@@ -5,7 +5,8 @@
 ## The results
 
 Let `(p⋉q)[(s,t)] = p[s]^{S_q} × q[t]^{S_p}` (symmetric) and `(p⋊q)[(s,t)] = p[s]^{S_q} × q[t]`
-(directed) be DJN's Dialectica tensors on Cont (unit `y`).
+(directed) be DJN's two tensors on Cont (unit `y`) — **their §6 formulas; the
+name "Dialectica" is my own identification, not DJN's, who ask what they mean.**
 
 - **Theorem 1.** `⋉` is neither left- nor right-closed. Witness `p = q = y²`: both `p⋉(−)` and
   `(−)⋉q` fail to preserve `y+y` (direction profile ⟨4,4⟩ vs ⟨2,2⟩), so — a left adjoint preserves

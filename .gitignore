@@ -43,3 +43,6 @@ peers/
 scratch/**/*.txt
 scratch/txtcache/
 scratch/polyidx/
+
+# ---- private drafting buffer (daily email), never public ----
+scratch/neil-batch.md

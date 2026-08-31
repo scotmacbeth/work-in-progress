@@ -1879,8 +1879,16 @@ $\Sigma\Pi\mathcal C$ --- the free coproduct completion of the free product
 completion of a monoidal category $\mathcal C$, with objects the formal sums
 $\sum_i\prod_a c_{i,a}$ whose entries $c_{i,a}$ live in $\mathcal C$. Taking
 $\mathcal C$ terminal recovers exactly our setting: $\Sigma\Pi 1\simeq\Cont$.
-They transport both the Day tensor $\dir$ and the substitution tensor $\tri$ up
-to $\Sigma\Pi\mathcal C$, and their Theorem~4.3 identifies the $\tri$-comonoids
+They transport the Day tensor $\dir$ up to $\Sigma\Pi\mathcal C$ --- where it
+agrees with ours --- and construct a \emph{weighted} composition product
+$\tri_{\mathrm{DJN}}$ which, at a position $(i,j\colon A_i\to J)$, has direction
+object $\prod_{a}\prod_{b}(u_{i,a}\cdot v_{ja,b})$ (their Def.~3.5 / Lemma~3.6),
+multiplying the \emph{outer} $u$ into the inner directions where our $\tri$ does
+not. The two agree exactly at $\mathcal C=1$, which is the only case this chapter
+invokes; off it they are different operations, and our defining property
+$\Ext{p\tri q}\cong\Ext{p}\circ\Ext{q}$ cannot even be stated on
+$\Sigma\Pi\mathcal C$, since their embedding does not land in endofunctors.
+Their Theorem~4.3 identifies the $\tri_{\mathrm{DJN}}$-comonoids
 with enriched categories and enriched cofunctors --- whose $\mathcal C=1$ case is
 the Ahman--Uustalu statement, recalled above, that a $\tri$-comonoid is a small
 category. That theorem, not this chapter, is the source for the fact that a

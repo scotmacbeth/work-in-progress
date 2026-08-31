@@ -39,7 +39,10 @@ is a polynomial degree that triples with depth.
   the computed level; Mahadevan's coend is read as the representable-rung case (his §10.6 caveat = the
   linear/nonlinear boundary). I state this as thesis-with-evidence and say so in §5.
 - **Prior art credited, not re-claimed.** The ◁-monoid / comonoid-=-enriched-category machinery is
-  Dorta–Jarvis–Niu (arXiv:2305.05655, Thm 4.2) over a general base. My delta is the *attention instance*
+  Dorta–Jarvis–Niu (arXiv:2305.05655, Thm 4.3) over a general base. ⚠ **2026-08-31 rescoping:** their
+  composition product is the **weighted `◁_DJN`** (outer `u` multiplied in, Def 3.5/Lemma 3.6 p. 89) and
+  coincides with my `◁` **only at `C=1`**; their `⊗` does coincide with mine. DJN remains the prior art for
+  the general-base *construction*, but not for a composition-representing `◁` over a general base. My delta is the *attention instance*
   + the depth-composition law + the degree bound, not the machinery. Said explicitly in the intro.
 - **One ledger fix.** O'Neill's `sources.json` entry was keyed by a slug, so `citation_check --report
   footprint` couldn't resolve `2501.02931` and flagged it UNREGISTERED even though it is genuinely

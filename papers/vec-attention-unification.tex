@@ -126,7 +126,14 @@ attention cannot be functorial for non-trivial groups~\cite{sargsyan}. The degre
 \paragraph{What is new, and what is not.} The machinery --- that a monoid in a monoidal category
 of container-like objects is an enriched category, and that layer-composition is monoidal
 composition --- is not mine; it is developed by Dorta, Jarvis and Niu over a general base
-category~\cite[Thm.~4.2]{djn}, and the free-monad-as-tensor-algebra fact is classical. The
+category~\cite[Thm.~4.3]{djn},\footnote{\emph{Scope note.} DJN's composition product is
+\emph{weighted}: at a position $(i,j\colon A_i\to J)$ its direction object is
+$\prod_a\prod_b(u_{i,a}\cdot v_{ja,b})$ (their Def.~3.5 / Lemma~3.6), where ours carries no outer $u$
+factor. The two coincide exactly at $\mathcal C=1$; their Day tensor $\otimes$, by contrast, agrees
+with ours over any base. Whether the $\Fam(\Vect_{\mathrm{fd}}^{\mathrm{op}})$ comonoid
+classification used here is a case of their Theorem~4.3 is therefore an open question, not a settled
+subsumption --- the two classifications visibly differ (families of $k$-algebras versus all enriched
+categories). We claim nothing either way here.} and the free-monad-as-tensor-algebra fact is classical. The
 contribution here is threefold and specific: (a) the \emph{placement} of a published transformer
 construction (O'Neill's) inside this machinery, functorially, at the level of unit and
 multiplication and not merely objects; (b) a \emph{correction} to that construction, internal to
@@ -404,8 +411,10 @@ not functorial for non-trivial groups.)
 
 \bibitem{djn}
 A.~Dorta, M.~Jarvis, N.~Niu,
-\emph{Monoidal Structures on Generalized Polynomial Categories}, arXiv:2305.05655. (Thm.~4.2: comonoids for
-substitution over a general base are enriched categories; the $\lhd$-monoid / free-monad machinery.)
+\emph{Monoidal Structures on Generalized Polynomial Categories}, arXiv:2305.05655. (Thm.~4.3: comonoids for
+\emph{their} weighted substitution product over a general base are enriched categories; the
+$\lhd$-monoid / free-monad machinery. See the scope note in \S1: their substitution product
+coincides with ours only at $\mathcal C=1$; their Day tensor coincides with ours over any base.)
 
 \bibitem{acu}
 D.~Ahman, T.~Uustalu,

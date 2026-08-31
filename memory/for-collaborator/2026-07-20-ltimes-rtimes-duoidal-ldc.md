@@ -4,7 +4,8 @@
 and upgrades it to a full duoidal structure with a clean coherence proof.**
 
 ## The result
-For the two Dorta–Jarvis–Niu Dialectica tensors on Poly=Cont
+For the two Dorta–Jarvis–Niu tensors on Poly=Cont (their §6; the *Dialectica*
+reading of them is **mine**, not theirs — DJN pose their meaning as open)
 (`(p⋉q)[(s,t)]=p[s]^{S_q}×q[t]^{S_p}`, `(p⋊q)[(s,t)]=p[s]^{S_q}×q[t]`, shared unit y):
 
 1. There **is** a natural linear distributor `δ: A⋉(B⋊C)→(A⋉B)⋊C` — the PROVE target. It is

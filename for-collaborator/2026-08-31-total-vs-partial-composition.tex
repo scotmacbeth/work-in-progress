@@ -1,0 +1,395 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ---- theorem environments -------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{question}[theorem]{Question}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---- notation -------------------------------------------------------------
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\DCont}{\mathsf{DCont}}
+\newcommand{\Vecfd}{\mathsf{Vec}_{\mathrm{fd}}}
+\newcommand{\OrgTr}{\mathsf{OrgTr}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\comp}{\mathbin{\triangleleft}}
+\newcommand{\grade}[1]{\textsf{\small\textbf{#1}}}
+
+% ---- front matter ---------------------------------------------------------
+\title{Total composition \textsc{constructs}; partial composition
+       \textsc{lifts}\\[2pt]
+       \large A speculative mechanism, a failed degree prediction,
+       and a name for the failure}
+\author{MacBeth \\ \small Kodamai}
+\date{31 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\fbox{\begin{minipage}{0.92\textwidth}
+\small
+\textbf{Recipient:} Rick.\\[2pt]
+\textbf{Author:} MacBeth (Kodamai). \qquad \textbf{Date:} 2026-08-31.\\[2pt]
+This note corresponds to \texttt{work-in-progress} commit
+\texttt{f95140a8\ldots} of the repository \texttt{scotmacbeth/work-in-progress};
+in full,
+\begin{center}
+\texttt{f95140a88a390dfb6c53694535c404f189500f9b}.
+\end{center}
+Everything asserted below is graded. \grade{proved} means I have a proof I stand
+behind; \grade{computed} means a finite verification; \grade{speculative} means a
+proposal with no proof. The central thesis of this note is \grade{speculative} and
+its most attractive consequence is \grade{speculative and currently unconfirmed}.
+Please read the grades as binding, not decorative.
+\end{minipage}}
+\end{center}
+
+\begin{abstract}
+Rick --- a short note on something adjacent to your front. I have a four-instance
+pattern separating compositional primitives into those that are \emph{total} and
+those that are \emph{partial}, and a proposed mechanism: total composition
+\textsc{constructs} the composite by a universal property, partial composition
+\textsc{solves a lifting problem}, and only lifting problems carry cohomology. Our
+shared object --- the Zappa--Sz\'ep obstruction $[\omega]\in
+H^2(\Sk_{\mathcal C};\mathcal D)$ --- is the one data point in the pattern that is
+\grade{proved}. The mechanism predicts a companion obstruction in $H^1$ for
+sheaf-theoretic multi-agent composition, one degree below ours. I tested that
+prediction against the literature and it is \textbf{not confirmed}; the most
+tempting near-miss is a genuine $H^1$ theorem on the wrong axis. I name that failure
+mode a \textsc{collision} and give its diagnostic. Three questions for you at the end.
+\end{abstract}
+
+%============================================================================
+\section{The thesis}\label{sec:thesis}
+%============================================================================
+
+\noindent\fbox{\begin{minipage}{0.96\textwidth}
+\textbf{Thesis} (\grade{speculative}).
+\emph{Composition is total exactly when the composite is \textsc{constructed} by a
+universal property, and partial exactly when the composite is a \textsc{solution to
+a lifting problem}. Colimits always exist, given a global cocompleteness precondition
+checked once; lifts need not, and the obstruction to a lift is a cohomology class.}
+\end{minipage}}
+
+\medskip
+
+I want to be exact about what is and is not being claimed. I have \emph{not} proved
+``universal-property-constructed $\Rightarrow$ total'', nor ``lifting problem
+$\Rightarrow$ cohomological obstruction'', in any generality. Both are
+folklore-shaped statements that I am using as a \emph{lens}, not as lemmas. What I
+have is four data points that the lens sorts correctly, one visible symptom that the
+lens explains (\S\ref{sec:asym}), and one falsifiable prediction that the lens makes
+(\S\ref{sec:pred}) --- which is where the interesting part begins, because the
+prediction did not survive contact with the literature and the way it failed is
+itself worth a name.
+
+Your instincts here are better than mine, which is why you are getting this rather
+than a finished paper.
+
+%============================================================================
+\section{Four data points}\label{sec:data}
+%============================================================================
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.30\textwidth}p{0.11\textwidth}p{0.25\textwidth}p{0.24\textwidth}@{}}
+\toprule
+\textbf{compositional primitive} & \textbf{total?} & \textbf{obstruction} &
+\textbf{status / source} \\
+\midrule
+\textbf{(1)} pushout / structured cospans
+  & total
+  & none found anywhere in the literature
+  & \emph{checked absence} of obstruction language; browse 2026-09-07,
+    \texttt{2509.18475}, \texttt{2301.01445} \\[4pt]
+\textbf{(2)} Spivak's $\#$ on $\OrgTr$
+  & total, \emph{unconditionally}
+  & none
+  & \texttt{2602.17917}, Prop.\ 4.3 \\[4pt]
+\textbf{(3)} Zappa--Sz\'ep / matched pairs of \emph{directed containers}
+  & \textbf{partial}
+  & $[\omega]\in H^2(\Sk_{\mathcal C};\mathcal D)$
+  & \grade{proved} (mine) \\[4pt]
+\textbf{(4)} sheaf gluing for multi-agent systems
+  & \emph{the test case}
+  & \textbf{predicted} $H^1$
+  & \grade{speculative}, \textbf{not confirmed}; see \S\ref{sec:pred} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+
+\noindent\textbf{(1) Pushouts and structured cospans.} The Baez--Courser--Fong line,
+as carried forward in the ACSet/structured-cospan tooling, composes by pushout. The
+data point is an \emph{absence}, and I want it labelled as such: I went looking for
+obstruction language in that literature and did not find it. That is evidence that
+nobody \emph{needed} one, not a theorem that none exists. Nothing can fail per-pair
+in a pushout: the composite is built out of the two given objects, and the only
+precondition --- cocompleteness of the ambient category --- is discharged once, for
+the whole setting, before any particular pair is considered.
+
+\medskip
+
+\noindent\textbf{(2) Spivak's $\#$ on organisational trees.} I had expected this one
+to go the other way, and it does not. The composition operator $\#$ on $\OrgTr$ is
+\emph{unconditionally total} (\texttt{2602.17917}, Prop.\ 4.3). I record this
+against my own earlier hope that a class $[\omega]$ would appear one level up in the
+orchestration hierarchy; it does not, and my $[\omega]$ stays a
+directed-container phenomenon. Second construction-side data point.
+
+\medskip
+
+\noindent\textbf{(3) Zappa--Sz\'ep products of directed containers.} \grade{proved},
+and your point of contact with all of this. For $K=\mathcal C\bowtie\mathcal D$ a
+strict factorisation, my pairwise criterion is a conjunction $(L)\wedge(G)$ of a
+freeness condition on hom-presheaves and a global closure condition; and
+\[
+  (G)\iff [\omega]=0 \in H^2(\Sk_{\mathcal C};\,\mathcal D).
+\]
+The tower underneath is citation --- Rosebrugh--Wood for existence, Baues--Wirsching
+for the abelian classification, Pirashvili for the non-abelian case; my contribution
+is the identification and the rigid-twist ($\mathbb Z/2$) computation. Note the
+shape: this composition does not \emph{build} $K$. It asks whether a \emph{given}
+$K$ factors --- a lifting problem against the skeleton $\Sk_{\mathcal C}$, and
+lifting problems against a skeleton are exactly what $H^2$ measures.
+
+The blockchain re-entrancy instance is the smallest witness I have that the class is
+not vacuous: there $[\omega]=\varepsilon$ with $H^2\cong\mathbb F_2$, machine-checked
+in Lean.
+
+\medskip
+
+\noindent\textbf{(4) Sheaf gluing.} The test case, and \S\ref{sec:pred} is about it.
+
+%============================================================================
+\section{The visible symptom: a precondition asymmetry}\label{sec:asym}
+%============================================================================
+
+Before the prediction, the reason I believe there is \emph{something} here rather
+than a tautology. The two families differ in an observable way that has nothing to do
+with which tensor they use, and everything to do with \emph{when their preconditions
+are discharged}:
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{total composition} & \textbf{partial composition} \\
+\midrule
+precondition is \textbf{global} & precondition is \textbf{per-pair} \\
+checked \textbf{once}, for the ambient category & checked \textbf{again}, for every pair \\
+shape: ``is $\mathcal E$ cocomplete?'' & shape: ``does $[\omega]$ vanish for \emph{this} $(\mathcal C,\mathcal D)$?'' \\
+failure is a \emph{well-formedness} error & failure is \emph{structural} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+
+This is the part I would defend hardest, because it is empirical rather than
+theoretical: the two schools of applied category theory really do differ in the
+\emph{kind} of hypothesis they carry, not merely in the monoidal structure they
+carry it on. The colimit school's hypotheses are ambient; the Zappa--Sz\'ep school's
+are pairwise and cohomological. The thesis of \S\ref{sec:thesis} is my attempt to say
+\emph{why}, and the asymmetry is the thing it is trying to explain.
+
+There is a consequence a systems engineer can use before modelling anything: \emph{does
+your composition operator build the composite, or does it look for one?} Build
+$\Rightarrow$ composition is always defined and correctness is a global
+well-formedness check. Look $\Rightarrow$ composition is partial, failures are
+structural rather than accidental, and there is in principle a computable invariant
+saying in advance which pairs compose. Supply chains, re-entrancy, and agent
+orchestration all sit on the \emph{lifting} side --- which is exactly why
+compositional failure there has economic consequences, and why compositional failure
+in a pushout-based model does not exist to have consequences.
+
+%============================================================================
+\section{The prediction, and its honest status}\label{sec:pred}
+%============================================================================
+
+Sheaf gluing is a \emph{limit} (matching families), not a colimit, and its totality
+is conditional on a \emph{cocycle condition on a cover}. So the mechanism does not
+predict ``sheaves are total''. It predicts:
+
+\medskip
+\noindent\fbox{\begin{minipage}{0.96\textwidth}
+\textbf{Prediction} (\grade{speculative and currently unconfirmed}).
+\emph{Sheaf-theoretic multi-agent composition carries an obstruction, and it sits in
+$H^1$ --- one degree below the Zappa--Sz\'ep $H^2$ --- because gluing local sections
+is a descent problem (torsor-flavoured, $H^1$), whereas Zappa--Sz\'ep asks for an
+extension/factorisation ($H^2$).}
+\end{minipage}}
+\medskip
+
+I tested this. The literature pass is \textbf{done}, and it returned
+\emph{not confirmed}. Three sources are relevant, all deep-read:
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.16\textwidth}p{0.34\textwidth}p{0.08\textwidth}p{0.34\textwidth}@{}}
+\toprule
+\textbf{source} & \textbf{what it does} & \textbf{degree} & \textbf{verdict against the prediction} \\
+\midrule
+\texttt{2606.01663} & Nash equilibria as \textbf{global sections} in a topos & $H^0$ &
+wrong degree; no gluing obstruction claimed \\[4pt]
+\texttt{2605.01879} & plan-incoherence \emph{asserted} as gluing failure; ``$H^1/H^2$
+obstructions to a global plan'' & $H^1$/$H^2$ &
+right degree, \textbf{no theorem is proved} --- appetite, not evidence \\[4pt]
+\texttt{2605.11204} \newline (Anwer--Riess--Hale), \textbf{Thm 2} & edge potentials of
+conservative, edge-separable forces recoverable from trajectory data iff
+$H^1(G;\mathcal F)=0$ & $H^1$ &
+a genuine $H^1$ theorem, \textbf{wrong axis} --- see \S\ref{sec:collision} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+
+The third row is the dangerous one, and it is the reason this note exists. Anwer--
+Riess--Hale prove a real theorem in exactly the predicted degree. Citing it as
+confirmation would have been wrong. Their $H^1$ measures \textbf{identifiability}:
+can the local interaction laws be recovered from observed trajectories? Mine would
+measure \textbf{existence of a glued composite}: does a family of locally defined
+compositions assemble into a global one? Same degree; no shared mechanism; different
+site (a communication graph versus a cover of a directed container); no shared
+functor of which the two $H^1$'s are shadows.
+
+I state the verdict plainly: \textbf{the degree prediction is unconfirmed, and
+nothing in the literature I have read confirms it.} What \texttt{2605.01879} shows is
+only that $H^1$ is the degree practitioners reach for when they gesture at this; that
+is sociology, not evidence.
+
+%============================================================================
+\section{Collision --- a name for this failure mode}\label{sec:collision}
+%============================================================================
+
+I have been keeping a small taxonomy of ways a distinction stops being visible.
+\textsc{Fusion} lives in the base: two logically independent conditions coincide over
+$\Set$ and come apart over $\Vecfd$. \textsc{Identification} lives in the
+representation: two non-isomorphic objects present the same functor, so the question
+stops referring. This section is about the third, which is the one that costs me
+time, because it is invisible to exactly the summaries I write.
+
+\begin{definition}[Collision]\label{def:collision}
+A \emph{collision} occurs when a \emph{lossy invariant} --- a cardinality, a
+cohomological degree, a count --- takes the same value on two structures that
+genuinely differ. Nothing has fused and nothing has been identified: the objects are
+perfectly distinct; the \emph{summary statistic} chosen to describe them is not
+injective, and the agreement therefore carries no information.
+\end{definition}
+
+\begin{remark}[Where each mode lives]
+\textsc{Fusion} lives in the base --- change the base and it goes away.
+\textsc{Identification} lives in the representation --- no change of base helps; a
+presentation must be fixed by fiat. \textsc{Collision} lives in \emph{my description
+of the objects}. Fusion and identification are facts about mathematics; collision is
+a fact about compression --- which is why it is the mode my own note-taking
+manufactures, and the only one of the three I control.
+\end{remark}
+
+\begin{quote}
+\textbf{Diagnostic}, to run before any ``same invariant, therefore same phenomenon''
+claim: \emph{name the two structures; name the invariant; ask what functor the
+invariant is a shadow of.} If the two shadows come from different functors ---
+cardinality of a hom-set versus of a colimit; $H^1$ of identifiability versus $H^1$ of
+descent --- the agreement is a collision and carries no information.
+\end{quote}
+
+\noindent\textbf{The sister instance, for calibration.} The reason I trust the
+diagnostic is that I have the same error in a setting where the ground truth is
+finite and checkable. In my counterexample to a conjectured left adjoint over
+$\Vecfd$ (\texttt{proofs/2026-08-30-left-adjoint-over-vec.md}), at
+$\dim P_s=1$ with $|T|=2$ over $\mathbb F_2$, the canonical comparison map $\kappa$
+has \textbf{4 elements on each side} --- and is still not a bijection. It
+double-counts the zero map and misses $e_0+e_1$. \grade{computed}. A cardinality-only
+check passes a failing adjunction; the map had to be examined.
+
+\begin{quote}
+\textbf{Check the map, not the count; check the axis, not the degree.}
+\end{quote}
+
+\noindent Anwer--Riess--Hale is the degree-shaped version of the $4=4$ coincidence.
+That is the whole content of \S\ref{sec:pred}'s negative verdict.
+
+%============================================================================
+\section{Where this stands}\label{sec:stands}
+%============================================================================
+
+The literature pass is finished and its answer is \emph{nobody has proved this}. So
+the outstanding work is not another browse; it is a proof attempt on my own model.
+The question to pose formally:
+
+\begin{question}\label{q:descent}
+Is multi-agent composition over a \emph{cover of a directed container} a descent
+problem --- and if so, does its obstruction live in $H^1(\text{cover};\Aut)$?
+\end{question}
+
+Two honest caveats attached to Question~\ref{q:descent}. First, ``cover of a directed
+container'' is not yet a definition I have written down; making it one is most of the
+work, and it may well be that the natural notion of cover makes the gluing total, in
+which case data point (4) joins (1) and (2) on the construction side and the
+\emph{degree} half of the thesis is simply vacuous while the coarse total/partial
+split survives. Second, if an obstruction does appear, I must state its axis before
+comparing it to anything --- by Definition~\ref{def:collision}, a landing in degree
+$1$ tells me nothing on its own.
+
+%============================================================================
+\section{What I am asking}\label{sec:asking}
+%============================================================================
+
+Three questions, in order of how much I would value an answer.
+
+\begin{enumerate}
+\item \textbf{Is the dichotomy real?} You have the obstruction-theory instincts here
+and I do not. Does the total/partial split look like a genuine structural dichotomy
+--- or is it a restatement of ``limits are unique, extensions are not'', dressed up
+with four examples? I would rather hear that it is folklore with a different name
+than publish it as a discovery.
+
+\item \textbf{Am I committing my own collision error?} The degree prediction --- $H^1$
+for gluing, $H^2$ for Zappa--Sz\'ep --- is the part I like most, which is exactly why
+I distrust it. Is there a principled reason a descent obstruction should sit one
+degree below a factorisation obstruction, or am I pattern-matching on degrees in
+precisely the way \S\ref{sec:collision} forbids? A verdict of ``you are doing the
+thing you just named'' is a completely acceptable answer and I would like it stated
+bluntly.
+
+\item \textbf{Do you know a worked case?} A composition obstruction --- existence of a
+composite, not identifiability, not recovery, not classification of twists on an
+already-existing object --- genuinely landing in $H^1$. If one exists anywhere in your
+territory, it settles the degree question faster than my proof attempt will. If your
+answer is that composition obstructions are $H^2$-shaped by their nature and $H^1$ is
+the wrong place to look, that is equally decisive and I will drop the degree half of
+the thesis.
+\end{enumerate}
+
+\medskip
+
+\noindent Nothing here needs a fast reply; the note is a snapshot, not a request for
+a referee report. But the second question is the one I cannot answer from inside my
+own framing, and you are the person who can.
+
+\medskip
+\noindent --- MacBeth
+
+\end{document}

@@ -210,9 +210,23 @@ Theorem~\ref{thm:introT4} --- extensivity as villain for T1/T2 and hero-of-the-o
 two-dimensional rather than a single ``goodness'' scale.
 
 \subsection{What is and is not new}
-The tensor $\otimes$ and the substitution $\lhd$ over a general base, and the theorem that
-$\lhd$-comonoids are enriched categories, are due to Dorta, Jarvis and Niu \cite{DJN}; we cite these
-as the definitions our theorems are \emph{about}, and re-prove nothing of theirs. The $\Set$ fullness
+The tensor $\otimes$ over a general base, a composition product $\lhd_{\mathrm{DJN}}$, and the theorem
+that $\lhd_{\mathrm{DJN}}$-comonoids are enriched categories (their Theorem~4.3; their Definition~4.2 is
+the definition of enriched cofunctor), are due to Dorta, Jarvis and Niu \cite{DJN}; we cite these
+as the definitions our theorems are \emph{about}, and re-prove nothing of theirs.
+\footnote{\textbf{Scope correction (2026-08-31).} Under the identification
+$\Sigma\Pi\mathcal C=\Fam(\mathcal D^\op)$, $\mathcal D=(\Pi\mathcal C)^\op$, our $\otimes$ agrees with
+theirs exactly, but their composition product does \emph{not} agree with ours: at a position
+$(i,j\colon A_i\to J)$ their direction object is
+$\prod_{a\in A_i}\prod_{b\in B_{ja}}(u_{i,a}\cdot v_{ja,b})$ (their Def.~3.5 / Lemma~3.6) --- the
+\emph{outer} $u$ multiplied in --- whereas ours is $\prod_{a\in A_i}\prod_{b\in B_{ja}}v_{ja,b}$. The two
+coincide exactly at $\mathcal C=1$. A smallest witness: $\mathcal C=2$ with $\cdot=\wedge$, $e=\top$,
+$p=\sum_{i\in 1}\prod_{a\in 1}\bot$ and $q=\sum_{j\in 1}\prod_{b\in 1}\top$ give $\bot$ for theirs and
+$\top$ for ours. Moreover our defining property $\ext{p\lhd q}\cong\ext p\circ\ext q$ is unavailable on
+$\Sigma\Pi\mathcal C$ for $\mathcal C\neq 1$, since their embedding lands in presheaves on
+$\Pi\mathcal C$ rather than in endofunctors. We therefore write $\lhd_{\mathrm{DJN}}$ for theirs and
+$\lhd$ for ours, and attribute to \cite{DJN} the general-base construction, not a
+composition-representing $\lhd$ over a general base.} The $\Set$ fullness
 theorem is Abbott--Altenkirch--Ghani \cite{AAG}; our contribution is to name its hidden hypothesis.
 The reconstruction of a container from an abstract familially-representable functor is Diers'
 \cite{Diers}, and uses extensivity of the codomain, not of the base --- a distinction Section~\ref{sec:external}
@@ -1088,8 +1102,9 @@ programme. We record it as secondary; Question~\ref{q:main} is the one to prove 
 %==========================================================================
 \section*{Acknowledgements}
 This survey was written on a directive of Neil Ghani (Kodamai) to map the approaches to containers
-over a base, with $\Fam(\Vect^\op)$ as the running example. The tensor and substitution structures
-over a general base are those of Dorta, Jarvis and Niu; the errors of framing are the author's.
+over a base, with $\Fam(\Vect^\op)$ as the running example. The tensor over a general base, and the
+weighted composition product $\lhd_{\mathrm{DJN}}$ from which our $\lhd$ is distinguished in
+Section~2, are those of Dorta, Jarvis and Niu; the errors of framing are the author's.
 
 %==========================================================================
 \begin{thebibliography}{99}

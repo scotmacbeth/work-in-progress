@@ -44,9 +44,55 @@ cocomplete, each object has an **extension endofunctor**
 > `⟦S,P⟧ : C → C,   ⟦S,P⟧X = ∐_{s∈S} [P_s, X]`      (over `Set`: `Σ_s X^{P_s}` = Poly).
 
 **The substitution product `◁`** is the monoidal structure whose extension is functor
-composition, `⟦(S,P)◁(T,Q)⟧ = ⟦S,P⟧∘⟦T,Q⟧` (DJN `2305.05655`; over `Set` = the composition
-product of `Poly`, Niu–Spivak). `◁`-comonoids = `C`-enriched categories (DJN Thm 4.2). `◁` is
-**non-symmetric**, so it has two potential internal homs:
+composition, `⟦(S,P)◁(T,Q)⟧ = ⟦S,P⟧∘⟦T,Q⟧` (over `Set` = the composition product of `Poly`,
+Niu–Spivak; over `Set`, `◁`-comonoids = categories, Ahman–Uustalu).
+
+> ⚠ **`◁` vs `◁_DJN` — NOT the same operation. SCOPE CORRECTION 2026-08-31** (full read of
+> `/home/agent/papers/djn_2305.05655.pdf`). This line previously cited DJN `2305.05655` for
+> "the monoidal structure whose extension is functor composition". That attribution is wrong
+> for every `C ≠ 1`. Dorta–Jarvis–Niu build a composition product on `ΣΠC`; under the
+> identification `ΣΠC = Fam(D^op)`, `D = (ΠC)^op`, shapes, positions and the direction-indexing
+> all agree, but the **direction object** does not:
+>
+> | at position `(i, j : A_i → J)` | direction object |
+> |---|---|
+> | mine, `p ◁ q` | `∏_{a∈A_i} ∏_{b∈B_{ja}} v_{ja,b}` — **no outer factor** |
+> | DJN, `p ◁_DJN q` (Def 3.5 / Lemma 3.6, p. 89) | `∏_{a∈A_i} ∏_{b∈B_{ja}} (u_{i,a} · v_{ja,b})` — **outer `u` multiplied in** |
+>
+> They coincide **exactly at `C = 1`** (`y·y = y` kills the factor; both give `Poly`
+> composition). Smallest divergence witness: `C = 2` with `· = ∧`, `e = ⊤`; take
+> `p = ∑_{i∈1}∏_{a∈1}⊥` and `q = ∑_{j∈1}∏_{b∈1}⊤`. DJN's predicate is `⊥·⊤ = ⊥`, mine
+> transported is `⊤` — non-isomorphic. Over `C = [0,∞]` (DJN §5) DJN gives `5+3 = 8` where
+> mine gives `3`. **The weighting is not presentational.** Three independent checks: (i) my
+> `⊗` *does* match their parallel `⊗` exactly under the same identification, so the base
+> identification is right and only `◁` breaks; (ii) their Thm 4.3 proof needs
+> `µ_{b,c} : |cb| → |b|·|c|` — weight-composition along paths, exactly the `u` factor — and all
+> of their §5 rests on it; (iii) the comonoid outputs differ — my `Fam(Vec_fd^op)` collapse-`◁`
+> comonoids are *families of `k`-algebras* (one-object enriched categories, discrete on objects),
+> their Thm 4.3 yields *all* enriched categories.
+>
+> ⚠ **Counter-consideration, recorded against myself.** "No outer factor" is the **`Set`** reading.
+> Off `Set`, wherever my `◁` is *defined at all* — the tiny/collapse locus of Prop 2.1 below —
+> `⟦p◁q⟧X = ∐_{s,t}[P_s⊗Q_t,X]`, so the outer position **is** multiplied in. This does not restore
+> agreement: DJN's outer factor is matched **diagonally** to the inner index (`u_{i,a}·v_{ja,b}`,
+> same `a`), which is exactly what makes their `µ_{b,c}` a weight-composition *along a path*,
+> whereas a `⊗`-style outer factor runs over **all** pairs `(a',(a,b))` and gives a **third**
+> formula. But it does mean the transport of my `◁` into `ΣΠC` is a *choice*, not forced by my
+> defining property (which is unavailable there) — and settling that choice is part of the open
+> question filed as `djn-subsumption-reopened` in `registry/linear-containers-vec.json`.
+>
+> **And my defining property is unavailable there.** For `C ≠ 1`, `⟦p◁q⟧ ≅ ⟦p⟧∘⟦q⟧` cannot even
+> be *stated* on `ΣΠC`: DJN's embedding gives `E(p) : (ΠC)^op → Set`, not an endofunctor, so
+> `E(p)∘E(q)` does not typecheck. No single base carries both definitions except `C = 1`.
+> DJN remains prior art for the general-base *construction* of `⊗` and of `◁_DJN`; it is not
+> prior art for a composition-representing `◁` over a general base.
+
+`◁_DJN`-comonoids in `(ΣΠC, e, ◁_DJN)` ≃ small `(ΣC^op, e, ⊙)`-enriched categories and enriched
+cofunctors (DJN **Theorem 4.3**, p. 91; their Def 4.2 is the *definition* of enriched
+cofunctor). Whether the analogous statement holds for **my** `◁` over a general `C` is a
+separate question, and is `speculative` — my own `Fam(Vec_fd^op)` computation returns
+*families of `k`-algebras*, not all enriched categories. `◁` is **non-symmetric**, so it has
+two potential internal homs:
 
 - **the `◁`-coclosure** — **VARIANCE CORRECTED 2026-08-30.** This line previously read
   "right internal hom = **right** adjoint to `(T,Q)◁(−)`". That is wrong on **both** counts.
@@ -218,9 +264,11 @@ T2 `t2-day-closedness-famcop` (`⊗`-closedness criterion, rigid hom, Vec dichot
 Thm 2 `workers-x-closed-lhd-obstructed` (`◁`-closure fails over `Set`). Compose to a new
 statement about the *`◁`* internal hom.
 
-**Cited, not reproved:** DJN `2305.05655` (`◁` over a general base; comonoids = enriched
-categories — they do **not** treat any closed structure for `◁`, so the `◁`-closure verdict is
-the T4 delta, exactly as closedness was the T2 delta). Niu–Spivak Prop 6.57 (the *coclosure* =
+**Cited, not reproved:** DJN `2305.05655` (`⊗` over a general base — which does coincide with
+mine — plus their *weighted* `◁_DJN` and its comonoids = enriched categories, **Thm 4.3**; see
+the ⚠ box in §0 for why `◁_DJN ≠ ◁` off `C = 1`. They do **not** treat any closed structure for
+either product, so the `◁`-closure verdict is the T4 delta, exactly as closedness was the T2
+delta). Niu–Spivak Prop 6.57 (the *coclosure* =
 the other, known hom — carefully **not** what is proved here). Gambino–Kock `0906.4931` (`Vec`
 not LCCC — boundary).
 

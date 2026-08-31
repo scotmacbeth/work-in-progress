@@ -90,3 +90,56 @@ Related: [[one-functional-many-probes-method]], [[fullness-unit-connectedness]],
 [[extensivity-is-the-container-boundary]], [[vec-comonoid-algebra-family-proved]],
 [[linear-attention-odot-degree-3L]],
 [[total-composition-constructs-partial-composition-lifts]], [[cohomological-obstruction-family]].
+
+---
+
+## ★ 2026-08-31 — A FOURTH COLLISION, AND IT IS A NEW SPECIES: THE SHARED SYMBOL
+
+The three collisions on record were **numerical**: the `4 = 4` cardinality that nearly hid the `Vec`
+left-adjoint failure, the `H¹` degree shared by gluing-existence and identifiability, and the 07-22
+`2405.10207` correction. Today's is not a number. It is a **notation**.
+
+**Dorta–Jarvis–Niu's `◁` is not my `◁`.** Under `ΣΠC = Fam((ΠC)^op)` the positions agree and the
+direction *indexing* agrees; the direction **object** differs by an outer weight:
+
+    mine   ∏_{a∈A_i} ∏_{b∈B_{ja}}  v_{ja,b}
+    DJN    ∏_{a∈A_i} ∏_{b∈B_{ja}} (u_{i,a} · v_{ja,b})
+
+They agree **exactly at `C = 1`**, where `y·y = y` annihilates the factor — and `C = 1` is the case
+everyone checks, because it is the case that reproduces `Poly`. Non-presentational on three grounds:
+my `⊗` *does* match theirs under the same identification (so the base identification is sound and only
+`◁` breaks); their Thm 4.3 proof requires `µ_{b,c}: |cb| → |b|·|c|`, which **is** the weight; and the
+comonoid outputs differ (families of k-algebras vs all enriched categories).
+
+**Why this species is worse than the numerical one.** A cardinality collision at least requires you
+to *compute something* before it can deceive you — and the remedy (*build the map, don't count*)
+fires at the moment of computation. A symbol collision deceives you **before any computation at
+all**. It is inherited silently the moment you adopt someone's notation, it survives every
+consistency check inside each framework separately, and it is *invisible in the place it does damage*
+— the compressed summary, where "DJN build `⊗` and `◁` over a general base" is a true-looking
+sentence containing a false identification. [[the-summary-is-what-gets-audited]], again, and this is
+now its sharpest instance.
+
+**Worse still, it made me concede something.** I recorded my `Vec`-comonoid/algebroid classification
+as a *special case of their Thm 4.3* and wrote myself a standing "do NOT re-claim". That concession
+rested on the operations agreeing. It is now an **open question at `speculative`** — deliberately
+*not* a restored claim, because this is the one correction of the day running in my own favour and
+that is precisely when to distrust myself. **Note the asymmetry I nearly missed: a symbol collision
+can cost you credit as easily as it can lend you unearned credit, and I only went looking because the
+error had been running against me in the *other* direction all month.**
+
+**The diagnostic extends.** Previously: *name the invariant, ask what functor it is a shadow of;
+different functors ⟹ the agreement carries no information.* Now also:
+> **Name the OPERATION, ask what universal property pins it down.** Mine is *defined* by
+> `⟦p◁q⟧ ≅ ⟦p⟧∘⟦q⟧`; theirs is a **stipulated formula** justified only by reducing to composition at
+> `C = 1`. **A defined operation and a stipulated one that agree on a degenerate case are not the
+> same operation** — and where a defining property is *unavailable* (their `E(p) : (ΠC)^op → Set` is
+> not an endofunctor, so `E(p)∘E(q)` does not typecheck), the two can never be compared off that case
+> at all.
+
+This closes a loop with Theorem D from the other side. Thm D says: `I` disconnected ⟹ `⟦−⟧` not
+injective on objects ⟹ `◁` is a **CHOICE**. DJN's `◁` *is* such a choice, made by a different author.
+**Theorem D predicted that divergent stipulations of `◁` would exist; DJN turn out to be the
+instance.** *Check the map, not the count; the axis, not the degree;* **and now — the universal
+property, not the symbol.**
+

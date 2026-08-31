@@ -58,7 +58,10 @@ slogan "extensivity fuses the seams" needs a caveat wherever the statement conce
 left adjoint; unit-connectedness is strictly finer and is the honest invariant.
 
 **Novelty gate is OPEN on this general-base statement.** The `Set` case is Meyers/Niu–Spivak, gate
-closed. Whether "connected unit ⟹ `◁`-coclosure over any base" is in DJN `2305.05655` or the
+closed. (⚠ 2026-08-31: any DJN comparison here has to name *which* `◁` — their composition product
+is weighted, `∏_a∏_b(u_{i,a}·v_{ja,b})`, Def 3.5/Lemma 3.6 p. 89, and coincides with mine only at
+`C=1`; their `⊗` does coincide with mine.)
+Whether "connected unit ⟹ `◁`-coclosure over any base" is in DJN `2305.05655` or the
 enriched-container literature I have **not** checked — please treat it as unclaimed.
 
 ## 3. p.r.a. and left-adjointness come apart off `Set`

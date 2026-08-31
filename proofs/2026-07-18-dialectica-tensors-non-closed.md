@@ -16,8 +16,10 @@ functor `⟦−⟧`. A container is `p = (S_p, p[-])`: a shape set `S_p` and, at
 direction set `p[s]`; `⟦p⟧X = ∐_{s∈S_p} X^{p[s]}`. Write `y = (1, *↦1)` for the unit
 (`⟦y⟧ = Id`) and `y^n = (1, *↦n)` for the "one shape, `n` directions" container.
 
-The **Dialectica tensors** (Dorta–Jarvis–Niu, arXiv:2305.05655 §6, at `C = 1`; Def. A.1 of the
-companion note) have shape set `S_p × S_q` and directions
+The two tensors of Dorta–Jarvis–Niu (arXiv:2305.05655 §6, at `C = 1`; Def. A.1 of the
+companion note) — which I call the **Dialectica tensors**, an identification that is **mine, not
+DJN's** (their §6 gives only the formulas and asks *"We would like to know if there are
+interpretations or applications for these monoidal products"*) — have shape set `S_p × S_q` and directions
 
 ```
     (p ⋉ q)[(s,t)] = p[s]^{S_q} × q[t]^{S_p}        (symmetric; de Paiva's ⊗_Dial extended)

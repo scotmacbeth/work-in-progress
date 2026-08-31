@@ -19,8 +19,10 @@ one that "needs the first approach"). He names three routes and flags the enrich
 - **What's proved (mine):** T1 — `⟦−⟧` full-faithful ⟺ monoidal **unit connected** (`C(I,−)` preserves ∐), NOT
   extensivity; the copower test decides it over extensive bases [[fullness-unit-connectedness]],
   [[copowers-gap-writer-monad-extensive]]. T2 — Dirichlet `⊗` closed ⟺ `Φ` familially representable; closed on
-  cartesian bases + `Fam_fin(Vec_fd^op)` only [[t2-day-closedness-famcop]]. `◁`-comonoids = enriched categories
-  (DJN `2305.05655` Thm 4.2, my Vec instance).
+  cartesian bases + `Fam_fin(Vec_fd^op)` only [[t2-day-closedness-famcop]]. `◁_DJN`-comonoids = enriched categories
+  (DJN `2305.05655` Thm 4.3). ⚠ **2026-08-31:** `◁_DJN` is *weighted* (outer `u` multiplied in, Def 3.5/Lemma 3.6
+  p. 89) and equals my `◁` **only at `C=1`**; whether my Vec instance is a case of their theorem is therefore an
+  **OPEN question at `speculative`**, not a settled subsumption. Their `⊗` does agree with mine exactly.
 - **Reaches Fam(Vec^op) DIRECTLY** — the external `∐` doesn't need `C` to have internal coproducts matching, and
   the non-extensive collapse `∐⊊⊕` becomes a *feature* (biproduct = "either prompt = both")
   [[extensivity-is-container-boundary]], [[vec-biproduct-collapse-proved]].

@@ -4,6 +4,16 @@
 Registry `fibredness-vs-left-closure` (proved, validator green). Code
 `scratch/fibredness-vs-closure/verify.py` — six checks, all green.
 
+> **Corrected 2026-08-31.** An earlier version of this note claimed the right-variable fibredness
+> of `◁` (base functor `⟦q⟧`) and the unconditional preservation of cartesian morphisms in both
+> variables as mine, under a heading offering them as a bonus. They are **not mine**: the first is
+> **Pradic–Price, `2601.15420`, Lemma 15** (p. 14, proof p. 31) — *with the same base functor* — and
+> the second is **Niu–Spivak `2312.00990`, Proposition 6.88** (p. 213), which Pradic–Price
+> themselves cite. I fetched and read their paper on 2026-08-30 to close an attribution debt and it
+> closed against me. What survives after the subtraction is stated in **"The part I think you'll
+> like"** below and accounted for in full in §8 of the proof file. Nothing mathematical changed —
+> only who is credited and what the results are claims about.
+
 ## The question
 
 Braithwaite–Hedges–Mihejevs' *Polylang* (ACT 2026 extended abstract) says, in one parenthetical
@@ -33,18 +43,56 @@ The separation is two-sided, so the answer is "no" whichever notion of fibred Pr
 
 ## The part I think you'll like
 
-Two things fell out that are better than the question asked for.
+After subtracting prior art (see the correction note above and §8 of the proof file), what survives
+is **1–3** below — the third is the one I would put in a grant paragraph — together with the
+two-probe diagnosis in **4**, which is also mine.
 
-**1. `◁` *is* fibred in its right variable, and the base functor is `⟦q⟧` itself.**
-`π(q◁p) = Σ_{t∈T}(π p)^{Q_t} = ⟦q⟧(π p)`. Moreover **both** variables of `◁` preserve cartesian
-morphisms *unconditionally* — the position map is always a reindexing along the iso `φ^♯_s`. So
-BHM's failure is purely a failure of **base-functoriality**, never of cartesianness: there is no
-comparison map to be non-invertible, there is simply no functor on the base at all. (Corollary:
-`μX.1+q◁X` *is* fibrationally constructible, its shape level being the W-type `μS.1+⟦q⟧S`. Their
-three listed fixpoints are all right-variable, so their stated reason doesn't actually block them;
+**1. Theorem A supplies a *proof* of a remark Pradic–Price state without one.** Their Remark 16
+(`2601.15420`, p. 14) reads, in its entirety: *"On the other hand, `X ↦ P ⋆ X` is not fibred."*
+Their `Q ⋆ P` is my `P ◁ Q`, so their `X ↦ P ⋆ X` is exactly my `L_q = (−)◁q`. There is **no proof
+and no justification anywhere in the paper or its 25 pages of appendices** — the only occurrences of
+"Remark 16" are the statement and a back-reference in §4.2; Appendix B.1 proves Lemmas 14, 15 and 49
+only. Their Definition 13.1 is *strict* (`shape ∘ F = F_0 ∘ shape^k` on the nose) where my (F) asks
+only for a natural iso, so PP-fibred ⟹ (F) and Theorem A (ii⟹iv) refutes theirs *a fortiori* —
+using only the **object part** of fibredness. And it says more than the remark does: it gives the
+exact boundary `|T|=1` and welds it to `(V)` and to `(C)`. Recorded as **Corollary A′**.
+*(Conservatively: I prove `C = Set`, which is the instance BHM's clause is about; PP assert Remark
+16 for a general lextensive `C` and I do not prove that generality.)*
+
+**2. Theorem B and the strict separation `(V) ⊊ (C) ⊊ (F)` are outside their framework entirely.**
+`Fam(Vec_fd^op)` is not `Cont(Vec_fd)` — their `Cont(C)` is *internal*, objects are morphisms
+`P : A → I` of `C` with base `C`, mine keeps an external shape *set* with base `Set`; the two agree
+exactly at `C = Set`. And their standing hypothesis (§2.1, p. 7) is *"Henceforth, all categories in
+sight shall be lextensive"*, which `Vec_fd` is not (`∐ ⊊ ⊕`). So PP-fibredness is simply undefined
+there: **no conflict with them, and no support from them.** Theorem B is unambiguously mine.
+
+**3. ★ And that hypothesis is itself the point.** Their *"all categories in sight shall be
+lextensive"* is direct corroboration of the extensivity thesis. Theorem A says that over `Set` —
+the extensive base par excellence — fibredness, verticality and left-closure are **the same
+condition**, and the probe analysis below says why: extensivity leaves exactly one collapse
+mechanism (`|T|=1`), which trivialises summability along with it. A framework in which every
+category is lextensive therefore **cannot exhibit** `(V) ⊊ (C) ⊊ (F)` — the witnesses `q_2` and
+`q_ω` live over a base the hypothesis excludes. Prior work assumes the very condition under which
+the seams fuse, and so is structurally unable to watch them come apart. It also explains, with
+nobody being wrong, why Remark 16 could sit unproved: inside a lextensive world the left-variable
+failure and the closure failure are one phenomenon, and neither needs separating from the other.
+
+**Cited background, not findings.** Two facts the argument leans on are prior art and are used here
+as citations. `◁` **is** fibred in its *right* variable for every `q`, with base functor literally
+`⟦q⟧`: `π(q◁p) = Σ_{t∈T}(π p)^{Q_t} = ⟦q⟧(π p)` — **Pradic–Price Lemma 15**, same base functor. And
+**both** variables of `◁` preserve cartesian morphisms *unconditionally* — **Niu–Spivak Prop. 6.88**
+over `Set`, which PP invoke by name in the Lemma 15 proof; the `Fam(C^op)` half with `◁ = ⊗` is
+mine. Put together they *isolate* the failure: BHM's non-fibredness is purely a failure of
+**base-functoriality**, never of cartesianness — there is no comparison map to be non-invertible,
+there is simply no functor on the base at all, which is what makes it unrepairable. That isolation
+is an observation about known facts, not a new theorem, and I now describe it that way. (Aside, on
+the same footing: their three listed fixpoints `μX.1+A⊗X`, `1+A×X`, `1+A▷X` are all
+**right**-variable, hence all fibred, so a fibrational construction would compute their shape level
+as the W-type `μS.1+⟦q⟧S` — what such a construction *would* yield; I do not construct the
+fixpoints. So BHM's stated reason does not, under my Definition 1.3, block the fixpoints they list;
 what it blocks is their own graded monad `T_P`. Worth telling them, gently — a two-page abstract.)
 
-**2. One test, two probes.** Both conditions are the single question "is
+**4. One test, two probes.** Both conditions are the single question "is
 `G_r(Z)=Fam(⟨Z⟩◁q,\,r)` familially representable?", evaluated at different `r`:
 
 | probe | `r` | what it sees |
@@ -82,14 +130,18 @@ the obstruction migrates to the position probe.
 - `◁ := ⊗` on the tiny locus is a **definition**, not a deduction — `⟦−⟧` is not full over `Vec`
   (my T1), so the collapse pins the extension, not the object. Theorem B is literally about
   `(−)⊗q`.
-- **The one open attribution point, and it is cheap.** Pradic–Price `2601.15420` is not on disk.
-  My `sources.json` entry (graded `deep-read`) records their framing as *"fibred endofunctors over
-  the fibrewise-opposite-of-the-codomain-fibration"* — which is verbatim my
-  `Cont = ∫_{Set}(\mathrm{cod})^{op}`, whose projection is the shape map. But that read was
-  grep-targeted at a different question, and my own 07-29 log still lists "is their fibrewise-op
-  the same operation as mine?" as **open**. Their definition of *fibred endofunctor* was never
-  extracted. **One fetch of `arXiv:2601.15420` closes this.** I proved both the `(F,F_0)` and the
-  vertical readings precisely so the conclusion does not depend on the answer.
+- **The attribution point is CLOSED, and it closed against me.** Pradic–Price `2601.15420` **is**
+  on disk (`papers/pradic-price_2601.15420_fixpoints-poly-of-poly.pdf` + `.txt`), fetched and read
+  2026-08-30; extraction in `scratch/2026-08-30-pradic-price-fibred-def.md`. Outcome, in full:
+  their `shape` fibration **is** my `π` over `Set` (§2.2, pp. 8–9: *"exactly the fibrewise opposite
+  of the codomain fibration"*), confirming the `sources.json` reading; their fibredness is the
+  `(F,F_0)` form and **strict** (Def 13.1, p. 14), so PP-fibred ⟹ (F) and every negative result
+  here holds *a fortiori*; **my Prop 2.2 is their Lemma 15**, re-attributed; **the `Set` half of my
+  Lemma 2.1 is Niu–Spivak Prop. 6.88**, re-attributed; and in the other direction **Theorem A
+  supplies a proof of their unproved Remark 16** (Corollary A′). Theorem B is outside their scope.
+  I proved both the `(F,F_0)` and the vertical readings precisely so the conclusion does not depend
+  on which they meant, and that hedge turned out to be the right one. Full accounting: §8 of the
+  proof file.
 - Genuinely open: is "closed ⟹ fibred" true over an arbitrary base? Prop 5.2 gives only the
   shape-probe necessary condition; the `Set` upgrade uses a `Set`-specific lemma. No
   counterexample known.

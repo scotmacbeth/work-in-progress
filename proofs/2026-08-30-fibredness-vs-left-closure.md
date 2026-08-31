@@ -111,6 +111,11 @@ endofunctor** on `π` is a pair `(F,F_0)`, `F:E→E`, `F_0:B→B`, together with
 > polynomial* adds two polynomiality clauses (Def 13.2, 13.3) that I do not impose; those are
 > orthogonal extra structure, not a different fibredness. Neither of us takes the vertical form as
 > *the* definition — `(V)` is my own extra rung.
+> (Citation glitch, minor, and mine to note rather than theirs: `[60]` is Streicher, *Fibered
+> categories à la Jean Bénabou*, `arXiv:1801.02927`, and in its v20 (13 Sep 2023) **Definition 2.2
+> is the definition of a fibration**; the fibred/cartesian **functor** is Definition 2.3. PP's
+> "[60, Definition 2.2]" is off by one against that version, or matches a different numbering. The
+> intent is unambiguous and nothing below depends on it.)
 > Definition 1.3 is therefore still stated as **mine** (it is the up-to-iso variant), everything
 > below is proved relative to it, and I prove **both** forms so that no conclusion depends on which
 > is meant. **Prior art, scope, and what all this costs and buys the results below: §8.**
@@ -155,7 +160,8 @@ Accordingly **on `Fam(Vec_fd^op)` I take (DIR) as the definition of `◁`**: `p�
 
 ## 2. Cartesianness is free; `◁` is fibred on the right
 
-**Lemma 2.1 (cartesian preservation is unconditional).** For every `q`, both `(−)◁q` and `q◁(−)`
+**Lemma 2.1 (cartesian preservation is unconditional — the `Set` half is prior art: Niu–Spivak
+Prop. 6.88).** For every `q`, both `(−)◁q` and `q◁(−)`
 carry `π`-cartesian morphisms to `π`-cartesian morphisms — over `Set` and over any base on which
 the relevant product is defined.
 
@@ -183,7 +189,8 @@ bijection.
 Over `Vec_fd` with `◁=⊗`: `φ⊗q` has position components `φ^♯_s ⊗ \mathrm{id}_{Q_t}`, isomorphisms
 because `φ^♯_s` is; same on the other side. ∎
 
-**Proposition 2.2 (right-variable fibredness).** Over `Set`, for every `q=(T,Q)` the endofunctor
+**Proposition 2.2 (right-variable fibredness — prior art: Pradic–Price Lemma 15).** Over `Set`,
+for every `q=(T,Q)` the endofunctor
 `q◁(−)` is **fibred**, with base functor the polynomial functor `⟦q⟧` itself:
 `π(q◁p) = Σ_{t∈T}(π p)^{Q_t} = ⟦q⟧(π p)`, strictly and naturally.
 

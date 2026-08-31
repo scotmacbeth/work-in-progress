@@ -305,10 +305,13 @@ computations only witness the three poles.
 
 - **Abbott–Altenkirch–Ghani** own the Set full-faithfulness; my Cor 3.1 *re-derives* it and
   *names its hidden hypothesis* (`1` connected). Not claimed new; the naming is the point.
-- **Dorta–Jarvis–Niu (arXiv:2305.05655)** build `⊗` and `◁` over a general `ΣΠV` base and
-  prove `◁`-comonoids ≃ enriched categories (their Thm 4.2); they do **not** treat
+- **Dorta–Jarvis–Niu (arXiv:2305.05655)** build `⊗` and a composition product `◁_DJN` over a
+  general `ΣΠV` base and prove `◁_DJN`-comonoids ≃ enriched categories (their **Thm 4.3**; their
+  Def 4.2 is the *definition* of enriched cofunctor); they do **not** treat
   full-faithfulness / closedness / extensivity / connectedness. My T1 is disjoint from their
-  Thm 4.2 and must be cited as prior art for the tensor/composition *definitions*.
+  Thm 4.3 and must be cited as prior art for the tensor *definition*.
+  ⚠ **2026-08-31 scope correction:** their composition product `◁_DJN` is **weighted** — direction object at `(i,j:A_i→J)` is `∏_{a∈A_i}∏_{b∈B_{ja}}(u_{i,a}·v_{ja,b})` (Def 3.5 / Lemma 3.6, p. 89) whereas mine carries **no outer `u` factor** — so `◁_DJN = ◁` **only at `C = 1`**. Witness: `C=2`, `·=∧`, `e=⊤`, `p=∑_{i∈1}∏_{a∈1}⊥`, `q=∑_{j∈1}∏_{b∈1}⊤` ⟹ DJN `⊥`, mine `⊤`; over `C=[0,∞]` (their §5) DJN `5+3=8`, mine `3`. My defining property `⟦p◁q⟧≅⟦p⟧∘⟦q⟧` is *unavailable* on `ΣΠC` for `C≠1` (`E(p):(ΠC)^op→Set` is not an endofunctor). Their `⊗` **does** match mine exactly, so only `◁` breaks. So cite them for `⊗` and for `◁_DJN`; do **not** cite them for a
+  composition-representing `◁` over a general base.
 - **Diers familial representability** owns the reconstruction `S=π₀(el F)` and *its*
   extensivity hypothesis (of the codomain `Set`); §3's "why the folklore said extensivity"
   distinguishes it from full-faithfulness of a fixed `⟦−⟧`. Cited, not reproved.

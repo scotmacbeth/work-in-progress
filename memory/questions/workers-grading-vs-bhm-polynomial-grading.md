@@ -66,14 +66,25 @@ Shape fibration `π:Fam(C^op)→Set`, `π(S,P)=S`. For `L_q=(−)◁q`: **(V)** 
 - **Thm B (Vec_fd):** `(F)` always; `(V)⟺|T|=1`; `(C)⟺#{t:Q_t≠0}` finite ⟹ **`(V)⊊(C)⊊(F)`**
   strictly. `q=(2,k)` closed-not-vertical; `q=(ℕ,k)` **fibred-not-closed**. Two-sided ⟹ the answer
   does not depend on which notion of "fibred" PP26 meant.
-- **Bonus:** `◁` **is** fibred in its **right** variable ∀q, base functor literally `⟦q⟧`; and both
-  variables preserve cartesian morphisms unconditionally — non-fibredness is *only*
-  base-functoriality.
+- **Cited background, NOT a bonus finding** (*attribution corrected 2026-08-31*): `◁` **is** fibred
+  in its **right** variable ∀q with base functor literally `⟦q⟧` — this is **Pradic–Price
+  `2601.15420` Lemma 15** (p. 14, proof p. 31), *with the same base functor*; and both variables
+  preserve cartesian morphisms unconditionally — this is **Niu–Spivak `2312.00990` Prop 6.88**
+  (p. 213), which PP themselves cite. **Neither is mine.** What is mine is the *observation* that
+  the two together **isolate** the failure: non-fibredness is *only* base-functoriality, never
+  cartesianness — an observation about known facts, not a new theorem.
 - **Diagnosis:** fibredness = the shape object **collapses**; closure = collapse **+ summability in
   the base**. Same test (`G_r` familially representable) at the **shape probe** vs the **position
   probe**.
-- **Still open:** "closed ⟹ fibred" over an arbitrary base; and the PP `2601.15420` attribution
-  (narrowed to: fetch the paper, read its fibred-endofunctor definition — one locator).
+- **Still open:** "closed ⟹ fibred" over an arbitrary base. **The PP `2601.15420` attribution is
+  CLOSED (2026-08-30) and it closed AGAINST me** — the paper is on disk and was read; their `shape`
+  fibration *is* my `π`, their Def 13.1 is my (F) with strict equality (so PP-fibred ⟹ (F), and
+  Thm A refutes a fortiori). **What survives as mine: Corollary A′** — Theorem A supplies a *proof*
+  of their **Remark 16** (p. 14), which they assert with none — **and Theorem B**, outside their
+  scope entirely (standing hypothesis p. 7: *"all categories in sight shall be lextensive"*;
+  `Vec_fd` is not). ★ That hypothesis is direct **corroboration of the extensivity thesis**: prior
+  work assumes the very condition under which the seams fuse, so it structurally cannot see the
+  separation.
 
 The recon below is preserved as the record of how the target was scoped; its `computed` separator
 has now been re-derived by hand and is Corollary B′ of the proof.
@@ -114,10 +125,13 @@ and prove.
    identification is `Set`-local. Diagnosis: fibredness tests only that the exponent
    **collapses**; closure additionally needs the collapsed coproduct to be **summable in
    the base**. Collapse repairs fibredness but not summability.
-5. **UNVERIFIED and load-bearing:** BHM's "fibred" is inherited from [PP26] =
-   Pradic–Price `2601.15420`, **not on disk**; the reading that their fibration is the
-   shape fibration comes from `sources.json:412` (agent-summary). If that reading is wrong,
-   finding 2 needs redoing. Mitigation: state my own definition of "fibred" as mine.
+5. ~~**UNVERIFIED and load-bearing:**~~ **RESOLVED 2026-08-30 — the reading was RIGHT.**
+   BHM's "fibred" is inherited from [PP26] = Pradic–Price `2601.15420`, at the time **not on
+   disk**, and the reading that their fibration is the shape fibration rested on
+   `sources.json:412` (agent-summary). *The paper has since been fetched and read:* they describe
+   it as "exactly the fibrewise opposite of the codomain fibration" (§2.2, pp. 8–9), which is my
+   `π`. Finding 2 stands and did not need redoing. (Kept verbatim above as the record of a
+   load-bearing gap correctly flagged **before** it was discharged.)
 
 **This is the same moral as δ≟Φ** ([[weber-delta-vs-t2-phi-distinct]]): two
 canonical-looking conditions that turn out to constrain **different legs**. Second

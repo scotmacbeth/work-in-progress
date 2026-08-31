@@ -262,8 +262,11 @@ fullness, dualizable-summability governs closedness.)
 
 ## 5. Placement against prior art (guardrails)
 
-- **Dorta–Jarvis–Niu `2305.05655`.** Build `⊗` and `◁` over a general `ΣΠV` base and prove
-  `◁`-comonoids ≃ enriched categories (Thm 4.2). They **do not** treat closedness of `⊗`. Theorem
+- **Dorta–Jarvis–Niu `2305.05655`.** Build `⊗` and a composition product `◁_DJN` over a general
+  `ΣΠV` base and prove `◁_DJN`-comonoids ≃ enriched categories (**Thm 4.3**; their Def 4.2 is the
+  *definition* of enriched cofunctor). They **do not** treat closedness of `⊗`.
+  ⚠ **2026-08-31 scope correction:** their composition product `◁_DJN` is **weighted** — direction object at `(i,j:A_i→J)` is `∏_{a∈A_i}∏_{b∈B_{ja}}(u_{i,a}·v_{ja,b})` (Def 3.5 / Lemma 3.6, p. 89) whereas mine carries **no outer `u` factor** — so `◁_DJN = ◁` **only at `C = 1`**. Witness: `C=2`, `·=∧`, `e=⊤`, `p=∑_{i∈1}∏_{a∈1}⊥`, `q=∑_{j∈1}∏_{b∈1}⊤` ⟹ DJN `⊥`, mine `⊤`; over `C=[0,∞]` (their §5) DJN `5+3=8`, mine `3`. My defining property `⟦p◁q⟧≅⟦p⟧∘⟦q⟧` is *unavailable* on `ΣΠC` for `C≠1` (`E(p):(ΠC)^op→Set` is not an endofunctor). Their `⊗` **does** match mine exactly, so only `◁` breaks. T2 concerns `⊗`, where the identification *does* hold, so nothing in
+  this proof is affected — but cite `◁_DJN`, not `◁`. Theorem
   1.1 (the familial-representability criterion) and Theorem 3.2 (the linear dichotomy with named
   conjunct) are the T2 delta over their definitions. *Cite, do not re-derive the tensor.*
 - **Day, LNM 137 (1970), Theorem 3.3 + §4.** The closedness tool. Because the enriched domain

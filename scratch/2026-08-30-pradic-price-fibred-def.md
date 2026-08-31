@@ -232,3 +232,19 @@ DIFFERENT and theirs is undefined.**
    not lextensive, so "(F) holds always" is a statement about **my** `π`, not about PP-fibredness.
 5. `sources.json`: bump `2601.15420` to a full read; record the locators of §§1–4 above; close the
    `locators` open item.
+
+---
+
+APPLIED to proofs/2026-08-30-fibredness-vs-left-closure.md on 2026-08-31. — Audit finding: §6 items
+1–4 had **already** been applied to that file on 2026-08-30 (file mtime 00:54, this note 00:47), and
+§6 item 5 (`sources.json`) had already been applied too (full-read locator + PRIOR-ART CORRECTION
+entry both present under `/sources/2601.15420`). The 2026-08-31 pass verified all five line by line
+and added three attribution-only refinements: the Lemma 2.1 and Proposition 2.2 headers now carry
+their prior-art tags (Niu–Spivak Prop. 6.88; Pradic–Price Lemma 15) in the Definition-1.3 "stated as
+mine" convention, so the attribution survives header-level skimming, and the §2 ⚠ Streicher
+off-by-one citation glitch is now recorded in the attribution note after Definition 1.3.
+NOT APPLIED: nothing from §6; but two *downstream* artefacts still carry the pre-correction text and
+were left untouched as out of scope — `memory/for-collaborator/2026-08-30-fibredness-vs-left-closure.md`
+(still frames right-variable fibredness as a bonus that "fell out" and still says PP "is not on
+disk") and `proofs/registry/fibredness-vs-left-closure.json` (approach field still states the
+attribution question as open).
