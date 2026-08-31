@@ -1,0 +1,109 @@
+{
+ "conjecture": "Linear attention as a composition in the Vec-matrix bicategory Mat(Vec), where (P o+ Q)(a,c) = (+)_b P(a,b) (x) Q(b,c). ORIGINAL STRONG CLAIM (from PROVE.md): (i) one head = one o+ ; (ii) stacking L heads = iterated o+, so a depth-L linear-attention stack is a SINGLE Vec-matrix (algebroid morphism), realising the vcont-plain-note.tex sec.4 'pipeline = |> / o+' wiring for a real ML primitive; (iii) softmax is the boundary. VERDICT: strong (ii) REFUTED for real (data-dependent) attention -- a live depth-L stack with identity feature map is homogeneous of degree EXACTLY 3^L in its input, so it is a single Vec-matrix only for L=0. The claim becomes a THEOREM in the FIXED-CONTEXT (frozen-KV, phi=id) regime, with TWO functors: contexts compose by o+ (biproduct, the sec.4 menu wiring), depths compose by o+ (matrix product, the sec.4 pipeline wiring). Softmax is not a o+ at all (non-homogeneous + bounded). Main novel content = the degree-3^L invariant (the obstruction) + the identification of fixed-context as the exact o+ regime; single-layer-as-matrix is prior work (Vertechi, O'Neill).",
+ "status": "proved",
+ "date_opened": "2026-08-22",
+ "date_closed": "2026-08-22",
+ "note": "PROVE session 2026-08-22. Compute-first: scratch/attn_toy{,2,3}.py, all claims exact to machine eps. The honest test built into PROVE.md (must be functoriality not restatement) is met by the BOUNDARY: (A) one-head=o+ is reassociation (translation); (B) context=o+-monoid-hom is the known linear-RNN fact (Katharopoulos 2006.16236) repackaged; (C) frozen depth=o+ is 'linear maps compose by matrix product'. The genuine deltas are Theorem D (degree 3^L) and the fixed-context = exact-o+-regime framing with the o+/o+ functor pair. Situated vs prior work: O'Neill 2501.02931 (agent-summary only) models linear attention as parametric 1-morphism in Para(Vect) and stacking as the FREE MONAD on the induced endofunctor -- a non-collapsing tower, which CORROBORATES the refutation of (ii) and which Theorem D quantitatively EXPLAINS (degree differs at each depth => no single morphism). Sargsyan 2603.16123 (deep-read) proves softmax non-functorial for non-trivial groups, corroborating D1 at a stronger level (D1 proved independently here). Proof file 2026-08-22-linear-attention-odot-composition.md. Realises the sec.4 pipeline proposal of vcont-plain-note as a theorem scoped to in-context/KV-cache regime; refines [[vec-lax-matrix-crown-resolved]] with a real ML instantiation and locates its ML boundary.",
+ "tree": {
+  "id": "root",
+  "approach": "Linear attention = o+ in Mat(Vec) EXACTLY at fixed context; strong 'stack = one Vec-matrix' REFUTED by degree 3^L. Two functors (o+ context, o+ depth), boundary at live self-attention / softmax / nonlinear phi.",
+  "trust": "proved",
+  "file": "2026-08-22-linear-attention-odot-composition.md",
+  "children": [
+   {
+    "id": "A-readout-is-odot",
+    "approach": "Prop A: with u = phi(W_Q q), out(q) = u^T S = (y_{d_phi}) o+ S, the single o+-composition contracting over the FEATURE index b in d_phi. Proof = bilinearity of the pairing + finiteness (reassociation). Identifies sec.3's abstract contraction index b as the feature dimension.",
+    "trust": "proved",
+    "file": "2026-08-22-linear-attention-odot-composition.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "vertechi-oneill-single-layer-precedent",
+      "approach": "PRECEDENT (not novel): single NN/attention layer as parametric span (Vertechi, deep-read) / parametric 1-morphism in Para(Vect) (O'Neill 2501.02931, agent-summary). Single-layer-as-linear-action is theirs; my delta is only the feature-axis identification of b.",
+      "trust": "unclassified",
+      "sources": [
+       "2501.02931",
+       "vertechi-nn-layers-parametric-spans-slides"
+      ],
+      "role": "attempt",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "B-context-is-oplus-monoid-hom",
+    "approach": "Prop B: S(-) : (Contexts, concat, empty) -> (Mat(Vec)(d_phi,d_v), (+), 0) is a monoid homomorphism, S(C.C')=S(C)(+)S(C'), S(empty)=0. Proof = additivity of the sum defining S; matrix addition IS the biproduct on hom-objects. = linear-attention-as-linear-RNN, container-repackaged as the sec.4 menu/both wiring acting on CONTEXTS.",
+    "trust": "proved",
+    "file": "2026-08-22-linear-attention-odot-composition.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "katharopoulos-linear-rnn",
+      "approach": "SOURCE (not load-bearing on the paper): linear attention = linear RNN, S_t = S_{t-1} + phi(k_t)(x)v_t. Prop B is proved independently here; citation is provenance only.",
+      "trust": "unclassified",
+      "sources": [
+       "2006.16236"
+      ],
+      "role": "attempt",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "C-frozen-depth-is-odot",
+    "approach": "Prop C: frozen (constant-KV) heads with phi=id and chained axes form a full sub-bicategory of Mat(Vec); depth-composite readout = S^1 o+ ... o+ S^L (ordinary matrix product = discrete-coend o+). Non-degenerate instance |b|=4 when value-out feeds next key-feature linearly. Proof = a frozen phi=id head IS the Vec-matrix S; composing = matrix product. Low novelty (linear maps compose by matrix product); content = regime identification.",
+    "trust": "proved",
+    "file": "2026-08-22-linear-attention-odot-composition.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "D-degree-3L-boundary",
+    "approach": "THEOREM D (main, novel): a live depth-L phi=id linear-attention stack is homogeneous of degree EXACTLY 3^L in its input tokens. Lemma D0: one live layer out_i = (W_V X^T X W_K^T W_Q) x_i is degree-3 homogeneous (S = W_K X^T X W_V^T is degree 2, times x_i degree 1). Induction: degree x3 per layer. Corollary: a o+-composite acts linearly (degree 1) on its argument, so a live stack (degree 3^L >= 3) is NOT a single Vec-matrix for any L>=1 => strong claim (ii) REFUTED. Verified: measured degrees 3,9,27 for L=1,2,3.",
+    "trust": "proved",
+    "file": "2026-08-22-linear-attention-odot-composition.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "D1-softmax-not-odot",
+      "approach": "Prop D1: softmax readout is not u^T S for any fixed S. (a) non-homogeneous: softmax(a.s) != a.softmax(s), normaliser Z(q) nonlinear; (b) bounded: out(q) is a convex combo of v_j so ||out|| <= max||v_j||, while u^T S is unbounded. Verified: homogeneity residual ~1.2, ||out|| in [0.30,1.39] over 10x-scaled q. Independent of Sargsyan.",
+      "trust": "proved",
+      "file": "2026-08-22-linear-attention-odot-composition.md",
+      "role": "premise",
+      "children": [
+       {
+        "id": "sargsyan-softmax-nonfunctorial",
+        "approach": "CORROBORATION (stronger, external, deep-read): softmax attention cannot be functorial for non-trivial groups (Sargsyan). Supports D1 at the functoriality level; D1 proved independently so not load-bearing.",
+        "trust": "unclassified",
+        "sources": [
+         "2603.16123"
+        ],
+        "role": "attempt",
+        "children": []
+       }
+      ]
+     },
+     {
+      "id": "D2-nonlinear-phi",
+      "approach": "Prop D2: readout is o+-linear in the FEATURE u=phi(W_Q q) for ANY phi (Prop A used only bilinearity); but nonlinear phi makes q -> phi(W_Q q) nonlinear, so depth-o+ fails in the raw query space (holds only in feature space). Verified for phi=elu+1 to eps.",
+      "trust": "proved",
+      "file": "2026-08-22-linear-attention-odot-composition.md",
+      "role": "premise",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "oneill-free-monad-reconciliation",
+    "approach": "CONNECTION -- PROMOTED 2026-08-23 to proved in its own registry oneill-free-monad-linear-container.json (after full-text deep-read of O'Neill). O'Neill's stacking free monad = free ◁-monoid on the one-shape linear container (*,AttP) = tensor algebra T(AttP); O'Neill's 'colim F^n' CORRECTED to the Adamek partial-sum chain (+)_n F^n (F pointable but never well-pointed; residual = the pointing). Theorem D (this file) is exactly the boundary: live degree 3^L != degree-1 AttP(x)(-). Rhyme with [[lean-free-monad-unit-laws-done]] now a theorem, not a conjecture.",
+    "trust": "proved",
+    "file": "2026-08-23-oneill-free-monad-linear-container.md",
+    "sources": [
+     "oneill-2025-self-attention-parametric-endofunctor"
+    ],
+    "role": "attempt",
+    "children": []
+   }
+  ]
+ }
+}

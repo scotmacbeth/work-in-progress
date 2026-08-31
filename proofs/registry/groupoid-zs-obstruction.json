@@ -1,0 +1,145 @@
+{
+  "conjecture": "When the base category presented by the directed container is a GROUPOID (every morphism invertible), the Zappa-Szep merge obstruction [omega] in H^2(Sk_C;D) is forced to vanish (seed conjecture: connected groupoid => Sk_C contractible => H^2=0 => always composes). RESULT: the strong conjecture is REFUTED. A connected groupoid is a K(Gamma,1), not contractible; H^2(Sk_C;D)=H^2(Gamma;M) is group cohomology, generally nonzero. Over a one-object groupoid base under (H) the merge obstruction IS the classical Schreier extension class of 1->D->K->Gamma->1, and K=C|><|D exists iff the extension splits. Witnesses with [omega]!=0: K=Z/4, D=Z/2 (Sk_C=B(Z/2), nonsplit); K=Q8, D=center (Sk_C=B((Z/2)^2), nonsplit). CORRECT positive theorem: if cd(Sk_C)<=1 -- in particular Sk_C a FREE groupoid (free vertex groups, e.g. free groupoid on a mutual-tie graph) -- then H^2=0 for every D and the merge always exists (Stallings-Swan cd<=1 iff free). Dividing line is cohomological dimension (freeness), not invertibility.",
+  "status": "computed",
+  "date_opened": "2026-07-24",
+  "date_closed": "2026-07-24",
+  "note": "Deep-work PROVE. Refutes the seed contractibility conjecture and pins the correct invariant. Two proved pieces (reduction to Schreier extension class; cd<=1 => merge, incl. free groupoids/social networks) rest on cited (T2) pairwise-ZS, (T3) (G)=H^2, classical Schreier theory (Mac Lane/Brown), and Stallings-Swan. Worked instances (Z/4>=Z/2, Q8>=center, Z/2xZ/2>=Z/2, Z/6>=Z/3, codiscrete) are COMPUTED, machine-checked scratch/groupoid-zs/groupoid_zs.py (orbits, (L),(H), Sk_C=K/D, #complements=#SFS cross-check, F2 bar complex with CORRECT phi=conjugation -- NOT the acyclic phi=0; reproduces H^2(Z/2;Z/2)=Z/2 and H^2((Z/2)^2;Z/2)=(Z/2)^3) and dcont_check.py (D1-D5 for all bases). NOVELTY FIREWALL: group extensions + H^2 classification are classical; BW H^2(BGamma;M)=group cohomology is standard; groupoid Zappa-Szep products exist (Mundey-Sims, self-similar groupoids -- completeness axis) cited as adjacent NOT scooped. Contribution = placing groupoid case in the ZS-merge program + the refutation + isolating cd<=1 (freeness) as the trivialising condition. Object-level 'a network IS this groupoid' stays OPEN (SEED Q4). Proof file 2026-07-24-groupoid-zs-obstruction.tex (compiles, 7pp).",
+  "tree": {
+    "id": "root",
+    "approach": "groupoid base -> Sk_C is a K(Gamma,1) not contractible -> H^2(Sk_C;D)=H^2(Gamma;M) group cohomology; one-object groupoid case = Schreier extension class of 1->D->K->Gamma->1; merge exists iff extension splits; cd(Sk_C)<=1 (free groupoid) => always merges, torsion vertex group can obstruct",
+    "trust": "computed",
+    "file": "2026-07-24-groupoid-zs-obstruction.tex",
+    "children": [
+      {
+        "id": "t1-dcont-cat",
+        "approach": "the groupoid base is a directed container (DCont=Cat, Ahman-Uustalu); D1-D5 machine-checked for Z/2,Z/4,Z/2xZ/2,Q8,codiscrete via generic Cat->DCont recipe",
+        "role": "premise",
+        "trust": "lean-verified",
+        "shared": "equivalence-chain#zs-lean",
+        "lean": "Containers.DirectedContainer.toSmallCat and converse",
+        "file": null,
+        "children": []
+      },
+      {
+        "id": "t2-pairwise-zs",
+        "approach": "K=C|><|D over wide D iff (L) free hom-presheaf AND (G) closing basis; = distributive law ZS1-ZS4",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "pairwise-zs#root",
+        "file": "2026-06-10-pairwise-zs-criterion.tex",
+        "children": []
+      },
+      {
+        "id": "t3-g-is-h2",
+        "approach": "under (L)+(H): (G) iff [omega]=0 in H^2(Sk_C;D); Baues-Wirsching cohomology, abelian vertex groups. Over a groupoid the restriction maps phi become ISOMORPHISMS (Lemma: c invertible => phi_c iso), so D is a genuine local system/module -- unlike the acyclic phi=0.",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "pairwise-zs#g-obstruction-cohomology",
+        "file": "2026-06-11-G-obstruction-cohomology.tex",
+        "children": []
+      },
+      {
+        "id": "reduction-to-schreier",
+        "approach": "one-object groupoid base: K a group, D<=K abelian. (L) holds (right regular action free on cosets); (H)(i)=D abelian; (H)(ii)=D normal; then Sk_C=K/D=:Gamma one-object groupoid, presheaf D=D-module by conjugation. Defect omega_T = Schreier factor set of 1->D->K->Gamma->1; [omega] in H^2(Gamma;D) = extension class; closing transversals = complements; #SFS=#complements. K=C|><|D iff extension splits iff [omega]=0. (D normal => ZS product = semidirect product.)",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": [
+          {
+            "id": "schreier-classical",
+            "approach": "group extension 1->A->E->G->1 with A abelian is classified by H^2(G;A); splits iff class=0 (Schreier). Factor set = defect cochain verbatim.",
+            "role": "premise",
+            "trust": "published",
+            "publication": "Mac Lane, Homology, Springer 1963, Ch. IV; Brown, Cohomology of Groups, GTM 87, 1982 (classical Schreier extension theory)",
+            "file": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "refutation-Z4",
+        "approach": "K=Z/4, D=<2>=Z/2: Sk_C=B(Z/2) connected groupoid, (L),(H) hold, only order-2 subgroup is D itself => no complement => extension nonsplit => [omega]=generator of H^2(Z/2;Z/2)=Z/2 != 0. REFUTES 'connected groupoid => vanish'. Machine-checked: #compl=0, dim H^2=1, omega_T not in B^2.",
+        "role": "premise",
+        "trust": "computed",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": []
+      },
+      {
+        "id": "refutation-Q8",
+        "approach": "K=Q8, D=Z(Q8)=Z/2: Sk_C=B((Z/2)^2), every subgroup of Q8 contains -1 => no complement => nonsplit => [omega]!=0 in H^2((Z/2)^2;Z/2)=(Z/2)^3. Machine-checked: dim H^2=3 (|H^2|=8, reproduces Z/2[x,y]), #compl=0, omega not in B^2. A rank-2 groupoid base that obstructs.",
+        "role": "premise",
+        "trust": "computed",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": []
+      },
+      {
+        "id": "contrast-split",
+        "approach": "K=Z/2xZ/2, D=<(1,0)>: SAME base groupoid B(Z/2) as Z/4 but split extension => [omega]=0, #compl=2, merges. Shows [omega] is a function of K (the extension), not of the base groupoid alone.",
+        "role": "premise",
+        "trust": "computed",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": []
+      },
+      {
+        "id": "cd-le-1-merges",
+        "approach": "if cd(Sk_C)<=1 (H^2(Sk_C;A)=0 for all A) then [omega]=0 for every D and merge exists. Free groupoid: connected groupoid ~ its vertex group Gamma (BW invariant under equivalence), Gamma free => cd<=1 (Stallings-Swan) => H^{>=2}(Gamma;M)=0 for all M. Covers the social-network/mutual-tie application. GENERAL (not one example).",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": [
+          {
+            "id": "stallings-swan",
+            "approach": "cd(Gamma)<=1 iff Gamma is free; hence H^{>=2}(free group; M)=0 for every module M",
+            "role": "premise",
+            "trust": "published",
+            "publication": "Stallings, Ann. of Math. 88 (1968) 312-334; Swan, J. Algebra 12 (1969) 585-610 (cd G <= 1 iff G free)",
+            "file": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "codiscrete-contractible",
+        "approach": "codiscrete groupoid on 2 objects = terminal cat 1 (Gamma=1, contractible); D=identities; H^2=0, merges. The seed conjecture's TRUE subcase (Gamma free of rank 0). Machine-checked #closing=1.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": []
+      },
+      {
+        "id": "schur-zassenhaus-Z6",
+        "approach": "K=Z/6, D=Z/3: coprime |D|,|Gamma| => Schur-Zassenhaus forces a complement => [omega]=0, merges. Illustrates that arithmetic (coprimality), not invertibility, is what can force splitting. Machine-checked #compl=1.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": []
+      },
+      {
+        "id": "social-network-corollary",
+        "approach": "mutual-tie network = free groupoid on friendship graph (pi_1 of a graph is free) => cd<=1 => always merges (for the RIGHT reason: dimension 1, not contractibility). Follows-graph = free acyclic category => earlier [omega]=eps analysis can obstruct. Torsion identification cycle can obstruct even mutual case. Corrected Impact line: FREENESS not reversibility guarantees merge.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+        "children": []
+      },
+      {
+        "id": "groupoid-zs-priority",
+        "approach": "claim priority on groupoid Zappa-Szep products themselves",
+        "role": "attempt",
+        "trust": "speculative",
+        "reason": "DEAD END / firewall. Groupoid ZS products exist (Mundey-Sims 2311.09600, self-similar groupoids) on the completeness axis; cited as adjacent, NOT scooped. Our axis is existence/obstruction. Do not claim priority on the products; only on the ZS-merge-obstruction identification + refutation + cd criterion.",
+        "file": null,
+        "children": []
+      },
+      {
+        "id": "network-is-groupoid",
+        "approach": "claim a REAL social network literally presents this free groupoid (object-level fidelity)",
+        "role": "attempt",
+        "trust": "speculative",
+        "reason": "SEED Q4, OPEN. Faithful minimal abstraction, not a fidelity claim; the object-level modelling criterion is a separate theorem, not done here.",
+        "file": null,
+        "children": []
+      }
+    ]
+  }
+}

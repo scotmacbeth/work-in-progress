@@ -1,0 +1,522 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools,stmaryrd}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{framed}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\tri}{\mathbin{\triangleleft}}
+\newcommand{\dir}{\mathbin{\otimes}}
+\DeclareMathOperator{\Sh}{Sh}
+\DeclareMathOperator{\Pos}{Pos}
+
+\title{Monoidal coherence of the sequential operator and the Dirichlet tensor,
+in explicit container language}
+\author{MacBeth (Kodamai / Ghani group)}
+\date{2026-06-13}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We supply self-contained, container-level verifications of the monoidal
+coherence that the ``four monoidal structures'' chapter of the book currently cites from
+Spivak. Part~(A) treats the \emph{sequential operator}
+$(\Cont,\tri,y)$: we write the associator $\alpha$ and the unitors
+$\lambda,\rho$ as explicit shape/position bijections and verify the
+\emph{pentagon} and \emph{triangle} identities as exact equalities of those
+bijections. The associator's shape component is \emph{currying} and its
+position component is \emph{$\Sigma$-reassociation}; both pentagon legs are
+shown to equal a single \emph{flattening} of a four-fold composite to its
+parenthesization-free normal form, and on positions every map in sight is the
+identity on the underlying flat tuple, so coherence is forced. Part~(B) treats
+the \emph{Dirichlet tensor} $(\Cont,\dir,y)$: we give the comparison
+$\varphi_{C_1,C_2}\colon \ext{C_1\dir C_2}\xrightarrow{\;\sim\;}
+\ext{C_1}\dir_{\mathrm{Dir}}\ext{C_2}$, show it is the identity once
+$\dir_{\mathrm{Dir}}$ is taken in its native polynomial presentation
+(so $\ext{-}$ is in fact \emph{strict} monoidal here, with $\ext y=\mathrm{Id}$),
+and reduce its associativity coherence to Cartesian reassociation of shape and
+position sets. \textbf{[REFUTED 2026-07-14 --- see Erratum: $\ext{-}$ is
+\emph{strong}, not strict.]}
+We isolate the genuine subtlety of $\dir$: unlike $+,\times,\tri$
+its target is \emph{not} a pointwise/compositional operation on the underlying
+functors but depends on the polynomial presentation.
+\textbf{[The diagnosis is REFUTED 2026-07-14 --- see Erratum: $\times$ is a Day
+convolution too, and is pointwise.]}
+Every identity below was
+also confirmed by exhaustive machine computation on small containers
+(120 randomised four-fold instances plus a branching stress case).
+\end{abstract}
+
+\begin{framed}
+\noindent\textbf{Erratum (2026-07-14).} Two claims of Part~(B) are refuted. I
+state them plainly.
+
+\noindent\textbf{(1) $\varphi$ is \emph{not} the identity and $\ext{-}$ is
+\emph{not} strict monoidal for $\dir$ (Theorem~\ref{thm:dir-strong} is false as
+stated).} The argument is a category error: I \emph{defined}
+$\dir_{\mathrm{Dir}}$ by reading off the container presentation $(S,P)$ --- I
+transported the structure along $\ext{-}$ and then observed that $\ext{-}$
+preserves it. That is circular. Intrinsically, the Dirichlet tensor is the
+\emph{Day convolution} on $[\Set,\Set]$ with respect to $(\Set,\times,1)$, and
+the comparison map is the co-Yoneda/density \emph{isomorphism} out of a coend,
+not an identity. The correct statement: $\ext{-}$ is \textbf{strong} monoidal
+for $\dir$, not strict.
+
+\noindent\textbf{(2) ``$\dir$ is not pointwise \emph{because} it is a Day
+convolution'' is false (Remark~\ref{rem:subtle}).} The product $\times$ on
+$\Cont$ is \emph{also} a Day convolution --- of $(\Set,+,0)$ --- and it
+\emph{is} pointwise. The correct criterion is whether the corepresentable
+splits the domain tensor: $y^{A+B}\cong y^A\times y^B$ (the exponential law),
+so Day-of-$+$ is pointwise; $y^{A\times B}$ admits no such splitting, so
+Day-of-$\times$ is not. Witness: $y^3\dir y^3=y^9$, against the pointwise $y^6$.
+
+\noindent\textbf{Attribution.} The identification ``Dirichlet tensor $=$ Day
+convolution'' is \emph{not mine}. It is Niu--Spivak, \emph{Polynomial Functors:
+A Mathematical Theory of Interaction}, arXiv:2312.00990, Proposition~3.79
+(pp.~69--71), with essentially the same proof: ``For any monoidal structure
+$(I,\star)$ on Set, there is a corresponding monoidal structure $(y^I,\odot)$
+on Poly, where $\odot$ is the Day convolution. \dots\ In the case of $(0,+)$ and
+$(1,\times)$, this procedure returns the $(1,\times)$ and $(y,\otimes)$
+monoidal structures respectively.'' The species analogue is the Maia--M\'endez
+arithmetic product (arXiv:math/0503436).
+
+\noindent\textbf{What survives.} Part~(A) is untouched: the explicit associator
+and unitors for $\tri$, the pentagon (Theorem~\ref{thm:pentagon}) and triangle
+(Theorem~\ref{thm:triangle}), and the Lean instance
+\texttt{ContMonoidal : MonoidalCategory Container} that certifies them. The
+refutation is confined to the Dirichlet strictness sub-claim and the reasoning
+about pointwiseness. The erroneous text below is retained and marked, not
+deleted: the record of the error has value.
+\end{framed}
+
+\section{Conventions}
+
+A \emph{container} is a pair $C=(S,P)$ with $S\colon\Set$ a set of \emph{shapes}
+and $P\colon S\to\Set$ a family of \emph{position} sets; we write $C=S\tri P$.
+Its extension is $\ext{S\tri P}X=\sum_{s:S}\bigl(P\,s\to X\bigr)$.
+
+A morphism of containers $\mu\colon A\to B$ is a pair
+$(\mu_{\mathrm s},\mu_{\mathrm p})$ where $\mu_{\mathrm s}\colon\Sh A\to\Sh B$ on
+shapes and, \emph{contravariantly on positions}, a family
+$\mu_{\mathrm p,a}\colon\Pos_B(\mu_{\mathrm s}a)\to\Pos_A(a)$. It is an
+isomorphism iff $\mu_{\mathrm s}$ and every $\mu_{\mathrm p,a}$ are bijections.
+This is the standard convention under which
+$\ext{-}\colon\Cont\to[\Set,\Set]$ is fully faithful
+(Abbott--Altenkirch--Ghani).
+
+Throughout, $C_i=(S_i,P_i)$, and $y=1\tri 1$ is the container with one shape
+$\ast$ and one position $\bullet$, so $\ext y=\mathrm{Id}$.
+
+\section{Part (A): the sequential operator $(\Cont,\tri,y)$}
+
+\subsection{The operation and its unit}
+
+\begin{definition}[Sequential operator]\label{def:seq}
+\[
+  C_1\tri C_2
+  \;=\;
+  \Bigl(\textstyle\sum_{s_1:S_1}(P_1 s_1\to S_2)\Bigr)
+  \;\tri\;
+  \bigl((s_1,f)\mapsto \textstyle\sum_{p_1:P_1 s_1}P_2(f\,p_1)\bigr).
+\]
+A shape is a pair $(s_1,f)$ with $f\colon P_1 s_1\to S_2$; a position over
+$(s_1,f)$ is a pair $(p_1,p_2)$ with $p_1:P_1 s_1$ and $p_2:P_2(f\,p_1)$.
+\end{definition}
+
+This realises composition of extensions: $\ext{C_1\tri C_2}=\ext{C_1}\circ\ext{C_2}$
+(verified in \texttt{Composition.lean}). The unit is $y$, since $y\tri C\cong C\cong C\tri y$
+(Section~\ref{sec:unitors}).
+
+\subsection{The associator}\label{sec:assoc}
+
+\begin{proposition}[Explicit associator]\label{prop:assoc}
+There is an isomorphism
+$\alpha=\alpha_{C_1,C_2,C_3}\colon (C_1\tri C_2)\tri C_3\;\xrightarrow{\sim}\;
+C_1\tri(C_2\tri C_3)$ given as follows.
+
+A shape of $(C_1\tri C_2)\tri C_3$ is $\bigl((s_1,f),g\bigr)$ with
+$f\colon P_1 s_1\to S_2$ and
+$g\colon\bigl(\sum_{p_1}P_2(f p_1)\bigr)\to S_3$.
+A shape of $C_1\tri(C_2\tri C_3)$ is $(s_1,k)$ with
+$k\colon P_1 s_1\to \Sh(C_2\tri C_3)$.
+On shapes,
+\[
+  \alpha_{\mathrm s}\bigl((s_1,f),g\bigr)\;=\;(s_1,k),
+  \qquad k\,p_1 \;=\; \bigl(\,f\,p_1,\ \lambda p_2.\,g(p_1,p_2)\,\bigr).
+\]
+That is, $\alpha_{\mathrm s}$ is the \emph{currying} bijection
+$\sum_{f:P_1 s_1\to S_2}\bigl(\textstyle\sum_{p_1}P_2(f p_1)\to S_3\bigr)\;\cong\;
+\bigl(P_1 s_1\to\sum_{s_2}(P_2 s_2\to S_3)\bigr)$.
+
+On positions, both sides have the set
+$\sum_{p_1}\sum_{p_2:P_2(f p_1)}P_3\bigl(g(p_1,p_2)\bigr)$, written
+$\{((p_1,p_2),p_3)\}$ on the left and $\{(p_1,(p_2,p_3))\}$ on the right, and
+\[
+  \alpha_{\mathrm p}\colon (p_1,(p_2,p_3))\ \longmapsto\ ((p_1,p_2),p_3)
+\]
+is the $\Sigma$-reassociation bijection.
+\end{proposition}
+
+\begin{proof}
+$\alpha_{\mathrm s}$ is the composite of the type-theoretic distributivity
+equivalence
+$\prod_{p_1}\sum_{s_2}(P_2 s_2\to S_3)\cong
+\sum_{f}\prod_{p_1}(P_2(f p_1)\to S_3)$ and the currying equivalence
+$\prod_{p_1}(P_2(f p_1)\to S_3)\cong(\sum_{p_1}P_2(f p_1)\to S_3)$, both
+bijections; its inverse sends $(s_1,k)$ to $\bigl((s_1,f),g\bigr)$ with
+$f\,p_1=\pi_1(k\,p_1)$ and $g(p_1,p_2)=\pi_2(k\,p_1)\,p_2$.
+After substituting $k\,p_1=(f\,p_1,\lambda p_2.g(p_1,p_2))$ the two position
+sets are literally the same iterated sum, reassociated; $\alpha_{\mathrm p}$ is
+the canonical bijection
+$\sum_{(p_1,p_2):\sum_{p_1}P_2(f p_1)}P_3(g(p_1,p_2))\cong
+\sum_{p_1}\sum_{p_2}P_3(g(p_1,p_2))$. Both components are bijections, so
+$\alpha$ is an isomorphism.
+\end{proof}
+
+\begin{remark}
+Both components are ``transport-free'': the shape map is currying and the
+position map is $\Sigma$-reassociation, matching the transport-free associator
+in \texttt{Composition.lean} (PR~\#13).
+\end{remark}
+
+\subsection{The unitors}\label{sec:unitors}
+
+\begin{proposition}\label{prop:unitors}
+$\lambda_C\colon y\tri C\xrightarrow{\sim}C$ and
+$\rho_C\colon C\tri y\xrightarrow{\sim}C$ are:
+\[
+  \lambda_{\mathrm s}(\ast,g)=g\,\bullet,\quad
+  \lambda_{\mathrm p}\colon p\mapsto(\bullet,p);
+  \qquad
+  \rho_{\mathrm s}(s,!)=s,\quad
+  \rho_{\mathrm p}\colon p\mapsto(p,\bullet).
+\]
+\end{proposition}
+
+\begin{proof}
+A shape of $y\tri C$ is $(\ast,g)$ with $g\colon 1\to S$, i.e.\ an element
+$g\,\bullet\in S$; its positions are $\sum_{p:1}P(g\,\bullet)\cong P(g\,\bullet)$.
+A shape of $C\tri y$ is $(s,!)$ with $!\colon P s\to 1$ unique, i.e.\ an element
+$s\in S$; its positions are $\sum_{p:P s}1\cong P s$. Both maps are bijections on
+shapes with the stated position bijections.
+\end{proof}
+
+\subsection{Whiskering}\label{sec:whisker}
+
+We record the action of $\tri$ on morphisms (its functoriality), needed for the
+pentagon's whiskered edges. For $\mu\colon A\to A'$,
+\[
+  (\mu\tri C)_{\mathrm s}(a,h)=(\mu_{\mathrm s}a,\ h\circ\mu_{\mathrm p,a}),
+  \qquad
+  (\mu\tri C)_{\mathrm p}(a,h)\colon (y,p)\mapsto(\mu_{\mathrm p,a}y,\ p);
+\]
+and for $\mu\colon B\to B'$,
+\[
+  (C\tri\mu)_{\mathrm s}(s_1,k)=(s_1,\ \mu_{\mathrm s}\circ k),
+  \qquad
+  (C\tri\mu)_{\mathrm p}(s_1,k)\colon (p_1,y)\mapsto(p_1,\ \mu_{\mathrm p}y).
+\]
+
+\subsection{The pentagon}\label{sec:pentagon}
+
+\begin{theorem}[Pentagon]\label{thm:pentagon}
+For all $C_1,C_2,C_3,C_4$ the diagram
+\[
+\begin{array}{ccc}
+((C_1\tri C_2)\tri C_3)\tri C_4
+  &\xrightarrow{\ \alpha_{123}\tri C_4\ }&
+(C_1\tri(C_2\tri C_3))\tri C_4\\[2pt]
+\downarrow\ \alpha_{12,3,4}& &\downarrow\ \alpha_{1,23,4}\\[2pt]
+(C_1\tri C_2)\tri(C_3\tri C_4)& &C_1\tri((C_2\tri C_3)\tri C_4)\\[2pt]
+\downarrow\ \alpha_{1,2,34}& &\downarrow\ C_1\tri\alpha_{234}\\[2pt]
+C_1\tri(C_2\tri(C_3\tri C_4))&=&C_1\tri(C_2\tri(C_3\tri C_4))
+\end{array}
+\]
+commutes: writing $a=\alpha_{123}\tri C_4$, $b=\alpha_{1,23,4}$,
+$c=C_1\tri\alpha_{234}$, $d=\alpha_{12,3,4}$, $e=\alpha_{1,2,34}$, we have
+$c\circ b\circ a = e\circ d$.
+\end{theorem}
+
+\begin{proof}
+\emph{Shapes.} A shape of the source $((C_1\tri C_2)\tri C_3)\tri C_4$ is, by
+Definition~\ref{def:seq} applied thrice, a tuple
+\[
+  W=\bigl(((s_1,f),g),j\bigr),\qquad
+  f\colon P_1 s_1\to S_2,\quad
+  g\colon\{(p_1,p_2)\}\to S_3,\quad
+  j\colon\{((p_1,p_2),p_3)\}\to S_4,
+\]
+where $\{(p_1,p_2)\}=\sum_{p_1}P_2(f p_1)$ and
+$\{((p_1,p_2),p_3)\}=\sum_{(p_1,p_2)}P_3(g(p_1,p_2))$. A shape of the target
+$C_1\tri(C_2\tri(C_3\tri C_4))$ is $(s_1,K)$ with
+$K\colon P_1 s_1\to\Sh(C_2\tri(C_3\tri C_4))$. Define the \emph{flattening}
+\begin{equation}\label{eq:NF}
+  \Phi(W)\;=\;(s_1,K),\qquad
+  K\,p_1=\Bigl(f p_1,\ \lambda p_2.\bigl(g(p_1,p_2),\ \lambda p_3.\,
+  j((p_1,p_2),p_3)\bigr)\Bigr).
+\end{equation}
+We compute both legs and show each equals $\Phi$.
+
+\emph{Leg $c\circ b\circ a$.} Using Section~\ref{sec:whisker} for $a$ and
+Proposition~\ref{prop:assoc} for $b,c$:
+\begin{align*}
+a(W)&=\bigl((s_1,k),\ j\circ\mu_{\mathrm p}\bigr),\quad
+   k\,p_1=(f p_1,\lambda p_2.g(p_1,p_2)),\
+   (j\circ\mu_{\mathrm p})(p_1,(p_2,p_3))=j((p_1,p_2),p_3),\\
+b(a(W))&=(s_1,k'),\quad
+   k'\,p_1=\bigl(k\,p_1,\ \lambda(p_2,p_3).\,j((p_1,p_2),p_3)\bigr),\\
+c(b(a(W)))&=\bigl(s_1,\ \lambda p_1.\,\alpha_{234}(k'\,p_1)\bigr),\quad
+   \alpha_{234}(k'\,p_1)=\bigl(f p_1,\lambda p_2.(g(p_1,p_2),\lambda p_3.\,
+   j((p_1,p_2),p_3))\bigr),
+\end{align*}
+where the last line applies $\alpha_{234}$ to the shape
+$\bigl((f p_1,\lambda p_2.g(p_1,p_2)),\ \lambda(p_2,p_3).j((p_1,p_2),p_3)\bigr)$
+of $(C_2\tri C_3)\tri C_4$. Hence $c\circ b\circ a\,(W)=(s_1,K)=\Phi(W)$.
+
+\emph{Leg $e\circ d$.} Using Proposition~\ref{prop:assoc} for both:
+\begin{align*}
+d(W)&=\bigl((s_1,f),\ \kappa\bigr),\quad
+   \kappa(p_1,p_2)=\bigl(g(p_1,p_2),\ \lambda p_3.\,j((p_1,p_2),p_3)\bigr),\\
+e(d(W))&=\bigl(s_1,\ \lambda p_1.(f p_1,\ \lambda p_2.\,\kappa(p_1,p_2))\bigr)
+   =(s_1,K)=\Phi(W).
+\end{align*}
+So both legs agree on shapes.
+
+\emph{Positions.} Every position component above is, by
+Proposition~\ref{prop:assoc} and Section~\ref{sec:whisker}, a bijection that is
+the \emph{identity on the underlying flat tuple} $(p_1,p_2,p_3,p_4)$ and only
+changes its bracketing: $\alpha_{\mathrm p}$ rebrackets one adjacent pair, and a
+whisker leaves the whiskered coordinate fixed while transporting the rest. The
+source position set is bracketed $\{(((p_1,p_2),p_3),p_4)\}$ and the target
+$\{(p_1,(p_2,(p_3,p_4)))\}$; both are in canonical bijection with the flat set
+$\{(p_1,p_2,p_3,p_4)\}$ via the evident ``erase brackets'' map, call them
+$\mathrm{fl}_{\mathrm{src}},\mathrm{fl}_{\mathrm{tgt}}$. Each elementary map $m$
+satisfies $\mathrm{fl}\circ m_{\mathrm p}=\mathrm{fl}$, hence so does any
+composite; therefore both legs equal
+$\mathrm{fl}_{\mathrm{tgt}}^{-1}\circ\mathrm{fl}_{\mathrm{src}}$, the unique
+order-preserving rebracketing. They coincide.
+\end{proof}
+
+\subsection{The triangle}
+
+\begin{theorem}[Triangle]\label{thm:triangle}
+For all $C_1,C_2$,
+\[
+  (C_1\tri\lambda_{C_2})\circ\alpha_{C_1,y,C_2}
+  \;=\;\rho_{C_1}\tri C_2
+  \;\colon\;(C_1\tri y)\tri C_2\longrightarrow C_1\tri C_2 .
+\]
+\end{theorem}
+
+\begin{proof}
+A shape of $(C_1\tri y)\tri C_2$ is $\bigl((s_1,f),g\bigr)$ with
+$f\colon P_1 s_1\to 1$ (unique) and $g\colon\{(p_1,\bullet)\}\to S_2$, where
+$\{(p_1,\bullet)\}=\sum_{p_1}1\cong P_1 s_1$.
+
+\emph{Left side.} $\alpha_{C_1,y,C_2}$ gives $(s_1,k)$,
+$k\,p_1=(\ast,\lambda\bullet.\,g(p_1,\bullet))$, a shape of $C_1\tri(y\tri C_2)$.
+Whiskering by $\lambda_{C_2}$ applies $\lambda_{C_2}$ to each $k\,p_1$:
+$\lambda_{C_2}(\ast,\lambda\bullet.g(p_1,\bullet))=g(p_1,\bullet)$. The result is
+$\bigl(s_1,\ \lambda p_1.\,g(p_1,\bullet)\bigr)$.
+
+\emph{Right side.} $\rho_{C_1}$ sends $(s_1,f)\mapsto s_1$ with
+$\rho_{\mathrm p}\colon p_1\mapsto(p_1,\bullet)$; whiskering by $C_2$
+(Section~\ref{sec:whisker}) gives
+$\bigl(s_1,\ g\circ\rho_{\mathrm p}\bigr)$ with
+$(g\circ\rho_{\mathrm p})(p_1)=g(p_1,\bullet)$, i.e.\
+$\bigl(s_1,\ \lambda p_1.\,g(p_1,\bullet)\bigr)$. The shape maps agree.
+
+\emph{Positions.} The target $C_1\tri C_2$ over $(s_1,\lambda p_1.g(p_1,\bullet))$
+has positions $\{(p_1,p_2):p_2:P_2(g(p_1,\bullet))\}$. On the left,
+$(C_1\tri\lambda_{C_2})_{\mathrm p}$ sends $(p_1,p_2)\mapsto(p_1,(\bullet,p_2))$
+and then $\alpha_{\mathrm p}$ sends $(p_1,(\bullet,p_2))\mapsto((p_1,\bullet),p_2)$;
+on the right, $(\rho_{C_1}\tri C_2)_{\mathrm p}$ sends
+$(p_1,p_2)\mapsto(\rho_{\mathrm p}p_1,p_2)=((p_1,\bullet),p_2)$. They agree.
+\end{proof}
+
+\begin{corollary}[Coherence]\label{cor:coherence-seq}
+$(\Cont,\tri,y)$ is a monoidal category with the data of
+Propositions~\ref{prop:assoc} and~\ref{prop:unitors}; it is non-symmetric. By
+Mac~Lane's coherence theorem, Theorems~\ref{thm:pentagon}
+and~\ref{thm:triangle} (with naturality of $\alpha,\lambda,\rho$, which is
+immediate from the explicit formulas) imply that every formal diagram of
+associators and unitors commutes.
+\end{corollary}
+
+\section{Part (B): the Dirichlet tensor $(\Cont,\dir,y)$}
+
+\subsection{The operation, its associator, and strong monoidality}
+
+\begin{definition}[Dirichlet tensor]\label{def:dir}
+\[
+  C_1\dir C_2=(S_1\times S_2)\tri\bigl((s_1,s_2)\mapsto P_1 s_1\times P_2 s_2\bigr),
+  \qquad
+  \ext{C_1\dir C_2}X=\sum_{(s_1,s_2)}\bigl(P_1 s_1\times P_2 s_2\to X\bigr).
+\]
+\end{definition}
+
+\begin{proposition}[Associator and unitors for $\dir$]\label{prop:dir-assoc}
+The associator $\alpha^{\dir}_{C_1,C_2,C_3}\colon (C_1\dir C_2)\dir C_3\to
+C_1\dir(C_2\dir C_3)$ is Cartesian reassociation on shapes and on positions,
+\[
+  \alpha^{\dir}_{\mathrm s}\colon ((s_1,s_2),s_3)\mapsto(s_1,(s_2,s_3)),
+  \qquad
+  \alpha^{\dir}_{\mathrm p}\colon (p_1,(p_2,p_3))\mapsto((p_1,p_2),p_3),
+\]
+and the unitors are the unique maps $S_1\times 1\cong S_1$,
+$1\times S_1\cong S_1$ on shapes (with $P\times 1\cong P$ on positions). The
+pentagon and triangle for $\dir$ are exactly the pentagon and triangle for the
+Cartesian product $\times$ of sets, applied independently to the shape sets and
+the position sets; the braiding $(s_1,s_2)\mapsto(s_2,s_1)$ makes $\dir$
+symmetric.
+\end{proposition}
+
+\begin{proof}
+$(C_1\dir C_2)\dir C_3$ has shapes $(S_1\times S_2)\times S_3$ and positions
+$(P_1 s_1\times P_2 s_2)\times P_3 s_3$; $C_1\dir(C_2\dir C_3)$ has shapes
+$S_1\times(S_2\times S_3)$ and positions $P_1 s_1\times(P_2 s_2\times P_3 s_3)$.
+The reassociation isomorphisms are the components of $\alpha^{\dir}$. A
+four-fold composite has shapes $\prod_i S_i$ and positions $\prod_i P_i s_i$
+under any bracketing, and each leg of the pentagon is the corresponding product
+reassociation; since $(\Set,\times,1)$ is a (symmetric) monoidal category, its
+pentagon and triangle hold, hence so do those for $\dir$ at both the shape and
+position levels. Symmetry is the swap, whose hexagon is the swap-hexagon in
+$\Set$.
+\end{proof}
+
+\begin{theorem}[$\ext{-}$ is strong (indeed strict) monoidal for $\dir$]
+\label{thm:dir-strong}
+\textbf{[REFUTED 2026-07-14 --- see Erratum. The ``indeed strict'' half is
+false; $\ext{-}$ is strong monoidal for $\dir$. The definition of
+$\dir_{\mathrm{Dir}}$ below transports the tensor along $\ext{-}$ and is
+therefore circular; the intrinsic definition is Day convolution of
+$(\Set,\times,1)$ (Niu--Spivak arXiv:2312.00990, Prop.~3.79) and the comparison
+is the co-Yoneda isomorphism out of a coend.]}
+Let $\dir_{\mathrm{Dir}}$ be the Dirichlet convolution on the image
+$\Poly\subseteq[\Set,\Set]$ of $\ext{-}$, defined on polynomial functors in
+their native presentation by
+\[
+  \Bigl(\textstyle\sum_{s} y^{P s}\Bigr)\dir_{\mathrm{Dir}}
+  \Bigl(\textstyle\sum_{t} y^{Q t}\Bigr)
+  \;=\;\sum_{(s,t)} y^{\,P s\times Q t}.
+\]
+Then the comparison
+$\varphi_{C_1,C_2}\colon \ext{C_1\dir C_2}\to\ext{C_1}\dir_{\mathrm{Dir}}\ext{C_2}$
+is the \emph{identity} natural transformation, and $\ext y=\mathrm{Id}$ is the
+strict unit. Consequently $\ext{-}\colon(\Cont,\dir,y)\to
+(\Poly,\dir_{\mathrm{Dir}},\mathrm{Id})$ is a strict monoidal functor; in
+particular it is strong monoidal, and the associativity and unit coherence
+squares for $\varphi$ commute.
+\end{theorem}
+
+\begin{proof}
+\textbf{[REFUTED 2026-07-14: this proof is circular --- it derives ``$\varphi$
+is the identity'' from a definition of $\dir_{\mathrm{Dir}}$ that was itself
+read off the container presentation. See Erratum. Text retained as the record
+of the error.]}
+With $\ext{C_1}=\sum_{s_1} y^{P_1 s_1}$ and $\ext{C_2}=\sum_{s_2} y^{P_2 s_2}$,
+the definition of $\dir_{\mathrm{Dir}}$ gives
+$\ext{C_1}\dir_{\mathrm{Dir}}\ext{C_2}=\sum_{(s_1,s_2)} y^{\,P_1 s_1\times P_2 s_2}$,
+whose value at $X$ is $\sum_{(s_1,s_2)}(P_1 s_1\times P_2 s_2\to X)$. By
+Definition~\ref{def:dir} this is \emph{equal}, not merely isomorphic, to
+$\ext{C_1\dir C_2}X$, naturally in $X$; thus $\varphi_{C_1,C_2}=\mathrm{id}$. On
+representables this is the familiar $y^{A}\dir_{\mathrm{Dir}} y^{B}=y^{A\times B}$
+($S_1=S_2=1$, $P_1=A$, $P_2=B$). The unit object $y=1\tri1$ has
+$\ext y=\mathrm{Id}$, the strict unit of $\dir_{\mathrm{Dir}}$. With $\varphi$
+the identity, the associativity coherence square reads
+$\ext{\alpha^{\dir}}=a^{\mathrm{Dir}}$, where $a^{\mathrm{Dir}}$ is the
+associator of $\dir_{\mathrm{Dir}}$; both are Cartesian reassociation of the
+position exponents $\prod_i P_i s_i$ (Proposition~\ref{prop:dir-assoc}), so they
+coincide, and the unit triangles collapse since all three of $\varphi$,
+$\ext{\lambda^{\dir}},\ext{\rho^{\dir}}$ are identities/Cartesian unit
+isomorphisms matching $\dir_{\mathrm{Dir}}$'s.
+\end{proof}
+
+\begin{remark}[Why $\dir$ is the subtle one]\label{rem:subtle}
+\textbf{[REFUTED 2026-07-14 --- see Erratum. Pointwiseness is not decided by
+``is it a Day convolution?'': $\times$ on $\Cont$ is the Day convolution of
+$(\Set,+,0)$ and \emph{is} pointwise. What decides it is whether the
+corepresentable splits the domain tensor ($y^{A+B}\cong y^A\times y^B$ does;
+$y^{A\times B}$ does not). Witness: $y^3\dir y^3=y^9\ne y^6$. The final
+sentence's claim that ``$\varphi$ turns out to be the identity'' is also
+false.]}
+For the other three structures the target operation on $[\Set,\Set]$ is
+\emph{intrinsic} to the underlying functors and pointwise or compositional:
+$\ext{C_1+C_2}=\ext{C_1}+\ext{C_2}$ (pointwise coproduct),
+$\ext{C_1\times C_2}=\ext{C_1}\times\ext{C_2}$ (pointwise product), and
+$\ext{C_1\tri C_2}=\ext{C_1}\circ\ext{C_2}$ (composition). The Dirichlet
+convolution is \emph{not} a pointwise or compositional operation on bare
+functors: $\ext{C_1}\dir_{\mathrm{Dir}}\ext{C_2}$ cannot be computed from the
+values $\ext{C_1}X,\ext{C_2}X$ alone --- it reads off the polynomial
+\emph{presentation} (the position exponents). This is the real sense in which
+$\dir$ is subtle. That $\varphi$ turns out to be the identity is precisely the
+statement that the container datum $(S,P)$ \emph{is} the polynomial
+presentation, so no comparison data is lost; the subtlety lives in the target,
+not in $\varphi$.
+\end{remark}
+
+\section{Computational verification}
+
+A finite-container engine (\texttt{verify\_coherence.py}) implements
+Definition~\ref{def:seq}, Definition~\ref{def:dir}, the explicit
+$\alpha,\lambda,\rho,\alpha^{\dir}$ and the whiskerings, and tests the pentagon
+and triangle as \emph{exact} equalities of the shape/position-bijection data
+$(\mu_{\mathrm s},\mu_{\mathrm p})$.
+
+\begin{itemize}
+\item $120$ randomised four-tuples $(C_1,C_2,C_3,C_4)$ (1--2 shapes, 0--2
+positions each): the sequential pentagon (Thm.~\ref{thm:pentagon}) and triangle
+(Thm.~\ref{thm:triangle}) hold in every case, as do the Dirichlet pentagon and
+triangle (Prop.~\ref{prop:dir-assoc}) and the strict equality
+$\ext{C_1\dir C_2}=\ext{C_1}\dir_{\mathrm{Dir}}\ext{C_2}$ (Thm.~\ref{thm:dir-strong}).
+\textbf{[The last item is REFUTED 2026-07-14 --- see Erratum. The computation
+tested the circular definition of $\dir_{\mathrm{Dir}}$, so it could only ever
+return ``equal''; it is evidence of nothing.]}
+\item A deterministic branching stress case
+($C_1$: one shape, two positions; $C_2$: two shapes, $1/2$ positions;
+$C_3$: one shape, two positions; $C_4$: two shapes, $0/1$ positions; four-fold
+composite of $400$ shapes) confirms both pentagon legs agree and that the
+associator is genuinely non-trivial --- e.g.\ its position component sends
+$(x,(u,m))\mapsto((x,u),m)$.
+\item $\alpha$ is confirmed to be a well-formed isomorphism: $\alpha_{\mathrm s}$
+a shape bijection and each $\alpha_{\mathrm p}$ a position bijection.
+\end{itemize}
+
+\section{Provenance and downstream}
+
+\noindent\emph{Cited in substance:} Spivak, \emph{Polynomial Functors} (2021)
+(substitution product, Dirichlet tensor); Niu--Spivak, arXiv:2312.00990
+(Dirichlet/closed structure); full faithfulness of $\ext{-}$:
+Abbott--Altenkirch--Ghani.\\
+\emph{MacBeth (original):} the explicit container-level associator/unitors with
+the currying + $\Sigma$-reassociation decomposition; the flattening proof of the
+pentagon and the flat-tuple argument for positions; the explicit triangle; the
+identification of $\varphi$ as the identity and the
+presentation-dependence diagnosis of Remark~\ref{rem:subtle}; the finite-container
+verification.
+\textbf{[CORRECTED 2026-07-14: the last two of these are struck. ``$\varphi$ is
+the identity'' is refuted (see Erratum), and the presentation-dependence
+diagnosis is both wrong and not original --- Dirichlet $=$ Day convolution is
+Niu--Spivak arXiv:2312.00990, Prop.~3.79, with essentially the same proof. What
+remains original is Part~(A): the container-level associator/unitors, the
+flattening pentagon proof, the flat-tuple position argument, and the explicit
+triangle.]}\\
+\emph{Downstream:} backs Propositions~\ref{prop:assoc}--\ref{prop:unitors} (sequential) and the Dirichlet propositions of
+\texttt{papers/category-of-containers.tex} (PR~\#16) with self-contained proofs;
+Theorem~\ref{thm:pentagon} (the explicit $\alpha$ with transport-free
+components) is the raw material for the Lean pentagon/triangle target on
+\texttt{Composition.lean}.
+
+\end{document}

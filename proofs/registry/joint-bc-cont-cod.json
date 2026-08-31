@@ -1,0 +1,101 @@
+{
+  "conjecture": "Close the shape-level-hyperdoctrine gap of cont-cod-predicate-fibration: construct the shape-level Fam-Kan quantifiers over Cont(Set)=Poly and settle the COMBINED (shape x position) Beck-Chevalley + Frobenius for Cont(cod)=Fam(cod^op). RESULT: Cont(cod) is a CO-HYPERDOCTRINE. Shape quantifiers exist (exists_j=Lan_u -| j^* -| Ran_u=forall_j, fibre product / fibre coproduct in the slices, unconditional). The exchange square coupling shape-pure j and position-pure r is a genuine Poly pullback. The joint BC/Frobenius is ONE-SIDED: right-adjoint (forall / E) quantifiers satisfy co-Frobenius (conjunction /\\ replaced by disjunction \\/) and Beck-Chevalley; left-adjoint (exists / A) quantifiers FAIL both Frobenius and cross-BC, obstructed uniformly by co-topos non-distributivity of (Set/P)^op (sum-of-products != product-of-sums). This is the fibrewise OP of the classical Lawvere-Frobenius-BC laws. CORRECTION: parent proof 6.2 wrongly attributed the co-Frobenius to A=(Pi_!)^op; it belongs to E=(Sigma_!)^op (op of Set's Sigma_!-Frobenius); A has Frobenius for no connective.",
+  "status": "proved",
+  "date_opened": "2026-08-28",
+  "date_closed": "2026-08-28",
+  "notes": "Fallback target of the 2026-08-28 PROVE (main target = T2 p.r.a. blocked by the Weber TAC 18 reading gate, browsing disabled this session; Weber absent from sources.json so a proved p.r.a. match was impossible this session). All claims exhaustively finite-verified in scratch/verify_joint_bc.py plus complete profile-level hand-proofs (Fubini / distributivity identities, fully general not spot-checks). Corrects and extends the parent node.",
+  "tree": {
+    "id": "joint-bc-cont-cod",
+    "approach": "Cont(cod) is a co-hyperdoctrine: shape Fam-Kan quantifiers + one-sided joint Beck-Chevalley/Frobenius (forall side holds, exists side fails by co-topos non-distributivity).",
+    "trust": "proved",
+    "file": "2026-08-28-joint-bc-cont-cod.md",
+    "children": [
+      {
+        "id": "shape-quantifiers-exist",
+        "approach": "Thm 2.1: along shape map u, restriction j^*=(-)o u has both Kan adjoints exists_j=Lan_u (fibre product of witnesses) and forall_j=Ran_u (disjoint union); both exist since Set/P complete+cocomplete. Dualisation of Thm 5.2 reappears (exists uses Set product, forall uses Set sum).",
+        "trust": "proved",
+        "file": "2026-08-28-joint-bc-cont-cod.md",
+        "role": "premise",
+        "children": [
+          {
+            "id": "shape-adjunction-verified",
+            "approach": "verify_joint_bc.py::test_shape_adjunction: hom-cardinality bijections confirm exists_j -| j^* -| forall_j over a 3->2 shape map. OK.",
+            "trust": "computed",
+            "file": "2026-08-28-joint-bc-cont-cod.md",
+            "role": "attempt",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "exchange-square-pullback",
+        "approach": "Prop 3.1: the square coupling shape-pure j (along u) and position-pure r (along tau) is a pullback in Cont(Set)=Poly with object (S,{R_{u(s)}}). Commutes by Poly composition; UP checked exhaustively on small test cones (14 cones, unique mediator each).",
+        "trust": "proved",
+        "file": "2026-08-28-joint-bc-cont-cod.md",
+        "role": "premise",
+        "children": [
+          {
+            "id": "exchange-pullback-UP-verified",
+            "approach": "verify_joint_bc.py::test_exchange_is_pullback: universal property brute-forced over cones from <=2-shape/pos containers. OK.",
+            "trust": "computed",
+            "file": "2026-08-28-joint-bc-cont-cod.md",
+            "role": "attempt",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "forall-side-holds",
+        "approach": "Thms 4.1-4.2: right-adjoint (forall/E) quantifiers satisfy cross BC (r^* forall_j = forall_j' r'^*, Fubini for finite sums) and co-Frobenius forall_j(Phi \\/ j^*Psi)=forall_j Phi \\/ Psi, E(phi \\/ Delta_c psi)=E phi \\/ psi (distributivity of Set-product over Set-coproduct). Same-type shape BC holds for both quantifiers; position-quantifier vs shape-substitution commute.",
+        "trust": "proved",
+        "file": "2026-08-28-joint-bc-cont-cod.md",
+        "role": "premise",
+        "children": [
+          {
+            "id": "forall-side-verified",
+            "approach": "verify_joint_bc.py: joint BC forall-side 240 OK; shape Frobenius forall_j-with-\\/ OK; position Frobenius E-with-\\/ OK; same-type shape BC 240+240 OK; Set-family control OK.",
+            "trust": "computed",
+            "file": "2026-08-28-joint-bc-cont-cod.md",
+            "role": "attempt",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "exists-side-fails",
+        "approach": "Thm 5.1: left-adjoint (exists/A) quantifiers FAIL Frobenius (every fibre connective) and cross-BC (r^* exists_j != exists_j' r'^*). Uniform obstruction: sum-of-products != product-of-sums = co-topos (Set/P)^op non-distributive = fibrewise op of Set distributivity. Single explicit counterexample suffices; obstruction fully general.",
+        "trust": "proved",
+        "file": "2026-08-28-joint-bc-cont-cod.md",
+        "role": "premise",
+        "children": [
+          {
+            "id": "exists-side-refuted",
+            "approach": "verify_joint_bc.py: joint BC exists-side 240 FAIL (predicted); shape Frobenius exists_j (both /\\,\\/) FAIL; position Frobenius A (both) FAIL.",
+            "trust": "computed",
+            "file": "2026-08-28-joint-bc-cont-cod.md",
+            "role": "attempt",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "correct-parent-6-2",
+        "approach": "Correction to parent cont-cod-predicate-fibration 6.2: co-Frobenius belongs to E=(Sigma_!)^op (right adjoint, op of Set's Sigma_!-Frobenius), NOT A=(Pi_!)^op as previously asserted-by-duality. A has Frobenius for no connective; Pi_! has none in Set to op. Direct finite verification supersedes the unaudited duality assertion.",
+        "trust": "proved",
+        "file": "2026-08-28-joint-bc-cont-cod.md",
+        "role": "attempt",
+        "children": []
+      },
+      {
+        "id": "weber-pra-deferred",
+        "approach": "DEAD-END for this session (not the theorem, the ROUTE): the intended main PROVE target (T2 closedness = parametric right adjoint, definition-match against Weber TAC 18 2007) could not be attempted -- Weber absent from sources.json (summary-only), browsing disabled. Node t2-closedness-is-pra stays speculative; needs the reading gate first.",
+        "trust": "dead-end",
+        "reason": "Reading gate unmet: Weber TAC 18 (2007) not in seed or sources.json (agent-summary only), and browsing is disabled in a deep-work PROVE session; a proved p.r.a. definition-match cannot rest on a summary-level source per the registry evidence rule.",
+        "refutation": "judgment",
+        "file": null,
+        "role": "attempt",
+        "children": []
+      }
+    ]
+  }
+}

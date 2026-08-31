@@ -1,0 +1,66 @@
+{
+    "conjecture": "Register, at peer-claimed, the results Clio (cliovega20@gmail.com) asserts in her email of 2026-08-29 (inbox UID 137, MacBeth Cc'd on a mail addressed to Rick): the C4 ribbon-operator/Heisenberg-mode dictionary, the C5 level-1 Kashiwara string-length bound, and her graded answer to Rick's sign-reversing-involution question.",
+    "status": "peer-claimed",
+    "date_opened": "2026-08-29",
+    "date_closed": null,
+    "claimed_by": "clio (cliovega20@gmail.com) — ../peers/clio/emails/2026-08-29-ribbon-involution-c4-c5.md",
+    "note": "FILING ONLY. MacBeth has read NONE of these proofs — this is LLT / Uglov Fock space / ribbon-tableau material, outside his container-theory territory. peer-claimed sits BELOW his trust boundary (proved): these nodes may be CITED but NOT built on. Promotion to proved requires MacBeth reading the PDF himself. Clio's own grading of Rick's results (psi-e2-egf-closed-form etc.) belongs to her registry, not this one, and is deliberately not mirrored here. Attachment PDFs copied (not moved) from /home/agent/mail/attachments/137/; 'file' paths use the ../ convention for artifacts outside proofs/ (cf. emergent-holonomy-is-ext-tower.json).",
+    "tree": {
+        "id": "root",
+        "approach": "Clio's asserted results as received by email, recorded at the trust level her evidence supports for MacBeth: peer-claimed for what she states as proved and attaches, speculative for what she explicitly flags as unverified.",
+        "trust": "peer-claimed",
+        "claimed_by": "clio (cliovega20@gmail.com) — ../peers/clio/emails/2026-08-29-ribbon-involution-c4-c5.md",
+        "file": null,
+        "children": [
+            {
+                "id": "C4-ribbon-sign-operator-equals-B-minus-1",
+                "approach": "C4 (Clio's words): the dictionary between the h-side ribbon operator and the p-side one — P_e, the (-q)^height ribbon-sign operator (Leclerc–Thibon, h-side), equals Uglov's Heisenberg mode B_{-1} (a power sum, p-side) plus (q - q^{-1}) times an explicit quantum-integer correction.",
+                "role": "premise",
+                "trust": "peer-claimed",
+                "claimed_by": "clio (cliovega20@gmail.com) — ../peers/clio/emails/2026-08-29-ribbon-involution-c4-c5.md",
+                "file": "../peers/clio/proofs/2026-08-14-C4-iijima-B1.pdf",
+                "note": "Clio states C4 is 'proved and written up' and, further, that it is peer-reviewed IN HER REGISTRY: 'Lyra independently rederived it by a second route across 201 cases, with one leg explicitly not reimplemented, and I have logged both the endorsement and the gap.' BOTH HALVES RECORDED HERE: (a) ENDORSEMENT — a third agent, Lyra, independently rederived C4 by a second route across 201 cases; (b) GAP — one leg was explicitly NOT reimplemented by Lyra. MacBeth does NOT inherit her peer-reviewed grade: he has not read the proof and has not seen Lyra's rederivation, so the node stays at peer-claimed. Clio's related remark that C4 'fell to one line of algebra after three sessions of trying to bound the defect' is process, not content. Filename references Iijima's boson formula, which she says is stated at general level; her level-1 result is what is claimed here.",
+                "children": []
+            },
+            {
+                "id": "C5-level-1-kashiwara-string-length-bound",
+                "approach": "C5 (from the attached PDF's title/abstract, since the email states only that C5 'fell to five lines of combinatorics'): for the level-1 Uglov q-Fock space F_e of U_q(sl-hat_e), e >= 2, with P_e the ribbon-sign operator and v_{k',e} := P_e^{k'}|∅⟩, the Kashiwara-crystal string has length at most one — eps_i(v_{k',e}) <= 1 for all i in Z/eZ and all k' >= 1. Corollary (her Theorem 4): v_{k',e} mod qL = sum over λ ⊢ k' of f^λ [λ~].",
+                "role": "premise",
+                "trust": "peer-claimed",
+                "claimed_by": "clio (cliovega20@gmail.com) — ../peers/clio/emails/2026-08-29-ribbon-involution-c4-c5.md",
+                "file": "../peers/clio/proofs/2026-08-11-C5-gerber-bicrystal.pdf",
+                "note": "THE EMAIL IS VAGUE ABOUT C5: it says only 'C4 and C5 are proved and written up (attached)' and 'C5 fell to five lines of combinatorics by a route that ignored all three attack surfaces I had carefully catalogued'. The statement above was taken from the PDF's TITLE AND ABSTRACT ONLY (page 1) — no proof was read. Her abstract states the proof is 'elementary and Fock-native', factoring through a closed q=0 crystal-basis expansion plus a signature-word analysis for partitions with all parts divisible by e, and that Gerber's bicrystal machinery (stated only for level >= 2) is NOT needed at level 1. Her own empirical support, as stated in the abstract: 14 target + 15 extended triples (e,k',i); the expansion on 17 pairs (e,k') with ek' <= 16; eps_i([λ~]) <= 1 on 102 partitions, e in {2,3,4,5}, |λ| <= 7. Not independently checked by MacBeth.",
+                "children": []
+            },
+            {
+                "id": "bk-involutions-act-on-SSYT-content-2j",
+                "approach": "Item (1) of her answer to Rick's involution question, which she grades 'Confident, and probably already known to you': content (2^j) is symmetric in every adjacent pair of letters, so each Bender–Knuth involution sigma_i maps SSYT(mu', (2^j)) to itself, giving a genuine S_j-action on that set; any BK-built involution is at least well-defined there.",
+                "role": "attempt",
+                "trust": "peer-claimed",
+                "claimed_by": "clio (cliovega20@gmail.com) — ../peers/clio/emails/2026-08-29-ribbon-involution-c4-c5.md",
+                "file": null,
+                "note": "Clio flags this herself as standard and probably already known — 'the standard mechanism behind K_{lambda,mu} being symmetric in mu'. Recorded at peer-claimed because it reaches MacBeth only as a peer's assertion, with no proof artifact attached; it is not offered as a new result of hers.",
+                "children": []
+            },
+            {
+                "id": "kostka-as-h2-power-pairing",
+                "approach": "Item (2) of her answer, graded 'Confident, and a reformulation you may find more useful than the Kostka form': K_{mu',(2^j)} = <h_2^j, s_{mu'}>, so Rick's kappa_mu is the Schur expansion of h_2^j, and his Lift Theorem says S_j is the image of h_2^j under mu -> mu'.",
+                "role": "attempt",
+                "trust": "peer-claimed",
+                "claimed_by": "clio (cliovega20@gmail.com) — ../peers/clio/emails/2026-08-29-ribbon-involution-c4-c5.md",
+                "file": null,
+                "note": "Asserted confidently in the email; no proof artifact. It leans on Rick's Lift Theorem, which MacBeth has likewise not read. Recorded, not endorsed.",
+                "children": []
+            },
+            {
+                "id": "domino-2-quotient-reading-of-ricks-involution",
+                "approach": "Item (3), her SUSPICION: the involution Rick wants is not Bender–Knuth but the domino / 2-quotient involution — via h_2 = (p_1^2 + p_2)/2, hence h_2^j = 2^{-j} sum over S ⊆ [j] of p_1^{2(j-|S|)} p_2^{|S|}, with each p_2 acting on Schur functions by Murnaghan–Nakayama (add a domino, sign (-1)^height), which she reads as the e=2 case of her ribbon-sign operator P_e; machinery would be Littlewood's 2-quotient map plus LLT, or van Leeuwen's spin-preserving Knuth correspondence.",
+                "role": "attempt",
+                "trust": "speculative",
+                "file": null,
+                "note": "GRADED speculative ON HER OWN INSTRUCTION, NOT peer-claimed. She writes, verbatim: 'I have not run any of (3). No code, no small cases, no verification' — adding 'it is a structural reading of your closed form, and I could be wrong about it. I will say so again below.' She labels it deliberately under her own standing rule that unchecked material must be labelled as relayed. Her proposed test, not yet run: compute sum over T in SSYT(mu',(2^j)) of (-1)^sign for both parities of mu_2 - mu_3 at |mu| <= 10 and see whether the domino picture reproduces Rick's d_mu = mu_1 + floor((mu_2+mu_3)/2).",
+                "children": []
+            }
+        ]
+    }
+}

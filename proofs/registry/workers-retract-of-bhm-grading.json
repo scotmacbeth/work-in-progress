@@ -1,0 +1,75 @@
+{
+    "conjecture": "The Workers ⊗-grading (ΔS, with ΔS⊗ΔT=Δ(S×T)) is a RETRACT, not a fibre, of the BHM ▷-grading (ΔS▷ΔT). Prove the retract (σ,r) as genuine Poly morphisms with r∘σ=id_{Δ(S×T)}, and settle grading-compatibility: whether Δ:(Set,×)→(Poly,▷) is lax/oplax/neither, and whether the store comultiplication ΔS→ΔS▷ΔS is the failure of ▷ to be the ⊗-diagonal.",
+    "status": "proved",
+    "date_opened": "2026-08-29",
+    "date_closed": "2026-08-29",
+    "note": "PROVE 2026-08-29. Upgrades the 08-29 computed retract observation to proved. P2: r∘σ=id_A as genuine Poly morphisms (variance handled — backward maps compose in reverse, both id), σ∘r≠id (8y⁴ vs 4y⁴), verified n≤3. P3a: σ oplax-associativity hexagon holds (both composites → fully-constant ternary shape); P3b: r lax hexagon holds (self-evaluation is associative → (s,(g(s),k(s,g(s))))); both unit-coherent; σ natural under bijections. P3c (the theorem): r∘δ=Δ(d) with π₂ — store comult is a lift of the ⊗-diagonal along r; 'σ∘Δd=e∘δ=δ', off-diagonal (1−e)δ = failure of ▷ to be ⊗-diagonal'. P3d: δ'=σ∘Δd is COASSOCIATIVE but NOT counital (right counit fails, verified n=2,3) ⟹ not a comonad ⟹ Δ not oplax monoidal FUNCTOR on full (Set,×); oplax(σ)+lax(r) on core groupoid (Set_≅,×). Store comonad is internal, not oplax-image of diagonal. Proof: 2026-08-29-workers-retract-of-bhm-grading.md. Code: scratch/verify_retract.py, verify_p3.py. LEAN 2026-08-29: P2/P3c/P3d formalised sorry-free in Containers/WorkersRetract.lean (Lean 4 core, no Mathlib); five of six theorems axiom-free, storeDiagSection_coassoc on [Quot.sound] alone. One correction surfaced by the type checker: the backward maps of σ and r are the canonical Sigma↔Prod swaps, not literal identities (B's fibre is Sigma (fun _:S => T), not Prod S T) — cosmetic, theorem unaffected. P3ab hexagons deliberately not formalised.",
+    "tree": {
+        "id": "root",
+        "approach": "ΔS⊗ΔT = Δ(S×T) is a canonical non-trivial retract of ΔS▷ΔT via (σ=const-inclusion, r=self-evaluation); the store comonad relates to the ⊗-diagonal by r∘δ=Δ(d), and Δ is oplax/lax only on the core groupoid.",
+        "trust": "proved",
+        "file": "2026-08-29-workers-retract-of-bhm-grading.md",
+        "children": [
+            {
+                "id": "workers-graded-category",
+                "approach": "Base: Workers = (Set,×)-graded category, grades multiply by ⊗ with ΔS⊗ΔT=Δ(S×T) on the nose (μ=id). Cited, not re-proved.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "P1-explicit-forms",
+                "approach": "ΔS⊗ΔT=Δ(S×T) (shapes/positions S×T); ΔS▷ΔT has shapes S×T^S, positions S×T. Restated cleanly with polynomial-morphism data.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-29-workers-retract-of-bhm-grading.md",
+                "children": []
+            },
+            {
+                "id": "P2-retract",
+                "approach": "Thm 1.1: r∘σ=id_A as genuine Poly morphisms (variance handled), σ∘r≠id. Idempotent e=σr collapses each branch g to const at self-eval g(s). Verified n≤3. LEAN: storeRetraction_storeSection (r∘σ=id, rfl) + storeSection_storeRetraction_ne (σ∘r≠id, Bool witness ⟨true,id⟩), both axiom-free, in Containers/WorkersRetract.lean. CORRECTION to the paper proof's phrasing: the two backward maps are NOT literally id — in Cont, A.Pos=Prod S T but B.Pos=Sigma (fun _:S => T), isomorphic but not defeq, so they are the canonical Sigma↔Prod swaps. Mutually inverse by structure η, so the retract theorem stands unchanged.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "file": "2026-08-29-workers-retract-of-bhm-grading.md",
+                "children": [],
+                "lean": "storeRetraction_storeSection"
+            },
+            {
+                "id": "P3ab-coherence",
+                "approach": "Prop 2.1/2.2: σ oplax-coherent hexagon (→ fully-constant shape), r lax-coherent hexagon (self-evaluation associative), units OK, σ natural under bijections. Verified to (2,3,2).",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-08-29-workers-retract-of-bhm-grading.md",
+                "children": []
+            },
+            {
+                "id": "P3c-diagonal-collapse",
+                "approach": "Thm 3.1: r∘δ=Δ(d) (π₂). Store comultiplication is a lift of the ⊗-diagonal along the retraction r. The precise sense of '⊗ is the diagonal collapse of ▷'. Verified n≤3. LEAN: storeRetraction_coComult : (deltaDC S).coComult.comp (storeRetraction S S) = storeDiag S, by rfl, axiom-free.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "file": "2026-08-29-workers-retract-of-bhm-grading.md",
+                "children": [],
+                "lean": "storeRetraction_coComult"
+            },
+            {
+                "id": "P3d-not-oplax-full-set",
+                "approach": "Thm 3.2: δ'=σ∘Δd is coassociative but not counital (right counit fails, verified n=2,3) ⟹ not a comonad ⟹ Δ not an oplax monoidal functor on full (Set,×); store comonad is internal. Oplax/lax only on core groupoid. LEAN: storeDiagSection_coassoc (rfl, [Quot.sound] only — via Container.associator) confirms the positive half; storeDiagSection_not_right_counital (Bool witness: shape true, position ⟨false,()⟩; law demands false, delivers true) and storeDiagSection_ne_coComult, both axiom-free.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "file": "2026-08-29-workers-retract-of-bhm-grading.md",
+                "children": [],
+                "lean": "storeDiagSection_not_right_counital"
+            },
+            {
+                "id": "L-lean-workers-retract",
+                "approach": "Lean 4 formalisation of P2/P3c/P3d in Containers/WorkersRetract.lean (Lean 4 core v4.30.0, no Mathlib), wired into the root Containers.lean; lake build green, zero warnings, zero sorries. Declarations: storeSection, storeRetraction, storeDiag, storeDiagSection (defs, L1 — that these elaborate IS the variance claim); storeRetraction_storeSection, storeSection_storeRetraction_ne, storeRetraction_coComult, storeDiagSection_ne_coComult, storeDiagSection_coassoc, storeDiagSection_not_right_counital. Axiom audit: all six theorems axiom-free EXCEPT storeDiagSection_coassoc, which depends on [Quot.sound] alone. NOT formalised: P3ab hexagons (out of scope by design).",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "lean": "storeRetraction_storeSection",
+                "file": "2026-08-29-workers-retract-of-bhm-grading.md",
+                "children": []
+            }
+        ]
+    }
+}

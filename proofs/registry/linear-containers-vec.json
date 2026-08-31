@@ -1,0 +1,116 @@
+{
+ "conjecture": "Linear containers LinCont := Fam(Vec^op), objects (S,(P_s)), extension <<S,P>>W = (+)_{s} Vec(P_s,W): Vec->Vec. THREE PARTS. PART 1 (biproduct collapse, primary): Vec's terminal object is 0 so <<S,P>>(0)=0 and the Set slogan F(1)=S dies; for finite S and finite-dim positions <<S,P>> ~= Id^N with N=Sum dim P_s, so a finite linear container is classified by the single number N (partition invisible), unique by Krull-Schmidt since End(Id)=k. PART 2 (representation / extensivity crux): Nat(<<S,P>>,<<T,Q>>) = Prod_s (+)_t Vec(Q_t,P_s) while container-hom = Prod_s (disjoint-union)_t Vec(Q_t,P_s); the extension <<->> is NOT full, and the gap is exactly '(disjoint-union) proper-subset (+)' = the failure of extensivity of Vec (in Set the coproduct in the hom-formula IS the disjoint union, giving full faithfulness / the classical Diers representation theorem). PART 3 (comonoid probe): finite-dim composition (S,P)o(T,Q)=(SxT,(P_s(x)Q_t)), unit ({*},k); a o-comonoid collapses to a family of k-algebras (one shape = a k-algebra), NOT a full algebroid -- linearity kills the dependent-sum that would encode off-diagonal morphisms.",
+ "status": "proved",
+ "date_opened": "2026-08-18",
+ "date_closed": null,
+ "note": "NEW FRONT: containers over Vec (Neil steer 2026-08-15). Compute-first: scratch/vec-containers/verify.py confirms finite collapse (dim <<{a,b},(k^2,k)>>(k^d)=3d), the hom formula and non-fullness (Nat(Id^2,Id^2) dim 4; matrix [[1,1],[0,0]] not a container morphism), Lemma 1.3 distribution, and composition dims. Novelty caveat on every node: strict polynomial functors (Friedlander-Suslin 1997; Krause 1203.0311) own the objects (additive = degree 1 corner); Diers familial representability owns 'coproduct of representables' + the extensivity hypothesis; Mitchell 1972 owns 'algebroid'. Claimed delta = the Fam(Vec^op) container framing + the identification of shape-collapse (objects) and fullness-gap (morphisms) as ONE phenomenon = failure of extensivity (disjoint-union proper-subset biproduct) under Set~>Vec. Proof file 2026-08-18-linear-containers-vec.md. | 2026-08-20: lax-matrix crown RESOLVED (algebroid = comonoid in Vec-matrix bicategory, strict o = diagonal degeneration; classical Benabou/Mitchell; container framing only = low novelty; routed to expository).",
+ "tree": {
+  "id": "root",
+  "approach": "Linear containers over Vec: Part 1 biproduct collapse [proved]; Part 2 representation/extensivity crux [proved as negative-with-remedy]; Part 3 comonoid probe [computed]",
+  "trust": "proved",
+  "file": "2026-08-18-linear-containers-vec.md",
+  "children": [
+   {
+    "id": "co-yoneda-linear",
+    "approach": "Lemma 1.1: for a Vec-functor G, Nat(h_P,G) ~= G(P) (linear co-Yoneda via universal element id_P); so Nat(Id,G)=G(k), Nat(h_P,h_Q)=Vec(Q,P)",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "h-additive-ff",
+    "approach": "Lemma 1.2: h:Vec^op->[Vec,Vec] full faithful + additive (h_{P(+)Q}=h_P(+)h_Q); unique indecomposable corepresentable = h_k=Id; End(Id)=k",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "findim-distributes",
+    "approach": "Lemma 1.3: dim P < infinity => Vec(P,(+)_t V_t) = (+)_t Vec(P,V_t) (f.d. image lands in finite subsum); fails for inf-dim P (h_P = infinite product)",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "part1-finite-collapse",
+    "approach": "Thm 2.1 (PART 1): S finite, positions f.d. => <<S,P>> ~= Id^N, N=Sum dim P_s; classified by N alone; Krull-Schmidt-Azumaya (End(Id)=k local) => decomposition Id^{(+)N} unique, recovers only N. Plus 2(a) terminal recovery fails <<S,P>>(0)=0, 2(c) survival regimes.",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "part2-hom-formula",
+    "approach": "Thm 3.1-3.2: Nat(<<S,P>>,<<T,Q>>) = Prod_s (+)_t Vec(Q_t,P_s) (co-Yoneda); container-hom = Prod_s (disjoint-union)_t Vec(Q_t,P_s)",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "part2-extensivity-crux",
+    "approach": "Thm 3.3 (PART 2, the crux): induced map on homs = (disjoint-union)_t ↪ (+)_t; NOT full whenever some s hits >=2 nonzero t. In Set the hom-formula coproduct IS the disjoint union => full faithful (classical). The lone change Set~>Vec is (disjoint-union) proper-subset (+) = failure of extensivity. Cor 3.4: finite recovery of (+)_s P_s up to iso, partition lost.",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "part3-composition",
+    "approach": "Prop 4.1 (PART 3, proved): finite-dim positions => (S,P)o(T,Q)=(SxT,(P_s(x)Q_t)), unit ({*},k); NOT the Set dependent sum Sum_s S^{P_s} (Lemma 1.3 + tensor-hom: linearity flattens the dependency to a plain product SxT).",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "part3-comonoid-algebras",
+    "approach": "Thm 7 (PART 3, PROVED 2026-08-19, upgrades Prop 4.2 computed->proved): o-comonoid in (Fam(Vec_fd^op),o,I) = family (A_s) of unital associative k-algebras, one per shape, NO cross-shape composition. Counit forces delta_shape=diagonal (unique (Set,x)-comonoid on S); contravariance => delta^#_s=mu_s:P_s(x)P_s->P_s (multiplication) and eps^#_s=eta_s:k->P_s (unit); counit laws <=> two-sided unit, coassoc <=> associativity. Comon_o(Fam(Vec_fd^op)) ~= Fam(Alg_k^op) (cocommutative = Fam(CAlg_k^op)). NEGATIVE HALF: shape-diagonal => delta never reaches off-diagonal block P_a(x)P_b (a!=b) => no hom-between-objects => a DISJOINT FAMILY OF ONE-OBJECT k-linear categories = k-algebras, NOT an algebroid. Refutes the crown 'o-comonoid over Vec = algebroid' guess in finite dim; the biproduct/linearity collapse (Prop 4.1 flattening Sum_s to x) is the mechanism. HYPOTHESES SHARPENED: finite-dim positions only, S ARBITRARY (finite S not needed). Verify: scratch/vec-comonoids/verify.py over F_2, 4/4 cases match #comonoids = prod_s A(n_s) (A(1)=1,A(2)=12), diagonal forced, no off-diagonal survivor, no cocommutativity forced.",
+    "trust": "proved",
+    "file": "2026-08-19-vec-comonoids-algebras.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "set-precedent-dirichlet",
+      "approach": "PREMISE (mirror): bare o-comonoid over Set analogue = (x)-comonoid in Poly = family of monoids, Comon(Cont,(x),y) ~= Fam(Mon^op); same counit-forces-diagonal + contravariance-makes-monoid mechanism, proved elementarily.",
+      "trust": "proved",
+      "file": "2026-07-17-bare-dirichlet-comonoid.md",
+      "role": "premise",
+      "children": []
+     },
+     {
+      "id": "lax-matrix-crown-resolved",
+      "approach": "RESOLUTION of the negative-half open thread (2026-08-20 scoping, agent-verified H1-H4). The algebroid DOES appear once positions are DOUBLE-INDEXED: correct objects = Vec-enriched graphs / matrices of vspaces (S,(P_{a,b})_{S x S}); correct (lax/bimodule) composition = MATRIX product (P o Q)_{a,c} = (+)_b P_{a,b} (x) Q_{b,c} (the (+)_b restores the extensivity coproduct whose absence ∐⊊⊕ caused the strict collapse). Then a MONOID in Mat(Vec) = k-linear category = algebroid (hom(a,b)=P_{a,b}, composition (+)_b A(b,c)(x)A(a,b)->A(a,c)); via the fibrewise op, a COMONOID in Mat(Vec^op) = algebroid too (both ops cancel). The strict single-index o (S x T, P_s(x)Q_t) is the DIAGONAL DEGENERATION (P_{a,b}=0 for a!=b), which is exactly why the counit-forced shape-diagonal gave only a family of algebras. MATHEMATICS IS CLASSICAL/PRIOR ART: Benabou 1967 (monad in Span/V-Mat = V-category), Mitchell 1972 (rings with several objects = algebroids), arXiv:1704.00329 (monad/comonad in V-Mat = V-cat/V-cocat variance). NOVELTY = LOW: only the container-theoretic FRAMING/DIAGNOSIS is mine (single-index Fam(Vec^op) = diagonal of Vec-matrix bicategory; the o=(+)_b sum = extensivity-restoring coproduct; ties strict-o collapse to non-extensivity). Verdict: NOT a PROVE target (fails non-triviality bar); route to EXPOSITORY to close the linear arc. H1-H4 verified correct by scoping agent (two nuances flagged: the (+)_b is the composable-arrows sum not literally the same coproduct; the diagonal happens at two coupled levels = position-support AND forced shape-comult).",
+      "trust": "computed",
+      "role": "attempt",
+      "children": [],
+      "note": "2026-08-19 WRITE: written up as expository/containers-over-vec.tex Part 4 (sec:algebroid), 22pp, compiles. Container-framing DIAGNOSIS written in own words and PROVED-grade as an elementary corollary of the proved sec.7 classification: Prop (diagonal embedding) single-index (S,(P_s)) = diagonal Vec-matrix, o restricts to pointwise (P_a(x)Q_a), so Comon_o(Fam(Vec_fd^op))=Fam(Alg^op) is the diagonal fragment of Comon(Mat_S(Vec^op),o,I)=Vec-Cat_S. Classical equivalences (Benabou monoid=algebroid; comonoid-via-op) STAY CITED, not re-graded (trust stays computed for those). Provenance box in sec:algebroid; TODO before external circulation: direct-read D.Lin Enriched Polynomial Functors; disambiguate 1209.0940/1403.0833 (linear=linear-logic)."
+     }
+    ]
+   },
+   {
+    "id": "gap-general-representation",
+    "approach": "GAP (attempt, open): intrinsic characterization of the essential image of <<->> for infinite S / inf-dim positions (candidate: accessible + preserves connected limits + small coproduct of corepresentables), and recovery of (S,P) up to biproduct ambiguity beyond the finite case. Diers extensivity hypothesis obstructs a clean equivalence.",
+    "trust": "in-progress",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "strict-poly-neighbour",
+    "approach": "NOVELTY FLOOR (attempt): strict polynomial functors own the objects (additive = degree-1 corner P_1 ~= Vec, corepresentables (-)^{dim P}); Diers/Carboni-Johnstone own familial representability + extensivity; Mitchell 1972 owns algebroid. Delta = the container framing + the extensivity-collapse identification, NOT the objects.",
+    "trust": "unclassified",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "attempt",
+    "sources": [
+     "1203.0311",
+     "1209.5122"
+    ],
+    "children": []
+   }
+  ]
+ }
+}

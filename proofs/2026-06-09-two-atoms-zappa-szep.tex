@@ -1,0 +1,362 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title{When does a directed container decompose?\\
+The two-atoms conjecture and its freeness correction}
+\author{MacBeth\\\small Kodamai}
+\date{9 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A directed container is the same thing as a small category, and a recurring
+dream is that every small category should split cleanly into two pure
+``atoms'': a poset skeleton (the shape data, with no loops) and the
+endomorphism monoids sitting at each vertex (the pure loop data), glued
+together by composition as a mutual action --- a Zappa--Sz\'ep product. I make
+this precise and then refute the naive form. The crisp result: for fixed
+objects $a,b$ the source-oriented unique factorization $f = t \circ e$ (with
+$e \in \End(a)$ an endomorphism at the source and $t$ a transversal arrow)
+holds for every $f \in \Hom(a,b)$ \emph{if and only if} $\Hom(a,b)$ is a
+\emph{free} right $\End(a)$-set; dually for the target orientation and free
+left $\End(b)$-sets. A quick necessary numerical test in the finite case is
+that $\lvert \End(a)\rvert$ divides $\lvert \Hom(a,b)\rvert$. The smallest
+counterexample has five morphisms and fails this divisibility, so the
+Zappa--Sz\'ep decomposition does not exist in general. The correct general
+statement is a bimodule/profunctor assembly: each $\Hom(a,b)$ is an
+$(\End(b),\End(a))$-biset, and $\C$ is the collage glueing of its vertex
+endomorphism monoids along these connecting bisets. Zappa--Sz\'ep is exactly
+the free, one-sided special case. This turns SEED open-question Q2 (the
+distributive-law decision procedure) into a finitely checkable freeness
+criterion.
+\end{abstract}
+
+\section{Setup: directed containers as small categories}
+
+I take for granted the equivalence between directed containers and small
+categories, and translate the dictionary once so that everything below is
+phrased categorically.
+
+\begin{definition}[Dictionary]
+A small category $\C$ corresponds to a directed container as follows: the
+\emph{shapes} are the objects; the positions $P(s)$ over a shape $s$ are the
+morphisms out of $s$; the root position $o$ is the identity $\id_s$; the
+operation $s \downarrow p$ takes the codomain of $p$; and the position monoid
+operation $p \oplus q$ is composition \emph{with order reversed}, $p \oplus q =
+q \circ p$. For objects $a,b$ I write $\Hom(a,b)$ for the set of morphisms
+$a \to b$, and
+\[
+  \End(a) := \Hom(a,a)
+\]
+for the \emph{endomorphism monoid} at $a$, a monoid under composition with unit
+$\id_a$.
+\end{definition}
+
+The two natural ways an endomorphism monoid acts on a hom-set are the whole
+content of what follows, so I state them carefully.
+
+\begin{definition}[The canonical biset structure]
+Fix objects $a,b$. The monoid $\End(a)$ acts on the \emph{right} of $\Hom(a,b)$
+by precomposition,
+\[
+  f \cdot e := f \circ e \qquad (f \in \Hom(a,b),\; e \in \End(a)),
+\]
+and the monoid $\End(b)$ acts on the \emph{left} by postcomposition,
+\[
+  e' \cdot f := e' \circ f \qquad (e' \in \End(b),\; f \in \Hom(a,b)).
+\]
+These two actions commute by associativity, $(e' \circ f) \circ e = e' \circ
+(f \circ e)$, so $\Hom(a,b)$ is canonically an
+$(\End(b),\End(a))$-\emph{biset}. The right action is unital and associative
+because $\End(a)$ is a monoid; likewise the left.
+\end{definition}
+
+\section{The two atoms and the naive conjecture}
+
+There are two ``pure'' kinds of small category, and the dream is that every
+category is built from just these.
+
+\begin{definition}[The two atoms]
+\leavevmode
+\begin{enumerate}
+\item A \emph{poset} (more precisely a thin category): at most one arrow between
+any ordered pair of objects, so in particular every endomorphism monoid is
+trivial, $\End(a) = \{\id_a\}$. This is the pure \emph{shape} atom --- all
+skeleton, no loops.
+\item A \emph{monoid}: a one-object category, where every arrow is a loop. This
+is the pure \emph{loop} atom --- all endomorphism, no shape.
+\end{enumerate}
+\end{definition}
+
+\begin{conjecture}[Two atoms; SEED Q2, naive form]\label{conj:naive}
+Every small category $\C$ is a Zappa--Sz\'ep product of a poset skeleton and
+its vertex endomorphism monoids, glued by composition as the mutual action.
+Concretely (\emph{source orientation}): there is a sub-collection of
+\emph{transversal} arrows, forming a thin subcategory, such that every $f \in
+\Hom(a,b)$ factors \emph{uniquely} as
+\[
+  f = t \circ e, \qquad e \in \End(a),\; t \text{ transversal}.
+\]
+Dually (\emph{target orientation}) every $f$ factors uniquely as $f = e' \circ
+t$ with $e' \in \End(b)$.
+\end{conjecture}
+
+The conjecture bundles three claims: (a) such a factorization exists; (b) it is
+unique; (c) the transversal is canonically the poset/reachability skeleton.
+I will show all three can fail, pin the exact condition for (a)+(b), and
+exhibit a separate failure of (c).
+
+\section{The freeness correction}
+
+Recall that a right $M$-set $X$ (for a monoid $M$) is \emph{free on a basis}
+$T \subseteq X$ if the action map
+\[
+  \mu : T \times M \longrightarrow X, \qquad \mu(t,m) = t \cdot m
+\]
+is a bijection; equivalently $X \cong \coprod_{t \in T} M$ as right $M$-sets,
+each summand the regular action. $X$ is \emph{free} if it admits some basis. For
+a \emph{group} $M$ this is the same as the orbit-theoretic notion (every
+stabilizer trivial, with $T$ one representative per orbit), but for a general
+monoid the action-map formulation is the correct definition. A
+\emph{transversal} is precisely a basis: one representative whose translates
+$t \cdot M$ cover $X$ disjointly and faithfully.
+
+\begin{theorem}[Freeness criterion]\label{thm:main}
+Fix objects $a,b$ of a small category $\C$. The source-oriented unique
+factorization of Conjecture~\ref{conj:naive} ---
+\emph{every $f \in \Hom(a,b)$ factors uniquely as $f = t \circ e$ with $e \in
+\End(a)$ and $t$ ranging over a fixed transversal} --- exists if and only if
+$\Hom(a,b)$ is a \emph{free} right $\End(a)$-set. In that case a transversal is
+exactly a choice of one representative arrow per $\End(a)$-orbit. Dually, the
+target-oriented factorization $f = e' \circ t$ with $e' \in \End(b)$ exists iff
+$\Hom(a,b)$ is a free left $\End(b)$-set.
+\end{theorem}
+
+\begin{proof}
+I prove the source statement; the target statement is the mirror image under
+$f \mapsto f^{\mathrm{op}}$.
+
+Unfold the factorization. A transversal $T \subseteq \Hom(a,b)$ together with
+the right $\End(a)$-action gives the action map
+\[
+  \mu : T \times \End(a) \longrightarrow \Hom(a,b), \qquad
+  \mu(t,e) = t \circ e = t \cdot e.
+\]
+The factorization claim ``every $f$ is $t \circ e$ for some transversal $t$ and
+some $e \in \End(a)$'' is exactly surjectivity of $\mu$; ``uniquely'' is
+injectivity of $\mu$. Hence: \emph{source-oriented unique factorization at
+$(a,b)$ holds $\iff$ there exists a transversal $T$ for which $\mu$ is a
+bijection.}
+
+But ``$\mu$ is a bijection for some $T$'' is, verbatim, the definition of
+$\Hom(a,b)$ being a free right $\End(a)$-set with basis $T$. So the two
+statements are literally the same statement, and the theorem holds. I record the
+two directions explicitly for the reader.
+
+($\Leftarrow$) If $\Hom(a,b)$ is free with basis $T$, then $\mu$ is a bijection
+by definition; reading off $f = \mu(t,e) = t \cdot e$ gives existence
+(surjectivity) and uniqueness (injectivity).
+
+($\Rightarrow$) Conversely, if some transversal $T$ makes $\mu$ a bijection,
+then $\Hom(a,b) \cong \coprod_{t \in T}\End(a)$ as right $\End(a)$-sets via
+$\mu$, which is exactly freeness with basis $T$.
+
+The phrase ``a transversal is a choice of one representative per orbit'' is the
+group intuition; for a general monoid the precise statement is that a basis $T$
+indexes the summands of the free decomposition, and surjectivity of $\mu$ says
+$T$ meets every right $\End(a)$-orbit while injectivity says each restricted
+orbit map $e \mapsto t\cdot e$ is injective \emph{and} distinct basis elements
+have disjoint orbits.
+\end{proof}
+
+\begin{remark}
+The slickest phrasing: a transversal making $\mu$ bijective is the same datum as
+a free-basis of $\Hom(a,b)$ as a right $\End(a)$-set, and a set has a basis as a
+free $M$-set iff the action is already free. ``Existence of factorization'' is
+the transversal meeting every orbit; ``uniqueness'' is freeness (no two
+endomorphisms send a transversal arrow to the same morphism).
+\end{remark}
+
+\begin{corollary}[Numerical necessary test]\label{cor:div}
+If $\C$ is finite and the source-oriented unique factorization holds at $a,b$,
+then $\lvert \End(a)\rvert$ divides $\lvert \Hom(a,b)\rvert$. Dually
+$\lvert \End(b)\rvert$ divides $\lvert \Hom(a,b)\rvert$ for the target
+orientation.
+\end{corollary}
+
+\begin{proof}
+A free right $\End(a)$-set is a disjoint union of orbits each of size $\lvert
+\End(a)\rvert$, so $\lvert \Hom(a,b)\rvert = (\text{number of orbits}) \cdot
+\lvert \End(a)\rvert$.
+\end{proof}
+
+\section{The smallest counterexample}
+
+\begin{example}[Five morphisms, divisibility fails both ways]\label{ex:main}
+Let $\C$ have two objects $a,b$. Put $\Hom(a,b) = \{s\}$ a single connecting
+arrow, $\Hom(b,a) = \varnothing$, and
+\[
+  \End(a) = \End(b) = \Z/2 = \{1, g\}, \qquad g^2 = 1,
+\]
+with the loops fixing the connecting arrow on both sides:
+\[
+  g \circ s = s = s \circ g.
+\]
+There are five morphisms in all: $\id_a = 1_a$, $g_a$, $\id_b = 1_b$, $g_b$,
+and $s$.
+\end{example}
+
+\begin{proposition}
+Example~\ref{ex:main} is a genuine small category, and it violates the source-
+\emph{and} target-oriented unique factorization simultaneously.
+\end{proposition}
+
+\begin{proof}
+\emph{It is a category.} The only composites to define beyond the two copies of
+$\Z/2$ are those involving $s$. Since $s$ is the unique arrow $a\to b$ and there
+are no arrows $b \to a$, every legal composite with $s$ lands in $\{s\}$:
+$g_b \circ s, \; s \circ g_a, \; g_b \circ s \circ g_a$ are all forced to be
+$s$, which is exactly the prescription $g\circ s = s = s\circ g$ (the loops are
+``central'' on $s$ and fix it). Associativity holds because each $\Z/2$ is
+associative and any bracketing of a string containing $s$ evaluates to $s$
+(every loop fixes $s$), independent of the bracketing; unit laws are immediate.
+
+\emph{It fails unique factorization.} Source orientation: $\End(a) = \{1,g\}$
+has order $2$ but $\lvert \Hom(a,b)\rvert = 1$, and $2 \nmid 1$, so by
+Corollary~\ref{cor:div} source-UF fails. Directly: $s \circ 1_a = s = s \circ
+g_a$, so the two would-be distinct factorizations $s = t\circ 1$ and $s = t
+\circ g$ (with $t = s$ the only candidate transversal) collapse --- the right
+$\Z/2$-action on the singleton $\{s\}$ is the trivial action, which is not free.
+Target orientation is symmetric: $1_b \circ s = s = g_b \circ s$, the left
+action is trivial, and again $2 \nmid 1$. So both orientations fail at once.
+\end{proof}
+
+\begin{remark}[The one-sided minimal case already breaks]
+Even the asymmetric category with $\End(a) = \Z/2$, $\End(b)$ trivial, and a
+single arrow $a \to b$ fixed by the source loop already fails source-UF: it is
+the smallest non-poset extension of the walking arrow ($\bullet \to \bullet$),
+and one nontrivial loop acting trivially on a singleton hom-set is enough to
+destroy uniqueness.
+\end{remark}
+
+\section{Two further nuances}
+
+\begin{remark}[Unique factorization does not give a poset skeleton]\label{rem:thick}
+Even when unique factorization holds, the transversal is a genuine \emph{choice}
+and need not be the reachability poset --- it can be \emph{thick}. Let $\End(a)$
+be trivial, $\End(b) = \Z/3$, and $\Hom(a,b)$ a set of three arrows on which
+$\Z/3$ acts \emph{freely} on the left (a single regular orbit). Since $\End(a)$
+is trivial, source-UF holds trivially. But the source-transversal is the entire
+$\Hom(a,b)$: three parallel arrows $a \to b$, manifestly \emph{not} thin. So
+clause (c) of the naive conjecture --- ``skeleton $=$ poset reflection'' ---
+fails independently of clauses (a),(b).
+\end{remark}
+
+\begin{remark}[Source and target loops are independent]
+Source loops act on the right and target loops on the left, and these are
+logically independent: in general one cannot absorb both into a single
+one-sided factorization. The naive conjecture conflates the two orientations,
+whereas $\Hom(a,b)$ genuinely carries \emph{two} actions and freeness on one
+side says nothing about the other. (In Example~\ref{ex:main} both fail; in
+Remark~\ref{rem:thick} the right side is trivially free while the left is free
+but with a thick transversal.)
+\end{remark}
+
+\begin{remark}[Computational evidence]
+A brute-force script \texttt{two\_atoms\_check.py} enumerates roughly $26$ small
+categories and tests source-oriented unique factorization on each. Of these,
+$18/26$ satisfy source-UF and $8/26$ fail; every one of the $8$ failures
+involves a nontrivial loop acting non-freely on a hom-set too small to carry a
+free orbit --- precisely the mechanism of Example~\ref{ex:main} and
+Corollary~\ref{cor:div}. This matches Theorem~\ref{thm:main} exactly: failure
+$\iff$ non-free connecting biset.
+\end{remark}
+
+\section{The correct general statement}
+
+The naive picture is salvaged not as a unique factorization but as a
+bimodule/profunctor assembly.
+
+\begin{theorem}[Corrected decomposition]\label{thm:correct}
+Let $\C$ be a small category with object set $\mathrm{ob}\,\C$.
+\begin{enumerate}
+\item \emph{(General assembly.)} $\C$ is reconstructed from the data
+\[
+  \big(\End(a)\big)_{a \in \mathrm{ob}\,\C}, \qquad
+  \big(\Hom(a,b) \text{ as an } (\End(b),\End(a))\text{-biset}\big)_{a,b},
+\]
+together with the composition maps
+$\Hom(b,c) \otimes_{\End(b)} \Hom(a,b) \to \Hom(a,c)$, as the
+\emph{collage} (category of elements / profunctor glueing) of the vertex
+endomorphism monoids along these connecting bisets. This is a
+bimodule-style assembly, not a unique factorization, and it \emph{always}
+exists.
+\item \emph{(Zappa--Sz\'ep special case.)} $\C$ is a Zappa--Sz\'ep product of a
+transversal skeleton and its vertex endomorphism monoids, in the sense of the
+source-oriented Conjecture~\ref{conj:naive}, if and only if every connecting
+biset $\Hom(a,b)$ is \emph{free} as a right $\End(a)$-set (the one-sided,
+regular case). Dually for the target orientation and left freeness.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Composition in $\C$ restricted to $\End(a)$ recovers each vertex monoid, and
+the biset structure of Definition~2 records pre/post-composition; the full
+composition maps factor through the relative tensor product over $\End(b)$
+because $(g \circ f)$ depends on $f,g$ only up to inserting/removing a $b$-loop,
+which is exactly the coequalizer defining $\otimes_{\End(b)}$. Conversely this
+data plus the composition maps reassembles $\C$: objects are the indices,
+morphisms $a \to b$ are the biset elements, identities are the monoid units, and
+the composition maps give associative composition (associativity is the
+compatibility of the tensor glueing). This is the standard collage of the
+endomorphism monoids regarded as a single-object categories linked by the
+$\Hom$-profunctors.
+
+(2) Apply Theorem~\ref{thm:main} at every pair $a,b$: source-oriented unique
+factorization globally is exactly the statement that every connecting biset is a
+free right $\End(\text{source})$-set, in which case picking a transversal per
+orbit gives the (thin-or-thick) skeleton and the loops, with composition as the
+mutual action --- a Zappa--Sz\'ep product. If some biset is non-free, the
+factorization fails there by Theorem~\ref{thm:main}, so no global Zappa--Sz\'ep
+decomposition exists.
+\end{proof}
+
+So the two-atoms dream is \emph{true exactly in the free, regular case} and
+false in general; the universal truth is the weaker bimodule collage.
+
+\section{Grant relevance}
+
+This converts SEED open-question Q2 --- the distributive-law / Zappa--Sz\'ep
+decision procedure for directed containers --- into a \emph{checkable
+criterion}. A Zappa--Sz\'ep (equivalently, distributive-law) decomposition of a
+directed container into a skeleton and its vertex monoids exists if and only if
+each hom-set is free over the relevant vertex endomorphism monoid. Freeness is
+finitely checkable (compute orbits, test that each orbit map is injective), and
+the counting condition $\lvert \End(a)\rvert \mid \lvert \Hom(a,b)\rvert$ of
+Corollary~\ref{cor:div} is a quick necessary pre-test that rejects most
+non-decomposable cases instantly. For the grant this is a clean, implementable
+algorithm with a sharp theorem behind it: the decision procedure is exactly an
+orbit-freeness check on the connecting bisets, and when it fails, the corrected
+decomposition theorem (Theorem~\ref{thm:correct}) still gives a canonical
+profunctor-collage assembly to fall back on.
+
+\end{document}

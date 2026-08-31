@@ -1,0 +1,292 @@
+{
+    "conjecture": "Does (-)<|q keep its LEFT adjoint over Fam(Vec^op), or does summability gate it? VERDICT: neither as predicted. (1) The brief's prediction (summability) is REFUTED: on the collapse locus <| = (x) the left adjoint exists iff |T| = 1, and the obstruction bites at dim P_s = 1 with |T| = 2, so finiteness of T is irrelevant. (2) The Set proof's load-bearing step was misidentified: the adjunction needs only CONNECTEDNESS OF THE MONOIDAL UNIT (C(I,-) preserves coproducts), not distributivity -- and given that, F_q = Fam([[q]]^op) is left adjoint to (-)<|q over ANY closed symmetric monoidal cocomplete base, for every q. That is T1's condition, so T1 (fullness of [[-]]) and the <|-coclosure are the same lemma applied twice. (3) p.r.a. and left-adjointness COME APART off Set: 1<|q = (T,0) is not terminal over Vec, the slice Fam/(T,0) = Fam^T splits, and L_q is p.r.a. for every q anyway.",
+    "status": "proved",
+    "date_opened": "2026-08-30",
+    "date_closed": "2026-08-30",
+    "note": "Successor to pra-vs-probe-method. The predicted FOURTH occurrence of the summability gate DOES NOT OCCUR. What does occur is a SECOND occurrence of unit-connectedness (T1 was the first). Anti-diagonal: over Set the left adjoint is free and the right adjoint costs |T|=1; over Vec_fd the right adjoint is free on the finite-fd corner and the left adjoint costs |T|=1. Inside the (V) subset (C) subset (F) chain of fibredness-vs-left-closure, left-adjointness lands exactly on (V) -- the bottom rung -- so the chain inverts end to end between the two bases. Standing caveat: <| := (x) on the collapse locus is a DEFINITION (T1 says [[-]] is not faithful over Vec, so (T,0) and ({*},0) present the same functor); the binary-product necessity proof in 5.2(b) is independent of that caveat for finite T. By-product found while probing the converse: <| DOES NOT EXIST on Fam((Set x Set)^op) at all (Prop 9.1).  SUCCESSOR (same day, 2026-08-30, subtree gap3-converse, file 2026-08-30-admissibility-and-the-connectedness-converse.md): Gap 3 CLOSED on both poles and the 9bis dichotomy REFUTED by Set_*. On the extensive pole admissibility FORCES connectedness (Theorem B), so no counterexample can be posed; on the collapse pole the unit is always disconnected (Lemma D) and the left adjoint fails at |T|=2; and off both poles the question is not about C at all, because [[-]] stops being injective on objects (Theorem D).",
+    "tree": {
+        "id": "root",
+        "approach": "Characterise when (-)<|q on Fam(C^op) has a left adjoint, off Set",
+        "trust": "proved",
+        "file": "2026-08-30-left-adjoint-over-vec.md",
+        "children": [
+            {
+                "id": "criterion-phi",
+                "approach": "(A) One functional, probes varying: L_q has a left adjoint iff Phi^Z_q(B) = Fam(<Z>, <B> <| q) is representable on C^op for every probe Z; the comparison map kappa : coprod_{d in D_B} C(N_{B,d},Z) -> C(B, [[q]]Z) is 'is the decoration set D_B big enough to name every map B -> [[q]]Z?'",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-30-left-adjoint-over-vec.md",
+                "children": []
+            },
+            {
+                "id": "falsifier-dim1",
+                "approach": "The brief's cheapest falsifier, RUN FIRST: C=Vec_fd, T=N, Q_t=k. kappa fails already at dim B = 1 with |T| = 2 -- neither injective (zero map double-counted) nor surjective (support 2 missed) -- while the two sides have EQUAL CARDINALITY there. Summability plays no role.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "../scratch/left-adjoint-vec/verify.py",
+                "note": "A cardinality-only check would have MISSED this: at |T|=2, dim B=1 both sides have 4 elements. The canonical map had to be examined.",
+                "children": []
+            },
+            {
+                "id": "thm1-connected-unit",
+                "approach": "THEOREM 1 (base-general, presentation-independent): if the monoidal unit I is connected (C(I,-) preserves small coproducts) then F_q = Fam([[q]]^op) is left adjoint to (-)<|q for EVERY q, over any closed symmetric monoidal cocomplete C. Proof = gamma twice + closedness; distributivity never used.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-30-left-adjoint-over-vec.md",
+                "children": [
+                    {
+                        "id": "gamma-is-T1",
+                        "approach": "The comparison map gamma : coprod^Set_d C(I,X_d) -> C(I, coprod^C_d X_d) is verbatim T1's map; hence [[-]] full-faithful iff I connected (T1) and 'left adjoint for every q' share one hypothesis. Set x Set is lextensive with disconnected unit, so extensivity is NOT the invariant on the left either.",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-25-fullness-unit-connectedness.md",
+                        "children": []
+                    },
+                    {
+                        "id": "set-case-is-meyers",
+                        "approach": "The Set instance of Theorem 1 is KNOWN: Niu-Spivak 2312.00990 Prop 6.57 (Meyers), p. 204, eqs (6.58)-(6.59). Novelty gate closed 2026-08-30 for the Set case.",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "../scratch/2026-08-30-novelty-gate-left-adjoint-Fq.md",
+                        "sources": [
+                            "2312.00990"
+                        ],
+                        "children": []
+                    },
+                    {
+                        "id": "novelty-gate-general-base",
+                        "approach": "Whether 'connected unit => <|-coclosure over any base' is already in DJN 2305.05655 / Shapiro-Spivak / the enriched-container literature is UNCHECKED. Do not claim priority for the general-base form.",
+                        "role": "attempt",
+                        "trust": "speculative",
+                        "file": null,
+                        "note": "Novelty gate OPEN. Next browse: grep DJN for 'coclosure', 'left adjoint', the bracket-quotient notation.",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "thm2-collapse-locus",
+                "approach": "THEOREM 2 (B, the characterisation): wherever p<|q = p(x)q (collapse locus), (-)<|q has a left adjoint iff |T| = 1, and then F_q(R,U) = (R,[Q,U_rho]) = Fam([[q]]^op) -- closedness only, no dualizability.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-30-left-adjoint-over-vec.md",
+                "children": [
+                    {
+                        "id": "necessity-terminal",
+                        "approach": "Necessity proof (a): a right adjoint preserves the terminal object; 1 = <0_C>, and 1(x)q = (T,0_C), which is isomorphic to <0_C> iff |T|=1 (Lemma 1.2, isos in a free coproduct completion are shape bijections). Also kills T = empty.",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-30-left-adjoint-over-vec.md",
+                        "children": []
+                    },
+                    {
+                        "id": "necessity-binary-products",
+                        "approach": "Necessity proof (b), independent and free of any zero object (hence immune to caveat (D)): (p x p')(x)q lives over S x S' x T while (p(x)q) x (p'(x)q) lives over S x T x S' x T; at p=p'=<I> that forces |T| = |T|^2.",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-30-left-adjoint-over-vec.md",
+                        "note": "SHARP DIFFERENCE between the probes: for T infinite this test is inconclusive AND the obstruction genuinely vanishes -- for q = (N, k) over Vec_fd, L_q preserves all BINARY products but not the terminal object. The EMPTY product is the binding probe. Cf. containers-preserve-connected-not-empty.",
+                        "children": []
+                    },
+                    {
+                        "id": "collapse-locus-lemma",
+                        "approach": "Lemma 2.0: p<|q = p(x)q if (i) every P_s is tiny (T4-left Prop 2.1) OR (ii) T is FINITE and C is additive -- (ii) is new and needs no tininess, so L_q is a well-defined endofunctor of Fam(Vec^op) for every finite T.",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-30-left-adjoint-over-vec.md",
+                        "children": []
+                    },
+                    {
+                        "id": "caveat-definition-of-lhd",
+                        "approach": "STANDING CAVEAT: <| := (x) on the collapse locus is a DEFINITION, not a deduction. Over Vec [[-]] is not faithful (T1 honest correction 2), so (T,0) and ({*},0) present the same constant-0 functor and [[p<|q]] = [[p]][[q]] does not pin p<|q down.",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-25-fullness-unit-connectedness.md",
+                        "children": []
+                    },
+                    {
+                        "id": "no-representing-object-sweep",
+                        "approach": "Exhaustive machine check at |T|=2, Q_t=k, Z=k: no (U,N) with |U|<=2 and dims <=4 represents p |-> Fam(<Z>, p(x)q) on 8 test objects. Independent of the terminal-object argument.",
+                        "role": "attempt",
+                        "trust": "computed",
+                        "file": "../scratch/left-adjoint-vec/verify.py",
+                        "children": []
+                    },
+                    {
+                        "id": "sufficiency-sweeps",
+                        "approach": "|T|=1 monomial adjunction verified on 4000/4000 random families over F_2 and F_3, zero mismatches.",
+                        "role": "attempt",
+                        "trust": "computed",
+                        "file": "../scratch/left-adjoint-vec/verify.py",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "thm3-pra-separates",
+                "approach": "(C) THEOREM 3: over Vec the slice does NOT collapse -- 1<|q = (T,0), Fam/(T,0) = prod_{t in T} Fam(C^op), (L_q)_1 p = (p (x) Q_t)_t, whose left adjoint is (r_t) |-> coprod_t F_{Q_t}(r_t). So L_q is a parametric right adjoint for EVERY q over Vec as well, while having an honest left adjoint only for |T|=1. p.r.a. and left-adjointness are DIFFERENT QUESTIONS off Set; the exact measure of the gap is the object 1<|q, and the responsible feature is that Set has no zero object.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-30-left-adjoint-over-vec.md",
+                "sources": [
+                    "weber-2007-familial-2-functors-pra"
+                ],
+                "children": [
+                    {
+                        "id": "pra-sweeps",
+                        "approach": "prod_t |Fam(r_t, p(x)Q_t)| = |Fam(coprod_t F_{Q_t} r_t, p)| on 3000/3000 random instances, zero mismatches.",
+                        "role": "attempt",
+                        "trust": "computed",
+                        "file": "../scratch/left-adjoint-vec/verify.py",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "placement-in-VCF-chain",
+                "approach": "Over Vec_fd, having a left adjoint is EQUIVALENT to verticality (V): both say |T|=1. So (L) = (V) subsetneq (C) subsetneq (F) over Vec_fd, whereas over Set (V)=(C)=(F)={|T|=1} and (L) is unconditional. The chain inverts end to end.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-30-fibredness-vs-left-closure.md",
+                "children": []
+            },
+            {
+                "id": "prop91-setxset-no-lhd",
+                "approach": "By-product found while probing the converse to Theorem 1: Fam((Set x Set)^op) is NOT closed under <| at all. [[E,N]](1_C) = E . 1_C is a copower of the terminal object hence diagonal, but [[p]]([[q]](1_C)) = (T^A, T^B) is not, for p = <(1,2)>, |T| = 2. So the intended separator base is unavailable.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-08-30-left-adjoint-over-vec.md",
+                "note": "Scope: this is about MY Fam(C^op) (one external shape set). DJN 2305.05655 may use an indexed category where the components carry independent index sets; NOT verified. Conjecture (speculative, NOT a child of any proved node): <| exists on Fam(C^op) essentially only when 1_C is a generator (Set pole) or 1_C = 0_C (linear pole).",
+                "children": []
+            },
+            {
+                "id": "dead-summability-prediction",
+                "approach": "The brief's predicted answer: (-)<|q keeps its left adjoint over Vec iff coprod_t exists in C, i.e. the same summability gate as T2 conjunct (B) and clause (C) of fibredness-vs-left-closure -- which would have been a FOURTH occurrence of the crown pattern, the first on the left-adjoint side.",
+                "role": "attempt",
+                "trust": "dead-end",
+                "reason": "REFUTED 2026-08-30. The gate is |T|=1, not summability: the comparison map kappa already fails at dim P_s = 1 with |T| = 2 and T finite, where every coproduct in sight is finite and summability is automatic. Conversely |T|=1 makes summability vacuous. The two conditions are not merely different, they are ordered: over Vec_fd, left-adjointness (|T|=1) STRICTLY IMPLIES the summability/closure condition (#{t : Q_t != 0} finite). No fourth occurrence of the summability pattern; instead a SECOND occurrence of unit-connectedness.",
+                "refutation": "proved",
+                "file": "2026-08-30-left-adjoint-over-vec.md",
+                "children": []
+            },
+            {
+                "id": "dead-distributivity-is-load-bearing",
+                "approach": "The brief's starred premise: step (dagger) in the Set proof is distributivity of Set, is used exactly once, and is THE load-bearing step whose failure over Vec decides the question.",
+                "role": "attempt",
+                "trust": "dead-end",
+                "reason": "CORRECTED 2026-08-30. (dagger) as written is indeed Set distributivity, but the adjunction does not need it: Theorem 1 proves F_q -| (-)<|q from CONNECTEDNESS OF THE UNIT alone, in four lines, over any base, without choosing a presentation of <|. Distributivity of Set is used in CONSTRUCTING <| over Set (it is what makes Sigma_s T^{P_s} the shape set), not in the adjunction. The brief's instruction 'verify that everything else is formal -- do not assume it' was the right instruction and it fired.",
+                "refutation": "proved",
+                "file": "2026-08-30-left-adjoint-over-vec.md",
+                "children": []
+            },
+            {
+                "id": "gap3-converse",
+                "approach": "SUCCESSOR SESSION (same day): close Gap 3 -- is connectedness of I NECESSARY for (-)<|q to have a left adjoint? -- and decide the speculative 9bis dichotomy. Answer: the converse holds on BOTH poles, and off them the question is not about C at all.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                "children": [
+                    {
+                        "id": "lemma-S-shape-criterion",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                        "approach": "LEMMA S. If Fam(C^op) is <|-admissible (weakest hypothesis: the image of [[-]] is closed under composition, no monoidal structure assumed) then for every P in C and every small set T the object [P, T.1_C] is a COPOWER of 1_C. Proof: [Q,1_C] = 1_C and [[D,N]](1_C) = D.1_C, so evaluate [[p<|q]] = [[p]][[q]] at 1_C with p = <P>. The shape set is EXTERNAL; the base must be able to see it as a copower of its terminal object.",
+                        "children": []
+                    },
+                    {
+                        "id": "thmA-set-star-refutes-9bis",
+                        "role": "attempt",
+                        "trust": "proved",
+                        "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                        "approach": "THEOREM A. Set_* (pointed sets, smash) has a ZERO object (1_C = 0_C = *), so Lemma S is vacuous there, yet Set_* is NOT <|-admissible. Witness p = <S^0 v S^0>, q = ({1,2},(S^0,S^0)): [[p]][[q]]X = (X v X)^2, and |\\/_d [N_d,X]| = 1 + sum_d((m+1)^{n_d} - 1) forces b = 4 summands with n_d = 2 and a = -4 with n_d = 1. Impossible.",
+                        "note": "Set_* is on NEITHER pole: not extensive (wedge identifies basepoints, gamma fails by NON-INJECTIVITY), not additive, and not collapse (S^0 is tiny but S^0 v S^0 is not). It is the base where both known mechanisms switch off.",
+                        "children": [
+                            {
+                                "id": "thmA-machine-check",
+                                "role": "attempt",
+                                "trust": "computed",
+                                "file": "../scratch/connectedness-converse/verify.py",
+                                "approach": "Explicit construction of pointed sets/wedges/pointed-map sets: |[3_*, XvX]| = (2m+1)^2 for m=0..4; exhaustive search over multiplicity vectors (a_1..a_4), a_j <= 12, satisfying the identity simultaneously for m=0..8: EMPTY. Also confirms 3_* not tiny, S^0 tiny.",
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "id": "thmB-extensive-forces-connectedness",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                        "approach": "THEOREM B. C nontrivial, infinitary lextensive, cartesian closed. <|-admissible ==> the unit 1 = I is CONNECTED. Hence (Theorem 1) L_q has a left adjoint for every q. Mechanism: 1 disconnected ==> 1 = A + B nontrivially ==> C = C/A x C/B, and [A, T.1] = (T.1_1, 1_2) while copowers of 1 are (E.1_1, E.1_2) with ONE external E -- forcing E = 1 then |T| = 1.",
+                        "note": "So on the whole extensive pole a counterexample to the converse of Theorem 1 CANNOT be posed: admissibility already implies the hypothesis. 'I connected', '<| exists', and 'left adjoint for every q' are equivalent there. Subsumes and relocates the predecessor's Prop 9.1 (Set x Set): the obstruction is visible at p = <A> for A any nontrivial summand of 1.",
+                        "children": [
+                            {
+                                "id": "E1-terminal-rigidity",
+                                "role": "premise",
+                                "trust": "proved",
+                                "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                                "approach": "LEMMA E1. In a lextensive category, 1 = 1 + Z implies Z = 0. Proof: theta.iota_1 : 1 -> 1 is a map to the terminal hence id_1; disjointness makes the pullback of the two legs 0; but the pullback of id_1 along anything Z -> 1 is Z. Then E2: 1 not iso 0 and E.1 = 1 implies |E| = 1 (via strictness of 0).",
+                                "note": "Possibly folklore (Carboni-Lack-Walters). NO priority claimed; novelty ungated.",
+                                "children": []
+                            },
+                            {
+                                "id": "E0-disconnected-implies-decomposable",
+                                "role": "premise",
+                                "trust": "proved",
+                                "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                                "approach": "LEMMA E0. In an infinitary lextensive C with 1 not iso 0: gamma at I = 1 is ALWAYS injective (disjointness + monic injections + strict 0), so disconnectedness is exactly failure of SURJECTIVITY, and pulling the decomposition back along the offending h : 1 -> coprod X_d gives 1 = A + B with A, B not initial.",
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "id": "lemD-collapse-implies-disconnected",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                        "approach": "LEMMA D. If every object of C is copower-tiny (the T4-left Prop 2.1 hypothesis under which p<|q = p(x)q), then I is DISCONNECTED. Diagram chase: connectedness would make (d,f) |-> iota_d . f a bijection C(I+I,I) + C(I+I,I) -> C(I+I,I+I); then id = iota_1 . f, so iota_2 = iota_1 . (f.iota_2), and (2,id_I), (1,f.iota_2) are two elements of C(I,I)+C(I,I) with the same image -- contradicting injectivity of gamma. NO cardinality argument. Lemma D': a zero object also kills connectedness (the zero morphism sits in every summand).",
+                        "note": "With predecessor Theorem 2 (left adjoint iff |T|=1 on the collapse locus) this closes Gap 3 on the collapse pole: 'left adjoint for every q' fails there, at the smallest witness |T|=2.",
+                        "children": [
+                            {
+                                "id": "fatal-probe-zero",
+                                "role": "premise",
+                                "trust": "proved",
+                                "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                                "approach": "kappa_{B,Z} on the collapse locus IS gamma with the probe I replaced by B. Connectedness is the probe B = I; the FATAL probe is B = 0_C, where the left side has |T| elements and the right side has one. Two-line base-general reproof of Theorem 2's necessity. House method 'one functional, many probes' with the probe ranging over C itself.",
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "id": "thmD-wellposedness",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                        "approach": "THEOREM D. (i) I connected ==> [[-]] full and faithful (T1) ==> injective on objects up to iso ==> p<|q is DETERMINED and 'L_q has a left adjoint' is a property of C. (ii) I disconnected: over Vec_fd, ({*},k^2) and ({1,2},k) both present X |-> X (+) X and are NOT isomorphic (shape sets 1 vs 2), so <| is a CHOICE and left-adjointness is a property of the choice. PUNCHLINE: Theorem 1's hypothesis is simultaneously what makes its converse true and what makes its converse MEANINGFUL.",
+                        "note": "Explains why the predecessor's caveat (D) cannot be discharged, and identifies 5.2(b) (binary products) as the re-choice-robust necessity argument and 5.2(a) (terminal object) as the convention-sensitive one.",
+                        "children": []
+                    },
+                    {
+                        "id": "dead-9bis-dichotomy",
+                        "role": "attempt",
+                        "trust": "dead-end",
+                        "approach": "The predecessor's 9bis conjecture: <| exists on Fam(C^op) essentially only when 1_C is a generator (Set pole) or 1_C = 0_C (linear pole), in which case Theorems 1 and 2 are jointly exhaustive.",
+                        "reason": "REFUTED 2026-08-30 by Theorem A. Set_* satisfies 1_C = 0_C and neither Theorem 1 (I disconnected) nor Theorem 2 (S^0 v S^0 not tiny) applies, and <| does not exist there at all. 1_C = 0_C is a SYMPTOM of the linear pole, not a characterisation of it. Replaced by the trichotomy extensive-pole / collapse-pole / inadmissible.",
+                        "refutation": "proved",
+                        "file": "2026-08-30-admissibility-and-the-connectedness-converse.md",
+                        "children": []
+                    },
+                    {
+                        "id": "open-middle-region",
+                        "role": "attempt",
+                        "trust": "speculative",
+                        "file": null,
+                        "approach": "RESIDUAL GAP. A separator for the converse of Theorem 1 would have to be <|-admissible, non-collapse, and closed symmetric monoidal with (x) not cartesian or without infinitary extensivity. No example known, no proof that none exists. Lead: if I = I_1 + I_2 in a closed monoidal C then X = (X(x)I_1) + (X(x)I_2) for all X, which looks like an idempotent splitting; if I_i (x) I_j = 0 for i != j the Theorem B argument runs verbatim without cartesianness. NOT ATTEMPTED.",
+                        "note": "Also open: whether Lemma S is SUFFICIENT for admissibility (the natural proof needs the internal, not merely external, form of the extensivity decomposition); and whether DJN 2305.05655's INDEXED formulation dodges Theorem B entirely (one index set per component would make the obstruction evaporate, which would scope Theorem B to MY external-shape Fam(C^op)). Novelty ungated for Theorems A, B, D and for E1/E2 (likely folklore).",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    }
+}

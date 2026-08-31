@@ -1,0 +1,295 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\Sup}{\mathsf{S}}
+\newcommand{\Wk}{\mathsf{W}}
+\newcommand{\Rt}{\mathsf{R}}
+
+\title{Orchestration composition is a Zappa--Sz\'ep product:\\
+a worked instantiation, and re-entrancy as the $H^2$ obstruction}
+\author{MacBeth\\\small Kodamai}
+\date{19 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We ground the ``agent orchestration $=$ directed container'' dictionary on the
+smallest non-trivial case. A supervisor--worker orchestration is modelled as a
+small category (equivalently a directed container, Ahman--Uustalu); composing two
+such orchestrations into a single interleaved joint agent is a \emph{distributive
+law / Zappa--Sz\'ep product} $\K=\C\bowtie\D$, governed by the pairwise
+criterion \textnormal{(L)}$\wedge$\textnormal{(G)}. We exhibit, and machine-check,
+a topology table with four regimes. Three \emph{compose}: independent supervisors
+(trivial law, $\K=\C\times\D$); a genuinely non-abelian coherent interleaving
+($\K=S_3=\mathbb Z/3\bowtie\mathbb Z/2$); and a state-protected (locked) re-entry
+pattern (a $\mathbb Z/2$-torsor of joint agents). One is \emph{obstructed}: an
+\emph{unprotected re-entrancy} pattern, in which a worker's outcome mutates the
+supervisor's shared state, presents \emph{exactly} as the ten-morphism rigid twist
+--- \textnormal{(L)} holds but \textnormal{(G)} fails, so no distributive law
+exists, and the obstruction is the nonzero class
+$[\omega]\in H^2(\Sk_\C;\D)\cong\mathbb Z/2$. This is the ``re-entrancy $=$ failed
+distributive law'' reading, computed rather than asserted. The single bit that
+flips the verdict is whether a callee mutates the caller's shared state. All
+claims are machine-checked (\texttt{projects/scratch/orchestration\_zs*.py}); the
+load-bearing theorems are cited, not reproved.
+\end{abstract}
+
+\section{What is and is not claimed}\label{sec:scope}
+
+The abstract machinery is established and used as a black box.
+\begin{itemize}
+\item[\textbf{(T1)}] \emph{Directed container $\cong$ small category} (Ahman--Uustalu;
+formalised in Lean in the author's development). A handoff topology --- objects are
+roles/agents, morphisms are admissible handoff paths --- is a small category, hence
+a directed container.
+\item[\textbf{(T2)}] \emph{Pairwise Zappa--Sz\'ep criterion} \cite{pairwise}. For a
+small category $\K$ and a wide subcategory $\D\subseteq\K$, there is a wide $\C$
+with $(\C,\D)$ a strict factorization system $\K=\C\bowtie\D$ if and only if
+\textnormal{(L)} every hom-presheaf $\Hom_\K(-,b)$ is free as a right $\D$-set, and
+\textnormal{(G)} free bases can be chosen closing into a wide subcategory. The data
+$\K=\C\bowtie\D$ is exactly a distributive law $\lambda:\D\C\Rightarrow\C\D$
+satisfying the matched-pair axioms ZS1--ZS4.
+\item[\textbf{(T3)}] \emph{The (G)-obstruction is an $H^2$ class} \cite{gobstr}.
+Under the standard hypothesis (abelian vertex groups, trivial left action),
+$\textnormal{(G)}\Leftrightarrow[\omega]=0\in H^2(\Sk_\C;\D)$; the rigid twist
+realizes the generator of $H^2\cong\mathbb Z/2$. The cohomology itself is classical
+(Rosebrugh--Wood for existence, Baues--Wirsching for the abelian classification,
+Pirashvili for the non-abelian case) and is cited, never reproved.
+\end{itemize}
+
+The reading ``an agent's interface is a polynomial functor / container; its dynamics
+is a coalgebra'' is Spivak's prior art and is not claimed here. \textbf{The sole
+contribution of this note} is the \emph{worked instantiation}: that the
+supervisor--worker orchestration patterns below literally present as the categories
+to which (T1)--(T3) apply, turning the dictionary from a proposed reading into a
+computed one. In particular the models are minimal faithful abstractions; we do not
+claim any specific production framework is \emph{exactly} one of them.
+
+\section{The orchestration category}\label{sec:model}
+
+Fix the handoff roles $\Sup$ (supervisor), $\Wk$ (a worker running), $\Rt$ (a
+result/return point). The supervisor carries a one-bit \emph{turn token} recording
+which worker currently holds its attention; passing the token is an involution
+$\tau$, $\tau^2=\id$, so $\End(\Sup)\supseteq\{\id_\Sup,\tau\}\cong\mathbb Z/2$.
+The generating handoffs are
+\[
+  p,p\tau:\Sup\to\Wk\quad(\text{dispatch, in turn-state $0$ resp.\ $1$; }p\tau=p\circ\tau),
+  \qquad
+  s,s_2:\Wk\to\Rt\quad(\text{two worker outcomes}),
+\]
+with composites $q,q\tau:\Sup\to\Rt$. The right $\mathbb Z/2$-action is
+$p\cdot\tau=p\tau$, $q\cdot\tau=q\tau$. We take the prescribed right factor to be
+the supervisor-internal (``token/reader'') moves
+\[
+  \D=\{\id_\Sup,\tau,\id_\Wk,\id_\Rt\},
+\]
+a wide subcategory. The candidate left factor $\C$ we are solving for is the genuine
+dispatch/handoff part. Everything hinges on \emph{one} composite: how a worker
+outcome, run after a dispatch, sits relative to the token.
+
+\begin{definition}[The two regimes]\label{def:regimes}
+Write $s$ for ``the worker returns normally'' and $s_2$ for ``the worker re-enters''
+(calls back into the supervisor before returning).
+\begin{itemize}
+\item[\textbf{(bug)}] \emph{Unprotected re-entry.} The re-entrant branch flips the
+token: $s\circ p=q$ but $s_2\circ p=q\tau$ (forcing $s\circ p\tau=q\tau$,
+$s_2\circ p\tau=q$). The category is $\K_{\mathrm{bug}}$.
+\item[\textbf{(ok)}] \emph{State-protected re-entry (a lock).} Neither outcome
+touches the token: $s\circ p=s_2\circ p=q$, $s\circ p\tau=s_2\circ p\tau=q\tau$.
+The category is $\K_{\mathrm{ok}}$.
+\end{itemize}
+\end{definition}
+
+Both $\K_{\mathrm{bug}},\K_{\mathrm{ok}}$ are genuine categories and $\D$ is wide in
+each (machine-checked). The reading is exact: \emph{re-entrancy is the callee
+mutating shared caller state during a pending call}, and here that is precisely the
+$s_2$-branch dragging the supervisor's turn token, i.e. $s_2\circ p=q\tau\neq q$.
+
+\begin{remark}[Relation to the free category on $\Sup\rightleftarrows\{w_1,w_2\}$]
+This is the minimal finite faithful model of the two-worker re-dispatch pattern.
+The two worker outcomes $s,s_2$ are the two-worker choice ``re-dispatch to $w_1$
+vs.\ $w_2$'', and the involution $\tau$ is the token's monodromy around the cycle
+$w_1\to\Sup\to w_2\to\Sup\to w_1$: traversing it once toggles the token, so the loop
+carries a $\mathbb Z/2$ holonomy. The free category on the graph
+$\Sup\rightleftarrows\{w_1,w_2\}$ is infinite (its morphisms are all dispatch/return
+paths) and carries no relations, hence no finite obstruction; the obstruction is
+created by the \emph{shared-state} relation $s_2\circ p=q\tau$, which is exactly the
+identification a re-entrant, state-mutating orchestration imposes. We work with the
+finite quotient because the $\mathbb Z/2$ holonomy is a finite phenomenon the
+Zappa--Sz\'ep machinery computes directly.
+\end{remark}
+
+\section{The obstruction: unprotected re-entry is the rigid twist}\label{sec:bug}
+
+\begin{proposition}[$\K_{\mathrm{bug}}$ is obstructed]\label{prop:bug}
+In $\K_{\mathrm{bug}}$, \textnormal{(L)} holds (each $\Hom(-,b)$ is free over $\D$,
+with exactly two bases per target), but \textnormal{(G)} fails: no wide $\C$ makes
+$(\C,\D)$ a strict factorization system. Hence no distributive law
+$\lambda:\D\C\Rightarrow\C\D$ exists, and the two concurrent behaviours (the
+supervisor's dispatch and the worker's internal step) cannot be serialized into a
+single joint agent.
+\end{proposition}
+
+\begin{proof}
+Freeness is a direct check; we give the crux. The right $\D$-orbits in $\Hom(-,\Rt)$
+are $\{q,q\tau\}$ (source $\Sup$), $\{s\}$, $\{s_2\}$ (source $\Wk$; $\D$ has no
+non-identity arrow out of $\Wk$), and $\{\id_\Rt\}$; a free basis picks one of
+$q,q\tau$ together with $s,s_2,\id_\Rt$ --- two bases. In $\Hom(-,\Wk)$ the orbits
+are $\{p,p\tau\}$ and $\{\id_\Wk\}$; a basis is $\{\id_\Wk,p\}$ or $\{\id_\Wk,p\tau\}$.
+So \textnormal{(L)} holds. Now any closing $\C$ chooses a $\Wk$-basis element
+$t\in\{p,p\tau\}$ and an $\Rt$-basis element $r\in\{q,q\tau\}$. Closure requires
+$s\circ t,\ s_2\circ t\in\C$, i.e.\ both must be the chosen $r$. But
+$s\circ p=q$ and $s_2\circ p=q\tau$ are the \emph{two distinct} orbit representatives,
+so the $\Rt$-basis would have to contain both $q$ and $q\tau$ --- impossible, it
+contains exactly one. The case $t=p\tau$ ($s\circ p\tau=q\tau$, $s_2\circ p\tau=q$)
+is identical. Hence \textnormal{(G)} fails; by (T2) there is no strict factorization,
+equivalently no distributive law. A brute-force search over all wide subcategories
+confirms $\#\mathrm{SFS}=0$.
+\end{proof}
+
+\begin{theorem}[The class is the generator of $\mathbb Z/2$]\label{thm:h2}
+$\K_{\mathrm{bug}}$ is isomorphic, as a category with its distinguished wide
+subcategory $\D$, to the ten-morphism rigid twist of \cite{gobstr} with
+$\D=\End$, under
+\[
+  \Sup\mapsto a,\ \Wk\mapsto x,\ \Rt\mapsto y,\quad
+  \tau\mapsto g,\ p\mapsto p,\ p\tau\mapsto pg,\ s\mapsto s,\ s_2\mapsto s_2,\
+  q\mapsto q,\ q\tau\mapsto qg.
+\]
+Consequently the hypothesis of (T3) holds ($\D$ is the abelian vertex group
+$\mathbb Z/2$ at $\Sup$, trivial elsewhere; the left action is trivial), the orbit
+category $\Sk_\C$ is the branch $\Sup\to\Wk\rightrightarrows\Rt$, and
+\[
+  H^2(\Sk_\C;\D)\cong\mathbb Z/2,\qquad [\omega]\neq 0\ \text{(the generator).}
+\]
+\end{theorem}
+
+\begin{proof}
+The stated bijection is checked to preserve domains, codomains, all composites, and
+$\D$ (machine-verified in \texttt{orchestration\_zs2.py}); it is therefore an
+isomorphism of categories matching the wide subcategories. The $H^2$ computation is
+then Theorem~rt of \cite{gobstr} verbatim: normalized cochains give
+$Z^2=C^2\cong(\mathbb Z/2)^2$ (coordinates $\omega([s],[p]),\omega([s_2],[p])$),
+$B^2=\langle(1,1)\rangle$ (the diagonal), so $H^2\cong\mathbb Z/2$, and the defect of
+the natural transversal is $(0,1)\notin B^2$, the generator.
+\end{proof}
+
+\begin{remark}[Reading the class]
+The two coordinates of $\omega$ are the two worker outcomes; $B^2=$ diagonal is the
+freedom to relabel which token-state is ``canonical.'' The class is nonzero precisely
+because the \emph{two} outcomes disagree on that relabelling by one token-flip --- the
+re-entrant branch's side effect. This is the categorical avatar of ``a flat bundle
+is trivial iff its holonomy vanishes'': the local completions of each partial handoff
+(free, by (L)) fail to glue into a global section (a serialized joint agent) by a
+single $\mathbb Z/2$ monodromy. It is the same obstruction the SEED reads in Ethereum
+re-entrancy, now located as an explicit $H^2$ generator on a handoff category.
+\end{remark}
+
+\section{The composing regimes}\label{sec:ok}
+
+\begin{proposition}[Locking restores composability]\label{prop:ok}
+In $\K_{\mathrm{ok}}$, \textnormal{(L)} and \textnormal{(G)} both hold; there are
+exactly two strict factorization systems over $\D$ (a $\mathbb Z/2$-torsor, so
+$[\omega]=0$), with $\C=\{\id_\Sup,\id_\Wk,\id_\Rt,p,q,s,s_2\}$ in one, and the
+extracted distributive law $\lambda$ satisfies ZS1--ZS4 and the unit laws.
+\end{proposition}
+
+\begin{proof}
+Machine-checked (\texttt{orchestration\_zs.py}, \texttt{orchestration\_zs2.py}). The
+only change from $\K_{\mathrm{bug}}$ is that $s_2\circ p=q$ rather than $q\tau$, so
+$s\circ t$ and $s_2\circ t$ now land on the \emph{same} orbit representative for a
+fixed $\Wk$-basis choice; the contradiction in the proof of
+Proposition~\ref{prop:bug} disappears and both transversals close. Extracting
+$\lambda(d,c)$ as the unique factorization of $d\circ c$ and checking ZS1--ZS4
+returns no violations.
+\end{proof}
+
+Two further composing regimes complete the table.
+
+\begin{example}[Independent supervisors]\label{ex:indep}
+Two supervisors over read-only workers do not interfere: the distributive law is the
+swap $\lambda(d,c)=(c,d)$, which trivially satisfies ZS1--ZS4, and
+$\K=\C\times\D$. With $\C=\D=\mathbb Z/2$ (dispatch cycles truncated for finiteness)
+one gets $\K=\mathbb Z/2\times\mathbb Z/2$, a category on the nose (checked).
+\end{example}
+
+\begin{example}[Genuinely non-abelian coherent interleaving]\label{ex:s3}
+Two supervisors over a \emph{shared} worker pool can interleave nontrivially yet
+consistently. Take $\C=\mathbb Z/3$ (supervisor-$\C$'s cyclic worker rotation),
+$\D=\mathbb Z/2$ (supervisor-$\D$'s toggle), with the left action ${}^{d}c=-c$ for
+the non-identity $d$ (the toggle reverses the rotation) and trivial right action.
+This is the dihedral matched pair; ZS1--ZS4 hold and
+$\K=\C\bowtie\D=S_3$, with the join genuinely non-abelian
+($(c_1)\circ(d_1)\neq(d_1)\circ(c_1)$, checked). So ``composition $=$ Zappa--Sz\'ep
+product'' is non-vacuous: it produces a legitimate joint agent that is neither a
+product nor obstructed. (The two-supervisor reading here is illustrative/schematic.)
+\end{example}
+
+\section{The table}\label{sec:table}
+
+All four rows are machine-checked in \texttt{projects/scratch/orchestration\_zs*.py}.
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+shared-worker topology & verdict & invariant \\
+\midrule
+independent supervisors (read-only workers) & composes & $\K=\C\times\D$ (trivial law) \\
+two supervisors, coherent nontrivial interleave & composes & $\K=S_3$, non-abelian join \\
+re-entry, state-protected (lock) & composes & $\#\mathrm{SFS}=2$, $[\omega]=0$ \\
+re-entry, \textbf{unprotected} (worker mutates state) & \textbf{obstructed} & $\#\mathrm{SFS}=0$, $[\omega]=$ gen $\mathbb Z/2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The single bit that flips the verdict is whether a worker's outcome
+mutates the supervisor's shared state. If it does, the distributive law becomes
+multivalued, (G) fails, and the obstruction to a joint agent is the nonzero
+$[\omega]\in H^2(\Sk_\C;\D)$.
+
+\section{Grant relevance and honest status}\label{sec:grant}
+
+This is the worked instantiation the orchestration dictionary lacked. It grounds the
+one genuinely unstaked claim --- \emph{composing two agent orchestrations is a
+distributive law / Zappa--Sz\'ep product $\C\bowtie\D$, not merely a functor} --- on
+a computed example, and locates a concrete failure mode (unprotected re-entrancy) as
+an explicit degree-two cohomology class on the handoff category. The degree axis is
+the differentiator from the multi-agent-systems sheaf-Laplacian literature, which
+puts $H^0$ (consensus) and $H^1$ (identifiability) on the \emph{communication} graph
+--- \emph{state} questions --- whereas this puts $H^2$ on the \emph{handoff} category
+--- a \emph{structural composability} question, one degree up.
+
+\paragraph{Status.} Grade: \textbf{computed}. The scaffolding (T1)--(T3) is proved
+and cited; the instantiation and the table are new and machine-checked; no new
+cohomology is claimed, and the models are minimal faithful abstractions rather than
+literal encodings of any named framework.
+
+\begin{thebibliography}{9}
+\bibitem{pairwise} MacBeth, \emph{The pairwise Zappa--Sz\'ep criterion}, Kodamai
+note, 10 June 2026.
+\bibitem{gobstr} MacBeth, \emph{The global-closure obstruction (G) is a cohomology
+class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\D)$}, Kodamai note, 11 June 2026.
+\end{thebibliography}
+
+\end{document}

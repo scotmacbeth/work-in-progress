@@ -1,0 +1,111 @@
+{
+    "conjecture": "Bare comonoids for the Dirichlet tensor in Poly (no ◁ structure) are exactly the FAMILIES OF MONOIDS: a container c = Σ_{s∈S} y^{M_s} with each direction set c[s] carrying an arbitrary monoid structure. Comultiplication forced diagonal on shapes, fibrewise binary op on directions; coassoc=associativity, counit=unitality. Comon(Cont,⊗,y) ≅ Fam(Mon^op); cocommutative ones = Fam(CMon^op). Answers the Poly/⊗-comonoid slice of Niu–Spivak Ch9 Q5 (open).",
+    "status": "proved",
+    "date_opened": "2026-07-17",
+    "date_closed": "2026-07-17",
+    "note": "Sibling of comparitor-comonoid-nogo (the DOUBLE comonoid = sets of COMMUTATIVE monoids). Bare ⊗-comonoid is strictly larger: ALL monoids, arbitrary shape set — 'strictly larger and cleaner' as the PROVE brief predicted. Elementary unwinding of the comonoid axioms in container coordinates; graded proved but explicitly flagged as 'answers an open question by an elementary computation', not a deep theorem. Honesty-gate: full-PDF re-read of Niu–Spivak 2312.00990 confirms Ch9 Q5 is OPEN, Rmk 3.78 flags ⊗-MONOIDS (dual) as future work, §8.2.4/Prop 8.79 is ⊗-on-Cat# (double ingredient) — NO bare classification in the book. Corrects comparitor-double-comonoid §7's loose attribution.",
+    "tree": {
+        "id": "root",
+        "approach": "bare ⊗-comonoids in Poly = families of monoids (sets of monoids); Comon(Cont,⊗,y) ≅ Fam(Mon^op)",
+        "trust": "proved",
+        "file": "2026-07-17-bare-dirichlet-comonoid.md",
+        "sources": [
+            "2312.00990"
+        ],
+        "children": [
+            {
+                "id": "day-dirichlet",
+                "approach": "⊗ = Day(Set,×): (p⊗q)[s,t]=p[s]×q[t], unit y; Cont ≅ Fam(Set^op)",
+                "role": "premise",
+                "trust": "peer-reviewed",
+                "file": "2026-07-14-day-family-classification.md",
+                "sources": [
+                    "2312.00990",
+                    "2111.10968"
+                ],
+                "review": "Niu–Spivak Prop 3.79 (full-PDF deep-read, verbatim-quoted 2026-07-14 + 2026-07-17); Cont≅Fam(Set^op) is SGF Prop 3.6. Cited standard results.",
+                "note": "Load-bearing setup; both cited standard.",
+                "children": []
+            },
+            {
+                "id": "counit-forces-diagonal",
+                "approach": "counit laws (ε⊗id)∘δ=id=(id⊗ε)∘δ force δ₁ = diagonal on shapes and e_s a two-sided unit on directions",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-07-17-bare-dirichlet-comonoid.md",
+                "children": []
+            },
+            {
+                "id": "coassoc-is-associativity",
+                "approach": "coassoc (δ⊗id)∘δ=(id⊗δ)∘δ ⟺ m_s associative; no cross-shape condition, no cocommutativity (comonoid ≠ cocommutative)",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-07-17-bare-dirichlet-comonoid.md",
+                "children": []
+            },
+            {
+                "id": "morphisms",
+                "approach": "⊗-comonoid morphism = forward shape map + backward monoid homomorphism per fibre ⟹ Comon ≅ Fam(Mon^op)",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-07-17-bare-dirichlet-comonoid.md",
+                "children": []
+            },
+            {
+                "id": "brute-force",
+                "approach": "corroboration (NOT load-bearing): enumerate ALL candidate (δ₁,{δ♯},{e}) and check comonoid laws by direct Poly-morphism composition; compare to independent monoid enumeration",
+                "role": "attempt",
+                "trust": "computed",
+                "file": null,
+                "note": "scratch/bare-comonoid/verify.py. y^1:1=1, y^2:4=4, y^3:33=33, [1,2]:4=4; all δ₁ diagonal; count matches UNFILTERED monoid count ⟹ no cocommutativity forced. The proof rests on §§3-4 analytically; this is a check.",
+                "children": []
+            },
+            {
+                "id": "q5-open",
+                "approach": "novelty anchor: Niu–Spivak Ch9 Q5 asks to characterize ⊗-comonoids in Poly — OPEN",
+                "role": "premise",
+                "trust": "published",
+                "file": null,
+                "sources": [
+                    "2312.00990"
+                ],
+                "publication": "Niu & Spivak, Polynomial Functors: A Mathematical Theory of Interaction (2023), Ch.9 Question 5, p.349; arXiv:2312.00990",
+                "note": "Full-PDF read 2026-07-17. Establishes the prior that the bare Poly/⊗-comonoid classification is not in the book.",
+                "children": []
+            },
+            {
+                "id": "book-nonclassification-audit",
+                "approach": "honesty audit: book does NOT classify bare ⊗-comonoids in Poly (Rmk 3.78 = ⊗-monoids future work; §8.2.4/Prop 8.79 = ⊗-on-Cat#)",
+                "role": "attempt",
+                "trust": "published",
+                "file": null,
+                "sources": [
+                    "2312.00990"
+                ],
+                "note": "Corrects comparitor-double-comonoid §7 mis-attribution ('Spivak owns the ⊗-comonoid classification'). He does not; 'set of monoids' there is MacBeth's own Cat#-Step-1 conclusion.",
+                "children": [],
+                "publication": "Niu & Spivak, Polynomial Functors: A Mathematical Theory of Interaction (2023); arXiv:2312.00990 — Remark 3.78 & §8.2.4/Prop 8.79"
+            },
+            {
+                "id": "lean-forward",
+                "approach": "Lean 4 (core, no Mathlib): forward map DirichletComonoid c → FamilyOfMonoids c machine-checked; assoc via general lemma dirichlet_mul_assoc (cases on δ + subst diagonal shape law collapses all transports)",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "file": null,
+                "lean": "Container.DirichletComonoid.toFamilyOfMonoids",
+                "note": "Lean file: lean/Containers/Containers/DirichletComonoid.lean. Sorry-free 2026-07-18; #print axioms = [Quot.sound] only (no sorry, no Classical). Declarations: hdiag/fst_diag/snd_diag (shape-diagonal forcing), mul/one/mul_apply, one_mul_law/mul_one_law (unit laws), Container.dirichlet_mul_assoc (general: any diagonal-on-shapes δ:C→C⊗C with coassoc induces associative fibre mult) + mul_assoc_law. Forward direction ONLY; converse now done in lean-converse child.",
+                "children": []
+            },
+            {
+                "id": "lean-converse",
+                "approach": "Lean 4 (core, no Mathlib): converse map FamilyOfMonoids c → DirichletComonoid c + BOTH round trips ⟹ full iso DirichletComonoid c ≅ FamilyOfMonoids c, machine-checked",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "file": null,
+                "lean": "Container.FamilyOfMonoids.toDirichletComonoid",
+                "note": "Lean file: lean/Containers/Containers/DirichletComonoidConverse.lean. Sorry-free 2026-07-20; #print axioms = [Quot.sound] only (no sorry, no Classical), and DirichletComonoid.ext depends on NO axioms. Converse chooses δ diagonal, so the three laws are TRANSPORT-FREE (ext' rfl; one_mul/mul_one/mul_assoc directly) — contrary to the LEAN.md expectation of a seq_pos_norm-style transport; the transport lives only in round-trip 2. Declarations: counitMor/comultMor, left_counit_law/right_counit_law/coassoc_law, toDirichletComonoid; DirichletComonoid.ext (Prop law fields); round trips toDirichletComonoid_toFamilyOfMonoids (rfl) and toFamilyOfMonoids_toDirichletComonoid (ext' along funext hdiag.symm; forward mul unfolds to δ.onPos∘transport, two transports agree by Eq-proof-irrelevance + Prod/Unit η). Completes the ⊗-comonoid column to a full iso, sibling of DirichletMonoidConverse (⊗-monoid column, 2026-07-20).",
+                "children": []
+            }
+        ]
+    }
+}

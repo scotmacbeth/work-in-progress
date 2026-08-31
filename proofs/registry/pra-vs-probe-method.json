@@ -1,0 +1,116 @@
+{
+ "conjecture": "Q2 falsifier for the crown 'one functional, many probes': decide whether L_q = (-)<|q is a parametric right adjoint (Weber TAC 18(22) 2007, Def 2.3) as an endofunctor of Cont(Set) = Fam(Set^op). VERDICT: it is, for EVERY q, and for the strongest possible reason -- it has an honest LEFT adjoint F_q(R,U) = (R, rho |-> [[q]](U_rho)) = Fam([[q]]^op). Hence outcome (alpha): the crown's Weber re-filing is REFUTED. Diagnosis: wrong adjoint side. p.r.a. is a condition on the LEFT adjoint of L_q (always exists); MacBeth's probes test the RIGHT adjoint (the <|-left-closure), which over Set exists iff |T|=1.",
+ "status": "proved",
+ "date_opened": "2026-09-06",
+ "date_closed": "2026-08-30",
+ "note": "PROVE session run against /home/agent/state/PROVE.md. The WAKE OBSERVATION steps 1-3 all HOLD (y^0 terminal, 1<|q = 1, so Cont/T1 = Cont and p.r.a. <=> honest left adjoint) -- outcome (gamma) does not occur. No q-dependence -- outcome (beta) does not occur. The solution-set gap flagged in the brief is NOT crossed: the adjoint is constructed explicitly (unit = generic-element/evaluation, counit = coproduct-injection), not inferred from limit preservation. Products/terminal/equalizers were ALSO verified by hand on both legs with correct variance (equalizer of shapes + COEQUALIZER of positions) and agree. The one hypothesis making F_q exist is DISTRIBUTIVITY of Set (Sigma_{c:A->T} Prod_a X_{a,c(a)} = Prod_a Sigma_t X_{a,t}) -- so the natural successor question is whether L_q is p.r.a. over Fam(Vec^op), where that step dies; if it acquires a summability condition there, that is a genuine fourth occurrence of the crown pattern, found on the LEFT adjoint. SURVIVING positive content: for a Set-valued G on a category with terminal object, p.r.a. => familially representable (family indexed by G(1)), with converse given small coproducts -- this gives each probe condition a citable name, but per-instance, not as a unification.",
+ "tree": {
+  "id": "root",
+  "approach": "L_q = (-)<|q on Cont(Set) is p.r.a. for every q, because F_q = Fam([[q]]^op) is an honest left adjoint",
+  "trust": "proved",
+  "file": "2026-08-30-pra-vs-probe-method.md",
+  "sources": [
+   "weber-2007-familial-2-functors-pra"
+  ],
+  "children": [
+   {
+    "id": "terminal-is-y0",
+    "approach": "y^0 = ({*}, empty) is terminal in Cont(Set) = Fam(Set^op), because empty is terminal in Set^op (fibrewise op)",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-08-30-pra-vs-probe-method.md",
+    "children": []
+   },
+   {
+    "id": "T1-is-terminal",
+    "approach": "1 <| q = 1 for all q (shapes = (empty -> T) = 1, positions = Sigma_{a in empty} = empty); hence Cont/T1 =~ Cont and Weber Def 2.3 degenerates to 'has a left adjoint'",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-08-30-pra-vs-probe-method.md",
+    "children": []
+   },
+   {
+    "id": "left-adjoint-direct",
+    "approach": "Direct hom computation: Cont(r, p<|q) = Prod_rho Sigma_s Set(P_s, [[q]](U_rho)) = Cont(F_q r, p), via hom-out-of-Sigma and the Set distributive law",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-08-30-pra-vs-probe-method.md",
+    "note": "The distributive law is the ONLY use of extensivity of the base -- the point where a Vec-base version would break.",
+    "children": []
+   },
+   {
+    "id": "left-adjoint-yoneda",
+    "approach": "Independent derivation: Nat(y^U, [[p]] o [[q]]) = [[p]]([[q]]U) = Nat(y^{[[q]]U}, [[p]]); extend along r = coproduct of y^{U_rho}. Gives naturality in both variables.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-08-30-pra-vs-probe-method.md",
+    "children": []
+   },
+   {
+    "id": "limit-preservation-by-hand",
+    "approach": "Terminal, all small products (positions = COPRODUCT of position sets), and equalizers (shape equalizer + position COEQUALIZER) preserved; both legs, correct variance",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-08-30-pra-vs-probe-method.md",
+    "children": []
+   },
+   {
+    "id": "small-case-sweeps",
+    "approach": "35797 (p,q,r) triples with |S|,|T|,|R| <= 3 and position sets <= 3: |Cont(F_q r, p)| = |Cont(r, p<|q)| with ZERO mismatches; 18 equalizer diagrams preserved",
+    "role": "attempt",
+    "trust": "computed",
+    "file": "../scratch/pra_lhd_check.py",
+    "note": "Hom-sets in Cont(Set) depend only on cardinalities, so cardinality checking is faithful for these instances. Sub-agent/script computation: computed, never higher.",
+    "children": []
+   },
+   {
+    "id": "contrast-right-adjoint",
+    "approach": "The RIGHT adjoint to L_q (the <|-left-closure) exists over Set iff |T|=1 -- Workers Thm 2 / T4-left. So L_q is always a right adjoint and almost never a left adjoint.",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-08-27-t4-left-closedness-lhd-famcop.md",
+    "review": "Cited from my own proved results workers-x-closed-lhd-obstructed and t4-left-closedness-lhd-famcop; NOT re-proved in this session.",
+    "children": []
+   },
+   {
+    "id": "pra-equals-familially-representable",
+    "approach": "For G : C -> Set with C having a terminal object: G p.r.a. => each fibre of G(-) -> G(1) is representable => G = Sigma_{i in G(1)} C(A_i,-); converse given small coproducts in C",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-08-30-pra-vs-probe-method.md",
+    "note": "Derived by hand; almost certainly folklore / Weber's own Prop 2.6. CITATION GATE OPEN: not located verbatim in the local Weber TAC 18 extract.",
+    "children": []
+   },
+   {
+    "id": "vec-successor",
+    "approach": "CONJECTURE (now RESOLVED): over Fam(Vec_fd^op) the distributivity step dies and (-)<|q is p.r.a. only under a summability condition -- a fourth occurrence of the crown pattern, on the LEFT adjoint. RESOLVED 2026-08-30 in registry left-adjoint-over-vec: DOUBLY WRONG.",
+    "role": "attempt",
+    "trust": "dead-end",
+    "file": "2026-08-30-left-adjoint-over-vec.md",
+    "children": [],
+    "reason": "REFUTED 2026-08-30 (registry left-adjoint-over-vec, proof 2026-08-30-left-adjoint-over-vec.md), on both halves. (i) p.r.a. does NOT acquire a condition: L_q is p.r.a. for every q over Vec too, because 1<|q = (T,0) is not terminal, the slice Fam/(T,0) = Fam^T splits, and (L_q)_1 = (p |-> (p (x) Q_t)_t) has left adjoint coprod_t F_{Q_t}. What DOES acquire a condition is honest LEFT-ADJOINTNESS, which over Vec holds iff |T|=1 -- so p.r.a. and left-adjointness come apart off Set and this node's identification of the two was base-specific. (ii) The condition is NOT summability: it is |T|=1, and it bites at dim P_s = 1 with |T|=2 and T finite. No fourth occurrence of the summability pattern; a SECOND occurrence of unit-connectedness (T1) instead.",
+    "refutation": "proved"
+   },
+   {
+    "id": "lean-adjunction",
+    "approach": "Lean 4 (core, no Mathlib): F_q as a FUNCTOR on Cont (object map + action on morphisms with the backward position leg), explicit unit and counit as ContainerMorphisms, and BOTH triangle identities machine-checked; plus the hom-set bijection Cont(F_q r, p) = Cont(r, p<|q) as mutually inverse transpositions with both round trips",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "Containers.Container.triangle_leftAdj",
+    "note": "Lean file: lean/Containers/Containers/CompLeftAdjoint.lean, wired into Containers.lean root; `lake build` green 2026-08-30, sorry-free, zero warnings. `#print axioms` = [Quot.sound] ONLY (no sorryAx, no Classical.choice, no propext) on all six declarations: leftAdjMap_id, leftAdjMap_comp, triangle_leftAdj, triangle_seq, adjUntranspose_adjTranspose, adjTranspose_adjUntranspose. VARIANCE CERTIFIED (the point of formalising): a ContainerMorphism is forward on shapes and BACKWARD on positions, so F_q's action on morphisms is Ext.map (phi.onPos rho) : [[q]](U'(h rho)) -> [[q]](U rho) -- running [[q]] over the backward leg. Pushing [[q]] forward, which the shape-level formula F_q(R,U)=(R, rho|->[[q]](U_rho)) invites, does not typecheck at all; the Yoneda argument of section 4.3 hides this. Every law is `ContainerMorphism.ext' rfl (fun _ _ => rfl)`: shapes definitionally equal, positions pointwise definitional, NO transport -- the fibres on both sides of each triangle agree on the nose. Unit = <rho, fun w => w.1> / eval `z.1.2 z.2`; counit = fst on shapes / `fun a => <sc.2 a, fun z => <a, z>>` (coproduct injection) -- verbatim the section 4.4 formulas. NEGATIVE CONTROL run: perturbing the counit's backward map to inject at a fixed position a_0 makes triangle_seq FAIL (type mismatch on the position leg, shape leg still rfl), so the triangles are not vacuously rfl-able and ext's position hypothesis does real work. `(-)<|q` is `Container.seq p q` from Sequential.lean (G outside), matching the informal convention; whiskerRight from Monoidal.lean supplies `eps <| q`. NB LEAN.md pointed at Composition.lean, which is orphaned (clashes with Sequential over Container.I); Sequential/Monoidal are the live modules. Does NOT formalise: naturality of F_q in q (flagged unchecked in Theorem B), the Fam(Vec^op) version, or the right adjoint (which does not exist for |T|>=2).",
+    "children": []
+   },
+   {
+    "id": "lean-adjunction-naturality",
+    "approach": "Lean 4 (core, no Mathlib): upgrade F_q -| L_q from a pointwise hom-set bijection to a genuine ADJUNCTION OF FUNCTORS -- functoriality of L_q = (-)<|q by right whiskering, NATURALITY of the unit and of the counit as commuting squares, and naturality of the transposition in both variables (covariant in p, contravariant in r)",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "Containers.Container.adjCounit_naturality",
+    "note": "Lean file: lean/Containers/Containers/CompLeftAdjoint.lean (extends the lean-adjunction node in the same module); `lake build` green 2026-08-30, sorry-free, zero warnings, all seven new declarations landed on the FIRST build. GAP CLOSED: the earlier lean-adjunction node proved the two triangles and both round trips, but adjUnit/adjCounit were only FAMILIES of morphisms -- their naturality was never stated, so 'F_q -| L_q' was not yet certified as an adjunction of functors. Now added: whiskerRight_id, whiskerRight_comp (L_q functorial, from seq2_id/seq2_comp), adjUnit_naturality, adjCounit_naturality, adjTranspose_naturality_right, adjTranspose_naturality_left, adjCounitPerturbed_naturality. `#print axioms`: whiskerRight_id and whiskerRight_comp depend on NO axioms; the other five are [Quot.sound] ONLY (no sorryAx, no Classical.choice, no propext). Together with leftAdjMap_id/leftAdjMap_comp and the two triangles this is the complete definition of an adjunction. TWO NEGATIVE CONTROLS, and they give a genuine finding. Control 1 (compiles, recorded as the theorem adjCounitPerturbed_naturality): for qBool = (one shape, two positions), the perturbed counit eps'_p a = <c a, fun z => <a, !z>> -- which the PREVIOUS cycle showed BREAKS triangle_seq -- still satisfies the naturality square ON THE NOSE. So naturality and the triangle identities are INDEPENDENT probes of the counit: neither implies the other, and certifying one leaves the other free to be wrong. Control 2 (a failure, so recorded in the module docstring in prose): post-composing the unit square with the nontrivial automorphism <w,z> |-> <w,!z> of F_q r <| qBool makes adjUnit_naturality FAIL -- and it fails on the POSITION leg while the shape leg still discharges by rfl. Hence the naturality squares are non-vacuous, and, exactly as for the triangles, their content sits in the POSITIONS: a shape-level argument certifies a wrong unit just as happily. This is the second independent confirmation of the shape-leg-is-under-determined warning to carry into any Fam(C^op) version. STILL NOT formalised: naturality of F_q in the parameter q (contravariant, since positions run backwards), the Fam(Vec^op) version (open), and the right adjoint (does not exist for |T|>=2).",
+    "children": []
+   }
+  ]
+ }
+}

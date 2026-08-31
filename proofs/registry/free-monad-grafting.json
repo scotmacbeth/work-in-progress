@@ -1,0 +1,130 @@
+{
+  "conjecture": "The free monad on a container (S◁P) is the ◁-monoid (S*◁P*, μ=grafting, η=lf), and its three monoid laws in (Cont,◁,I) — unit-L, unit-R, associativity — are the explicit tree-grafting laws, stated as container-coordinate morphism equations (forward on shapes + backward on positions). Construction is Gambino–Kock Thm 4.5 (prior art); the contribution is spelling out the laws G-K state as 'lengthy but routine' and omit.",
+  "status": "lean-verified",
+  "date_opened": "2026-07-16",
+  "date_closed": "2026-07-17",
+  "tree": {
+    "id": "root",
+    "approach": "Reduce each of the three ◁-monoid laws to a structural-induction fact about closed P-trees, in coordinates matching Composition.lean; verify both morphism components (shapes + positions) against the standard unitors/associator.",
+    "trust": "lean-verified",
+    "file": "2026-07-16-free-monad-grafting-laws.md",
+    "lean": "Containers.Container.freeMonoid (lean/Containers/Containers/Free.lean)",
+    "sources": [
+      "0906.4931"
+    ],
+    "lean_status": "2026-07-17 LEAN session: FULLY DISCHARGED. Free.lean builds clean, ZERO sorry/admit. All three ◁-monoid laws machine-checked as container-morphism equations: unit-L, unit-R (Container.freeMonoid.left_unit/.right_unit), and assoc (Container.freeMonoid.assoc, via new theorems graft_assoc = Lemma C shape half + split_assoc = Lemma D position half). Axioms independently verified by MacBeth (wake 2026-07-17): Containers.Container.freeMonoid, graft_assoc, split_assoc, graft_unit_right, split_unit_right ALL depend on [Quot.sound] ONLY — no sorryAx, no Classical.choice, no propext. First machine-checked free-monad-on-a-container as a ◁-monoid. Reusable trick: generalize-then-rewrite-via-defeq-trans to eliminate a ▸ transport whose hidden proof is only definitionally (not syntactically) equal to a lemma's output (split_assoc nd case).",
+    "note": "ATTRIBUTION / NOVELTY GUARD: the construction (positions=trees, directions=LEAVES, μ=grafting, ⟦S*◁P*⟧≅free-monad functor) is Gambino–Kock arXiv:0906.4931 Thm 4.5 (deep-read; also Gambino–Hyland TYPES 2003 single-variable, Abbott–Altenkirch–Ghani ICALP 2004 container W-types). G-K is NOT a logical premise of this note — the note re-derives the monoid LAWS from the definitions, it does not lean on G-K's law-verification (which G-K omit). G-K is cited so the construction is not claimed. Sibling result, not a dependency.",
+    "children": [
+      {
+        "id": "wtype-carrier-exists",
+        "role": "premise",
+        "approach": "S* = Tr(1), the initial algebra of X↦X+Σ_{s:S}(P(s)→X), exists as a set (W-type); leaves(t) is a set. Structural induction = the initial-algebra induction principle. Foundational, standard in Set (and any LCC+W-types category).",
+        "trust": "proved",
+        "file": null,
+        "note": "Abbott–Altenkirch–Ghani, ICALP 2004, gives the container-side W-type packaging; existence of initial algebras of polynomial endofunctors in Set is textbook. This is the only external logical premise the law-derivation stands on.",
+        "children": []
+      },
+      {
+        "id": "lemma-A-leaf-bijection",
+        "role": "premise",
+        "approach": "leaves(graft(t,u)) ≅ Σ_{ℓ∈leaves(t)} leaves(u_ℓ) by path concatenation; inverse = split at the UNIQUE t-leaf prefix. Induction on t. This forces μ♯ (no free choice).",
+        "trust": "proved",
+        "file": "2026-07-16-free-monad-grafting-laws.md",
+        "children": []
+      },
+      {
+        "id": "lemma-B-unitR",
+        "role": "premise",
+        "approach": "graft(t, λℓ.lf) = t, induction on t. Forward component of FM-unitR.",
+        "trust": "lean-verified",
+        "file": "2026-07-16-free-monad-grafting-laws.md",
+        "lean": "Containers.graft_unit_right (with backward split_unit_right; assembled into freeMonoid.right_unit)",
+        "children": []
+      },
+      {
+        "id": "lemma-C-graft-assoc",
+        "role": "premise",
+        "approach": "graft(graft(t,u),v) = graft(t, λℓ.graft(u_ℓ,v_ℓ)), induction on t. Forward component of FM-assoc — the substance G-K omit.",
+        "trust": "lean-verified",
+        "file": "2026-07-16-free-monad-grafting-laws.md",
+        "lean": "Containers.graft_assoc (Quot.sound only)",
+        "children": []
+      },
+      {
+        "id": "lemma-D-split-coherence",
+        "role": "premise",
+        "approach": "The two split-composites of the associator square agree = associativity of list concatenation (via Corollary A′, the unique flat factorization z=ℓ·w·x). Backward component of FM-assoc.",
+        "trust": "lean-verified",
+        "file": "2026-07-16-free-monad-grafting-laws.md",
+        "lean": "Containers.split_assoc (Quot.sound only)",
+        "children": []
+      },
+      {
+        "id": "computational-verification",
+        "role": "attempt",
+        "approach": "scratch/free_monad_{graft,laws,stress}.py: all 3 laws (fwd+bwd) hold on 6 containers, trees ≤3 nodes, all labellings; graft_split verified a bijection; wrong-forward-graft and corrupted-backward-split negative controls BOTH fire.",
+        "trust": "computed",
+        "file": null,
+        "children": []
+      },
+      {
+        "id": "free-monad-universal-property",
+        "role": "attempt",
+        "approach": "The container-coordinate proof of the free-monad UNIVERSAL PROPERTY (companion §6 gap #3, now closed). Insertion of generators α_X:X⇒m_X (α₁ s = nd s(λp.lf)); induced monoid morphism ĝ:m_X⇒M by W-type recursion (ĝ₁ lf=ε, ĝ₁(nd s κ)=μ_M(g₁ s, λq.ĝ₁(κ(g♯_s q)))); ĝ♯ mirrored via μ_M♯. Proved by structural induction on the tree: (a) ĝ is a monoid morphism — UNIT trivial, MULT (fwd+bwd) reduces base=M-left-unit / step=M-associativity, EACH in both components (no law of M re-proved; M is a given monoid); (b) triangle α;ĝ=g via M-right-unit (both comps); (c) uniqueness via node-as-graft identity nd s κ=graft(α₁ s, w) + MULT + Lemma-A bijectivity of split (forces the backward map). Hence F:X↦m_X ⊣ U:Mon(Cont)→Cont. Part 2: ⟦−⟧ strong-monoidal + AAG full-faithful ⟹ preserves the free monoid; GK 4.5 completes 'against all monads'.",
+        "trust": "proved",
+        "file": "2026-07-24-free-monad-universal-property.md",
+        "lean": "Containers.Container.freeExtend + freeExtend_triangle + freeExtend_unit + freeExtShape_mult + mult_assoc_shape + freeExtShape_unique + mult_left_unit_pos + mult_assoc_pos (lean/Containers/Containers/FreeUniversal.lean) — PARTIAL (MULT-forward + both M-law BACKWARD extractions landed; MULT-backward node step + backward-uniqueness remain)",
+        "lean_status": "2026-07-24 LEAN session: PARTIAL formalisation, FreeUniversal.lean builds clean in the root library, ZERO sorry, all key results depend on [Quot.sound] ONLY (independently #print-axioms checked). MACHINE-CHECKED: (i) freeInsert = α_X; (ii) freeExtShape = ĝ₁ and freeExtPos = ĝ♯ by tree recursion, packaged as freeExtend = ĝ : X.free ⟶ M (full morphism, both components); (iii) freeExtend_triangle = the FULL adjunction triangle α;ĝ=g (BOTH shape and position halves — shape via mult_right_unit, position via new mult_right_unit_pos extracting M's right-unit backward law through the generic ContainerMorphism.onPos_congr projection); (iv) freeExtend_unit = ĝ preserves the monoid unit (full morphism eq); (v) freeExtShape_unique = object-level uniqueness (any recursion-consistent shape map is ĝ₁), a transport-free structural induction; (vi) M's forward unit laws mult_left_unit/mult_right_unit in coordinates. 2026-07-24 LEAN session 2 (ADDED): (vii) mult_assoc_shape = M-ASSOC forward in coordinates, extracted from Mon.assoc by congrArg-onShapes at ⟨⟨a,b⟩,C⟩ of (M◁M)◁M (both sides reduce definitionally to μ_M-associativity); (viii) freeExtShape_mult = MULT FORWARD, the SHAPE half of the multiplication homomorphism law μ;ĝ=(ĝ◁ĝ);μ_M, by tree induction: base = M-left-unit, node step = childwise IH then mult_assoc_shape. Both [Quot.sound]-only. Clean term-mode proof, no transports (the forward/shape direction is transport-free). REMAINING (not yet Lean, each documented at its use site in FreeUniversal.lean): (1) the BACKWARD/POSITION half of the MULT homomorphism law — split-vs-M.mult-position identity; it transports the target position along freeExtShape_mult and threads M-associativity BACKWARD through the leaf-path split, mirroring Free.split_assoc PLUS an M-ASSOC-backward extraction from Mon.assoc (companion §4.3); (2) backward-uniqueness among monoid morphisms (companion §6), forced by split-bijectivity — needs the cat/split inverse pair + split-bijectivity, not yet in Free.lean. Reusable trick: ContainerMorphism.onPos_congr (cases on the morphism equality collapses the position transport to rfl) turns any packaged morphism law into its backward/position coordinate fact — the projection direction ext'/ext_eq don't give. 2026-07-24 LEAN session 3 (ADDED, [Quot.sound]-only, #print-axioms checked): (ix) mult_left_unit_pos = M-LUNIT BACKWARD in coordinates, dual of mult_left_unit, extracted from Mon.left_unit via onPos_congr (snd-projection lands the residual in Unit); (x) mult_assoc_pos = M-ASSOC BACKWARD in coordinates, dual of mult_assoc_shape, extracted from Mon.assoc via onPos_congr at ⟨⟨a,b⟩,C⟩ — the transport term is LITERALLY mult_assoc_shape (same congrFun(congrArg onShapes Mon.assoc)), so it threads without coercion; closed as a one-liner `:= onPos_congr Mon.assoc _ r` after writing both sides in fully-computed coordinate form (all comp/seq₂/associator layers reduce definitionally). These are the two M-law inputs the backward multiplication law (companion §4.3) consumes. The MULT-backward BASE case (lf → mult_left_unit_pos + cast_symm_cast) is verified in scratch; the NODE step remains (threads mult_assoc_pos through split's nd-clause after a childwise forward-IH family-transport; mirrors Free.split_assoc ×~1.5). Full assembly sketch + paste-ready base case in projects/memory/for-collaborator/free-monad-mult-backward-lean.md. NB: registry node lives inside free-monad-grafting.json (there is no standalone free-monad-universal-property.json).",
+        "note": "ATTRIBUTION: the theorem is Gambino–Kock 4.5 (deep-read, sources.json). This node = the container-coordinate PROOF artifact, the piece the grafting-laws note left open. Part 1 (Theorem A, the adjunction in Cont) is self-contained on the lean-verified carrier+laws + elementary induction; it does NOT depend on GK or AAG. Part 2's 'against all monads' completion DOES rest on AAG full-faithfulness (standard) + GK 4.5 — graded via those sources, flagged in §9. Verified computationally in scratch/free_monad_up_verify.py (3 target monoids incl. 2 non-free with nontrivial position maps; triangle + both MULT components + uniqueness).",
+        "sources": [
+          "0906.4931"
+        ],
+        "children": [
+          {
+            "id": "lemma-A-cited-here",
+            "role": "premise",
+            "approach": "split_{t,u} is a bijection with inverse cat (path concatenation). Used for MULT-backward and — crucially — to FORCE the backward map in uniqueness (invert split). Same node as lemma-A-leaf-bijection above; cited, not re-proved.",
+            "trust": "proved",
+            "file": "2026-07-16-free-monad-grafting-laws.md",
+            "children": []
+          },
+          {
+            "id": "free-monoid-laws-cited-here",
+            "role": "premise",
+            "approach": "m_X is a ◁-monoid (the three laws). This is the root result, lean-verified (Free.lean). The UP is stated FOR this monoid; cited, not re-proved.",
+            "trust": "lean-verified",
+            "file": "2026-07-16-free-monad-grafting-laws.md",
+            "lean": "Containers.Container.freeMonoid",
+            "children": []
+          },
+          {
+            "id": "mult-fwd-shape-lean",
+            "role": "attempt",
+            "approach": "MULT FORWARD (shape half of the multiplication homomorphism law μ;ĝ=(ĝ◁ĝ);μ_M): ĝ₁(graft t u) = μ_M(ĝ₁ t, λq'.ĝ₁(u(ĝ♯_t q'))). Tree induction on t: base = M-left-unit (mult_left_unit), node step = childwise IH then M-ASSOC-forward (mult_assoc_shape, extracted from Mon.assoc). Companion §4.2. This is the shape/forward half of homomorphism-MULT; the position/backward half (§4.3) remains.",
+            "trust": "lean-verified",
+            "file": "2026-07-24-free-monad-universal-property.md",
+            "lean": "Containers.Container.freeExtShape_mult (with Containers.Container.mult_assoc_shape) — lean/Containers/Containers/FreeUniversal.lean; [Quot.sound] only, #print-axioms checked",
+            "children": []
+          },
+          {
+            "id": "up-computational-verification",
+            "role": "attempt",
+            "approach": "scratch/free_monad_up_verify.py: for target monoids Writer(ℤ/3), Reader({0,1}) [nontrivial backward], and a free m_Y [both comps nontrivial], with nontrivial g: triangle α;ĝ=g, UNIT, and MULT (fwd+bwd) hold over all (t,u) with t≤3 nodes; ĝ₁ is the unique recursion-consistent map into finite T (brute force, depth≤2).",
+            "trust": "computed",
+            "file": null,
+            "children": []
+          },
+          {
+            "id": "mult-bwd-mlaw-inputs-lean",
+            "role": "attempt",
+            "approach": "The two BACKWARD/position halves of M's monoid laws that the backward multiplication homomorphism law (companion §4.3) consumes: mult_left_unit_pos ((μ_M.onPos⟨ε,λ_.c⟩ p).2 = mult_left_unit ▸ p) and mult_assoc_pos (M-associativity backward: the two split-composites of the associator square agree as a regrouped triple ⟨⟨q,q'⟩,x⟩). Both extracted from Mon.left_unit / Mon.assoc through ContainerMorphism.onPos_congr — the duals of the shipped mult_left_unit / mult_assoc_shape. Also: MULT-backward base case (lf) verified in scratch.",
+            "trust": "lean-verified",
+            "file": "2026-07-24-free-monad-universal-property.md",
+            "lean": "Containers.Container.mult_left_unit_pos + Containers.Container.mult_assoc_pos (lean/Containers/Containers/FreeUniversal.lean); [Quot.sound] only, #print-axioms checked",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

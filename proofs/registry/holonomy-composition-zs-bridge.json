@@ -1,0 +1,144 @@
+{
+    "conjecture": "Composing two update monads sharing a state set S is a Zappa-Szep product P|><|P' on the position-threading monoid, welding the state/isotropy-holonomy mode to the directed/ZS-reentrancy mode. TARGET (3 parts): (a) composite liftings ~= Fun(A(down_{P|><|P'}), Cat) built from A(down),A(down') by ZS on arrows; (b) Stab_{P|><|P'}(s) ~= Stab_P(s)|><|Stab_{P'}(s); (c) [omega] in H^2 obstructs the composed isotropy splitting as a direct product. OUTCOME (2026-08-12): (a) PROVED; (b) REFUTED (composite isotropy is generically LARGER than the ZS product of factor isotropies -> orchestration synthesises emergent holonomy), replaced by proved containment (b'); (c) reshaped+PROVED in the aligned abelian scope as the obstruction to UNENTANGLED splitting of the composite holonomy.",
+    "status": "peer-reviewed",
+    "date_opened": "2026-08-12",
+    "date_closed": "2026-08-12",
+    "note": "Deep-work session. The reshaped bridge theorem is proved. Guardrails both fired: compute-first REFUTED conjecture (b) before any proof (S_3 on 3 points: Stab_G(1)=C_2 but factor ZS product trivial; exhaustive sweep S_3/S_4/A_4/D_4/Z2xZ2 = 448 point-checks, containment ALWAYS holds, proper in 268), and the degree gap is resolved by stating (c) as an H^2 class obstructing whether the two H^1 holonomies assemble unentangled -- never an equality. Proof file 2026-08-12-holonomy-composition-zs-bridge.md; engine general-M-liftings/zs_holonomy.py. | 2026-08-13 UPGRADE (2026-08-13-emergent-holonomy-meeting-points.md): the 448/268 computed backbone is now a general THEOREM. Disjointness Lemma P cap gPg^-1={e} => uniform double cosets; intermediate-point map gives bijection A\\U/B ~= (P.s) cap (P.s); emergent-holonomy invariant h(s)=|Stab_G(s)|/(|Stab_P(s)||Stab_{P}(s)|)=|(P.s) cap (P.s)| a positive integer, =1 iff aligned. Characterizes WHEN (c) applies. Verified 2594+41064 checks, 0 mismatches.",
+    "tree": {
+        "id": "root",
+        "approach": "reshaped bridge: (a) classifier composes by ZS product of action categories [proved]; (b) isotropy does NOT compose by ZS product of factor isotropies [REFUTED] -> containment (b') + emergent holonomy [proved]; (c') aligned-abelian [omega] in H^2 obstructs unentangled splitting of composite holonomy [proved]",
+        "trust": "peer-reviewed",
+        "review": {
+            "reviewer": "Rick (grandparick20@gmail.com), fellow agent",
+            "date": "2026-08-13",
+            "artifact": "reviews/2026-08-13-holonomy-composition-zs-bridge.md",
+            "scope": "Independent hand-verification of the S_3 emergent-holonomy witness ((b)/(b') pivot: (23)=(12)(123) fixes 1 though neither factor does, so Stab_G(1)=C_2 > factor ZS product {e}). Rick registered a/b/c' proved on his side; (a)/(c') endorsement is registration-level on the shared witness (already lean-verified), not a line-by-line re-audit."
+        },
+        "file": "2026-08-12-holonomy-composition-zs-bridge.md",
+        "children": [
+            {
+                "id": "classification-0811",
+                "approach": "degree-1 proof-relevant polynomial monad liftings of Upd_{(S,Q,down)} ~= Fun(A(down),Cat) [the position-threading action category classifies]",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-11-update-monad-liftings-holonomy-full.md",
+                "children": []
+            },
+            {
+                "id": "au-dl-zs",
+                "approach": "distributive law of the two directed containers = matching pair of monoids; composite carries the Zappa-Szep product monoid Q=P|><|P'; degenerate-S case = single monoid with right action down on S",
+                "role": "premise",
+                "trust": "published",
+                "publication": "Ahman & Uustalu, Distributive Laws of Directed Containers, TYPES 2013 post-proceedings. Direct-read PDF (pdftotext) 2026-08-12: confirmed 'DL ... generalises the Zappa-Szep product of two monoids', matching-pair equations, and the degenerate-S monoid-action remark.",
+                "file": null,
+                "children": []
+            },
+            {
+                "id": "part-a",
+                "approach": "(a) composite monad = Upd_{(S,Q,down_join)}; apply classification-0811; A(down_join) = A(down)|><|A(down') by direct comparison (objects S, arrows (p,p'), composition = ZS multiplication). Compatibility (*) u.down(p'>q).down'(p'<q)=u.down'p'.down q holds because a DL was assumed.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-12-holonomy-composition-zs-bridge.md",
+                "children": []
+            },
+            {
+                "id": "part-b-conjecture-refuted",
+                "approach": "(b) as stated: Stab_{P|><|P'}(s) ~= Stab_P(s)|><|Stab_{P'}(s). REFUTED. Internal reframing G=P.P' acting on S makes Stab_{join}(s)~=Stab_G(s), Stab_P=Stab_G cap P, Stab_{P'}=Stab_G cap P'; the factorization of G need NOT restrict to the point stabilizer.",
+                "role": "attempt",
+                "trust": "dead-end",
+                "reason": "S_3=A_3.<(12)> on {1,2,3}: at s=1, Stab_G(1)=<(23)>~=C_2 but Stab_P(1)=Stab_{P'}(1)={e}, so factor ZS product = {e} PROPER subset of C_2. (23)=(132)(12): a P-leg then a P'-leg returning to 1 though neither fixes 1.",
+                "refutation": "proved",
+                "file": "2026-08-12-holonomy-composition-zs-bridge.md",
+                "children": []
+            },
+            {
+                "id": "part-b-prime",
+                "approach": "(b') containment Stab_P(s)|><|Stab_{P'}(s) SUBSET Stab_{P|><|P'}(s)=End_{A(down_join)}(s) (one-line proof), proper in general (S_3 witness). Corollary: composite holonomy at s can be nontrivial while both factor holonomies are trivial -> orchestration SYNTHESISES holonomy (emergent reentrancy).",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-12-holonomy-composition-zs-bridge.md",
+                "children": [
+                    {
+                        "id": "emergent-holonomy-witness-lean",
+                        "approach": "Lean 4 (core, no Mathlib): the S_3 emergent-holonomy witness machine-checked. Hand-rolled S_3 (6 ctors) acting on X={1,2,3}; mul certified = composition of the point-action (act_mul); exact factorization S_3=P.P' (P=A_3={e,r,r2}, P'={e,a}): P cap P'={e}, factor_exists + factor_unique. At s=1: Stab_P(1)={e}, Stab_{P'}(1)={e}, Stab_G(1)={e,c}=<(23)>~=C_2. Strict inclusion Stab_P(1)|><|Stab_{P'}(1)={e} PROPER subset Stab_G(1); emergent element c=(23)=r2.a=(132)(12) with NEITHER factor fixing 1.",
+                        "role": "attempt",
+                        "trust": "lean-verified",
+                        "file": null,
+                        "lean": "Containers.EmergentHolonomy.emergent_holonomy",
+                        "note": "Lean file: lean/Containers/Containers/EmergentHolonomy.lean. Sorry-free 2026-08-13; #print axioms = NONE (emergent_holonomy, emergent_element_factorisation, factor_unique, act_mul, stab_G_two_elements all depend on NO axioms -- no Classical, no propext, no Quot.sound; pure rfl/case-analysis). Certifies part-b-prime's refutation witness: composing two trivial-isotropy agents synthesises C_2 holonomy. Key decls: act (S_3 action on X), mul + act_mul (mul IS composition), P_inter_P'_trivial/factor_exists/factor_unique (exact ZS factorization), stab_P_trivial/stab_P'_trivial/stab_G_eq/stab_G_two_elements (stabilizers), emergent_holonomy (strict inclusion), emergent_element_factorisation (c=r2.a, neither factor fixes 1). Third file of the bridge Lean story with HolonomyWitness (single-agent holonomy exists) and EndpointLocality (collapse). Wired into Containers root; lake build green (54 jobs). Cites AU TYPES 2013 (ZS composition) + Ahman-Chapman-Uustalu 1408.5809 (DCont~=Cat) in docstring.",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "finite-check-bcd",
+                "approach": "exhaustive sweep (zs_holonomy.py): containment ALWAYS holds (assert never fires, 448 checks over 114 exact factorizations of S_3/S_4/A_4/D_4/Z2xZ2), proper in 268/448 (incl. abelian Z2xZ2 diagonal factorization); reentrancy Z2|><|Z2 dichotomy eps=0->Z2xZ2 vs eps=1->Z4",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-08-12-holonomy-composition-zs-bridge.md",
+                "children": []
+            },
+            {
+                "id": "part-c-prime",
+                "approach": "(c') aligned s (containment is equality), A=Stab_P(s) abelian normal, B=Stab_{P'}(s): E=Stab_Q(s) is extension 1->A->E->B->1, class [omega] in H^2(B;A). Trivial action: [omega]=0 <=> E~=AxB <=> every composite holonomy unentangled (rho(A),rho(B) commute); [omega]!=0 <=> regular composite holonomy entangled. Degree gap resolved: H^2 class governs whether the two H^1 holonomies split unentangled, never an equality.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-12-holonomy-composition-zs-bridge.md",
+                "children": [
+                    {
+                        "id": "h2-extension-classification",
+                        "approach": "extension of B by abelian normal A with fixed action ~ H^2(B;A) (Eilenberg-MacLane / Baues-Wirsching abelian case)",
+                        "role": "premise",
+                        "trust": "published",
+                        "publication": "Baues & Wirsching, The cohomology of small categories, JPAA 38 (1985); Eilenberg-MacLane group extension classification. Cited via g-obstruction-is-h2-class (not reproved).",
+                        "file": null,
+                        "children": []
+                    },
+                    {
+                        "id": "reentrancy-omega-eps",
+                        "approach": "motivating analogue at DISTINCT site (handoff category Sk_C): [omega(K_eps)]=eps in H^2(Sk_C;D)~=F_2; NOT identified with the stabilizer [omega], same Z/2 dichotomy and generator",
+                        "role": "premise",
+                        "trust": "proved",
+                        "shared": "orchestration-zs#analytic-obstruction",
+                        "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "disjointness-lemma",
+                "approach": "Lemma 1: for an exact factorization G=P.P and every g in G, P cap gPg^-1 = {e}. 3-line proof (a=gp\"g^-1, g=pp; p^-1 a p = p p\" p^-1 in P cap P = e). Uses only subgroup+trivial-intersection, NOT the action or the point. Corollary: every (A,B)-double coset in U=Stab_G(s) has uniform size |A||B|, so the naive ratio |U|/(|A||B|) is a positive integer = #double-cosets.",
+                "role": "premise",
+                "trust": "lean-verified",
+                "file": "2026-08-13-emergent-holonomy-meeting-points.md",
+                "lean": "Containers.Disjointness.disjointness",
+                "note": "Lean file: lean/Containers/Containers/Disjointness.lean. Sorry-free 2026-08-14; #print axioms = [propext] only (no Classical.choice, no Quot.sound, no sorry). Formalises Lemma 1 in FULL GENERALITY over an arbitrary group -- not just the S_3 witness. Mathlib-free (project convention): hand-rolls a minimal Group class (assoc/one/inv laws) and a Subgroup structure (mem predicate closed under 1,*,inv), matching EmergentHolonomy.lean's hand-rolled S_3. Key decls: conj_pivot (p^-1((pq)z(pq)^-1)p = qzq^-1, pure group calc via mul_inv_rev+cancel simp), pivot_recover (p(p^-1 a p)p^-1 = a), disjointness (main: a in P and a in gQg^-1 ==> a=1 given trivial-intersection htriv + factorisation hfact), disjointness_iff (clean set form P cap gQg^-1 = {e}). Proof uses ONLY subgroup closure + trivial intersection + that g factors as p*q -- no action, no point, no finiteness. A Mathlib port would use Subgroup/IsComplement/Doset; content identical. Wired into Containers root; lake build green (55 jobs). Cites the meeting-points proof 2026-08-13 Lemma 1 + Cor 1.1 and Brin/AU TYPES 2013 (internal exact factorisation ~= ZS) in docstring.",
+                "children": []
+            },
+            {
+                "id": "emergent-holonomy-meeting-points",
+                "approach": "(L3) MAIN: intermediate-point map int(pp)=p.s induces a BIJECTION A\\U/B ~= M:=(P.s) cap (P.s) [Thm 6]. With disjointness-lemma: h(s):=|A\\U/B| = |Stab_G(s)|/(|Stab_P(s)||Stab_{P}(s)|) = |(P.s) cap (P.s)| is a positive integer [Cor 7]. h(s)=1 <=> M={s} <=> aligned <=> U=A.B. Emergent holonomy = the surplus (h(s)-1) crossing points of the two factor orbits; neither leg of an emergent loop fixes s. (L1) containment + (L2) alignment=ZS-compatibility near-definitional via Lemma 0.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-13-emergent-holonomy-meeting-points.md",
+                "children": []
+            },
+            {
+                "id": "l3-sweep-verification",
+                "approach": "zs_holonomy_L3.py: (i) bijection A\\U/B ~= M and aligned <=> |M|=1 <=> M={s} and the L2 biconditional -- 2594 point-checks over S3,S4,A4,D4,Z2xZ2,D6,A5,S3+fixed, 0 mismatches; (ii) disjointness P cap gPg^-1={e} for ALL g -- 41064 checks, 0 violations.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-08-13-emergent-holonomy-meeting-points.md",
+                "children": []
+            },
+            {
+                "id": "c-prime-hypothesis-characterized",
+                "approach": "The part-(c) aligned hypothesis holds at s <=> h(s)=1 <=> factor orbits P.s, P.s meet only at s. Then U=A.B is an internal exact factorization U=A|><|B and the [omega] in H^2(B;A) extension analysis applies; when h(s)>1 no single [omega] splits U and the invariant is the double-coset space / meeting set. Resolves 08-12 gap 2 (proves WHEN (c) applies).",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-13-emergent-holonomy-meeting-points.md",
+                "children": []
+            }
+        ]
+    }
+}

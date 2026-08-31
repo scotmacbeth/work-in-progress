@@ -1,0 +1,832 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz-cd}
+\usepackage{hyperref}
+
+% ---- Theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{notation}[theorem]{Notation}
+
+% ---- Notation macros ----
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Fam}{\mathbf{Fam}}
+\newcommand{\op}{^{\mathrm{op}}}
+\newcommand{\yA}{y^{A}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\ob}{\mathrm{ob}}
+\newcommand{\co}{\mathbin{\text{\Large$\cdot$}}}      % copower dot
+\newcommand{\Day}{\circledast}
+\newcommand{\Dayc}{\odot}
+\newcommand{\tri}{\triangleleft}       % sequential (composition) operator, cf. monoidal chapter
+\DeclareMathOperator{\Hom}{Hom}
+\newcommand{\iso}{\cong}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+
+\title{Chapter 0 --- The Machinery:\\ Representables, Yoneda, Day Convolution, and Kan Extensions}
+\author{MacBeth}
+\date{}
+
+% Book conventions: this is a chapter of \emph{The Category of Containers}.
+% Cross-references of the form ``Theorem~C'' point to the four-monoidal chapter.
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This chapter assembles the pre-container tools the rest of the book leans on:
+representable functors and the Yoneda lemma, density of representables, left
+Kan extensions and the coend calculus, Day convolution, and the interaction of
+the Yoneda embedding with monoidal and closed structure. \emph{Everything here
+is standard}, collected for self-containedness and to fix notation. We claim no
+originality: the Yoneda lemma is Yoneda's and Mac Lane's; Kan extensions and the
+coend calculus follow Mac Lane~\cite{MacLane} Ch.~X, Riehl~\cite{Riehl}, and
+Loregian~\cite{Loregian}; Day convolution is Day's~\cite{Day1970}. Our only
+contribution is arrangement --- pedagogical order, and proofs written in our own
+words --- and the deliberate foregrounding of two observations of Neil Ghani that
+the book's monoidal chapter will invoke as black boxes: that free coproduct
+completion \emph{is} a left Kan extension along the representable embedding
+(\S\ref{sec:kan}), and that closed structure on a Day-convolution category is
+\emph{forced on representables and extended by density}
+(\S\ref{sec:closed}). We are careful about the second: density determines the
+internal hom, but it does \emph{not} follow that an arbitrary cocontinuous
+strong-monoidal functor preserves it (we give a one-line counterexample,
+Remark~\ref{rem:notfree}); preservation is a genuine, separate fact, true for the
+container-extension functor and checked directly in the monoidal chapter.
+\end{abstract}
+
+\tableofcontents
+
+\bigskip
+\noindent\textbf{Conventions.} $\Set$ is the category of sets and functions.
+For a locally small category $\mathcal{C}$ we write $\mathcal{C}(a,b)$ for its
+hom-set. All functors are covariant unless a superscript $\op$ says otherwise. A
+\emph{presheaf} on $\mathcal{C}$ is a functor $\mathcal{C}\op\to\Set$; a
+\emph{copresheaf} is a functor $\mathcal{C}\to\Set$. We use $\iso$ for
+canonical (natural) isomorphism throughout, and we are careful to say
+\emph{which} isomorphism whenever it matters.
+
+% =====================================================================
+\section{Representable functors and the Yoneda lemma}
+\label{sec:yoneda}
+% =====================================================================
+
+Every construction in this book eventually reduces to a hom-set. The
+representable functors are the functors that \emph{are} a hom-set, one argument
+held fixed, and they turn out to generate everything else. We start there.
+
+\begin{definition}[Representable copresheaf]
+\label{def:rep}
+Fix a set $A$. The \emph{covariant representable} at $A$ is the functor
+\[
+  \yA \;:=\; \Set(A,-)\;:\;\Set \longrightarrow \Set,
+  \qquad
+  \yA(X) = \Set(A,X) = X^{A},
+\]
+sending a function $f\colon X\to Y$ to post-composition
+$\yA(f) = f\circ(-)\colon X^{A}\to Y^{A}$. A copresheaf $F\colon\Set\to\Set$ is
+\emph{representable} if $F\iso\yA$ for some $A$; we call $A$ the
+\emph{representing object}.
+\end{definition}
+
+\begin{remark}[The container reading]
+\label{rem:containerrep}
+This book is about \emph{containers}. A container is a pair $(S,P)$ of a set $S$
+of \emph{shapes} and a family $P\colon S\to\Set$ of \emph{position sets}, and its
+\emph{extension} is the functor
+\[
+  \ext{S,P}\;:\;\Set\to\Set,
+  \qquad
+  \ext{S,P}(X) \;=\; \sum_{s\in S}\Set\!\bigl(P(s),X\bigr).
+\]
+The \emph{representable container} is the one with a single shape and $A$
+positions, $(S,P)=(1,\,A)$ (the family $1\to\Set$ picking out $A$). Its extension
+is
+\[
+  \ext{1,A}(X) \;=\; \sum_{s\in 1}\Set(A,X) \;=\; \Set(A,X) \;=\; X^{A} \;=\; \yA(X).
+\]
+So representable copresheaves are exactly the extensions of single-shape
+containers, and the coproduct in the general formula is a coproduct \emph{of
+representables} indexed by shapes. This is not a coincidence to be admired and
+forgotten: \S\ref{sec:kan} and \S\ref{sec:day} show that ``a container is a
+coproduct of representables'' is the whole story, phrased first as a Kan
+extension and then as a Day convolution.
+\end{remark}
+
+\subsection{The Yoneda embedding and the Yoneda lemma}
+
+Definition~\ref{def:rep} is uniform in $A$: a function $a\colon A'\to A$ induces,
+by \emph{pre}-composition, a natural transformation $\yA\Rightarrow y^{A'}$. Thus
+$A\mapsto\yA$ is a functor $\Set\op\to[\Set,\Set]$, the \emph{Yoneda embedding}
+(covariant version). We write it $y^{(-)}$. It is genuinely an embedding: fully
+faithful, as the Yoneda lemma will show.
+
+\begin{theorem}[Yoneda lemma]
+\label{thm:yoneda}
+Let $F\colon\Set\to\Set$ be any functor and $A$ any set. There is a bijection
+\[
+  \Theta_{F,A}\;:\;\Nat(\yA,\,F)\;\xrightarrow{\ \iso\ }\;F(A),
+\]
+natural in both $F$ and $A$, given by evaluating a natural transformation at the
+identity: $\Theta(\alpha) = \alpha_{A}(\id_{A})$.
+\end{theorem}
+
+\begin{proof}
+We build the inverse and check both round trips.
+
+\emph{Inverse.} Given an element $x\in F(A)$, define a family of maps
+$\Psi(x)_{X}\colon \yA(X)=\Set(A,X)\to F(X)$ by
+\[
+  \Psi(x)_{X}(g) \;=\; F(g)(x),\qquad g\colon A\to X .
+\]
+This is natural in $X$: for $h\colon X\to Y$ we must show
+$F(h)\circ\Psi(x)_{X} = \Psi(x)_{Y}\circ\yA(h)$. Applied to $g\colon A\to X$ the
+left side is $F(h)(F(g)(x)) = F(h\circ g)(x)$ by functoriality, and the right side
+is $\Psi(x)_{Y}(h\circ g) = F(h\circ g)(x)$. They agree, so $\Psi(x)$ is a
+natural transformation $\yA\Rightarrow F$.
+
+\emph{$\Theta$ after $\Psi$.} For $x\in F(A)$,
+\[
+  \Theta(\Psi(x)) = \Psi(x)_{A}(\id_{A}) = F(\id_{A})(x) = \id_{F(A)}(x) = x .
+\]
+
+\emph{$\Psi$ after $\Theta$.} Let $\alpha\colon\yA\Rightarrow F$ and put
+$x=\Theta(\alpha)=\alpha_{A}(\id_{A})$. We must show $\Psi(x)=\alpha$, i.e.\ for
+every $X$ and every $g\colon A\to X$ that $F(g)(x) = \alpha_{X}(g)$. Naturality of
+$\alpha$ at the map $g\colon A\to X$ gives a commuting square
+\[
+\begin{tikzcd}[column sep=large]
+  \Set(A,A) \arrow[r,"\alpha_{A}"] \arrow[d,"g\circ(-)"'] & F(A) \arrow[d,"F(g)"]\\
+  \Set(A,X) \arrow[r,"\alpha_{X}"'] & F(X).
+\end{tikzcd}
+\]
+Chase $\id_{A}$ around it. Down-then-right gives
+$\alpha_{X}(g\circ\id_{A}) = \alpha_{X}(g)$; right-then-down gives
+$F(g)(\alpha_{A}(\id_{A})) = F(g)(x)$. Hence $\alpha_{X}(g) = F(g)(x) =
+\Psi(x)_{X}(g)$, as required.
+
+Thus $\Theta$ and $\Psi$ are mutually inverse bijections. Naturality of $\Theta$
+in $F$ (along natural transformations $F\Rightarrow F'$) and in $A$ (along
+functions $A'\to A$, which act on $\yA$ by pre-composition) is a routine diagram
+chase of the same shape; we omit it. \end{proof}
+
+\begin{corollary}[Full faithfulness]
+\label{cor:ff}
+Taking $F=y^{B}$ in Theorem~\ref{thm:yoneda} gives
+$\Nat(\yA,y^{B})\iso y^{B}(A)=\Set(B,A)$, natural in $A$ and $B$. Hence the
+Yoneda embedding $y^{(-)}\colon\Set\op\to[\Set,\Set]$ is fully faithful: natural
+transformations between representables are exactly (pre-composition by)
+functions, in the opposite direction.
+\end{corollary}
+
+\begin{example}[Yoneda in $\Set$, concretely]
+\label{ex:yoneda}
+Take $A=1$, the one-element set. Then $\yA = \Set(1,-)$ is naturally isomorphic to
+the identity functor, since $\Set(1,X)\iso X$. The Yoneda lemma reads
+$\Nat(\mathrm{Id},F)\iso F(1)$: a natural self-map of the identity is pinned down
+by a single element of $F(1)$. For $F=\mathrm{Id}$ this recovers
+$\Nat(\mathrm{Id},\mathrm{Id})\iso 1$: the only natural transformation
+$\mathrm{Id}\Rightarrow\mathrm{Id}$ is the identity. Try to build a
+``doubling'' natural transformation $X\to X$ and you cannot even start: there is
+no natural way to duplicate an anonymous element, precisely because $\id_{1}$ is
+the only probe you are allowed and it must go to itself.
+\end{example}
+
+\subsection{Density of representables}
+\label{sub:density}
+
+The Yoneda lemma says representables see everything. Density says representables
+\emph{are} everything, once you are allowed colimits.
+
+\begin{theorem}[Density / co-Yoneda]
+\label{thm:density}
+Every functor $F\colon\Set\to\Set$ is canonically a colimit of representables.
+Concretely, $F$ is the coend
+\[
+  F \;\iso\; \int^{A\in\Set} F(A)\cdot \yA,
+\]
+where $F(A)\cdot\yA$ denotes the $F(A)$-fold copower (coproduct) of the
+representable $\yA$. Equivalently, $F$ is the colimit of the canonical diagram
+\[
+  \bigl(\, \yA \;\xrightarrow{\ \Psi(x)\ }\; F \,\bigr)_{(A,\,x),\ x\in F(A)}
+\]
+indexed by the category of elements of $F$; the coend presentation packages this
+diagram and its identifications.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+This is the ``density formula,'' dual to Yoneda; see
+Riehl~\cite[\S6.2]{Riehl} or Loregian~\cite[Ch.~2]{Loregian}. The universal
+property is exactly Theorem~\ref{thm:yoneda} read backwards: a cocone from the
+diagram $F(A)\cdot\yA$ to a functor $G$ is, by the copower and Yoneda
+adjunctions, a family of maps $F(A)\to \Nat(\yA,G)\iso G(A)$ natural in $A$, i.e.\
+exactly a natural transformation $F\Rightarrow G$. Since cocones out of the coend
+biject naturally with maps $F\Rightarrow G$, the coend \emph{is} $F$. The coend's
+coequalizer presentation
+\[
+  \coprod_{f\colon A\to A'} F(A)\cdot y^{A'}
+  \;\rightrightarrows\;
+  \coprod_{A} F(A)\cdot \yA
+  \;\twoheadrightarrow\; F
+\]
+records the identification ``push $x$ along $f$ in $F$'' $=$ ``reindex the
+representable along $f$,'' which is where naturality is spent. \end{proof}
+
+\begin{remark}
+\label{rem:densegen}
+Density is the load-bearing fact for \S\ref{sec:kan} and \S\ref{sec:closed}: the
+representables form a \emph{dense generator} of $[\Set,\Set]$. Any two of our
+constructions that agree on representables and both preserve the relevant
+colimits agree everywhere. We will use this uniformity of argument for Neil's
+observation~(ii) --- ``the internal hom is determined on representables and
+extended by density.''
+\end{remark}
+
+% =====================================================================
+\section{Left Kan extensions}
+\label{sec:kan}
+% =====================================================================
+
+A Kan extension is the best approximation to ``extend a functor along another
+functor.'' We need the left version and its pointwise coend formula, and then one
+theorem: for our purposes the free coproduct completion of a category \emph{is} a
+left Kan extension along the representable embedding. This is the lemma the
+monoidal chapter cites for its Theorem~C.
+
+\begin{definition}[Left Kan extension]
+\label{def:lan}
+Let $K\colon\mathcal{C}\to\mathcal{D}$ and $F\colon\mathcal{C}\to\mathcal{E}$ be
+functors. A \emph{left Kan extension} of $F$ along $K$ is a functor
+$\Lan_{K}F\colon\mathcal{D}\to\mathcal{E}$ together with a natural transformation
+$\eta\colon F\Rightarrow (\Lan_{K}F)\circ K$ that is universal from $F$: for every
+$G\colon\mathcal{D}\to\mathcal{E}$ and every $\gamma\colon F\Rightarrow G\circ K$
+there is a \emph{unique} $\bar\gamma\colon\Lan_{K}F\Rightarrow G$ with
+$(\bar\gamma K)\circ\eta = \gamma$.
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+  \mathcal{C} \arrow[r,"F"] \arrow[d,"K"'] & \mathcal{E}\\
+  \mathcal{D} \arrow[ur,"\Lan_{K}F"',""{name=L,above}] &
+  \arrow[from=1-1,to=2-1,phantom]
+  \arrow[Rightarrow,from=1-2,to=L,"\eta"',shorten <=6pt,shorten >=6pt]
+\end{tikzcd}
+\]
+Equivalently, $\Lan_{K}(-)$ is left adjoint to precomposition
+$(-)\circ K\colon[\mathcal{D},\mathcal{E}]\to[\mathcal{C},\mathcal{E}]$.
+\end{definition}
+
+\begin{theorem}[Pointwise coend formula]
+\label{thm:lancoend}
+If $\mathcal{C}$ is small, $\mathcal{E}$ is cocomplete, and $\mathcal{D}$ is
+locally small, then $\Lan_{K}F$ exists and is computed pointwise by the coend
+\[
+  (\Lan_{K}F)(d) \;\iso\; \int^{c\in\mathcal{C}} \mathcal{D}(Kc,\,d)\cdot F(c),
+\]
+where $\mathcal{D}(Kc,d)\cdot F(c)$ is the $\mathcal{D}(Kc,d)$-fold copower of the
+object $F(c)\in\mathcal{E}$.
+\end{theorem}
+
+\begin{proof}[Reference]
+Standard; Mac Lane~\cite[Ch.~X, \S4]{MacLane}, Riehl~\cite[\S6.2]{Riehl},
+Loregian~\cite[Ch.~2]{Loregian}. The universal property of
+Definition~\ref{def:lan} follows because maps out of the copower/coend transpose,
+via the co-Yoneda density argument, to natural transformations, exactly as in the
+proof of Theorem~\ref{thm:density}. \end{proof}
+
+\subsection{Free coproduct completion \emph{is} a left Kan extension}
+
+We now single out the instance the book uses. Recall the container category.
+
+\begin{notation}[$\Cont$ and $\Fam(\Set\op)$]
+\label{not:cont}
+A morphism of containers $(S,P)\to(T,Q)$ is a pair $(u,v)$ with
+$u\colon S\to T$ a map of shapes and $v$ a family
+$v_{s}\colon Q(u\,s)\to P(s)$ of position maps \emph{going backwards}. This is
+exactly the data of a family, indexed by $S$, of objects of $\Set\op$ (namely the
+$P(s)$) together with a map of the index sets and, over it, morphisms in
+$\Set\op$. Hence
+\[
+  \Cont \;\iso\; \Fam(\Set\op),
+\]
+the \emph{free coproduct completion} of $\Set\op$: objects are $S$-indexed
+families of objects of $\Set\op$, and $\Fam(\mathcal{A})$ is the universal
+category with all (small) coproducts containing $\mathcal{A}$. Under the
+extension functor $\ext{-}$, a family $(P(s))_{s\in S}$ maps to the coproduct of
+representables $\sum_{s\in S} y^{P(s)}$ (Remark~\ref{rem:containerrep}).
+\end{notation}
+
+\begin{theorem}[Free coproduct completion as $\Lan$; Neil's observation (i)]
+\label{thm:neil1}
+Let $\mathcal{A}$ be a small category and let
+$Y\colon\mathcal{A}\to\Fam(\mathcal{A})$ be the ``singleton'' embedding sending
+$a$ to the one-element family $(a)$. Then $\Fam(\mathcal{A})$, with $Y$, is the
+free cocompletion of $\mathcal{A}$ under coproducts, and consequently:
+\begin{enumerate}
+\item[\textup{(a)}] For any functor $F\colon\mathcal{A}\to\mathcal{E}$ into a
+category $\mathcal{E}$ with small coproducts, the \emph{coproduct-preserving}
+extension $\widehat{F}\colon\Fam(\mathcal{A})\to\mathcal{E}$ defined on objects by
+\[
+  \widehat{F}\bigl((a_{s})_{s\in S}\bigr) \;=\; \coprod_{s\in S} F(a_{s})
+\]
+is the left Kan extension $\Lan_{Y}F$, and $\widehat{F}\circ Y\iso F$.
+\item[\textup{(b)}] In particular $\widehat{F}$ \emph{preserves representables}:
+it sends the singleton family $(a)=Y(a)$ to $F(a)$, i.e.\ to the generator
+$F(a)$, with no further identifications.
+\end{enumerate}
+Specialising $\mathcal{A}=\Set\op$, $F = y^{(-)}\colon\Set\op\to[\Set,\Set]$ (the
+representable embedding), and $\mathcal{E}=[\Set,\Set]$, the extension
+$\widehat{y^{(-)}}\colon\Cont\iso\Fam(\Set\op)\to[\Set,\Set]$ is exactly the
+container-extension functor $\ext{-}$, and it is the left Kan extension of the
+representable embedding along the singleton embedding
+$Y$.\footnote{A size remark, since $\Set\op$ is \emph{not} small and
+Theorem~\ref{thm:lancoend} was stated for small $\mathcal C$. Two things rescue
+the specialisation, and neither needs a large coend to converge. First, the
+objects of $\Fam(\Set\op)=\Cont$ are indexed by \emph{small} shape sets $S$, so
+the coproduct $\coprod_{s\in S}F(a_s)$ that the proof lands on is a small
+colimit, which exists in $[\Set,\Set]$. Second --- and this is the clean route
+--- part~(a) is really a consequence of the \emph{universal property} of the free
+coproduct completion (coproduct-preserving functors out of $\Fam(\mathcal A)$
+biject with functors out of $\mathcal A$), which holds for large $\mathcal A$
+verbatim; the coend computation above is the concrete face of that universal
+property, not a hypothesis we depend on.} Thus
+\[
+  \ext{-}\;=\;\Lan_{Y}\,y^{(-)}, \qquad
+  \ext{S,P} \;=\; \coprod_{s\in S} y^{P(s)} .
+\]
+\end{theorem}
+
+\begin{proof}
+We prove (a) and (b); the specialisation is then read off.
+
+\emph{The coend collapses to the coproduct.} Apply
+Theorem~\ref{thm:lancoend} with $K=Y\colon\mathcal{A}\to\Fam(\mathcal{A})$. For an
+object $d=(a_{s})_{s\in S}$ of $\Fam(\mathcal{A})$,
+\[
+  (\Lan_{Y}F)(d) \;\iso\; \int^{a\in\mathcal{A}} \Fam(\mathcal{A})\bigl(Y a,\,d\bigr)\cdot F(a).
+\]
+By the definition of morphisms in the free coproduct completion, a map from a
+\emph{singleton} family $Y a=(a)$ into $d=(a_{s})_{s\in S}$ is a choice of one
+index $s\in S$ together with a morphism $a\to a_{s}$ in $\mathcal{A}$:
+\[
+  \Fam(\mathcal{A})\bigl(Ya,\,(a_{s})_{s}\bigr) \;\iso\;
+  \coprod_{s\in S} \mathcal{A}(a,\,a_{s}).
+\]
+(There is no coproduct \emph{to} match on the domain side --- the domain is a
+singleton --- which is exactly why singletons are the generators.) Substituting,
+\[
+  (\Lan_{Y}F)(d)
+   \;\iso\; \int^{a} \Bigl(\coprod_{s\in S}\mathcal{A}(a,a_{s})\Bigr)\cdot F(a)
+   \;\iso\; \coprod_{s\in S}\;\int^{a} \mathcal{A}(a,a_{s})\cdot F(a),
+\]
+using that copowers and the coend (both colimits) commute with the coproduct over
+$s$. The inner coend is the co-Yoneda / density formula
+(Theorem~\ref{thm:density}) evaluated for the functor $F$ at the object $a_{s}$:
+\[
+  \int^{a}\mathcal{A}(a,a_{s})\cdot F(a)\;\iso\;F(a_{s}).
+\]
+Hence $(\Lan_{Y}F)(d)\iso\coprod_{s\in S}F(a_{s}) = \widehat{F}(d)$, naturally in
+$d$. This proves (a): the coproduct-preserving extension \emph{is} the left Kan
+extension, with unit $\eta\colon F\iso\widehat{F}\circ Y$ the identification of
+$F(a)$ with the one-term coproduct.
+
+\emph{Preservation of representables (b).} By (a),
+$\widehat{F}(Ya)=\coprod_{s\in 1}F(a)=F(a)$, on the nose. When $F=y^{(-)}$ the
+generators $F(a)$ are the representables themselves, so $\widehat{y^{(-)}}$ sends
+singletons to representables: it preserves representables.
+
+\emph{Identification with $\ext{-}$.} For $\mathcal{A}=\Set\op$ and
+$d=(P(s))_{s\in S}$ a container $(S,P)$, part (a) gives
+$\widehat{y^{(-)}}(S,P)=\coprod_{s\in S}y^{P(s)}$, whose value at $X$ is
+$\sum_{s\in S}\Set(P(s),X)=\ext{S,P}(X)$ by Remark~\ref{rem:containerrep}. So
+$\widehat{y^{(-)}}=\ext{-}=\Lan_{Y}y^{(-)}$. \end{proof}
+
+\begin{remark}[Why this is exactly the reusable form the book needs]
+\label{rem:reusable}
+Theorem~\ref{thm:neil1} says the container-extension functor is not an ad hoc
+gadget: it is \emph{forced} as the unique cocontinuous (coproduct-preserving)
+extension of the representable embedding. Two consequences the monoidal chapter
+uses without reproof: (i) any structure on $\Set\op$ that we wish to transport to
+$\Cont$ need only be defined on generators (singletons) and extended by
+coproducts, and the result is automatically the Kan extension; (ii) to check that
+a functor out of $\Cont$ agrees with $\ext{-}$ it suffices to check agreement on
+representables plus preservation of coproducts. These are precisely the two hooks
+Theorem~C hangs on.
+\end{remark}
+
+\begin{example}[The extension of a two-shape container]
+\label{ex:lan}
+Take $S=\{s_{0},s_{1}\}$, $P(s_{0})=1$, $P(s_{1})=2=\{0,1\}$. Then
+\[
+  \ext{S,P}\;=\;y^{1}\ \amalg\ y^{2}\;\iso\;\mathrm{Id}\ \amalg\ (-)^{2},
+  \qquad
+  \ext{S,P}(X)\;=\;X\ +\ X^{2}.
+\]
+This is the functor whose algebras are ``a nullary-of-arity-1 and a binary
+operation'' --- e.g.\ the signature functor for magmas-with-a-unary-op. The
+point of Theorem~\ref{thm:neil1} is that we did \emph{not} compute a coend to get
+this: the completion being free, the Kan extension is literally the coproduct of
+representables indexed by shapes, read straight off $(S,P)$.
+\end{example}
+
+% =====================================================================
+\section{Day convolution}
+\label{sec:day}
+% =====================================================================
+
+Day convolution transports a monoidal structure from a category to its presheaf
+category, in the universal way compatible with Yoneda. On $\Cont$ it degenerates
+to ``multiply shapes, combine positions,'' with no coend to compute --- and that
+degeneration is the reason the next chapter's monoidal structures are as
+tractable as they are.
+
+\begin{definition}[Day convolution]
+\label{def:day}
+Let $(\mathcal{C},\otimes,I)$ be a small monoidal category. The \emph{Day
+convolution} of copresheaves $F,G\colon\mathcal{C}\to\Set$ is
+\[
+  (F\Day G)(c) \;=\; \int^{c_{1},c_{2}\in\mathcal{C}}
+     \mathcal{C}(c_{1}\otimes c_{2},\,c)\times F(c_{1})\times G(c_{2}),
+\]
+with unit the representable $y^{I}=\mathcal{C}(I,-)$.
+\end{definition}
+
+\begin{theorem}[Day~\cite{Day1970}; universal property]
+\label{thm:dayuniv}
+$(\,[\mathcal{C},\Set],\Day,y^{I})$ is a symmetric\footnote{Symmetric when
+$\otimes$ is; in general braided/plain monoidal as $\otimes$ is.} monoidal
+category. It is cocontinuous in each variable, and the Yoneda
+embedding\footnote{The domain is $\mathcal C\op$, not $\mathcal C$: recall
+(\S\ref{sec:yoneda}) that $y^{(-)}\colon c\mapsto\mathcal C(c,-)$ is
+\emph{covariant out of $\mathcal C\op$}, a morphism $a\to b$ of $\mathcal C\op$
+inducing $y^{a}\Rightarrow y^{b}$ by precomposition. The tensor is unchanged on
+objects, so strong monoidality reads $y^{a}\Day y^{b}\iso y^{a\otimes b}$ either
+way; we keep the variance honest because the container application turns exactly
+on it.}
+\[
+  y^{(-)}\colon(\mathcal{C}\op,\otimes,I)\longrightarrow([\mathcal{C},\Set],\Day,y^{I})
+\]
+is \emph{strong monoidal}: there are natural isomorphisms
+\[
+  y^{c_{1}}\Day y^{c_{2}} \;\iso\; y^{\,c_{1}\otimes c_{2}},
+  \qquad y^{I}=y^{I}.
+\]
+Moreover Day convolution is the \emph{unique} monoidal structure on
+$[\mathcal{C},\Set]$ that is cocontinuous in each variable and makes $y^{(-)}$
+strong monoidal.
+\end{theorem}
+
+\begin{proof}[Reference and the one computation we will reuse]
+The full statement is Day~\cite{Day1970}; see also
+Loregian~\cite[Ch.~3]{Loregian}. We record only the representable computation, as
+the degeneration below leans on it. By the coend formula and the co-Yoneda lemma
+(density, Theorem~\ref{thm:density}) applied twice,
+\[
+  (y^{a}\Day y^{b})(c)
+  = \int^{c_{1},c_{2}} \mathcal{C}(c_{1}\otimes c_{2},c)\times
+      \mathcal{C}(a,c_{1})\times\mathcal{C}(b,c_{2})
+  \iso \mathcal{C}(a\otimes b,\,c) = y^{a\otimes b}(c),
+\]
+the first coend variable collapsing $c_{1}\rightsquigarrow a$ and the second
+$c_{2}\rightsquigarrow b$ by density. Cocontinuity in each variable is immediate:
+coends and products-with-a-fixed-set are colimits and preserve colimits in $F$
+(resp.\ $G$). Uniqueness: any cocontinuous-in-each-variable monoidal structure is
+determined by its values on the dense generators (the representables) by
+Remark~\ref{rem:densegen}, and strong-monoidality pins those values to
+$y^{a}\Day y^{b}\iso y^{a\otimes b}$; two such structures therefore agree
+everywhere. \end{proof}
+
+\subsection{Key degeneration: Day on $\Cont$ needs no coend}
+\label{sub:degen}
+
+Now we cash Theorem~\ref{thm:neil1} against Theorem~\ref{thm:dayuniv}. The
+category carrying our presheaves is $\Cont\iso\Fam(\Set\op)$, the \emph{free}
+coproduct completion of $\Set\op$; its objects are coproducts of representables;
+Day is cocontinuous in each variable. So Day is determined on representables and
+extended by coproducts --- and on representables it is just $\otimes$ of the
+representing objects. No coend survives.
+
+\begin{proposition}[Degenerate Day on containers]
+\label{prop:degen}
+Let $(\Set,\star,I)$ be any monoidal structure on $\Set$ (below: $\star\in\{+,
+\times,\vee\}$). Taking it as the base monoidal category $\mathcal C=(\Set,\star)$
+of Definition~\ref{def:day} --- the opposite enters only through the
+\emph{embedding} $y^{(-)}\colon\Set\op\to[\Set,\Set]$ and the identification
+$\Cont\iso\Fam(\Set\op)$, not through $\star$ --- Day convolution induces a
+monoidal structure $\Dayc_{\star}$ on $\Cont$ given \emph{without any coend} by
+\[
+  p\ \Dayc_{\star}\ q \;=\;\Bigl(\,S_{p}\times S_{q},\ \ (s,t)\mapsto p[s]\star q[t]\,\Bigr),
+\]
+where $p=(S_{p},p[-])$ and $q=(S_{q},q[-])$ are containers (writing $p[s]$ for the
+position set at shape $s$). On extensions this is the Day convolution induced by
+$\star$; on representables it restricts to $y^{a}\Dayc_{\star}y^{b}=y^{a\star b}$.
+\end{proposition}
+
+\begin{proof}
+Write every container as a coproduct of representables,
+$p=\coprod_{s\in S_{p}}y^{p[s]}$, $q=\coprod_{t\in S_{q}}y^{q[t]}$
+(Theorem~\ref{thm:neil1}). Day convolution is cocontinuous in each variable
+(Theorem~\ref{thm:dayuniv}), so it commutes with these coproducts:
+\[
+  p\Day_{\star}q
+  \;\iso\; \Bigl(\coprod_{s}y^{p[s]}\Bigr)\Day_{\star}\Bigl(\coprod_{t}y^{q[t]}\Bigr)
+  \;\iso\; \coprod_{s,t}\bigl(y^{p[s]}\Day_{\star}y^{q[t]}\bigr).
+\]
+By strong-monoidality on representables (the representable computation in the
+proof of Theorem~\ref{thm:dayuniv}, with base $\mathcal{C}=(\Set,\star)$ and the
+$\Set\op$-valued embedding $y^{(-)}$),
+$y^{p[s]}\Day_{\star}y^{q[t]}\iso y^{\,p[s]\star q[t]}$. Hence
+\[
+  p\Day_{\star}q \;\iso\; \coprod_{(s,t)\in S_{p}\times S_{q}} y^{\,p[s]\star q[t]},
+\]
+which is exactly the container $\bigl(S_{p}\times S_{q},\,(s,t)\mapsto p[s]\star
+q[t]\bigr)$ read off by Theorem~\ref{thm:neil1}. The coend that defined
+$\Day_{\star}$ has been discharged entirely by density on the generators plus
+cocontinuity; nothing integral remains. \end{proof}
+
+\begin{remark}[Where the coend went]
+\label{rem:coendgone}
+The coend in Definition~\ref{def:day} is a colimit that identifies ways of
+factoring an object as $c_{1}\otimes c_{2}$. On a \emph{free} coproduct
+completion the only objects that need testing are the generators (singletons),
+and a generator factors through $\otimes$ in exactly one way up to the coend's
+identifications --- that is the content of the representable collapse
+$y^{a}\Day y^{b}\iso y^{a\otimes b}$. So the coend does no work beyond the
+generators, and cocontinuity carries the answer to all coproducts. This is the
+same phenomenon as Theorem~\ref{thm:neil1}: ``free completion $\Rightarrow$
+structure is what it does on generators.''
+\end{remark}
+
+\begin{example}[Three instances side by side]
+\label{ex:three}
+Take $\star\in\{+,\times,\vee\}$ where $\vee$ is a fixed monoidal structure on
+$\Set$ (for concreteness one may read $\vee$ as a chosen ``max-of-arities''
+combination; we do \emph{not} classify these here --- that is the business of the
+next chapter). Proposition~\ref{prop:degen} gives, for containers
+$p=(S_{p},p[-])$, $q=(S_{q},q[-])$:
+\[
+\renewcommand{\arraystretch}{1.5}
+\begin{array}{r|l|l}
+  \star & p\ \Dayc_{\star}\ q \text{ (positions at shape }(s,t)) & \text{one-line reading}\\\hline
+  + & p[s] + q[t] & \text{a position on the left \emph{or} on the right}\\
+  \times & p[s]\times q[t] & \text{a position on the left \emph{and} on the right}\\
+  \vee & p[s]\vee q[t] & \text{the chosen combined arity}
+\end{array}
+\]
+In all three cases shapes multiply, $S_{p}\times S_{q}$; only the position-combining
+law changes. Concretely with $p=y^{2}$ (one shape, two positions) and $q=y^{3}$:
+$p\Dayc_{+}q=y^{5}$, $p\Dayc_{\times}q=y^{6}$, and $p\Dayc_{\vee}q=y^{\,2\vee 3}$.
+We stress that we have proved \emph{the formula}, not any classification of which
+monoidal structures on $\Cont$ arise this way; the classification (Theorem~C and
+its companions) is the next chapter's work, and the present degeneration lemma is
+the tool it stands on.
+\end{example}
+
+% =====================================================================
+\section{Yoneda, monoidal, and closed}
+\label{sec:closed}
+% =====================================================================
+
+The last piece is closed structure. A closed monoidal category has internal homs
+$[-,-]$ right adjoint to the tensor. Neil's observation~(ii) is that closed
+structure on a Day category is \emph{forced on representables and extended by
+density}: because representables are a dense generator, the internal hom is pinned
+down by its behaviour against $y^{c}$ and has no freedom elsewhere. We prove
+exactly that, and we are deliberately careful about a temptation it invites and
+does not license. It is tempting to conclude that \emph{any} cocontinuous
+strong-monoidal functor out of $[\mathcal C,\Set]$ automatically preserves the
+internal hom --- ``it agrees on generators, so it agrees everywhere.'' That
+inference is \emph{false}: the internal hom is built from a \emph{limit}
+(right adjoint), and a cocontinuous functor is under no obligation to preserve
+limits. We give a one-line counterexample (Remark~\ref{rem:notfree}). Preservation
+is a genuine, additional fact; it holds for the container-extension functor, and
+the monoidal chapter establishes \emph{that} directly, using this section only for
+the density principle and the representable formula.
+
+\begin{definition}[Closed monoidal category]
+\label{def:closed}
+A monoidal category $(\mathcal{V},\otimes,I)$ is \emph{closed} if for every object
+$b$ the functor $-\otimes b$ has a right adjoint $[b,-]$, the \emph{internal hom},
+i.e.\ there are natural isomorphisms
+$\mathcal{V}(a\otimes b,\,c)\iso\mathcal{V}(a,\,[b,c])$.
+\end{definition}
+
+\begin{theorem}[Closure is determined on representables; Neil's observation (ii)]
+\label{thm:neil2}
+Let $(\mathcal{C},\otimes,I)$ be a small monoidal category and equip
+$[\mathcal{C},\Set]$ with Day convolution $(\Day,y^{I})$
+(Theorem~\ref{thm:dayuniv}).
+\begin{enumerate}
+\item[\textup{(a)}] \emph{(Day is closed.)} $[\mathcal{C},\Set]$ is closed for
+$\Day$: each $-\Day G$ has a right adjoint $[G,-]_{\Day}$, and
+\[
+  [G,H]_{\Day}(c)\;\iso\;\Nat\!\bigl(y^{c}\Day G,\ H\bigr).
+\]
+The internal hom is thus \emph{determined by its behaviour on representable
+first arguments}; on a representable it is a shift,
+$[y^{c},H]_{\Day}\iso H(c\otimes-)$, and it is extended to all $G$ by density
+(Theorem~\ref{thm:density}).
+\item[\textup{(b)}] \emph{(The hom of two representables.)} Evaluated on a pair of
+representables,
+\[
+  [\,y^{a},\,y^{b}\,]_{\Day}(d)\;\iso\;\Nat\!\bigl(y^{d\otimes a},\,y^{b}\bigr)
+  \;\iso\;\mathcal C(b,\ d\otimes a).
+\]
+This is in general a \emph{coproduct} of representables --- a genuine container ---
+\emph{not} a single representable. For the Dirichlet tensor
+$\star=\times$ on $\Set$ (Proposition~\ref{prop:degen}) it is the container whose
+shapes are the maps $b\to a$, i.e.\ the morphisms $\Cont(y^{a},y^{b})$, with $b$
+positions apiece; that is precisely the ``shapes are morphisms'' internal hom of
+the monoidal chapter.
+\end{enumerate}
+Part~(a) is Day's~\cite{Day1970}. What part~(a) does \emph{not} assert is that an
+arbitrary functor sharing these values preserves the internal hom; see
+Remark~\ref{rem:notfree} and Corollary~\ref{cor:contclosed} for the honest form of
+the transport the book uses.
+\end{theorem}
+
+\begin{proof}
+\emph{(a) The Day-closed structure.} Fix $G$. The functor $-\Day G$ is
+cocontinuous in its first variable (Theorem~\ref{thm:dayuniv}), and
+$[\mathcal{C},\Set]$ is a presheaf category, hence cocomplete and locally
+presentable; a cocontinuous endofunctor of a locally presentable category has a
+right adjoint (adjoint functor theorem for locally presentable categories,
+Riehl~\cite[\S E]{Riehl}). Call it $[G,-]_{\Day}$. To identify it on
+representables, use Yoneda and the adjunction:
+\[
+  [G,H]_{\Day}(c)
+  \;\iso\;\Nat\!\bigl(y^{c},\,[G,H]_{\Day}\bigr)
+  \;\iso\;\Nat\!\bigl(y^{c}\Day G,\ H\bigr),
+\]
+the first step by the Yoneda lemma (Theorem~\ref{thm:yoneda}) and the second by
+the $(-\Day G)\dashv[G,-]_{\Day}$ adjunction. This proves the displayed formula
+and shows $[G,-]_{\Day}$ is \emph{determined} by its behaviour against
+representables --- exactly ``determined on representables and extended by
+density.'' Taking $G=y^{c}$ representable and reading the same formula in the
+first slot,
+\[
+  [y^{c},H]_{\Day}(d)\iso\Nat\!\bigl(y^{d}\Day y^{c},\,H\bigr)
+  \iso\Nat\!\bigl(y^{d\otimes c},\,H\bigr)\iso H(d\otimes c),
+\]
+by Yoneda and $y^{d}\Day y^{c}\iso y^{d\otimes c}$
+(Theorem~\ref{thm:dayuniv}); so $[y^{c},H]_{\Day}\iso H((-)\otimes c)$ is a shift,
+as claimed.
+
+\emph{(b) The hom of two representables.} Put $H=y^{b}$ in the shift formula from
+part~(a):
+\[
+  [y^{a},y^{b}]_{\Day}(d)\iso y^{b}(d\otimes a)
+  =\mathcal C(b,\,d\otimes a),
+\]
+using $[y^{a},y^{b}]_{\Day}(d)\iso\Nat(y^{d}\Day y^{a},y^{b})\iso\Nat(y^{d\otimes
+a},y^{b})\iso\mathcal C(b,d\otimes a)$ (Yoneda and strong monoidality). Whether
+this is again representable is exactly the question of whether $d\mapsto\mathcal
+C(b,d\otimes a)$ is a single representable, which it need not be; it is, however,
+always a coproduct of representables by density (Theorem~\ref{thm:density}), hence
+a container. For $\mathcal C=(\Set,\times)$,
+\[
+  [y^{a},y^{b}]_{\Day}(d)=\Set(b,\,d\times a)
+  =\Set(b,d)\times\Set(b,a)
+  =\coprod_{\phi\in\Set(b,a)}\Set(b,d)
+  =\coprod_{\Cont(y^{a},y^{b})} y^{b}(d),
+\]
+using $\Cont(y^{a},y^{b})\iso\Set(b,a)$ (Corollary~\ref{cor:ff}). So the internal
+hom is the container with shape set $\Cont(y^{a},y^{b})$ and $b$ positions at each
+shape --- the ``shapes are morphisms'' formula the monoidal chapter certifies
+(after Niu--Spivak, Exercise~4.78). It is emphatically not $y^{b^{a}}$.
+\end{proof}
+
+\begin{remark}[Density determines; it does \emph{not} transport for free]
+\label{rem:notfree}
+It is tempting to upgrade Theorem~\ref{thm:neil2} to: \emph{any} cocontinuous
+strong-monoidal $L\colon[\mathcal C,\Set]\to\mathcal V$ (with $\mathcal V$ closed)
+preserves the internal hom, since it agrees with the target's internal hom on the
+dense generators. \textbf{This is false}, and the reason is worth internalising,
+because it recurs. The would-be argument reduces $G$ to a coproduct of
+representables $G=\coprod_{s}y^{c_{s}}$ and uses that internal-hom-out-of-$G$ is a
+\emph{product} $\prod_{s}[y^{c_{s}},-]$; but a cocontinuous $L$ preserves
+\emph{co}products, and is under no obligation to preserve that product. Internal
+hom is a right adjoint --- a limit-shaped thing --- and colimit-preservation buys
+nothing against it.
+
+A one-line counterexample. Take $\mathcal C=\mathbf 1$, so
+$[\mathcal C,\Set]=\Set$ with Day tensor the cartesian product and internal hom
+$[G,H]=H^{G}$. Let $\mathcal V=\mathrm{Vect}_{k}$ (closed under $\otimes_{k}$) and
+$L=k[-]$ the free-vector-space functor: it is cocontinuous (a left adjoint) and
+strong monoidal, $k[A\times B]\iso k[A]\otimes k[B]$, $k[1]=k$. The comparison is
+\[
+  \lambda_{G,H}\colon\ k[H^{G}]\ \longrightarrow\ \Hom_{k}\bigl(k[G],k[H]\bigr),
+  \qquad (f\colon G\to H)\ \longmapsto\ \bigl(e_{g}\mapsto e_{f(g)}\bigr).
+\]
+For $G$ infinite and $|H|\ge2$ (say $G=\mathbb N$, $H=\{0,1\}$) it is \emph{not}
+surjective: a general linear map $k[\mathbb N]\to k[H]$ assigns arbitrary,
+independent images to the countably many basis vectors, whereas a
+\emph{finite} linear combination of the ``function'' maps $e_{g}\mapsto e_{f(g)}$
+realises only finitely many distinct column-patterns. So $\lambda$ is not
+invertible: $L=k[-]$ is strong monoidal but not strong closed. What distinguishes
+it from the container-extension functor is that $k[-]$ is not fully faithful,
+whereas $\ext{-}$ is; and it is the honest, checkable preservation --- not an
+abstract entailment --- that the next corollary rests on.
+\end{remark}
+
+\begin{corollary}[The container reading]
+\label{cor:contclosed}
+For the Dirichlet tensor $\Dayc_{\times}$ on $\Cont\iso\Fam(\Set\op)$,
+Theorem~\ref{thm:neil2} pins the internal hom down with no coend: it is determined
+on representables by the shift $[y^{a},H]_{\Day}\iso H((-)\times a)$, and on two
+representables it is the container
+\[
+  [y^{a},y^{b}]_{\Day}\;=\;\Bigl(\Cont(y^{a},y^{b}),\ \text{$b$ positions at each shape}\Bigr),
+\]
+extended to all containers by density. That $\Dayc_{\times}$ is genuinely closed
+--- that this candidate internal hom really is right adjoint to $-\Dayc_{\times}q$
+--- is the content the monoidal chapter certifies directly (after Niu--Spivak,
+Exercise~4.78; machine-checked in \texttt{DirichletClosed.lean}). Chapter~0
+supplies only the two pieces that make the formula \emph{forced}: the density
+principle and the representable computation above. It does \emph{not} supply
+closure ``for free'' from cocontinuity --- Remark~\ref{rem:notfree} shows why no
+such free lunch exists. \emph{(This is the honest form the monoidal chapter
+cites.)}
+\end{corollary}
+
+\begin{example}[The Dirichlet hom of two representables, computed]
+\label{ex:ccc}
+Take $\star=\times$. A natural first guess for $[y^{a},y^{b}]_{\Day}$ is the
+``pointwise exponential'' $y^{\,b^{a}}$ --- and it is \emph{wrong}, instructively
+so. Part~(b) computes the honest answer:
+\[
+  [y^{a},y^{b}]_{\Day}(d)=\Set(b,d\times a)=\underbrace{\Set(b,d)}_{=\,y^{b}(d)}\times\,\Set(b,a)
+  =\coprod_{\phi\colon b\to a} y^{b}(d).
+\]
+So the internal hom is $\coprod_{\Set(b,a)}y^{b}$: a container with $|\Set(b,a)|$
+shapes --- one per morphism $y^{a}\to y^{b}$ --- each carrying $b$ positions. Take
+$a=2$, $b=1$, $d$ arbitrary: the guess $y^{b^{a}}=y^{1^{2}}=y^{1}=\mathrm{Id}$
+gives $[\,\cdot\,](d)=d$, whereas the truth $\Set(1,d\times2)=d\times2$ gives
+$2d$; already off by a factor of two. The exponent lives in the \emph{shapes}
+(the morphisms), not in the positions --- which is exactly why the monoidal
+chapter's internal hom has ``shapes are morphisms.''  We flag --- for the next
+chapter --- that at the level of the full functor category $[\Set,\Set]$ this
+Dirichlet-closed structure is \emph{not} the container-composition structure
+$\tri$; the present chapter asserts only that, whatever Day tensor we transported,
+its internal hom is \emph{forced} on representables and extended by density.
+\end{example}
+
+% =====================================================================
+\section*{What this chapter bought us}
+\addcontentsline{toc}{section}{What this chapter bought us}
+% =====================================================================
+
+Three reusable facts, each proved from the same two ideas (Yoneda + density):
+\begin{itemize}
+\item \textbf{Representables generate.} Every functor is a canonical colimit of
+representables (Theorem~\ref{thm:density}); representables are a dense generator
+of $[\Set,\Set]$.
+\item \textbf{Completion is Kan.} The container-extension functor is the left Kan
+extension of the representable embedding along the singleton inclusion, i.e.\
+free coproduct completion, and it preserves representables
+(Theorem~\ref{thm:neil1}). Hence Day convolution on $\Cont$ needs no coend
+(Proposition~\ref{prop:degen}): $p\Dayc_{\star}q=(S_{p}\times S_{q},\,(s,t)\mapsto
+p[s]\star q[t])$.
+\item \textbf{Closure is determined, not free.} A Day tensor is closed, and its
+internal hom is \emph{forced} on representables --- $[y^{a},H]_{\Day}\iso
+H((-)\otimes a)$, and $[y^{a},y^{b}]_{\Day}$ the ``shapes are morphisms''
+container --- then extended by density (Theorem~\ref{thm:neil2}). Density
+\emph{determines} the hom; it does not hand it over to every cocontinuous functor
+for free (Remark~\ref{rem:notfree}), and the actual closure of the container
+tensors is certified directly in the monoidal chapter.
+\end{itemize}
+These are the pre-container tools the monoidal chapter's Theorem~C and its
+companions stand on. Nothing here is new; the arrangement --- and the care about
+what density does and does not buy --- is ours.
+
+\begin{thebibliography}{9}
+\bibitem{Day1970} B.~Day, \emph{On closed categories of functors}, in Reports of
+the Midwest Category Seminar IV, Lecture Notes in Mathematics 137, Springer,
+1970, pp.~1--38.
+\bibitem{Loregian} F.~Loregian, \emph{(Co)end Calculus}, London Mathematical
+Society Lecture Note Series 468, Cambridge University Press, 2021.
+\bibitem{MacLane} S.~Mac Lane, \emph{Categories for the Working Mathematician},
+2nd ed., Graduate Texts in Mathematics 5, Springer, 1998 (esp.\ Ch.~III on Yoneda
+and Ch.~X on Kan extensions).
+\bibitem{Riehl} E.~Riehl, \emph{Category Theory in Context}, Aurora: Dover Modern
+Math Originals, Dover, 2016.
+\end{thebibliography}
+
+\end{document}

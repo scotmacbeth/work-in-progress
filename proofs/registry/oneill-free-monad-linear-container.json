@@ -1,0 +1,86 @@
+{
+ "conjecture": "O'Neill's (arXiv:2501.02931) free monad on the linear self-attention endofunctor F is the free ◁-monoid on a ONE-SHAPE LINEAR CONTAINER C = (*, AttP) over Fam(Vec^op): the tensor algebra T(AttP) = (+)_{L>=0} AttP^{(x)L}, acting by W |-> T(AttP)(x)W, with unit = zero layers and multiplication = concatenation of parameter tensors = ◁-grafting. Three deltas beyond translation: (1) FUNCTORIAL identification with the ◁-monoid free monad [[lean-free-monad-unit-laws-done]] (grafting=concatenation; the Para(Vect) parameter-tensor composition Q(x)P IS the container ◁-product (*,Q)◁(*,P)=(*,Q(x)P)); (2) CORRECTION of O'Neill Thm 3.2 -- the free monad is the Adamek chain of PARTIAL SUMS (+)_n F^n, NOT the colimit of the BARE POWERS F^n he names; F is pointable but never well-pointed so Kelly's theorem does not apply; the residual/skip connection is exactly the pointing (unit eta) that repairs the chain; (3) BOUNDARY = my degree-3^L theorem: a live (data-dependent, phi=id) depth-L stack has degree exactly 3^L, hence is NOT the degree-1 functor AttP(x)(-), so the tensor-algebra identification is exact in O'Neill's linear/frozen regime and provably fails outside it.",
+ "status": "proved",
+ "date_opened": "2026-08-23",
+ "date_closed": "2026-08-23",
+ "note": "PROVE session 2026-08-23. Promotes the previously-speculative 'oneill-free-monad-reconciliation' node of vec-attention-composition.json to proved, after full-text deep-read of O'Neill (sources.json extraction upgraded agent-summary -> full-text same session; Thm 3.1/3.2/B.1 + Para(Vect) composition rule read verbatim from ~/papers/oneill.txt). Honest altitude: the OBJECT-level fact 'free monad on A(x)(-) = tensor algebra' is standard; novelty = the correction (2), the functorial ◁-monoid identification (1), and the degree-3^L boundary (3). Numeric verification scratch/verify_three_facts.py all PASS (currying iso; series-vs-power dim divergence [3,9,21,45,93,189] vs [3,6,12,24,48,96]; concat-then-fold associativity 1.8e-15). Grant-facing: places a published transformer-theory construction inside the Kodamai container framework and corrects it -- Neil's #1 'find a USE for VCont' priority.",
+ "tree": {
+  "id": "root",
+  "approach": "O'Neill stacked-linear-attention free monad = free ◁-monoid on linear container (*,AttP) = tensor algebra; colim F^n corrected to (+)_n F^n; degree-3^L is the boundary.",
+  "trust": "proved",
+  "file": "2026-08-23-oneill-free-monad-linear-container.md",
+  "children": [
+   {
+    "id": "lemma1-oneshape-containers-are-vec-tensor",
+    "approach": "Lemma 1: (*,A)◁(*,B)=(*,A(x)B) by currying Hom(A,Hom(B,W))=Hom(A(x)B,W); one-shape linear containers under ◁ are monoidally iso to (Vec_fd,(x),k), unit (*,k)=Id. Numeric FACT 1: dim & bijection PASS.",
+    "trust": "proved",
+    "file": "2026-08-23-oneill-free-monad-linear-container.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "thm2-free-◁-monoid-is-tensor-algebra",
+    "approach": "Theorem 2: free ◁-monoid on (*,A) = list container (N, (A^{(x)n})) = tensor algebra T(A); extension (+)_n A^{(x)n}(x)W = T(A)(x)W; (eta,mu) = free monoid on A in (Vec,(x)), mu=concatenation=◁-grafting (trees are paths for one shape). = free monad on F=A(x)(-) via mu Y. W (+) A(x)Y.",
+    "trust": "proved",
+    "file": "2026-08-23-oneill-free-monad-linear-container.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "lean-free-monad-general",
+      "approach": "PREMISE (lean-verified, general): free monad on a container = free ◁-monoid it generates, all 3 monoid laws sorry-free. This work is the linear/Vec instance.",
+      "trust": "lean-verified",
+      "lean": "Free.lean (◁-monoid free monad, 3 laws sorry-free)",
+      "file": null,
+      "role": "premise",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "thm3-correction-adamek-not-powers",
+    "approach": "Theorem 3 (the correction): free monad = colimit of Adamek chain Y_n=(+)_{k<n}A^{(x)k}(x)W (partial sums) => (+)_n F^n; O'Neill Thm 3.2 names colimit of BARE POWERS F^n (single term) -- different diagram, different colimit. F=A(x)(-) pointable (eta^a_W(x)=a(x)x for any a in A) but NEVER well-pointed (F eta != eta F for a!=0), so Kelly's theorem inapplicable. Residual/skip connection = the pointing; F'(W)=W(+)A(x)W = two-shape container ({stop,layer},0,A). Numeric FACT 2: series [3,9,21,45,93,189] != powers [3,6,12,24,48,96] for all n>=1, PASS.",
+    "trust": "proved",
+    "file": "2026-08-23-oneill-free-monad-linear-container.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "oneill-thm32-source",
+      "approach": "SOURCE (full-text, deep-read this session): O'Neill Thm 3.2/B.1 states stacking = free monad = 'colimit of id->F->F^2->...'; composition rule (P,f);(Q,g)=(Q(x)P,h) gives depth-L parameter AttP^{(x)L}. The paper's OWN composition rule forces (+)_L AttP^{(x)L}, internal grounds for the correction.",
+      "trust": "unclassified",
+      "sources": [
+       "oneill-2025-self-attention-parametric-endofunctor"
+      ],
+      "role": "attempt",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "cor4-degree-3L-boundary",
+    "approach": "Corollary 4: live phi=id depth-L stack has degree exactly 3^L (prior proved Thm D); F=AttP(x)(-) and every F^n are degree 1 in W, so live stack is not any F^n nor a monad morphism => the tensor-algebra identification holds exactly in O'Neill's linear/frozen regime, fails outside (degree 1->3->...->3^L). Softmax a further boundary.",
+    "trust": "proved",
+    "file": "2026-08-22-linear-attention-odot-composition.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "dictionary-and-unification",
+    "approach": "Para(Vect)<->linear-container dictionary: 1-morphism (P,f) <-> (*,P); parameter Q(x)P <-> ◁-product; reparam rho <-> container morphism; stacking free monad <-> free ◁-monoid. Unification test: Hedges additive lenses = Vec-container morphisms over (+) (backed by proved note extensivity-is-container-boundary). Vertechi parametric spans/optics = computed-level claim, NOT re-read this session -- GAP.",
+    "trust": "computed",
+    "role": "attempt",
+    "children": [
+     {
+      "id": "vertechi-unification-gap",
+      "approach": "GAP: Vertechi (parametric spans/optics) as an instance of the linear-container morphism category -- plausible but not re-read this session (no browsing in PROVE). Deep-read needed to promote from computed to proved.",
+      "trust": "speculative",
+      "sources": [
+       "vertechi-nn-layers-parametric-spans-slides"
+      ],
+      "role": "attempt",
+      "children": []
+     }
+    ]
+   }
+  ]
+ }
+}

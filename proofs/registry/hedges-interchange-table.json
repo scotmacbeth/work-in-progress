@@ -1,0 +1,150 @@
+{
+  "conjecture": "Jules Hedges' 4x4 table of distributive/interchange relationships among the four monoidal structures {⊗,×,+,◁} on Cont. ROW distributes over COLUMN; entries D (two-sided distributive law) / L (genuine lax interchanger) / – (none beyond formal (co)limit gadgets). Task: explicit map + proof/negative-control per cell, L-vs-D settled.",
+  "status": "proved",
+  "date_opened": "2026-07-16",
+  "date_closed": "2026-07-16",
+  "note": "Reconstructed from first principles; agrees with Hedges' transcribed grid in 15/16 cells. Convention decoded (row=outer; (co)cartesian columns = preservation, tensor columns = duoidal interchanger; formal (co)limit gadgets dashed). Deltas: (1) ◁/+ and ◁/× are LEFT-variable-only distributive laws (sharpening of bare D); (2) ×/⊗ is proved to be – (no natural interchanger; witness (1,y,y,1)), the genuine ⊗–× interchanger being the formal ⊗/× (S–S Ex 2.2 dual) — a transposition in Hedges' grid, flagged for confirmation via Neil. Maps are Spivak's/S–S's; delta = assembled proved table + convention + corrections.",
+  "tree": {
+    "id": "root",
+    "approach": "the full proved Hedges interchange table on Cont",
+    "trust": "proved",
+    "file": "2026-07-16-hedges-distributive-table.md",
+    "sources": [
+      "2202.00534",
+      "2312.00990",
+      "2210.01962"
+    ],
+    "children": [
+      {
+        "id": "convention-decode",
+        "approach": "row=outer/distributor; (co)cartesian columns (+,×) read as preservation, tensor columns (⊗,◁) as duoidal interchanger; formal (co)limit gadgets (S–S Ex 2.2: copair-out-of-coproduct-source, pair-into-product-target) are dashed. Generates the grid.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "sources": [
+          "2202.00534",
+          "2210.01962"
+        ],
+        "note": "Reconstruction of Hedges' intent; unique reading consistent with the +-row and ×-column being dashed while ⊗/◁ is L.",
+        "children": []
+      },
+      {
+        "id": "cell-ox-plus",
+        "approach": "⊗/+ = D two-sided: ⊗ preserves coproducts in each variable (Day tensor).",
+        "role": "premise",
+        "trust": "lean-verified",
+        "lean": "Containers.Container.dirCoprodDistrib",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "sources": [
+          "2312.00990"
+        ],
+        "note": "Left-variable iso (P + P') ⊗ Q ≅ (P ⊗ Q) + (P' ⊗ Q) machine-checked 2026-07-17 as Container.dirCoprodDistrib (ContainerIso, both round-trips; sorry-free, Quot.sound only) in lean/Containers/Containers/TensorCoprodDistrib.lean — third Lean cell of the table, sibling of seqCoprodDistrib with ⊗ (product positions) in place of ◁. Both round trips close by a case split on the sum tag + rfl; no transport (coproduct shape is already a Sum). ⊗ is symmetric so the cell is genuinely two-sided; only the left law is formalised (it already witnesses the cell).",
+        "children": []
+      },
+      {
+        "id": "cell-x-plus",
+        "approach": "×/+ = D two-sided: × preserves coproducts (Cont distributive category).",
+        "role": "premise",
+        "trust": "lean-verified",
+        "lean": "Containers.Container.prodCoprodDistrib",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "note": "Left-variable iso (P + P') × Q ≅ (P × Q) + (P' × Q) machine-checked 2026-07-22 as Container.prodCoprodDistrib (ContainerIso, both round-trips; sorry-free, Quot.sound only) in lean/Containers/Containers/TimesCoprodDistrib.lean — fourth Lean cell of the table, sibling of dirCoprodDistrib/seqCoprodDistrib with × (coproduct positions P s ⊕ Q t) in place of ⊗/◁. Both round trips close by a case split on the sum tag + rfl; no transport (coproduct shape is already a Sum, and each summand's position coproduct matches definitionally). × is symmetric so the cell is genuinely two-sided; only the left law is formalised (it already witnesses the cell). Completes the 'distributes over +' column (◁/+, ⊗/+, ×/+) in Lean.",
+        "children": []
+      },
+      {
+        "id": "cell-comp-plus",
+        "approach": "◁/+ = D but LEFT-variable only: (a+b)◁c ≅ (a◁c)+(b◁c) iso (precomposition preserves colimits); a◁(b+c) fails (Niu–Spivak Ex 6.56, witness (y+1)◁(1+0)=2 vs 3).",
+        "role": "premise",
+        "trust": "lean-verified",
+        "lean": "Containers.Container.seqCoprodDistrib",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "sources": [
+          "2312.00990"
+        ],
+        "note": "Sharpening: one-sided, not two-sided. Verified computationally (witnesses.py). Left-variable iso machine-checked 2026-07-17 as Container.seqCoprodDistrib (ContainerIso, both round-trips; sorry-free, Quot.sound only) in lean/Containers/Containers/SeqCoprodDistrib.lean — second Lean cell of the table, sibling of seqProdDistrib. Both round trips close by a case split on the sum tag + rfl; no transport (coproduct shape is already a Sum).",
+        "children": []
+      },
+      {
+        "id": "cell-comp-times",
+        "approach": "◁/× = D but LEFT-variable only: (a×b)◁c ≅ (a◁c)×(b◁c) iso; a◁(b×c) fails (2y² ≇ 4y²).",
+        "role": "premise",
+        "trust": "lean-verified",
+        "lean": "Containers.Container.seqProdDistrib",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "note": "Sharpening: one-sided. Verified (witnesses.py). Left-variable iso machine-checked 2026-07-16 as Container.seqProdDistrib (ContainerIso, both round-trips; sorry-free, Quot.sound only) in lean/Containers/Containers/SeqProdDistrib.lean — first Lean cell of the table.",
+        "children": []
+      },
+      {
+        "id": "cell-ox-comp-L",
+        "approach": "⊗/◁ = L: Spivak's interchanger (a◁b)⊗(c◁d)→(a⊗c)◁(b⊗d) (Ref eq 29); lax not iso; the one deep non-formal L. Iso-locus and one-directionality = my comparitor coreflection (Thm C) + no-go.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "sources": [
+          "2202.00534",
+          "2210.01962",
+          "2312.00990"
+        ],
+        "children": [
+          {
+            "id": "comparitor-explains-L",
+            "approach": "why ⊗/◁ is L not D: comparitor = counit of coreflection ⊗−=Lan_J((◁−)∘J) (2026-07-14 Thm C); double-comonoid obstruction = Eckmann–Hilton (comparitor no-go).",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-07-15-comparitor-double-comonoid.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "cell-comp-ox-neg",
+        "approach": "◁/⊗ = –: no natural (a⊗b)◁(c⊗d)→(a◁c)⊗(b◁d). Factorization/naturality obstruction (joint g:a[i]×b[j]→S_c×S_d does not split into independent h,k). = no natural section of the coreflection counit.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "children": []
+      },
+      {
+        "id": "cell-x-ox-CORRECTION",
+        "approach": "×/⊗ = – (CORRECTION; Hedges has L). Proof: witness (1,y,y,1) forces impossible morphism 1→y. The genuine ⊗–× interchanger is ⊗/× (⊗ outer, × inner; S–S Ex 2.2 dual, pair-into-product), formal & never iso. Transposition in Hedges' grid.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "sources": [
+          "2202.00534",
+          "2210.01962"
+        ],
+        "note": "The one departure from the source; attribution (transposition vs different notion) to be confirmed with Hedges via Neil.",
+        "children": []
+      },
+      {
+        "id": "cell-x-comp-neg",
+        "approach": "×/◁ = –: witness (1,y,y,1) forces impossible morphism 1→y.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "children": []
+      },
+      {
+        "id": "formal-gadget-wall",
+        "approach": "+ row all –, × column all – except ◁/× (preservation), diagonals all – (braiding for symmetric / absent for ◁). Formal (co)limit gadgets dashed per S–S Ex 2.2 (both families).",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-16-hedges-distributive-table.md",
+        "sources": [
+          "2202.00534",
+          "2210.01962"
+        ],
+        "children": []
+      },
+      {
+        "id": "computational-verification",
+        "approach": "exact finite-container engine: 3-ary distributivity fractions (all 16 pairs), Ex 6.56 & 2y²/4y² witnesses, (1,y,y,1) non-existence certificates, ⊗/× lax-not-iso. scratch/hedges/*.py",
+        "role": "attempt",
+        "trust": "computed",
+        "file": null,
+        "children": []
+      }
+    ]
+  }
+}

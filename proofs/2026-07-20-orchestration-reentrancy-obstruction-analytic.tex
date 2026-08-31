@@ -1,0 +1,425 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Ab}{\mathbf{Ab}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\cod}{\operatorname{cod}}
+\newcommand{\orb}{\operatorname{orb}}
+\newcommand{\flr}[1]{\lfloor #1 \rfloor}
+\newcommand{\Sup}{\mathsf{S}}
+\newcommand{\Wk}{\mathsf{W}}
+\newcommand{\Rt}{\mathsf{R}}
+
+\title{The re-entrancy obstruction is the token-mutation bit:\\
+an analytic proof for orchestration Zappa--Sz\'ep products}
+\author{MacBeth\\\small Kodamai}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We give a fully analytic proof --- no enumeration of factorization systems, no
+machine-verified isomorphism --- of the re-entrancy obstruction theorem for
+supervisor--worker agent orchestration. Model the handoff topology as a small
+category $\K_\varepsilon$ carrying a one-bit turn token, parametrized by a single
+bit $\varepsilon\in\mathbb Z/2$: the worker's re-entrant outcome sends the dispatch
+$p$ to $s_2\circ p=q\cdot\tau^{\varepsilon}$, so $\varepsilon=0$ means the worker
+\emph{fixes} the supervisor's token and $\varepsilon=1$ means it \emph{mutates} it.
+Fixing the token-internal moves $\D$ as the right factor, we prove
+\[
+   [\omega(\K_\varepsilon)] \;=\; \varepsilon\cdot(\text{generator})
+   \quad\text{in}\quad H^2(\Sk_\C;\D)\cong\mathbb Z/2 .
+\]
+That is, \emph{the degree-two obstruction class equals the token-mutation bit,
+on the nose}. It follows that the joint orchestration admits a Zappa--Sz\'ep
+product $\K_\varepsilon=\C\bowtie\D$ (equivalently a distributive law
+$\lambda:\D\C\Rightarrow\C\D$) if and only if $\varepsilon=0$, i.e.\ if and only if
+the worker fixes the token; and when $\varepsilon=1$ the obstruction is the nonzero
+generator of $H^2\cong\mathbb Z/2$, the unprotected-re-entrancy failure mode. The
+proof assembles two cited theorems --- the pairwise Zappa--Sz\'ep criterion and the
+$(G)$-obstruction-is-$H^2$ classification --- with a direct orbit and cochain
+computation on the parametrized family; no new cohomology is developed. This
+promotes the orchestration node from \textsc{computed} to \textsc{proved}.
+\end{abstract}
+
+\section{Statement and cited scaffolding}\label{sec:scope}
+
+Two theorems are used as black boxes; both are proved in companion notes and are
+cited, never reproved.
+
+\begin{itemize}
+\item[\textbf{(T2)}] \emph{Pairwise Zappa--Sz\'ep criterion} \cite{pairwise}. For a
+small category $\K$ and a wide subcategory $\D\subseteq\K$, there exists a wide
+$\C\subseteq\K$ with $(\C,\D)$ a strict factorization system --- equivalently a
+distributive law $\lambda:\D\C\Rightarrow\C\D$ satisfying the matched-pair axioms
+ZS1--ZS4, equivalently $\K=\C\bowtie\D$ --- if and only if
+\begin{itemize}
+\item[\textnormal{(L)}] each hom-presheaf $\Hom_\K(-,b)$ is free as a right
+$\D$-set; and
+\item[\textnormal{(G)}] free bases can be chosen closing into a wide subcategory.
+\end{itemize}
+\item[\textbf{(T3)}] \emph{The $(G)$-obstruction is an $H^2$ class} \cite{gobstr}.
+Assume \textnormal{(L)} and the hypothesis (H) below (abelian vertex groups,
+trivial left action). Then the free $\D$-orbits form a category $\Sk_\C$, the vertex
+automorphism groups form a presheaf $\D:\Sk_\C^{\mathrm{op}}\to\Ab$, every
+transversal $T$ carries a defect $2$-cocycle $\omega_T$, regauging changes it by a
+coboundary, and
+\[
+   \textnormal{(G) holds}\iff[\omega]:=[\omega_T]=0\in H^2(\Sk_\C;\D).
+\]
+The cohomology itself is classical (Rosebrugh--Wood \cite{rw} for existence,
+Baues--Wirsching \cite{bw} for the abelian classification); it is cited, not
+reproved.
+\end{itemize}
+
+\begin{quote}\small
+\textbf{Hypothesis \textnormal{(H)}} \cite{gobstr}. \emph{(i)} $\D$ is a disjoint
+union of vertex groups $G_a=\Aut_\D(a)$, each abelian, with $\D(a,b)=\varnothing$
+for $a\neq b$. \emph{(ii)} For every generator $c:a\to b$ and every $\psi\in G_b$,
+$\psi\circ c$ lies in the $\D$-orbit of $c$ (trivial left action).
+\end{quote}
+
+\noindent(We refer to this displayed hypothesis as (H).)
+
+The reading ``an agent's interface is a polynomial functor / container, its dynamics
+a coalgebra'' is Spivak's prior art and is not claimed. The contribution here is the
+analytic identification of the re-entrancy obstruction with an explicit degree-two
+class, uniformly across the token-mutation parameter.
+
+\section{The parametrized orchestration category}\label{sec:model}
+
+Fix three handoff roles: $\Sup$ (supervisor), $\Wk$ (worker running), $\Rt$
+(result/return point). The supervisor carries a one-bit \emph{turn token}; toggling
+it is an involution $\tau$ with $\tau^2=\id_\Sup$, so
+$\End(\Sup)=\{\id_\Sup,\tau\}\cong\mathbb Z/2$.
+
+\begin{definition}[The family $\K_\varepsilon$]\label{def:Keps}
+For $\varepsilon\in\mathbb Z/2$, let $\K_\varepsilon$ be the small category with
+objects $\Sup,\Wk,\Rt$ and morphisms
+\[
+\begin{aligned}
+&\End(\Sup)=\{\id_\Sup,\tau\},\quad \End(\Wk)=\{\id_\Wk\},\quad \End(\Rt)=\{\id_\Rt\},\\
+&\Hom(\Sup,\Wk)=\{p,\ p\tau\},\quad
+ \Hom(\Sup,\Rt)=\{q,\ q\tau\},\quad
+ \Hom(\Wk,\Rt)=\{s,\ s_2\},
+\end{aligned}
+\]
+and no morphisms $\Wk\to\Sup$, $\Rt\to\Sup$, $\Rt\to\Wk$ (the topology is acyclic:
+$\Sup\to\Wk\to\Rt$ with a direct $\Sup\to\Rt$). Here $p\tau:=p\circ\tau$ and
+$q\tau:=q\circ\tau$, and $p\neq p\tau$, $q\neq q\tau$ by construction (the token
+genuinely distinguishes the two dispatch states). Composition through the middle is
+\[
+   s\circ p=q,\qquad s_2\circ p=q\cdot\tau^{\varepsilon},
+\]
+extended by right $\tau$-equivariance:
+$s\circ p\tau=q\tau$, $s_2\circ p\tau=q\cdot\tau^{\varepsilon+1}$; identities and
+$\tau^2=\id_\Sup$ as stated.
+\end{definition}
+
+The single bit $\varepsilon$ is the entire content: $s_2$ is the re-entrant worker
+outcome, and $\varepsilon=[\,s_2\circ p=q\tau\,]$ records whether that outcome
+\emph{mutates} the token ($\varepsilon=1$) or \emph{fixes} it ($\varepsilon=0$). We
+name the two instances $\K_{\mathrm{ok}}:=\K_0$ (state-protected re-entry, a lock)
+and $\K_{\mathrm{bug}}:=\K_1$ (unprotected re-entry).
+
+\begin{lemma}[$\K_\varepsilon$ is a category]\label{lem:cat}
+For each $\varepsilon\in\mathbb Z/2$, $\K_\varepsilon$ is a well-defined small
+category.
+\end{lemma}
+
+\begin{proof}
+Every non-identity morphism raises the poset level $\Sup<\Wk<\Rt$ except the
+$\Sup$-endomorphism $\tau$, so the only composites to specify are (a) right
+multiplication by $\tau$ on $\Sup$-sourced arrows, which is a group action
+($\tau^2=\id$, and $f\cdot\tau^2=f$), and (b) the two length-two composites
+$s\circ p,\ s_2\circ p:\Sup\to\Rt$, given above; all longer composites factor
+through $\Rt$ (a sink) or begin with an $\Sup$-endomorphism. Associativity therefore
+reduces to compatibility of (a) and (b): for $f\in\{s,s_2\}$,
+\[
+   (f\circ p)\circ\tau \;=\; f\circ(p\circ\tau) \;=\; f\circ p\tau,
+\]
+which holds \emph{by definition} of $f\circ p\tau$ as $(f\circ p)\cdot\tau$; and
+$(f\circ p)\circ\tau^2=f\circ p$ since $\tau^2=\id_\Sup$. Unit laws are immediate.
+Hence $\K_\varepsilon$ is a category. (Machine-confirmed for both $\varepsilon$ in
+\texttt{orchestration\_zs\_parametrized.py}.)
+\end{proof}
+
+We fix once and for all the wide right factor of token-internal (``reader'') moves,
+\[
+   \D=\{\id_\Sup,\ \tau,\ \id_\Wk,\ \id_\Rt\}\subseteq\K_\varepsilon,
+\]
+a wide subcategory (it contains all identities and is closed:
+$\tau\circ\tau=\id_\Sup$). Its vertex groups are $G_\Sup=\{\id_\Sup,\tau\}\cong
+\mathbb Z/2$ and $G_\Wk=G_\Rt=0$.
+
+\section{Freeness and the hypothesis hold, uniformly in $\varepsilon$}\label{sec:LH}
+
+\begin{lemma}[(L) holds]\label{lem:L}
+For each $\varepsilon$, every hom-presheaf $\Hom_{\K_\varepsilon}(-,b)$ is a free
+right $\D$-set.
+\end{lemma}
+
+\begin{proof}
+The right $\D$-action is precomposition; since $\D(a,b)=\varnothing$ for $a\neq b$
+and the only nonidentity element is $\tau\in G_\Sup$, the action is trivial on
+$\Wk$- and $\Rt$-sourced arrows and is the regular $\mathbb Z/2$-action, by right
+multiplication by $\tau$, on $\Sup$-sourced arrows. Decompose each hom-presheaf into
+$\D$-orbits:
+\[
+\begin{aligned}
+\Hom(-,\Sup)&=\{\id_\Sup,\tau\} &&\text{(one regular }\mathbb Z/2\text{-orbit)},\\
+\Hom(-,\Wk)&=\underbrace{\{p,p\tau\}}_{\text{apex }\Sup}\ \sqcup\ \underbrace{\{\id_\Wk\}}_{\text{apex }\Wk},\\
+\Hom(-,\Rt)&=\underbrace{\{q,q\tau\}}_{\text{apex }\Sup}\ \sqcup\ \underbrace{\{s\}}_{\text{apex }\Wk}\ \sqcup\ \underbrace{\{s_2\}}_{\text{apex }\Wk}\ \sqcup\ \underbrace{\{\id_\Rt\}}_{\text{apex }\Rt}.
+\end{aligned}
+\]
+Each $\Sup$-apex orbit has two distinct elements permuted freely by $\tau$
+($p\neq p\tau$, $q\neq q\tau$, $\id_\Sup\neq\tau$), hence is a free
+$G_\Sup$-torsor $\cong\D(-,\Sup)$; each $\Wk$- or $\Rt$-apex orbit is a singleton
+with trivial group, $\cong\D(-,\Wk)$ resp.\ $\D(-,\Rt)$. So every hom-presheaf is a
+coproduct of representable $\D$-sets, i.e.\ free. This uses only that $p\neq p\tau$
+and $q\neq q\tau$; it is independent of $\varepsilon$ (the value of $s_2\circ p$
+lies inside the orbit $\{q,q\tau\}$ either way).
+\end{proof}
+
+\begin{lemma}[(H) holds]\label{lem:H}
+For each $\varepsilon$, $\K_\varepsilon$ with $\D$ satisfies Hypothesis (H).
+\end{lemma}
+
+\begin{proof}
+\emph{(i)} $\D$ is the disjoint union of the vertex groups $G_\Sup\cong\mathbb Z/2$
+(abelian), $G_\Wk=G_\Rt=0$; there are no cross arrows. \emph{(ii)} The left action
+is postcomposition by a target vertex automorphism $\psi\in G_b$. The only
+nontrivial vertex group sits at $\Sup$, and $\Sup$ is a \emph{source}: no
+non-identity generator has codomain $\Sup$ (nothing maps into $\Sup$ but its own
+endomorphisms). Thus for every generator $c:a\to b$ with $b\in\{\Wk,\Rt\}$ the group
+$G_b$ is trivial and $\psi\circ c=c\in\orb(c)$; the remaining case is the regular
+orbit at $\Sup$, where $\tau\circ\id_\Sup=\tau=\id_\Sup\circ\tau\in\orb(\id_\Sup)$.
+So (H)(ii) holds.
+\end{proof}
+
+By Lemmas~\ref{lem:L}--\ref{lem:H}, the machinery of (T3) applies to
+$\K_\varepsilon$ for both $\varepsilon$: the class $[\omega(\K_\varepsilon)]\in
+H^2(\Sk_\C;\D)$ is defined and $(G)\Leftrightarrow[\omega]=0$.
+
+\section{The orbit category, the complex, and $H^2\cong\mathbb Z/2$}\label{sec:h2}
+
+We compute the data of (T3) directly; everything below is analytic.
+
+\paragraph{Orbit category $\Sk_\C$.} Its objects are $\Sup,\Wk,\Rt$; its
+non-identity morphisms are the non-regular free orbits from
+Lemma~\ref{lem:L}:
+\[
+   [p]:\Sup\to\Wk,\quad [q]:\Sup\to\Rt,\quad [s],[s_2]:\Wk\to\Rt.
+\]
+Composition is $\orb(c_2)\ast\orb(c_1)=\orb(c_2\circ c_1)$ (well defined by (T3)
+under (H)). The only composites of non-identities are
+\[
+   [s]\ast[p]=\orb(s\circ p)=\orb(q)=[q],\qquad
+   [s_2]\ast[p]=\orb(s_2\circ p)=\orb(q\cdot\tau^\varepsilon)=\orb(q)=[q],
+\]
+the last equality because $q$ and $q\tau$ lie in the \emph{same} orbit; hence
+$[s]\ast[p]=[s_2]\ast[p]=[q]$ \emph{independently of $\varepsilon$}. So
+$\Sk_\C$ is the branch $\Sup\to\Wk\rightrightarrows\Rt$ with both middle arrows
+composing to $[q]$ --- the same category for both $\varepsilon$.
+
+\paragraph{Presheaf $\D$.} $\D(\Sup)=\mathbb Z/2$, $\D(\Wk)=\D(\Rt)=0$. Every
+restriction map $\varphi_c:G_{\cod c}\to G_{\dom c}$ along a generator has
+$\cod c\in\{\Wk,\Rt\}$ (the only generators are $[p],[q],[s],[s_2]$, none of which
+targets $\Sup$), so $G_{\cod c}=0$ and $\varphi_c=0$: \emph{all restriction maps
+vanish}.
+
+\paragraph{Normalized cochain complex.} By (T3),
+$C^n=\prod_{\text{composable }o_n,\dots,o_1}G_{\dom o_1}$ on non-identity chains,
+and only chains with $\dom o_1=\Sup$ contribute (elsewhere $G_{\dom o_1}=0$).
+\begin{itemize}
+\item $C^1$: generators with source $\Sup$ are $[p],[q]$, giving coordinates
+$h([p]),h([q])\in\mathbb Z/2$; so $C^1\cong(\mathbb Z/2)^2$.
+\item $C^2$: composable pairs $(o_2,o_1)$ with $\dom o_1=\Sup$. Then $o_1\in
+\{[p],[q]\}$; if $o_1=[q]$ then $o_2$ starts at $\Rt$, a sink, so none; if
+$o_1=[p]$ then $o_2\in\{[s],[s_2]\}$. Coordinates $\omega([s],[p]),
+\omega([s_2],[p])\in\mathbb Z/2$; so $C^2\cong(\mathbb Z/2)^2$.
+\item $C^3=0$: a composable triple with $\dom o_1=\Sup$ would need
+$o_1=[p]$, $o_2\in\{[s],[s_2]\}$, and $o_3$ starting at $\Rt$ --- none exist.
+\end{itemize}
+
+\paragraph{Cohomology.} Since $C^3=0$, $Z^2=\ker\delta^2=C^2\cong(\mathbb Z/2)^2$.
+The coboundary $\delta^1$ (with all $\varphi=0$) is, from (T3) Eq.\ (d1),
+\[
+   (\delta^1h)([s],[p])=-h([s]\ast[p])+h([p])=h([p])-h([q]),\qquad
+   (\delta^1h)([s_2],[p])=h([p])-h([q]),
+\]
+so $B^2=\operatorname{im}\delta^1=\{(t,t):t\in\mathbb Z/2\}=\langle(1,1)\rangle$,
+the diagonal. Therefore
+\[
+   H^2(\Sk_\C;\D)=(\mathbb Z/2)^2/\langle(1,1)\rangle\cong\mathbb Z/2 .
+\]
+
+\section{The obstruction class equals the token-mutation bit}\label{sec:main}
+
+\begin{theorem}[Main]\label{thm:main}
+Let $T=\{p,q,s,s_2\}$ (together with identities) be the natural transversal of
+$\K_\varepsilon$. Its defect $2$-cocycle is
+\[
+   \omega_T=\big(\omega_T([s],[p]),\ \omega_T([s_2],[p])\big)=(0,\varepsilon)\in(\mathbb Z/2)^2,
+\]
+and consequently
+\[
+   [\omega(\K_\varepsilon)] \;=\; \varepsilon\cdot(\text{generator})
+   \qquad\text{in }\ H^2(\Sk_\C;\D)\cong\mathbb Z/2 .
+\]
+\end{theorem}
+
+\begin{proof}
+The defect at a composable pair $(c_2,c_1)$ of chosen generators is the unique
+$\D$-element $\omega_T(c_2,c_1)$ with $c_2\circ c_1=\flr{c_2c_1}_T\circ
+\omega_T(c_2,c_1)$, where $\flr{\cdot}_T$ is the chosen generator of the target
+orbit (T3, Def.\ of the defect). Both composable pairs have target orbit
+$\orb(q)$ with chosen generator $q$. Then:
+\[
+   s\circ p=q=q\circ\id_\Sup\ \Rightarrow\ \omega_T([s],[p])=\id_\Sup\ (=0);
+\]
+\[
+   s_2\circ p=q\cdot\tau^\varepsilon=q\circ\tau^\varepsilon\ \Rightarrow\
+   \omega_T([s_2],[p])=\tau^\varepsilon\ (=\varepsilon).
+\]
+So $\omega_T=(0,\varepsilon)$. Its class in $H^2=(\mathbb Z/2)^2/\langle(1,1)\rangle$
+is $(0,\varepsilon)$; for $\varepsilon=0$ this is $0$, and for $\varepsilon=1$ we
+have $(0,1)\notin\langle(1,1)\rangle=\{(0,0),(1,1)\}$, the nonzero generator. Hence
+$[\omega(\K_\varepsilon)]=\varepsilon\cdot(\text{generator})$.
+\end{proof}
+
+\begin{corollary}[Re-entrancy dichotomy]\label{cor:main}
+For the supervisor--worker orchestration $\K_\varepsilon$ with token-internal right
+factor $\D$:
+\begin{enumerate}
+\item[(i)] $\K_\varepsilon$ admits a Zappa--Sz\'ep product $\K_\varepsilon=\C\bowtie\D$
+--- equivalently a distributive law $\lambda:\D\C\Rightarrow\C\D$ (ZS1--ZS4),
+equivalently a serialization of the supervisor's dispatch and the worker's internal
+step into a single joint agent --- \emph{if and only if $\varepsilon=0$, i.e.\ iff
+the worker's outcome fixes the supervisor's turn token} ($s_2\circ p=q$).
+\item[(ii)] When $\varepsilon=1$ (the worker mutates the token, $s_2\circ p=q\tau$)
+the obstruction class $[\omega]$ is the nonzero generator of
+$H^2(\Sk_\C;\D)\cong\mathbb Z/2$; no distributive law exists. This is exactly the
+unprotected-re-entrancy failure mode.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{(i)} By (L) (Lemma~\ref{lem:L}) and (T2), $\C\bowtie\D$ exists iff $(G)$ holds.
+By (H) (Lemma~\ref{lem:H}) and (T3), $(G)$ holds iff $[\omega]=0$. By
+Theorem~\ref{thm:main}, $[\omega]=0$ iff $\varepsilon=0$. Chaining the three
+equivalences gives (i). \emph{(ii)} is the case $\varepsilon=1$ of
+Theorem~\ref{thm:main} together with the same equivalence chain: $[\omega]\neq0
+\Rightarrow(G)$ fails $\Rightarrow$ no $\C\bowtie\D$.
+\end{proof}
+
+\begin{remark}[Why the class \emph{equals} the bit]
+The two coordinates of $\omega_T$ are the two worker outcomes $s,s_2$; the
+coboundary subgroup $B^2=\langle(1,1)\rangle$ is the freedom to relabel which
+token-state is ``canonical,'' which shifts \emph{both} outcomes together. The class
+is nonzero precisely when the two outcomes \emph{disagree} on that relabelling by
+one token-flip --- and that disagreement is, by definition, the re-entrant branch's
+side effect $s_2\circ p=q\tau\neq q$. Formally the coordinate difference
+$\omega_T([s_2],[p])-\omega_T([s],[p])=\varepsilon$ is the gauge-invariant content,
+and it is the token-mutation bit. This is the categorical avatar of ``a flat bundle
+is trivial iff its holonomy vanishes'': the local completions of each partial handoff
+(free, by (L)) glue to a global serialized agent iff a single $\mathbb Z/2$ monodromy
+--- the token flip --- vanishes.
+\end{remark}
+
+\begin{remark}[Relation to the rigid twist]
+$\K_1=\K_{\mathrm{bug}}$ is isomorphic, as a category with distinguished wide
+subcategory $\D$, to the ten-morphism rigid twist of \cite{gobstr} (send
+$\Sup,\Wk,\Rt\mapsto a,x,y$ and $\tau\mapsto g$). The present proof does \emph{not}
+route through that isomorphism: it applies (T3) to $\K_\varepsilon$ directly and
+computes the class from the defect, so the rigid-twist identification is now a
+corollary (both compute the generator of the same $H^2\cong\mathbb Z/2$) rather than
+a load-bearing machine check. The gain is the uniform statement
+$[\omega(\K_\varepsilon)]=\varepsilon$ across the parameter, which the single
+rigid-twist instance did not provide.
+\end{remark}
+
+\section{The composing regimes (context)}\label{sec:context}
+
+Corollary~\ref{cor:main} is the deliverable. Two further regimes, already computed
+in \cite{instantiation} and \emph{not} re-established here, complete the qualitative
+picture of ``composition $=$ Zappa--Sz\'ep product'':
+\begin{itemize}
+\item \emph{Independent supervisors} (read-only workers): the distributive law is
+the swap, $\K=\C\times\D$ (trivial matched pair).
+\item \emph{Coherent non-abelian interleaving}: two supervisors over a shared worker
+pool give the dihedral matched pair $\K=\mathbb Z/3\bowtie\mathbb Z/2=S_3$; ZS1--ZS4
+hold and the join is genuinely non-abelian --- so the criterion is non-vacuous, it
+produces legitimate joint agents that are neither products nor obstructed.
+\end{itemize}
+These are illustrative (the two-supervisor reading is schematic) and remain at grade
+\textsc{computed}; the \textsc{proved} content of this note is
+Corollary~\ref{cor:main}.
+
+\section{Status and grant relevance}\label{sec:grant}
+
+\paragraph{What is proved.} Corollary~\ref{cor:main}: the analytic dichotomy
+``$\C\bowtie\D$ exists $\iff$ the worker fixes the token,'' with the obstruction
+identified as the explicit class $[\omega]=\varepsilon\in H^2(\Sk_\C;\D)\cong
+\mathbb Z/2$. The scaffolding (T2), (T3) is cited and proved elsewhere
+\cite{pairwise,gobstr,rw,bw}; the freeness (L), the hypothesis (H), the orbit
+category, the complex, the defect, and the class are all computed by hand
+(\S\ref{sec:LH}--\ref{sec:main}), with no enumeration of factorization systems and
+no machine-verified isomorphism. A parametrized script
+(\texttt{projects/scratch/orchestration\_zs\_parametrized.py}) confirms every
+analytic claim ($\K_\varepsilon$ is a category, (L) holds, $\Sk_\C$ is
+$\varepsilon$-independent, $B^2$ is the diagonal, $\omega_T=(0,\varepsilon)$, and
+--- as an independent cross-check, not part of the proof --- $\#\mathrm{SFS}=2,0$ for
+$\varepsilon=0,1$).
+
+\paragraph{What is not claimed.} No new cohomology (the $H^2$ machinery is
+Baues--Wirsching / Rosebrugh--Wood). No claim that a named production framework
+\emph{is} $\K_\varepsilon$: the model is a minimal faithful abstraction of the
+two-worker re-dispatch pattern, empirically instantiable later. The novelty is the
+Zappa--Sz\'ep obstruction layer itself: the closest prior art (Aberl\'e,
+arXiv:2604.01303) supplies the polynomial-interface / free-monad implementation
+mechanism but only the \emph{unobstructed} parallel sum of two systems --- no
+Zappa--Sz\'ep product, no interaction obstruction, no cohomology. This theorem is
+that surviving layer, and it is the anchor for the grant's Impact section:
+\emph{unprotected re-entrancy in agent orchestration is a nonzero degree-two class
+on the handoff category}, one degree above the $H^0/H^1$ sheaf-Laplacian invariants
+of the multi-agent-systems literature (which measure consensus and identifiability on
+the \emph{communication} graph, not composability of the \emph{handoff} structure).
+
+\begin{thebibliography}{9}
+\bibitem{pairwise} MacBeth, \emph{The pairwise Zappa--Sz\'ep criterion}, Kodamai
+note, 10 June 2026.
+\bibitem{gobstr} MacBeth, \emph{The global-closure obstruction (G) is a cohomology
+class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\D)$}, Kodamai note, 11 June 2026.
+\bibitem{instantiation} MacBeth, \emph{Orchestration composition is a Zappa--Sz\'ep
+product: a worked instantiation}, Kodamai note, 19 July 2026.
+\bibitem{rw} R.~Rosebrugh, R.~J.~Wood, \emph{Distributive laws and factorization},
+J.\ Pure Appl.\ Algebra 175 (2002), 327--353.
+\bibitem{bw} H.-J.~Baues, G.~Wirsching, \emph{Cohomology of small categories},
+J.\ Pure Appl.\ Algebra 38 (1985), 187--211.
+\end{thebibliography}
+
+\end{document}

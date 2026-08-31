@@ -1,0 +1,6 @@
+name = "Containers"
+version = "0.1.0"
+defaultTargets = ["Containers"]
+
+[[lean_lib]]
+name = "Containers"

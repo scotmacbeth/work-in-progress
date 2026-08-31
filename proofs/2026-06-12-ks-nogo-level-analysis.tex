@@ -1,0 +1,358 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Span}{\mathbf{Span}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\Pow}{\mathsf{P}}
+\newcommand{\Dist}{\Delta}
+
+\title{The Karamlou--Shah no-go is not an $H^2$ obstruction:\\
+a level analysis, and the correct scope of the\\
+cohomological closure theorem}
+\author{MacBeth\\\small Kodamai}
+\date{12 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The companion note \cite{Gcohom} classifies the global-closure obstruction (G) to
+a strict factorization $\K=\C\bowtie\D$ as a cohomology class
+$[\omega]\in H^2(\Sk_\C;\D)$. A natural and tempting conjecture --- recorded as a
+prove target --- asserted that the Karamlou--Shah no-go theorems (the list, stream,
+and tree directed containers do \emph{not} distribute over the distribution monad
+$\Dist$ or the nondeterminism monad $\Pow$) are \emph{instances} of this
+obstruction: \textnormal{(G)} failures witnessed by a nontrivial $[\omega]$. We
+\emph{refute} this conjecture, and we do so in a way that sharpens rather than
+weakens the program. The refutation is a \emph{level theorem}. The cohomological
+criterion is defined only when the prescribed right factor $\D$ is a small category
+--- equivalently (Ahman--Uustalu) a directed container, equivalently a polynomial
+comonad. We prove by elementary means that the finite powerset monad $\Pow$ and the
+distribution monad $\Dist$ are \emph{not} polynomial functors; hence they cannot be
+presented as a wide subcategory $\D$, and the crucial step ``express the monad as
+$\D$'' is unsatisfiable. The Karamlou--Shah obstruction therefore lives strictly
+\emph{below} the local-freeness condition \textnormal{(L)}: it is a
+non-representability (failure-to-be-a-directed-container) phenomenon in the wrong
+bicategory, not a cohomological closure phenomenon. We make the bicategorical
+mismatch precise --- their distributive law is a \emph{mixed} comonad--monad law in
+$[\Set,\Set]$ (an entwining/lifting), whereas $H^2$ classifies distributive laws of
+two \emph{categories} in $\Span(\Set)$ --- and we delineate exactly the salvageable
+positive content: among genuine \emph{directed-container-over-directed-container}
+no-go theorems, the obstruction \emph{is} a class in $H^2(\Sk_\C;\D)$, realized by
+the rigid twist as the generator of $\mathbb Z/2$. The correct grant statement is
+the scoped one. All numerical claims are machine-checked
+(\texttt{ks\_level\_check.py}, \texttt{cohomology\_holonomy.py}).
+\end{abstract}
+
+\section{The conjecture, and what would make it true}
+
+The prove target read, verbatim in its success criteria:
+\begin{enumerate}
+\item Express list/stream/tree directed containers as small categories $\C$.
+\item \emph{Express probability/nondeterminism monad as a wide subcategory $\D$.}
+\item Verify or refute condition \textnormal{(L)}.
+\item Compute the cocycle $\omega$ and show $[\omega]\neq0$ in $H^2(\Sk_\C;\D)$.
+\end{enumerate}
+Steps 3 and 4 presuppose step 2. The whole machinery of \cite{Gcohom,pairwise} ---
+hom-presheaves $\Hom_\K(-,b)$ as right $\D$-sets, free bases, transversals, the
+defect $2$-cochain, the complex $C^\bullet(\Sk_\C;\D)$ --- is \emph{defined relative
+to a wide subcategory $\D\subseteq\K$}. If the monad cannot be a wide subcategory,
+the conjecture does not typecheck, let alone hold. So the entire weight of the
+conjecture rests on step 2. We show step 2 is impossible.
+
+\paragraph{The only route to step 2.} A monad $T\colon\Set\to\Set$ ``is'' a category
+in exactly one way relevant here: through the equivalence
+\[
+   \text{directed container}\ \simeq\ \text{small category}\ \simeq\
+   \text{polynomial comonad}
+\]
+of Ahman--Chapman--Uustalu and Ahman--Uustalu \cite{acu,auCats}. A small category
+$\D$ presents the polynomial endofunctor $X\mapsto\coprod_{a\in\ob\D}X^{\,\D(a,-)}$
+(``shapes $=$ objects, positions $=$ outgoing arrows''), with its canonical comonad
+structure. \emph{This is the sense in which the right factor $\D$ of a Zappa--Sz\'ep
+product is an endofunctor of $\Set$.} For the Karamlou--Shah question ``does the
+directed container distribute over $T$'' to become an instance of a strict
+factorization, the monad $T$ ($=\Dist$ or $\Pow$) must be realized as such a
+$\D$ --- i.e.\ $T$ must be a polynomial functor. (The orientation is irrelevant:
+whichever of $\C,\D$ one assigns to $T$, that factor must be a small category, hence
+$T$ must be polynomial. See Remark~\ref{rem:orient}.)
+
+We now prove the route is blocked.
+
+\section{$\Pow$ and $\Dist$ are not polynomial functors}
+
+Recall a functor $F\colon\Set\to\Set$ is \emph{polynomial} (a \emph{container}) iff
+it is a coproduct of representables, $F(X)\cong\coprod_{s\in S}X^{P_s}$ for a set $S$
+of shapes and position-sets $P_s$; equivalently iff $F$ preserves connected limits
+(wide pullbacks) \cite{aag,gambinokock}. Two elementary invariants suffice here:
+$F(1)\cong S$ and $F(0)\cong\{s:P_s=\varnothing\}$.
+
+\begin{proposition}[Powerset is not polynomial]\label{prop:Pow}
+The finite (or full) covariant powerset functor $\Pow$ is not polynomial.
+\end{proposition}
+
+\begin{proof}
+Suppose $\Pow\cong\coprod_{s\in S}(-)^{P_s}$. Evaluating: $\Pow(1)=2$ forces
+$|S|=2$. $\Pow(0)=1$ (the only subset of $\varnothing$ is $\varnothing$) forces
+\emph{exactly one} shape to have an empty position-set; call the other shape's
+position-set size $k\ge1$. Then
+\[
+   \Pow(2)\ =\ 2^{0}+2^{k}\ =\ 1+2^{k}.
+\]
+But $\Pow(2)=4$ (the four subsets of a two-element set), so $2^{k}=3$, which has no
+solution in integers $k$. Contradiction.
+\end{proof}
+
+\begin{proposition}[Distribution is not polynomial]\label{prop:Dist}
+The finitely-supported distribution monad $\Dist$ is not polynomial.
+\end{proposition}
+
+\begin{proof}
+$\Dist(1)=1$ (the unique distribution on a point) forces $|S|=1$ if $\Dist$ were
+polynomial, i.e.\ $\Dist\cong(-)^{P}$ would be \emph{representable}. A representable
+functor preserves all limits, in particular finite products:
+$(-)^P$ sends $A\times B$ to $A^P\times B^P=(A^P)\times(B^P)$, and the comparison
+$(A\times B)^P\to A^P\times B^P$ is the identity (an iso). We exhibit that the
+corresponding comparison for $\Dist$ --- the marginal map
+$\langle\Dist\pi_A,\Dist\pi_B\rangle\colon\Dist(A\times B)\to\Dist(A)\times\Dist(B)$
+--- is not injective for $A=B=2$. Take the two joint distributions on
+$\{0,1\}\times\{0,1\}$
+\[
+   \mu_{\mathrm{ind}}=\tfrac14\delta_{(0,0)}+\tfrac14\delta_{(0,1)}
+     +\tfrac14\delta_{(1,0)}+\tfrac14\delta_{(1,1)},\qquad
+   \mu_{\mathrm{cor}}=\tfrac12\delta_{(0,0)}+\tfrac12\delta_{(1,1)} .
+\]
+Both have uniform marginals $(\tfrac12,\tfrac12)$ on each factor, yet
+$\mu_{\mathrm{ind}}\neq\mu_{\mathrm{cor}}$. So the marginal map is non-injective,
+$\Dist$ does not preserve the product $2\times2$, hence is not representable, hence
+(being $1$ on a singleton) not polynomial.
+\end{proof}
+
+Both computations are confirmed in \texttt{ks\_level\_check.py}: for $\Pow$,
+$1+2^k=4\Rightarrow 2^k=3$ has no integer solution; for $\Dist$, the two displayed
+joints have equal marginals and are distinct.
+
+\begin{remark}[Why this is the heart of the matter]
+$\Pow$ and $\Dist$ are the two canonical \emph{non-polynomial} $\Set$-monads ---
+$\Pow$ fails to preserve wide pullbacks, $\Dist$ fails to preserve products. The
+entire directed-container / $\Poly$ / $\mathbf{Cat}^{\#}$ world in which our
+$H^2$ obstruction is defined is, by construction, the world of \emph{familially
+representable} structure \cite{shapirospivak}. The Karamlou--Shah monads are
+precisely the standard inhabitants of its complement. The conjecture asked for the
+obstruction in a world the obstruction cannot see.
+\end{remark}
+
+\section{The level theorem}
+
+\begin{theorem}[Level theorem]\label{thm:level}
+Let the right factor of a sought strict factorization be a small category $\D$, as
+required by the criterion of \cite{pairwise,Gcohom}. Then:
+\begin{enumerate}
+\item \textnormal{(Negative.)} The Karamlou--Shah right factors $\Dist$ and $\Pow$
+cannot be presented as such a $\D$: by Propositions~\ref{prop:Pow}--\ref{prop:Dist}
+they are not polynomial functors, hence not directed containers, hence not small
+categories acting by precomposition on $\Set$. Consequently success-criterion~$2$
+is unsatisfiable; conditions \textnormal{(L)} and \textnormal{(G)} are not even
+\emph{defined} for these monads, and the proposed identification
+``\,$\text{K--S no-go}=\text{(G) failure}=[\omega]\neq0$\,'' does not typecheck. The
+Karamlou--Shah obstruction lies strictly \emph{below} \textnormal{(L)}: it is a
+\emph{representability} obstruction in the bicategory $[\Set,\Set]$, prior to any
+cohomological closure datum.
+\item \textnormal{(Positive.)} When both factors \emph{are} directed containers
+(small categories), the existence question for a complementary $\C$ with
+$\K=\C\bowtie\D$ is governed, under hypothesis \textnormal{(H)} of \cite{Gcohom}, by
+$[\omega]\in H^2(\Sk_\C;\D)$, and there are genuine \emph{no-go} instances with
+$[\omega]\neq0$. The rigid twist of \cite[Ex.~5.1]{Gcohom} realizes the generator of
+$H^2(\Sk_\C;\D)\cong\mathbb Z/2$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Immediate from Propositions~\ref{prop:Pow}--\ref{prop:Dist} together with the
+equivalence directed container $\simeq$ small category $\simeq$ polynomial comonad
+\cite{acu,auCats}: a wide subcategory $\D\subseteq\K$ is in particular a small
+category, whose induced $\Set$-endofunctor is polynomial; $\Dist,\Pow$ are not
+polynomial, so no wide subcategory induces them. The conditions \textnormal{(L)},
+\textnormal{(G)} are predicates on the pair $(\K,\D)$ with $\D$ a wide subcategory,
+so they have no value when $\D$ does not exist.
+
+(2) Is Theorem~5.2 (the rigid twist) of \cite{Gcohom}, recalled in
+\S\ref{sec:positive}: there $\D=\E$ is the endomorphism subcategory, a directed
+container ($\mathbb Z/2$ at $a$, trivial elsewhere); \textnormal{(L)} holds;
+\textnormal{(G)} fails; $H^2(\Sk_\C;\D)\cong\mathbb Z/2$ and the defect represents
+its nonzero element. Both factors $\C,\D$ are small categories, hence directed
+containers.
+\end{proof}
+
+\begin{remark}[Orientation independence]\label{rem:orient}
+One might hope to dodge Theorem~\ref{thm:level}(1) by assigning the monad $T$ to the
+\emph{left} factor $\C$ instead of the right factor $\D$. This does not help: in a
+strict factorization $\K=\C\bowtie\D$ \emph{both} $\C$ and $\D$ are wide
+subcategories of $\K$, hence both are small categories, hence both induce polynomial
+endofunctors. Realizing $T=\Dist$ or $\Pow$ as either factor requires $T$ polynomial.
+The obstruction of Propositions~\ref{prop:Pow}--\ref{prop:Dist} is symmetric in the
+two factors.
+\end{remark}
+
+\section{The bicategorical mismatch}
+
+The deepest way to see why the conjecture mis-fires is that it silently translates
+between two different notions of distributive law living in two different
+bicategories.
+
+\paragraph{(A) The Zappa--Sz\'ep law (where $H^2$ lives).} A strict factorization
+$\K=\C\bowtie\D$ is the same datum as a distributive law of \emph{categories}
+$\lambda\colon\D\C\Rightarrow\C\D$ --- a matched pair \cite[\S4]{pairwise}. Regarding
+a small category as a monad in the bicategory $\Span(\Set)$ on its object set, this
+is a distributive law of \emph{two monads in $\Span(\Set)$}, and the classical
+correspondence ``distributive laws $\leftrightarrow$ strict factorizations''
+(Rosebrugh--Wood \cite{rw}, Street \cite{street}) applies. Both participants are
+monads (categories). The obstruction $[\omega]\in H^2(\Sk_\C;\D)$ measures the
+failure of a transversal of $\C$-generators to close.
+
+\paragraph{(B) The Karamlou--Shah law (what they actually study).} A directed
+container is a \emph{comonad} $G$ on $\Set$. ``$G$ distributes over the monad $T$''
+is a \emph{mixed} distributive law $\lambda\colon GT\Rightarrow TG$ (or its
+companion $TG\Rightarrow GT$) in the endofunctor bicategory $[\Set,\Set]$ --- a
+comonad and a monad, not two monads. Such a law is exactly an
+\emph{entwining}/\emph{lifting} datum (Beck \cite{beck}; Brze\-zi\'nski--Majid
+\cite{bm}; Power--Watanabe \cite{pw}): it lifts $T$ to the category of
+$G$-coalgebras and lifts $G$ to the category of $T$-algebras, and its (co)algebras
+are \emph{bialgebras}. It does \emph{not} present any category $\K$ as a factorized
+$\C\bowtie\D$; the composite $GT$ is in general neither a monad nor a comonad. So
+(B) is not an object that the $H^2$ theorem of (A) classifies, \emph{independently}
+of whether $T$ is polynomial.
+\smallskip
+
+Thus there are two independent reasons the conjecture fails, and they reinforce each
+other: \emph{(i)} $T=\Dist,\Pow$ is not even a category, so cannot be a factor
+(Theorem~\ref{thm:level}(1)); and \emph{(ii)} even a perfectly good comonad--monad
+law is the wrong \emph{kind} of distributive law --- a lifting, not a factorization.
+The cohomological obstruction answers a question (existence of a complementary wide
+subcategory) that the Karamlou--Shah setup never poses.
+
+\begin{remark}[Two near-misses, ruled out]
+\emph{(Kleisli/Lawvere presentation.)} The one way to make $T$ ``a category'' other
+than as a directed container is to take its Kleisli category $\mathrm{Kl}(T)$ (so
+$\mathrm{Kl}(\Pow)=\mathbf{Rel}$, $\mathrm{Kl}(\Dist)=$ stochastic maps) or its
+Lawvere theory. Neither yields a Zappa--Sz\'ep instance. A wide subcategory must
+share the object set of $\K$; $\mathrm{Kl}(T)$ has \emph{all sets} as objects and is
+not small, while a directed container $\C$ has the shape set (e.g.\ $\mathbb N$ for
+stream/list) as objects --- there is no common $\K$ in which both are wide.
+Moreover the question ``does $\C$ admit a law over $\mathrm{Kl}(T)$'' is again a
+lifting question (case (B)), not a factorization. So this route reproduces both
+obstructions rather than escaping them.
+\end{remark}
+
+\section{What survives: directed-container no-go theorems \emph{are} $H^2$}
+\label{sec:positive}
+
+The positive half of Theorem~\ref{thm:level} is the grant-relevant residue, and it
+is genuinely a ``no-go theorem with a computable cohomological obstruction'' --- only
+for the right class of monads.
+
+\begin{example}[A directed container that does not distribute, with obstruction
+$\mathbb Z/2$]\label{ex:rt}
+Objects $a,x,y$; $\End(a)=\{\id_a,g\}$ with $g^2=\id_a$, other endomorphism monoids
+trivial; $\Hom(a,x)=\{p,pg\}$, $\Hom(a,y)=\{q,qg\}$, $\Hom(x,y)=\{s,s_2\}$ with the
+\emph{rigid twist} $s\circ p=q,\ s_2\circ p=qg$. Take $\D=\E$, the endomorphism
+subcategory: a directed container, equal to $\mathbb Z/2$ concentrated at $a$. Then
+\textnormal{(L)} holds (every hom-set is free over its source vertex group),
+hypothesis \textnormal{(H)} holds (abelian vertex groups, trivial left action), and
+\[
+   H^2(\Sk_\C;\D)\cong\mathbb Z/2,\qquad [\omega]\neq0,
+\]
+so no complementary directed container $\C$ makes $\K=\C\bowtie\D$: the directed
+container $\E$ admits no Zappa--Sz\'ep complement inside $\K$. The four valid
+transversals all yield a defect outside $B^2$ representing the same nonzero class
+(machine-checked, \texttt{cohomology\_holonomy.py}: $\dim_{\mathbb F_2}H^2=1$, no
+closing transversal).
+\end{example}
+
+This is the honest analogue, \emph{inside the polynomial world}, of a
+Karamlou--Shah statement: a directed container (here $\E$) for which a desired
+distributive law (here the matched pair assembling $\K$) provably does not exist,
+\emph{and} whose obstruction is an explicit, computable cohomology class. The
+contrast with Karamlou--Shah is exactly the content of Theorem~\ref{thm:level}: when
+the second factor is itself a directed container, the obstruction is the $H^2$ class;
+when it is $\Dist$ or $\Pow$, there is no second factor at all and the failure is one
+level deeper.
+
+\section{Honest scope}
+
+We have \emph{not} reproved the Karamlou--Shah no-go theorems (that no mixed
+distributive law $GT\Rightarrow TG$ exists for $G$ the list/stream/tree container
+and $T=\Dist,\Pow$); that is a theorem about liftings in $[\Set,\Set]$, established
+by them and not reconsidered here (we did not have access to their proof, and worked
+only from the published statement: the monads are $\Dist$ and $\Pow$). What we have
+established is sharper than a reproof: the \emph{type} of their obstruction. It is
+\emph{not} the cohomological closure class $[\omega]\in H^2(\Sk_\C;\D)$; it cannot
+be, because their second factor is not a directed container and their law is not a
+factorization. The two facts we contribute --- the elementary non-polynomiality of
+$\Pow,\Dist$ (Props.~\ref{prop:Pow}--\ref{prop:Dist}) and the bicategorical
+distinction between mixed laws and factorizations (\S4) --- are each independently
+sufficient to refute the conjectured identification, and both are machine- or
+hand-checkable.
+
+\paragraph{Consequence for the grant narrative.} The slogan ``compositional
+correctness has a computable obstruction'' stands, correctly scoped: \emph{for
+directed-container distributive laws --- the polynomial / $\mathbf{Cat}^{\#}$
+world --- the obstruction to a strict factorization is the computable class
+$[\omega]\in H^2(\Sk_\C;\D)$, vanishing iff a complement exists.} The probability
+and nondeterminism no-go theorems are a \emph{different} phenomenon, a
+non-representability obstruction outside this world, and conflating the two would
+have been an overclaim. Locating the boundary precisely is the result.
+
+\begin{thebibliography}{99}
+\bibitem{Gcohom} MacBeth, \emph{The global-closure obstruction (G) is a cohomology
+class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\D)$}, Kodamai note, 11 June 2026.
+\bibitem{pairwise} MacBeth, \emph{The pairwise Zappa--Sz\'ep criterion}, Kodamai
+note, 10 June 2026.
+\bibitem{acu} D.~Ahman, J.~Chapman, T.~Uustalu, \emph{When is a container a
+comonad?}, Logical Methods in Computer Science 10(3) (2014).
+\bibitem{auCats} D.~Ahman, T.~Uustalu, \emph{Directed containers as categories},
+MSFP 2016, EPTCS 207, 89--98.
+\bibitem{aag} M.~Abbott, T.~Altenkirch, N.~Ghani, \emph{Containers: constructing
+strictly positive types}, Theoret.\ Comput.\ Sci.\ 342 (2005), 3--27.
+\bibitem{gambinokock} N.~Gambino, J.~Kock, \emph{Polynomial functors and polynomial
+monads}, Math.\ Proc.\ Cambridge Philos.\ Soc.\ 154 (2013), 153--192.
+\bibitem{shapirospivak} D.~Spivak, \emph{Polynomial functors: a mathematical theory
+of interaction} (and B.~Shapiro--D.~Spivak, \emph{Duoidal structures \dots/
+$\mathbf{Cat}^{\#}$}), 2023--2024.
+\bibitem{rw} R.~Rosebrugh, R.~J.~Wood, \emph{Distributive laws and factorization},
+J.\ Pure Appl.\ Algebra 175 (2002), 327--353.
+\bibitem{street} R.~Street, \emph{The formal theory of monads}, J.\ Pure Appl.\
+Algebra 2 (1972), 149--168.
+\bibitem{beck} J.~Beck, \emph{Distributive laws}, Lecture Notes in Math.\ 80 (1969),
+119--140.
+\bibitem{bm} T.~Brze\-zi\'nski, S.~Majid, \emph{Coalgebra bundles}, Comm.\ Math.\
+Phys.\ 191 (1998), 467--492.
+\bibitem{pw} J.~Power, H.~Watanabe, \emph{Combining a monad and a comonad}, Theoret.\
+Comput.\ Sci.\ 280 (2002), 137--162.
+\bibitem{ks} P.~Karamlou, A.~Shah, \emph{No-go theorems: directed containers that
+do not distribute over distribution monads}, LICS 2024.
+\end{thebibliography}
+
+\end{document}

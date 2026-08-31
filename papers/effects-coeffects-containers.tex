@@ -1,0 +1,1055 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{stmaryrd}      % \llbracket \rrbracket
+\usepackage{pifont}        % \ding
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage[protrusion=true,expansion=false]{microtype}
+
+% ---- theorem environments -------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---- notation -------------------------------------------------------------
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\Kl}{\mathrm{Kl}}
+\newcommand{\coKl}{\mathrm{coKl}}
+\newcommand{\Alg}{\mathrm{Alg}}
+\newcommand{\Coalg}{\mathrm{Coalg}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\str}{\mathrm{st}}
+\newcommand{\lv}{\mathrm{lv}}
+\newcommand{\arr}{\mathrm{arr}}
+\newcommand{\first}{\mathrm{first}}
+\newcommand{\Ext}[1]{\llbracket #1\rrbracket}
+\newcommand{\cont}[2]{(#1,#2)}
+\newcommand{\Maybe}{\mathsf{Maybe}}
+\newcommand{\Pf}{\mathsf{Pf}}
+\newcommand{\Writer}{\mathsf{Writer}}
+\newcommand{\List}{\mathsf{List}}
+\newcommand{\Arr}{\mathsf{Arr}}
+\newcommand{\rcomp}{\mathbin{>\!\!>\!\!>}}
+\DeclareMathOperator{\Nat}{Nat}
+\DeclareMathOperator{\Hom}{Hom}
+
+\begin{document}
+
+\title[Effects and coeffects entwine on containers]{Effects and coeffects entwine on containers:\\
+one monad, two feeds, and the branching obstruction}
+
+\author{MacBeth}
+\address{Kodamai}
+\email{}
+
+\date{31 July 2026}
+
+\subjclass[2020]{18C15, 18M05, 18C50, 68Q55}
+\keywords{container, polynomial functor, distributive law, entwining, monad, comonad,
+effect, coeffect, arrow, Freyd category, bialgebraic semantics}
+
+\begin{abstract}
+A single monad $M$ on $\Set$ acts on the category $\Cont$ of containers along either
+axis: on \emph{shapes} it gives the Ahman--Bauer effect monad $T_M$; on \emph{positions}
+it gives, by contravariance, a coeffect comonad $G_M$. We ask how these two feeds of one
+monad interact. They always entwine: for every $M$ with a $\prod$-cointerpretation lifting
+there is a canonical mixed distributive law $\lambda\colon T_M G_M \Rightarrow G_M T_M$
+--- the oplax product-comparison of $M$, read on positions --- making $G_M$ a comonad on
+$T_M$-algebras and $T_M$ a monad on $G_M$-coalgebras. This Turi--Plotkin bialgebra holds
+unconditionally, nondeterminism included. The reverse orientation is another story: the
+compositor $\kappa\colon G_M T_M \Rightarrow T_M G_M$ that would let one \emph{sequentially
+compose} effect--coeffect programs $G_M p \to T_M q$ into a category exists if and only if
+$M$ is \emph{non-branching} (every operation has arity at most one), a class we identify
+exactly as the writer-with-absorbing-exceptions monads $MX \cong E + A\times X$. There the
+arrows form a Hughes arrow, equivalently a Freyd category over $(\Cont,\times)$; for
+branching $M$ they fail, through two independent axioms. Branching obstructs the
+\emph{orientation} of the effect--coeffect interaction, not the interaction itself.
+\end{abstract}
+
+\maketitle
+
+%============================================================================
+\section{Introduction}
+%============================================================================
+
+A monad is a model of an \emph{effect}: a way of building a computation that returns a
+value while also doing something --- failing, choosing, logging, diverging. A comonad is
+a model of a \emph{coeffect}: a way of consuming a computation that reads a value together
+with some ambient \emph{context} --- an environment, a history, a resource budget. The two
+notions are formally dual, and a long line of work in programming semantics has asked how
+they interact when both are present at once: how does one \emph{compose} a program that
+reads context and produces effects with another of the same shape? The classical answers
+--- Hughes arrows \cite{Hughes00}, Freyd categories \cite{PowerRobinson97,Atkey11},
+biKleisli categories of a monad and a comonad with a distributive law
+\cite{PowerWatanabe02,UustaluVene08}, and the bialgebraic operational semantics of Turi and
+Plotkin \cite{TuriPlotkin97} --- all live over an arbitrary base category and take the
+monad and the comonad as \emph{independent} data, related (if at all) by a distributive law
+that must be supplied by hand.
+
+This paper studies the case where the monad and the comonad are not independent but are the
+\emph{two feeds of a single monad}, and where the base category is the category $\Cont$ of
+containers (equivalently, polynomial functors in one variable). The setting makes the
+interaction canonical, and canonicity turns out to have sharp consequences.
+
+\paragraph{The two feeds.}
+A container $\cont S P$ is a set $S$ of \emph{shapes} together with a family $P\colon S\to
+\Set$ of \emph{positions}; it presents the polynomial endofunctor $\Ext{S,P}Y = \sum_{s\in
+S} Y^{P(s)}$ on $\Set$. A morphism of containers is a map \emph{forward} on shapes and
+\emph{backward} on positions --- positions are contravariant --- and this single fact about
+variance is the hinge of the whole paper. Given any monad $M$ on $\Set$ (with a mild
+support hypothesis, made precise in \S\ref{sec:prelim}), there are exactly two ways to feed
+$M$ into a container, and the variance decides the outcome:
+\begin{itemize}
+  \item \emph{Along the shapes}, $T_M\cont S P = \cont{MS}{P^\star}$ applies $M$ to the
+  shape set and extends the positions to match (Ahman--Bauer \cite{AhmanBauer24}, Thm.~6.3).
+  Shapes are covariant, so $T_M$ is a \textbf{monad} on $\Cont$ --- the \emph{effect} feed.
+  \item \emph{Along the positions}, $G_M\cont S P = \cont S{M\circ P}$ applies $M$ to each
+  position fibre and leaves the shapes fixed (the \emph{transfer}). Positions are
+  contravariant, so $G_M$ is a \textbf{comonad} on $\Cont$ --- the \emph{coeffect} feed.
+\end{itemize}
+There is no third axis and no freedom in the outcome. The reader should hold onto the
+asymmetry: it is the same variance --- positions run backward --- that makes $G_M$ a comonad
+and, we will find, forces the single direction in which the effect feed can pass through the
+coeffect feed.
+
+\paragraph{The question, and the answer.}
+Do the two feeds $T_M$ and $G_M$ of one monad $M$ interact via a distributive law, and if
+so, what does that law model? We give a complete answer, and it is a \emph{dichotomy of two
+dual laws} that coincide only in a degenerate regime.
+
+\begin{theorem}[Main dichotomy]\label{thm:main}
+Let $M$ be a $\Set$-monad with a $\prod$-cointerpretation predicate lifting (for instance
+$\Pf$, $\Maybe$, $\Writer$, or $\mathrm{Id}$), with effect monad $T_M$ and coeffect comonad
+$G_M$ on $\Cont$ as above. Then:
+\begin{enumerate}
+  \item \emph{(Bialgebra face, all $M$.)} There is a canonical mixed distributive law
+  $\lambda\colon T_M G_M \Rightarrow G_M T_M$, the oplax product-comparison of $M$ read on
+  positions, satisfying the four entwining axioms for \emph{every} such $M$. Consequently
+  $G_M$ lifts to a comonad on $T_M$-algebras and $T_M$ lifts to a monad on
+  $G_M$-coalgebras: a Turi--Plotkin-style $\lambda$-bialgebra.
+  \item \emph{(Arrow face, non-branching $M$ only.)} The reverse compositor
+  $\kappa\colon G_M T_M \Rightarrow T_M G_M$ satisfies the four axioms --- equivalently, the
+  effect--coeffect programs $p\rightsquigarrow q := \Cont(G_M p,\,T_M q)$ form a category,
+  indeed a Hughes arrow / Freyd category over $(\Cont,\times)$ --- \emph{if and only if $M$
+  is non-branching}, meaning every shape of $M$ has arity at most one. The sole obstructed
+  axiom is associativity.
+  \item \emph{(Classification of the positive class.)} A cartesian $M$ is non-branching if
+  and only if it is a \emph{writer-with-absorbing-exceptions} monad
+  \[
+    MX \;\cong\; E + A\times X,\qquad (A,\cdot,e)\ \text{a monoid},\quad
+    (E,\odot)\ \text{a left $A$-set},
+  \]
+  with writer unit $x\mapsto(e,x)$ and the log $A$ acting on the exceptions $E$; the arrow
+  category exists throughout this class.
+\end{enumerate}
+\end{theorem}
+
+Parts (1)--(3) are Theorems~\ref{thm:entwine}, \ref{thm:arrowsA}--\ref{thm:arrowsB}, and
+\ref{thm:classify} below. The single monad $M$ carries two comparison maps between its
+composites $T_M G_M$ and $G_M T_M$, and they behave oppositely: the oplax one runs
+$T_M G_M \Rightarrow G_M T_M$ and is always a law; the lax one runs the other way and is a
+law only when $M$ does not branch. \emph{Same monad, same two feeds, same category $\Cont$:
+the unification of effects and coeffects exists unconditionally as a bialgebra, and its
+categorical packaging as an arrow calculus is exactly what branching obstructs.} The
+obstruction is not to the interaction but to its \emph{orientation}.
+
+\paragraph{Why this is worth stating.}
+Three points give the result its edge.
+
+First, the bialgebra face \emph{keeps the branching monads}. A recurring worry about
+effect--coeffect calculi is that the interesting computational monads --- nondeterminism
+$\Pf$, probability, lists --- are precisely the ones that break the sequential composition.
+They do break the \emph{arrow}, but they do not break the \emph{bialgebra}: part (1) holds
+for $\Pf$ and $\List$ exactly as for $\Maybe$. So the denotational, bialgebraic unification
+of effects and coeffects on containers is available for every $M$, and the affirmative
+answer to ``is there a Turi--Plotkin bialgebra here?'' is unconditional.
+
+Second, the obstruction is \emph{named}. Part (3) does not merely say ``non-branching''; it
+identifies the class as the writer-with-absorbing-exceptions monads $E + A\times(-)$, a
+recognisable and closed family (the writer transformer over the exception monad, twisted by
+an action). ``Non-branching'' is moreover a genuinely new dividing line, provably orthogonal to
+commutativity and affineness (Proposition~\ref{prop:independence}): $\Pf$ is commutative and branching,
+$E+(-)$ with $|E|>1$ is non-commutative and non-branching, the distribution monad is affine
+and branching.
+
+Third, branching disables the arrow \emph{twice over}, through two independent axioms. The
+compositor $\kappa$ fails associativity (Theorem~\ref{thm:arrowsA}) through the
+multiplication of $M$ \emph{merging} leaves (a \emph{union of products versus product of
+unions} discrepancy); and, separately, the effect monad $T_M$ has no \emph{natural} strength
+for the product on $\Cont$ (Lemma~\ref{lem:strong}), failing through leaf-\emph{symmetry}
+rather than merging. Both failures are equivalent to the arity condition, by different
+arguments --- a pleasingly redundant obstruction.
+
+\paragraph{Method.}
+Because both feeds are identity on shapes over $MS$ (for $T_M$) or on $S$ (for $G_M$), every
+law and every axiom localises to a \emph{position-level equation in $\Set$}, with backward
+maps composing contravariantly. At a shape with leaves $b$ and position sets $Z_b$, the two
+composites $T_M G_M$ and $G_M T_M$ read as $M(\prod_b Z_b)$ and $\prod_b M(Z_b)$, and the
+only canonical map between them is the oplax product-comparison
+$\str\colon M(\prod_b Z_b)\to\prod_b M(Z_b)$. The entwining axioms are then naturality
+squares for $M$'s unit and multiplication; the arrow's obstruction is that the \emph{reverse}
+(lax) comparison fails to commute with the leaf-merging in $\mu^M$; and the strength
+obstruction is a Yoneda computation showing a natural distributivity map must read a single
+distinguished leaf, which leaf-symmetry then forbids. The classification is a
+polynomial-functor argument (arity $\le 1$ is degree $\le 1$) followed by a monad-structure
+pin.
+
+\paragraph{Outline.}
+Section~\ref{sec:prelim} fixes containers, the two liftings, and the entwining vocabulary.
+Section~\ref{sec:feeds} presents the effect monad $T_M$ and the coeffect comonad $G_M$ and
+the sense in which they are one monad's two feeds. Section~\ref{sec:bialgebra} proves the
+bialgebra face --- the law $\lambda$ for all $M$ --- and Section~\ref{sec:onedirection}
+shows the reverse orientation fails, isolating branching as the obstruction.
+Section~\ref{sec:arrow} builds the arrow face: the biKleisli category
+(Theorem~\ref{thm:arrowsA}), the Freyd/Hughes structure and the strength obstruction
+(Theorem~\ref{thm:arrowsB}). Section~\ref{sec:classify} classifies the positive class as
+writer-with-absorbing-exceptions and closes the associativity axiom across it
+(Theorem~\ref{thm:classify}). Section~\ref{sec:lean} reports the machine-checked instance.
+Section~\ref{sec:related} places the result among its neighbours, and
+Section~\ref{sec:conclusion} concludes.
+
+\paragraph{Provenance.}
+The mathematical results collected here were established in a sequence of the author's proof
+notes; the effect monad $T_M$ is due to Ahman and Bauer \cite{AhmanBauer24}, and the
+entwining and arrow formalism is classical (Beck \cite{Beck69}; Power--Watanabe
+\cite{PowerWatanabe02}; Brzezi\'nski--Majid \cite{BrzezinskiMajid98}; Uustalu--Vene
+\cite{UustaluVene08}). What is new is the identification of the law welding one monad's two
+container feeds, its forced orientation, the branching obstruction, and the classification
+of the positive class. Attribution is given in place. Two axioms are proved in coordinates
+and machine-verified on the flagship monads but not written out as a fully symbolic chase over
+an arbitrary predicate lifting; these mechanical gaps are flagged honestly where they occur
+(Remarks~\ref{rem:e2gap} and \ref{rem:scope}).
+
+%============================================================================
+\section{Preliminaries}\label{sec:prelim}
+%============================================================================
+
+We work with containers and with $\Set$-monads carrying a support structure. This section
+fixes notation and recalls the entwining vocabulary; a reader fluent in polynomial functors
+and distributive laws can skim it.
+
+\subsection{Containers}
+A \emph{container} is a pair $\cont S P$ with $S\in\Set$ (\emph{shapes}) and $P\colon S\to
+\Set$ (\emph{positions}). A \emph{morphism} $\cont S P \to \cont T Q$ is a pair $(u,f)$ with
+$u\colon S\to T$ \emph{forward} and, for each $s\in S$, a map $f_s\colon Q(u\,s)\to P(s)$
+\emph{backward}; composition is forward on shapes and backward (in the opposite order) on
+positions. Containers and their morphisms form a category $\Cont$. The \emph{extension}
+functor
+\[
+  \Ext{-}\colon \Cont \longrightarrow [\Set,\Set],\qquad
+  \Ext{S,P}Y = \sum_{s\in S} Y^{P(s)},
+\]
+is fully faithful, with image the \emph{polynomial} endofunctors; we freely identify a
+container with the functor it presents. Finite products in $\Cont$ are
+\[
+  \cont S P \times \cont T Q = \bigl(S\times T,\ (s,t)\mapsto P(s)\sqcup Q(t)\bigr),
+\]
+matching $\Ext{p\times c}Y = \Ext p Y\times\Ext c Y$; this is the cartesian tensor used in
+\S\ref{sec:arrow}.
+
+\subsection{Set-monads with support and the predicate lifting}\label{sec:prelim-lifting}
+Let $M=(M,\eta,\mu)$ be a monad on $\Set$ presented as a polynomial functor
+\[
+  M X \;=\; \sum_{s\in M1} X^{\,\mathrm{ar}(s)},\qquad \mathrm{ar}\colon M1\to\Set,
+\]
+so each element $m\in MX$ has a \emph{support} of \emph{leaves} $b\in\lv(m)$ carrying labels
+$x_b\in X$. We say $M$ is \emph{non-branching} if $|\mathrm{ar}(s)|\le 1$ for every shape
+$s$ (equivalently every $m$ has $|\lv(m)|\le 1$), and \emph{branching} otherwise. Flagship
+examples: $\Maybe = 1+(-)$, exception $E+(-)$, $\Writer_N = N\times(-)$, and $\mathrm{Id}$
+are non-branching; finite powerset $\Pf$ and $\List$ are branching.
+
+To lift $M$ into positions we need a \emph{predicate lifting} $(-)^\star$ turning a family
+$P\colon S\to\Set$ into $P^\star\colon MS\to\Set$. We use the \emph{$\prod$-cointerpretation}
+of Ahman and Bauer \cite[\S6.1,\S6.5]{AhmanBauer24}:
+\[
+  P^\star(m) \;=\; \prod_{b\in\lv(m)} P(x_b),
+\]
+the universal (product-based) lifting. Its unit datum is the projection $i$ out of the
+singleton product $P^\star(\eta_S s)=\prod_{\{*\}}P s = Ps$, and its multiplication datum is
+the restriction $j$ that reindexes a product along the leaf-map of $\mu^M$. The monads for
+which this weak Mendler algebra is defined include all the flagship examples above; the
+reader monad $A^K$ is \emph{not} one, which is why the lifting is taken weak. We call such
+$M$ a \emph{$\prod$-cointerpretation monad}; this is the standing hypothesis throughout, and
+\emph{cartesian} means $\mu^M$ (and $\eta^M$) are cartesian natural transformations
+(preserve the leaf-count).
+
+\begin{remark}[``Non-branching'' is not Kock-affine]\label{rem:affine-clash}
+Non-branching means \emph{arity $\le 1$}, i.e.\ degree $\le 1$ as a polynomial (a constant
+term plus a linear term). It is \emph{not} affineness in Kock's sense $M1\cong 1$: here the
+shape set $M1$ may be arbitrarily large. The two coincide only trivially ($M1\cong1$ forces
+$M=\mathrm{Id}$). We say \emph{non-branching} or \emph{arity-$\le 1$} throughout and never
+\emph{affine}, to avoid the clash.
+\end{remark}
+
+\subsection{Mixed distributive laws and entwinings}\label{sec:prelim-entwine}
+Let $T$ be a monad and $G$ a comonad on a category $\mathcal C$. A \emph{mixed distributive
+law} (or \emph{entwining}) of $G$ over $T$ is a natural transformation
+$\lambda\colon TG\Rightarrow GT$ satisfying four axioms --- two expressing compatibility with
+the unit and multiplication of $T$, two with the counit and comultiplication of $G$
+(Beck \cite{Beck69}; Power--Watanabe \cite{PowerWatanabe02}; the entwining-structure
+language is Brzezi\'nski--Majid \cite{BrzezinskiMajid98}). Such a $\lambda$ is exactly the
+datum lifting $G$ to a comonad on the category $\Alg(T)$ of $T$-algebras and $T$ to a monad
+on the category $\Coalg(G)$ of $G$-coalgebras; a compatible $T$-algebra-and-$G$-coalgebra is
+a \emph{$\lambda$-bialgebra} in the sense of Turi and Plotkin \cite{TuriPlotkin97}. We write
+the four axioms E1--E4 (unit-$T$, mult-$T$, counit-$G$, comult-$G$) and, for the opposite
+orientation $\kappa\colon GT\Rightarrow TG$, their mirror E1$'$--E4$'$; here E2$'$ is the
+mult-$T$/associativity axiom.
+
+Dually, a mixed distributive law $\kappa\colon GT\Rightarrow TG$ lifts $G$ to a comonad on
+the Kleisli category $\Kl(T)$, whose \emph{coKleisli} category is the \emph{biKleisli}
+category of the pair: its objects are those of $\mathcal C$, its morphisms $p\to q$ are the
+maps $Gp\to Tq$, and composition uses $\kappa$ to thread the effect of one map past the
+coeffect of the next \cite{PowerWatanabe02,UustaluVene08}. When $T$ is strong and $G$
+costrong compatibly with $\kappa$, this biKleisli category is a \emph{Hughes arrow}
+\cite{Hughes00}, equivalently a \emph{Freyd category} over the cartesian base
+\cite{PowerRobinson97,Atkey11,JacobsHeunenHasuo09}. These are the two structures the paper
+produces from the two feeds of one $M$.
+
+%============================================================================
+\section{The two feeds of one monad}\label{sec:feeds}
+%============================================================================
+
+We recall the two liftings and the exact sense in which they are dual halves of one monad.
+
+\subsection{The effect monad}
+Ahman and Bauer \cite[Thm.~6.3]{AhmanBauer24} show that a $\prod$-cointerpretation monad $M$
+lifts along shapes to a monad on $\Cont$:
+\[
+  T_M\cont S P = \cont{MS}{P^\star},\qquad P^\star(m)=\prod_{b\in\lv(m)}P(x_b).
+\]
+The unit $\eta^T$ covers $\eta^M$ on shapes and is backward the singleton projection $i$; the
+multiplication $\mu^T$ covers $\mu^M$ and is backward the restriction $j$. Because shapes are
+covariant, $T_M$ is a monad. On extensions $\Ext{T_M(S,P)}Y = \sum_{m\in MS} Y^{P^\star(m)}$:
+$T_M$ is the container of \emph{$M$-structured computations over the operations of $\cont S
+P$}, with positions the tuples of operands, one per leaf.
+
+\subsection{The coeffect comonad}
+Dually, apply $M$ to the position fibres:
+\[
+  G_M\cont S P = \cont S{M\circ P}.
+\]
+The counit $\varepsilon$ is backward $\eta^M$ and the comultiplication $\delta$ is backward
+$\mu^M$; shapes are untouched. Because positions are \emph{contravariant}, the covariant
+monad $M$ becomes a \emph{comonad} $G_M$ on $\Cont$. On extensions $\Ext{G_M(S,P)}Y =
+\sum_{s} Y^{M(P s)}$: an operation of arity $P(s)$ acquires an $M$-structured arity, a
+\emph{context} wrapped around every operand slot. (For $M=\Maybe$, $G_M$ adjoins a fresh
+basepoint to each fibre --- a default or exception argument on every operation.)
+
+The two liftings are welded together by the fibrewise $(-)^\op$ that makes a container a
+container: apply $M$ where the variance runs forward and monads stay monads; apply it where
+the variance runs backward and monads become comonads. There is no third axis, and no choice
+in the outcome. The rest of the paper studies how these two feeds of \emph{the same} $M$
+interact.
+
+%============================================================================
+\section{The bialgebra face: the two feeds always entwine}\label{sec:bialgebra}
+%============================================================================
+
+This is the headline. We show the two feeds interact via a canonical mixed distributive law
+$\lambda\colon T_M G_M\Rightarrow G_M T_M$, valid for \emph{every} $\prod$-cointerpretation
+$M$, branching or not, and identify what it models.
+
+\subsection{The two composites and the canonical comparison}
+Both $T_M G_M$ and $G_M T_M$ are the identity on shapes over $MS$, so it suffices to read
+their positions at a fixed shape $m\in MS$. Localise at $m$, write $Z_b := P(x_b)$ for the
+position set at leaf $b\in\lv(m)$, and compute:
+\[
+  \renewcommand{\arraystretch}{1.4}
+  \begin{array}{c|c}
+    \text{functor} & \text{positions at } m\\\hline
+    G_M\,T_M & M\bigl(P^\star m\bigr)=M\bigl(\textstyle\prod_b Z_b\bigr)\\
+    T_M\,G_M & (M\circ P)^\star(m)=\textstyle\prod_b M(Z_b)
+  \end{array}
+\]
+($G_M T_M$: run $T_M$, then fatten its positions with $M$. $T_M G_M$: fatten first, then
+take the product-lifting of the $M$-fattened positions.) Between $M(\prod_b Z_b)$ and
+$\prod_b M(Z_b)$ there is exactly one canonical map, the \emph{oplax product-comparison}
+\[
+  \str_{(Z_b)}\colon\ M\bigl(\textstyle\prod_b Z_b\bigr)\longrightarrow\prod_b M(Z_b),
+  \qquad w\longmapsto\bigl(M(\pi_b)\,w\bigr)_b,
+\]
+built from $M$ and the product projections alone. It exists for \emph{every} functor $M$ by
+the universal property of the target product --- it is the structure map exhibiting $M$ as an
+oplax monoidal functor for $(\Set,\times)$ --- and no algebra structure on $M$ is used to
+write it down.
+
+\paragraph{The direction is forced.}
+$\str$ runs $G_M T_M$-positions to $T_M G_M$-positions. Container morphisms run their
+position map \emph{backward}, so $\str$ is the backward part of a morphism the \emph{other}
+way,
+\[
+  \lambda_X\colon\ T_M G_M X\longrightarrow G_M T_M X,\qquad
+  \text{forward }\id_{MS},\quad\text{backward }\str,
+\]
+a $2$-cell $\lambda\colon T_M G_M\Rightarrow G_M T_M$: the standard orientation of a mixed
+distributive law of the comonad $G_M$ over the monad $T_M$. The naive opposite orientation
+would need the reverse map $\prod_b M(Z_b)\to M(\prod_b Z_b)$, which is not canonical and, we
+show in \S\ref{sec:onedirection}, does not assemble into a law.
+
+\subsection{The entwining theorem}
+
+\begin{theorem}[The two feeds entwine]\label{thm:entwine}
+Let $M$ be a $\prod$-cointerpretation $\Set$-monad, $T_M,G_M$ its two container liftings, and
+$\lambda\colon T_M G_M\Rightarrow G_M T_M$ the $2$-cell backward $\str$. Then $(T_M,G_M,
+\lambda)$ is an entwining structure on $\Cont$: $\lambda$ is natural and satisfies the four
+entwining axioms. Consequently $G_M$ lifts to a comonad on $\Alg(T_M)$ and $T_M$ lifts to a
+monad on $\Coalg(G_M)$, exhibiting a $\lambda$-bialgebra in the sense of Turi and Plotkin.
+\end{theorem}
+
+\begin{proof}
+Everything is identity on shapes, so each axiom localises to a position-level equation in
+$\Set$, with backward maps composing contravariantly; localise at $Z_b$ and write
+$\str=(M\pi_b)_b$.
+\begin{itemize}
+  \item \textbf{Counit-$G$} ($\varepsilon_G$ against $\lambda$). Backward,
+  $M(\pi_b)\circ\eta_{\prod Z}=\eta_{Z_b}\circ\pi_b$: the naturality of $\eta$ at $\pi_b$.
+  \item \textbf{Unit-$T$}. At a single shape the product collapses to one factor; there
+  $\str=M(\id)=\id$ and the Mendler $i$ is the singleton projection $=\id$, so both sides are
+  $\id_{MZ}$.
+  \item \textbf{Comult-$G$} ($\delta_G$ against $\lambda$). Backward,
+  $M(\pi_b)\circ\mu_{\prod Z}=\mu_{Z_b}\circ MM(\pi_b)$: the naturality of $\mu$ at $\pi_b$.
+  Threading the two paths componentwise, both equal $(\mu_{Z_b}\circ MM(\pi_b))_b$.
+  \item \textbf{Mult-$T$}. The only axiom touching the Mendler $j$. Both paths are built from
+  $\str$ and the reindexing of a product along the leaf-map of $\mu^M$; since $\str$ is
+  componentwise $M$ applied to a projection, it commutes with that reindexing
+  ($M(\pi_{\rho(b,c)})=M(\pi_{(b,c)})\circ M(\text{reindex})$), and the two backward maps
+  coincide. This is the naturality of $\str$ with respect to product-reindexing, i.e.\ the
+  $j$-naturality diagram of Ahman--Bauer \cite[Def.~6.2]{AhmanBauer24}.
+\end{itemize}
+Naturality of $\lambda$ in $X$ is naturality of $\str$ and of the projections. The lifting to
+$\Alg(T_M)$ and $\Coalg(G_M)$ is the standard consequence of the entwining axioms
+\cite{PowerWatanabe02}.
+\end{proof}
+
+\begin{remark}[The one-line meaning of $\lambda$]
+The entwining says one thing: \emph{$M$ oplax-preserves products, coherently with its unit
+and multiplication, transported onto positions.} Fibrationally, $G_M=(M^\op)_*$ is vertical
+and $T_M$ covers the base monad $M$; $\lambda$ is the Beck--Chevalley-type $2$-cell comparing
+\emph{apply $M$ on the base, then fatten positions} against \emph{fatten positions, then apply
+$M$ on the base}. The comparison exists one way for free --- that is $\str$ --- and the four
+axioms are exactly its coherence with the two monad structures $M$ carries on the two feeds.
+\end{remark}
+
+\begin{remark}[The mult-$T$ index-chase]\label{rem:e2gap}
+Axiom mult-$T$ is the only one whose full symbolic verification depends on the specific weak
+Mendler $j$. The conceptual mechanism above --- $\str$ commutes with the product-reindexing
+that is $j$ --- is complete; the fully spelt-out index-chase over an arbitrary $j$ is
+mechanical and is not written out. It is machine-verified for the $\prod$-cointerpretation
+examples across three containers, including the \emph{branching} commutative case $M=\Pf$
+(union/restriction $j$), $M=\Maybe$, and $M=\Writer$ over both an abelian and a
+non-commutative log. The other three axioms are complete as stated.
+\end{remark}
+
+The bialgebra face holds for \emph{every} $M$. In particular nondeterminism ($\Pf$),
+lists, and --- for any $\prod$-cointerpretation presentation --- probabilistic branching all
+carry the $\lambda$-bialgebra: the two feeds of a branching monad still entwine in the
+standard orientation, and $G_M$ still acts on $T_M$-algebras. This is the sense in which the
+denotational unification of effects and coeffects on containers is unconditional. What
+branching costs is the \emph{other} orientation, to which we now turn.
+
+%============================================================================
+\section{One direction only: the branching obstruction}\label{sec:onedirection}
+%============================================================================
+
+The opposite orientation $G_M T_M\Rightarrow T_M G_M$ needs the \emph{lax} comparison
+$\prod_b M(Z_b)\to M(\prod_b Z_b)$, which not every monad has; a commutative monad supplies
+the cartesian one (for $\Pf$, $(S_b)_b\mapsto\prod_b S_b$, the set of choice-tuples). Even
+when it exists, it fails to be a distributive law the moment $M$ branches.
+
+\begin{example}[$\Pf$ breaks the reverse orientation]\label{ex:pf-breaks}
+Take $M=\Pf$ and the container $X=\bigl(\{a,b\},\ a\mapsto\{0,1\},\ b\mapsto\{0\}\bigr)$. The
+lax $G_M T_M\Rightarrow T_M G_M$ map satisfies unit-$T$, counit-$G$, and comult-$G$, but
+fails mult-$T$. At the double shape $\{\{a,b\},\{a\}\}\in\Pf\,\Pf\,S$ the two paths return, on
+one side, the \emph{correlated} two-element set $\{((1,0),(1)),\,((0,0),(0))\}$ --- a union of
+products --- and on the other the full four-element \emph{product of unions}. The
+multiplication $\mu=\bigcup$ merges the leaf $a$ shared by $\{a,b\}$ and $\{a\}$, and the
+cartesian lax map cannot see that the two choices at that shared leaf must agree:
+\emph{union of products $\neq$ product of unions}.
+\end{example}
+
+The obstruction is \textbf{branching, not non-commutativity}. $\Pf$ is commutative and still
+fails; what breaks the law is $\mu$ identifying leaves, which needs a shape with at least two
+positions so that $\bigcup$ can overlap. When $M$ has arity at most one no two leaves are
+ever shared, $\mu$ can identify none, mult-$T$ holds trivially, and \emph{both} orientations
+are entwinings at once. The dichotomy is clean:
+\begin{center}\small
+  \renewcommand{\arraystretch}{1.4}\setlength{\arraycolsep}{4pt}
+  $\begin{array}{c|c|c}
+    M & T_M G_M\Rightarrow G_M T_M\ (\text{oplax }\str) & G_M T_M\Rightarrow T_M G_M\ (\text{lax})\\\hline
+    \text{arity}\le 1\ (\Maybe,\Writer,\mathrm{Id}) & \text{entwining }\checkmark
+      & \text{entwining }\checkmark\\
+    \text{branching}\ (\Pf,\List,\dots) & \text{entwining }\checkmark\ (\textbf{universal})
+      & \text{fails mult-}T\ \text{\ding{55}}
+  \end{array}$
+\end{center}
+So the interaction of the two feeds is real, and it lives in the standard orientation, where
+it holds for all $M$; the orientation one might guess first is the one branching forbids. The
+same variance that forced $G_M$ to be a comonad also forces the single direction in which the
+monad feed can pass through it.
+
+%============================================================================
+\section{The arrow face: composing effect--coeffect programs}\label{sec:arrow}
+%============================================================================
+
+We now read the reverse orientation as a \emph{composition rule}. An \emph{effect--coeffect
+arrow} $p\rightsquigarrow q$ is a container morphism $G_M p\to T_M q$: it reads its input
+through the coeffect $G_M$ and delivers its output through the effect $T_M$. This is the
+container analogue of a coKleisli-of-$G$-then-Kleisli-of-$T$ program $GA\to TB$, and it is
+what one \emph{sequentially composes}.
+
+\subsection{The biKleisli category and its compositor}
+The arrows $G_M p\to T_M q$ are the morphisms of the coKleisli category of the comonad $G_M$
+lifted to the Kleisli category $\Kl(T_M)$ --- the biKleisli category of the pair
+\cite{PowerWatanabe02,UustaluVene08}. Explicitly, the identity $p\rightsquigarrow p$ is
+$\eta^T_p\circ\varepsilon_p$, and the composite of $f\colon G_M p\to T_M q$ and
+$g\colon G_M q\to T_M r$ is
+\[
+  G_M p \xrightarrow{\ \delta_p\ } G_M G_M p \xrightarrow{\ G_M f\ } G_M T_M q
+      \xrightarrow{\ \kappa_q\ } T_M G_M q \xrightarrow{\ T_M g\ } T_M T_M r
+      \xrightarrow{\ \mu^T_r\ } T_M r.
+\]
+The middle step is a natural transformation $\kappa\colon G_M T_M\Rightarrow T_M G_M$: the
+composite \emph{commutes the effect $T_M$ out through the coeffect $G_M$}, from $G_M T_M q$ to
+$T_M G_M q$. This is the \emph{reverse} of the proved $\lambda$ of Theorem~\ref{thm:entwine};
+on positions its backward map is the \emph{lax} product-comparison $\prod_b M(Z_b)\to
+M(\prod_b Z_b)$ of \S\ref{sec:onedirection}. Composition therefore requires exactly the
+orientation that branching obstructs.
+
+\begin{theorem}[Existence of the arrow category]\label{thm:arrowsA}
+For a $\prod$-cointerpretation $\Set$-monad $M$ the following are equivalent.
+\begin{enumerate}
+  \item The effect--coeffect arrows $G_M p\to T_M q$ form a category with identity
+  $\eta^T\circ\varepsilon$ and the biKleisli composition above.
+  \item There is a natural $\kappa\colon G_M T_M\Rightarrow T_M G_M$ satisfying the four
+  mixed-distributive-law axioms E1$'$--E4$'$.
+  \item $M$ is non-branching.
+\end{enumerate}
+The unit laws correspond to E1$'$, E3$'$; associativity corresponds to \textbf{E2$'$} (the
+mult-$T$ axiom), which is the sole axiom that branching destroys.
+\end{theorem}
+
+\begin{proof}
+$(1)\Leftrightarrow(2)$ is the mixed analogue of Beck's theorem \cite{PowerWatanabe02}: a
+lifting of $G_M$ to $\Kl(T_M)$ is the same datum as a $\kappa$ obeying E1$'$--E4$'$, and the
+coKleisli category of the lifted comonad is (1), with the hom-sets $\Cont(G_M p,T_M q)$,
+identity $\eta^T\circ\varepsilon$, and the displayed composite; the unit laws unwind to
+E1$'$/E3$'$ and associativity to E2$'$, which is precisely the statement that the lifted
+comonad preserves Kleisli composition. $(2)\Leftrightarrow(3)$ is the dichotomy of
+\S\ref{sec:onedirection}: the lax $\kappa$ satisfies E1$'$, E3$'$, E4$'$ for every $M$ and
+satisfies E2$'$ iff $M$ is non-branching, the branching failure being the union-of-products
+versus product-of-unions discrepancy of Example~\ref{ex:pf-breaks}.
+\end{proof}
+
+The equivalence $(1)\Leftrightarrow(3)$ is what makes the result sharp: the existence of an
+effect--coeffect arrow calculus on containers is a property of the effect monad $M$, namely
+non-branching, and the obstruction is exactly the entwining axiom that branching destroys.
+The signature is telling. For $M=\Pf$ the unit laws still hold and \emph{only} associativity
+breaks; an explicit non-associative triple $f,g,h\colon G_M(A_1)\to T_M(A_1)$ (with
+$A_1=(\{a,b\};a\mapsto2,b\mapsto1)$, all forward $a\mapsto\{a\},b\mapsto\{a,b\}$) differs at
+shape $b$, position $(1,0)$, returning $\varnothing$ on one association and $\{0\}$ on the
+other.
+
+\subsection{The Freyd/Hughes structure, and the strength obstruction}
+A category is not yet an arrow: an arrow has, in addition, an identity-on-objects functor
+from a cartesian base and a $\first$ operator. We take the tensor to be the cartesian product
+$\times$ on $\Cont$. For a pure morphism $\varphi\colon p\to q$ set
+$\arr(\varphi)=\eta^T_q\circ\varphi\circ\varepsilon_p\colon G_M p\to T_M q$.
+
+\begin{proposition}[The pure functor]\label{prop:arr}
+$\arr$ is an identity-on-objects functor $\Cont\to\Arr_M$: $\arr(\id)$ is the biKleisli
+identity, and $\arr(\psi\circ\varphi)=\arr(\varphi)\,\rcomp\,\arr(\psi)$.
+Its image is the pure/central subcategory.
+\end{proposition}
+\begin{proof}
+Functoriality is the counit/unit calculation: expanding the composite and using
+$\varepsilon\circ\delta=\id$ together with the entwining triangles E1$'$
+($\kappa\circ G_M\eta^T=\eta^T G_M$) and E3$'$ ($T_M\varepsilon\circ\kappa=\varepsilon T_M$),
+both of which hold for \emph{every} $M$ (\S\ref{sec:onedirection}), collapses the middle
+$\eta^T\cdots\varepsilon$ to give $\eta^T\circ\psi\circ\varphi\circ\varepsilon
+=\arr(\psi\circ\varphi)$.
+\end{proof}
+
+The coeffect side is unconditionally well-behaved; the effect side is where branching bites
+again.
+
+\begin{lemma}[Coeffects are always costrong]\label{lem:costrong}
+For every $M$ there is a natural costrength $\sigma_{p,c}\colon G_M(p\times c)\to G_M p\times
+c$, forward $\id$, backward at $(v,t)$ the map $M(Qv)\sqcup Q_c t\to M(Qv\sqcup Q_c t)$ that is
+$M(\mathrm{inl})$ on the coeffect summand and $\eta^M\circ\mathrm{inr}$ on the fresh summand.
+\end{lemma}
+\begin{proof}
+$G_M$-positions are a \emph{single} $M$-structure $M(Ps)$, with no product over leaves, so the
+map is $M$ applied to $\mathrm{inl}$ and the unit on the new $c$-factor; no branching arises.
+Naturality is functoriality of $M$ and naturality of $\eta^M$.
+\end{proof}
+
+\begin{lemma}[Effects are strong iff non-branching]\label{lem:strong}
+The effect monad $T_M$ admits a \emph{natural} tensorial strength $\tau_{q,c}\colon T_M
+q\times c\to T_M(q\times c)$ for $\times$ if and only if $M$ is non-branching.
+\end{lemma}
+\begin{proof}
+Backward, $\tau$ is the distributivity map
+$d_{m,t}\colon\prod_{b\in\lv m}\bigl(Q(v_b)\sqcup Q_c t\bigr)\to\bigl(\prod_b Q(v_b)\bigr)
+\sqcup Q_c t$.
+
+$(\Leftarrow)$ If every $m$ has $|\lv m|\le 1$ then this is, at a nullary shape, the coprojection
+$1\to 1\sqcup Q_c t$, and at a unary shape the identity on $Q(v_0)\sqcup Q_c t$ (a length-$1$
+product is its unique factor). No choice is made, so $\tau$ is natural and satisfies the
+strength unit and multiplication axioms.
+
+$(\Rightarrow)$ Suppose some $m_0$ has $n=|\lv m_0|\ge 2$. The family $d$ must be natural in
+$q$ and $c$, i.e.\ a natural transformation of the functors $L(A,C)=\prod_b(A_b\sqcup C)$ and
+$R(A,C)=(\prod_b A_b)\sqcup C$ of the variables $A_b:=Q(v_b)$, $C:=Q_c t$, and equivariant
+under the reindexings of $\lv m_0$ realised by $M$'s functoriality. Specialise every
+$A_b=\varnothing$: then $L(\varnothing,C)=C^{\,n}$ and $R(\varnothing,C)=C$, so $d$ restricts
+to a natural map $C^{\,n}\Rightarrow C$. Since $C^{\,n}=\Hom(n,-)$, Yoneda gives
+$\Nat(\Hom(n,-),\mathrm{Id})\cong n$: the natural maps $C^{\,n}\to C$ are exactly the $n$ leaf
+projections, so $d|_{A=\varnothing}=\pi_i$ for a \emph{fixed} distinguished leaf $i$. That
+distinguished leaf is the contradiction. For \emph{symmetric} branching (e.g.\ $\Pf$),
+$M$'s functoriality realises the transposition of two leaves of $m_0$ as an automorphism
+fixing the shape; equivariance forces $\pi_i=\pi_j$, impossible on $C^{\,n}$ with $|C|\ge2$.
+For \emph{ordered} branching (e.g.\ $\List$), a leaf-reindexing morphism breaks the fixed
+choice likewise. Hence no natural $d$, so no natural $\tau$.
+\end{proof}
+
+\begin{remark}[Two faces of branching]
+A \emph{total} strength does exist for branching $M$ --- the ``priority'' rule (all-$\mathrm{
+inl}$ to the product, else the leftmost $\mathrm{inr}$ value) is total and even satisfies the
+strength unit and multiplication axioms --- but it is \emph{not natural}: it hard-codes the
+distinguished leaf that naturality forbids. So the strength obstruction is genuinely distinct
+from the associativity obstruction of Theorem~\ref{thm:arrowsA}: the latter is $\mu^T$
+\emph{merging} (E2$'$, union-of-products), the former is leaf-\emph{symmetry} (naturality).
+Branching disables the arrow through two independent axioms, both equivalent to arity $\le1$.
+\end{remark}
+
+\begin{theorem}[The arrow is Freyd iff non-branching]\label{thm:arrowsB}
+For non-branching $M$, with $\sigma_G$ (Lemma~\ref{lem:costrong}) and $\tau_T$
+(Lemma~\ref{lem:strong}) and $\first(f)=\tau_{q,c}\circ(f\times\id_c)\circ\sigma_{p,c}$, the
+data $(\Arr_M,\arr,\rcomp,\first)$ satisfy all the Hughes arrow laws;
+$\Arr_M$ is a Hughes arrow, equivalently a Freyd category over the cartesian base
+$(\Cont,\times)$. For branching $M$, $\Arr_M$ is not even a category
+(Theorem~\ref{thm:arrowsA}), and $\first$ is not definable ($T_M$ has no natural strength,
+Lemma~\ref{lem:strong}). Hence
+\[
+  \boxed{\ \Arr_M\ \text{is a Hughes arrow / Freyd category}\iff M\ \text{is non-branching}.\ }
+\]
+\end{theorem}
+\begin{proof}
+The constructions $\arr,\first$ are uniform in $M$; the abstract packaging is the standard
+theorem that the biKleisli category of a strong monad and a costrong comonad with a compatible
+distributive law is a Freyd/arrow category \cite{UustaluVene08,PowerRobinson97,Atkey11,
+JacobsHeunenHasuo09}. The container-specific content --- that $\sigma_G,\tau_T,\kappa$ satisfy
+the required (co)strength and compatibility coherences --- holds for non-branching $M$ by
+Lemmas~\ref{lem:costrong}--\ref{lem:strong} and Theorem~\ref{thm:arrowsA}, and is verified
+exhaustively for the representatives $\Maybe$ and $\Writer/\mathbb{Z}_2$, which span the
+normal form of \S\ref{sec:classify}. The branching direction is Theorem~\ref{thm:arrowsA} and
+Lemma~\ref{lem:strong}.
+\end{proof}
+
+\begin{remark}[$\Arr_M$ is Atkey's biKleisli Arrow; branching is transverse to Atkey's index]\label{rem:atkey}
+Atkey \cite{Atkey11} shows that Hughes arrows are \emph{not} the same thing as Freyd
+categories: an arrow is strictly more general --- it admits a second, comonad-structured
+input that a Freyd category lacks --- and the precise correspondence is \emph{arrows $\cong$
+closed \textbf{indexed} Freyd categories}, the extra generality controlled by an \emph{index}
+that records the comonadic input. His running construction (\S2, after Uustalu--Vene
+\cite{UustaluVene08}) is exactly ours: from a comonad $W$, a monad $T$, and a distributive
+law $WT\Rightarrow TW$ he forms the biKleisli arrow $\mathrm{Ar}(x,y)=[Wx\to Ty]$; with
+$W=G_M$, $T=T_M$, and $\lambda=\kappa$ this is \emph{verbatim} our
+$\Arr_M(p,q)=\Cont(G_M p,\,T_M q)$.
+
+It is tempting to read Theorem~\ref{thm:arrowsB} as an \emph{index-collapse} --- non-branching
+$M$ trivialising Atkey's index so that $\Arr_M$ becomes a plain (non-indexed) Freyd category
+--- but that reading is \emph{false}, and the way it fails is informative. Atkey's index
+records the \emph{coeffect} input $W=G_M$, and $G_M$ is trivial exactly when $M$ is:
+$G_M=\mathrm{Id}$ iff $M=\mathrm{Id}$, immediate from $G_M\cont S P=\cont S{M\circ P}$.
+Index-collapse is therefore the single condition $M=\mathrm{Id}$, \emph{strictly stronger}
+than non-branching: $\Maybe$ and $\Writer$ are non-branching with $G_M\neq\mathrm{Id}$, and
+Theorem~\ref{thm:arrowsB} still makes their $\Arr_M$ a genuine Freyd category --- through the
+\emph{strength} of $T_M$, not through any collapse of the coeffect index. The branching axis
+and Atkey's index axis are thus \emph{orthogonal}: index-collapse ($M=\mathrm{Id}$) is a proper
+sub-condition of non-branching, and Atkey's index measures a coeffect that persists across the
+entire non-branching class. \emph{Non-branching is not index-collapse.}
+
+What branching controls is whether the biKleisli construction lands in Atkey's landscape at
+all: for branching $M$ the compositor $\kappa$ is not even a distributive law (E2$'$ fails,
+Theorem~\ref{thm:arrowsA}), so $\Arr_M$ degrades below an indexed Freyd category --- below even
+an arrow. The branching obstruction sits on the \emph{arity} axis, transverse to Atkey's
+monad~$\subset$~Freyd~$\subset$~indexed-Freyd~$\subset$~arrow stratification of the coeffect;
+whether the resulting (Boolean) arity dichotomy admits any graded refinement is taken up in
+\S\ref{sec:conclusion}.
+\end{remark}
+
+\begin{remark}[The pure and effectful sub-calculi]
+The image of $\arr$ is the pure/central subcategory. The \emph{effect} sub-calculus is the
+Kleisli category $\Kl(T_M)$ (collapse $G_M$ by $\varepsilon$): container programs with the
+Ahman--Bauer effect. The \emph{coeffect} sub-calculus is the coKleisli category $\coKl(G_M)$
+(collapse $T_M$ by $\eta^T$): container programs reading the transfer-comonad context. The
+arrow $\Arr_M$ \emph{fuses} them, and Theorem~\ref{thm:arrowsA} says the fusion is coherent
+exactly when $M$ does not branch.
+\end{remark}
+
+%============================================================================
+\section{The positive class: writer with absorbing exceptions}\label{sec:classify}
+%============================================================================
+
+Theorems~\ref{thm:arrowsA}--\ref{thm:arrowsB} leave a name to be attached: which monads are
+the non-branching ones? We classify them completely.
+
+\begin{theorem}[Classification]\label{thm:classify}
+For a cartesian $\prod$-cointerpretation $\Set$-monad $M$ the following are equivalent:
+\begin{enumerate}
+  \item the arrow category $\Arr_M$ exists;
+  \item $M$ is non-branching;
+  \item $M\cong E + A\times(-)$ as a functor, for some sets $E,A$;
+  \item $M$ is a \emph{writer-with-absorbing-exceptions} monad: $MX = E + A\times X$ with
+  $(A,\cdot,e)$ a monoid, $(E,\odot)$ a left $A$-set, writer unit $\eta_X(x)=(e,x)$, and
+  \[
+    \mu_X\colon\ \mathrm{inl}\,e'\mapsto\mathrm{inl}\,e',\quad
+    \mathrm{inr}(a,\mathrm{inl}\,e')\mapsto\mathrm{inl}(a\odot e'),\quad
+    \mathrm{inr}(a,\mathrm{inr}(a',x))\mapsto\mathrm{inr}(a\cdot a',x).
+  \]
+\end{enumerate}
+Moreover, for every such $M$ and every container $p$ the compositor $\kappa$ satisfies all
+four axioms E1$'$--E4$'$; in particular the associativity axiom E2$'$ holds throughout the
+class, so $\Arr_M$ is a category for the entire class, not only for $\Maybe$ and $\Writer$.
+\end{theorem}
+
+\begin{proof}
+$(1)\Leftrightarrow(2)$ is Theorem~\ref{thm:arrowsA}.
+
+$(2)\Leftrightarrow(3)$: a polynomial functor is $MX=\sum_{s\in M1}X^{\mathrm{ar}(s)}$. If
+$|\mathrm{ar}(s)|\le1$ for all $s$, partition the shapes as $E=\{s:\mathrm{ar}(s)=
+\varnothing\}$ and $A=\{s:|\mathrm{ar}(s)|=1\}$; then $X^{\mathrm{ar}(s)}$ is $1$ on $E$ and
+$X$ on $A$, so $MX\cong E + A\times X$ naturally. Conversely $E+A\times(-)$ has all arities
+$\le1$.
+
+$(3)\Rightarrow(4)$: let $MX=E+A\times X$ carry a monad. By naturality (Yoneda for the
+identity domain), the unit $\eta$ is either a constant $x\mapsto\mathrm{inl}\,e_0$ or
+$x\mapsto\mathrm{inr}(a_0,x)$; the constant form violates the left-unit law, so
+$\eta_X(x)=\mathrm{inr}(e_0,x)$ for a distinguished $e_0\in A$ (the writer unit). Naturality
+similarly forces $\mu$ to the schematic form above, carrying the variable $x$ exactly when the
+outer and inner $A$-labels multiply into $A$. Writing $N:=E\sqcup A$ with the induced binary
+operation, the unit laws make $e_0$ a two-sided unit in $A$, and the associativity of $\mu$
+unwinds to the associativity of $N$; $E$ is automatically a two-sided ideal of left zeros. In
+the \emph{cartesian} case $\mu^M$ preserves the leaf-count, which rules out \emph{aborting}
+($a\cdot a'\in E$ for $a,a'\in A$ would destroy the single leaf), so $A$ is a submonoid and
+$\sigma$ restricts to a unital, associative action $\odot\colon A\times E\to E$: $E$ is a left
+$A$-set, statement (4). $(4)\Rightarrow(3)$ is immediate.
+
+Finally, the last clause. Non-branching means every $P^\star$-product occurring anywhere is a
+product over $\le1$ factor, so $\kappa$'s backward map is, shape by shape, either the identity
+(one leaf: rewrap the single factor) or the monad unit $\eta^M\colon1\to M1$ (no leaf: the
+empty product). Reading each axiom E1$'$--E4$'$ as an equality of $\Cont$-morphisms: on shapes
+all four reduce to the monad/comonad shape-laws of $M$; on positions the only nontrivial
+content sits at unary shapes, where $\kappa=\id$ and the axiom collapses to the corresponding
+structural law of $M$ on the single leaf --- for E2$'$, the associativity of $\cdot$ in $A$,
+which holds. The $\ge2$-leaf comparison that breaks E2$'$ for branching $M$ never forms.
+\end{proof}
+
+\begin{remark}[The Set-monad level, and why aborting is excluded]
+One level up, the functors $E+A\times(-)$ that carry \emph{any} monad structure are exactly
+the monoids $N=E\sqcup A$ with unit in $A$ and $E$ a two-sided ideal of left zeros --- the
+multiplication of two unary shapes may \emph{abort} into $E$ (e.g.\ the nilpotent
+$\{e,z,0\}$ with $z^2=0\in E$, giving $MX=1+2\times X$). These aborting monads are genuine
+$\Set$-monads but are \emph{not cartesian}: their $\mu$ destroys a leaf, so Ahman--Bauer's
+$T_M$ is undefined for them and they fall outside the arrow story. Within the class where
+$T_M$ exists, the non-branching monads are exactly the non-aborting ones --- the
+writer-with-absorbing-exceptions monads. (With trivial action $\odot$, $E+A\times X$ is the
+writer transformer over the exception monad, $\mathsf{WriterT}_A(\mathsf{Exc}_E)(X)$; general
+$\odot$ twists the discard by a left $A$-action on $E$.)
+\end{remark}
+
+\begin{remark}[Scope]\label{rem:scope}
+Both $\lambda$ and $\kappa$, and the strength $\tau$, use the product structure of $P^\star$;
+whether a canonical law exists for a general (non-$\prod$) weak Mendler algebra is open, and
+out of scope. The Freyd base is the cartesian $\times$; a monoidal (non-cartesian) arrow over
+the Dirichlet tensor $\otimes$ would need a different strength story and is a separate
+question. No finite $\prod$-cointerpretation monad is simultaneously branching and
+non-commutative ($\List$ is the witness, but infinite), so that corner of the entwining
+theorem is proved by naturality and untested computationally.
+\end{remark}
+
+\subsection{Related conditions: non-branching is genuinely new}\label{sec:related-conditions}
+The dividing line of Theorems~\ref{thm:arrowsA}--\ref{thm:classify} is \emph{non-branching}.
+One should check that this is not a disguised form of one of the two classical properties of a
+$\Set$-monad --- Kock \emph{commutativity} \cite{Kock70,Kock71} and Kock/Jacobs
+\emph{affineness} $M1\cong1$ \cite{Jacobs16} (the sense of Remark~\ref{rem:affine-clash}, not
+the polynomial-degree sense we deliberately avoid). It is not: writing
+\[
+  \text{P1}=\text{non-branching},\qquad \text{P2}=\text{commutative},\qquad
+  \text{P3}=\text{affine }(M1\cong1),
+\]
+the three are pairwise logically independent, with a single implication among them pointing the
+other way (P1$\wedge$P3$\Rightarrow$P2). The commutativity of the members of the positive class
+is itself sharp:
+
+\begin{lemma}[Commutativity criterion for the class]\label{lem:commcrit}
+A writer-with-absorbing-exceptions monad $MX=E+A\times X$ (Theorem~\ref{thm:classify}) is
+commutative if and only if \textup{(i)} $A$ is a commutative monoid, \textup{(ii)} $|E|\le1$,
+and \textup{(iii)} the action $\odot$ is trivial. In particular $\Maybe$ ($|E|=1$, $A=1$) and
+$\Writer_A$ with $A$ abelian are commutative, whereas $\Writer_{N_3}$ over a non-commutative
+monoid $N_3$ and the exception monad $E+(-)$ with $|E|\ge2$ are not.
+\end{lemma}
+\begin{proof}
+$M$ is commutative iff Kock's two canonical maps $MX\times MY\to M(X\times Y)$ agree.
+Evaluating both on the four kinds of pair in $(E+A\times X)\times(E+A\times Y)$: on
+$(\mathrm{inl}\,e,\mathrm{inl}\,e')$ they return $\mathrm{inl}\,e$ and $\mathrm{inl}\,e'$
+(equal for all inputs iff $|E|\le1$); on $(\mathrm{inl}\,e,\mathrm{inr}(b,y))$ they return
+$\mathrm{inl}\,e$ and $\mathrm{inl}(b\odot e)$, and symmetrically on the mirror pair (equal iff
+$\odot$ is trivial); on $(\mathrm{inr}(a,x),\mathrm{inr}(b,y))$ they return
+$\mathrm{inr}(a\cdot b,(x,y))$ and $\mathrm{inr}(b\cdot a,(x,y))$ (equal iff $A$ is
+commutative). All four agree iff (i)--(iii).
+\end{proof}
+
+\begin{proposition}[Non-branching is independent of commutativity and affineness]\label{prop:independence}
+Each of the three $2\times2$ faces of the cube $(\mathrm{P1},\mathrm{P2},\mathrm{P3})$ is fully
+realised by explicit $\Set$-monads; hence no one of the three properties implies or precludes
+another. Concretely:
+\[
+  \renewcommand{\arraystretch}{1.3}
+  \begin{array}{c|c|l}
+    (\mathrm{P1},\mathrm{P2},\mathrm{P3}) & \text{witness } M & \text{values}\\\hline
+    (T,T,T) & \mathrm{Id} & \text{ar}\le1,\ \text{comm},\ M1=1\\
+    (T,T,F) & \Maybe=1+(-) & \text{ar}\le1,\ \text{comm},\ M1=2\\
+    (T,F,T) & \text{--- impossible ---} & \text{Remark~\ref{rem:theoremC}}\\
+    (T,F,F) & \Writer_{N_3}=N_3\times(-) & \text{ar}\le1,\ \text{non-comm},\ M1=3\\
+    (F,T,T) & \mathcal P^{+}\ (\text{non-empty powerset}) & \text{branch},\ \text{comm},\ M1=1\\
+    (F,T,F) & \Pf & \text{branch},\ \text{comm},\ M1=2\\
+    (F,F,T) & \text{free idempotent magma} & \text{branch},\ \text{non-comm},\ M1=1\\
+    (F,F,F) & \text{free magma (binary trees)} & \text{branch},\ \text{non-comm},\ M1=\infty
+  \end{array}
+\]
+Here $N_3=\{1,a,b\}$ is the three-element non-commutative monoid with $a\cdot x=a$ and
+$b\cdot x=b$ for $x\in\{a,b\}$.
+\end{proposition}
+\begin{proof}
+Each $2\times2$ face is a projection of the table (e.g.\ P1$\times$P2 is realised by
+$\mathrm{Id},\Writer_{N_3},\Pf$, and the free magma), so every pair of properties attains all
+four truth-values and pairwise independence follows. The property values are established as:
+\textbf{P1} by the support certificate of \S\ref{sec:prelim-lifting} (the $E+A\times(-)$
+witnesses have all supports $\le1$; $\mathcal P^{+},\Pf$ and both magmas carry a support-$2$
+element); \textbf{P2} by Lemma~\ref{lem:commcrit} for the non-branching witnesses, by the
+classical commutativity of the semilattice monads $\mathcal P^{+},\Pf$ \cite{Kock71}, and by
+the failure of the medial/interchange law $(a*b)*(c*d)=(a*c)*(b*d)$ --- forced by Kock's
+theorem that a commutative monad has homomorphic operations --- in explicit small models of the
+two magmas; \textbf{P3} by the displayed values of $|M1|$. Full witnesses, the four-row
+commutativity chase, and an exhaustive machine sweep are in the author's proof notes.
+\end{proof}
+
+\begin{remark}[The one dependency]\label{rem:theoremC}
+The three properties are \emph{not} jointly independent: the cube has exactly one empty cell,
+$(\mathrm{P1},\lnot\mathrm{P2},\mathrm{P3})$, because \textbf{non-branching and affine imply
+commutative}. If $M\cong E+A\times(-)$ is non-branching then $M1\cong E+A$, so affineness
+$|M1|=1$ forces $(|E|,|A|)\in\{(0,1),(1,0)\}$, i.e.\ $M\cong\mathrm{Id}$ or the constant monad
+$1$, both commutative. Equivalently, \emph{every non-commutative affine monad is branching}:
+affineness collapses the non-branching world to the two trivial monads and so cannot express
+non-branching. This lone implication --- pointing away from non-branching --- is the only
+logical relation among P1, P2, P3, which confirms that ``non-branching'' is a genuinely new
+dividing line rather than a restatement of a classical monad condition.
+\end{remark}
+
+%============================================================================
+\section{A machine-checked instance}\label{sec:lean}
+%============================================================================
+
+The non-branching monad $M=\Maybe$ furnishes the smallest genuinely effectful arrow category,
+and it has been formalised in Lean~4. The development \texttt{BiKleisliMaybe.lean} constructs
+the effect monad $T_{\Maybe}\cont S P=(1+S,\ P^\star)$ as an instance of an abstract
+\texttt{MixedDistrib} structure --- monad $T$, comonad $G$, compositor $\kappa$, and the four
+axioms E1$'$--E4$'$ including the associativity axiom E2$'$ --- and derives the biKleisli
+composition together with its associativity law \texttt{acomp\_assoc} from those axioms, with
+no \texttt{sorry}. This is, to the author's knowledge, the first machine-checked
+\emph{associative} effect--coeffect arrow category on containers for a concrete non-branching
+monad. It verifies the load-bearing content of Theorem~\ref{thm:arrowsA} in the smallest
+non-trivial case; the general E2$'$ across the whole class (Theorem~\ref{thm:classify}) is
+proved in coordinates but not yet Lean-certified, and remains a natural next target.
+
+%============================================================================
+\section{Related work}\label{sec:related}
+%============================================================================
+
+\paragraph{The two feeds, and their sources.}
+The effect monad $T_M$ is Ahman--Bauer \cite[Thm.~6.3]{AhmanBauer24}; the coeffect comonad
+$G_M$ is the transfer (the author's, proved and Lean-verified). Neither paper forms the
+composites $T_M G_M$ / $G_M T_M$ or a distributive law between the feeds. The entwining and
+arrow formalism is classical: Beck \cite{Beck69}; Power--Watanabe \cite{PowerWatanabe02};
+Brzezi\'nski--Majid \cite{BrzezinskiMajid98}; Uustalu--Vene \cite{UustaluVene08}; Hughes
+\cite{Hughes00}; Power--Robinson \cite{PowerRobinson97}; Atkey \cite{Atkey11};
+Jacobs--Heunen--Hasuo \cite{JacobsHeunenHasuo09}; Turi--Plotkin \cite{TuriPlotkin97}. We
+deploy it where the base monad sits on positions and branching is the decisive parameter.
+
+\paragraph{Distributive laws of container (co)monads (Purdy--Damato).}
+Purdy and Damato \cite{PurdyDamato25} characterise distributive laws between
+container-monads and container-comonads \emph{on $\Set$}, including mixed
+monadic-over-directed laws, by an explicit data presentation. By contrast our $T_M$ and $G_M$
+are a monad and a comonad on the category $\Cont$ itself, obtained from a single $\Set$-monad
+$M$ by transferring it to shapes and to positions respectively; their (co)monads are container
+functors on $\Set$, whereas ours are endofunctors of $\Cont$, one level up. Consequently our
+mixed law $\lambda$ and its arrow-orientation $\kappa$ live in $[\Cont,\Cont]$ and are not
+instances of their classification. (Their Example~22 links monadic-container laws to matching
+pairs of monoid actions in the sense of Zappa--Sz\'ep, adjacent to the directed mode discussed
+below but at the level of monoids rather than of the entwining.)
+
+\paragraph{Interaction laws (Katsumata--Rivas--Uustalu).}
+The nearest neighbour by intent is the theory of \emph{interaction laws of monads and comonads}
+\cite{KRU20}, which answers effect/coeffect interaction by a \emph{pairing}
+$\psi\colon TX\times DY\to X\times Y$, realised as a monoid object in a Chu construction over
+$([\mathcal C,\mathcal C],\mathrm{Day})$. That is emphatically \emph{not} a distributive law
+--- distributive laws are \emph{inputs} to their machinery, never outputs --- so the two
+accounts are orthogonal in kind, a pairing versus a compositor. What they share is only the
+\emph{location} of the obstruction: their degeneracy theorems locate the same branching wall
+from the side of extensive categories that our arity criterion locates from the side of
+polynomial functors --- convergent evidence that branching is the universal obstruction to
+composing effects with coeffects.
+
+\paragraph{Neighbours read only in outline.}
+Two further lines of work are close in intent and deserve a detailed comparison we defer here
+to a later reading. Modern higher-order \emph{bialgebraic denotational semantics} (Goncharov,
+Milius, Tsampas, Urbat, and collaborators, ICFP 2026) builds bialgebras from a syntax
+$\Sigma$-algebra and a behaviour $B$-coalgebra glued by higher-order GSOS laws via locally
+final coalgebras --- a different object from our monad-over-comonad mixed distributive law, in
+which both $T_M$ and $G_M$ arise as the two feeds of one $\Set$-monad rather than as separate
+syntax and behaviour functors. Separately, Dumas, Duval and Reynaud (\emph{Patterns for
+computational effects arising from a monad or a comonad}, 2013) pair a monad with its
+associated comonad as two dual but \emph{separate} equational proof-patterns (Kleisli versus
+coKleisli), whereas we entwine an independent shapes-monad and positions-comonad via a genuine
+distributive law. We flag both as neighbours rather than cite them as sources, having so far
+consulted them only in outline.
+
+\paragraph{Three modes of composition.}
+The effect--coeffect arrow is one of three container-native modes of welding compositional
+systems the author has studied, and it is the branching-obstructed one. The other two are the
+Zappa--Sz\'ep product of two directed containers (obstructed by a cohomology class
+$[\omega]\in H^2$) and the state-graded category of stateful ``Workers'' (unobstructed, the
+grade accumulating). The three obstructions --- a cohomology class, nothing, and a Boolean
+arity condition --- are three genuinely different kinds of mathematics for three ways of
+gluing; they do not unify into a master theorem, and the honest synthesis is that
+\emph{whether} two systems compose is, in each mode, a computable invariant of the parts,
+though which invariant depends on the axis.
+
+%============================================================================
+\section{Conclusion}\label{sec:conclusion}
+%============================================================================
+
+One monad $M$ on $\Set$ feeds a container along two axes: forward on shapes it is the effect
+monad $T_M$, backward on positions it is the coeffect comonad $G_M$. We have shown that these
+two feeds always entwine --- the oplax product-comparison of $M$, read on positions, is a
+mixed distributive law $\lambda\colon T_M G_M\Rightarrow G_M T_M$ for every $M$ --- giving a
+Turi--Plotkin $\lambda$-bialgebra in which $G_M$ acts on $T_M$-algebras and $T_M$ on
+$G_M$-coalgebras, nondeterminism and all. The reverse compositor $\kappa$ that would let one
+\emph{sequentially compose} effect--coeffect programs $G_M p\to T_M q$ into a Hughes arrow /
+Freyd category exists if and only if $M$ is non-branching, and that class is exactly the
+writer-with-absorbing-exceptions monads $E+A\times(-)$. The same monad, the same two feeds:
+the unification of effects and coeffects is unconditional as a bialgebra and conditional as an
+arrow, and branching is precisely what separates the two --- obstructing the orientation of the
+interaction, not the interaction itself.
+
+Several questions remain open and are, to us, the natural continuations.
+\begin{itemize}
+  \item \emph{Beyond the $\prod$-cointerpretation.} Both laws use the product structure of
+  $P^\star$. Is there a canonical $\lambda$ for a general (non-$\prod$) weak Mendler algebra?
+  There is no evident map $M(P^\star)\to(MP)^\star$ without the product, so we suspect not, but
+  a proof either way is missing (Remark~\ref{rem:scope}).
+  \item \emph{A graded refinement?} Read through Atkey's arrows~$\cong$~indexed Freyd
+  categories (Remark~\ref{rem:atkey}), one might hope the Boolean dichotomy ``$\Arr_M$ is a
+  category iff arity ${\le}1$'' is the bottom rung of a \emph{graded} tower indexed by arity.
+  A companion analysis rules out the two natural gradings. Along the effect axis the arity
+  invariant is already two-valued --- a cartesian $\Set$-monad has maximal arity in
+  $\{{\le}1,\infty\}$, with no finite rung between, since an arity-$n$ shape substituted into
+  itself has arity $n^2$ --- so ``arity ${\le}n$'' names no monads for $2\le n<\infty$; and the
+  leaf-count grade on arrows is destroyed by the very merging in $\mu^{T_M}$ that branching
+  forces. A grade that survives, if one exists, must live on the \emph{coeffect}: Atkey's index
+  measures $G_M$, nontrivial for every $M\neq\mathrm{Id}$ and independent of branching, and
+  whether a graded comonad on $G_M$ organises $\Arr_M$ along that axis is left open.
+  \item \emph{The Dirichlet arrow.} The Freyd reading fixes the cartesian $\times$. Does the
+  Dirichlet tensor $\otimes$ on $\Cont$ carry a \emph{monoidal} (non-cartesian) effect--coeffect
+  arrow, with a different strength story? The costrength of $G_M$ is the easy half; the effect
+  strength for $\otimes$ is the open one.
+  \item \emph{Full formalisation.} The Maybe arrow category is machine-checked
+  (\S\ref{sec:lean}); the associativity axiom E2$'$ across the whole writer-with-exceptions
+  class (Theorem~\ref{thm:classify}) is proved in coordinates but not yet in Lean. Certifying
+  it, and the general mult-$T$ index-chase for $\lambda$ (Remark~\ref{rem:e2gap}), would close
+  the two mechanical gaps.
+\end{itemize}
+
+%============================================================================
+\begin{thebibliography}{99}
+
+\bibitem{AhmanBauer24} D.~Ahman, A.~Bauer.
+\emph{Comodule representations of second-order functionals}.
+\href{https://arxiv.org/abs/2409.17664}{arXiv:2409.17664};
+J.\ Log.\ Algebraic Methods Program.\ \textbf{146} (2025).
+
+\bibitem{Atkey11} R.~Atkey.
+\emph{What is a categorical model of arrows?}
+Electronic Notes in Theoretical Computer Science \textbf{229}(5) (2011) 19--37.
+
+\bibitem{PurdyDamato25} C.~Purdy, D.~Damato.
+\emph{Distributive laws of monadic containers}.
+\href{https://arxiv.org/abs/2503.17191}{arXiv:2503.17191}; Proc.\ CALCO 2025.
+
+\bibitem{Beck69} J.~Beck.
+\emph{Distributive laws}.
+In: Seminar on Triples and Categorical Homology Theory, Lecture Notes in Mathematics
+\textbf{80}, Springer (1969) 119--140.
+
+\bibitem{BrzezinskiMajid98} T.~Brzezi\'nski, S.~Majid.
+\emph{Coalgebra bundles}.
+Communications in Mathematical Physics \textbf{191} (1998) 467--492.
+
+\bibitem{Hughes00} J.~Hughes.
+\emph{Generalising monads to arrows}.
+Science of Computer Programming \textbf{37}(1--3) (2000) 67--111.
+
+\bibitem{Jacobs16} B.~Jacobs.
+\emph{Affine monads and side-effect-freeness}.
+Proc.\ CMCS 2016, LNCS \textbf{9608}, Springer (2016) 53--72.
+
+\bibitem{JacobsHeunenHasuo09} B.~Jacobs, C.~Heunen, I.~Hasuo.
+\emph{Categorical semantics for arrows}.
+Journal of Functional Programming \textbf{19}(3--4) (2009) 403--438.
+
+\bibitem{KRU20} S.~Katsumata, E.~Rivas, T.~Uustalu.
+\emph{Interaction laws of monads and comonads}.
+Proc.\ FoSSaCS 2020, LNCS \textbf{12077}, 356--375;
+\href{https://arxiv.org/abs/1912.13477}{arXiv:1912.13477}.
+
+\bibitem{Kock70} A.~Kock.
+\emph{Monads on symmetric monoidal closed categories}.
+Archiv der Mathematik \textbf{21} (1970) 1--10.
+
+\bibitem{Kock71} A.~Kock.
+\emph{Closed categories generated by commutative monads}.
+Journal of the Australian Mathematical Society \textbf{12}(4) (1971) 405--424.
+
+\bibitem{PowerRobinson97} J.~Power, E.~Robinson.
+\emph{Premonoidal categories and notions of computation}.
+Mathematical Structures in Computer Science \textbf{7}(5) (1997) 453--468.
+
+\bibitem{PowerWatanabe02} J.~Power, H.~Watanabe.
+\emph{Combining a monad and a comonad}.
+Theoretical Computer Science \textbf{280} (2002) 137--162.
+
+\bibitem{TuriPlotkin97} D.~Turi, G.~Plotkin.
+\emph{Towards a mathematical operational semantics}.
+Proc.\ LICS 1997, IEEE (1997) 280--291.
+
+\bibitem{UustaluVene08} T.~Uustalu, V.~Vene.
+\emph{Comonadic notions of computation}.
+Electronic Notes in Theoretical Computer Science \textbf{203}(5) (2008) 263--284.
+
+\end{thebibliography}
+
+\end{document}

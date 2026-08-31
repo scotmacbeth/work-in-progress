@@ -1,0 +1,475 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{tikz-cd}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+
+% ---- Theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{notation}[theorem]{Notation}
+
+% ---- Notation macros (matched to Chapter 0) ----
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Fam}{\mathbf{Fam}}
+\newcommand{\op}{^{\mathrm{op}}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\ob}{\mathrm{ob}}
+\DeclareMathOperator{\Hom}{Hom}
+\newcommand{\iso}{\cong}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\cont}[2]{(#1\,\triangleleft\,#2)}
+\newcommand{\y}{y}
+
+% ---- Provenance tag helper ----
+\newcommand{\prov}[1]{\hfill\textsf{[#1]}}
+
+% ---- Correction / warning box ----
+\newtcolorbox{warnbox}[1][]{colback=black!4,colframe=black!55,
+  fonttitle=\bfseries,title={#1},breakable,left=2mm,right=2mm,top=1mm,bottom=1mm}
+
+\title{Which Functors Are Containers?\\[0.3em]
+  \large A chapter of \emph{The Category of Containers}}
+\author{MacBeth}
+\date{}
+
+% Book conventions: this is a chapter of \emph{The Category of Containers}.
+% Cross-references ``Chapter~0'' point to the standalone machinery chapter
+% (representables, Yoneda, Day, Kan). ``The representation theorem'' is the
+% earlier chapter ``Containers and their extension functor''.
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Hand me a functor $F\colon\Set\to\Set$. Is it a container? This chapter answers
+the question exactly. First we see that a container is \emph{literally} a family of
+sets, so that $\Cont$ is the free coproduct completion $\Fam(\Set\op)$ --- a fact
+that makes everything else fall out. Then comes the test: $F$ is a container if and
+only if it \emph{preserves connected limits}. We compute the test on friendly
+functors, watch the covariant powerset fail it by a one-line counting argument, and
+then recover a container's positions from its functor. Along the way we correct the
+formula everyone reaches for first --- the fibre of $F(2)\to F(1)$ --- which computes
+the \emph{powerset} of the positions, not the positions themselves. We close with
+limits and colimits in $\Cont$: it is complete and cocomplete, the extension functor
+$\ext{-}$ preserves connected limits and coproducts, and it stops respecting colimits
+at exactly the place where quotients manufacture symmetries and carry an object out of
+the polynomial world. Everything substantive here is classical --- Diers,
+Carboni--Johnstone, Gambino--Kock; our contribution is arrangement, the concrete
+non-examples, and the honest correction. The products and coproducts are
+machine-checked.
+\end{abstract}
+
+\section*{The question}
+\addcontentsline{toc}{section}{The question}
+
+A container $\cont SP$ is a set $S$ of shapes together with, for each shape $s$, a
+set $P(s)$ of positions; its extension is the functor
+\[
+  \ext{\cont SP}(X) \;=\; \coprod_{s\in S} X^{P(s)}
+    \;=\; \bigl\{(s,v)\mid s\in S,\ v\colon P(s)\to X\bigr\}.
+\]
+We met this in the opening chapter, and we proved the representation theorem: the
+extension functor $\ext{-}\colon\Cont\to[\Set,\Set]$ is full and faithful, so the
+combinatorics of containers captures exactly the natural transformations between their
+extensions \prov{Cited: AAG05}.
+
+Full and faithful tells us that $\ext{-}$ is an isomorphism \emph{onto its image}. It
+does not tell us what that image is. So the question that organises this chapter is the
+obvious next one, and it is sharper than it looks:
+
+\begin{center}
+\itshape Given a functor $F\colon\Set\to\Set$, is it a container?
+\end{center}
+
+This is not idle taxonomy. The whole programme of this book --- the equivalence chain,
+the comonoids, the monoidal structures --- lives \emph{inside} the image of $\ext{-}$.
+Everything we can say about containers is a statement about functors of this special
+shape. Knowing which functors are of this shape is knowing the exact reach of the
+theory: what it covers, and --- just as important --- where its boundary runs and what
+lies on the far side.
+
+\paragraph{The promise.} By the end of this chapter you will be able to look at a
+functor and decide whether it is a container; you will know how to read its shapes and
+positions back off; and you will see why the first formula you would guess for the
+positions is wrong. The tools are a single structural identification and a single
+theorem, and both are best met after a little computation.
+
+\section{A container is a family of sets}
+\label{sec:fam}
+
+Before we test functors, we should see $\Cont$ for what it is. Strip the extension
+away and look at the raw data of a container: a set $S$, and for each $s\in S$ a set
+$P(s)$. That is an $S$-indexed family of sets. Nothing more.
+
+Families of objects of a category $\mathcal C$ are themselves the objects of a
+category, the \emph{free coproduct completion} $\Fam(\mathcal C)$. Its objects are
+pairs $(S, P\colon S\to\mathcal C)$; a morphism $(S,P)\to(T,Q)$ is a reindexing
+function $u\colon S\to T$ together with, for each $s\in S$, a $\mathcal C$-morphism
+comparing $P(s)$ with $Q(u(s))$. The completion turns coproducts that $\mathcal C$
+may lack into formal ones: a family $(S,P)$ \emph{is} the formal coproduct
+$\coprod_{s\in S}P(s)$.
+
+Now watch the variance. A container morphism $\cont{S}{P}\to\cont{T}{Q}$, as we
+defined it, is a shape map $u\colon S\to T$ \emph{forward} together with position maps
+$f_s\colon Q(u(s))\to P(s)$ running \emph{backward}. Backward is exactly a morphism in
+$\Set\op$. So the comparison lives in $\Set\op$, not $\Set$, and we have identified the
+category on the nose.
+
+\begin{proposition}[$\Cont$ is the free coproduct completion of $\Set\op$]
+\label{prop:fam}
+There is an isomorphism of categories $\Cont\iso\Fam(\Set\op)$, the identity on
+objects, sending a container morphism $(u,f)$ to the reindexing $u$ together with the
+family $(f_s)_{s\in S}$ read as morphisms in $\Set\op$.
+\prov{Folklore}
+\end{proposition}
+
+This is not deep, but it is clarifying, and it pays for itself immediately. Chapter~0
+showed that the free coproduct completion of any category $\mathcal C$ embeds into
+$[\mathcal C\op,\Set]$ by the left Kan extension of the Yoneda embedding along itself
+--- concretely, a family becomes a coproduct of representables. Feed it $\mathcal
+C=\Set\op$ and the abstract statement becomes our extension functor:
+\[
+  (S,P) \;\longmapsto\; \coprod_{s\in S}\y^{P(s)}, \qquad
+  \y^{A} = \Hom_{\Set}(A,-),
+\]
+because a representable on $\Set\op$ evaluated in $\Set$ is the covariant homfunctor
+$\y^A = (-)^A$. So $\ext{\cont SP}=\coprod_s\y^{P(s)}$ is not a definition we imposed;
+it is what the free coproduct completion of $\Set\op$ \emph{does} when you land it in
+functors. Containers are exactly coproducts of representable endofunctors of $\Set$.
+Hold that phrase --- \emph{coproduct of representables} --- because it is the whole
+answer to our question, once we understand which functors it describes.
+
+\begin{warnbox}[Terminology hazard: positions versus directions]
+The reader who also reads Spivak's \emph{Poly} must keep two dictionaries. There, a
+polynomial functor is written $p=\sum_{i\in p(1)}\y^{p[i]}$, the elements of $p(1)$
+are called \emph{positions}, and the elements of each fibre $p[i]$ are called
+\emph{directions}. In our language the elements of $p(1)=S$ are \emph{shapes} and the
+elements of the fibres $P(s)$ are \emph{positions}. The naming is exactly opposite:
+Spivak's ``positions'' are our shapes, and his ``directions'' are our positions. The
+objects are the same; only the words differ. We keep shapes-and-positions throughout,
+because in the applications a shape is a structure and a position is a slot inside it,
+and that is the intuition we want the words to carry.
+\end{warnbox}
+
+\section{The test}
+\label{sec:test}
+
+We know the target shape: a container extension is a coproduct of representables,
+$F(X)\iso\coprod_{s\in S}X^{P(s)}$. So the question ``is $F$ a container?'' is the
+question ``can $F$ be written that way?'' We gather evidence by computing: the
+arithmetic of finite sets decides several cases outright, and --- better --- teaches
+the method.
+
+Here is the fact that does the work. If $F=\ext{\cont SP}$ and $X$ is a finite set with
+$|X|=n$, then
+\[
+  |F(n)| \;=\; \sum_{s\in S}\,n^{\,|P(s)|}.
+\]
+The cardinality of a container extension at $n$ is a sum of powers of $n$, one power
+per shape, the exponent being the number of positions. Evaluations at small $n$ probe
+this sum. At $n=1$ every power is $1$, so $|F(1)|=|S|$: the value at a one-element set
+counts the shapes. At $n=0$ every positive power vanishes and $0^0=1$, so $|F(0)|$
+counts the shapes with \emph{no} positions --- the constants. These two readings alone
+are often enough.
+
+\begin{example}[Friendly functors pass]\label{ex:pass}
+$F(X)=1+X$: shapes $\{0,1\}$ with $|P|=0,1$; extension $\coprod\{X^0,X^1\}$. A
+container. $F(X)=X^2$: one shape, two positions. A container. Lists,
+$F(X)=\coprod_{n}X^{n}$: shape $n\in\mathbb N$, positions $\{0,\dots,n-1\}$. A
+container. In each case the coproduct-of-powers form is visible on the page.
+\end{example}
+
+\begin{example}[The covariant powerset fails --- and the argument is one line]
+\label{ex:powerset}
+Let $\mathcal P\colon\Set\to\Set$ be the covariant powerset functor, $\mathcal
+P(X)=\{\text{subsets of }X\}$, acting on maps by direct image. Is it a container?
+
+Count. $\mathcal P(\varnothing)=\{\varnothing\}$ has one element; $\mathcal
+P(1)=\{\varnothing,\{*\}\}$ has two; $\mathcal P(2)$ has four; in general $|\mathcal
+P(n)|=2^{n}$. Suppose, for contradiction, $\mathcal P=\ext{\cont SP}$. From $n=1$ we
+read $|S|=|\mathcal P(1)|=2$: two shapes. From $n=0$ we read that exactly $|\mathcal
+P(0)|=1$ of them has no positions; call the other shape $s_\star$, with $|P(s_\star)|=p$
+positions. Now evaluate at $n=2$:
+\[
+  4 \;=\; |\mathcal P(2)| \;=\; \sum_{s\in S} 2^{|P(s)|}
+        \;=\; 2^{0} + 2^{p} \;=\; 1 + 2^{p}.
+\]
+So $2^{p}=3$, which no natural number $p$ satisfies. The covariant powerset is
+\emph{not} a container.
+\end{example}
+
+The powerset example is worth pausing on, because the reason it fails is the reason
+the theory has a boundary at all. A subset of $X$ is a collection of elements with no
+record of \emph{where} each element sits. A container labelling $v\colon P(s)\to X$, by
+contrast, assigns each position its own element, and the position is a name that
+persists. Powerset forgets the names; it is a functor built by \emph{quotienting}, and
+quotients are exactly what containers cannot do. We will meet this boundary again in
+\S\ref{sec:limits}, from the colimit side, and it will be the same wall.
+
+Counting settles individual cases, but we want a criterion that works for every
+functor, finite or not. Here it is. The right notion is that of a \emph{connected
+limit}: a limit whose indexing diagram is connected (any two objects joined by a
+zig-zag of arrows). A pullback is connected --- its shape
+$\bullet\to\bullet\leftarrow\bullet$ is joined up --- and so are wide pullbacks (many
+arrows into one target) and cofiltered limits. A product is \emph{not}: its shape is a
+bare set of objects with no arrows between them, so it falls into disconnected pieces.
+Connected versus disconnected is exactly the line the characterisation runs along.
+
+\begin{theorem}[Characterisation of containers]\label{thm:char}
+For a functor $F\colon\Set\to\Set$ the following are equivalent.
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $F$ is a container extension: $F\iso\ext{\cont SP}$ for some container.
+\item $F$ preserves connected limits (equivalently: wide pullbacks and cofiltered
+      limits).
+\item $F$ is a coproduct of representable functors.
+\end{enumerate}
+\prov{Cited: Gambino--Kock 2009, \S1.18 \& Prop.~1.22; the equivalence is due to
+Diers 1977 and Carboni--Johnstone 1995}
+\end{theorem}
+
+Why is preserving connected limits the same as being a coproduct of representables?
+The intuition is short and worth carrying. A single representable $\y^A=(-)^A$
+preserves \emph{all} limits: it is the right adjoint to $-\times A$, and right adjoints
+preserve limits. The
+question is what survives when we glue representables by a coproduct. In $\Set$,
+coproducts commute with connected limits but not with arbitrary ones: a connected
+diagram cannot ``see'' the disjoint branches of a coproduct separately, so the
+coproduct passes through the limit, whereas a product (disconnected) can pair up
+elements across different branches and breaks the interchange. Preserving connected
+limits is therefore precisely the trace left in $[\Set,\Set]$ by ``being a coproduct
+of things that preserve everything.'' Condition (ii) is the shadow of condition (iii).
+
+\begin{warnbox}[Why ``connected'', and neither ``wide pullbacks'' nor ``all''\,]
+Condition (ii) is easy to mis-state in either direction.
+
+\emph{Not merely wide pullbacks.} Wide pullbacks are the connected limits one meets
+most often, so one is tempted to shorten (ii) to ``preserves wide pullbacks''. That is
+genuinely weaker: cofiltered limits are connected too, yet they are not built from
+pullbacks, and they must be demanded separately. ``Preserves connected limits'' unpacks
+to wide pullbacks \emph{and} cofiltered limits together, and dropping the latter loses
+functors \prov{Cited: Gambino--Kock, \S1.18}.
+
+\emph{Not all limits either.} A container need \emph{not} preserve the \emph{empty}
+limit --- the terminal object --- because $\ext{\cont SP}(1)=S$ can be any set, whereas
+preserving the empty limit would force $F(1)\iso1$. The empty diagram is
+\emph{disconnected}, so it sits rightly outside (ii). Connectedness is exactly the
+dividing line: it keeps the cofiltered limits, which containers respect, and discards
+the products and the empty limit, which they do not.
+\end{warnbox}
+
+\section{Reading the positions back off}
+\label{sec:recover}
+
+The test tells us \emph{whether} $F$ is a container. Suppose it passes. How do we
+recover the data $\cont SP$?
+
+The shapes are free: $S=F(1)$, exactly as the counting in \S\ref{sec:test} used. A
+one-element set has one labelling per shape, so $F(1)=\coprod_s 1^{P(s)}=\coprod_s
+1=S$. That half is honest arithmetic. The positions are the subtle half, and here is
+where a natural first guess goes wrong.
+
+\begin{warnbox}[Correction: the fibre of $F(2)\to F(1)$ is \emph{not} $P(s)$]
+The tempting formula runs: the unique map $2\to1$ induces $F(2)\to F(1)=S$; take the
+fibre over a shape $s$ and call it the positions. Compute what this actually returns.
+Since $F(2)=\coprod_{s'}2^{P(s')}$ and the map to $S$ forgets the labelling
+$P(s')\to 2$ and remembers only $s'$, the fibre over $s$ is
+\[
+  \bigl\{\,\varphi\colon P(s)\to 2\,\bigr\} \;=\; 2^{P(s)},
+\]
+the set of \emph{subsets} of $P(s)$ --- the powerset of the positions, not the
+positions. Evaluation-and-fibre overcounts by an exponential. No single evaluation of
+$F$, followed by a fibre, can extract $P(s)$: the functor at a fixed set only ever
+sees \emph{labellings} of the positions, never the positions bare.
+\end{warnbox}
+
+The correction is not a patch; it is a signpost pointing at the real mechanism. To see
+$P(s)$ itself we must ask for the labelling that names each position \emph{by itself}
+--- the identity labelling --- and that is a universal property, not an evaluation.
+
+\begin{proposition}[Position recovery via the generic element]\label{prop:recover}
+Let $F$ be a container. For each shape $s\in F(1)$ there is a set $P(s)$ and a
+\emph{generic element} $g_s\in F(P(s))$ lying over $s$, universal in the sense that for
+every set $X$ and every $x\in F(X)$ lying over $s$ there is a unique map $\alpha\colon
+P(s)\to X$ with $F(\alpha)(g_s)=x$. This $P(s)$ is the object of positions, and
+\[
+  F(X)\;\iso\;\coprod_{s\in F(1)} X^{P(s)}
+\]
+is the container form, recovered componentwise by the Yoneda lemma. The generic
+element is the initial object of the category of elements of $F$ sitting over $s$; its
+existence is exactly the connected-limit preservation of Theorem~\ref{thm:char}.
+\prov{Cited: Gambino--Kock 2009, Prop.~1.22}
+\end{proposition}
+
+The generic element is the identity labelling $g_s=(s,\id_{P(s)})$ wearing abstract
+clothing: it is the one element of $F(P(s))$ from which every other labelled structure
+of shape $s$ is obtained by relabelling, and by exactly one relabelling. ``Exactly
+one'' is the universal property, and it is what pins $P(s)$ down to the positions
+rather than to any of their exponential shadows.
+
+\begin{remark}[The derivative sees the total position set]
+A second, tidier-looking phrasing is worth knowing --- and worth not overtrusting.
+The total space of positions $\coprod_{s}P(s)$ is the value at $1$ of the
+\emph{derivative} $\partial F$ --- the container of one-hole contexts developed in the
+chapter on the chain rule --- and $P(s)$ is its fibre over $s$. This is correct, but it
+is a restatement, not a shortcut: $\partial F$ is itself a derived construction, not a
+single evaluation of $F$, so it does not escape the moral of the correction box. If you
+want the positions, you must, one way or another, invoke the universal property.
+\end{remark}
+
+\section{Limits and colimits in $\Cont$}
+\label{sec:limits}
+
+We have been studying $\ext{-}$ as a bridge from $\Cont$ into $[\Set,\Set]$. It is
+natural to ask how much categorical structure the bridge carries across. The
+identification of \S\ref{sec:fam} answers the first half at a stroke: free coproduct
+completions are complete and cocomplete, so \emph{$\Cont$ is both}. What is delicate is
+which limits and colimits $\ext{-}$ \emph{preserves}, and the characterisation theorem
+has already told us where the answer turns.
+
+Start with the structure that is easy, concrete, and machine-checked. Binary products
+and coproducts in $\Cont$ have a clean description, and the variance is the whole
+lesson.
+
+\begin{proposition}[Products and coproducts of containers]\label{prop:prodcoprod}
+In $\Cont$:
+\begin{itemize}
+\item the \emph{coproduct} of $\cont SP$ and $\cont TQ$ has shapes $S+T$ and
+      positions inherited case-wise ($P$ on the left summand, $Q$ on the right);
+\item the \emph{product} of $\cont SP$ and $\cont TQ$ has shapes $S\times T$ and, over
+      $(s,t)$, positions $P(s)+Q(t)$ --- a \emph{coproduct} of position sets.
+\end{itemize}
+\prov{MacBeth, Lean-verified: Cont.lean}
+\end{proposition}
+
+The product deserves a second look, because it inverts the naive expectation. The
+positions of a product are a \emph{sum}, not a product. The reason is the variance of
+\S\ref{sec:fam} playing out on universal properties: the projection $\pi_1\colon
+\cont SP\times\cont TQ\to\cont SP$ has the forward shape map $(s,t)\mapsto s$, and on
+positions it must run \emph{backward}, so it is the coproduct injection $P(s)\hookrightarrow
+P(s)+Q(t)$. A morphism into the product is a pair of morphisms, and pairing forward
+shape maps forces summing backward position maps. Under $\ext{-}$ this reads as the
+familiar polynomial identity $\ext{\cont SP\times\cont TQ}(X)=\coprod_{s,t}
+X^{P(s)+Q(t)}=\coprod_{s,t}X^{P(s)}\times X^{Q(t)}$, the product of the two extensions
+--- so $\ext{-}$ preserves this product. It is worth being clear about why that is a
+separate fact, and not a corollary of the characterisation theorem.
+
+\begin{warnbox}[What $\ext{-}$ preserves, and where it stops]
+Theorem~\ref{thm:char} says a container extension \emph{preserves connected limits}.
+Products are the archetypal \emph{dis}connected limit, so connected-limit preservation
+says nothing about them directly; nevertheless $\ext{-}$ does preserve products, by the
+explicit computation above (and coproducts, since a coproduct of shapes maps to a
+coproduct of extensions). The clean summary is:
+\[
+  \ext{-}\ \text{preserves}\ \begin{cases}
+    \text{connected limits} & \text{(Theorem~\ref{thm:char})}\\
+    \text{products and coproducts} & \text{(Proposition~\ref{prop:prodcoprod})}
+  \end{cases}
+\]
+but $\ext{-}$ is \emph{not} cocontinuous: it does not preserve general colimits. In
+particular it does not preserve coequalisers.
+\end{warnbox}
+
+Why should coequalisers be where preservation breaks? Because a coequaliser is a
+quotient, and we have already watched a quotient carry an object out of the container
+world once. The covariant powerset of \S\ref{sec:test} is itself a quotient of a
+coproduct of representables: it is the list functor with its labellings identified
+whenever they differ by a rearrangement or a repetition. That double identification is
+exactly what a coproduct of representables cannot express --- a representable names its
+positions and keeps them distinct --- and it is why the counting failed. Coequalisers
+reproduce the phenomenon in general: coequalise two container morphisms and the
+resulting functor can acquire automorphisms of its positions. The mildest such
+quotients, by a group acting on positions, are the \emph{analytic} functors of Joyal's
+species, which are already outside the image of $\ext{-}$; powerset lies further out
+still, its idempotent identification being coarser than any group action. Either way
+the lesson is one line: the coproduct-of-representables form is closed under connected
+limits and under coproducts, and not under quotients.
+
+\begin{warnbox}[Open thread for a later pass]
+The precise statement ``$\ext{-}$ does not preserve coequalisers'' deserves a pinned
+reference and a concrete two-container coequaliser exhibiting the failure. Abbott's
+thesis is the place the author expects to find it; that citation is \emph{not} yet
+verified against the source, and no specific theorem number should be attributed until
+it is. Treat this paragraph's claim as the honest folklore it is --- consistent with
+everything above --- and see the citation tracker.
+\end{warnbox}
+
+\section{The boundary of the theory}
+\label{sec:boundary}
+
+Step back and the chapter's three findings line up into one picture. A container is a
+family of sets; $\Cont=\Fam(\Set\op)$; and its extension is a coproduct of
+representables. Being a coproduct of representables is a property a functor can be
+tested for --- preservation of connected limits --- and when it holds, the shapes are
+$F(1)$ and the positions are named by generic elements, not by fibres. And the same
+form that these coproducts take is what fails under quotients: powerset from the value
+side, coequalisers from the colimit side. Both failures are one failure. Containers are
+what you get by \emph{summing} representables; you leave them the moment you
+\emph{quotient}.
+
+That boundary is the polynomial boundary the book keeps returning to. Inside it live
+the objects on which the whole equivalence chain runs --- directed containers,
+comonoids, small categories, the monoidal structures of the later chapters --- and each
+of those structures will silently use that its underlying functor is a coproduct of
+representables, that its shapes are recoverable, that connected limits pass through.
+Outside it lie the analytic and symmetric functors, the probability and powerset
+monads, the quotients: a rich world, but one where the equivalence chain fractures,
+and where compositional correctness has to be re-earned rather than inherited. Knowing
+which functors are containers is knowing where you are standing.
+
+The next chapter puts the boundary to work: it asks which containers carry a
+\emph{comonoid} structure, and finds --- the central surprise of the book --- that the
+answer is small categories.
+
+\section*{Provenance summary}
+\addcontentsline{toc}{section}{Provenance summary}
+\begin{itemize}
+\item \textbf{$\Cont\iso\Fam(\Set\op)$} (Prop.~\ref{prop:fam}): folklore; the free
+      coproduct completion, embedded via the Kan extension of Chapter~0.
+\item \textbf{Characterisation and recovery} (Thm.~\ref{thm:char},
+      Prop.~\ref{prop:recover}): cited to Gambino--Kock, \emph{Polynomial functors and
+      polynomial monads}, arXiv:0906.4931, \S1.18 and Prop.~1.22, which report the
+      equivalence as due to Diers (1977) and Carboni--Johnstone (\emph{MSCS} 5, 1995).
+      Not claimed as new; exposition and the non-examples are ours.
+\item \textbf{Representation theorem} (used, not reproved): Abbott--Altenkirch--Ghani,
+      \emph{TCS} 342 (2005); the book's earlier chapter.
+\item \textbf{Products and coproducts} (Prop.~\ref{prop:prodcoprod}): MacBeth,
+      machine-checked in \texttt{Cont.lean} (the \texttt{lean/} tree).
+\item \textbf{Non-cocontinuity / coequaliser failure} (\S\ref{sec:limits}): stated as
+      folklore; the exact reference (Abbott's thesis) is flagged as not yet pinned.
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{AAG05} M.~Abbott, T.~Altenkirch, N.~Ghani.
+  \emph{Containers: constructing strictly positive types.}
+  Theoretical Computer Science \textbf{342} (2005), 3--27.
+\bibitem{GK} N.~Gambino, J.~Kock.
+  \emph{Polynomial functors and polynomial monads.}
+  arXiv:0906.4931; Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), 153--192.
+\bibitem{CJ} A.~Carboni, P.~Johnstone.
+  \emph{Connected limits, familial representability and Artin glueing.}
+  Mathematical Structures in Computer Science \textbf{5} (1995), 441--459.
+  (Corrigenda: \emph{MSCS} \textbf{14} (2004), 185--187.)
+\bibitem{Diers} Y.~Diers.
+  \emph{Cat\'egories localisables.} Th\`ese de doctorat, Universit\'e Paris VI, 1977.
+\end{thebibliography}
+
+\end{document}

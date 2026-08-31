@@ -1,0 +1,484 @@
+%% ---------------------------------------------------------------------------
+%% The Dialectica tensors on Cont --- DEFERRED / HELD material
+%%
+%% Provenance: this is section 10 ("Beyond the census: the Dialectica tensors")
+%% pulled OUT of papers/four-monoidal-chapter.tex on 2026-07-19, at Neil's
+%% direction (email uid-65/68/69). The tensors lXtimes and rXtimes are NOT part
+%% of the core three-chapter book programme; they are material for a later
+%% chapter on Cont(C) for a base category C other than Set. Held here intact so
+%% the census/monoidal chapter can close on the census and the (co)monoid table.
+%%
+%% Lead for the future chapter: the symmetric tensor lXtimes carries a
+%% subgame-perfection game-theory flavour (both players respond adaptively to the
+%% other's move) which is worth developing on its own terms in the Cont(C)
+%% setting.
+%%
+%% TODO (supersession flag, do not silently ship): the closure discussion below
+%% records "conjecturally, neither tensor is closed" and "the closure of rXtimes
+%% is conjecturally negative". This is now SUPERSEDED. A later PROVE result
+%% (proofs/2026-07-18-rtimes-left-closed.md; memory: dialectica-non-closure-one-sided)
+%% shows rXtimes IS left-closed: it is DIRECTED-closed (left yes, right no), with
+%% [q,r] = (Cont(q,r), (a,c) |-> S_q x coprod_t r[a t]). Update the "Structural
+%% consequences" subsection before this file is ever promoted out of held status.
+%%
+%% CITATION TODO (carried over): the entries depaiva89, lnv2405, capucci2024 are
+%% NOT deep-read from source; they are distinguishing-only and do not affect the
+%% mathematics, but must be deep-read in a browse session before publication.
+%% ---------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+%% ---- Notation (kept consistent with the rest of the repo) ----
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Fam}{\mathbf{Fam}}
+\newcommand{\cont}[2]{#1 \triangleleft #2}
+\newcommand{\Ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\tri}{\mathbin{\triangleleft}}
+\newcommand{\dir}{\mathbin{\otimes}}
+\newcommand{\dayt}{\mathbin{\odot}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\ihom}[2]{[#1,#2]}
+\newcommand{\coclose}[2]{\{#1,#2\}}
+\newcommand{\cod}{\mathrm{cod}}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Nat}{Nat}
+\DeclareMathOperator{\Fun}{Fun}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Cat}{\mathbf{Cat}}
+\newcommand{\Cathash}{\mathbb{C}\mathrm{at}^{\sharp}}
+\newcommand{\Dial}{\mathbf{Dial}}
+\newcommand{\Hmg}{\mathrm{Hmg}}
+\newcommand{\dtens}{\mathbin{\otimes_{\Dial}}}
+
+%% ---- Flagging environments (Neil's convention) ----
+\theoremstyle{plain}
+\newtheorem{Theorem}{Theorem}[section]
+\newtheorem{Proposition}[Theorem]{Proposition}
+\newtheorem{Lemma}[Theorem]{Lemma}
+\newtheorem{Corollary}[Theorem]{Corollary}
+\newtheorem{Conjecture}[Theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{Definition}[Theorem]{Definition}
+\newtheorem{Example}[Theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{Remark}[Theorem]{Remark}
+\newtheorem{Question}[Theorem]{Question}
+
+\newcommand{\prov}[1]{\hfill\textsf{\footnotesize[#1]}}
+
+\title{\textbf{The Dialectica tensors on $\Cont$}\\[0.3em]
+  \large held material, deferred from the four-tensor chapter}
+\author{MacBeth\\ \normalsize Kodamai AI Mathematician project}
+\date{Held 19 July 2026 (content 17 July 2026)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This is held material, deferred from the companion chapter \emph{Four canonical
+monoidal structures on $\Cont$}. The four canonical structures ($+$, $\times$,
+the Dirichlet tensor $\dir$, the sequential operator $\tri$) are the Day-family
+census and belong to the core book. The two tensors studied here --- the
+symmetric $\ltimes$ and the directed $\rtimes$ of Dorta--Jarvis--Niu --- lie
+\emph{outside} the Day family, and are identified as the multiplicative and
+directed Dialectica products of G\"odel's functional interpretation. They are
+retained here for a later chapter on $\Cont(C)$ over a base $C\neq\Set$; see the
+supersession note in the source header before promoting this file.
+\end{abstract}
+
+\section{Beyond the census: $\ltimes$ and $\rtimes$ as Dialectica products}
+\label{sec:dialectica}
+
+\subsection{Is there anything outside the Day family?}
+\label{sec:dia-setup}
+
+Theorem~A of the companion chapter accounts for the \emph{Day-convolutional}
+part of the census. Recall its terms: a monoidal structure $(\odot,J)$ on $\Cont$ is
+\emph{convolutional} when $\odot$ preserves coproducts in each variable and
+carries representables to representables, equivalently
+$(p\odot q)[(s,t)]=p[s]\star q[t]$ for a monoidal structure $(\star,I)$ on $\Set$
+of which $\odot$ is the Day convolution. That theorem makes the Day
+construction $(\star,I)\mapsto(\odot_\star,y^I)$ an \emph{equivalence} between
+monoidal structures on $\Set$ and convolutional monoidal structures on $\Cont$;
+$\times$ and $\dir$ are the images of $(+,\varnothing)$ and $(\times,1)$, while
+$+$ and $\tri$ sit outside for elementary reasons (the companion chapter's census).
+
+An equivalence onto the \emph{convolutional} structures is, honestly read, a
+statement about a sub-family. It leaves a sharper question open at the level of
+$\Cont$ itself:
+
+\begin{quote}
+\emph{Are there monoidal structures on $\Cont$ outside the Day family
+altogether --- tensors whose direction at $(s,t)$ is \textbf{not} a pointwise
+function $F(p[s],q[t])$ of the two fibres?}
+\end{quote}
+
+The answer is yes, and the examples are not exotic: they were written down by
+Dorta--Jarvis--Niu \cite{DJN23} and left \emph{uninterpreted}. This section
+identifies them as the Dialectica tensors of Gödel's functional interpretation,
+answering DJN's own stated open question --- the ``second instance'' of
+\emph{why exactly these?} noted in the closest-neighbour discussion of the
+companion chapter's provenance section.
+
+\subsection{The two DJN tensors in container coordinates}
+\label{sec:dia-def}
+
+Dorta--Jarvis--Niu study monoidal structures on generalised polynomial
+categories $\Sigma\Pi\mathcal C$; specialising to $\mathcal C=\mathbf 1$ gives
+$\Sigma\Pi\mathbf 1\simeq\Poly\simeq\Cont$ \cite[Prop.~2.9]{DJN23}. Beyond the
+Day convolution $\dir$ and the sequential operator $\tri$, their \S6 exhibits
+\emph{at least two further} monoidal structures with the same unit $y$, which we
+write $\ltimes$ and $\rtimes$.
+
+\begin{Definition}[$\ltimes$ and $\rtimes$, in container coordinates]
+\label{def:dia-tensors}
+Both tensors have shape set $S_p\times S_q$. Their directions are
+\[
+  (p\ltimes q)[(s,t)] \;=\; p[s]^{\,S_q}\times q[t]^{\,S_p},
+  \qquad
+  (p\rtimes q)[(s,t)] \;=\; p[s]^{\,S_q}\times q[t],
+\]
+with unit $y$ on both sides. Here $X^{S}$ denotes the function set $S\to X$, and
+the exponent $S$ is the \emph{shape set of the other factor}.
+\prov{Cited: DJN \cite[\S6]{DJN23}, in container coordinates}
+\end{Definition}
+
+The tensor $\ltimes$ is \emph{symmetric}: each factor's direction set is
+exponentiated by the other factor's shape set. The tensor $\rtimes$ is
+\emph{triangular}: only the left factor is exponentiated, so it will turn out to
+be associative but not symmetric (Lemma~\ref{lem:nfold}). These are two of the
+monoidal products DJN define; they explicitly leave their meaning open, writing
+that ``we would like to know if there are interpretations or applications for
+these monoidal products'' \cite{DJN23}.
+
+The single feature that governs everything below is the exponential
+$(-)^{S_q}$: a direction set exponentiated by a \emph{global} shape set, rather
+than the pointwise $p[s]\star q[t]$ of a Day tensor. That is what pushes
+$\ltimes/\rtimes$ outside the Day family (§\ref{sec:dia-consequences}), and it
+is the Dialectica hallmark (§\ref{sec:dia-main}).
+
+\begin{Lemma}[Unit laws and closed forms]
+\label{lem:nfold}
+$p\ltimes y\cong p\cong y\ltimes p$ and $p\rtimes y\cong p\cong y\rtimes p$.
+The $k$-fold iterates have closed forms
+\begin{align*}
+  (p_1\ltimes\dots\ltimes p_k)\bigl[(s_1,\dots,s_k)\bigr]
+    &\;\cong\; \prod_{f=1}^{k} p_f[s_f]^{\,\bigl(\prod_{g\neq f}S_{p_g}\bigr)},\\
+  (p_1\rtimes\dots\rtimes p_k)\bigl[(s_1,\dots,s_k)\bigr]
+    &\;\cong\; \prod_{f=1}^{k} p_f[s_f]^{\,\bigl(\prod_{g> f}S_{p_g}\bigr)} .
+\end{align*}
+Consequently $\ltimes$ is associative and symmetric, while $\rtimes$ is
+associative but not symmetric.
+\prov{MacBeth (computed; exponential laws)}
+\end{Lemma}
+
+\begin{proof}
+For the unit, $S_y=1$ and $y[\ast]=1$, so
+$(p\ltimes y)[(s,\ast)]=p[s]^{1}\times 1^{S_p}=p[s]$, and symmetrically; the
+$\rtimes$ case is the same computation. The closed forms follow by induction from
+Definition~\ref{def:dia-tensors} using $(X\times Y)^{S}\cong X^{S}\times Y^{S}$
+and $X^{S\times T}\cong(X^{S})^{T}$. In the $\ltimes$ form each factor $p_f$ is
+exponentiated by the product of \emph{all} other shape sets, an expression
+invariant under reassociation and under permutation of the factors; hence
+$\ltimes$ is associative and symmetric. In the $\rtimes$ form each factor is
+exponentiated only by the shape sets \emph{to its right}, an expression
+unambiguous under reassociation (the product over $g>f$ does not depend on
+bracketing) but sensitive to the factor order; hence $\rtimes$ is associative but
+not symmetric.
+\end{proof}
+
+The triangular exponent pattern is the precise sense in which $\rtimes$ is
+\emph{directed}: reading the factors left to right, factor $f$ is challenged by
+the choices of all \emph{later} factors, but not the earlier ones --- a strict,
+one-directional dependency, of which $\ltimes$ is the symmetric closure.
+
+\subsection{The homogeneous fragment is de Paiva's Dialectica category}
+\label{sec:dia-hmg}
+
+\begin{Definition}[Homogeneous container]
+\label{def:homogeneous}
+A container is \emph{homogeneous} of arity $(I,A)$ if it has the form
+$p=\sum_{i\in I}y^{A}$: shape set $I$, with \emph{every} direction set equal to
+the same $A$.
+\prov{Cited: DJN \cite[\S2]{DJN23}}
+\end{Definition}
+
+DJN prove that the homogeneous objects form a full subcategory equivalent to de
+Paiva's original Dialectica category
+\cite[Prop.~2.13]{DJN23}:
+\[
+  \Hmg(2)\;\simeq\;\Dial(\Set).
+\]
+Under this dictionary a homogeneous object corresponds to a de Paiva triple
+$(U,X,\alpha)$, where $U$ is the set of \emph{positions} (the shape set $I$),
+$X$ is the set of \emph{challenges} (the common direction set $A$), and $\alpha$
+is a set-valued (relational) predicate on $U\times X$. A morphism carries a
+forward map $f\colon U\to V$ together with a backward map $F\colon U\times Y\to
+X$ --- exactly the two components of a container morphism between homogeneous
+objects. So \emph{positions are $U$ and directions are $X$}.
+
+\begin{Definition}[de Paiva's Dialectica tensor]
+\label{def:depaiva-tensor}
+On $\Dial(\Set)$ the multiplicative (linear-logic) tensor is
+\[
+  (U,X,\alpha)\dtens(V,Y,\beta)
+    \;=\;\bigl(\,U\times V,\ X^{V}\times Y^{U},\ \alpha\otimes\beta\,\bigr),
+\]
+where, for $f\colon V\to X$ and $g\colon U\to Y$, the predicate is
+$(\alpha\otimes\beta)\bigl((u,v),(f,g)\bigr)=\alpha(u,f v)\wedge\beta(v,g u)$.
+\prov{Cited: de Paiva \cite{depaiva89}}
+\end{Definition}
+
+The witness object $X^{V}\times Y^{U}$ is the defining feature of the
+Gödel--de~Paiva functional interpretation: to answer a challenge against a
+conjunction $A\otimes B$ one must supply, for each of the opponent's moves in
+one component, a response in the \emph{other} --- hence the mutual function
+spaces.
+
+\subsection{Main identification: $\ltimes$ is de Paiva's tensor, extended}
+\label{sec:dia-main}
+
+\begin{Proposition}[$\ltimes$ restricts to the Dialectica tensor]
+\label{prop:ltimes-is-dial}
+On the homogeneous fragment $\Hmg(2)\simeq\Dial(\Set)$, the tensor $\ltimes$
+restricts to de Paiva's Dialectica tensor $\dtens$. Concretely, for homogeneous
+$p=\sum_{I}y^{A}$ and $q=\sum_{J}y^{B}$,
+\[
+  p\ltimes q \;=\;\sum_{I\times J} y^{\,A^{J}\times B^{I}},
+\]
+whose shape set $I\times J=U\times V$ and direction set
+$A^{J}\times B^{I}=X^{V}\times Y^{U}$ match Definition~\ref{def:depaiva-tensor}
+exactly. Hence $\ltimes$ is de Paiva's Dialectica tensor extended off
+$\Hmg(2)$ to all of $\Poly\simeq\Cont$.
+\prov{MacBeth (an identification; matches definitions)}
+\end{Proposition}
+
+\begin{proof}
+Take $p$ and $q$ homogeneous with $S_p=I$, $p[i]=A$ for all $i$, and $S_q=J$,
+$q[j]=B$ for all $j$. Definition~\ref{def:dia-tensors} gives shape set
+$I\times J$ and, at every shape $(i,j)$,
+\[
+  (p\ltimes q)[(i,j)]\;=\;p[i]^{\,S_q}\times q[j]^{\,S_p}
+    \;=\;A^{J}\times B^{I}.
+\]
+This direction set is independent of $(i,j)$, so $p\ltimes q$ is again
+homogeneous, of arity $\bigl(I\times J,\ A^{J}\times B^{I}\bigr)$, i.e.\
+$p\ltimes q=\sum_{I\times J}y^{A^{J}\times B^{I}}$. Under the dictionary of
+§\ref{sec:dia-hmg} --- $U=I$, $V=J$, $X=A$, $Y=B$ --- the shape set is
+$U\times V$ and the direction set is $X^{V}\times Y^{U}$, the forward and
+backward objects of $\dtens$ in Definition~\ref{def:depaiva-tensor}. The
+predicate matches by the same substitution: a direction $(f,g)\in A^{J}\times
+B^{I}$ is precisely a pair $f\colon V\to X$, $g\colon U\to Y$, and DJN's fibrewise
+predicate composition realises $\alpha\otimes\beta$. So on $\Hmg(2)$ the two
+tensors agree, and $\ltimes$ is the extension of $\dtens$ to all containers.
+\end{proof}
+
+For $\rtimes$ the corresponding restriction gives, on homogeneous inputs,
+direction $A^{J}\times B$: the left challenge is functionalised over $V$ but the
+right challenge is presented bare. By Lemma~\ref{lem:nfold} the $k$-fold
+$\rtimes$ exponentiates each factor's challenge only over the positions of the
+factors to its \emph{right}. So $\rtimes$ is the \emph{directed} Dialectica
+tensor: where $\ltimes$ is the conjunction in which both players respond
+adaptively to the other's move, $\rtimes$ is the conjunction whose dependency
+flows one way only --- one problem answered adaptively in response to the other,
+which is played blind. Contrast the two closed forms of Lemma~\ref{lem:nfold}:
+$\ltimes$ exponentiates over the product of \emph{all} other shape sets and is
+symmetric; $\rtimes$ exponentiates only rightward and is directed.
+
+For orientation, here is how the two Dialectica conjunctions split between the
+$\Cont$ tensors. On $\Hmg(2)$ the Day tensor $\dir$ restricts to direction
+$A\times B=X\times Y$ --- the naive Gödel conjunction $A\wedge B$, whose
+challenge is the plain product of challenges --- whereas $\ltimes$ restricts to
+the linear tensor $X^{V}\times Y^{U}$. The two structures cleanly separate the
+non-linear ($\dir$) and multiplicative-linear ($\ltimes$) conjunctions of the
+Dialectica interpretation.
+
+\subsection{Structural consequences}
+\label{sec:dia-consequences}
+
+\begin{Proposition}[Non-convolutional]
+\label{prop:nonconv}
+Neither $\ltimes$ nor $\rtimes$ is convolutional: there is no functor
+$F\colon\Set\times\Set\to\Set$ with $(p\ltimes q)[(s,t)]=F(p[s],q[t])$. In
+particular they are not Day convolutions of any monoidal structure on $\Set$, so
+the companion chapter's Day equivalence (its Theorem~A) does not reach them.
+\prov{MacBeth (computed witness)}
+\end{Proposition}
+
+\begin{proof}
+Let $p=y^{2}$ (one shape, direction set of size $2$) and, for each $n$, let
+$q_n$ be homogeneous with $|S_{q_n}|=n$ and every direction set of size $2$.
+Then $(p\ltimes q_n)[(\ast,t)]=2^{\,n}\times 2^{\,1}=2^{\,n+1}$. The two fibres
+$p[\ast]=2$ and $q_n[t]=2$ are fixed independently of $n$, yet the resulting
+direction set grows with $n=|S_{q_n}|$. A convolutional formula $F(2,2)$ would be
+constant in $n$; no such $F$ exists. The same inputs defeat $\rtimes$. Since
+every Day tensor is convolutional (with $F=\star$), neither tensor is a Day
+convolution, and the companion chapter's Theorem~A --- an equivalence onto the
+\emph{convolutional} structures --- does not apply to them.
+\end{proof}
+
+This is the honest boundary of the classification. The Day family --- the four
+canonical tensors together with the wider family indexed by monoidal structures
+on $\Set$ --- does \emph{not} exhaust the monoidal structures on $\Cont$. The
+structures it omits are the linear-logic tensors $\ltimes$ and $\rtimes$, and
+the reason it omits them is precisely that their direction is a non-pointwise,
+shape-set-indexed exponential rather than a fibrewise formula.
+
+\begin{Proposition}[Non-cocontinuous]
+\label{prop:noncocont}
+$(-)\ltimes q$ does not preserve coproducts: $\ltimes$ does not distribute over
+$+$. The same holds for $\rtimes$. Conjecturally, neither tensor is closed.%
+\footnote{\textbf{Superseded, held for update.} The closure conjecture below is
+now partly refuted: a later result (\texttt{proofs/2026-07-18-rtimes-left-closed.md})
+shows $\rtimes$ \emph{is} left-closed --- it is \emph{directed}-closed (left yes,
+right no), with $[q,r]_\rtimes=\bigl(\Cont(q,r),\,(a,c)\mapsto S_q\times
+\coprod_t r[a\,t]\bigr)$. So the honest statement is that $\ltimes$ is bi-non-closed
+while $\rtimes$ is left- but not right-closed. This section is retained
+\emph{intact} pending its promotion out of held status; do not ship without
+folding in this correction.}
+\prov{MacBeth (computed); $\rtimes$ left-closed (proved, see footnote)}
+\end{Proposition}
+
+\begin{proof}
+The shape set of $p+p'$ is $S_p+S_{p'}$, so
+$\bigl((p+p')\ltimes q\bigr)[(s,t)]$ has the exponent
+$q[t]^{\,S_p+S_{p'}}\cong q[t]^{S_p}\times q[t]^{S_{p'}}$, whereas the
+$p$-summand of $(p\ltimes q)+(p'\ltimes q)$ has exponent $q[t]^{S_p}$. These
+differ (for a concrete instance the direction cardinality profiles are
+$[8,8,32,32,32,32]$ against $[8,8,16,16,16,16]$), so there is no natural
+distributive isomorphism. The obstruction is exactly the exponent's dependence
+on the \emph{entire} shape set $S_p$, which a coproduct enlarges. A tensor whose
+left action fails to preserve coproducts cannot have a right adjoint in that
+variable, so $(-)\ltimes q$ is not a left adjoint and $\ltimes$ is not
+left-closed; we record the closure of $\rtimes$ as conjecturally negative for
+the same reason.
+\end{proof}
+
+These are, to our knowledge, the first non-\emph{bi}closed monoidal structures in
+the $\Cont$ story, in sharp contrast with the census, where $\times$ is cartesian
+closed, $\dir$ is closed, and $\tri$ has a right coclosure (all in the companion
+chapter). Because
+$\ltimes/\rtimes$ are non-convolutional, this non-closure says nothing about
+whether the \emph{convolutional} tensors are closed; the two questions are
+disjoint.
+
+\begin{Remark}[A lead on closure, not a refutation]
+\label{rem:dia-closure}
+The non-closure argument above is a \emph{left}-closure argument: it rules out a
+right adjoint to $(-)\ltimes q$ because that functor does not even preserve
+coproducts. It does not settle every reasonable sense of ``closed.''
+Lucatelli~Nunes--Vákár \cite{lnv2405} equip Grothendieck constructions --- of
+which $\Cont$ is one --- with a Dialectica-flavoured monoidal \emph{closed}
+structure in which the Dialectica twist lives in the \emph{internal hom}
+$\multimap$, not in the tensor (their tensor is an untwisted, product-like
+tensor lifted from base and fibre). If a hom
+with a $\ltimes$-shaped twist exists on $\Cont$ it will be found on their model,
+not by adjointness to $\ltimes$; we flag this as a lead for a later pass rather
+than a refutation of the conjecture recorded in
+Proposition~\ref{prop:noncocont}.
+\end{Remark}
+
+\subsection{Related work}
+\label{sec:dia-related}
+
+We are careful about what is new here, because the theme is well populated. What
+this section contributes is an \emph{identification} --- DJN's uninterpreted
+$\ltimes$ is de Paiva's Dialectica tensor, extended off the homogeneous slice ---
+together with the closed forms of Lemma~\ref{lem:nfold} that expose the
+directedness of $\rtimes$, and the taxonomy placement of
+§\ref{sec:dia-consequences}. It is emphatically \emph{not} the first connection
+between Dialectica and polynomial functors; that relationship is the animating
+theme of DJN \cite{DJN23} itself.
+
+The following distinctions matter.
+
+\emph{Lucatelli~Nunes--Vákár \cite{lnv2405}} give a Dialectica-formula monoidal
+\emph{closed} structure on Grothendieck constructions, which instantiates to
+containers. But their tensor is \emph{an untwisted, product-like tensor lifted
+from base and fibre}, and the Dialectica
+twist lives in their internal hom $\multimap$, not in the tensor. They neither
+produce $\ltimes$ nor address DJN's open question; their construction is
+orthogonal to the identification made here (see Remark~\ref{rem:dia-closure}).
+
+\emph{Capucci--Gavranović--Malik--Rios--Weinberger \cite{capucci2024}} unify
+lenses, optics and Dialectica fibrationally --- at the level of the
+\emph{category}, as a common fibrational pattern, not as a monoidal tensor on
+$\Cont$. Again this is a different object from $\ltimes$.
+
+Finally, one must pre-empt the objection that DJN's own abstract already
+``extends dialectica categories''. It does --- but their extending tensor (their
+\S3) is the \emph{non-twisting} parallel product, with direction $A\times B$;
+that is the Gödel conjunction, not the multiplicative one. The genuinely
+twisting multiplicative tensor, with the mutual function spaces $X^{V}\times
+Y^{U}$, is $\ltimes$, and $\ltimes$ is exactly what DJN left uninterpreted. It is
+that gap this section fills, framed as an answer to DJN's own stated open
+question.
+
+\begin{Remark}[Grade and novelty]
+\label{rem:dia-grade}
+The identification of Proposition~\ref{prop:ltimes-is-dial} is a matching of
+definitions and is \emph{proved} at the level of the formulas, not conjectural;
+we grade the mathematics \textsf{[computed / an identification]}, the meet with
+de~Paiva's tensor formula, which we cite from the standard reference
+\cite{depaiva89} rather than reproduce. Its \emph{novelty} was checked by a
+dedicated literature sweep against the recent Dialectica--polynomial corpus
+(de~Paiva, Trotta, Spivak, Hedges, Lucatelli~Nunes--Vákár, Capucci et al.,
+2023--2026); the verdict was \emph{clear}. The claim is framed accordingly, and
+this framing is the honest one: we identify a \emph{known} tensor --- de Paiva's
+--- with DJN's uninterpreted operation $\ltimes$; we do \emph{not} claim to be
+the first to relate Dialectica and $\Poly$, which would be false. The two nearest
+neighbours are cited and distinguished above (Lucatelli~Nunes--Vákár
+\cite{lnv2405}, Capucci et al.\ \cite{capucci2024}); neither produces $\ltimes$
+nor answers DJN's question. What DJN, who know $\Dial(\Set)\simeq\Hmg(2)$
+intimately, nonetheless posed as open, this section settles.
+\end{Remark}
+
+%% ===========================================================================
+
+%% ===========================================================================
+\begin{thebibliography}{9}
+
+\bibitem{AAG05} M.~Abbott, T.~Altenkirch, N.~Ghani.
+  \emph{Containers: constructing strictly positive types}.
+  Theoretical Computer Science \textbf{342} (2005) 3--27.
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak.
+  \emph{Polynomial Functors: A Mathematical Theory of Interaction}.
+  arXiv:2312.00990, 2023.
+
+\bibitem{DJN23} Dorta, Jarvis, N.~Niu.
+  \emph{Monoidal Structures on Generalized Polynomial Categories}.
+  In \emph{Applied Category Theory 2023}, Electronic Proceedings in Theoretical
+  Computer Science 397, 84--97, 2023. arXiv:2305.05655.
+
+\bibitem{depaiva89} V.~de~Paiva.
+  \emph{The Dialectica Categories}.
+  In \emph{Categories in Computer Science and Logic} (Boulder, 1987),
+  Contemporary Mathematics 92, American Mathematical Society, 1989, 47--62;
+  see also Ph.D.\ thesis / Tech.\ Report 213, University of Cambridge Computer
+  Laboratory, 1991.
+
+\bibitem{lnv2405} F.~Lucatelli~Nunes, M.~V\'ak\'ar.
+  \emph{Monoidal closure of Grothendieck constructions via
+  $\Sigma$-tractable monoidal structures and Dialectica formulas}.
+  arXiv:2405.07724, 2024; to appear in \emph{Theory and Applications of
+  Categories}.
+
+\bibitem{capucci2024} M.~Capucci, B.~Gavranovi\'c, A.~Malik, F.~Rios,
+  J.~Weinberger.
+  \emph{On a fibrational construction for optics, lenses, and Dialectica
+  categories}.
+  arXiv:2403.16388, 2024; ENTICS Vol.\ 4 (Proc.\ MFPS XL, 2024).
+
+\end{thebibliography}
+
+\end{document}

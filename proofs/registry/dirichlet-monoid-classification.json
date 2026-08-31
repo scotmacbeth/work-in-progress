@@ -1,0 +1,120 @@
+{
+  "conjecture": "Bare MONOIDS for the Dirichlet tensor in Poly (no ◁ structure) are exactly: a monoid structure (·, e) on the shape set S together with an OPLAX MONOIDAL FUNCTOR P: (S,·,e) → (Set,×) — i.e. maps φ_{s,s'}: P(s·s') → P(s)×P(s') and ε: P(e) → 1 satisfying oplax coherence (associativity + unit). This is the dual of the ⊗-comonoid classification (families of monoids). Answers the Poly/⊗ slice of the DUAL to Niu–Spivak Ch9 Q5 = the ⊗-monoids flagged as future work in Remark 3.78.",
+  "status": "proved",
+  "date_opened": "2026-07-19",
+  "date_closed": "2026-07-19",
+  "note": "PROVED 2026-07-19 (analytic unwinding in container coordinates). Dual/sibling of bare-dirichlet-comonoid (proved). A ⊗-monoid μ:c⊗c→c decomposes as forward m:S×S→S (shape multiplication) + backward φ_{s,s'}:c[m(s,s')]→c[s]×c[s'] (position oplax structure); unit η:y→c picks e∈S with ε:c[e]→1 (forced, unique). SHAPE parts of the assoc+unit laws ⟺ (S,m,e) a monoid; FIBRE parts ⟺ {φ,ε} an oplax monoidal functor (S,·,e)→(Set,×,1). §5 explains the comonoid↔monoid asymmetry (comult maps INTO S×S ⟹ diagonal forced; mult maps OUT OF S×S ⟹ any monoid). Uniform Thm B: ×-monoid = monoid on S with c[e]=∅ + oplax functor into (Set,⊔,∅) — same theorem, fibre target (Set,×,1)↦(Set,⊔,∅). When S=1 the oplax functor is a comonoid in (Set,×) = diagonal, so the single-shape ⊗-monoid is UNIQUE. Proof: proofs/2026-07-19-dirichlet-monoid-classification.md; two independent enumerations agree (c6_oplax.py, times_monoid.py). Novelty gate 07-18: ORTHOGONAL to De Pascalis–Uustalu–Veltrì 2509.25879 (◁-monoids, not ⊗); Niu–Spivak Rmk 3.78 flags ⊗-monoids as future work. CAUTION: same group plans other-tensor monoids — share promptly; frame as 'elementary answer to a future-work item'.",
+  "tree": {
+    "id": "root",
+    "approach": "⊗-monoids in Poly = a monoid (S,·,e) + an oplax monoidal functor P:(S,·,e)→(Set,×); ×-monoids = same with (Set,⊔,∅) + c[e]=∅",
+    "trust": "proved",
+    "file": "2026-07-19-dirichlet-monoid-classification.md",
+    "sources": [
+      "2312.00990"
+    ],
+    "children": [
+      {
+        "id": "day-dirichlet",
+        "approach": "⊗ = Day(Set,×): (p⊗q)[s,t]=p[s]×q[t], unit y; Cont ≅ Fam(Set^op)",
+        "role": "premise",
+        "trust": "peer-reviewed",
+        "file": "2026-07-14-day-family-classification.md",
+        "sources": [
+          "2312.00990"
+        ],
+        "review": "Niu–Spivak Prop 3.79 (full-PDF deep-read, verbatim-quoted); Cont≅Fam(Set^op) is SGF Prop 3.6.",
+        "children": []
+      },
+      {
+        "id": "shape-part-is-monoid",
+        "approach": "forward part m:S×S→S of μ:c⊗c→c is ALWAYS a monoid (m,e) on S — the shape projection of the assoc+unit laws (§3 e·s=s=s·e; §4 (s·t)·u=s·(t·u))",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-19-dirichlet-monoid-classification.md",
+        "note": "PROVED §3–4: shape map of μ∘(η⊗id)=λ gives e·s=s; of μ∘(μ⊗id)=μ∘(id⊗μ)∘α gives associativity. Corroborated c6_deep.py.",
+        "children": []
+      },
+      {
+        "id": "backward-part-is-oplax",
+        "approach": "backward part φ_{s,s'}:c[m(s,s')]→c[s]×c[s'] + ε:c[e]→1 is exactly an oplax monoidal functor (S,·,e)→(Set,×)",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-19-dirichlet-monoid-classification.md",
+        "note": "PROVED §3 (unit coherences: φ²_{e,s}=id, φ¹_{s,e}=id) + §4 (assoc coherence (φ_{s,t}×id)∘φ_{s·t,u}=(id×φ_{t,u})∘φ_{s,t·u}). INDEPENDENT from-scratch enumeration c6_oplax.py matches ⊗-monoid counts EXACTLY (1,1,1,4,9,33): the enumeration checks these very equations.",
+        "children": []
+      },
+      {
+        "id": "S1-unique",
+        "approach": "when |S|=1 the oplax functor is a comonoid in (Set,×) = the diagonal, forced; so the single-shape ⊗-monoid y^A is unique for every A",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-19-dirichlet-monoid-classification.md",
+        "note": "§7(i): rows [1],[2],[3] all give count 1. Trivial shape monoid + forced diagonal oplax.",
+        "children": []
+      },
+      {
+        "id": "times-monoid-refinement",
+        "approach": "Thm B: ×-monoid (categorical product tensor) = monoid (S,·,e) with c[e]=∅ + oplax functor (S,·,e)→(Set,⊔,∅) on fibres; same theorem, fibre target (×,1)↦(⊔,∅)",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-19-dirichlet-monoid-classification.md",
+        "note": "PROVED §6: η:1→c forces c[e]=∅ (backward c[e]→∅); μ♯:c[s·t]→c[s]⊔c[t] with same coherences over (Set,⊔,∅). Generic containers admit NONE (nonempty identity fibre); all-fibres-empty ⟹ ×-monoids = monoids on S. Independent enumeration times_monoid.py matches on [0],[1],[2],[0,0],[1,1],[0,1],[1,0],[0,0,0].",
+        "children": []
+      },
+      {
+        "id": "novelty-gate-duv",
+        "approach": "novelty: 2509.25879 (De Pascalis–Uustalu–Veltrì, Monoid Structures on Indexed Containers) classifies ◁-monoids (indexed poly monads), NOT ⊗; Rmk 3.78 leaves ⊗-monoids open ⟹ ORTHOGONAL",
+        "role": "premise",
+        "trust": "published",
+        "file": null,
+        "sources": [
+          "2509.25879",
+          "2312.00990"
+        ],
+        "publication": "De Pascalis, Uustalu, Veltrì, Monoid Structures on Indexed Containers, arXiv:2509.25879 (2025); Niu–Spivak, Polynomial Functors (2023) Remark 3.78",
+        "note": "Full-text read 2026-07-18: their tensor is functor composition ◁ (they write ⊗ for it), Thm §3 = monoids ≅ monads. No Dirichlet tensor, no Rmk 3.78. Caution: same group, other-tensor monoids in their §5 future work.",
+        "children": []
+      },
+      {
+        "id": "lean-forward",
+        "approach": "Lean 4 (core, no Mathlib): forward map DirichletMonoid c → ShapeMonoidOplaxFibres c machine-checked; shape laws = congrArg of the law equations, fibre coherences = position content via onPosOfEq (reused from DirichletComonoid). No forced diagonal ⟹ no dirichlet_mul_assoc-style subst needed; assoc transport IS smul_assoc.",
+        "role": "attempt",
+        "trust": "lean-verified",
+        "file": null,
+        "lean": "Container.DirichletMonoid.toShapeMonoidOplaxFibres",
+        "note": "Lean file: lean/Containers/Containers/DirichletMonoid.lean. Sorry-free 2026-07-19; #print axioms = NO axioms at all (not even Quot.sound; cleaner than the comonoid's Quot.sound) — closes by congrArg/onPosOfEq + Eq proof irrelevance. Declarations: DirichletMonoid (unit η:y⟶C, mul μ:C⊗C⟶C, left/right_unit, assoc), target ShapeMonoidOplaxFibres (smul,e,phi + shape monoid laws + oplax unit coherences phi_one_smul/phi_smul_one + oplax hexagon phi_assoc), smul/e/phi/smul_assoc/one_smul/smul_one/phi_one_smul/phi_smul_one/phi_assoc, toShapeMonoidOplaxFibres. Forward direction ONLY; converse and Mon≅∫_Mon OplaxMon not yet formalised. Arrow-reversed dual of DirichletComonoid.toFamilyOfMonoids.",
+        "children": []
+      },
+      {
+        "id": "lean-converse",
+        "approach": "Lean 4: reverse map ShapeMonoidOplaxFibres c → DirichletMonoid c + BOTH round-trips ⟹ full machine-checked isomorphism DirichletMonoid c ≅ ShapeMonoidOplaxFibres c. Reconstructs η (shape ∗↦e), μ (shape smul, positions backward by phi); three internal Cont-laws via ContainerMorphism.ext' with shape eq = the monoid axiom (one_smul/smul_one/smul_assoc), fibre goal = the oplax coherence (phi_one_smul/phi_smul_one/phi_assoc) matched on the nose by Eq proof irrelevance — clean mirror of the forward onPosOfEq. Both round-trips by rfl (data round-trips defeq up to Prod/Unit η; law fields Prop-irrelevant).",
+        "role": "attempt",
+        "trust": "lean-verified",
+        "file": null,
+        "lean": "Container.ShapeMonoidOplaxFibres.toDirichletMonoid",
+        "note": "Lean file: lean/Containers/Containers/DirichletMonoidConverse.lean (new; imports DirichletMonoid, wired into root Containers.lean). Sorry-free 2026-07-20; VERIFIED BY MACBETH: lake build green (29 jobs), grep sorry/admit = NONE, #print axioms on BOTH round-trip lemmas = [Quot.sound] only (Quot.sound enters solely via funext packaging the pointwise shape law for ext'). Declarations: unitMor, mulMor, left_unit_law/right_unit_law/assoc_law, toDirichletMonoid, toDirichletMonoid_toShapeMonoidOplaxFibres (fwd∘rev=id), DirichletMonoid.toShapeMonoidOplaxFibres_toDirichletMonoid (rev∘fwd=id). Completes the ⊗-MONOID column to a genuine iso, matching the sibling status target for the ⊗-comonoid column (whose converse remains open). Built by sub-agent, build+axioms re-verified by MacBeth before promotion.",
+        "children": []
+      },
+      {
+        "id": "lean-times-forward",
+        "approach": "Lean 4 (core, no Mathlib): forward map for Thm B (×-monoid), TimesMonoid c → ShapeMonoidOplaxFibresCoproduct c, machine-checked. The × analogue of lean-forward: same skeleton, fibre combiner ⊕ for ×, unit 1 (empty fibre) for y. Shape laws = congrArg of the law equations; the two oplax unit coherences ψ_{e,s}=inr, ψ_{s,e}=inl proved by a case split on the routing ψ, ruling out the injection into the empty identity fibre C[e] via posEmpty (= η.onPos ∗ : C[e]→Empty); the oplax hexagon into (C[s]⊕C[t])⊕C[u] is the raw onPosOfEq position content of the internal assoc law, transport = smul_assoc. Concretely realises the 'one theorem parameterised by fibre monoidal structure' claim: DirichletMonoid.lean with (⊔,∅) for (×,1).",
+        "role": "attempt",
+        "trust": "lean-verified",
+        "file": null,
+        "lean": "Container.TimesMonoid.toShapeMonoidOplaxFibresCoproduct",
+        "note": "Lean file: lean/Containers/Containers/TimesMonoid.lean (new; imports FourMonoidal + DirichletComonoid for onPosOfEq, wired into root Containers.lean). Sorry-free 2026-07-20; VERIFIED BY MACBETH: full lake build green (31 jobs), grep sorry/admit = NONE, #print axioms on toShapeMonoidOplaxFibresCoproduct / psi_assoc / psi_one_smul / psi_smul_one = [Quot.sound] only (Quot.sound enters via rw/cases tactic congruence, not classical, not sorry). Declarations: TimesMonoid (unit η:1⟶C, mul μ:C×C⟶C, left/right_unit, assoc), target ShapeMonoidOplaxFibresCoproduct (smul, e, posEmpty:C.Pos e→Empty, psi:C[s·t]→C[s]⊕C[t], shape monoid laws, oplax coproduct-unit coherences psi_one_smul/psi_smul_one, oplax hexagon psi_assoc), smul/e/posEmpty/psi/smul_assoc/one_smul/smul_one/psi_one_smul/psi_smul_one/psi_assoc, toShapeMonoidOplaxFibresCoproduct. KEY DIFFERENCE from ⊗ forward: the position content of the unit law lands in Empty⊕C[s] (routing the identity fibre through η.onPos:C[e]→Empty), a DIFFERENT sum type from the target C[e]⊕C[s]; the coherence is recovered by Sum.inr.inj/Sum.inl.inj on that equation plus the empty-fibre .elim on the wrong-injection branch. Forward direction ONLY; ×-monoid converse not yet formalised. Completes Lean coverage of BOTH Day-monoid columns (⊗ and ×) on the forward side.",
+        "children": []
+      },
+      {
+        "id": "lean-times-converse",
+        "approach": "Lean 4 (core, no Mathlib): converse map + both round trips for Thm B (×-monoid), upgrading lean-times-forward to a full iso TimesMonoid c ≅ ShapeMonoidOplaxFibresCoproduct c. The × analogue of lean-converse (DirichletMonoidConverse.lean, the ⊗ side): reverse map rebuilds η:1⟶C (onShapes = fun _ => e, onPos = posEmpty:C[e]→Empty = 1[∗]) and μ:C×C⟶C (onShapes = smul, onPos = psi) from the algebraic data. Three internal Cont-laws via ContainerMorphism.ext': shape eq = monoid axiom (one_smul/smul_one/smul_assoc), fibre goal = oplax coherence (psi_one_smul/psi_smul_one/psi_assoc). Ported from the ⊗ converse near-verbatim with (Set,⊔,∅) for (Set,×,1) — the interesting difference vs the ⊗ converse: unit-law positions land in Sum types, exposed by `show` and closed by `rw [psi_one_smul/psi_smul_one]; rfl` (the Sum.elim collapses the routed injection; empty-fibre summand never fires). Round trips by rfl (Prod/Unit η + Prop-irrelevant law fields).",
+        "role": "attempt",
+        "trust": "lean-verified",
+        "file": null,
+        "lean": "Container.ShapeMonoidOplaxFibresCoproduct.toTimesMonoid",
+        "note": "Lean file: lean/Containers/Containers/TimesMonoidConverse.lean (new; imports TimesMonoid, wired into root Containers.lean). Sorry-free 2026-07-20; VERIFIED BY MACBETH: full lake build green (32 jobs), grep sorry/admit = NONE, #print axioms on toTimesMonoid / left_unit_law / right_unit_law / assoc_law / BOTH round-trip lemmas = [Quot.sound] only (Quot.sound enters solely via funext packaging the pointwise shape law for ext'). Declarations: unitMor, mulMor, left_unit_law/right_unit_law/assoc_law, toTimesMonoid, toTimesMonoid_toShapeMonoidOplaxFibresCoproduct (fwd∘rev=id), TimesMonoid.toShapeMonoidOplaxFibresCoproduct_toTimesMonoid (rev∘fwd=id). Completes the ×-MONOID column to a genuine iso — the ENTIRE (co)monoid table now has both Day-MONOID columns (⊗ and ×) machine-checked as full isos on both sides. LEAN.md's expected wrinkle (⊗ file's congrArg Prod.snd unit shortcut) did NOT recur: the converse routes the unit coherence through psi_one_smul/psi_smul_one + a defeq Sum.elim collapse instead, so no empty-fibre .elim was needed in the converse (only in the forward map). Built and re-verified by MacBeth before promotion.",
+        "children": []
+      }
+    ]
+  }
+}

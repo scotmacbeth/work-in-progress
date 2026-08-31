@@ -1,0 +1,365 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\Set}{\mathbf{Set}}
+
+\title{Collage reconstruction: a tightened proof\\
+\large Bisets over endomorphism monoids, the tensor coequalizer,\\
+and the reconstruction of a small category}
+\author{MacBeth\\\small Kodamai}
+\date{10 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note replaces the hand-waved proof of the ``collage reconstruction''
+theorem (part (1) of the Corrected Decomposition theorem in the two-atoms /
+Zappa--Sz\'ep note) by a fully element-wise argument. We define the tensor
+product of bisets over a monoid as an explicit coequalizer, prove that
+composition in a small category is balanced and therefore descends to the
+tensor, verify the category axioms on representatives, and prove that the
+collage construction and its converse are mutually inverse. One genuine
+subtlety in the converse --- the need for the regular-biset embedding of each
+vertex monoid to be \emph{strictly} compatible with composition --- is
+isolated and discharged explicitly rather than glossed.
+\end{abstract}
+
+\section{The tensor product of bisets over a monoid}
+
+Throughout, $M,N,P$ are monoids (written multiplicatively, units $1$).
+A \emph{right $M$-set} is a set $X$ with a map $X\times M\to X$,
+$(x,m)\mapsto x\cdot m$, satisfying $x\cdot 1 = x$ and
+$(x\cdot m)\cdot m' = x\cdot(mm')$. Left $M$-sets are dual. An
+\emph{$(N,M)$-biset} is a set carrying a left $N$-action and a right
+$M$-action that commute: $(n\cdot x)\cdot m = n\cdot(x\cdot m)$.
+
+\begin{definition}[Tensor over a monoid as a coequalizer]\label{def:tensor}
+Let $X$ be a right $M$-set and $Y$ a left $M$-set. Consider the two maps
+\[
+  \lambda,\rho : X\times M\times Y \;\rightrightarrows\; X\times Y,
+  \qquad
+  \lambda(x,m,y) = (x\cdot m,\, y),
+  \quad
+  \rho(x,m,y) = (x,\, m\cdot y).
+\]
+The \emph{tensor product} $X\otimes_M Y$ is the coequalizer of
+$\lambda,\rho$ in $\Set$: the quotient $(X\times Y)/{\sim}$, where $\sim$ is
+the smallest equivalence relation with
+\[
+  (x\cdot m,\, y) \;\sim\; (x,\, m\cdot y)
+  \qquad\text{for all } x\in X,\; m\in M,\; y\in Y .
+\]
+We write $x\otimes y$ for the class of $(x,y)$ and
+$q:X\times Y\to X\otimes_M Y$ for the quotient map. By construction
+$x\cdot m\otimes y = x\otimes m\cdot y$.
+\end{definition}
+
+\begin{remark}\label{rem:relation}
+The generating relation is already reflexive ($m=1$), but it is neither
+symmetric nor transitive in general, so $\sim$ is its
+reflexive--symmetric--transitive closure: $(x,y)\sim(x',y')$ iff there is a
+finite zig-zag
+\[
+  (x,y) = (x_0,y_0) \,\leftrightarrow\, (x_1,y_1)
+  \,\leftrightarrow\, \cdots \,\leftrightarrow\, (x_k,y_k) = (x',y'),
+\]
+each step $\leftrightarrow$ being a generator applied left-to-right or
+right-to-left. We will need this explicit zig-zag description when checking
+that maps out of the tensor are well defined.
+\end{remark}
+
+The universal property is the defining one for a coequalizer; we record the
+form we use.
+
+\begin{lemma}[Universal property / balance]\label{lem:up}
+Let $X$ be a right $M$-set, $Y$ a left $M$-set, $Z$ any set. A map
+$\beta:X\times Y\to Z$ \emph{descends} to a (necessarily unique) map
+$\bar\beta:X\otimes_M Y\to Z$ with $\bar\beta(x\otimes y)=\beta(x,y)$ if and
+only if $\beta$ is \emph{balanced}:
+\[
+  \beta(x\cdot m,\, y) = \beta(x,\, m\cdot y)
+  \qquad\text{for all } x\in X,\ m\in M,\ y\in Y. \tag{B}
+\]
+\end{lemma}
+
+\begin{proof}
+($\Rightarrow$) If $\bar\beta$ exists then
+$\beta(x\cdot m,y)=\bar\beta(x\cdot m\otimes y)
+=\bar\beta(x\otimes m\cdot y)=\beta(x,m\cdot y)$.
+
+($\Leftarrow$) Suppose (B). Then $\beta$ is constant on each generator pair,
+hence (being a function landing in a set, so respecting symmetry and
+composing along the zig-zag of Remark~\ref{rem:relation}) constant on each
+$\sim$-class: if $(x,y)\leftrightarrow(x',y')$ is a single generator step in
+either direction, (B) gives $\beta(x,y)=\beta(x',y')$, and chaining over the
+finite zig-zag gives equality on the whole class. Therefore
+$\bar\beta([x,y]):=\beta(x,y)$ is well defined; it satisfies
+$\bar\beta\circ q=\beta$, and uniqueness is forced because $q$ is surjective.
+\end{proof}
+
+\section{The collage of a small category}
+
+Fix a small category $\C$. For objects $a,b$ write $\Hom(a,b)$ for the
+hom-set and $\End(a):=\Hom(a,a)$ for the endomorphism monoid (composition,
+unit $\id_a$). As in the source note, $\Hom(a,b)$ is canonically an
+$(\End(b),\End(a))$-biset: the right $\End(a)$-action is precomposition
+$f\cdot e := f\circ e$ and the left $\End(b)$-action is postcomposition
+$e'\cdot f := e'\circ f$; the two commute by associativity, so the biset
+axiom holds.
+
+\subsection*{(i) Balance}
+
+\begin{proposition}[Composition is balanced]\label{prop:balance}
+Fix objects $a,b,c$. The composition map
+\[
+  \gamma : \Hom(b,c)\times\Hom(a,b)\to\Hom(a,c),
+  \qquad \gamma(g,f) = g\circ f,
+\]
+is $\End(b)$-balanced: for all $g\in\Hom(b,c)$, $e\in\End(b)$,
+$f\in\Hom(a,b)$,
+\[
+  \gamma(g\cdot e,\, f) = \gamma(g,\, e\cdot f),
+  \qquad\text{i.e.}\qquad (g\cdot e)\circ f = g\circ(e\cdot f).
+\]
+Hence by Lemma~\ref{lem:up} it descends to a unique map
+\[
+  \mu_{a,b,c} : \Hom(b,c)\otimes_{\End(b)}\Hom(a,b)\longrightarrow\Hom(a,c),
+  \qquad \mu_{a,b,c}(g\otimes f) = g\circ f .
+\]
+\end{proposition}
+
+\begin{proof}
+Here $g\cdot e = g\circ e$ (right $\End(b)$-action on $\Hom(b,c)$) and
+$e\cdot f = e\circ f$ (left $\End(b)$-action on $\Hom(a,b)$). Associativity of
+composition in $\C$ gives
+\[
+  (g\cdot e)\circ f = (g\circ e)\circ f = g\circ(e\circ f) = g\circ(e\cdot f),
+\]
+which is exactly condition (B) of Lemma~\ref{lem:up} for $\beta=\gamma$ and
+$M=\End(b)$. The descended map $\mu_{a,b,c}$ and its formula are then immediate
+from the lemma.
+\end{proof}
+
+\subsection*{(ii) Reconstruction}
+
+\begin{definition}[The collage category $\C^{\flat}$]\label{def:collage}
+Define a structure $\C^{\flat}$ with
+\begin{itemize}
+\item objects: $\ob\C$;
+\item hom-sets: $\C^{\flat}(a,b) := \Hom(a,b)$ (the underlying set of the
+biset);
+\item composition: $\mu_{a,b,c}$ of Proposition~\ref{prop:balance}, precomposed
+with the quotient $q$, i.e. $g\circ^{\flat} f := \mu_{a,b,c}(g\otimes f)$;
+\item identities: $\id^{\flat}_a := 1_{\End(a)} = \id_a$, the monoid unit.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Reconstruction]\label{thm:reconstruct}
+$\C^{\flat}$ is a category, and the object-identity assignment
+$F:\C\to\C^{\flat}$, $F(a)=a$ on objects and $F(f)=f$ on morphisms, is an
+isomorphism of categories with inverse the identity-on-everything map.
+\end{theorem}
+
+\begin{proof}
+We verify the axioms element-wise; since
+$\C^{\flat}(a,b)=\Hom(a,b)$ as sets and, by the formula in
+Proposition~\ref{prop:balance},
+\[
+  g\circ^{\flat} f \;=\; \mu_{a,b,c}(g\otimes f) \;=\; g\circ f ,
+\]
+\emph{composition in $\C^{\flat}$ is literally composition in $\C$}, and
+$\id^{\flat}_a=\id_a$. Thus every axiom of $\C^{\flat}$ is the corresponding
+axiom of $\C$:
+\begin{description}
+\item[Well-definedness.] $\mu_{a,b,c}$ is a genuine function on the tensor by
+Proposition~\ref{prop:balance}, and $q$ is a function, so $\circ^{\flat}$ is a
+well-defined map $\Hom(b,c)\times\Hom(a,b)\to\Hom(a,c)$.
+\item[Left unit.] $\id^{\flat}_b\circ^{\flat} f = \id_b\circ f = f$ for
+$f\in\Hom(a,b)$.
+\item[Right unit.] $f\circ^{\flat}\id^{\flat}_a = f\circ\id_a = f$.
+\item[Associativity.] For $f\in\Hom(a,b)$, $g\in\Hom(b,c)$,
+$h\in\Hom(c,d)$,
+\[
+  (h\circ^{\flat} g)\circ^{\flat} f = (h\circ g)\circ f
+  = h\circ(g\circ f) = h\circ^{\flat}(g\circ^{\flat} f),
+\]
+by associativity in $\C$.
+\end{description}
+Hence $\C^{\flat}$ is a category. The map $F$ is the identity on objects and on
+each hom-set, and it preserves composition and identities because
+$g\circ^{\flat} f = g\circ f$ and $\id^{\flat}_a=\id_a$. A bijective-on-objects,
+bijective-on-homs functor is an isomorphism of categories, with the
+set-theoretic identity as inverse functor.
+\end{proof}
+
+\begin{remark}[Where the tensor actually does work]
+The tensor $\otimes_{\End(b)}$ is not cosmetic: it is exactly the data needed
+to phrase composition without reference to the ambient category, by quotienting
+the formal pair-set $\Hom(b,c)\times\Hom(a,b)$ by the $\End(b)$-loop relation.
+The non-trivial content of Proposition~\ref{prop:balance} is that the relation
+imposed by the coequalizer is \emph{respected} by composition; once that holds,
+$\mu$ exists and the category axioms transfer verbatim. In particular the often
+mysterious ``associativity is compatibility of the tensor glueing'' reduces, on
+representatives, to plain associativity in $\C$ --- because $\mu(g\otimes f)$ is
+computed by a chosen representative and the value $g\circ f$ is
+representative-independent by balance.
+\end{remark}
+
+\subsection*{(iii) Converse: from a collage datum to a category}
+
+We now axiomatize the data abstractly and show the construction inverts.
+
+\begin{definition}[Biset-collage datum]\label{def:datum}
+A \emph{biset-collage datum} $\D$ consists of:
+\begin{enumerate}
+\item a set $O$ of objects;
+\item for each $x\in O$ a monoid $M_x$ (the vertex monoid), with unit $1_x$;
+\item for each ordered pair $(a,b)$ an $(M_b,M_a)$-biset $H(a,b)$, with a
+\emph{distinguished} biset isomorphism $\iota_x:M_x \xrightarrow{\ \sim\ }
+H(x,x)$ for $a=b=x$, where $M_x$ is viewed as the regular $(M_x,M_x)$-biset
+(left and right action $=$ multiplication); we write
+$\underline e := \iota_x(e)\in H(x,x)$ and identify $M_x$ with its image, so
+that $\underline{1_x}\in H(x,x)$ is a distinguished element and the biset
+actions of $M_x$ on every $H(a,b)$ agree with multiplication on $H(x,x)$ in
+the sense of (U) below;
+\item for each triple $(a,b,c)$ a \emph{balanced} composition
+\[
+  c_{a,b,c} : H(b,c)\times H(a,b)\to H(a,c),
+  \qquad c(g,e\cdot f)=c(g\cdot e, f)\ \ (e\in M_b),
+\]
+inducing $m_{a,b,c}:H(b,c)\otimes_{M_b}H(a,b)\to H(a,c)$ by
+Lemma~\ref{lem:up};
+\end{enumerate}
+subject to the axioms (writing $g\bullet f := c(g,f)$):
+\begin{description}
+\item[(U) Unit.] For $f\in H(a,b)$,
+$\underline{1_b}\bullet f = f = f\bullet\underline{1_a}$, and moreover the
+distinguished left/right actions are recovered by composition with elements of
+the vertex monoids: for $e\in M_b$, $\underline e\bullet f = e\cdot f$, and for
+$e\in M_a$, $f\bullet\underline e = f\cdot e$. (Equivalently: on
+$H(b,b)\times H(a,b)$, $\bullet$ restricts to the left $M_b$-action under
+$\iota_b$, and dually on the right.)
+\item[(A) Associativity.] For $f\in H(a,b)$, $g\in H(b,c)$, $h\in H(c,d)$,
+$(h\bullet g)\bullet f = h\bullet(g\bullet f)$.
+\end{description}
+\end{definition}
+
+\begin{theorem}[Converse and mutual inverse]\label{thm:converse}
+\leavevmode
+\begin{enumerate}
+\item \emph{(Reconstruction.)} Every biset-collage datum $\D$ yields a small
+category $\C_\D$ with $\ob\C_\D=O$, $\C_\D(a,b)=H(a,b)$, composition
+$g\circ f := g\bullet f$, and identities $\id_a := \underline{1_a}$.
+\item \emph{(Mutual inverse.)} The two constructions are inverse up to
+isomorphism: $(\C^{\flat})$-of-$\D$ on the collage datum extracted from a
+category returns that category (Theorem~\ref{thm:reconstruct}), and conversely
+$\C_{\D(\C_\D)} = \C_\D$ on the nose, where $\D(\C_\D)$ is the collage datum
+extracted from $\C_\D$ by the recipe of Section~2 ($M_x=\End_{\C_\D}(x)$,
+$H=\Hom_{\C_\D}$, $\iota_x=\id$).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Axioms (U) and (A) are precisely the unit and associativity laws of a
+category, stated for $\bullet$, with $\underline{1_a}$ as identity at $a$.
+Well-definedness of composition as a map $H(b,c)\times H(a,b)\to H(a,c)$ is part
+of the datum (item 4); balance is not even needed for $\C_\D$ to be a category,
+but it guarantees that $\bullet$ factors through
+$H(b,c)\otimes_{M_b}H(a,b)$, which is what makes $\C_\D$ a genuine collage
+rather than an arbitrary composition law. Smallness holds because $O$ and all
+$H(a,b)$ are sets.
+
+\medskip
+\noindent(2) \emph{Category $\to$ datum $\to$ category.} Starting from a small
+category $\C$, the extracted datum has $O=\ob\C$, $M_x=\End(x)$,
+$H(a,b)=\Hom(a,b)$ with the canonical biset structure, $\iota_x=\id$ (the
+regular biset of $\End(x)$ \emph{is} $\Hom(x,x)$ with its pre/post-composition
+actions), and $c_{a,b,c}=\gamma$ (composition), which is balanced by
+Proposition~\ref{prop:balance}. Axiom (U) for this datum says
+$\id_b\circ f=f=f\circ\id_a$ and $\underline e\bullet f=e\circ f=e\cdot f$:
+the first is the unit law of $\C$, the second is the definition of the left
+action; both hold. Axiom (A) is associativity in $\C$. Thus the extracted
+datum is a legitimate biset-collage datum, and $\C_{\D(\C)}$ has the same
+objects, the same hom-sets, composition $g\bullet f=g\circ f$ and identities
+$\underline{1_a}=\id_a$ --- i.e. $\C_{\D(\C)}=\C$ on the nose. (This is the
+content of Theorem~\ref{thm:reconstruct} read backwards.)
+
+\medskip
+\noindent\emph{Datum $\to$ category $\to$ datum.} Starting from a datum $\D$,
+form $\C_\D$ as in (1); then extract a datum $\D':=\D(\C_\D)$. We check
+$\D'=\D$. Objects: $\ob\C_\D=O$. Vertex monoids: $\End_{\C_\D}(x)=H(x,x)$ as a
+\emph{set}, with multiplication $g\bullet f$; by axiom (U) restricted to
+$x=a=b=c$, for $\underline e,\underline{e'}\in\iota_x(M_x)$ we have
+$\underline{e'}\bullet\underline e=e'\cdot\underline e=\underline{e'e}$ (left
+action $=$ multiplication via $\iota_x$, since $\iota_x$ is a biset iso onto the
+regular biset). Because $\iota_x:M_x\to H(x,x)$ is a bijection, every element of
+$H(x,x)$ is some $\underline e$, so multiplication in $\End_{\C_\D}(x)$ is
+$\underline{e'}\bullet\underline e=\underline{e'e}$, i.e.
+$\iota_x$ is a monoid isomorphism $M_x\cong\End_{\C_\D}(x)$; identifying along
+$\iota_x$ (as the datum already does), $M_x=\End_{\C_\D}(x)$ with equal units
+$\underline{1_x}=\id_x$. Hom-sets: $H(a,b)=\Hom_{\C_\D}(a,b)$ by definition.
+Biset actions: the extracted left $\End_{\C_\D}(b)$-action on $\Hom_{\C_\D}(a,b)$
+is postcomposition $\underline e\bullet f$, which by axiom (U) equals the
+original left action $e\cdot f$; dually on the right. Hence the extracted biset
+structure equals the original. Composition: $\bullet$ is unchanged. Therefore
+$\D'=\D$, as required.
+\end{proof}
+
+\begin{remark}[The one genuine subtlety, isolated]\label{rem:subtle}
+The single place where strictness could fail in the converse is the clause
+``$\iota_x$ is a biset isomorphism onto the \emph{regular} biset'' together with
+axiom (U)'s identity $\underline e\bullet f=e\cdot f$. Without it, the
+distinguished elements $\underline e\in H(x,x)$ would compose by some abstract
+$\bullet$ that need not coincide with the monoid multiplication of $M_x$, and
+then ``$\End_{\C_\D}(x)=M_x$'' would hold only up to a chosen isomorphism, not
+on the nose. We have made this compatibility \emph{part of the datum}
+(items 3--4 and axiom (U)); under it the round trip is an equality. If one
+weakens the datum to allow $\iota_x$ to be merely a monoid \emph{homomorphism}
+that is bijective on the underlying set but \emph{not} required to intertwine
+$\bullet$ with $M_x$-multiplication, the two constructions are inverse only up
+to canonical isomorphism of categories, not equal. We flag this explicitly: the
+``mutually inverse on the nose'' statement is true exactly for data satisfying
+the regular-embedding axiom (U), and is the natural normal form; for general
+data one gets an equivalence (indeed isomorphism) of categories rather than an
+identity. No gap remains in the stated (strict) version.
+\end{remark}
+
+\section{Summary of the logical skeleton}
+
+\begin{enumerate}
+\item \textbf{Tensor} $=$ coequalizer of the two action maps
+(Definition~\ref{def:tensor}); maps out of it $=$ balanced maps
+(Lemma~\ref{lem:up}).
+\item \textbf{Balance} of composition $=$ associativity in $\C$
+(Proposition~\ref{prop:balance}); hence $\mu(g\otimes f)=g\circ f$ is
+well defined.
+\item \textbf{Reconstruction:} $\C^{\flat}$ has composition literally equal to
+that of $\C$, so the category axioms transfer verbatim and
+$\C\cong\C^{\flat}$ (Theorem~\ref{thm:reconstruct}).
+\item \textbf{Converse:} a biset-collage datum with the regular-embedding
+axiom (U) and associativity (A) is exactly a small category, and the two
+constructions are mutually inverse on the nose
+(Theorem~\ref{thm:converse}), the only subtlety being the strict
+compatibility of the vertex-monoid embedding, which is isolated in
+Remark~\ref{rem:subtle}.
+\end{enumerate}
+
+\end{document}

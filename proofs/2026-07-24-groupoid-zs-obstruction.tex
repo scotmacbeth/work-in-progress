@@ -1,0 +1,452 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Ab}{\mathbf{Ab}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\cd}{\operatorname{cd}}
+\newcommand{\orb}{\operatorname{orb}}
+
+\title{Invertibility does not kill the Zappa--Sz\'ep merge obstruction:\\
+the groupoid case is group cohomology, not contractibility}
+\author{MacBeth\\\small Kodamai}
+\date{24 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Every prior instance of the Zappa--Sz\'ep merge obstruction
+$[\omega]\in H^2(\Sk_\C;\D)$ was computed over an \emph{acyclic} base
+(supervisor$\to$worker; \texttt{procure}$\to$\texttt{make}$\to$\texttt{ship}; an
+olog $\mathsf{Book}\to\mathsf{Author}\to\mathsf{Name}$), giving finite classes
+$\Z/2$ or $\Z/n$. The seed conjecture predicted that when the base category
+presented by the directed container is a \emph{groupoid} (every morphism
+invertible), the obstruction must vanish: ``a connected groupoid has contractible
+skeleton, so $H^2$ collapses and groupoid-presented containers always compose.''
+\textbf{We refute the reason and correct the conclusion.} A connected groupoid is
+\emph{not} contractible; it is a $K(\Gamma,1)$ for its vertex group $\Gamma$, so
+$H^2(\Sk_\C;\D)\cong H^2(\Gamma;M)$ is honest \emph{group cohomology}, generally
+nonzero. Concretely, the one--object groupoid $B(\Z/2)$ carries a right factor
+$\D\cong\Z/2$ with $[\omega]\neq0$: the total category is $\Z/4$, the extension
+$1\to\Z/2\to\Z/4\to\Z/2\to1$ is non-split, and $[\omega]$ is the generator of
+$H^2(\Z/2;\Z/2)\cong\Z/2$. So \emph{groupoid bases can obstruct}. The correct
+identification is exact: under the standing hypothesis (H), the merge obstruction
+over a one-object groupoid base \emph{is} the classical Schreier extension class of
+$1\to\D\to\K\to\Sk_\C\to1$, and $\K=\C\bowtie\D$ exists iff the extension splits.
+The conjecture's conclusion nevertheless survives for the intended application, for
+a \emph{better} reason: if $\Sk_\C$ has cohomological dimension $\le 1$ --- in
+particular if it is a \emph{free} groupoid (all vertex groups free, e.g.\ the free
+groupoid on a mutual-tie graph) --- then $H^2(\Sk_\C;\D)=0$ for \emph{every} $\D$,
+so the merge always exists. The dividing line is therefore not
+groupoid-vs-acyclic but $\cd\le1$-vs-$\cd\ge2$: freeness, not invertibility, is
+what trivialises the obstruction. All finite claims are machine-checked
+(\texttt{scratch/groupoid-zs/}).
+\end{abstract}
+
+\section{Cited scaffolding and the standing hypothesis}\label{sec:scaffold}
+
+We use, as black boxes, the two theorems that set up the obstruction; both are
+proved in companion notes and cited, never reproved.
+
+\begin{itemize}
+\item[\textbf{(T2)}] \emph{Pairwise Zappa--Sz\'ep criterion} \cite{pairwise,rw}. For a
+small category $\K$ and wide subcategory $\D\subseteq\K$, a wide $\C\subseteq\K$
+with $(\C,\D)$ a strict factorization system --- equivalently a distributive law
+$\lambda:\D\C\Rightarrow\C\D$, equivalently $\K=\C\bowtie\D$ --- exists iff
+\textnormal{(L)} each $\Hom_\K(-,b)$ is a free right $\D$-set and \textnormal{(G)}
+free bases close into a wide subcategory.
+\item[\textbf{(T3)}] \emph{The (G)-obstruction is an $H^2$ class} \cite{gobstr}.
+Assume \textnormal{(L)} and hypothesis (H) below. Then the free $\D$-orbits form a
+category $\Sk_\C$, the vertex groups $G_a=\Aut_\D(a)$ form a presheaf
+$\D:\Sk_\C^{\mathrm{op}}\to\Ab$, every transversal $T$ has a defect $2$-cocycle
+$\omega_T$, regauging changes it by a coboundary, and
+$\textnormal{(G)}\iff[\omega]:=[\omega_T]=0\in H^2(\Sk_\C;\D)$. The complex is
+Baues--Wirsching \cite{bw}; the equivalence with extension theory is
+classical.
+\end{itemize}
+
+\begin{quote}\small
+\textbf{Hypothesis (H)} \cite{gobstr}. \emph{(i)} $\D$ is a disjoint union of
+abelian vertex groups $G_a=\Aut_\D(a)$, with $\D(a,b)=\varnothing$ for $a\neq b$;
+\emph{(ii)} for every generator $c:a\to b$ and $\psi\in G_b$, $\psi\circ c$ lies in
+the $\D$-orbit of $c$ (trivial left action), i.e.\ $\psi\circ c=c\circ\varphi_c(\psi)$
+for a unique $\varphi_c(\psi)\in G_a$.
+\end{quote}
+
+Recall the mechanism of the acyclic examples \cite{gobstr,orch,supply}: the
+nontrivial vertex group sat at a \emph{source}, so every restriction map
+$\varphi_c$ vanished, $C^3=0$, and $H^2(\Sk_\C;\D)$ was a small finite group cut
+out by the branch geometry alone. \emph{This source-concentration is exactly what a
+groupoid destroys}: in a groupoid every object receives arrows, so no vertex group
+sits at a pure source, and the restriction maps become isomorphisms.
+
+\begin{lemma}[Restrictions are isomorphisms over a groupoid]\label{lem:iso}
+If $\Sk_\C$ is a groupoid then every restriction map $\varphi_c:G_{b}\to G_{a}$
+($c:a\to b$ in $\Sk_\C$) is an isomorphism; hence $\D$ is a \emph{local system}
+(a functor inverting every arrow), i.e.\ a module over the fundamental group(oid).
+\end{lemma}
+\begin{proof}
+$\varphi$ is functorial and contravariant, $\varphi_{c_2\ast c_1}=\varphi_{c_1}
+\circ\varphi_{c_2}$, with $\varphi_{\id}=\id$ \cite[Lem.~skel]{gobstr}. If $c$ has a
+two-sided inverse $c^{-1}$ in $\Sk_\C$ then $\varphi_c\circ\varphi_{c^{-1}}
+=\varphi_{c^{-1}\ast c}=\varphi_{\id}=\id$ and symmetrically, so $\varphi_c$ is
+invertible.
+\end{proof}
+
+\section{The one-object groupoid base is a group extension}\label{sec:reduction}
+
+The cleanest connected groupoid is a group $\Gamma$ viewed as a one-object
+groupoid $B\Gamma$. We show the entire obstruction problem, over such a base, is
+the classical theory of group extensions. Throughout this section $\K$ is a
+\emph{group} (a one-object groupoid) and $\D\le\K$ a subgroup; we write the single
+object $\ast$ and identify arrows with group elements.
+
+\begin{proposition}[Orbits, hypothesis, and skeleton]\label{prop:setup}
+Let $\K$ be a group and $\D\le\K$ an abelian subgroup. The right $\D$-action on
+$\K$ by $f\cdot d=fd$ has orbits the left cosets $f\D$, and each orbit is free.
+Hence \textnormal{(L)} holds. Hypothesis \textnormal{(H)(i)} holds iff $\D$ is
+abelian; \textnormal{(H)(ii)} holds iff $\D$ is \emph{normal} in $\K$, and then the
+orbit category is the quotient group
+\[
+   \Sk_\C \;=\; \K/\D \;=:\;\Gamma ,
+\]
+a one-object connected groupoid, with presheaf $\D(\ast)=\D$ carrying the
+$\Gamma$-action by conjugation $\varphi_{[c]}(\psi)=c^{-1}\psi c$ (well defined on
+$\Gamma$ because $\D$ is abelian and normal).
+\end{proposition}
+\begin{proof}
+Freeness of the right regular action on cosets is immediate ($fd=fd'\Rightarrow
+d=d'$). \textnormal{(H)(i)} is the definition of abelian $\D$. For
+\textnormal{(H)(ii)}: the vertex group is $G_\ast=\D$ and a generator of the coset
+$c\D$ is $c$; $\psi\circ c=\psi c$ lies in $c\D$ iff $c^{-1}\psi c\in\D$, i.e.\ iff
+$c$ normalises $\D$. Requiring this for all coset representatives $c$ is
+normality of $\D$. When $\D\trianglelefteq\K$, orbit composition
+$c_2\D\ast c_1\D=\orb(c_2c_1)=c_2c_1\D$ is well defined (it is coset multiplication
+in $\K/\D$), giving $\Sk_\C=\Gamma$; and conjugation descends to a
+$\Gamma$-action on $\D$ because $\D$ is central-by-nothing\,---\,abelian and normal
+makes $\D$ a $\Gamma$-module. Contravariance $\varphi_{[c]}(\psi)=c^{-1}\psi c$
+matches Lemma~\ref{lem:iso}.
+\end{proof}
+
+\begin{proposition}[The defect is the Schreier factor set]\label{prop:schreier}
+With $\K,\D,\Gamma$ as in Proposition~\ref{prop:setup}, choose a transversal
+$T=\{c_\gamma:\gamma\in\Gamma\}$ of coset representatives with $c_{1}=\id$ (the
+unit normalization). The defect $2$-cochain of \textnormal{(T3)} is
+\begin{equation}\label{eq:factorset}
+   c_{\gamma_2}\,c_{\gamma_1}
+     \;=\; c_{\gamma_2\gamma_1}\,\cdot\,\omega_T(\gamma_2,\gamma_1),
+   \qquad \omega_T(\gamma_2,\gamma_1)\in\D ,
+\end{equation}
+i.e.\ $\omega_T$ is exactly the \emph{factor set} (Schreier $2$-cocycle) of the
+group extension
+\begin{equation}\label{eq:ext}
+   1\longrightarrow \D \longrightarrow \K \xrightarrow{\;\pi\;} \Gamma
+     \longrightarrow 1 ,\qquad \pi=\text{quotient by }\D .
+\end{equation}
+Consequently $[\omega]\in H^2(\Sk_\C;\D)=H^2(\Gamma;\D)$ is the extension class of
+\eqref{eq:ext}, and:
+\[
+   \K=\C\bowtie\D \ \text{ (the merge exists) }
+   \iff \eqref{eq:ext}\ \text{splits}
+   \iff \D\ \text{has a complement in }\K
+   \iff [\omega]=0 .
+\]
+Moreover the closing transversals (the strict factorizations) are exactly the
+group-theoretic complements of $\D$, so
+\[
+   \#\{\text{strict factorizations}\}=\#\{\text{complements of }\D\ \text{in }\K\}.
+\]
+\end{proposition}
+\begin{proof}
+Equation \eqref{eq:factorset} is Definition~(defect) of \textnormal{(T3)}
+specialised to $\K$ a group: the chosen generator $\lfloor c_{\gamma_2}c_{\gamma_1}
+\rfloor_T$ of the orbit $\orb(c_{\gamma_2}c_{\gamma_1})=(\gamma_2\gamma_1)\D$ is
+$c_{\gamma_2\gamma_1}$, and the residual $\D$-element is $\omega_T$. This is
+verbatim the defining relation of a factor set of \eqref{eq:ext}
+\cite{maclane,brown}. The cocycle identity \eqref{eq:factorset} pushed through
+associativity is the standard $2$-cocycle condition in $H^2(\Gamma;\D)$ with the
+conjugation action of Proposition~\ref{prop:setup}; regauging
+$c_\gamma\mapsto c_\gamma h_\gamma$ ($h_\gamma\in\D$) is the standard coboundary.
+By \textnormal{(T3)}, $[\omega]=0\iff$\textnormal{(G)}, and by \textnormal{(T2)}
+with \textnormal{(L)}, \textnormal{(G)}$\iff\K=\C\bowtie\D$. A transversal closes
+iff $\omega_T\equiv\id$ iff the $c_\gamma$ satisfy $c_{\gamma_2}c_{\gamma_1}
+=c_{\gamma_2\gamma_1}$, i.e.\ iff $\{c_\gamma\}$ is a subgroup mapping isomorphically
+onto $\Gamma$ --- a complement. Splitting of \eqref{eq:ext} $\iff[\omega]=0$ is
+Schreier's theorem \cite{maclane,brown}.
+\end{proof}
+
+Proposition~\ref{prop:schreier} is the conceptual pivot: \emph{over a one-object
+groupoid base and under \textnormal{(H)}, the Zappa--Sz\'ep merge obstruction and
+the group-extension obstruction are the same class}. The Zappa--Sz\'ep product
+$\C\bowtie\D$ with $\D$ normal is the internal semidirect product $\C\ltimes\D$;
+its existence is a splitting; the holonomy is Schreier's $H^2$.
+
+\section{Refutation: a connected groupoid base with nonzero obstruction}
+\label{sec:refute}
+
+\begin{theorem}[Invertibility does not trivialise the obstruction]\label{thm:refute}
+There is a directed container presenting the connected groupoid $B(\Z/2)$ and a
+right factor $\D\cong\Z/2$ of internal relabelings for which $[\omega]\neq0$; hence
+no Zappa--Sz\'ep product / merge exists. Explicitly, take $\K=\Z/4$ and
+$\D=\{0,2\}\cong\Z/2$. Then $\Sk_\C=\Z/4\,/\,\Z/2=\Z/2=B(\Z/2)$ is a connected
+groupoid, \textnormal{(L)} and \textnormal{(H)} hold, and
+\[
+   [\omega]\;=\;\text{the generator of }\;H^2(\Z/2;\Z/2)\cong\Z/2 ,
+\]
+the class of the non-split extension $1\to\Z/2\to\Z/4\to\Z/2\to1$.
+\end{theorem}
+\begin{proof}
+$\Z/4$ is abelian so $\D=\{0,2\}$ is abelian and normal; by
+Propositions~\ref{prop:setup}--\ref{prop:schreier}, \textnormal{(L)} and
+\textnormal{(H)} hold, $\Sk_\C=\Z/2$, the action of $\Z/2$ on $\D$ is trivial
+(abelian $\K$), and $[\omega]$ is the extension class of $\Z/4$. The only order-$2$
+subgroup of $\Z/4$ is $\D$ itself, so $\D$ has \emph{no} complement: the extension
+is non-split and $[\omega]\neq0$. Since $H^2(\Z/2;\Z/2)\cong\Z/2$ (trivial action),
+$[\omega]$ is its generator. All of this is machine-checked
+(\S\ref{sec:comp}, example (B)): $\#\text{complements}=0$, the $\mathbb F_2$ bar
+complex has $\dim H^2=1$, and $\omega_T\notin B^2$.
+\end{proof}
+
+\begin{remark}[Where the conjecture broke]\label{rem:broke}
+The seed conjecture read ``connected groupoid $\Rightarrow\Sk_\C$ contractible
+$\Rightarrow H^2=0$.'' A connected groupoid $\Sk_\C$ is equivalent, as a category,
+to its vertex group $\Gamma$; its classifying space is $B\Gamma=K(\Gamma,1)$, which
+is contractible \emph{iff $\Gamma=1$}. For $\Gamma=\Z/2$, $B\Gamma=\mathbb{RP}^\infty$
+has $H^2(\mathbb{RP}^\infty;\Z/2)=\Z/2\neq0$. The broken assumption was the tacit
+identification of ``every object isomorphic to every other'' (which \emph{does}
+hold in a connected groupoid, making the \emph{skeleton} a single object) with
+``the classifying space is a point'' (which needs the vertex group trivial too).
+Invertibility collapses the objects but not the loops; the loops are precisely the
+$H^{\ge1}$.
+\end{remark}
+
+\begin{theorem}[Same base, split total: obstruction is genuinely about $\K$]\label{thm:contrast}
+The value of $[\omega]$ is not a function of the base groupoid alone. With the same
+base $\Sk_\C=B(\Z/2)$ and the same coefficient $\D\cong\Z/2$, the total category
+$\K=\Z/2\times\Z/2$ with $\D=\langle(1,0)\rangle$ has $[\omega]=0$: $\D$ has two
+complements $\langle(0,1)\rangle,\langle(1,1)\rangle$, the split extension merges.
+\end{theorem}
+\begin{proof}
+Machine-checked (\S\ref{sec:comp}, example (C)): $\#\text{complements}=2$,
+$\omega_T\in B^2$, $[\omega]=0$. Analytically, $\Z/2\times\Z/2$ is the split
+extension of $\Z/2$ by $\Z/2$, whose class is $0$.
+\end{proof}
+
+A larger, non-cyclic groupoid base obstructs in the same way.
+
+\begin{theorem}[A rank-two groupoid base]\label{thm:q8}
+Let $\K=Q_8$ (quaternion group) and $\D=Z(Q_8)=\{\pm1\}\cong\Z/2$. Then
+$\Sk_\C=Q_8/\{\pm1\}=(\Z/2)^2$ is a connected groupoid, \textnormal{(H)} holds,
+$H^2\big((\Z/2)^2;\Z/2\big)\cong(\Z/2)^3$, and $[\omega]\neq0$: every subgroup of
+$Q_8$ contains $-1$, so $\D$ has no complement and the extension is non-split. No
+merge exists.
+\end{theorem}
+\begin{proof}
+Machine-checked (\S\ref{sec:comp}, example (D)): the $\mathbb F_2$ bar complex
+returns $\dim H^2=3$ (so $|H^2|=8$, the known $H^*((\Z/2)^2;\Z/2)=\Z/2[x,y]$ with
+$\dim H^2=3$), $\#\text{complements}=0$, and $\omega_T\notin B^2$. $Q_8$ is the
+non-split central extension realising the class $x^2+xy+y^2$.
+\end{proof}
+
+\section{The correct positive theorem: cohomological dimension, not invertibility}
+\label{sec:positive}
+
+The conjecture's \emph{conclusion} --- ``these bases always compose'' --- is true
+for the cases that matter, but for a reason invisible to the contractibility story.
+
+\begin{theorem}[$\cd\le1$ forces the merge, for every $\D$]\label{thm:cd}
+Suppose the skeleton $\Sk_\C$ has cohomological dimension $\le1$, i.e.\
+$H^2(\Sk_\C;A)=0$ for every coefficient system $A:\Sk_\C^{\mathrm{op}}\to\Ab$.
+Then for every right factor $\D$ satisfying \textnormal{(L)} and \textnormal{(H)},
+$[\omega]=0$ and the Zappa--Sz\'ep product $\K=\C\bowtie\D$ exists.
+In particular this holds whenever $\Sk_\C$ is a \emph{free groupoid} --- every
+connected component has a free vertex group --- e.g.\ the free groupoid on any graph.
+\end{theorem}
+\begin{proof}
+By \textnormal{(T3)} the class $[\omega]$ lives in $H^2(\Sk_\C;\D)$, which is $0$ by
+hypothesis; then \textnormal{(G)} holds and \textnormal{(T2)} gives the product.
+For the free-groupoid case: a connected groupoid is equivalent to its vertex group
+$\Gamma$, and Baues--Wirsching cohomology is invariant under equivalence of
+categories \cite{bw}, so $H^2(\Sk_\C;\D)\cong\prod_{\text{comp.}}H^2(\Gamma_i;M_i)$
+(group cohomology, $M_i$ the stalk, a $\Gamma_i$-module by Lemma~\ref{lem:iso}). A
+free group has cohomological dimension $\le1$ (Stallings--Swan
+\cite{stallings,swan}: $\cd\Gamma\le1\iff\Gamma$ free), whence
+$H^{\ge2}(\Gamma_i;M)=0$ for \emph{every} module $M$. Thus $H^2(\Sk_\C;\D)=0$.
+\end{proof}
+
+\begin{corollary}[Trichotomy for a connected groupoid base]\label{cor:trichotomy}
+Let $\Sk_\C$ be a connected groupoid with vertex group $\Gamma$ and let $\D$ satisfy
+\textnormal{(H)}, giving a $\Gamma$-module $M$ and an extension
+$1\to M\to\K\to\Gamma\to1$. Then $[\omega]\in H^2(\Gamma;M)$ is its class, and:
+\begin{enumerate}
+\item[\textnormal{(a)}] \textbf{$\Gamma$ free} $(\cd\le1)$: $H^2(\Gamma;M)=0$ for
+all $M$; the merge \emph{always} exists.
+\item[\textnormal{(b)}] \textbf{$\Gamma$ trivial} $(\Gamma=1)$: $\Sk_\C$ is
+genuinely contractible (the seed conjecture's true subcase); the merge exists. This
+is (a) with $\Gamma$ free of rank $0$, and is realised by codiscrete groupoids
+(\S\ref{sec:comp}, example (A)).
+\item[\textnormal{(c)}] \textbf{$\Gamma$ has torsion}: $H^2(\Gamma;M)$ can be
+nonzero (Theorems~\ref{thm:refute},\ref{thm:q8}); the merge exists iff the specific
+extension splits.
+\end{enumerate}
+The dividing line is $\cd(\Gamma)$, not invertibility. Freeness --- the absence of
+holonomy loops beyond dimension one --- is what trivialises the obstruction; a
+non-free (torsion) symmetry, even though fully invertible, can carry a nonzero
+degree-two class.
+\end{corollary}
+
+\begin{remark}[Unification with the acyclic examples]\label{rem:unify}
+Both regimes are the \emph{same} invariant $H^2(\Sk_\C;\D)$; the base's homotopy
+type chooses the mechanism. Over an \emph{acyclic} base (a poset/DAG, the free
+category on an acyclic quiver) the nontrivial vertex group sits at a source, the
+restriction maps vanish, and $H^2$ is cut out by branch-and-rejoin geometry --- the
+$\Z/2$ rigid twist, the $\Z/n$ lot-cursor \cite{gobstr,orch,supply}. Over a
+\emph{groupoid} base every restriction map is an isomorphism (Lemma~\ref{lem:iso})
+and $H^2$ is group cohomology of $\Gamma$. The extremes meet in one slogan: the
+merge is automatic exactly when $\Sk_\C$ is one-dimensional ($\cd\le1$) --- a
+forest of handoffs, or a free groupoid of reversible ties --- and it can obstruct
+the moment the handoff skeleton acquires a genuine degree-two cocycle, whether from
+a rejoining acyclic branch or from a torsion loop.
+\end{remark}
+
+\section{Application: which social networks merge for free}\label{sec:social}
+
+The result stages Neil's social-network exploration. Model a platform as a directed
+container whose skeleton is the free (categorical or groupoidal) structure on its
+tie-graph; merging two platforms sharing users is the Zappa--Sz\'ep composition
+$\C\bowtie\D$ along the shared sub-structure $\D$ of relabelings/identifications.
+The grading here is \textsc{computed}: ``a real network \emph{is} this
+groupoid'' is a faithful abstraction, not a fidelity claim (the standing SEED-Q4
+caveat).
+
+\begin{corollary}[Mutual ties merge; the reason is dimension one]\label{cor:social}
+A network of \emph{mutual} (symmetric) ties presents the \emph{free groupoid} on its
+friendship graph. Its vertex groups are the fundamental groups of the graph's
+connected components --- free groups (a graph is a $K(\text{free},1)$). By
+Theorem~\ref{thm:cd}, $H^2=0$ for every coefficient system: \emph{mutual-tie
+platforms always merge consistently}, for any right factor of shared
+identifications. By contrast a network of \emph{directed} (follows) ties presents a
+free \emph{category} on a directed quiver; when it is acyclic the earlier analysis
+applies and a rejoining of two follow-paths can obstruct
+($[\omega]=\varepsilon\in\Z/n$, \cite{orch,supply}). And a shared symmetry with
+\emph{torsion} --- a finite cyclic identification cycle of order $n$ that is not
+free --- can obstruct even in the mutual case (Theorem~\ref{thm:refute} is $n=2$).
+\end{corollary}
+
+\noindent The corrected headline for the grant's Impact line is therefore sharper
+than the conjecture: \emph{reversibility alone does not guarantee that two platforms
+merge; \textbf{freeness} does.} Mutual-tie graphs merge because their groupoids are
+one-dimensional, not because they are trivial; introduce a torsion identification
+(a quotient that forces a nontrivial finite loop) and the merge can fail with a
+computable degree-two obstruction.
+
+\section{Computational verification}\label{sec:comp}
+
+All finite claims are machine-checked in \texttt{projects/scratch/groupoid-zs/}:
+\texttt{groupoid\_zs.py} (orbits, \textnormal{(L)}, \textnormal{(H)}, $\Sk_\C$, the
+defect, \#complements, and the $\mathbb F_2$ bar complex with the \emph{correct}
+restriction maps $\varphi$), \texttt{dcont\_check.py} (D1--D5 for the bases). The
+$\varphi$ computation matters: unlike the acyclic scripts, the groupoid restriction
+maps are isomorphisms, not zero (Lemma~\ref{lem:iso}), so the earlier hard-coded
+$\varphi=0$ is replaced by conjugation.
+
+\begin{center}
+\small
+\begin{tabular}{llccccl}
+\toprule
+ & base $\Sk_\C$ & $\D$ & (L),(H) & $\dim H^2$ & \#compl. & verdict\\
+\midrule
+(A) codiscrete $\bullet\rightleftarrows\bullet$ & $1$ (contractible) & $\{\id\}$ & yes & $0$ & $1$ & merges\\
+(B) $\Z/4$ & $B(\Z/2)$ & $\Z/2$ & yes & $1$ & $0$ & \textbf{obstructed}\\
+(C) $\Z/2\times\Z/2$ & $B(\Z/2)$ & $\Z/2$ & yes & $1$ & $2$ & merges\\
+(D) $Q_8$ & $B((\Z/2)^2)$ & $\Z/2$ & yes & $3$ & $0$ & \textbf{obstructed}\\
+(E) $\Z/6$ & $B(\Z/2)$ & $\Z/3$ & yes & --- & $1$ & merges\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Examples (B),(D) are connected-groupoid bases with $[\omega]\neq0$
+(Theorems~\ref{thm:refute},\ref{thm:q8}); (C) is the same base as (B) with a split
+total (Theorem~\ref{thm:contrast}); (E) illustrates Schur--Zassenhaus (coprime
+$|\D|,|\Gamma|$ force a split, $[\omega]=0$). In every case
+$\#\text{complements}>0\iff[\omega]=0$, confirming Proposition~\ref{prop:schreier};
+$\dim H^2$ reproduces the known group cohomologies $H^2(\Z/2;\Z/2)=\Z/2$,
+$H^2((\Z/2)^2;\Z/2)=(\Z/2)^3$; and $\delta^2\delta^1=0$ is verified on the full
+(now non-vacuous) $C^3$.
+
+\section{Status, novelty, and honest scope}\label{sec:status}
+
+\paragraph{What is proved.} (i) The reduction: over a one-object groupoid base
+under \textnormal{(H)}, the merge obstruction is exactly the Schreier extension
+class, and the merge exists iff the extension splits
+(Propositions~\ref{prop:setup}--\ref{prop:schreier}). (ii) The refutation of the
+strong conjecture: connected-groupoid bases $B(\Z/2)$ and $B((\Z/2)^2)$ with
+$[\omega]\neq0$ (Theorems~\ref{thm:refute},\ref{thm:q8}). (iii) The correct positive
+theorem: $\cd(\Sk_\C)\le1$ --- in particular a free groupoid --- forces the merge for
+every $\D$ (Theorem~\ref{thm:cd}), giving the social-network corollary with the
+right reason (Corollary~\ref{cor:social}). Grade: the worked \emph{instances} are
+\textsc{computed} (machine-checked); the reduction and the $\cd\le1$ theorem are
+\textsc{proved}, resting on the cited \textnormal{(T2)}, \textnormal{(T3)},
+Schreier theory, and Stallings--Swan.
+
+\paragraph{What is \emph{not} claimed (novelty firewall).} Group extensions and
+their $H^2$ classification are classical (Schreier; \cite{maclane,brown}); the
+identification $H^2_{\mathrm{BW}}(B\Gamma;M)=H^2(\Gamma;M)$ is standard. Groupoid
+Zappa--Sz\'ep products themselves exist in the operator-algebra / self-similar
+literature (Mundey--Sims and neighbours), on the \emph{completeness} axis, and are
+cited as adjacent, \emph{not} a scoop. The contribution here is narrow and precise:
+placing the groupoid case inside the Zappa--Sz\'ep merge program, \emph{refuting}
+the seed contractibility conjecture, and isolating $\cd\le1$ (freeness) as the true
+trivialising condition --- one honest correction, machine-witnessed, that redirects
+the application story from ``reversible $\Rightarrow$ mergeable'' to ``free
+$\Rightarrow$ mergeable.''
+
+\paragraph{Open.} The nonabelian regime (\textnormal{(H)(ii)} fails: $\D$ non-normal,
+i.e.\ a genuine two-sided Zappa--Sz\'ep matched pair rather than a semidirect
+product) pushes the obstruction to a nonabelian $H^2$ of the matched pair
+(Kac/Pirashvili, cited in \cite{gobstr}); we do not enter it. And the fidelity
+question --- whether a given real network \emph{is} the free groupoid on its
+tie-graph --- stays \textsc{open} (SEED-Q4).
+
+\begin{thebibliography}{99}
+\bibitem{pairwise} MacBeth, \emph{The pairwise Zappa--Sz\'ep criterion}, Kodamai
+note, 10 June 2026.
+\bibitem{gobstr} MacBeth, \emph{The global-closure obstruction (G) is a cohomology
+class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\D)$}, Kodamai note, 11 June 2026.
+\bibitem{orch} MacBeth, \emph{The re-entrancy obstruction is the token-mutation bit},
+Kodamai note, 20 July 2026.
+\bibitem{supply} MacBeth, \emph{Supply-chain composition is a Zappa--Sz\'ep product},
+Kodamai note, 23 July 2026.
+\bibitem{rw} R.~Rosebrugh, R.~J.~Wood, \emph{Distributive laws and factorization},
+J.\ Pure Appl.\ Algebra 175 (2002), 327--353.
+\bibitem{bw} H.-J.~Baues, G.~Wirsching, \emph{Cohomology of small categories},
+J.\ Pure Appl.\ Algebra 38 (1985), 187--211.
+\bibitem{maclane} S.~Mac Lane, \emph{Homology}, Springer, 1963 (Ch.~IV: group
+extensions and $H^2$).
+\bibitem{brown} K.~S.~Brown, \emph{Cohomology of Groups}, GTM 87, Springer, 1982.
+\bibitem{stallings} J.~Stallings, \emph{On torsion-free groups with infinitely many
+ends}, Ann.\ of Math.\ 88 (1968), 312--334.
+\bibitem{swan} R.~G.~Swan, \emph{Groups of cohomological dimension one},
+J.\ Algebra 12 (1969), 585--610.
+\end{thebibliography}
+
+\end{document}

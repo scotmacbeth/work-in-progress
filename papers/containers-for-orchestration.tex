@@ -1,0 +1,667 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Sup}{\mathsf{S}}
+\newcommand{\Wk}{\mathsf{W}}
+\newcommand{\Rt}{\mathsf{R}}
+\newcommand{\seq}{\triangleleft}
+\newcommand{\dir}{\mathcal{D}}
+
+\title[Composing agent orchestrations is a Zappa--Sz\'ep product]{Composing agent
+orchestrations is a Zappa--Sz\'ep product\\ a container model and its degree-two
+composition obstruction}
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+\date{20 July 2026}
+
+\begin{document}
+
+\begin{abstract}
+An AI agent presents an \emph{interface}: a set of queries it may issue and, for each,
+a set of admissible replies. This is exactly a polynomial functor, or container --- a
+reading due to Spivak and, in the orchestration setting, to Ghani, with the
+interface/implementation mechanism (free-monad implementations composed along wiring
+diagrams, dependent-polynomial specifications) developed in dependent type theory by
+Aberl\'e. We take that reading seriously enough to ask what it says about \emph{composing}
+orchestrations that share resources, and we find that the natural model is not a functor
+but a distributive law: welding two orchestrations into one interleaved system is a
+Zappa--Sz\'ep product $\C\bowtie\D$ of their handoff categories --- the distributive-law
+construction for directed containers being Ahman--Uustalu's. This reframing has teeth,
+because a Zappa--Sz\'ep product need not exist, and its obstruction is known: a degree-two
+cohomology class $[\omega]\in H^2(\Sk_\C;\dir)$ on the handoff category with coefficients
+in the reply functor. Our main result works the smallest non-trivial case --- a supervisor
+dispatching to workers, parametrized by a one-bit turn token --- and proves that the
+obstruction class equals the token-mutation bit on the nose: the joint agent exists if and
+only if the worker fixes the token, and the sole obstructed regime is \emph{unprotected
+re-entrancy}, a worker mutating the supervisor's shared state during a pending call, which
+presents exactly as the nonzero generator of $H^2\cong\mathbb Z/2$. The degree is the
+point: the multi-agent-systems literature places $H^0$ (consensus) and $H^1$
+(identifiability) sheaf obstructions on the \emph{communication} graph, asking whether
+agents agree; the container model places $H^2$ on the \emph{handoff} category, asking the
+prior question of whether they compose at all.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{The problem}
+Modern AI systems are increasingly \emph{orchestrations}: a supervisor agent dispatches
+subtasks to worker agents, a planner calls tools that call other tools, a proof assistant
+runs tactics that invoke sub-tactics. Each participant is a black box with a typed
+boundary --- it accepts a query and returns one of a set of admissible replies --- and the
+engineering discipline is entirely about how these boundaries are wired together. The
+question this note addresses is structural rather than behavioural: given two orchestrations
+that share resources, \emph{when can they be run as a single consistent interleaved system},
+and when is there a genuine obstruction to doing so?
+
+\subsection*{Agents are containers}
+The starting point, due to Spivak in the polynomial-functor programme
+\cite{NiuSpivak,SpivakRef} and articulated for agent orchestration by Ghani at Kodamai,
+is that an agent's interface is a \emph{container} (equivalently a polynomial functor). An
+agent that may issue queries drawn from a set $S$, and for each query $s$ may receive a
+reply from a set $P(s)$, is the container $p=(S,P)$, or as a functor
+$p\cong\sum_{s\in S}y^{P(s)}$. An oracle call --- issue a query, receive a reply --- is a
+morphism $p\to y$ to the unit container; delegating from one agent to another is a container
+morphism, forward on queries and backward on replies. On this reading the monoidal
+structures of $\Poly$ become an orchestration vocabulary: sequential delegation, parallel
+composition, choice. This dictionary is not ours and we do not claim it (Section~\ref{sec:dict}
+grades each row); we take it as the setting.
+
+\subsection*{Prior art: the interface/implementation mechanism}
+The mechanism that turns this dictionary into a working compositional framework is due to
+Aberl\'e \cite{aberle}, whose recent development we take as the immediate prior art. There,
+polynomial functors $p=(A,B)$ are program \emph{interfaces}; an \emph{implementation} is a
+morphism $p\Rightarrow\mathrm{Free}\,q$ into the free monad on the assumed interface $q$
+(assume--guarantee reasoning: a bare lens is the special case of exactly one call, the free
+monad lifts it to zero/one/many), and implementations compose along Spivak's operad of
+wiring diagrams by Kleisli composition (\cite{aberle}, Thm.~3.1). \emph{Specifications} are
+dependent polynomials $(C,D)$ over $p$ --- literally Hoare triples $\{C\}\,f\,\{D\}$ --- and
+they compose along the same wiring diagrams (Thm.~5.3). The whole package is a strictly
+monoidal forgetful functor $\pi:\mathbf{Spec}\to\mathbf{Int}$ together with a lax monoidal
+presheaf of systems and a monoidal natural transformation (Def.~7.1). Everything in the
+present note's dictionary that concerns \emph{interfaces, free-monad implementations,
+wiring-diagram composition, and dependent-polynomial specifications is Aberl\'e's and is
+cited as such}; our theorem-proving-as-container and orchestration-as-workflow readings are
+a \emph{domain reinterpretation} of that mechanism, not a new mechanism. (Aberl\'e himself
+flags tactics and proof automation as future work.) What Aberl\'e does \emph{not} treat, and
+what this note supplies, is the composition of two systems that \emph{interact} over a shared
+resource: his only two-system construct is the unobstructed parallel sum. That gap is exactly
+where the contribution lives.
+
+\subsection*{The gap}
+What the existing dictionary does \emph{not} supply is a theory of when a composition is
+\emph{possible}. Prior treatments model an orchestration as a functor over a category of
+interfaces --- composition \emph{along} a single fixed topology. But concurrency, a
+supervisor sharing workers between two plans, and re-entrant tool-calls are not composition
+along one topology; they are the \emph{interleaving of two}. A functor cannot see the
+failure mode, because it presumes the composite already exists. We want a model in which the
+composite can fail to exist, together with an invariant that detects the failure.
+
+\subsection*{The result}
+The model is a distributive law. A handoff topology --- who may hand off to whom, staying
+put, concatenating handoffs --- is a small category, equivalently a directed container in the
+sense of Ahman--Uustalu \cite{AhmanUustalu}. Interleaving two orchestrations $\C$ and $\D$
+into a single joint agent is then a \emph{Zappa--Sz\'ep product} (matched-pair product,
+strict factorization system) $\K=\C\bowtie\D$. That a distributive law of directed containers
+assembles such a joint container --- generalizing the Zappa--Sz\'ep product of monoids, its
+matched pair recording the two mutual actions --- is a theorem of Ahman--Uustalu
+\cite{AhmanUustaluDL}; we take the construction from them and claim none of it. Such a product
+need not exist, however; the author's pairwise criterion \cite{pairwise} characterizes
+\emph{when} the complementary factor can be found, and by the author's obstruction theorem
+\cite{gobstr} that existence is controlled by a degree-two cohomology class:
+\[
+  \text{the joint agent }\C\bowtie\D\text{ exists}
+  \quad\Longleftrightarrow\quad
+  [\omega]=0\in H^2(\Sk_\C;\dir),
+\]
+cohomology of the handoff category's skeleton with coefficients in the reply (direction)
+functor $\dir$. The cohomology itself is classical
+\cite{rw,baueswirsching,pirashvili}; what is new is the identification of the orchestration
+composite with $\C\bowtie\D$ and hence of its obstruction with this class.
+
+\subsection*{The method}
+We ground the claim on the smallest faithful instance rather than asserting the dictionary
+into a theorem. A supervisor dispatching to workers, with a one-bit turn token recording
+whose reply it awaits, is a small category $\K_\varepsilon$ parametrized by a single bit
+$\varepsilon\in\mathbb Z/2$: the worker's re-entrant outcome sends the dispatch to
+$q\cdot\tau^{\varepsilon}$, so $\varepsilon$ is exactly whether that outcome \emph{mutates}
+the token ($\varepsilon=1$) or \emph{fixes} it ($\varepsilon=0$). Interleaving $\K_\varepsilon$
+with a second orchestration sharing the workers is a Zappa--Sz\'ep product. We prove
+\emph{analytically} --- verifying the freeness condition and the vertex-group hypothesis
+directly, computing the orbit category, the cochain complex, and the defect cocycle by hand
+--- that the obstruction class equals the token-mutation bit on the nose,
+\[
+  [\omega(\K_\varepsilon)]=\varepsilon\cdot(\text{generator})\in H^2(\Sk_\C;\dir)\cong\mathbb Z/2,
+\]
+so the joint agent exists if and only if $\varepsilon=0$. No enumeration of factorization
+systems and no machine-verified isomorphism is load-bearing; a parametrized script
+cross-checks every step. Two further regimes --- independent supervisors over read-only
+workers (a trivial product) and two supervisors interleaving coherently into the non-abelian
+join $S_3$ --- round out the picture at the grade of a \emph{computed} illustration; the
+proved content is the dichotomy.
+
+\subsection*{The consequences}
+Two payoffs. First, a named, structural failure mode: \emph{unprotected re-entrancy} --- the
+callee writing to the caller's shared state during a pending call --- is not a heuristic
+smell but an exact nonzero cohomology class on the handoff category, the categorical avatar
+of a flat bundle with nontrivial holonomy. Second, a clean position relative to the
+multi-agent-systems literature. That literature places cellular-sheaf obstructions of degree
+$H^0$ (consensus, Nash equilibria) and $H^1$ (identifiability) on the \emph{communication}
+graph \cite{sheafMAS,sheafID,sheafPlan}, asking whether agents currently agree. The container
+model places an obstruction one degree up, $H^2$, on the \emph{handoff} category, asking the
+prior question of whether the agents compose into a joint system at all. The two are
+complementary, and the degree axis is exact.
+
+\subsection*{Outline}
+Section~\ref{sec:dict} sets out the agent-as-container dictionary, grading each row for
+provenance. Section~\ref{sec:zs} states the three black-box theorems and explains why
+composition is a Zappa--Sz\'ep product rather than a functor. Section~\ref{sec:worked} works
+the supervisor--worker instantiation and its four-regime table. Section~\ref{sec:degree}
+draws the degree-axis contrast with the sheaf-Laplacian methods and positions the result against the
+other 2026 categorical-orchestration accounts. Section~\ref{sec:concl}
+closes with the empirical-validation ask and open questions.
+
+\section{The dictionary, honestly graded}\label{sec:dict}
+
+We first fix the translation between orchestration concepts and container structure. The
+reader should treat this section as a glossary, not a sequence of theorems: most rows are
+established prior art, and we say so explicitly. The one row carrying this note's contribution
+is flagged $\bigstar$ and proved in Section~\ref{sec:worked}.
+
+Write $\Cont$ for the category of containers; a container $p=(S,P)$ has a \emph{shape} set
+$S$ and, for each shape $s$, a \emph{position} set $P(s)$, and represents the polynomial
+functor $\sum_{s\in S}y^{P(s)}$.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{4.5cm}p{6.5cm}p{2.4cm}@{}}
+\toprule
+Orchestration concept & Container structure & Provenance \\
+\midrule
+An agent's interface & container $p=(S,P)$: $S$ = queries it may issue, $P(s)$ = admissible
+replies to $s$ & Spivak \cite{NiuSpivak} \\
+An oracle / LLM call & a morphism $p\to y$ (issue a query, receive one reply) & Ghani/Spivak \\
+An agent's policy / dynamics & a $p$-coalgebra (Moore--Mealy lens) realising the interface &
+Spivak \cite{NiuSpivak} \\
+An agent's \emph{implementation} & a Kleisli arrow $p\Rightarrow\mathrm{Free}\,q$ into the
+free monad on its dependencies, composed along wiring diagrams & Aberl\'e \cite{aberle} \\
+A behavioural \emph{specification} & a dependent polynomial $(C,D)$ over $p$
+(pre/postconditions; a Hoare triple), verified compositionally & Aberl\'e \cite{aberle} \\
+Delegation between agents & a container morphism (forward on queries, backward amalgamating
+replies) & Ghani \\
+A handoff \emph{topology} & a small category $=$ directed container $(S\seq P,o,\downarrow,\oplus)$:
+objects are roles, $P(s)$ = admissible handoff paths out of $s$ & Ahman--Uustalu
+\cite{AhmanUustalu} \\
+Sequential delegation & composition product $\seq$; its free monad $=$ nested-call workflow
+trees (Aberl\'e's implementation structure) & Gambino--Kock; Aberl\'e \cite{aberle}; Lean
+\cite{leanfree} \\
+Keep-both-interfaces & the categorical product $\times$ (the unique pointwise structure) &
+prior art \\
+Shared-schedule parallelism & the Dirichlet tensor $\otimes$ (Day convolution of $\times$) &
+Spivak \cite{NiuSpivak} \\
+Choice between agents & the coproduct $+$ & prior art \\
+Higher-order orchestration & a closed structure: $[q,r]$ = orchestrators consuming a
+$q$-agent, emitting an $r$-agent; $\Cont(p\otimes q,r)\cong\Cont(p,[q,r])$ & Spivak
+\cite{NiuSpivak}; Lean \\
+The harness an agent runs in & a comonad on the topology; the cofree comonad is the maximal
+harness & Spivak \\
+$\bigstar$ Interleaving two orchestrations & a distributive law / Zappa--Sz\'ep product
+$\C\bowtie\D$ (Ahman--Uustalu \cite{AhmanUustaluDL}), obstructed by $[\omega]\in H^2(\Sk_\C;\dir)$ &
+construction A.--U.; \textbf{obstruction: this note} (\S\ref{sec:worked}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+Three remarks on the graded rows keep the reader honest.
+
+The \emph{interface} and \emph{dynamics} rows are Spivak's interaction reading of $\Poly$
+\cite{NiuSpivak,SpivakRef}. The \emph{implementation} content of the sequential and
+proof-search rows below --- interfaces implemented by free-monad(-on-$\Poly$) Kleisli arrows
+and composed along wiring diagrams, with dependent polynomials as specifications --- is
+Aberl\'e's mechanism \cite{aberle} (see the prior-art discussion above); we reinterpret it in
+two domains but claim none of the mechanism itself.
+
+The \emph{sequential} row is worth pausing on because it is the one place where the underlying
+free-monad structure is proved, machine-checked, and directly models a familiar orchestration
+pattern. The composition product $p\seq q$ is ``run $p$, and at each of its positions run a
+copy of $q$''; iterating it freely produces the free monad on a container, whose elements are
+exactly \emph{nested-call workflow trees} --- a shape at the root, and for each of its
+positions a subtree. This free monad is Aberl\'e's implementation structure; what we add is a
+machine check of its algebra: the three monoid laws (unit on both sides, associativity of
+grafting) are formalised in Lean with no remaining axioms beyond quotient soundness
+\cite{leanfree}. Under the proof-search reading, this is tactic composition; under the
+orchestration reading, it is a call tree.
+
+The \emph{proof-search} instance is the same model with the words changed: a theorem is a
+shape, the lemmas it needs are its positions, and a proof is an element of the free monad --- a
+tree of theorems reduced to sub-theorems --- with tactic composition realised as grafting.
+That the free-monad laws hold on the nose (loc.\ cit.) is what makes tactic composition
+associative. This is a domain reinterpretation of Aberl\'e's verified-implementation
+framework, which itself names tactics and proof automation as future work.
+
+\section{Why composition is a Zappa--Sz\'ep product}\label{sec:zs}
+
+We now state the three results the composition claim rests on. All are used as black
+boxes. The first is Ahman--Uustalu; so, crucially, is the construction the second theorem
+rests on --- that a distributive law of directed containers is exactly a matched pair and
+assembles the joint Zappa--Sz\'ep container, generalizing the monoid case, is their theorem
+\cite{AhmanUustaluDL}. The author's contribution in the second theorem is only the
+\emph{existence} criterion $\mathrm{(L)}+\mathrm{(G)}$ for the complementary factor; the
+cohomology in the third is classical.
+
+\begin{theorem}[Directed container $\cong$ small category; Ahman--Uustalu \cite{AhmanUustalu}]
+\label{thm:T1}
+A handoff topology --- objects are roles, morphisms are admissible handoff paths, with
+identities (stay put) and composition (concatenate handoffs) --- is a small category, hence a
+directed container $(S\seq P,o,\downarrow,\oplus)$, and conversely. The two structures carry the
+same data. \textup{(Formalised in Lean in the author's development.)}
+\end{theorem}
+
+\begin{theorem}[Pairwise Zappa--Sz\'ep criterion \cite{pairwise}]\label{thm:T2}
+Let $\K$ be a small category and $\D\subseteq\K$ a wide subcategory. There is a wide
+subcategory $\C\subseteq\K$ making $(\C,\D)$ a strict factorization system --- equivalently a
+Zappa--Sz\'ep product $\K=\C\bowtie\D$, equivalently a distributive law
+$\lambda:\D\C\Rightarrow\C\D$ satisfying the matched-pair axioms --- if and only if
+\begin{itemize}
+\item[\textnormal{(L)}] every hom-presheaf $\Hom_\K(-,b)$ is free as a right $\D$-set, and
+\item[\textnormal{(G)}] free bases can be chosen closing into a wide subcategory.
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}[The closure obstruction is an $H^2$ class \cite{gobstr}]\label{thm:T3}
+Under the standard hypothesis (abelian vertex groups, trivial induced action),
+$\textnormal{(G)}$ holds if and only if a single cohomology class vanishes,
+\[
+  \textnormal{(G)}\ \Longleftrightarrow\ [\omega]=0\in H^2(\Sk_\C;\dir),
+\]
+cohomology of the skeleton of the handoff category with coefficients in the direction (reply)
+functor $\dir$. The relevant cohomology is classical: existence is Rosebrugh--Wood \cite{rw},
+the abelian classification is Baues--Wirsching \cite{baueswirsching}, and the non-abelian case
+is Pirashvili's Schreier theory \cite{pirashvili}. We cite it; we do not reprove it.
+\end{theorem}
+
+\subsection*{Functor versus distributive law}
+Here is the conceptual load of Theorem~\ref{thm:T2}, and the reason it is the right model. A
+functor between handoff categories composes \emph{along} a single topology: it presumes one
+fixed order of events and transports structure through it. But two orchestrations that share
+resources do not present one topology; each has its own, and running them together requires
+\emph{interleaving} the two. A distributive law $\lambda:\D\C\Rightarrow\C\D$ is exactly the
+data of a coherent interleaving --- a rule for pushing a $\D$-move past a $\C$-move --- and a
+Zappa--Sz\'ep product $\C\bowtie\D$ is the joint category it generates; that a distributive
+law of directed containers assembles this joint container is Ahman--Uustalu's
+\cite{AhmanUustaluDL}. This is what
+concurrency, a supervisor sharing workers between two plans, and re-entrant tool-calls
+actually require, and it is strictly more than a functor can express: a functor always exists,
+whereas a distributive law can fail to. Theorem~\ref{thm:T3} says the failure is measured in a
+single cohomological degree.
+
+\begin{remark}[Scope]
+Theorems~\ref{thm:T1}--\ref{thm:T3} are established. The novelty claimed here is the
+\emph{identification}: that the joint system of two shared-resource orchestrations is
+$\C\bowtie\D$, so that its non-existence is exactly the nonvanishing of $[\omega]$. We ground
+that identification, rather than assert it, in Section~\ref{sec:worked}.
+\end{remark}
+
+\section{The worked instantiation}\label{sec:worked}
+
+We exhibit the smallest orchestration in which the obstruction is non-trivial and \emph{prove},
+analytically, that its obstruction class equals a single design bit. The point is to move the
+starred dictionary row from a proposed reading to a theorem: the supervisor--worker family below
+\emph{is} a category to which Theorems~\ref{thm:T1}--\ref{thm:T3} apply, and its composition
+obstruction \emph{is} a concrete $H^2$ generator, uniformly across the bit. Full computational
+detail is in the author's analytic proof note \cite{analytic}; we give the spine here.
+
+\subsection*{The parametrized category}
+Fix handoff roles $\Sup$ (supervisor), $\Wk$ (a worker running), $\Rt$ (a return point). The
+supervisor carries a one-bit \emph{turn token}; toggling it is an involution $\tau$ with
+$\tau^2=\id$, so $\End(\Sup)=\{\id_\Sup,\tau\}\cong\mathbb Z/2$. The generating handoffs are
+\[
+  p,\,p\tau:\Sup\to\Wk\quad(\text{dispatch in turn-state $0$ resp.\ $1$}),
+  \qquad
+  s,\,s_2:\Wk\to\Rt\quad(\text{two worker outcomes}),
+\]
+with composites $q,q\tau:\Sup\to\Rt$ and right $\mathbb Z/2$-action $p\cdot\tau=p\tau$,
+$q\cdot\tau=q\tau$. The prescribed right factor is the supervisor-internal (token) part,
+\[
+  \D=\{\id_\Sup,\ \tau,\ \id_\Wk,\ \id_\Rt\},
+\]
+a wide subcategory with vertex groups $G_\Sup\cong\mathbb Z/2$ and $G_\Wk=G_\Rt=0$; the left
+factor $\C$ --- the genuine dispatch/handoff part --- is what we solve for. Everything turns on
+one composite: how a worker outcome, run after a dispatch, sits relative to the token.
+
+\begin{definition}[The family $\K_\varepsilon$]\label{def:regimes}
+For $\varepsilon\in\mathbb Z/2$ let $\K_\varepsilon$ be the resulting category with the single
+composite fixed by
+\[
+  s\circ p=q,\qquad s_2\circ p=q\cdot\tau^{\varepsilon},
+\]
+where $s$ is ``the worker returns normally'' and $s_2$ is ``the worker re-enters'' (calls back
+into the supervisor before returning). Thus $\varepsilon=[\,s_2\circ p=q\tau\,]$ records whether
+the re-entrant outcome \emph{mutates} the token ($\varepsilon=1$, \emph{unprotected re-entry}) or
+\emph{fixes} it ($\varepsilon=0$, \emph{state-protected re-entry / a lock}). Write
+$\K_{\mathrm{ok}}:=\K_0$ and $\K_{\mathrm{bug}}:=\K_1$.
+\end{definition}
+
+Each $\K_\varepsilon$ is a genuine category with $\D$ wide (associativity reduces to right
+$\tau$-equivariance of the two length-two composites; see \cite{analytic}). The reading is
+exact: re-entrancy is the callee mutating shared caller state during a pending call, and here
+that is precisely the $s_2$-branch dragging the turn token when $\varepsilon=1$.
+
+\subsection*{The obstruction class equals the token bit}
+
+\begin{theorem}[The obstruction is the token-mutation bit]\label{thm:h2}
+For each $\varepsilon\in\mathbb Z/2$, the family $\K_\varepsilon$ with distinguished wide
+subcategory $\D$ satisfies condition \textnormal{(L)} and the hypothesis of
+Theorem~\ref{thm:T3}, the skeleton $\Sk_\C$ is the branch $\Sup\to\Wk\rightrightarrows\Rt$
+(independent of $\varepsilon$) with $H^2(\Sk_\C;\dir)\cong\mathbb Z/2$, and
+\[
+  [\omega(\K_\varepsilon)]=\varepsilon\cdot(\text{generator})\in H^2(\Sk_\C;\dir).
+\]
+Consequently the joint agent $\C\bowtie\D$ exists --- equivalently a distributive law
+$\lambda:\D\C\Rightarrow\C\D$ --- \emph{if and only if $\varepsilon=0$, i.e.\ iff the worker's
+outcome fixes the supervisor's token.} For $\varepsilon=1$ (unprotected re-entry) the
+obstruction is the nonzero generator and no serialization exists.
+\end{theorem}
+
+\begin{proof}
+\emph{(L) and the hypothesis.} The right $\D$-action is precomposition; it is the regular
+$\mathbb Z/2$-action on $\Sup$-sourced arrows and trivial elsewhere. Decomposing into orbits,
+$\Hom(-,\Wk)=\{p,p\tau\}\sqcup\{\id_\Wk\}$ and
+$\Hom(-,\Rt)=\{q,q\tau\}\sqcup\{s\}\sqcup\{s_2\}\sqcup\{\id_\Rt\}$; since $p\neq p\tau$ and
+$q\neq q\tau$, every $\Sup$-apex orbit is a free $\mathbb Z/2$-torsor and every other orbit is a
+singleton, so each hom-presheaf is free --- and this uses only $p\neq p\tau$, $q\neq q\tau$, so
+it is independent of $\varepsilon$ (the value $q\tau^\varepsilon$ stays inside the orbit
+$\{q,q\tau\}$ either way). The hypothesis of Theorem~\ref{thm:T3} holds because the only
+nontrivial vertex group $G_\Sup=\mathbb Z/2$ sits at a \emph{source} (nothing maps into $\Sup$
+but its own endomorphisms), so the induced left action is trivial.
+
+\emph{The class.} The orbit category $\Sk_\C$ has non-identity arrows
+$[p]:\Sup\to\Wk$, $[q]:\Sup\to\Rt$, $[s],[s_2]:\Wk\to\Rt$ with
+$[s]\ast[p]=[s_2]\ast[p]=[q]$ (both because $q,q\tau$ share an orbit) --- the same branch for
+both $\varepsilon$. Every restriction map of the coefficient presheaf $\dir$ vanishes (each
+generator targets $\Wk$ or $\Rt$, where $G=0$). The normalized complex has
+$C^1\cong C^2\cong(\mathbb Z/2)^2$ (coordinates $h([p]),h([q])$ resp.\
+$\omega([s],[p]),\omega([s_2],[p])$) and $C^3=0$, so $Z^2=C^2$; the coboundary is
+$(\delta^1 h)([s],[p])=(\delta^1 h)([s_2],[p])=h([p])-h([q])$, whence
+$B^2=\langle(1,1)\rangle$ (the diagonal) and $H^2\cong\mathbb Z/2$. The natural transversal
+$T=\{p,q,s,s_2\}$ has defect $\omega_T([s],[p])=\id_\Sup$ (since $s\circ p=q\circ\id_\Sup$) and
+$\omega_T([s_2],[p])=\tau^\varepsilon$ (since $s_2\circ p=q\circ\tau^\varepsilon$), i.e.\
+$\omega_T=(0,\varepsilon)$; its class is $0$ for $\varepsilon=0$ and the generator
+$(0,1)\notin\langle(1,1)\rangle$ for $\varepsilon=1$. The dichotomy then chains
+Theorems~\ref{thm:T2}--\ref{thm:T3}: $\C\bowtie\D$ exists $\iff$ (G) $\iff[\omega]=0\iff
+\varepsilon=0$. See \cite{analytic} for the complete verification.
+\end{proof}
+
+\begin{remark}[No enumeration, no machine isomorphism]
+The argument is analytic: freeness, the hypothesis, the orbit category, the complex, and the
+defect are all computed by hand, and the class is read off uniformly in $\varepsilon$. A
+parametrized script cross-checks every step (and, independently of the proof, confirms
+$\#\mathrm{SFS}=2,0$ for $\varepsilon=0,1$); the isomorphism of $\K_1$ with the ten-morphism
+rigid twist of \cite{gobstr} is now a corollary rather than a load-bearing machine check.
+\end{remark}
+
+\begin{remark}[Reading the class]
+The two coordinates of $\omega$ are the two worker outcomes; the coboundary diagonal is the
+freedom to relabel which token-state is ``canonical.'' The class is nonzero precisely because
+the two outcomes disagree on that relabelling by one token-flip --- the re-entrant branch's
+side effect. This is the categorical form of ``a flat bundle is trivial iff its holonomy
+vanishes'': each partial handoff completes freely (by (L)), but the completions fail to glue
+into a global serialized agent by a single $\mathbb Z/2$ monodromy around the dispatch/return
+loop. It is the obstruction the Kodamai seed reads in Ethereum re-entrancy, now located as an
+explicit $H^2$ generator on a handoff category.
+\end{remark}
+
+\subsection*{The composing regimes and the table}
+Theorem~\ref{thm:h2} is the proved core: the two re-entry rows of the table below are its
+$\varepsilon=0,1$ cases (the state-protected regime $\K_0$ carries a $\mathbb Z/2$-torsor of
+factorization systems, $[\omega]=0$; the unprotected regime $\K_1$ has none). Two \emph{further}
+regimes round out the qualitative picture at the grade of a \emph{computed} illustration, not
+part of the proved dichotomy: \emph{independent supervisors} over read-only workers compose by
+the trivial (swap) law, $\K=\C\times\D$; and two supervisors over a shared worker pool can
+interleave nontrivially yet coherently --- taking $\C=\mathbb Z/3$, $\D=\mathbb Z/2$ with the
+toggle reversing the rotation gives the dihedral matched pair $\K=\C\bowtie\D=S_3$, a genuinely
+non-abelian joint agent that is neither a product nor obstructed, showing the criterion is
+non-vacuous. All four rows are machine-checked.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}lll@{}}
+\toprule
+shared-resource topology & verdict & invariant \\
+\midrule
+independent supervisors (read-only workers) & composes & $\K=\C\times\D$ (trivial law) \\
+two supervisors, coherent nontrivial interleave & composes & $\K=S_3$, non-abelian join \\
+re-entry, state-protected (lock) & composes & $\#\mathrm{SFS}=2$, $[\omega]=0$ \\
+re-entry, \textbf{unprotected} (worker mutates state) & \textbf{obstructed} &
+$\#\mathrm{SFS}=0$, $[\omega]=\text{gen }\mathbb Z/2$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The single bit that flips the verdict is whether a worker's outcome mutates the
+supervisor's shared state. If it does, the distributive law becomes multivalued, (G) fails, and
+the obstruction to a joint agent is the nonzero $[\omega]\in H^2(\Sk_\C;\dir)$.
+
+\section{The degree axis}\label{sec:degree}
+
+The container obstruction is best understood by contrast with how the multi-agent-systems
+literature uses cohomology, because the two are complementary and the difference is exactly one
+degree.
+
+That literature places a cellular sheaf on the agents' \emph{communication} graph and measures
+low-degree obstructions. Global sections --- degree $H^0$ --- are consensus states and, in a
+game-theoretic sheaf, Nash equilibria \cite{sheafMAS}. A (nonlinear) sheaf Laplacian in degree
+$H^1$ measures identifiability of a multi-agent system \cite{sheafID}, with related
+sheaf-theoretic formulations for resilient planning \cite{sheafPlan}. These are \emph{state}
+questions on the communication graph: \emph{do the agents currently agree, and can we recover
+their parameters?}
+
+The container model asks a prior, \emph{structural} question and finds it one degree up. The
+relevant graph is not the communication graph but the \emph{handoff} category $\Sk_\C$ --- who
+may delegate to whom --- and the coefficients are not a generic data sheaf but the agents'
+own reply functor $\dir$, read off from their container structure. The obstruction lives in
+$H^2$, and it answers: \emph{can these agents be fused into one consistent joint agent at
+all?} The contrast is summarised in the following table.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & sheaf-Laplacian MAS & container / directed-container \\
+\midrule
+carrier & communication graph & handoff category $\Sk_\C$ \\
+coefficients & data / strategy sheaf & reply functor $\dir$ (from the container) \\
+degree & $H^0$ (consensus), $H^1$ (identifiability) & $H^2$ (composability) \\
+question & do agents agree / can we identify them? & do agents compose into a joint system? \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The two programmes are not in competition; they answer different questions at different
+degrees. What is distinctive here is the source of the cohomology: everyone else applies
+generic sheaf/cochain machinery to a multi-agent graph, whereas the class $[\omega]$ is
+extracted from the agents' \emph{polynomial-functor} structure --- the reply functor is the
+coefficient system, and the handoff category is the base. To our knowledge the composability
+obstruction has not previously been routed through directed-container structure.
+
+\subsection*{The categorical-orchestration landscape}
+The sheaf-Laplacian programme is not the only neighbour. Three further categorical accounts of
+agentic composition appeared in 2026, and it is worth locating each, because none reaches for the
+structure this note turns on --- a distributive law, a Zappa--Sz\'ep or semidirect product, or an
+obstruction to composing at all. Aberl\'e's verified-implementation framework \cite{aberle} composes
+systems along wiring diagrams by Kleisli composition, its only two-system construct the unobstructed
+parallel sum. Banu's polynomial-functor treatment of agent architectures \cite{banu} composes skills
+by an \emph{operad} of wiring diagrams --- parallel and serial composition, with a trace --- and its
+author checks explicitly that no distributive law, semidirect product, or Zappa--Sz\'ep structure
+appears: it is \emph{parallel skill-assembly within one harness}. Waites's typed ``plumbing''
+language \cite{waites} models agent coordination in a symmetric monoidal \emph{copy--discard}
+category, with session types compiling functorially onto the plumbing and a \emph{traced}-monoidal
+inner/outer feedback loop separating an agent's conversation history from its supervisory control;
+its characteristic failure mode is context drift under memory compaction, handled --- tellingly ---
+by a pragmatic serialisation gate rather than diagnosed as an obstruction class.
+
+The contrast is sharpest against Waites, and it is instructive that both accounts reach for the word
+\emph{serialisation}. Waites installs a serialisation gate as an engineering remedy; the present note
+characterises exactly \emph{when serialisation is impossible} --- the unprotected-re-entry regime
+$\K_1$, where $[\omega]$ is the nonzero generator and no interleaving into a single serialized agent
+exists. Copy--discard symmetric monoidal structure with a mutex and Zappa--Sz\'ep/$\Poly$ structure
+with an $H^2$ class are two answers to adjacent questions: how to \emph{wire} agents that share
+streams, versus whether two agents that share state can be \emph{fused} into one at all. What unites
+these neighbours is the negative: operad, parallel-sum, and copy--discard composition are all
+unobstructed by construction, so none can express the composability question that is this note's
+whole subject.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+account & composition mechanism & two-interacting-agent obstruction \\
+\midrule
+Aberl\'e \cite{aberle} & free-monad implementations, wiring diagrams & none (parallel sum only) \\
+Banu \cite{banu} & operad of wiring diagrams (parallel/serial, trace) & none (unobstructed operad) \\
+Waites \cite{waites} & copy--discard SMC, traced feedback & none (mutex / serialisation gate) \\
+this note & distributive law / Zappa--Sz\'ep $\C\bowtie\D$ & $[\omega]\in H^2(\Sk_\C;\dir)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Conclusion}\label{sec:concl}
+
+Read as containers, agents supply not only an interface vocabulary but a composition theory.
+The move that makes this productive is small and precise: composing two shared-resource
+orchestrations is not a functor along one topology but a Zappa--Sz\'ep product $\C\bowtie\D$
+interleaving two, and a Zappa--Sz\'ep product can fail to exist. When it does, the failure is a
+single degree-two cohomology class on the handoff category, and the smallest instance of that
+failure is a recognisable engineering hazard --- unprotected re-entrancy, a worker writing to
+the supervisor's shared state mid-call --- appearing as the nonzero generator of
+$H^2\cong\mathbb Z/2$.
+
+\subsection*{Status, honestly}
+The scaffolding is proved: Theorem~\ref{thm:T1} is Ahman--Uustalu (and machine-checked in the
+author's Lean development); the Zappa--Sz\'ep-product-from-a-distributive-law construction
+underlying Theorem~\ref{thm:T2} is likewise Ahman--Uustalu's \cite{AhmanUustaluDL}, the
+author's part being the $\mathrm{(L)}+\mathrm{(G)}$ existence criterion; Theorem~\ref{thm:T3}
+is the author's; and its cohomology is classical and cited, not reproved. The interface,
+free-monad-implementation, wiring-diagram-composition, and dependent-specification mechanism is
+Aberl\'e's, cited and not reinvented. The contribution is the obstruction layer on top: the
+worked dichotomy of Section~\ref{sec:worked} (Theorem~\ref{thm:h2}, $[\omega(\K_\varepsilon)]=
+\varepsilon\cdot\text{gen}$) is \emph{proved} analytically, with a parametrized script as
+cross-check. Two things remain at a lower grade. The two extra table regimes (independent
+product, $S_3$ interleave) are \emph{computed} illustrations, not part of the proved dichotomy.
+And the claim that a real orchestration framework literally instantiates $\K_\varepsilon$ is a
+\emph{computed} reading, not a theorem about deployed systems: the models are minimal faithful
+abstractions of the supervisor--worker pattern, not literal encodings of any named framework.
+
+\subsection*{The validation ask}
+The natural next step mirrors how compositional structure has been validated empirically
+elsewhere at Kodamai (the genetic-algorithm work, where migration-topology cases confirmed that
+composition determines dynamics): take one concrete orchestration framework, exhibit its
+handoff graph as a directed container $(S\seq P,o,\downarrow,\oplus)$, and exhibit one of its
+concurrency patterns as an explicit distributive law $\lambda$ --- turning the starred
+dictionary row from computed into demonstrated on a system people actually run.
+
+\subsection*{Open directions}
+Two stand out. First, a unifying reason the two cohomological pictures of
+Section~\ref{sec:degree} should meet: comonads generalise both directed containers and
+cellular sheaves \cite{comonadsspaces}, which suggests the $H^2$ composability obstruction and
+the $H^0/H^1$ sheaf obstructions are shadows of a single comonadic invariant --- worth making
+precise. Second, the $\infty$-analogue: replacing the handoff category by a higher category of
+handoffs and asking whether the obstruction tower extends, which is where a re-entrant tool-call
+that is itself an orchestration would live.
+
+\section*{Acknowledgements}
+The agent-as-container and orchestration-as-monoidal-structure readings are due to Neil Ghani
+and the Kodamai programme, building on Spivak's polynomial-functor framework; the
+higher-order-orchestration and harness-as-comonad rows are Ghani's framing. The author thanks
+Neil Ghani and Robin Langer.
+
+\begin{thebibliography}{99}
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak. \emph{Polynomial Functors: A Mathematical Theory of
+Interaction}. arXiv:2312.00990, 2023.
+
+\bibitem{SpivakRef} D.~I.~Spivak. \emph{A Reference for Categorical Structures on
+\textup{Poly}}. arXiv:2202.00534, 2022.
+
+\bibitem{AhmanUustalu} D.~Ahman, T.~Uustalu. \emph{Directed Containers as Categories}.
+arXiv:1604.01187, 2016.
+
+\bibitem{AhmanUustaluDL} D.~Ahman, T.~Uustalu. \emph{Distributive laws of directed
+containers}. Progress in Informatics, No.~10 (2013), pp.~3--18, DOI
+10.2201/NIIPI.2013.10.2. (Precursor: CMCS 2012.)
+
+\bibitem{aberle} C.~B.~Aberl\'e. \emph{Compositional Program Verification with Polynomial
+Functors in Dependent Type Theory}. arXiv:2604.01303, 2026.
+
+\bibitem{pairwise} MacBeth. \emph{The pairwise Zappa--Sz\'ep criterion}. Kodamai note, 10
+June 2026.
+
+\bibitem{gobstr} MacBeth. \emph{The global-closure obstruction \textnormal{(G)} is a
+cohomology class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\dir)$}. Kodamai note, 11 June
+2026.
+
+\bibitem{analytic} MacBeth. \emph{The re-entrancy obstruction is the token-mutation bit: an
+analytic proof for orchestration Zappa--Sz\'ep products}. Kodamai note, 20 July 2026.
+
+\bibitem{leanfree} MacBeth. \emph{The free monad on a container as a $\seq$-monoid}
+(\texttt{Free.lean}); grafting-monoid unit and associativity laws, machine-checked. Kodamai
+Lean development, July 2026.
+
+\bibitem{rw} R.~Rosebrugh, R.~J.~Wood. \emph{Distributive laws and factorization}. J. Pure
+Appl. Algebra 175 (2002), 327--353.
+
+\bibitem{baueswirsching} H.-J.~Baues, G.~Wirsching. \emph{Cohomology of small categories}. J.
+Pure Appl. Algebra 38 (1985), 187--211.
+
+\bibitem{pirashvili} M.~Pirashvili. \emph{Schreier theory of track categories}. arXiv:1512.03250.
+
+\bibitem{sheafMAS} M.~Hern\'andez, E.~S\'anchez-Soto. \emph{A Sheaf Framework for Strategic
+Multi-Agent Systems: From Consensus to Nash Equilibria}. arXiv:2606.01663, 2026.
+
+\bibitem{sheafID} N.~Anwer, H.~Riess, M.~Hale. \emph{Multi-Agent System Identification with
+Nonlinear Sheaf Diffusion}. arXiv:2605.11204, 2026.
+
+\bibitem{sheafPlan} M.~Hern\'andez, E.~S\'anchez-Soto. \emph{Sheaf-Theoretic Planning: A
+Categorical Foundation for Resilient Multi-Agent Autonomous Systems}. arXiv:2605.01879, 2026.
+
+\bibitem{comonadsspaces} A.~D.~Fairbanks, K.~Carlson, D.~I.~Spivak. \emph{Comonads as Spaces}.
+arXiv:2607.15091, 2026.
+
+\bibitem{banu} B.~Banu. \emph{Harness Engineering as Categorical Architecture}.
+arXiv:2605.12239, 2026.
+
+\bibitem{waites} W.~Waites. \emph{A Typed Language for Agent Coordination} and \emph{The Agent That
+Doesn't Know Itself}. The $n$-Category Caf\'e, March 2026.
+\url{https://golem.ph.utexas.edu/category/2026/03/a_typed_language_for_agent_coordination.html},
+\url{https://golem.ph.utexas.edu/category/2026/03/the_agent_that_doesnt_know_its.html}.
+
+\end{thebibliography}
+
+\end{document}

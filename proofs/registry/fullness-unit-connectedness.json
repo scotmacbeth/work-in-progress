@@ -1,0 +1,113 @@
+{
+ "conjecture": "For a closed symmetric monoidal C with small coproducts, the container extension <<->> : Fam(C^op) -> C-enriched-[C,C], <<S,P>> = coprod_s [P_s,-], acts on homs by prod_s of the canonical comparison gamma_{(X_t)} : coprod^Set_t C(I,X_t) -> C(I, coprod^C_t X_t) with X_t=[Q_t,P_s]. FLAGSHIP T1: <<->> is FULLY FAITHFUL iff the monoidal unit I is CONNECTED, i.e. C(I,-):C->Set preserves small coproducts. This is NOT extensivity of C: Set x Set is (l)extensive yet <<->> is not full (unit (1,1) disconnected); Vec fails because C(k,-)=forgetful does not preserve (+). The controlling invariant is unit-connectedness, correcting Neil's 'extensive <=> full' conjecture. Faithful iff coproduct injections are I-disjoint (so <<->> is NOT faithful over Vec: zeros collapse), full iff gamma surjective. Set is the classical AAG case because 1 is connected (its hidden hypothesis).",
+ "status": "proved",
+ "date_opened": "2026-08-25",
+ "date_closed": null,
+ "note": "Neil #1 (email UID 120) flagship T1. Generalizes the Vec instance (linear-containers-vec) to arbitrary closed base. Method: enriched co-Yoneda (Nat(h_P,G)=G(P)) + Nat out of coproduct = product of Nats, reducing full/faithful to whether C(I,-) preserves coproducts. HONEST CORRECTIONS to PROVE.md brief: (i) the iff is with UNIT-CONNECTEDNESS not extensivity -- Set x Set counterexample (extensive, not full); (ii) 'faithful always' is FALSE -- <<->> not faithful over Vec (zero-collapse). Computationally witnessed (F_3 Vec: 6 morphisms, image 5 of 9; Set x Set: 2 morphisms vs 4 nat transfs). Prior art cited not reproved: AAG (Set full-faithful, re-derived + hypothesis named), Dorta-Jarvis-Niu 2305.05655 (tensor/composition defs over general base; disjoint from full-faithful question), Diers (reconstruction S=pi_0(el F) uses extensivity of the CODOMAIN Set -- a different theorem, whose fusion with (a) at C=Set is why folklore said 'extensivity'). T2 (closedness) and T3 (change of base = change of enrichment): T3 proved as corollary; T2 conjectured (gaps).",
+ "tree": {
+  "id": "root",
+  "approach": "T1 fullness criterion over a closed base: full-faithful iff unit connected; extensivity refuted as the invariant (Set x Set counterexample)",
+  "trust": "proved",
+  "file": "2026-08-25-fullness-unit-connectedness.md",
+  "children": [
+   {
+    "id": "enriched-hom-formula",
+    "approach": "Thm 1.3 + Rem 1.3a: Nat_set(<<S,P>>,<<T,Q>>) = prod_s C(I, coprod^C_t [Q_t,P_s]), via enriched co-Yoneda (Lemma 1.1) and Nat(coprod_s F_s,G)=prod_s Nat(F_s,G) (Lemma 1.2). Set-level, no completeness needed.",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "comparison-map-gamma",
+    "approach": "Def 1.4: <<->> acts on the s-component as gamma_{([Q_t,P_s])} : coprod^Set_t C(I,[Q_t,P_s]) -> C(I,coprod^C_t[Q_t,P_s]), the canonical 'does C(I,-) preserve this coproduct' map (using C(Q,Z)=C(I,[Q,Z])).",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "sufficiency-connected-unit",
+    "approach": "Thm 2.1(1): C(I,-) preserves small coproducts => every gamma is a bijection => <<->> fully faithful. Clean, general.",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "necessity-copower",
+    "approach": "Thm 2.1(2): <<->> full (resp faithful) => C(I,-) preserves (resp reflects) all copowers T.Z, via source ({s},Z) target (T,(I)). Disconnected unit (some copower unpreserved) => not full. Part (3) upgrades to full connectedness when a cogenerator [-,Z0] is essentially surjective (Vec_fd finite coproducts); caveat noted for infinite Vec where the copower test suffices anyway.",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "pole-set-AAG",
+    "approach": "Cor 3.1: C=Set, I=1, Set(1,-)=Id preserves coproducts => full-faithful. Re-derives Abbott-Altenkirch-Ghani AND names its hidden hypothesis (1 connected).",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "sources": [],
+    "children": []
+   },
+   {
+    "id": "pole-vec-shared",
+    "approach": "Cor 3.2: C=Vec, I=k, C(k,-)=forgetful does not preserve (+) => neither full nor faithful; the ∐⊊⊕ crux. Cites the fully-worked Vec instance.",
+    "trust": "proved",
+    "shared": "linear-containers-vec#part2-extensivity-crux",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "pole-setxset-counterexample",
+    "approach": "Cor 3.3 + Thm 3.4 (THE DELIVERABLE): C=Set x Set is (l)extensive but unit (1,1) is DISCONNECTED (C((1,1),(X,Y)+(X',Y'))=(X+X')x(Y+Y') != XxY + X'xY'), so <<->> is NOT full. Explicit witness: source ({s},(1,1)), target ({t1,t2},((1,1),(1,1))) has 2 container morphisms but 4 natural transformations. => Extensivity is NEITHER necessary nor sufficient for fullness; the correct invariant is connectedness of the monoidal unit. Verified computationally.",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "why-folklore-said-extensivity",
+    "approach": "Sec 3: two distinct theorems conflated -- (a) full-faithfulness of the FIXED extension <<->> (governed by unit-connectedness of the enrichment base) and (b) Diers reconstruction S=pi_0(el F) from an abstract familially-representable functor (governed by extensivity of the CODOMAIN Set). At C=Set base=codomain=Set so (a),(b) fuse and 'extensivity' reads off both; off Set they separate. Diers/AAG cited, not reproved.",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "sources": [],
+    "children": []
+   },
+   {
+    "id": "t3-change-of-enrichment",
+    "approach": "Cor 4.1 (T3): a lax monoidal F:Set->C sends Set-containers to Fam(C^op) with extension in C-enriched [C,C]; change of base induces change of enrichment. Full-faithful iff target unit connected; free-vector-space F1=k not connected => linearizing strictly loses naturality = ∐⊊⊕. Confirms Vec-enrichment as the invariant view. Eilenberg-Kelly/Cruttwell base-change is the generic mechanism; container instantiation is the delta.",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "t2a-tensor-closedness",
+    "approach": "Prop 4.2 (T2a): Dirichlet/Day tensor (SxT,(P_s(x)Q_t)) closed via pointwise Day right adjoint when C complete+monoidal-closed. Adjunction SHAPE identified; coproduct-completion bookkeeping NOT verified in general.",
+    "trust": "speculative",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "t2b-lhd-coclosure",
+    "approach": "Prop 4.3 (T2b): left coclosure of composition o via Lan iff Lan preserves corepresentables [P,-]; holds over Set (Spivak 6.57), fragile when (x)!=x. Break LOCATED, general survival criterion NOT proved. (Separately: Cont lacks a o-CLOSURE, only coclosure -- proved 2026-08-21.)",
+    "trust": "speculative",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "gap-general-iff-no-cogenerator",
+    "approach": "GAP (Rem 2.2): exact criterion is 'C(I,-) preserves coproducts of internal-homs coprod_t[Q_t,Z]'. Whether the copower necessity of 2.1(2) always upgrades to full connectedness for EVERY closed C (i.e. copower-tiny => coproduct-tiny for a monoidal unit). RESOLVED 2026-08-26 (registry copowers-gap-writer-monad, proved): (A) copowers-of-unit <=> induced Set-monad is the WRITER MONAD (-)xEnd(I); (C) <=> EM-comparison K:C->End(I)-Set preserves coproducts; and EXTENSIVE C => (A)<=>(C)<=> I indecomposable & non-initial, discharging the gap for every intended base (Set, presheaf/Grothendieck toposes, Set x Set). Additive/thin bases fail (A) already; no standard base separates. Residual (Q') = a non-extensive separator, reduced + obstruction identified (mixed point non-lifting through coprod eps), left OPEN.",
+    "trust": "proved",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "attempt",
+    "children": []
+   }
+  ]
+ }
+}

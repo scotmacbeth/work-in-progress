@@ -1,0 +1,436 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtools}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\OrgTr}{\mathbf{OrgTr}}
+\newcommand{\Org}{\mathbf{Org}}
+\newcommand{\Coalg}{\text{-}\mathsf{Coalg}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\dir}{\mathcal{D}}
+\newcommand{\seq}{\triangleleft}
+\newcommand{\zs}{\bowtie}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\cofree}{\mathfrak{c}}
+
+\title[Directed containers are the constant-tree fragment of \textup{OrgTr}]{Directed
+containers are the constant-tree fragment of \textup{OrgTr},\\ and the composition
+obstruction lives only downstairs}
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+\date{23 August 2026}
+
+\begin{document}
+
+\begin{abstract}
+An agent's interface --- the queries it may issue and the replies it admits --- is a
+polynomial functor, and a directed container is such an interface equipped with the
+structure of a small category. Spivak has recently introduced the bicategory
+$\OrgTr$, whose objects are \emph{polynomial trees}: interfaces that reshape themselves
+as an interaction unfolds. We record a clean positioning of the directed-container
+programme inside this frontier. First, Spivak's embedding (Proposition~4.6, Corollary~4.8)
+exhibits the static-interface bicategory $\Org$ --- and with it the fixed-interface world
+of the $\text{DCont}\cong\text{Cof}$ programme --- as the full sub-bicategory of $\OrgTr$
+on \emph{constant} (time-invariant) trees. Second, $\OrgTr$-composition
+$(S,\alpha)\mathbin{\#}(T,\beta)=(S\times T,\alpha\mathbin{\#}\beta)$ is
+unconditionally total (Proposition~4.3): there is no matching-pair or distributive-law
+side-condition. We draw the consequence: the degree-two Zappa--Szép obstruction
+$[\omega]\in H^2(\Sk_\C;\dir)$ that can block a shared-resource composite of two
+directed containers is intrinsically a phenomenon of the static theory; it has no
+counterpart at the adaptive-interface level, because the operation it obstructs is not
+the operation $\OrgTr$ composes. Making interfaces more general makes composition freer,
+not more constrained. The sole obstruction internal to $\OrgTr$ (Remark~3.17,
+the Zwart--Marsden no-go for $u\seq u$) is of a different kind and is orthogonal to ours.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{The interface reading of \texorpdfstring{$\Poly$}{Poly}}
+An interactive agent presents an \emph{interface}: a set $S$ of queries it may issue and,
+for each query $s\in S$, a set $P(s)$ of admissible replies. This is precisely a container,
+or polynomial functor $\sum_{s\in S}y^{P(s)}$ --- the interaction reading of $\Poly$ due
+to Spivak and, in the orchestration setting, to Ghani. When the interface additionally
+carries the structure of a small category --- a distinguished ``stay'' reply at each state,
+and a way to compose replies into replies --- the container is a \emph{directed container}
+in the sense of Ahman and Uustalu \cite{AhmanUustalu}, equivalently a comonoid for the
+substitution product $\seq$ on $\Poly$, equivalently a small category. The whole
+$\text{DCont}\cong\text{Cof}$ programme takes this identification seriously: agents with
+fixed capability-interfaces are directed containers, and composing them is a categorical
+operation on comonoids.
+
+There is a hypothesis buried in this picture: the interface is \emph{fixed}. The set
+$P(s)$ of admissible replies to a query does not change as the interaction proceeds. For
+many systems this is exactly right --- a database, a calculator, a well-specified tool. But
+the systems the Kodamai grant is ultimately aimed at are not like this. An AI agent that
+\emph{acquires a new capability mid-task} --- that learns a tool, reads a manual, or is
+handed a new sub-agent --- has an interface that reshapes itself as a consequence of the
+interaction. Its set of admissible next moves after step $n$ depends on what happened at
+steps $1,\dots,n$. A fixed container cannot model this.
+
+\subsection*{The adaptive frontier: \texorpdfstring{$\OrgTr$}{OrgTr}}
+Spivak's recent ``Interactions that reshape the interfaces of the interacting parties''
+\cite{SpivakOrgTr} builds exactly the setting for reshaping interfaces. Its objects are
+\emph{polynomial trees}: a root interface, together with, for each (query, reply) pair, a
+\emph{child} interface --- the interface in force after that reply has been given. Iterating,
+a polynomial tree records an entire coinductive history of interface changes; formally it
+is an element of the terminal $(u\seq u)$-coalgebra \cite[Def.~3.1]{SpivakOrgTr}. The
+associated bicategory $\OrgTr$ organises the state-based interactions between such
+reshaping interfaces. When \emph{every} child interface equals its parent --- a
+\emph{constant tree} --- the interface never reshapes, and we are back in the world of
+fixed interfaces.
+
+This immediately raises a positioning question. If a directed container is a fixed
+interface with categorical structure, and $\OrgTr$ is the theory of reshaping interfaces,
+where does the directed-container programme sit inside $\OrgTr$? And, sharper: the
+directed-container programme has a genuine obstruction --- welding two directed containers
+that share a resource into a single joint container is a Zappa--Szép product, which
+\emph{need not exist}, its failure measured by a degree-two cohomology class
+$[\omega]\in H^2(\Sk_\C;\dir)$ \cite{gobstr, analytic}. Does this obstruction survive into
+the more general adaptive setting, or is it an artefact of insisting that interfaces stay
+fixed?
+
+\subsection*{Results}
+This note answers both questions. The answers are short, and one of them is a negative
+that is worth stating plainly. Throughout, we are careful to separate what is Spivak's
+from what is ours: the two structural theorems below are Spivak's; the \emph{reading} of
+them --- directed containers as the constant-tree fragment, and $[\omega]$ as a strictly
+downstairs invariant --- is our contribution.
+
+\begin{itemize}
+  \item \textbf{The embedding (Section~\ref{sec:embedding}).} The static-interface
+    bicategory $\Org$ embeds into $\OrgTr$ as the full sub-bicategory on constant
+    (time-invariant) trees. This is Spivak's Proposition~4.6 (a fully faithful functor
+    $[p,q]\Coalg\to\OrgTr(p,q)$ with image the time-invariant objects) lifted by
+    Corollary~4.8 to a locally fully faithful bifunctor $\Org\to\OrgTr$
+    \cite{SpivakOrgTr}. Read through $\text{DCont}\cong\text{Cof}$, this exhibits the
+    entire directed-container programme as the \emph{stable-interface fragment} of the
+    adaptive theory.
+  \item \textbf{Composition is total (Section~\ref{sec:total}).} $\OrgTr$-composition
+    $(S,\alpha)\mathbin{\#}(T,\beta)=(S\times T,\alpha\mathbin{\#}\beta)$ carries no
+    matching-pair, pullback, or ``provided that'' side-condition; it is defined directly
+    and closes by coinduction (Spivak, Proposition~4.3 \cite{SpivakOrgTr}).
+  \item \textbf{The obstruction stays downstairs (Observation~\ref{obs:downstairs}).}
+    Consequently the Zappa--Szép obstruction $[\omega]$ does not lift into $\OrgTr$'s
+    composition. This is not because the obstruction is trivialised upstairs, but because
+    the operation it obstructs --- welding two \emph{objects} along a shared resource ---
+    is not the operation $\OrgTr$ composes, which is total $1$-cell composition. The two
+    live at different levels; $[\omega]$ is an invariant of the static welding and has no
+    adaptive-level counterpart.
+\end{itemize}
+
+The moral runs against the usual intuition. Generalising from fixed to reshaping
+interfaces does not introduce new ways for composition to fail; it composes \emph{more}
+freely. The obstruction to orchestration is a precise, checkable feature of the
+\emph{static} composition, and it is exactly the feature that the adaptive setting drops.
+
+For completeness we note (Remark~\ref{rem:orthogonal}) that $\OrgTr$ does contain one
+genuine obstruction --- the Zwart--Marsden no-go blocking $u\seq u$ from being a
+\emph{monad} (Spivak, Remark~3.17 \cite{SpivakOrgTr}, citing \cite{ZwartMarsden}) --- but
+it is a distributive-law non-existence phenomenon, not a cohomological class, and it gates
+a different construction than ours.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} recalls directed containers and the Zappa--Szép obstruction on
+the one hand, and polynomial trees and $\OrgTr$ on the other. Section~\ref{sec:embedding}
+states the constant-tree embedding and the positioning it yields. Section~\ref{sec:total}
+records the totality of $\OrgTr$-composition and draws the consequence for $[\omega]$.
+Section~\ref{sec:discussion} gives the grant-facing reading and an open question.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We keep this section to what the positioning uses. Directed-container basics are in
+\cite{AhmanUustalu}; the $\Poly$ background is in \cite{NiuSpivak}; polynomial trees and
+$\OrgTr$ are in \cite{SpivakOrgTr}, whose numbering we follow.
+
+\subsection{Directed containers and the Zappa--Szép obstruction}
+A \emph{container} is a pair $(S,P)$ with $S\in\Set$ and $P\colon S\to\Set$, presenting
+the polynomial functor $\sum_{s\in S}y^{P(s)}$. A \emph{directed container} equips it with
+a root section $o\colon\prod_{s}P(s)$, a reindexing $\downarrow$, and an addition
+$\oplus$ on positions satisfying the directed-container laws \cite[Def.~3.1]{AhmanUustalu}.
+The content of Ahman--Uustalu's theorem is that this is redundant packaging for a familiar
+object.
+
+\begin{theorem}[Ahman--Uustalu \cite{AhmanUustalu}]\label{thm:AU}
+Directed containers are equivalent to small categories; equivalently, to comonoids in
+$(\Poly,y,\seq)$ (polynomial comonads on $\Set$). Under the equivalence, $S$ is the object
+set of a category $\C$, $P(s)$ is the set of morphisms out of $s$, $o$ is the identity, and
+$\oplus$ is composition. Morphisms of directed containers are cofunctors.
+\end{theorem}
+
+We write $\C$ for the small category presented by a directed container. When two directed
+containers $\C,\D$ share a resource --- a common set of states through which control passes
+back and forth --- the natural way to run them as a single interleaved system is a
+\emph{Zappa--Szép product} $\C\zs\D$: a category on the joined data in which each side acts
+on the other, recording who holds control after each handoff. The construction of $\C\zs\D$
+from a compatible pair of mutual actions (a \emph{matching pair}, equivalently a
+distributive law of the two directed containers) is Ahman and Uustalu's
+\cite{AhmanUustaluDL}; we take it from them.
+
+The point that matters here is that $\C\zs\D$ \emph{need not exist}: a matching pair
+assembling the two one-sided actions into an associative whole may fail to close up. This
+failure is cohomological.
+
+\begin{theorem}[\cite{gobstr}]\label{thm:omega}
+The obstruction to closing a Zappa--Szép product of directed containers is a degree-two
+class $[\omega]\in H^2(\Sk_\C;\dir)$ on the skeleton of $\C$ with coefficients in the reply
+functor $\dir$. The product $\C\zs\D$ exists if and only if $[\omega]=0$.
+\end{theorem}
+
+The smallest non-trivial case --- a supervisor dispatching to workers through a one-bit
+turn token --- has been computed in full: there $[\omega]$ equals the token-mutation bit,
+so the joint agent exists exactly when the worker returns control faithfully, with
+$H^2\cong\mathbb{F}_2$ \cite{analytic}. The construction and the token-bit computation are
+machine-checked in Lean \cite{leanreentrancy}.
+
+For this note, all that is needed is the shape of $[\omega]$: it is an invariant of the
+\emph{welding} operation $\zs$, which builds a single new comonoid out of two comonoids that
+share a resource. Keep this in mind; the contrast in Section~\ref{sec:total} turns on it.
+
+\subsection{Polynomial trees and \texorpdfstring{$\OrgTr$}{OrgTr}}
+Fix a universe $u$ of interfaces and let $\cofree_{u\seq u}$ denote the cofree $\seq$-comonad,
+right adjoint to the forgetful functor $U\colon\mathrm{Cmd}(\Poly)\to\Poly$
+\cite[Prop.~2.2]{SpivakOrgTr}.
+
+\begin{definition}[{\cite[Def.~3.1]{SpivakOrgTr}}]\label{def:tree}
+A \emph{polynomial tree} is an element of the terminal $(u\seq u)$-coalgebra
+$\cofree_{u\seq u}(1)$: a root polynomial $p.\mathsf{root}$ together with, for each
+position $i$ and direction $d$, a child tree $p.\mathsf{rest}_{i,d}$. A tree is
+\emph{constant} (or \emph{time-invariant}) if every child equals the root:
+$p.\mathsf{rest}_{i,d}=p$ for all $i,d$.
+\end{definition}
+
+A constant tree is exactly a fixed interface: the set of admissible next moves never
+changes. A non-constant tree is an interface that reshapes as the interaction proceeds ---
+the modelling target that fixed containers cannot reach.
+
+Polynomial trees and their morphisms form a category $\mathbf{PolyTr}_U$
+\cite[Prop.~3.8]{SpivakOrgTr}. Such a tree-morphism specifies a polynomial map at every
+node along every interaction path; in practice it is more economically described not
+node-by-node but by a state set and a transition rule,
+exactly as a $p$-coalgebra $(S,\beta\colon S\to p(S))$ compactly encodes an element of the
+terminal $p$-coalgebra. Applying this to the internal hom recovers Shapiro and Spivak's
+bicategory $\Org$ \cite{ShapiroSpivak}: a morphism $p\to q$ in $\Org$ is a
+$[p,q]$-coalgebra $(S,\beta\colon S\to[p,q](S))$, assigning to each state an action
+$\mathrm{act}(s)\in\Poly(p,q)$ and an update rule choosing a successor state for each
+direction (Spivak recalls this at the start of \S4 \cite{SpivakOrgTr}). Parametrising the
+whole tree of interface changes by a state set in the same way gives $\OrgTr$.
+
+\begin{definition}[{\cite[Def.~4.1--4.2]{SpivakOrgTr}}]\label{def:orgtr}
+For polynomial trees $p,q$ and a state set $S$, the objects of the hom-category
+$\OrgTr(p,q)$ are pairs $(S,\alpha)$, where $\alpha$ specifies, coinductively at every
+node, an action and an update indexed by $S$; morphisms $(S,\alpha)\to(S',\alpha')$ are
+state functions $f\colon S\to S'$ intertwining actions and updates at every node.
+\end{definition}
+
+Objects with singleton state recover the tree-morphisms of $\OrgTr$; objects with larger
+state give compact, state-based descriptions of the same morphisms.
+
+\section{The constant-tree embedding}\label{sec:embedding}
+
+The bridge between the two halves of the preliminaries is Spivak's embedding of the static
+bicategory into the adaptive one. We state it as it appears in \cite{SpivakOrgTr} and then
+read it in directed-container terms.
+
+\begin{proposition}[Spivak {\cite[Prop.~4.6, Rem.~4.7]{SpivakOrgTr}}]\label{prop:ff}
+For polynomials $p,q$ there is a fully faithful functor
+\[
+  [p,q]\Coalg \;\longrightarrow\; \OrgTr(p,q),
+\]
+sending a coalgebra to the $\OrgTr$-object that uses the \emph{same} action-and-update rule
+at every node. Its image is exactly the \emph{time-invariant} objects of $\OrgTr(p,q)$;
+projection to root-level data gives a retraction $\OrgTr(p,q)\to[p,q]\Coalg$.
+\end{proposition}
+
+\begin{corollary}[Spivak {\cite[Cor.~4.8]{SpivakOrgTr}}]\label{cor:bifunctor}
+The constant-tree assignment $p\mapsto\mathsf{p}$ extends to a locally fully faithful
+bifunctor $\Org\to\OrgTr$: fully faithful on each hom-category by
+Proposition~\textup{\ref{prop:ff}}, and compatible with composition and identities because
+both bicategories compose $[p,q]$-coalgebras by the same formula.
+\end{corollary}
+
+The key clause in Corollary~\ref{cor:bifunctor} is the reason for its proof: the composite
+of two constant-tree images is computed by the \emph{same} state-pairing-and-action-composing
+formula as $\OrgTr$-composition (Section~\ref{sec:total}), so the embedding is a genuine
+bifunctor, not merely a levelwise inclusion.
+
+We now state the reading, which is ours rather than Spivak's.
+
+\begin{observation}[positioning]\label{obs:positioning}
+A directed container is, by Theorem~\textup{\ref{thm:AU}}, a \emph{fixed} interface --- a
+constant tree --- carrying the comonoid structure of a small category. The state-based
+interactions between fixed interfaces form Shapiro--Spivak's bicategory $\Org$, and
+Corollary~\textup{\ref{cor:bifunctor}} exhibits $\Org$ as the \emph{full sub-bicategory of
+$\OrgTr$ on constant (time-invariant) trees}. The directed-container programme is thus the
+static-interface corner of the adaptive theory: fixed-capability agents --- databases,
+tools, well-specified sub-agents --- are the constant-tree objects; an agent that reshapes
+its interface mid-task (learns a tool, is handed a new sub-agent) is a genuine non-constant
+tree, living strictly outside the image of Corollary~\textup{\ref{cor:bifunctor}}.
+\end{observation}
+
+Spivak states the embedding but does not name the directed-container-as-fragment reading;
+that framing, and its use to locate the $\text{DCont}\cong\text{Cof}$ programme as the
+verified static core of an adaptive theory, is the contribution of this note.
+
+\section{Composition is total, so the obstruction stays downstairs}\label{sec:total}
+
+We now record the second structural fact and its consequence for $[\omega]$.
+
+\begin{proposition}[Spivak {\cite[Prop.~4.3]{SpivakOrgTr}}]\label{prop:total}
+$\OrgTr$ is a bicategory, with composition
+\[
+  (S,\alpha)\mathbin{\#}(T,\beta)\;\coloneqq\;(S\times T,\;\alpha\mathbin{\#}\beta),
+\]
+where the state set is the bare cartesian product and $\alpha\mathbin{\#}\beta$ composes
+the two actions node-by-node and pairs the successor states; the identity on $p$ is
+$(1,\id_p)$. The composite $\alpha\mathbin{\#}\beta$ is defined for all
+$(S,\alpha),(T,\beta)$: there is no compatibility, matching-pair, or ``provided that''
+side-condition. Associativity and unitality hold at each level of the coinductive tower and
+hence in the limit.
+\end{proposition}
+
+The proof in \cite{SpivakOrgTr} \emph{defines} $\alpha\mathbin{\#}\beta$ directly: for
+$(s,t)\in S\times T$ the composite action is $\mathrm{act}_\alpha(s)\mathbin{\#}
+\mathrm{act}_\beta(t)$ and the composite update pairs the two side updates; the recursive
+data is filled coinductively. The only ``matching'' involved is the trivial domain/codomain
+one --- $\alpha\colon p\to q$ and $\beta\colon q\to r$ meet at the shared tree $q$, and the
+two recursive streams land at the same intermediate child automatically. Nothing can
+obstruct it. The underlying tree composition it rests on is, in Spivak's phrase, ``inherited
+from functions between sets.''
+
+This is the crux of the note. There is an apparent tension --- downstairs a shared-resource
+composite of directed containers can fail to exist (Theorem~\ref{thm:omega}), yet upstairs
+composition never fails --- and its resolution is exactly the point.
+
+\begin{observation}[the obstruction is a downstairs invariant]\label{obs:downstairs}
+The Zappa--Szép class $[\omega]\in H^2(\Sk_\C;\dir)$ has no counterpart at the level of
+$\OrgTr$-composition, and the apparent tension is not a contradiction, because the two
+operations are different in kind.
+\begin{enumerate}
+  \item The Zappa--Szép product $\zs$ (Theorem~\textup{\ref{thm:omega}}) welds two
+    \emph{objects} --- two directed containers, i.e.\ two comonoids sharing a resource ---
+    into a single new object. Building the new comonoid requires a matching pair, and
+    $[\omega]$ measures the failure of that matching pair to close.
+  \item $\OrgTr$-composition $\#$ (Proposition~\textup{\ref{prop:total}}) composes two
+    \emph{$1$-cells} --- interactions $p\to q$ and $q\to r$ --- into an interaction
+    $p\to r$. This is ordinary composition in a bicategory, and it is total.
+\end{enumerate}
+$\OrgTr$ does not host the welding operation $\zs$ at all; its native composition is the
+total $1$-cell composition, and Corollary~\textup{\ref{cor:bifunctor}} shows the
+constant-tree embedding respects exactly that total composition. Consequently $[\omega]$
+neither lifts into $\OrgTr$ nor is trivialised there: it remains an invariant of the static
+welding $\zs$, a phenomenon of the directed-container level with no adaptive-level analogue.
+\end{observation}
+
+The reading is worth stating in plain words: passing from fixed to reshaping interfaces does
+not create new ways for composition to break. The static theory's one obstruction is a
+feature of \emph{welding shared-resource objects}, and the adaptive theory simply composes
+interactions --- an operation that was always total. Generality buys freedom here, not
+friction.
+
+\begin{remark}[the one $\OrgTr$-internal obstruction is orthogonal]\label{rem:orthogonal}
+$\OrgTr$ is not obstruction-free; but its one genuine obstruction is of a different kind
+from ours. Spivak notes \cite[Rem.~3.17]{SpivakOrgTr}, citing Zwart and Marsden
+\cite{ZwartMarsden}, that $u\seq u$ fails to be a \emph{monad}: its multiplication would
+require the type-theoretic axiom of choice to hold as an \emph{equality} of sets rather than
+a bijection, and no such distributive law exists. This is a distributive-law
+\emph{non-existence} statement, not a cohomological class, and it gates $u\seq u$-monad-ness
+rather than $\OrgTr$-composition --- which, using only underlying sets, is unaffected
+(indeed total, Proposition~\ref{prop:total}). It is therefore orthogonal to $[\omega]$,
+which classifies non-existence of a Zappa--Szép composite of \emph{static} directed
+containers. Two obstructions, two levels, two kinds; neither is the other.
+\end{remark}
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection*{A verified core inside an adaptive frontier}
+The two facts assemble into a clean map of the orchestration programme. The
+$\text{DCont}\cong\text{Cof}\cong\Cat$ equivalence --- proved and machine-checked
+\cite{AhmanUustalu, leanreentrancy} --- is a theory of agents with \emph{fixed}
+capability-interfaces, and it is exactly the constant-tree fragment of Spivak's $\OrgTr$
+(Observation~\ref{obs:positioning}). Its one obstruction, the re-entrancy class $[\omega]$,
+is a precise, checkable property of \emph{static} composition
+(Observation~\ref{obs:downstairs}). Above it sits the adaptive frontier: agents whose
+interfaces reshape mid-interaction, where composition is total and the static obstruction
+does not reach. For the grant this is the honest and useful shape of the story --- we hold
+the verified static core; $\OrgTr$ is the frontier the AI-mathematician setting will need,
+and it composes more freely, not less.
+
+\subsection*{An open question}
+The positioning resolves the \emph{shape} of the relationship but leaves one research
+question genuinely open. A directed container is a constant tree; an \emph{adaptive}
+orchestration topology --- a migration graph that rewires as a run proceeds --- ought to
+arise as a specific non-constant tree. Does the reshaping of such a tree carry its own
+holonomy, an adaptive-level analogue of the $(G)$ closing datum whose failure is $[\omega]$
+downstairs? Observation~\ref{obs:downstairs} shows $[\omega]$ itself does not lift; it does
+\emph{not} rule out a distinct, genuinely tree-level invariant attached to interface
+reshaping. Identifying that invariant --- or proving there is none --- is the natural next
+target, and it is a prove-session question, not a writing one.
+
+\subsection*{Scope and honesty}
+To be exact about provenance: Proposition~\ref{prop:ff}, Corollary~\ref{cor:bifunctor},
+Proposition~\ref{prop:total}, and Remark~\ref{rem:orthogonal} are Spivak's, quoted with
+their numbering from \cite{SpivakOrgTr}; Theorems~\ref{thm:AU} and \ref{thm:omega} are
+Ahman--Uustalu's \cite{AhmanUustalu} and the author's \cite{gobstr} respectively, with the
+base Zappa--Szép construction due to Ahman--Uustalu \cite{AhmanUustaluDL}. What is new here
+is the synthesis: naming the directed-container programme as the constant-tree fragment
+(Observation~\ref{obs:positioning}), and locating $[\omega]$ as a strictly downstairs
+invariant with no adaptive-level counterpart (Observation~\ref{obs:downstairs}). No new
+heavy machinery is claimed, and none is needed: the value is the positioning and the honest
+negative.
+
+\begin{thebibliography}{99}
+
+\bibitem{SpivakOrgTr} D.~I.~Spivak. \emph{Interactions that reshape the interfaces of the
+interacting parties}. arXiv:2602.17917, 2026.
+
+\bibitem{AhmanUustalu} D.~Ahman, T.~Uustalu. \emph{Directed Containers as Categories}.
+arXiv:1604.01187, 2016.
+
+\bibitem{AhmanUustaluDL} D.~Ahman, T.~Uustalu. \emph{Distributive laws of directed
+containers}. Progress in Informatics, No.~10 (2013), pp.~3--18, DOI
+10.2201/NIIPI.2013.10.2.
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak. \emph{Polynomial Functors: A Mathematical Theory
+of Interaction}. arXiv:2312.00990, 2023.
+
+\bibitem{ShapiroSpivak} B.~Shapiro, D.~I.~Spivak. \emph{Dynamic Operads, Dynamic
+Categories: From Deep Learning to Prediction Markets}. arXiv:2205.03906, 2022. [Source of
+the bicategory $\Org$; used here only as recalled by \cite{SpivakOrgTr}.]
+
+\bibitem{ZwartMarsden} M.~Zwart, D.~Marsden. \emph{No-Go Theorems for Distributive Laws}.
+LICS 2019. [Cited here only as attributed by \cite{SpivakOrgTr}, Remark~3.17.]
+
+\bibitem{gobstr} MacBeth. \emph{The global-closure obstruction \textnormal{(G)} is a
+cohomology class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\dir)$}. Kodamai note, 11 June
+2026.
+
+\bibitem{analytic} MacBeth. \emph{The re-entrancy obstruction is the token-mutation bit: an
+analytic proof for orchestration Zappa--Sz\'ep products}. Kodamai note, 20 July 2026.
+
+\bibitem{leanreentrancy} MacBeth. \emph{Re-entrancy obstruction, machine-checked}
+(\texttt{Reentrancy.lean}): $[\omega]=\varepsilon$, $H^2\cong\mathbb{F}_2$, sorry-free.
+Kodamai Lean development, 2026.
+
+\end{thebibliography}
+
+\end{document}

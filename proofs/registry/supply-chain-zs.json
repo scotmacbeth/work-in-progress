@@ -1,0 +1,119 @@
+{
+  "conjecture": "A supply chain, abstracted to a small category, is a directed container (Ahman-Uustalu); composing two flows sharing a warehouse is a Zappa-Szep product C|><|D; an inventory inconsistency between two routes to the same delivered good is a nonzero class [omega] in H^2(Sk_C; Z/n) ~= Z/n. COMPUTED worked example: for the lot-cursor family W_{n,eps} (s.p=q, s2.p=q.tau^eps), C|><|D exists iff eps=0 (routes agree on provenance), and [omega(W_{n,eps})]=eps -- the quantitative unit-mismatch. n=2 reproduces the PROVED orchestration re-entrancy bit. Same machine (n=2) = olog merge along a shared type. Staging for the applications turn; commits nothing to the book.",
+  "status": "computed",
+  "date_opened": "2026-07-23",
+  "date_closed": "2026-07-23",
+  "note": "Clones the proved orchestration template (orchestration-zs.json / 2026-07-20 analytic tex) and generalizes the token Z/2 -> Z/n: supply-chain bookkeeping is a cyclic lot-cursor, so the obstruction lands in Z/n and measures the discrepancy in units, not just a parity bit. Contribution is DOMAIN INSTANTIATION + object-level directed-container write-out (S,P,o,+) with D-laws (orchestration stayed category-level) + olog sibling. Grade discipline: general theorems (T1 DCont=Cat lean-verified, T2 pairwise-ZS proved, T3 (G)=H^2 proved, T4 orchestration proved) are CITED as shared stubs, never re-graded; the instantiation is COMPUTED (a sub-agent-free by-hand + Python computation). Object-level 'a real supply chain IS this category' stays OPEN (SEED Q4) -- faithful abstraction, not fidelity claim. Machine-check: scratch/supply_chain_zs.py (8 (n,eps) pairs: category axioms, (L), Sk_C shape eps-independent, B^2=diagonal, H^2~=Z/n, omega_T=(0,eps), [omega]=eps, #SFS=n(eps=0)/0(eps!=0) cross-check; base-chain and olog D-laws). Proof file 2026-07-23-supply-chain-zs.tex (compiles, 5pp).",
+  "tree": {
+    "id": "root",
+    "approach": "supply chain -> small category -> directed container; two flows sharing a warehouse compose (C|><|D exists) iff eps=0 (routes agree on lot-provenance); inventory inconsistency (eps!=0) = (G)-failure = class eps in H^2(Sk_C;Z/n)~=Z/n",
+    "trust": "computed",
+    "file": "2026-07-23-supply-chain-zs.tex",
+    "children": [
+      {
+        "id": "t1-dcont-cat",
+        "approach": "any system presenting a small category is a directed container (= small category), Ahman-Uustalu; used for base chain, warehouse family, and olog",
+        "role": "premise",
+        "trust": "lean-verified",
+        "shared": "equivalence-chain#zs-lean",
+        "lean": "Containers.DirectedContainer.toSmallCat and converse (see equivalence-chain M2/M3 both directions)",
+        "file": null,
+        "children": []
+      },
+      {
+        "id": "t2-pairwise-zs",
+        "approach": "K=C|><|D over wide D iff (L) free hom-presheaf AND (G) closing basis; = distributive law ZS1-ZS4",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "pairwise-zs#root",
+        "file": "2026-06-10-pairwise-zs-criterion.tex",
+        "children": []
+      },
+      {
+        "id": "t3-g-is-h2",
+        "approach": "under (L)+(H): (G) iff [omega]=0 in H^2(Sk_C;D); Baues-Wirsching / Rosebrugh-Wood cohomology, abelian vertex groups (Z/n abelian => applies verbatim)",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "pairwise-zs#g-obstruction-cohomology",
+        "file": "2026-06-11-G-obstruction-cohomology.tex",
+        "children": []
+      },
+      {
+        "id": "t4-orchestration-parity",
+        "approach": "n=2 anchor: orchestration re-entrancy [omega]=eps in H^2~=Z/2, proved analytically, class computation lean-verified. Supply-chain W_{2,eps} IS this instance.",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "orchestration-zs#analytic-obstruction",
+        "lean": "Containers.Reentrancy.phi_omega, omega_inB2_iff_zero (n=2 class core)",
+        "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+        "children": []
+      },
+      {
+        "id": "base-chain-dcont",
+        "approach": "base chain procure->manufacture->ship as poset category C_0; directed container S=stages, P(s)=outgoing ops, o=id, s|>p=cod p, p(+)q=q.p; D1-D5 machine-checked exhaustively (thin poset => automatic)",
+        "role": "premise",
+        "trust": "computed",
+        "file": "2026-07-23-supply-chain-zs.tex",
+        "children": []
+      },
+      {
+        "id": "warehouse-family-Zn",
+        "approach": "W_{n,eps}: objects Wh(warehouse, Z/n lot-cursor tau),Pr,De; s.p=q, s2.p=q.tau^eps; D=Z/n internal relabelings (wide). Verify (L),(H); Sk_C = Wh->Pr=>De eps-independent; presheaf restrictions 0; C^3=0 => H^2=(Z/n)^2/diag~=Z/n; omega_T=(0,eps) => [omega]=eps. Composes iff eps=0.",
+        "role": "premise",
+        "trust": "computed",
+        "file": "2026-07-23-supply-chain-zs.tex",
+        "children": [
+          {
+            "id": "L-H-hold",
+            "approach": "(L): hom-presheaves free (Wh-apex orbits are free Z/n-torsors {p.tau^k},{q.tau^k}; others singletons); (H): D abelian vertex groups G_Wh=Z/n, G_Pr=G_De=0, trivial left action (Wh is a source). Machine-checked freeness.",
+            "role": "premise",
+            "trust": "computed",
+            "file": "2026-07-23-supply-chain-zs.tex",
+            "children": []
+          },
+          {
+            "id": "class-equals-eps",
+            "approach": "defect of transversal T={p,q,s,s2}: omega_T([s],[p])=0, omega_T([s2],[p])=tau^eps => omega_T=(0,eps); B^2=diagonal <(1,1)> => [omega]=eps in Z/n. Cross-check #SFS=n(eps=0)/0(eps!=0).",
+            "role": "premise",
+            "trust": "computed",
+            "file": "2026-07-23-supply-chain-zs.tex",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "eps0-composes",
+        "approach": "eps=0 regime: rework route preserves lot-cursor, [omega]=0, C|><|D exists, #SFS=n (Z/n-torsor of canonical lot-labelings). The composing regime.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-23-supply-chain-zs.tex",
+        "children": []
+      },
+      {
+        "id": "epsnonzero-obstructed",
+        "approach": "eps!=0 regime: rework route shifts lot-cursor by eps, [omega]=eps nonzero in Z/n, no distributive law, #SFS=0. Inventory off by eps units = inconsistency. The obstructed regime.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-23-supply-chain-zs.tex",
+        "children": []
+      },
+      {
+        "id": "olog-sibling",
+        "approach": "book-has->author-has->name olog as directed container (D-laws checked); merge with second olog sharing author = ZS composition; naming-convention disagreement (Z/2) = nonzero [omega] = merge conflict. Same machine, n=2.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-23-supply-chain-zs.tex",
+        "children": []
+      },
+      {
+        "id": "supply-chain-is-category",
+        "approach": "claim a REAL supply chain literally presents a category (operations associative on the nose, inventory path-equations hold) -- object-level fidelity",
+        "role": "attempt",
+        "trust": "speculative",
+        "reason": "SEED Q4, OPEN. This example builds a faithful minimal abstraction and applies the theorems to IT; it does not assert that any real supply chain is this category. Object-level modelling criterion is a separate theorem to earn, not done here.",
+        "file": null,
+        "children": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,106 @@
+{
+ "conjecture": "The symmetric monoidal structures (Set,⋆,I) with R_B=(−)⋆B polynomial for every set B — equivalently the left-closed (biclosed) Day-convolutional tensors on Cont — are exactly ⋆≅× (I=1, giving ⊗ on Cont) and ⋆≅∨_S for a unique set S (I=∅, A∨_S B=A+A×S×B+B, giving the ▷_S family; ∨_∅=+ giving product ×).",
+ "status": "in-progress",
+ "date_opened": "2026-07-23",
+ "date_closed": null,
+ "tree": {
+  "id": "root",
+  "approach": "Classify closed convolutional tensors: reduce to arity structure of R_B, prove no high arities (Key Lemma), reconstruct × / ∨_S. Follows the 2026-07-15 biconditional (closed ⟺ R_B polynomial ∀B) and the 2026-07-22 non-vacuity (collapse tensor).",
+  "trust": "in-progress",
+  "file": "2026-07-23-closed-convolutional-tensors-classification.md",
+  "children": [
+   {
+    "id": "lemma-1-unit-small",
+    "role": "premise",
+    "approach": "Lemma 1: |I|≤1. R_1(I)=I⋆1=1 with R_1=Σ_k X^{M_k} forces (if |I|≥2) R_1 constant, then X⋆∅=X^A, then I⋆∅=I^A=∅ contradicts left unit I⋆∅≅∅. Uses symmetry + polynomiality of R_1,R_∅ only. Corroborated by cardinality classification (no unit≥2 solution).",
+    "trust": "proved",
+    "file": "2026-07-23-closed-convolutional-tensors-classification.md",
+    "children": []
+   },
+   {
+    "id": "prop-2-degree-multiplicativity",
+    "role": "premise",
+    "approach": "Prop 2: d(C⋆B)=d(C)·d(B) where d(B)=sup arity. From R_B∘R_C≅R_{C⋆B} (associativity) + composition-of-polynomials arity formula Σ_{i∈A_{B,b}}A_{C,φ(i)}. d is a monoid hom (Set,⋆)→(Card,·).",
+    "trust": "proved",
+    "file": "2026-07-23-closed-convolutional-tensors-classification.md",
+    "children": []
+   },
+   {
+    "id": "key-lemma-no-high-arities-bounded",
+    "role": "premise",
+    "approach": "Key Lemma (bounded case): if κ=sup_B d(B) is finite then κ≤1. If 2≤κ<∞, pick B,u with |A_{B,u}|=κ; Prop 2 gives d(B⋆B)≥κ²>κ, contradicting global sup. So all arities ≤1 (each R_B affine) whenever κ finite. Finite shadow verified: no single-var degree-≥2 term survives associativity+unit (cardinality-classification.py, degrees 2-4).",
+    "trust": "proved",
+    "file": "2026-07-23-closed-convolutional-tensors-classification.md",
+    "children": [
+     {
+      "id": "gap-infinite-arities",
+      "role": "attempt",
+      "approach": "Exclude κ infinite (some arity an infinite set, or finite-but-unbounded). Prop-2 growth fails (κ²=κ). STATUS 2026-07-24: genuine open problem, meaningful probability conjecture is FALSE. Counting/arity-recursion/one-variable-naturality PROVEN blind (Prop C). Residual obstruction, if any, is element-level pentagon/hexagon jointly in all variables. Precise next target: does seed R_2=y+y^λ admit an all-variable-natural associator satisfying pentagon?",
+      "trust": "speculative",
+      "file": "2026-07-24-arity-gap-further-work.md",
+      "children": [
+       {
+        "id": "lemma-A-affine-eq-conn-colimit",
+        "role": "attempt",
+        "approach": "Lemma A: for polynomial P=Σ y^{A_i}, affine (all |A_i|≤1) ⟺ P preserves connected colimits. y^A=(−)^A is right adjoint (preserves limits); preserves connected colimits iff |A|≤1 (|A|≥2 fails pushout 2=1+_∅1: 2^|A|≥4≠2); Σ_I commutes with colimits + connected colimits commute with coproducts (extensive Set). So target 'R_B affine' = 'R_B preserves connected colimits'.",
+        "trust": "proved",
+        "file": "2026-07-24-arity-gap-further-work.md",
+        "children": []
+       },
+       {
+        "id": "prop-B-closure-gives-limits-only",
+        "role": "attempt",
+        "approach": "Prop B: closure of ⊙_⋆ ⟺ R_B preserves connected LIMITS, and tightly — nothing about colimits. Cont≅Fam(Set^op) free coproduct completion; connected colimit of representables computed in Set^op; (−)⊙_⋆y^B preserves Cont-colimits (closure) ⟹ R_B preserves connected limits (= (H)). Non-connected colimits probe R_B only shape-wise. So affineness (=connected-colimit preservation, Lemma A) is NOT implied by closure; the two are independent; only cardinal count κ²>κ forced affine in bounded case.",
+        "trust": "proved",
+        "file": "2026-07-24-arity-gap-further-work.md",
+        "children": []
+       },
+       {
+        "id": "prop-C-recursion-fixed-point",
+        "role": "attempt",
+        "approach": "Prop C (main contribution): the associativity arity-recursion A_{C⋆B,(b,φ)}=Σ_{i∈A_{B,b}}A_{C,φ(i)} is a FIXED POINT at infinite seed. R_2=y+y^λ (λ infinite) propagates to R_{2⋆2}=y+2^λ·y^λ; associator (X⋆2)⋆2≅X⋆(2⋆2) is genuine natural-in-X iso (both = X+μy^λ, μ=2^λ, since (X+X^λ)^λ=μ·X^λ). Finite seed n≥2 grows n→n²→... (re-derives Key Lemma). PROVES cardinality/recursion/1-var-naturality cannot obstruct ⟹ multi-session stuckness is structural. Verified scratch/arity-gap/recursion_selfconsistency.py.",
+        "trust": "proved",
+        "file": "2026-07-24-arity-gap-further-work.md",
+        "children": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "reconstruction-affine-to-families",
+    "role": "premise",
+    "approach": "Given all R_B affine (X⋆B=C_B+D_B×X): I=1 ⟹ C_B=∅,D_B=B ⟹ ⋆≅×. I=∅ ⟹ C_B=B (unit), symmetry identity B+D_B×X≅X+D_X×B forces D_X affine in X ⟹ D_X=1+S×X ⟹ X⋆B=X+B+S×X×B=∨_S; associativity gives D_{B⋆C}≅D_B×D_C, D_∅=1 (strong monoidal D), pinning the associator. S unique. Verified on finite sets (verify_reconstruction.py).",
+    "trust": "proved",
+    "file": "2026-07-23-closed-convolutional-tensors-classification.md",
+    "children": [
+     {
+      "id": "biconditional-closed-iff-poly",
+      "role": "premise",
+      "approach": "The 2026-07-15 biconditional: (Cont,⊙_⋆) left-closed ⟺ (−)⋆B polynomial ∀B. Lets the arity classification of ⋆ be read as the closed-tensor classification on Cont.",
+      "trust": "proved",
+      "shared": null,
+      "file": "2026-07-15-uniform-closure-day-tensors.md",
+      "children": []
+     },
+     {
+      "id": "theorem-A-day-equivalence",
+      "role": "premise",
+      "approach": "Theorem A: {monoidal ⋆ on Set} ≃ {convolutional monoidal on Cont}, and ×↦⊗, ∨_S↦▷_S. Gives the Cont-side reading.",
+      "trust": "proved",
+      "file": "2026-07-14-day-family-classification.md",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "main-theorem-bounded",
+    "role": "premise",
+    "approach": "Main Theorem (bounded-arity case, κ<∞): (H) ⟹ ⋆≅× (I=1) or ⋆≅∨_S (I=∅). PROVED. Unconditional version pending gap-infinite-arities. Note: conclusion FAMILIES are complete (both × and every ∨_S have κ=1); only exhaustiveness against unbounded pathologies is conditional.",
+    "trust": "proved",
+    "file": "2026-07-23-closed-convolutional-tensors-classification.md",
+    "children": []
+   }
+  ]
+ }
+}

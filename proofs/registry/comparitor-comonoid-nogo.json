@@ -1,0 +1,78 @@
+{
+  "conjecture": "Double comonoids in the normal duoidal (Poly, ◁, ⊗) are exactly the SETS OF COMMUTATIVE MONOIDS (coproducts of one-object categories on commutative monoids); the compatibility is a fibrewise Eckmann–Hilton collapse. The original 'degenerate (y^A or Ay)' phrasing is FALSE in both directions.",
+  "status": "proved",
+  "date_opened": "2026-07-15",
+  "date_closed": "2026-07-15",
+  "note": "Reframed from a 'no-go' to a positive classification. Novelty audit 2026-07-15 scoped the delta to the descent/converse; the session then found the target itself was wrong and the true class is 'sets of commutative monoids', via Eckmann–Hilton. Spivak owns Indep, Eq.33, and Prop 8.79 (⊗ on Cat#); MacBeth owns the EH reduction + corrected classification. CORRECTION 2026-07-17: the §7 phrase 'Spivak owns ... the ⊗-comonoid classification (sets of monoids)' is WRONG — full-PDF re-read confirms the book does NOT classify bare ⊗-comonoids (Ch9 Q5 OPEN; Rmk 3.78 = ⊗-monoids future work). 'Set of monoids' there is MacBeth's own Cat#-Step-1 conclusion. Bare ⊗-comonoid classification is now in sibling node bare-dirichlet-comonoid (proved): = families of ALL monoids.",
+  "tree": {
+    "id": "root",
+    "approach": "double comonoids in (Poly,◁,⊗) = sets of commutative monoids",
+    "trust": "proved",
+    "file": "2026-07-15-comparitor-double-comonoid.md",
+    "sources": ["2202.00534", "2312.00990"],
+    "children": [
+      {
+        "id": "duoidal-structural",
+        "approach": "double comonoid = ⊗-comonoid object in (Comon_◁(Poly)=Cat#, ⊗=product of categories)",
+        "role": "premise",
+        "trust": "proved",
+        "file": null,
+        "sources": ["2312.00990"],
+        "note": "Aguiar–Mahajan comonoids-in-comonoids + Niu–Spivak Prop 8.79 (⊗ lifts to product category). Load-bearing; cited, standard. Cross-checked against direct AM diagrams on y^A.",
+        "children": []
+      },
+      {
+        "id": "step1-endos",
+        "approach": "ε^⊗ + diagonal δ^⊗ cofunctor cod-axiom force every arrow to be an endomorphism ⟹ set of monoids",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-15-comparitor-double-comonoid.md",
+        "children": []
+      },
+      {
+        "id": "step2-eckmann-hilton",
+        "approach": "cofunctor composition axiom = homomorphism law (C2); with shared unit ⟹ Eckmann–Hilton ⟹ m=μ, each hom-monoid commutative; ⊗-structure unique",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-15-comparitor-double-comonoid.md",
+        "children": [
+          {
+            "id": "eh-bruteforce",
+            "approach": "corroboration only (NOT load-bearing): brute-force (C1)-(C4) over monoid library (Z/2,Z/3,Z/4,V4,min,S_3,T_2,LZ3) confirms valid m exists iff commutative, unique m=μ, C3 redundant. The proof rests on the EH Lemma, proved analytically; this is a check, not a dependency.",
+            "role": "attempt",
+            "trust": "computed",
+            "file": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "step3-converse",
+        "approach": "converse: any set of commutative monoids admits δ^⊗=diagonal-of-composition; (comp) axiom holds exactly by commutativity; per-fibre, no cross-object obstruction",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-15-comparitor-double-comonoid.md",
+        "children": []
+      },
+      {
+        "id": "degenerate-phrasing",
+        "approach": "original target: double comonoid ⟺ degenerate (y^A or Ay)",
+        "role": "attempt",
+        "trust": "dead-end",
+        "file": "2026-07-15-comparitor-double-comonoid.md",
+        "reason": "FALSE both directions (refuted in §6). (i) y^A is a double comonoid iff A is COMMUTATIVE — target wrongly admits y^{S_3}. (ii) multi-object sets of commutative monoids (e.g. 2y²={Z/2,Z/2}) are double comonoids the target wrongly excludes. degenerate ⊊ {sets of comm monoids}. The Eq.33 iso-locus was a decoy: descent needs only the constant-j image, not Indep invertible.",
+        "refutation": "proved",
+        "children": []
+      },
+      {
+        "id": "factoring-weak-reading",
+        "approach": "weak reading: δ^◁ merely factors through Indep (option a)",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-15-comparitor-double-comonoid.md",
+        "reason": "Not dead — established as part 1 of the theorem: factoring ⟺ set of (any) monoids, factor unique. Kept as an attempt node because it is a strictly weaker property than double comonoid; the gap between the two IS the Eckmann–Hilton commutativity.",
+        "children": []
+      }
+    ]
+  }
+}

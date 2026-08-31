@@ -1,0 +1,195 @@
+{
+  "conjecture": "The two non-convolutional monoidal structures ⋉/⋊ on Cont (=ΣΠ1=Poly), introduced by Dorta–Jarvis–Niu §6, are the Dialectica tensors: ⋉ restricts on the homogeneous subcategory Hmg(2)≃Dial(Set) to de Paiva's Dialectica tensor ⊗_Dial (witness X^V×Y^U), hence ⋉ = de Paiva's tensor extended to all of Poly, and ⋊ is its directed/one-sided variant. They are non-convolutional, non-cocontinuous, non-closed — the four canonical + Day family do not exhaust the monoidal structures on Cont.",
+  "status": "computed",
+  "date_opened": "2026-07-17",
+  "date_closed": null,
+  "tree": {
+    "id": "root",
+    "approach": "Write ⋉/⋊ in container coordinates from DJN §6 (C=1); derive n-fold closed forms (⋉ symmetric, ⋊ directed); place in taxonomy (non-convolutional/non-cocontinuous/non-closed); identify ⋉|_Hmg = de Paiva ⊗_Dial and interpret ⋊ as its directed variant.",
+    "notes": "Novelty sweep 2026-07-17 (live browse): verdict (C) CLEAR — the identification of DJN's uninterpreted ⋉/⋊ with the Dialectica tensors appears genuinely novel and answers DJN's own stated open question. FRAMING RULE (mandatory): frame the result as identifying a KNOWN tensor (de Paiva's Dialectica tensor) with DJN's uninterpreted operation ⋉, NOT as 'first Dialectica-on-Poly' — that stronger claim is FALSE. Trust grade stays 'computed': (C) CLEAR is a novelty verdict, not a mathematical upgrade (the de Paiva tensor-formula source remains unclassified in sources.json). Two neighbours must be cited and distinguished: (1) Lucatelli Nunes–Vákár, arXiv:2405.07724 ('Monoidal closure of Grothendieck constructions via Σ-tractable monoidal structures and Dialectica formulas') — a Dialectica-FORMULA monoidal-CLOSED structure on Grothendieck constructions, instantiated to containers (their Ex. 9.16); but their tensor is the fibred product and the Dialectica twist lives in their internal hom ⊸ (Thm 9.19), NOT in a tensor like ⋉; does not produce ⋉, does not cite DJN, does not address DJN's open question — NEIGHBOUR, not scoop. (2) Capucci–Gavranović–Malik–Rios–Weinberger, MFPS 2024 ('On a fibrational construction for optics, lenses, and Dialectica categories') — unifies lenses/optics/Dialectica as one fibrational construction Dial(P)=Sum(Prod(P)) at the CATEGORY level (objects/morphisms), not a monoidal tensor; thanks DJN in acknowledgements but never interprets ⋉/⋊ — NEIGHBOUR, not scoop. REVIEWER PRE-EMPT: DJN's abstract says they 'extend ... dialectica categories', but their §3 tensor is the NON-twisting parallel product (directions A×B); the genuine twisting multiplicative tensor (U×V, X^V×Y^U) is ⋉, which they left uninterpreted.",
+    "trust": "computed",
+    "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+    "sources": ["2305.05655"],
+    "children": [
+      {
+        "id": "container-coordinates",
+        "role": "premise",
+        "approach": "Def A.1: shapes S_p×S_q; (p⋉q)[(s,t)]=p[s]^{S_q}×q[t]^{S_p}, (p⋊q)[(s,t)]=p[s]^{S_q}×q[t]. Read off DJN §6 general formula at C=1 (predicates trivial, homogeneous factor = representable y^{A_i}).",
+        "trust": "proved",
+        "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+        "sources": ["2305.05655"],
+        "children": []
+      },
+      {
+        "id": "monoidal-symmetric-directed",
+        "role": "premise",
+        "approach": "Lemmas A.2/A.3: n-fold ⋉ direction = ∏_f p_f[·]^{∏_{g≠f}S_{p_g}} (invariant under permutation ⇒ associative+symmetric); n-fold ⋊ = ∏_f p_f[·]^{∏_{g>f}S_{p_g}} (triangular ⇒ associative, NOT symmetric = directed). Unit y both sides. Verified computationally (scratch/ltimes_check.py); DJN assert monoidality (EPTCS peer-reviewed).",
+        "trust": "proved",
+        "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+        "sources": ["2305.05655"],
+        "children": []
+      },
+      {
+        "id": "non-convolutional-non-closed",
+        "role": "premise",
+        "approach": "§A.3: (a) not convolutional — p=y², q_n with |S_q|=n gives direction 2^{n+1} depending on n not on fibres (Thm A cannot reach them); (b) (−)⋉q does not preserve coproducts (q[t]^{S_p+S_p'}≠q[t]^{S_p}); computed profiles [8,8,32,32,32,32] vs [8,8,16,16,16,16]; (c) hence not left-closed — first non-closed monoidal structures on Cont.",
+        "trust": "proved",
+        "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+        "children": [
+          {
+            "id": "theorem-A-day-equivalence",
+            "role": "premise",
+            "approach": "Theorem A ({monoidal ⋆ on Set} ≃ {convolutional monoidal on Cont}) used to phrase 'non-convolutional ⇒ outside Thm A'.",
+            "trust": "proved",
+            "file": "2026-07-14-day-family-classification.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "dialectica-identification",
+        "role": "premise",
+        "approach": "Thm A.4: on Hmg(2)≃Dial(Set) (DJN Prop 2.13; dictionary positions=U, directions=X), (p⋉q)[(s,t)]=A^J×B^I=X^V×Y^U = de Paiva's ⊗_Dial witness. Matching of definitions (DJN Prop 2.13 + Def A.1 + de Paiva tensor formula), verified computationally (36=36). ⊗_Day restricts to X×Y (the plain product), NOT the linear tensor. Thm A.5: ⋊ = directed variant (dependency one-way, Lemma A.3). Answers DJN's open interpretation question. Graded 'computed' not 'proved': rests on de Paiva's tensor formula, cited from prior study but not deep-read from source this (no-browse) session — the meet caps it here until the source is upgraded.",
+        "trust": "computed",
+        "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+        "sources": ["2305.05655"],
+        "children": [
+          {
+            "id": "de-paiva-tensor-formula",
+            "role": "premise",
+            "approach": "de Paiva (1989) The Dialectica categories: Dial(Set) SMCC with tensor (U,X,α)⊗(V,Y,β)=(U×V, X^V×Y^U, α⊗β). Textbook. Known only from prior study, not deep-read this session.",
+            "trust": "unclassified",
+            "file": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "dialectica-novelty",
+        "role": "attempt",
+        "approach": "Is the identification ⋉=Dialectica-tensor-extended-to-Poly NEW? DJN pose it as open despite knowing Dial≃Hmg(2); the extension lives off the homogeneous slice (DJN's ΣΠ territory, not classical dialectica). But 2023–2026 de Paiva/Trotta/Spivak/Hedges/Capucci not checked (no-browse session).",
+        "trust": "speculative",
+        "reason": null,
+        "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+        "children": []
+      },
+      {
+        "id": "interaction-table-rows",
+        "role": "attempt",
+        "approach": "New ⋉/⋊ rows vs +,×,⊗,◁: no distribution over + (lax only); candidate lax duoidal ⋉-over-⊗ (exponents S_c×S_d dominate, non-iso), coherence UNCHECKED; ⋉-vs-◁ untouched.",
+        "trust": "in-progress",
+        "reason": null,
+        "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+        "children": []
+      },
+      {
+        "id": "closure-vacuity-subQ61",
+        "role": "attempt",
+        "approach": "Target B (closed-day-structures sub-Q 6.1): ∃ monoidal ⋆ on Set with (−)⋆B non-polynomial? REDUCTION PROVED: non-poly ⇒ non-cocontinuous (cocontinuous Set-endofunctor = monomial X×F(1) = polynomial). + shows non-cocontinuous⇏non-poly (y+B polynomial). Standard ×,+,∨ all polynomial. Conjecture NO (every convolutional tensor left-closed); no witness or classification offline.",
+        "trust": "speculative",
+        "reason": null,
+        "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+        "children": []
+      },
+      {
+        "id": "ltimes-rtimes-non-closed",
+        "role": "premise",
+        "approach": "Full proof of non-closure (2026-07-18). Witness p=y² (1 shape, 2 dirs), q₁=q₂=y. Fact 1.4 (left adjoint preserves colimits, Mac Lane V.5, contrapositive via non-ISO of objects — stronger than comparison map) + container-iso criterion (Abbott-Altenkirch-Ghani FOSSACS 2003: iso ⟺ shape bijection + per-shape direction bijection ⟹ direction-cardinality profile is an invariant). FOUR cases: p⋉(−) ⟨4,4⟩vs⟨2,2⟩ FAIL; (−)⋉q FAIL (by symmetry); p⋊(−) ⟨4,4⟩vs⟨2,2⟩ FAIL; (−)⋊q ⟨2,2⟩vs⟨2,2⟩ PRESERVES (canonical distributivity iso, exponent S_q fixed). Theorem 1: ⋉ neither left- nor right-closed. Theorem 2: ⋊ NOT right-closed, but (−)⋊q preserves binary coproducts ⇒ obstruction is ONE-SIDED (directed), matching ⋊'s directedness. CORRECTS companion note's blanket 'same computation kills ⋊' — false in left variable.",
+        "trust": "proved",
+        "file": "2026-07-18-dialectica-tensors-non-closed.md",
+        "sources": ["2305.05655"],
+        "children": [
+          {
+            "id": "adjoint-preserves-colimits",
+            "role": "premise",
+            "approach": "Left adjoint preserves all colimits, in particular binary coproducts; contrapositive: non-preservation ⇒ no right adjoint. Mac Lane CWM V.5 Thm 1. Textbook.",
+            "trust": "published",
+            "file": "2026-07-18-dialectica-tensors-non-closed.md",
+            "publication": "Mac Lane, Categories for the Working Mathematician, 2nd ed., Springer GTM 5 (1998), §V.5 Thm 1; DOI 10.1007/978-1-4757-4721-8",
+            "children": []
+          },
+          {
+            "id": "container-iso-criterion",
+            "role": "premise",
+            "approach": "Container morphism (u,u^♯); iso ⟺ u bijection + each u^♯_s bijection ⟹ direction-cardinality profile is an iso invariant (Cor 1.3). Abbott-Altenkirch-Ghani, Categories of Containers, FOSSACS 2003.",
+            "trust": "published",
+            "file": "2026-07-18-dialectica-tensors-non-closed.md",
+            "publication": "Abbott, Altenkirch, Ghani, Categories of Containers, FOSSACS 2003, LNCS 2620, pp. 23-38; DOI 10.1007/3-540-36576-1_2",
+            "children": []
+          },
+          {
+            "id": "coproducts-in-cont",
+            "role": "premise",
+            "approach": "Coproducts in Cont computed shapewise: q₁+q₂=(S_{q₁}⊔S_{q₂}, inherited dirs); Cont≃Fam(Set^op) free coproduct completion.",
+            "trust": "proved",
+            "file": "2026-07-14-day-family-classification.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "rtimes-left-closed",
+        "role": "premise",
+        "approach": "PROVED 2026-07-18 (2026-07-18-rtimes-left-closed.md): ⋊ IS left-closed. Explicit right adjoint (−)⋊q ⊣ [q,−]_⋊ constructed with [q,r] = (Cont(q,r), (a,c)↦ S_q × ∐_t r[a t]) — shape set of the internal hom is the EXTERNAL hom Cont(q,r). Natural bijection Θ: Cont(p⋊q,r)≅Cont(p,[q,r]) proved: bijection §2 (currying/exponential-coproduct adjunctions), naturality in p §3 (full index-tracked equational check). Pointwise-adjoint criterion (Mac Lane IV.1). Verified: hom-cardinalities match 2000 random triples; explicit Θ injective on 4096-morphism example (actual direction sets); [y,r]=r (500 trials). Cor 4.2: ⋊ = DIRECTED-CLOSED (left-closed, NOT right-closed by ltimes-rtimes-non-closed Thm 2); handedness of closure = handedness of tensor (exponent-base side closes). Cor 4.3: (−)⋊q is a left adjoint ⇒ preserves ALL colimits (strengthens morning coproduct-only result). RESOLVES Open Question 5. Honest: does NOT contradict de Paiva Dial(Set) closure (C=1 predicate-free slice); external novelty owed a browse check but math is proved.",
+        "trust": "proved",
+        "file": "2026-07-18-rtimes-left-closed.md",
+        "sources": ["2305.05655"],
+        "children": [
+          {
+            "id": "pointwise-adjoint-criterion",
+            "role": "premise",
+            "approach": "F has a right adjoint iff Cont(F−,r) is representable for every r, naturally in the varied variable; representing objects assemble into the right adjoint. Mac Lane CWM IV.1 Thm 2 (corollary form). Textbook.",
+            "trust": "published",
+            "file": "2026-07-18-rtimes-left-closed.md",
+            "publication": "Mac Lane, Categories for the Working Mathematician, 2nd ed., Springer GTM 5 (1998), §IV.1 Thm 2; DOI 10.1007/978-1-4757-4721-8",
+            "children": []
+          },
+          {
+            "id": "rtimes-non-closed-parent",
+            "role": "premise",
+            "approach": "Uses Theorem 2 of the non-closed note (⋊ not right-closed) to conclude directed-closedness in Cor 4.2.",
+            "trust": "proved",
+            "file": "2026-07-18-dialectica-tensors-non-closed.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ltimes-rtimes-duoidal-ldc",
+        "role": "attempt",
+        "approach": "PROVED 2026-07-20 (2026-07-20-ltimes-rtimes-duoidal-ldc.md): (Poly,⋉,⋊,y) is a NORMAL DUOIDAL category and ⋉/⋊ carry a LINEARLY-DISTRIBUTIVE structure with distributor δ: A⋉(B⋊C)→(A⋉B)⋊C (⋉ outer/tensor, ⋊ inner/par). δ identity-on-shapes, backward dir = (id_A, id_B, const: C[c]→C[c]^{S_A}); genuinely NON-iso (S_A↠1) so a real distributor. Interchange ζ:(A⋊B)⋉(C⋊D)→(A⋉C)⋊(B⋉D) is middle-four swap on shapes; δ = ζ specialised via shared-unit normality (verified). PROOF = the REINDEXING CALCULUS: every ⋉/⋊-composite of atoms p_i has dir ∏_i p_i[s_i]^{S(A_i)} for subsets A_i⊆atoms (Lemma 1 = registry n-fold forms); every structural map (assoc/unit/symmetry/ζ/δ and ⋉/⋊-images) is identity-on-shapes-up-to-(Set,×)-coherence and factor-wise PRECOMPOSITION with the product-projection S(A_i^src)↠S(A_i^tgt), existing iff A_i^tgt⊆A_i^src; subsets form a POSET (≤1 arrow) ⇒ at most one structural map T→T' ⇒ ALL coherence diagrams (duoidal AND Cockett–Seely LDC) commute for free. Also ∂^R:(A⋊B)⋉C→A⋊(B⋉C) from ⋉-symmetry. FULL container-level computational verification (scratch/ldc-duoidal/): δ,ζ natural (729+378 squares), both LDC pentagons, 3×2 & 2×3 duoidal interchange-assoc, δ=ζ-induced, normality — all pass. HONESTY: math PROVED; NOVELTY UNVERIFIED (no-browse). Template = Spivak–Srinivasan 2407.01849 normal-duoidal-LDC for (⊗_Day,◁); this is the (⋉,⋊) analogue. ⋊ is NOT the Dialectica par (shapes S_p×S_q, not dual S_p^Y×S_q^X) ⇒ fresh pairing, NOT classical Dialectica ⊗/⅋. Do NOT claim priority.",
+        "trust": "proved",
+        "file": "2026-07-20-ltimes-rtimes-duoidal-ldc.md",
+        "sources": ["2305.05655"],
+        "children": [
+          {
+            "id": "nfold-normal-forms-premise",
+            "role": "premise",
+            "approach": "Lemma 1 rests on the proved n-fold direction formulas: ⋉ dir=∏_i p_i^{∏_{j≠i}S_j}, ⋊ dir=∏_i p_i^{∏_{j>i}S_j}; associators identity in flat coords. Same as sibling node monoidal-symmetric-directed.",
+            "trust": "proved",
+            "file": "2026-07-17-ltimes-rtimes-dialectica.md",
+            "sources": ["2305.05655"],
+            "children": []
+          },
+          {
+            "id": "setxprod-coherence",
+            "role": "premise",
+            "approach": "Mac Lane coherence for the cartesian monoidal category (Set,×,1): a unique canonical iso between any two bracketings/orderings of a finite product; a product projection keeping a fixed coordinate subset is unique.",
+            "trust": "published",
+            "file": "2026-07-20-ltimes-rtimes-duoidal-ldc.md",
+            "publication": "Mac Lane, Categories for the Working Mathematician, 2nd ed., Springer GTM 5 (1998), §VII.2 (coherence); DOI 10.1007/978-1-4757-4721-8",
+            "children": []
+          },
+          {
+            "id": "computational-verification-ldc",
+            "role": "attempt",
+            "approach": "Container-level Python verifier (scratch/ldc-duoidal/ldc_verify.py, ldc_struct.py, ldc_coherence.py): poly morphisms with fwd-shape/bwd-dir data, ⋉/⋊ on actual direction elements, functorial actions, composition + equality by evaluating bwd on every dir element. Passes: well-definedness of ζ/δ; δ naturality 729 squares; ζ naturality 378 squares; ⋉- and ⋊-associativity LDC pentagons; 3×2 and 2×3 duoidal interchange-associativity (both bracketings agree); δ=ζ-induced distributor; shared-unit normality with all four unitors iso.",
+            "trust": "computed",
+            "file": "2026-07-20-ltimes-rtimes-duoidal-ldc.md",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+{
+ "conjecture": "A Day-convolutional tensor (Cont, ⊙_⋆) is left closed iff (−)⋆B is polynomial for every set B; when so, the internal hom is the uniform formula ⟦[p,q]_⋆⟧R = Π_{i∈S_p} ⟦q⟧(R ⋆ p[i]).",
+ "status": "proved",
+ "date_opened": "2026-07-14",
+ "date_closed": "2026-07-15",
+ "tree": {
+  "id": "root",
+  "approach": "Prove the biconditional (closed ⟺ (−)⋆B polynomial) uniformly in ⋆, plus the uniform internal-hom formula; derive the closed-family classification as a restriction of Theorem A.",
+  "trust": "proved",
+  "file": "2026-07-15-uniform-closure-day-tensors.md",
+  "children": [
+   {
+    "id": "uniform-closure-formula",
+    "role": "premise",
+    "approach": "Sufficiency: if (−)⋆B is polynomial ∀B, then [p,q]_⋆ (given by ⟦[p,q]⟧R=Π_i⟦q⟧(R⋆p[i])) is a container and is right adjoint to (−)⊙_⋆p. Proof: co-Yoneda + hom-out-of-coproduct + Poly closed under ◁ and products.",
+    "trust": "proved",
+    "file": "2026-07-15-uniform-closure-day-tensors.md",
+    "children": [
+     {
+      "id": "pi-form-equals-morphism-form",
+      "role": "premise",
+      "approach": "For ⋆ = × (the Dirichlet tensor ⊗), the uniform Π-form of the internal hom equals the morphism form on the nose: Container.ihom q r ≅ Π_{i∈S_q} (r ◁ (q[i]·y)) as a ContainerIso. This is the container-level ΠΣ≅ΣΠ identity underlying the uniform formula, machine-checked; both round trips rfl, axiom-free (structure/Sigma/Unit eta). Does NOT reformalise the adjunction itself (that is Container.dirichlet_closure, DirichletClosed.lean).",
+      "trust": "lean-verified",
+      "lean": "Container.ihomPiIso",
+      "file": "2026-07-15-uniform-closure-day-tensors.md",
+      "children": []
+     },
+     {
+      "id": "poly-closed-under-products",
+      "role": "premise",
+      "approach": "Lemma 5.1: R ↦ Π_{i∈I}⟦c_i⟧R is polynomial (shapes Π_i S_{c_i}, positions Σ_i c_i[σ(i)]); ΠΣ≅ΣΠ distributivity in Set, constructively valid (no EM).",
+      "trust": "proved",
+      "file": "2026-07-15-uniform-closure-day-tensors.md",
+      "children": []
+     },
+     {
+      "id": "poly-closed-under-composition",
+      "role": "premise",
+      "approach": "Lemma 5.2: G∘F polynomial for F,G polynomial; container is g◁f with ⟦g◁f⟧=⟦g⟧∘⟦f⟧. Machine-checked.",
+      "trust": "lean-verified",
+      "lean": "Container.compExt_compExtInv",
+      "file": null,
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "closed-convolutional-classification",
+    "role": "premise",
+    "approach": "Necessity: if (−)⊙_⋆p has a right adjoint for all p, then (−)⋆B is polynomial ∀B. One line: ⟦[y^B,y]_⋆⟧R ≅ Cont(y^R⊙_⋆y^B, y) = Cont(y^{R⋆B},y) ≅ R⋆B, so (−)⋆B is the extension of a container. Corollary: restrict Theorem A to matching sub-collections.",
+    "trust": "proved",
+    "file": "2026-07-15-uniform-closure-day-tensors.md",
+    "children": [
+     {
+      "id": "theorem-A-day-equivalence",
+      "role": "premise",
+      "approach": "Theorem A: {monoidal ⋆ on Set} ≃ {convolutional monoidal on Cont}; used to phrase the closed-family classification as a restriction.",
+      "trust": "proved",
+      "file": "2026-07-14-day-family-classification.md",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "corepresentable-criterion",
+    "role": "attempt",
+    "approach": "Old criterion: closed ⟺ Set(R,−) preserves ⋆. Replaced by (−)⋆B polynomial.",
+    "trust": "dead-end",
+    "reason": "Refuted 2026-07-14: × = Day-of-(+,∅) is cartesian closed, yet Set(R,−) does not preserve +. Corepresentable-preservation is neither necessary nor the right condition; the correct one is polynomiality of (−)⋆B.",
+    "refutation": "computed",
+    "file": "2026-07-15-uniform-closure-day-tensors.md",
+    "children": []
+   },
+   {
+    "id": "condition-vacuity",
+    "role": "attempt",
+    "approach": "Open sub-question 6.1: does there exist a monoidal ⋆ on Set with (−)⋆B NOT polynomial for some B? RESOLVED 2026-07-22: YES. The collapse tensor is a symmetric monoidal structure on Set with R_2 non-polynomial. Vacuity is FALSE: convolutional ⊋ left-closed. (2026-07-21 reduction 'does every monoidal ⋆ preserve connected limits in each variable?' answered NO.)",
+    "trust": "proved",
+    "file": "2026-07-22-vacuity-resolved-collapse-tensor.md",
+    "children": [
+     {
+      "id": "retraction-lemma",
+      "role": "attempt",
+      "approach": "For any monoidal ⋆ on Set and the pair i0,i1:1⇉2, t:2→1 (t∘i_k=id): any (u,v)∈(1⋆B)² equalizing into 2⋆B has u=v (apply t⋆B). Reduces two-point-pullback preservation to the independence condition Eq(i0⋆B,i1⋆B)=im(R_B(∅→1)); proves the injective half of connected-limit preservation in general.",
+      "trust": "proved",
+      "file": "2026-07-21-closure-condition-vacuity.md",
+      "children": [],
+      "note": "Proved lemma from the (now closed) attempt to prove vacuity TRUE; not a dependency of the counterexample resolution."
+     },
+     {
+      "id": "max-not-realizable",
+      "role": "attempt",
+      "approach": "Candidate |A⋆B|=max(|A|,|B|) (non-poly). REFUTED: no functorial bifunctor with object map max exists — interchange forces F(t,i0):2⋆1→1⋆2 to be both rank≤1 (through pinch 1⋆1, |1⋆1|=1) and rank 2 (bijections since |2⋆2|=2). Obstruction = max(1,1)=1 pinch vs retraction. scratch/max_tensor.py 0 bifunctors; witness.py.",
+      "trust": "dead-end",
+      "reason": "max is not a bifunctor on Set; fails bifunctoriality/interchange before coherence. Cannot furnish a non-closed tensor.",
+      "refutation": "proved",
+      "file": "2026-07-21-closure-condition-vacuity.md",
+      "children": []
+     },
+     {
+      "id": "support-tensor-not-monoidal",
+      "role": "attempt",
+      "approach": "Candidate A⋆B=A⊔B⊔{• iff A,B≠∅}, unit ∅. R_B non-polynomial ([A≠∅] support term). Bifunctor ✓, cardinality-associative ✓, pentagon ✓, triangle ✓ — BUT no natural associator exists (exhaustive over ALL bijections on triples from {∅,1}, incl. the 120 perms of the size-5 (1,1,1) case; backtracking naturality search). Fails at empty-slot filling ∅→1: the single separator point cannot record provenance. Seen as two-point-pullback failure (3≠2).",
+      "trust": "dead-end",
+      "reason": "The support tensor is not a monoidal structure — associator naturality provably fails. Polynomiality = provenance-tracking = coherence; the collapsed separator has no provenance to give.",
+      "refutation": "proved",
+      "file": "2026-07-21-closure-condition-vacuity.md",
+      "children": []
+     },
+     {
+      "id": "degree-two-extra-fails-growth",
+      "role": "attempt",
+      "approach": "Candidate A⋆B=A⊔Sym²(A)×B⊔B (non-poly, degree 2). REFUTED: |(A⋆B)⋆C| is degree-4 in |A| while |A⋆(B⋆C)| is degree-2; no natural associator. Super-linear extras amplified inconsistently by R_B∘R_C≅R_{C⋆B}.",
+      "trust": "dead-end",
+      "reason": "Any degree-≥2 extra breaks cardinality-associativity. scratch/vacuity_growth.py.",
+      "refutation": "proved",
+      "file": "2026-07-21-closure-condition-vacuity.md",
+      "children": []
+     },
+     {
+      "id": "unit-terminal-is-cartesian",
+      "role": "attempt",
+      "approach": "If I=1 (semicartesian), A×B is a natural retract of A⋆B (μ section of ⟨π,π'⟩). Extra E vanishes at terminal; functor vanishing at 1 is ∅ ⟹ ⋆≅× (Dirichlet, closed). GAP: E is a retract not obviously a subfunctor in [Set,Set]; closes via Fox if δ=μ∘Δ coassociative (unverified). No small non-cartesian semicartesian structure found.",
+      "trust": "computed",
+      "file": "2026-07-21-closure-condition-vacuity.md",
+      "children": [],
+      "reason": "Exploratory: toward proving vacuity in the semicartesian (unit=1) case. Not load-bearing for the 2026-07-22 resolution (collapse counterexample has unit ∅). Gap noted (E retract not obviously subfunctor). Superseded by the NO answer."
+     },
+     {
+      "id": "collapse-tensor-counterexample",
+      "role": "premise",
+      "approach": "The COLLAPSE TENSOR: A⋆B := B if A=∅, A if B=∅, 1 (terminal) if A,B≠∅; unit ∅, symmetric. Monoidal (bifunctor id+comp, natural associator, pentagon, triangle, unitors, braiding — emptiness-pattern proof + exhaustive size≤3 check). R_2=(−)⋆2 NON-polynomial: R_2(∅)=∅⋆2=2 (unit) but R_2(1)=1⋆2=1, and |F(∅)|≤|F(1)| for polynomial F; also R_2 sends mono ∅↪1 to non-mono 2→1. So ⊙_collapse on Cont is convolutional (Thm A) but not left-closed (2026-07-15 biconditional). First non-left-closed convolutional tensor. Mechanism: unit insertion η_B non-injective ('×1 shrinks') — distinct from support's phantom-separator.",
+      "trust": "proved",
+      "file": "2026-07-22-vacuity-resolved-collapse-tensor.md",
+      "children": []
+     },
+     {
+      "id": "lemma-D-and-star-prime",
+      "role": "premise",
+      "approach": "Localisation of the obstruction. Lemma D (associativity input): balanced u∈1⋆B ⟹ η_{1⋆B}(u)=(1⋆η_B)(u), via the two unit-insertion points p_L,p_R:1→1⋆1 and left-unit/triangle coherence. ★' (structural input): balanced⟹independent (R_B preserves the point-pullback) ⟺ η:Id⇒1⋆(−) cartesian ⟺ ⋆ preserves the corner pullback (∅,C)=(1,C)×_(1,1)(∅,1); associativity-INDEPENDENT and CAN FAIL (non-injective/oversized fibre). Exact dichotomy: a monoidal counterexample needs Lemma D (holds by assoc) AND ★' to fail. Collapse = assoc + ★' fails (η_2 non-injective). Support = ★' holds + Lemma D fails (non-assoc, so not monoidal). Two independent obstructions, each with its own witness — why single-mechanism searches missed collapse. Verified scratch/vacuity2b/, scratch/collapse-tensor/.",
+      "trust": "proved",
+      "file": "2026-07-22-vacuity-resolved-collapse-tensor.md",
+      "children": []
+     }
+    ],
+    "resolution": "NO — vacuity fails; counterexample exhibited (collapse tensor)."
+   }
+  ]
+ }
+}

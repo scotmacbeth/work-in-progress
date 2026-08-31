@@ -1,0 +1,2031 @@
+%% ---------------------------------------------------------------------------
+%% Four canonical monoidal structures on Cont
+%% A chapter of "The Category of Containers" (MacBeth)
+%% MacBeth (Kodamai AI Mathematician project), 2026-07-15
+%%
+%% Written to be DROPPED INTO the book "The Category of Containers":
+%%   * delete the preamble down to \begin{document} (the book already has these
+%%     macros: \Set \Cont \Poly \cont \Ext \prov and the Theorem/Definition/...
+%%     environments, numbered [chapter]);
+%%   * the top-level \section{...}s below become the chapter's sections; replace
+%%     \maketitle+abstract by \chapter{Four canonical monoidal structures on Cont}
+%%     and a lead paragraph.
+%% Compiles standalone with pdflatex as it is.
+%% ---------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+%% ---- Notation (kept consistent with the rest of the repo) ----
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Fam}{\mathbf{Fam}}
+\newcommand{\cont}[2]{#1 \triangleleft #2}
+\newcommand{\Ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\tri}{\mathbin{\triangleleft}}
+\newcommand{\dir}{\mathbin{\otimes}}
+\newcommand{\dayt}{\mathbin{\odot}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\ihom}[2]{[#1,#2]}          %% internal hom for \dir
+\newcommand{\coclose}[2]{\{#1,#2\}}     %% right coclosure for \tri
+\newcommand{\cod}{\mathrm{cod}}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Nat}{Nat}
+\DeclareMathOperator{\Fun}{Fun}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\Cat}{\mathbf{Cat}}
+\newcommand{\Cathash}{\mathbb{C}\mathrm{at}^{\sharp}}
+\newcommand{\Dial}{\mathbf{Dial}}
+\newcommand{\Hmg}{\mathrm{Hmg}}
+\newcommand{\dtens}{\mathbin{\otimes_{\Dial}}} %% de Paiva's Dialectica tensor
+
+%% ---- Flagging environments (Neil's convention) ----
+\theoremstyle{plain}
+\newtheorem{Theorem}{Theorem}[section]
+\newtheorem{Proposition}[Theorem]{Proposition}
+\newtheorem{Lemma}[Theorem]{Lemma}
+\newtheorem{Corollary}[Theorem]{Corollary}
+\newtheorem{Conjecture}[Theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{Definition}[Theorem]{Definition}
+\newtheorem{Example}[Theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{Remark}[Theorem]{Remark}
+\newtheorem{Question}[Theorem]{Question}
+
+\newcommand{\prov}[1]{\hfill\textsf{\footnotesize[#1]}}
+
+\title{\textbf{Four canonical monoidal structures on $\Cont$}\\[0.3em]
+  \large the classification behind the census, their closures,
+  and how they interact}
+\author{MacBeth\\ \normalsize Kodamai AI Mathematician project}
+\date{15 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The category of containers carries four monoidal structures that everyone
+writes down: the coproduct $+$, the product $\times$, the Dirichlet tensor
+$\dir$, and the sequential (substitution) operator $\tri$. We give each its
+associator and unitors explicitly, in container language, and record that all
+four are machine-checked as monoidal categories in Lean~4. Then we ask the
+question the census leaves open --- \emph{why these four?} --- and answer it.
+Every monoidal structure on $\Set$ induces one on $\Cont$ by Day convolution
+[Cited: Niu--Spivak]; $\times$ and $\dir$ are the images of $(\Set,+,\varnothing)$ and
+$(\Set,\times,1)$, while $+$ and $\tri$ lie outside that family. Our first
+theorem says the Day construction is not merely a source of examples but an
+\emph{equivalence} onto the monoidal structures that preserve coproducts in each
+variable and close up the representables. Our second says that the categorical
+product is the \emph{unique} monoidal structure on $\Cont$ --- among all of them,
+Day or not --- whose extension is the pointwise product of functors; being
+pointwise is the rare thing, not the generic one. Our third says what the
+comparison map $\dir\to\tri$ is: the counit of a coreflection, exhibiting
+$p\dir(-)$ as the terminal coproduct-preserving approximation to $p\tri(-)$.
+The Dirichlet tensor is the sequential operator with its dependency switched
+off, and not by fiat. We then close the structures --- the internal hom for
+$\dir$ [Cited: Niu--Spivak] is machine-checked in Lean~4, we believe the first
+such certification --- and study how they interact through the normal duoidal
+category $(\Cont,\dir,\tri)$, whose spine is the comparitor. There the
+double comonoids are classified: they are exactly the \emph{sets of commutative
+monoids}, by a fibrewise Eckmann--Hilton collapse, correcting a plausible
+guess in both directions, on which the chapter closes. (A further step outside
+the Day family altogether --- identifying two uninterpreted tensors of
+Dorta--Jarvis--Niu as the multiplicative and directed Dialectica products of
+Gödel's functional interpretation --- is deferred to a later $\Cont(C)$ chapter
+and held in a companion file.)
+\end{abstract}
+
+\tableofcontents
+
+%% ===========================================================================
+\section{Introduction}
+
+\subsection*{The census, and the question it leaves open}
+
+Open any account of containers, or of the polynomial functors they present, and
+you meet four monoidal structures on the same category:
+
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+ & shapes of $p\dayt q$ & positions there & unit \\
+\midrule
+coproduct $+$   & $S_p + S_q$ & inherited & $0$ \\
+product $\times$ & $S_p\times S_q$ & $p[s] + q[t]$ & $1=y^{\varnothing}$ \\
+Dirichlet $\dir$ & $S_p\times S_q$ & $p[s]\times q[t]$ & $y=y^{1}$ \\
+sequential $\tri$ & $\sum_{s\in S_p}\bigl(p[s]\to S_q\bigr)$ &
+   $\sum_{i\in p[s]} q[f\,i]$ & $y$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This is a \emph{census}. It tells you what is there; it does not tell you why,
+and it does not tell you how the four relate. A reader who has just been handed
+this table is entitled to three complaints, and each of them is a mathematical
+question.
+
+\emph{First:} the product's positions are a \emph{disjoint union} --- yet its
+extension is the \emph{pointwise product} of functors. The Dirichlet tensor
+multiplies the positions --- and its extension is not pointwise at all. Why is
+the arithmetic upside down?
+
+\emph{Second:} why exactly four? Is four a fact about $\Cont$, or an accident of
+what people happen to have written down?
+
+\emph{Third:} $\dir$ and $\tri$ have the same unit $y$, and on one-shape
+containers they visibly agree: $y^A\dir y^B = y^{A\times B} = y^A\tri y^B$. Two
+different tensors that coincide on representables --- is that a coincidence?
+
+None of the three has a satisfying answer at the level of the census. All three
+have the same answer one level up.
+
+\subsection*{The three theorems}
+
+Write $y^A$ for the container with one shape and position set $A$ (the
+\emph{representable}, extension $X\mapsto X^A$), and call a monoidal structure
+$(\dayt,J)$ on $\Cont$ \textbf{convolutional} when
+
+\begin{itemize}[nosep]
+\item[\textbf{(D1)}] $\dayt$ preserves coproducts in each variable separately
+  (including the empty one: $p\dayt 0\cong 0$), and
+\item[\textbf{(D2)}] the representables are closed under $\dayt$.
+\end{itemize}
+
+\begin{itemize}
+\item \textbf{Theorem A (classification, §\ref{sec:day}).} The Day construction
+  $(\star,I)\mapsto(\dayt_\star, y^I)$ is an \emph{equivalence} from monoidal
+  structures on $\Set$ to convolutional monoidal structures on $\Cont$. Every
+  convolutional structure is a Day convolution, and the structure on $\Set$
+  inducing it is unique up to monoidal isomorphism.
+
+\item \textbf{Theorem B$^+$ (uniqueness of the pointwise structure,
+  §\ref{sec:pointwise}).} Let $(\dayt,J)$ be \emph{any} monoidal structure on
+  $\Cont$ --- convolutional or not. If $\Ext{p\dayt q}\cong\Ext p\times\Ext q$
+  naturally, then $(\dayt,J)\cong(\times,1)$. The categorical product is the
+  \emph{only} monoidal structure on containers whose extension is the pointwise
+  product.
+
+\item \textbf{Theorem C (what the comparitor is, §\ref{sec:comparitor}).}
+  For each $p$, the functor $p\dir(-)$ is the left Kan extension of $p\tri(-)$
+  along the representable embedding $y^{(-)}\colon\Set^{\mathrm{op}}\to\Cont$,
+  and the known comparison map $o_{p,q}\colon p\dir q\to p\tri q$ is the
+  \emph{counit of the resulting coreflection}. Hence $p\dir(-)$ is the terminal
+  coproduct-preserving approximation to $p\tri(-)$.
+\end{itemize}
+
+These answer the three complaints in order. The arithmetic is upside down
+because $\times$ is the Day convolution of the \emph{coproduct} of sets, and
+$y^{A+B}\cong y^A\times y^B$ is the exponential law (§\ref{sec:census}). Four is
+an accident: $\Cont$ carries $+$, it carries $\tri$, and it carries a Day family
+indexed by the monoidal structures on $\Set$ --- a family that is a proper class
+(§\ref{sec:properclass}). And $\dir$ agrees with $\tri$ on representables
+because it is \emph{generated} by that agreement: $\dir$ is the Day-ification of
+$\tri$ (§\ref{sec:comparitor}).
+
+\subsection*{Two further movements: closure, and interaction}
+
+The census answered, two questions a monoidal category always raises remain.
+\emph{Are the tensors closed?} And \emph{how do they interact with one another?}
+Both have clean answers, and both are largely a matter of \emph{organising}
+existing results correctly rather than proving new ones --- so we are scrupulous
+in §§\ref{sec:closed}--\ref{sec:duoidal} about what is cited and what is ours.
+(A further movement, leaving the Day family behind entirely to locate its outer
+boundary via the Dialectica tensors, is deferred to a later $\Cont(C)$ chapter;
+the material is held in \texttt{papers/dialectica-tensors-deferred.tex}.)
+
+\emph{Closure} (§\ref{sec:closed}). The Dirichlet tensor is closed: its internal
+hom is the container whose \emph{shapes are the container morphisms}, and this is
+in the literature [Cited: Niu--Spivak, Spivak]. Our contribution here is not the
+formula but its \emph{certification}: $(\Cont,\dir,y)$ is a closed monoidal
+category in Lean~4, currying and uncurrying inverse on the nose, every proof
+\texttt{rfl}. To our knowledge this is the first machine-checked Dirichlet
+closure. The sequential operator $\tri$ is not closed on the left, but has a
+right coclosure [Cited: Spivak; Meyers], and $\Cont$ is cartesian closed but
+\emph{not} locally cartesian closed [Cited: Altenkirch--Levy--Staton] --- so it
+does not model dependent type theory, a fact worth stating plainly.
+
+\emph{Interaction} (§\ref{sec:duoidal}). The pair $(\dir,\tri)$ is a
+\emph{normal duoidal} category [Cited: Spivak--Srinivasan], and its interchange
+law is the home of the comparitor. Duoidal categories have \emph{double
+comonoids}, objects that are comonoids for both tensors compatibly; here the
+$\tri$-comonoids are the small categories, so a double comonoid is a small
+category with extra structure. We classify them: \textbf{the double comonoids in
+$(\Cont,\tri,\dir)$ are exactly the sets of commutative monoids}
+(Theorem~\ref{thm:doublecomonoid}). The mechanism is a fibrewise
+Eckmann--Hilton collapse, and the classification corrects a natural guess ---
+``the degenerate polynomials'' --- in both directions.
+
+\subsection*{A correction, stated plainly}
+\label{sec:erratum}
+
+An earlier draft of this material (June 2026) contained two claims that are
+false, and since they were circulated I state their refutations here rather than
+quietly deleting them.
+
+\begin{enumerate}
+\item \emph{``$\Ext{-}$ is strict monoidal for $\dir$.''} It is
+  \textbf{strong}, not strict. The argument was circular: it defined the
+  Dirichlet convolution on functors by \emph{reading off the container
+  presentation} --- that is, by transporting the tensor along $\Ext{-}$ --- and
+  then observed that $\Ext{-}$ preserved it. Intrinsically $\dir$ is a Day
+  convolution, defined by a coend, and the comparison is the co-Yoneda
+  isomorphism, not an identity. Corollary~\ref{cor:deadend} below explains why
+  no repair was possible: $\Ext{-}$ is monoidal into the pointwise product
+  \emph{only} for the cartesian structure.
+
+\item \emph{``$\dir$ fails to be pointwise \emph{because} it is a Day
+  convolution.''} False, and the reason is instructive: $\times$ is
+  \emph{also} a Day convolution --- of $(\Set,+,\varnothing)$ --- and it
+  \emph{is} pointwise. Day-ness is not the criterion, and there is \emph{no}
+  ``pointwise/closed duality'' of the kind that draft proposed. The criterion is
+  whether the corepresentable splits the tensor of $\Set$: $y^{A+B}\cong
+  y^A\times y^B$ does split, $y^{A\times B}$ does not. Witness: $y^3\dir y^3=y^9$,
+  against a pointwise $y^6$. (This splitting criterion --- which \emph{survives}
+  --- reads almost identically to the false duality, and one must not confuse
+  them: the survivor is about the corepresentable splitting the \emph{domain}
+  tensor, not about the internal hom preserving anything.)
+
+\item \emph{``The pentagon for $\tri$ is trivial.''} A bad word for a true fact.
+  The coherence of $\tri$ discharges by \texttt{rfl} in Lean because both
+  bracketings of an iterated $\tri$ flatten to the \emph{same}
+  $\Sigma$-telescope (§\ref{sec:seq}); that is a \emph{syntactic} coincidence of
+  normal forms, not a claim that parenthesisation is vacuous. Mac~Lane's theorem
+  is not \emph{free} for $\tri$ --- it is \emph{pre-paid}: the work is done by the
+  definitional equality, once, rather than by a coherence argument each time. We
+  restate the fact carefully in §\ref{sec:seq} rather than call it trivial.
+\end{enumerate}
+
+The identification ``Dirichlet tensor $=$ Day convolution'' is \emph{not ours};
+it is Niu--Spivak \cite[Prop.~3.79]{NiuSpivak}. What is new here is the converse
+--- Theorem~A --- and what the converse buys: Theorems~B$^+$ and~C.
+
+\subsection*{Plan}
+
+Everything rests on one structural fact, proved in §\ref{sec:prelim}: $\Cont$ is
+the free coproduct completion of $\Set^{\mathrm{op}}$, so a coproduct-preserving
+functor out of $\Cont$ --- and any natural transformation between two such --- is
+determined by what it does to representables. Given that, the three theorems are
+elementary. Section~\ref{sec:census} is the census itself;
+§§\ref{sec:day}--\ref{sec:comparitor} prove A, B$^+$ and C, with
+§\ref{sec:properclass} showing that no cheaper invariant than pointwiseness
+could have isolated the product. Section~\ref{sec:closed} closes the tensors;
+§\ref{sec:duoidal} studies their interaction and classifies the double
+comonoids, on which this chapter closes. (The step outside the Day family
+altogether --- identifying two further tensors of Dorta--Jarvis--Niu as the
+Dialectica products of Gödel's functional interpretation --- is deferred to a
+later $\Cont(C)$ chapter, held in
+\texttt{papers/dialectica-tensors-deferred.tex}.) Section~\ref{sec:provenance}
+records provenance, what is machine-checked, and what is open.
+
+Every statement carries a bracketed provenance tag, following the book's
+convention: \textsf{[Cited]}, \textsf{[MacBeth]}, \textsf{[MacBeth,
+Lean-verified: \emph{file}]}, \textsf{[Open]}.
+
+%% ===========================================================================
+\section{Preliminaries}
+\label{sec:prelim}
+
+\begin{Definition}[Container, extension]\label{def:container}
+A \emph{container} is a pair $p=(S_p, p[-])$ with $S_p$ a set of \emph{shapes}
+and $p[s]$ a set of \emph{positions} for each $s\in S_p$. A morphism
+$p\to q$ is a pair $(f,g)$ with $f\colon S_p\to S_q$ on shapes and, contravariantly,
+$g_s\colon q[f\,s]\to p[s]$ on positions. The \emph{extension} is
+\[
+   \Ext p X \;=\; \sum_{s\in S_p} X^{p[s]},
+\]
+and $\Ext{-}\colon\Cont\to[\Set,\Set]$ is fully faithful, with image the
+polynomial functors $\Poly$.
+\prov{Cited: Abbott--Altenkirch--Ghani 2005}
+\end{Definition}
+
+We write $p=\sum_{s\in S_p} y^{p[s]}$ and use $\Cont$ and $\Poly$
+interchangeably. Two families of containers do all the work below.
+
+\begin{Definition}[Representable, linear]\label{def:repr}
+$y^A$ is the container with a single shape and positions $A$; so
+$\Ext{y^A}X = X^A$. A container is \emph{representable} if it has exactly one
+shape. We abbreviate $y:=y^1$ (extension the identity functor), $1:=y^{\varnothing}$
+(extension the constant functor at a point --- the terminal container), and write
+$0$ for the container with no shapes. A container is \emph{linear} if every
+position set $p[s]$ is a singleton.
+\end{Definition}
+
+\begin{Lemma}[The representable embedding is fully faithful]\label{lem:yff}
+$y^{(-)}\colon\Set^{\mathrm{op}}\to\Cont$, $A\mapsto y^A$, is fully faithful.
+\prov{MacBeth (elementary)}
+\end{Lemma}
+
+\begin{proof}
+A morphism $y^A\to y^B$ is a map on shapes $1\to 1$, which is forced, together
+with a map $B\to A$ on positions. So $\Cont(y^A,y^B)\cong\Set(B,A)=
+\Set^{\mathrm{op}}(A,B)$, naturally in $A$ and $B$.
+\end{proof}
+
+\begin{Lemma}[$\Cont$ is the free coproduct completion of $\Set^{\mathrm{op}}$]
+\label{lem:fam}
+$\Cont\cong\Fam(\Set^{\mathrm{op}})$, an isomorphism of categories, with
+$y^{(-)}$ as the universal embedding.
+\prov{Folklore; proof MacBeth}%
+\footnote{The identification of $\Poly$ with the free coproduct completion of
+$\Set^{\mathrm{op}}$ is standard in the polynomial-functor literature and we
+claim no originality for it. We give the elementary proof because the universal
+property (Lemma~\ref{lem:up}) is used repeatedly and we want it in the exact
+form we use. Precise locators are deferred to a citation pass; the reader should
+treat this as folklore, not as a MacBeth theorem.}
+\end{Lemma}
+
+\begin{proof}
+An object of $\Fam(\mathcal C)$ is a family $(A_i)_{i\in I}$ of objects of
+$\mathcal C$; a morphism $(A_i)_I\to(B_j)_J$ is a function $u\colon I\to J$
+together with morphisms $A_i\to B_{u\,i}$ in $\mathcal C$. Take
+$\mathcal C=\Set^{\mathrm{op}}$. An object is then a set $I$ together with an
+$I$-indexed family of sets --- exactly a container. A morphism is a function
+$u\colon I\to J$ together with $\Set^{\mathrm{op}}$-maps $A_i\to B_{u\,i}$, that
+is, $\Set$-maps $B_{u\,i}\to A_i$ --- exactly a container morphism
+(Definition~\ref{def:container}), variance included.
+\end{proof}
+
+\begin{Lemma}[Universal property]\label{lem:up}
+Let $\mathcal E$ have small coproducts. Restriction along $y^{(-)}$ is an
+equivalence
+\[
+  \Fun_{\sqcup}(\Cont,\mathcal E)\;\simeq\;\Fun(\Set^{\mathrm{op}},\mathcal E),
+\]
+where $\Fun_\sqcup$ denotes coproduct-preserving functors; the inverse sends $G$
+to $\widehat G(p)=\sum_{s\in S_p} G(p[s])$. More generally, for each $n\ge 1$,
+restriction is an equivalence
+\[
+  \Fun_{\sqcup,\dots,\sqcup}(\Cont^n,\mathcal E)\;\simeq\;
+  \Fun\bigl((\Set^{\mathrm{op}})^n,\mathcal E\bigr)
+\]
+between functors preserving coproducts \emph{separately in each variable} and
+arbitrary $n$-ary functors on $\Set^{\mathrm{op}}$.
+\prov{Folklore; proof MacBeth}
+\end{Lemma}
+
+\begin{proof}
+The case $n=1$ is the universal property of $\Fam$ (Lemma~\ref{lem:fam}). For
+$n=2$: coproducts in $\Fun_\sqcup(\Cont,\mathcal E)$ are computed pointwise, so
+by currying, a bifunctor $\Cont\times\Cont\to\mathcal E$ preserving coproducts in
+the second variable is a functor $\Cont\to\Fun_\sqcup(\Cont,\mathcal E)$, and it
+preserves coproducts in the first variable exactly when that functor does. Hence
+\begin{multline*}
+\Fun_{\sqcup,\sqcup}(\Cont^2,\mathcal E)
+ \simeq\Fun_\sqcup\bigl(\Cont,\Fun_\sqcup(\Cont,\mathcal E)\bigr)
+ \simeq\Fun\bigl(\Set^{\mathrm{op}},\Fun_\sqcup(\Cont,\mathcal E)\bigr)\\
+ \simeq\Fun\bigl((\Set^{\mathrm{op}})^2,\mathcal E\bigr),
+\end{multline*}
+each step by the case $n=1$. Induct.
+\end{proof}
+
+We use Lemma~\ref{lem:up} constantly and in one specific form, worth stating as
+a slogan:
+
+\begin{quote}
+\emph{A functor $\Cont^n\to\Cont$ that preserves coproducts in each variable is
+determined, up to canonical isomorphism, by its restriction to representables ---
+and so are the natural transformations between two such. An equation between
+such transformations (a pentagon, a triangle) holds if and only if it holds on
+representables.}
+\end{quote}
+
+Lemma~\ref{lem:up} compares functors that already preserve coproducts. In
+§\ref{sec:comparitor} we shall need to compare a coproduct-preserving functor
+with one that does \emph{not} preserve coproducts (namely $p\tri-$), so we
+record the Kan extension itself, and not merely the equivalence.
+
+\begin{Lemma}[Extension by coproducts \emph{is} the left Kan extension]
+\label{lem:lan}
+Write $J:=y^{(-)}$. For every $G\colon\Set^{\mathrm{op}}\to\Cont$ the left Kan
+extension of $G$ along $J$ exists and is given by
+\[
+   (\Lan_J G)(q)\;=\;\sum_{t\in S_q} G\bigl(q[t]\bigr).
+\]
+Consequently $\Lan_J\dashv\mathrm{res}_J$, where
+$\mathrm{res}_J F=F\circ J$ --- and this adjunction holds against \emph{arbitrary}
+$F\colon\Cont\to\Cont$, not merely coproduct-preserving ones.
+\prov{Folklore; proof MacBeth}
+\end{Lemma}
+
+\begin{proof}
+The pointwise formula computes $(\Lan_J G)(q)$ as the colimit of $G$ over the
+comma category $J/q$. An object of $J/q$ is a set $A$ together with a morphism
+$y^A\to q$, that is (Definition~\ref{def:container}) a shape $t\in S_q$ and a
+function $u\colon q[t]\to A$. A morphism $(A,t,u)\to(A',t',u')$ is a morphism
+$A\to A'$ of $\Set^{\mathrm{op}}$, i.e.\ a function $g\colon A'\to A$; the
+commuting condition forces $t=t'$ (the shape map of $y^A\to y^{A'}$ is the only
+one there is, so the composite still selects $t'$) and $u=g\circ u'$.
+
+So $J/q$ is the disjoint union over $t\in S_q$ of a fibre $\mathcal F_t$ whose
+objects are functions $u\colon q[t]\to A$ and whose morphisms
+$(A,u)\to(A',u')$ are $g\colon A'\to A$ with $g\circ u'=u$. That is,
+$\mathcal F_t=(q[t]/\Set)^{\mathrm{op}}$, and the pair $(q[t],\id)$ --- initial in
+the coslice --- is \emph{terminal} in $\mathcal F_t$. A colimit over a category
+with a terminal object is the value of the diagram there, so
+$\operatorname{colim}_{\mathcal F_t}G=G(q[t])$ and
+$\operatorname{colim}_{J/q}G=\sum_{t\in S_q}G(q[t])$. This exists for every $G$
+and every $q$, so the pointwise left Kan extension exists, and a pointwise left
+Kan extension along $J$ that exists at every object is left adjoint to
+restriction along $J$.
+\end{proof}
+
+\begin{Remark}[No size problem]\label{rem:size}
+The usual definition of Day convolution on $\Poly$ is a coend over $\Set^2$,
+which is large \cite[eq.~(3.80)]{NiuSpivak}. We never form a coend.
+Lemma~\ref{lem:up} is a \emph{freeness} statement, and the extension it produces
+is a coproduct indexed by $S_p\times S_q$, which is small. Nothing below needs
+the coend to exist; co-Yoneda \cite[eq.~(3.81)]{NiuSpivak} says the two agree
+when it does.
+\end{Remark}
+
+%% ===========================================================================
+\section{The census: four structures, and why the arithmetic looks upside down}
+\label{sec:census}
+
+\begin{Definition}[The four]\label{def:four}
+For containers $p,q$:
+\begin{align*}
+ p + q &:= \bigl(S_p + S_q,\ \text{positions inherited}\bigr),
+   &&\text{unit } 0;\\
+ p\times q &:= \bigl(S_p\times S_q,\ (s,t)\mapsto p[s] + q[t]\bigr),
+   &&\text{unit } 1 = y^{\varnothing};\\
+ p\dir q &:= \bigl(S_p\times S_q,\ (s,t)\mapsto p[s]\times q[t]\bigr),
+   &&\text{unit } y = y^{1};\\
+ p\tri q &:= \Bigl(\textstyle\sum_{s\in S_p}\bigl(p[s]\to S_q\bigr),\
+   (s,f)\mapsto \textstyle\sum_{i\in p[s]} q[f\,i]\Bigr),
+   &&\text{unit } y .
+\end{align*}
+On extensions, $\Ext{p+q}=\Ext p+\Ext q$ and $\Ext{p\times q}=\Ext p\times\Ext q$
+(both pointwise) and $\Ext{p\tri q}=\Ext p\circ\Ext q$. There is \emph{no}
+pointwise description of $\Ext{p\dir q}$.
+\prov{Cited: Spivak 2022 \cite{SpivakRef}; Niu--Spivak \cite{NiuSpivak}}
+\end{Definition}
+
+That last sentence is the seed of everything that follows. But first, the
+complaint a new reader always makes.
+
+\subsection{The first jewel: a sum of positions gives a product of functors}
+
+The product of containers has \emph{shapes} $S_p\times S_q$ --- fine, choose one
+of each --- but its \emph{positions} are $p[s]+q[t]$, a \emph{disjoint union}.
+Readers find this perverse: surely a product of things should multiply
+something. It does not, and the reason is one line of arithmetic:
+\[
+  \Ext{p\times q}X
+   \;=\;\sum_{(s,t)} X^{\,p[s]+q[t]}
+   \;=\;\sum_{(s,t)} X^{p[s]}\times X^{q[t]}
+   \;=\;\Bigl(\sum_s X^{p[s]}\Bigr)\times\Bigl(\sum_t X^{q[t]}\Bigr)
+   \;=\;\Ext pX\times\Ext qX .
+\]
+The middle step is the \emph{exponential law} $X^{A+B}\cong X^A\times X^B$: a
+labelling of the disjoint union of the two position sets is precisely a pair of
+labellings. To hold a $p$-structure and a $q$-structure side by side is to fill
+in $p$'s positions \emph{and} $q$'s positions, and the positions you must fill
+are the two sets together. The sum on positions is not a quirk of the
+definition; it is what ``both at once'' means when the data live at positions.
+
+Read it the other way and it is a warning. The Dirichlet tensor multiplies the
+positions, so
+\[
+  \Ext{p\dir q}X=\sum_{(s,t)}X^{\,p[s]\times q[t]},
+\]
+and $X^{A\times B}$ does \emph{not} split as anything built from $X^A$ and
+$X^B$. So $\dir$ cannot be pointwise --- $y^3\dir y^3=y^9$, where a pointwise
+product would give $y^6$. Two tensors, the same shape set, opposite behaviour on
+extensions, and the whole difference is which operation on \emph{positions}
+appears in the exponent. Section~\ref{sec:day} explains why the exponent is
+exactly where the choice lives.
+
+\subsection{Coherence, and the second jewel}
+
+\begin{Theorem}[The four are monoidal categories]\label{thm:fourmonoidal}
+Each of $(\Cont,+,0)$, $(\Cont,\times,1)$, $(\Cont,\dir,y)$ and
+$(\Cont,\tri,y)$ is a monoidal category. The first three are symmetric; $\tri$
+is not.
+\prov{Cited: Spivak 2022 \cite{SpivakRef}; MacBeth, Lean-verified:
+\texttt{FourMonoidal.lean}, \texttt{Dirichlet.lean}, \texttt{Monoidal.lean}}
+\end{Theorem}
+
+The Lean development gives one \texttt{MonoidalCategory Container} instance per
+structure --- \texttt{contCoprodMonoidal}, \texttt{contProdMonoidal},
+\texttt{contDirichletMonoidal} and \texttt{ContMonoidal} --- each with its
+associator, unitors, naturality, pentagon and triangle discharged.
+
+For $+$ and $\times$ coherence is free: they are the categorical coproduct and
+product, and any category with finite coproducts and products is monoidal for
+them. For $\times$ and $\dir$ there is a second and more informative derivation:
+both are Day convolutions, so their associator and unitors act
+\emph{separately} on the shape sets and on the position sets, inherited from
+$\Set$'s own $+$ and $\times$, and the pentagon and triangle are then $\Set$'s
+pentagon and triangle applied twice over. Proposition~\ref{prop:dayday} says
+this in the right generality. The sequential operator is the one that needs
+work, and we do it in §\ref{sec:seq}.
+
+Before that, a reversal worth recording, because it is the opposite of what we
+predicted.
+
+\begin{Remark}[The second jewel: $\dir$ is the \emph{tamest} of the four]
+\label{rem:tame}
+We spent a month calling the Dirichlet tensor ``the subtle one''. In Lean it is
+the only one of the four that costs nothing: in
+\texttt{contDirichletMonoidal} every coherence obligation ---
+associator naturality, both unitors, pentagon, triangle --- closes by
+\texttt{rfl}. Its associator is the definitional $\eta$-law for pairs. The other
+three all need $\texttt{Quot.sound}$ somewhere, because their position sets are
+built by \emph{case analysis} (a coproduct, or a dependent sum) rather than by
+pairing, and case analysis has to be proved to respect equality where pairing
+does not.
+
+So $\dir$ is subtle \emph{semantically} --- it is the one whose extension is not
+pointwise --- and utterly tame \emph{syntactically}. The two kinds of difficulty
+are unrelated, and conflating them cost us a month and one false theorem
+(§\ref{sec:erratum}).
+\end{Remark}
+
+\subsection{The sequential operator, explicitly}
+\label{sec:seq}
+
+$\tri$ is the operator this book cares about most --- its comonoids are the
+directed containers, hence the small categories (a theorem of Ahman--Uustalu
+\cite{AhmanUustalu}; in $\tri$-comonoid form it is the $\mathcal C=1$ case of
+Dorta--Jarvis--Niu \cite[Thm.~4.3]{DJN23}) --- so we give its coherence
+data in full, in container language, rather than citing it.
+
+\begin{Proposition}[Associator and unitors for $\tri$]\label{prop:seqassoc}
+$\alpha\colon (p\tri q)\tri r\xrightarrow{\ \sim\ } p\tri(q\tri r)$ is given on
+shapes by \emph{currying} and on positions by \emph{$\Sigma$-reassociation}. In
+detail: a shape of $(p\tri q)\tri r$ is $((s,f),g)$ with $f\colon p[s]\to S_q$
+and $g\colon\sum_{i\in p[s]}q[f\,i]\to S_r$; a shape of $p\tri(q\tri r)$ is
+$(s,k)$ with $k\colon p[s]\to S_{q\tri r}$; and
+\[
+  \alpha_{\mathrm s}\bigl((s,f),g\bigr)=(s,k),\qquad
+  k\,i=\bigl(f\,i,\ j\mapsto g(i,j)\bigr),
+\]
+while both sides have positions $\sum_i\sum_{j\in q[f\,i]} r\bigl[g(i,j)\bigr]$,
+bracketed $((i,j),m)$ on the left and $(i,(j,m))$ on the right, and
+$\alpha_{\mathrm p}(i,(j,m))=((i,j),m)$. The unitors are
+\[
+  \lambda_{\mathrm s}(\ast,g)=g\,\bullet,\quad \lambda_{\mathrm p}(m)=(\bullet,m);
+  \qquad
+  \rho_{\mathrm s}(s,!)=s,\quad \rho_{\mathrm p}(i)=(i,\bullet).
+\]
+\prov{MacBeth, Lean-verified: \texttt{Monoidal.lean}}
+\end{Proposition}
+
+\begin{proof}
+$\alpha_{\mathrm s}$ is the composite of the distributivity equivalence
+$\prod_i\sum_{t}(q[t]\to S_r)\cong\sum_f\prod_i(q[f\,i]\to S_r)$ with currying
+$\prod_i(q[f\,i]\to S_r)\cong(\sum_i q[f\,i]\to S_r)$; its inverse sends $(s,k)$
+to $((s,f),g)$ with $f\,i=\pi_1(k\,i)$ and $g(i,j)=\pi_2(k\,i)\,j$. Once
+$k\,i=(f\,i,\ j\mapsto g(i,j))$ is substituted, the two position sets are the
+same iterated sum with different bracketing, and $\alpha_{\mathrm p}$ is the
+canonical reassociation. Both components are bijections. The unitors are read
+off from $\sum_{i\in 1}q[g\,\bullet]\cong q[g\,\bullet]$ and
+$\sum_{i\in p[s]}1\cong p[s]$.
+\end{proof}
+
+Both components are \emph{transport-free}: in Lean the associator needs no
+\texttt{cast}, because currying and $\Sigma$-reassociation are definitional
+equalities of the underlying types. That is why the pentagon goes through by
+computation.
+
+\begin{Theorem}[Pentagon and triangle for $\tri$]\label{thm:pentagon}
+The associator and unitors of Proposition~\ref{prop:seqassoc} satisfy the
+pentagon and the triangle identity. Hence $(\Cont,\tri,y)$ is a monoidal
+category, and by Mac~Lane's coherence theorem \cite{MacLane} every formal diagram of
+associators and unitors commutes.
+\prov{MacBeth, Lean-verified: \texttt{Monoidal.lean} (\texttt{Container.pentagon},
+\texttt{Container.triangle})}
+\end{Theorem}
+
+\begin{proof}
+\emph{Shapes: both legs are a flattening.} A shape of the source
+$((p_1\tri p_2)\tri p_3)\tri p_4$ is, unfolding
+Definition~\ref{def:four} three times, a tuple $W=\bigl(((s,f),g),h\bigr)$ with
+\[
+ f\colon p_1[s]\to S_2,\qquad
+ g\colon\{(i,j)\}\to S_3,\qquad
+ h\colon\{((i,j),m)\}\to S_4,
+\]
+where $\{(i,j)\}=\sum_i p_2[f\,i]$ and $\{((i,j),m)\}=\sum_{(i,j)}p_3[g(i,j)]$.
+Define the \emph{normal form}
+\[
+  \Phi(W)=\bigl(s,\ i\mapsto\bigl(f\,i,\ j\mapsto (\,g(i,j),\ m\mapsto
+   h((i,j),m)\,)\bigr)\bigr),
+\]
+a shape of the target $p_1\tri(p_2\tri(p_3\tri p_4))$: it simply erases the
+bracketing and leaves the nested-function presentation. Computing the two legs
+of the pentagon with Proposition~\ref{prop:seqassoc} --- one leg applies
+$\alpha\tri p_4$, then $\alpha$, then $p_1\tri\alpha$; the other applies
+$\alpha$ twice --- each yields $\Phi(W)$ after currying is unwound. Two maps
+equal to the same normal form are equal.
+
+\emph{Positions: everything is the identity on the flat tuple.} Every map in
+either leg is, on positions, a bijection that leaves the underlying flat tuple
+$(i,j,m,n)$ alone and only changes its bracketing: $\alpha_{\mathrm p}$
+rebrackets one adjacent pair, and whiskering fixes the whiskered coordinate and
+transports the rest. Let $\mathrm{fl}$ denote the ``erase brackets'' bijection
+from either bracketed position set to the flat set $\{(i,j,m,n)\}$. Each
+elementary map $\mu$ satisfies $\mathrm{fl}\circ\mu_{\mathrm p}=\mathrm{fl}$,
+hence so does any composite; so both legs equal
+$\mathrm{fl}_{\mathrm{tgt}}^{-1}\circ\mathrm{fl}_{\mathrm{src}}$, and they
+coincide.
+
+The triangle is the same computation with $p_2=y$: both sides send the shape
+$((s,f),g)$ of $(p_1\tri y)\tri p_2$ to $\bigl(s,\ i\mapsto g(i,\bullet)\bigr)$
+and both send the position $(i,m)$ to $((i,\bullet),m)$.
+\end{proof}
+
+\begin{Remark}
+The proof of Theorem~\ref{thm:pentagon} is the informal shadow of what Lean
+does. In \texttt{Monoidal.lean} the pentagon and triangle close by \texttt{rfl}
+on both components: the normal form $\Phi$ \emph{is} Lean's normal form, and
+``erase the brackets'' is definitional unfolding. Machine and hand agree on the
+mechanism, not merely on the conclusion.
+\end{Remark}
+
+%% ===========================================================================
+\section{Why these? The Day family and its classification}
+\label{sec:day}
+
+The census gives four. The next definition gives a proper class, and the four
+sort themselves inside it.
+
+\begin{Definition}[The Day tensor of a monoidal structure on $\Set$]
+\label{def:day}
+Let $(\star, I)$ be a monoidal structure on $\Set$. Define, on containers,
+\[
+  p\dayt_\star q \;:=\;\Bigl(S_p\times S_q,\ (s,t)\mapsto p[s]\star q[t]\Bigr)
+   \;=\;\sum_{(s,t)} y^{\,p[s]\,\star\,q[t]},
+  \qquad J_\star := y^{I}.
+\]
+\prov{Cited: Niu--Spivak \cite[Prop.~3.79]{NiuSpivak}}
+\end{Definition}
+
+\begin{Proposition}[Day tensors are monoidal]\label{prop:dayday}
+$(\dayt_\star, J_\star)$ is a monoidal structure on $\Cont$; it preserves
+coproducts in each variable; and it sends representables to representables, with
+$y^A\dayt_\star y^B=y^{A\star B}$. It is the Day convolution of $(\star,I)$.
+\prov{Cited: Niu--Spivak \cite[Prop.~3.79, eqs.~(3.80)--(3.81)]{NiuSpivak}}
+\end{Proposition}
+
+\begin{proof}
+The coherence data are inherited componentwise. The associator of $\dayt_\star$
+at $(p,q,r)$ is the identity on shapes (both sides have shapes
+$S_p\times S_q\times S_r$) and, on positions, the associator of $\star$ at
+$(p[s],q[t],r[u])$ --- reversed, positions being contravariant. Pentagon and
+triangle hold shapewise because they hold in $\Set$. Coproduct preservation in
+each variable holds because $S_p\times(-)$ preserves coproducts of sets,
+including the empty one. Representables: immediate from the formula. The
+identification with Day convolution is \cite[Prop.~3.79]{NiuSpivak}.
+\end{proof}
+
+\begin{Example}[Two of the four are Day tensors]\label{ex:twoare}
+$\dayt_{(+,\varnothing)}=\times$ and $\dayt_{(\times,1)}=\dir$.
+\prov{Cited: Niu--Spivak \cite[Prop.~3.79, ¶2]{NiuSpivak}}
+\end{Example}
+
+This is the answer to the upside-down arithmetic of §\ref{sec:census}: the
+positions of the categorical product are a disjoint union \emph{because the
+product is the Day convolution of the coproduct of sets}. The tensor of $\Set$
+lands in the exponent, and $y^{A+B}\cong y^A\times y^B$.
+
+\begin{Lemma}[Every Day tensor annihilates $0$]\label{lem:annihilate}
+$p\dayt_\star 0\cong 0\cong 0\dayt_\star p$.
+\prov{MacBeth (elementary)}
+\end{Lemma}
+
+\begin{proof}
+$S_p\times\varnothing=\varnothing$.
+\end{proof}
+
+Trivial as it is, Lemma~\ref{lem:annihilate} already expels the coproduct from
+the family: $p+0\cong p\not\cong 0$. So $+$ is not a Day tensor, and neither is
+$\tri$ (Table~\ref{tab:sorting}). We now show that these two failures are the
+\emph{only} way to fall outside the family.
+
+\subsection{Theorem A}
+
+\begin{Definition}[Convolutional]\label{def:convolutional}
+A monoidal structure $(\dayt, J)$ on $\Cont$ is \emph{convolutional} if
+\textbf{(D1)} $\dayt$ preserves coproducts in each variable, including the empty
+coproduct ($p\dayt 0\cong 0$); and \textbf{(D2)} the representables are closed
+under $\dayt$.
+\prov{MacBeth}
+\end{Definition}
+
+\begin{Lemma}[The unit comes for free]\label{lem:unitfree}
+(D1) and (D2) force $J$ to be representable.
+\prov{MacBeth}
+\end{Lemma}
+
+\begin{proof}
+Write $J=\sum_{t\in S_J} y^{J[t]}$. By (D1),
+\[
+  y^A \;\cong\; J\dayt y^A \;=\;\sum_{t\in S_J}\bigl(y^{J[t]}\dayt y^A\bigr),
+\]
+and by (D2) each summand has exactly one shape. So the right-hand side has
+$|S_J|$ shapes and the left has one; hence $|S_J|=1$.
+\end{proof}
+
+So ``convolutional'' is a condition on the \emph{tensor} alone --- the unit has
+no say in the matter. This is what makes Theorem~A a statement about
+bifunctors, and it is what lets Theorem~B$^+$ drop the Day hypothesis
+altogether.
+
+\begin{Theorem}[A: classification]\label{thm:A}
+The assignment $(\star,I)\mapsto(\dayt_\star, y^I)$ is an \textbf{equivalence}
+\[
+  \{\text{monoidal structures on }\Set\}\;\simeq\;
+  \{\text{convolutional monoidal structures on }\Cont\},
+\]
+both sides taken with monoidal isomorphisms over the identity functor as
+morphisms. In particular every convolutional monoidal structure on $\Cont$ is a
+Day convolution, and the monoidal structure on $\Set$ inducing it is unique up
+to monoidal isomorphism.
+\prov{MacBeth}
+\end{Theorem}
+
+\begin{proof}
+\emph{Well defined:} Proposition~\ref{prop:dayday}.
+
+\emph{Essentially surjective.} Let $(\dayt,J)$ be convolutional. By (D2) the
+full subcategory of representables is closed under $\dayt$, and by
+Lemma~\ref{lem:unitfree} it contains $J$; by Lemma~\ref{lem:yff} that
+subcategory \emph{is} $\Set^{\mathrm{op}}$. We need a canonical choice of tensor
+on $\Set$, not merely ``$y^A\dayt y^B$ is isomorphic to some $y^C$''. By (D2)
+the container $y^A\dayt y^B$ has exactly one shape, so we may put
+\[
+   A\star B \;:=\;\bigl(y^A\dayt y^B\bigr)[\ast],
+\]
+the position set at that unique shape --- and then $y^A\dayt y^B=y^{A\star B}$
+on the nose. Likewise $I:=J[\ast]$, so $J=y^I$. Functoriality of $\star$ follows
+from that of $\dayt$ together with Lemma~\ref{lem:yff}. Applying (D2) twice,
+both $(y^A\dayt y^B)\dayt y^C$ and $y^A\dayt(y^B\dayt y^C)$ are representable, so
+the associator of $\dayt$ at representables is an isomorphism \emph{between
+representables} and hence comes from an isomorphism in $\Set^{\mathrm{op}}$
+(Lemma~\ref{lem:yff}); likewise the unitors. Their pentagon and triangle are the
+pentagon and triangle of $\dayt$ at representables. So $(\Set,\star,I)$ is
+monoidal (a monoidal structure on $\mathcal C$ and on $\mathcal C^{\mathrm{op}}$
+are the same data, with the coherence isomorphisms inverted).
+
+Now $\dayt$ and $\dayt_\star$ are both bifunctors $\Cont^2\to\Cont$ preserving
+coproducts in each variable --- the first by (D1), the second by
+Proposition~\ref{prop:dayday} --- and they agree on representables by
+construction. $\Cont$ has small coproducts, so Lemma~\ref{lem:up} applies with
+$\mathcal E=\Cont$: with $n=2$ it makes $\dayt$ and $\dayt_\star$ canonically
+isomorphic. Their associators are both natural transformations between functors
+$\Cont^3\to\Cont$ that preserve coproducts in each variable, and on
+representables both restrict to the associator of $\star$ --- for $\dayt$ by the
+construction just given, for $\dayt_\star$ by Proposition~\ref{prop:dayday}. By
+Lemma~\ref{lem:up} with $n=3$, a natural transformation between two such
+functors is determined by its restriction to representables, so the two
+associators agree under the isomorphism; with $n=1$, so do the unitors. Hence
+$\dayt\cong\dayt_\star$ is a monoidal isomorphism.
+
+\emph{Fully faithful.} A monoidal isomorphism $\varphi\colon\dayt_\star\cong
+\dayt_{\star'}$ over $\id_{\Cont}$ restricts at representables to
+$y^{A\star B}\cong y^{A\star' B}$, hence (Lemma~\ref{lem:yff}) to a natural
+isomorphism $\star\cong\star'$, monoidal because $\varphi$ is. Conversely a
+monoidal isomorphism $\star\cong\star'$ extends by Lemma~\ref{lem:up}. The two
+operations are mutually inverse: restriction after extension is the identity on
+the nose, and extension after restriction is the identity by the uniqueness half
+of Lemma~\ref{lem:up}.
+\end{proof}
+
+\begin{Remark}\label{rem:D1D2}
+(D1) and (D2) are exactly what Lemma~\ref{lem:up} needs: (D1) says the tensor is
+determined by its restriction to representables; (D2) says that restriction
+lands in $\Set^{\mathrm{op}}$ rather than merely in $\Cont$. Drop (D2) and one
+gets not a monoidal structure on $\Set$ but a promonoidal-style structure valued
+in $\Cont$ --- a strictly larger family, which we do not classify here.
+\end{Remark}
+
+\subsection{Where the four sit}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lccl@{}}
+\toprule
+ & (D1) coproducts, each variable & (D2) representables closed & Day tensor? \\
+\midrule
+$\times$ & yes & yes & yes, of $(+,\varnothing)$ \\
+$\dir$   & yes & yes & yes, of $(\times,1)$ \\
+$+$      & \textbf{no} --- $p+0\cong p\not\cong 0$ &
+           \textbf{no} --- $y^A+y^B$ has two shapes & no \\
+$\tri$   & \textbf{no} in the right variable\footnotemark &
+           yes --- $y^A\tri y^B=y^{A\times B}$ & no \\
+\bottomrule
+\end{tabular}
+\caption{The four, sorted by Theorem~A's two conditions.}
+\label{tab:sorting}
+\end{table}
+\footnotetext{$(y+1)\tri(1+0)\cong 2$ but $\bigl((y+1)\tri 1\bigr)+\bigl((y+1)\tri
+0\bigr)\cong 3$ \cite[Ex.~6.56]{NiuSpivak}. In the \emph{left} variable $\tri$
+does preserve coproducts.}
+
+The coproduct fails both conditions, and fails (D1) for a triviality. \emph{The
+sequential operator is the near miss.} It satisfies (D2) exactly, and its
+restriction to representables is $(A,B)\mapsto A\times B$ with unit
+$1$ --- the \emph{same restriction as the Dirichlet tensor}. Only (D1), and only
+in the right variable, keeps it out of the family.
+
+That is not a coincidence. Section~\ref{sec:comparitor} shows it is a theorem:
+$\dir$ is what you get when you force $\tri$ to satisfy (D1).
+
+%% ===========================================================================
+\section{Pointwiseness, and the theorem that explains a dead end}
+\label{sec:pointwise}
+
+\begin{Definition}[Pointwise]\label{def:pointwise}
+A monoidal structure $\dayt$ on $\Cont$ is \emph{pointwise} if there is an
+isomorphism $\theta_{p,q}\colon p\dayt q\cong p\times q$, natural in $p$ and
+$q$.
+\prov{MacBeth}
+\end{Definition}
+
+Because $\Ext{-}$ is fully faithful and $\Ext{p\times q}=\Ext p\times\Ext q$,
+this says exactly that $\Ext{p\dayt q}X\cong\Ext pX\times\Ext qX$ naturally in
+$p,q$ and $X$ --- i.e.\ that
+$\Ext{-}\colon(\Cont,\dayt)\to([\Set,\Set],\times_{\text{ptwise}})$ is strong
+monoidal.
+
+\subsection{The unit already decides it --- sometimes}
+
+\begin{Proposition}\label{prop:unitinitial}
+If $\dayt$ is pointwise then its unit is $1=y^{\varnothing}$, the terminal
+container.
+\prov{MacBeth}
+\end{Proposition}
+
+\begin{proof}
+Naturality gives $\Ext JX\times\Ext pX\cong\Ext{J\dayt p}X\cong\Ext pX$ for all
+$p, X$. Take $p=y$, so $\Ext pX=X$: then $\Ext JX\times X\cong X$ for all $X$.
+At $X=2$ this forces $|\Ext J2|=1$. Writing $\Ext J2=\sum_{s\in S_J}2^{J[s]}$, a
+sum of positive cardinals equal to $1$ forces $|S_J|=1$ and $2^{|J[\ast]|}=1$,
+i.e.\ $J[\ast]=\varnothing$. So $J=y^{\varnothing}=1$.
+\end{proof}
+
+\begin{Corollary}\label{cor:dirnotptwise}
+The Dirichlet tensor is not pointwise: its unit is $y\neq 1$.
+\prov{MacBeth}
+\end{Corollary}
+
+That is a one-line proof of a fact we had previously only witnessed by the
+example $y^3\dir y^3=y^9\neq y^6$. But the unit is a \emph{blunt} instrument:
+§\ref{sec:properclass} exhibits a proper class of non-pointwise Day tensors that
+all share the product's unit. Something sharper is needed, and the sharper thing
+is a rigidity property of the coproduct.
+
+\subsection{The rigidity of the coproduct}
+
+\begin{Lemma}[Rigidity]\label{lem:rigidity}
+Let $\alpha\colon (A+B)+C\Rightarrow A+(B+C)$ be \emph{any} natural
+transformation of functors $\Set^3\to\Set$. Then $\alpha$ is the canonical
+associator. Likewise the only natural $\varnothing+A\Rightarrow A$ and
+$A+\varnothing\Rightarrow A$ are the canonical unitors. Consequently
+$(+,\varnothing)$ admits exactly one monoidal structure on $\Set$, and its
+coherence data are forced \emph{before} coherence is imposed.
+\prov{MacBeth; likely folklore}
+\end{Lemma}
+
+\begin{proof}
+A map out of $(A+B)+C$ is precisely its three components on $A$, $B$, $C$.
+
+\emph{The $A$-component} is a family $u_{A,B,C}\colon A\to A+B+C$ natural in all
+three variables. Naturality in $B$ and $C$ along the unique maps
+$\varnothing\to B$, $\varnothing\to C$ gives
+$u_{A,B,C}=(\id_A+{!}_B+{!}_C)\circ u_{A,\varnothing,\varnothing}$. Now
+$A+\varnothing+\varnothing\cong A$ canonically and naturally, so
+$u_{A,\varnothing,\varnothing}$ is a natural endomorphism of $\id_{\Set}$, and
+the only one is the identity: for $a\in A$, name it $\bar a\colon 1\to A$;
+naturality against $\bar a$ gives
+$\eta_A(a)=\eta_A(\bar a(\ast))=\bar a(\eta_1(\ast))=a$, since $\eta_1$ is the
+identity on $1$. Hence $u_{A,B,C}=\mathrm{inl}$.
+
+\emph{The $B$-component} is a family $v_{A,B,C}\colon B\to A+B+C$. Setting
+$A=C=\varnothing$ and running the same argument makes
+$v_{\varnothing,B,\varnothing}$ the canonical isomorphism; naturality in $A$ and
+$C$ along $\varnothing\to A$, $\varnothing\to C$ then makes $v_{A,B,C}$ the
+middle injection. Symmetrically for $C$. So $\alpha$ is canonical.
+
+\emph{Unitors.} A natural $\lambda_A\colon\varnothing+A\to A$ has an
+$\varnothing$-component (unique) and an $A$-component, a natural endomorphism of
+$\id_{\Set}$, hence the identity.
+\end{proof}
+
+\subsection{Theorem B, and the removal of its hypothesis}
+
+\begin{Theorem}[B: the product is the unique pointwise Day tensor]\label{thm:B}
+For a monoidal structure $(\star,I)$ on $\Set$, the following are equivalent:
+\begin{enumerate}[nosep,label=(\arabic*)]
+\item $\dayt_\star$ is pointwise;
+\item $\star\cong +$ as bifunctors $\Set\times\Set\to\Set$;
+\item $(\star,I)\cong(+,\varnothing)$ as monoidal structures on $\Set$;
+\item $\dayt_\star\cong\times$ as monoidal structures on $\Cont$.
+\end{enumerate}
+\prov{MacBeth}
+\end{Theorem}
+
+\begin{proof}
+\emph{(1) $\Rightarrow$ (2).} Restrict $\theta$ to representables. By
+Proposition~\ref{prop:dayday}, $y^A\dayt_\star y^B=y^{A\star B}$; and
+$y^A\times y^B=y^{A+B}$ (one shape, positions $A+B$). So $\theta$ gives
+$y^{A\star B}\cong y^{A+B}$, natural in $A,B\in\Set^{\mathrm{op}}$. Since
+$y^{(-)}$ is fully faithful (Lemma~\ref{lem:yff}), this isomorphism comes from a
+natural isomorphism of the bifunctors $\star$ and $+$ on
+$(\Set^{\mathrm{op}})^2$; taking opposites, $\star\cong +$ on $\Set^2$.
+
+\emph{(2) $\Rightarrow$ (3).} Let $\varphi\colon\star\cong +$ be a natural
+isomorphism of bifunctors. The left unitor of $\star$ gives $I\star A\cong A$;
+composing with $\varphi$, $I+A\cong A$ for every set $A$. At $A=1$ this gives
+$|I|+1=1$, so $I=\varnothing$. Transport the monoidal structure
+$(\star,I,\alpha,\lambda,\rho)$ along $\varphi$ and $I\cong\varnothing$: the
+result is a monoidal structure whose tensor is literally $+$, whose unit is
+literally $\varnothing$, and whose coherence data are natural --- hence, by
+Lemma~\ref{lem:rigidity}, \emph{canonical}. So the transported structure is
+$(+,\varnothing)$ on the nose, i.e.\ $(\varphi, I\cong\varnothing)$ is a monoidal
+isomorphism.
+
+\emph{(3) $\Rightarrow$ (4).} The fully faithful half of Theorem~\ref{thm:A}:
+a monoidal isomorphism $(\star,I)\cong(+,\varnothing)$ extends to a monoidal
+isomorphism $\dayt_\star\cong\dayt_{(+,\varnothing)}=\times$
+(Example~\ref{ex:twoare}).
+
+\emph{(4) $\Rightarrow$ (1).} A monoidal isomorphism is in particular a natural
+isomorphism.
+\end{proof}
+
+\begin{Theorem}[B$^+$: the Day hypothesis is not needed]\label{thm:Bplus}
+Let $(\dayt, J)$ be \emph{any} monoidal structure on $\Cont$. Then $\dayt$ is
+pointwise if and only if $(\dayt,J)\cong(\times,1)$. That is: \textbf{the
+categorical product is the unique pointwise monoidal structure on $\Cont$}.
+\prov{MacBeth}
+\end{Theorem}
+
+\begin{proof}
+($\Leftarrow$) is trivial. ($\Rightarrow$) Pointwise says $\dayt\cong\times$ as
+\emph{bifunctors}. Both (D1) and (D2) are properties of the bifunctor alone and
+are invariant under natural isomorphism of bifunctors. The product satisfies
+both: (D1) because $\Cont$ is distributive ($(p+q)\times r\cong p\times r+q\times
+r$ and $0\times r\cong 0$, immediate from the shape formula $S_p\times S_q$), and
+(D2) because $y^A\times y^B=y^{A+B}$. Hence $\dayt$ satisfies (D1) and (D2),
+i.e.\ $(\dayt,J)$ is convolutional. By Theorem~\ref{thm:A},
+$(\dayt,J)\cong(\dayt_\star, y^I)$ monoidally for some monoidal $(\star,I)$ on
+$\Set$; then $\dayt_\star$ is pointwise, so by Theorem~\ref{thm:B}
+$\dayt_\star\cong\times$ monoidally, and therefore $\dayt\cong\times$ monoidally.
+\end{proof}
+
+So pointwiseness is not a condition one imposes \emph{within} the Day family and
+then discovers is rare. It is a condition on monoidal structures on $\Cont$ at
+large, and it holds for the product and nothing else. The Day family is simply
+where one can \emph{see} this, because Theorem~A makes the family surveyable.
+
+\begin{Corollary}[Why the strictness dead end was forced]\label{cor:deadend}
+$\Ext{-}\colon(\Cont,\dayt)\to([\Set,\Set],\times_{\text{ptwise}})$ is strong
+monoidal if and only if $\dayt$ is the cartesian structure. In particular no
+reformulation of $\dir$ could ever have made $\Ext{-}$ monoidal into the
+pointwise product.
+\prov{MacBeth}
+\end{Corollary}
+
+This retro-explains the erratum of §\ref{sec:erratum}. The failure was
+structural, not a bookkeeping error: there was no version of that claim that
+could have been true. (What \emph{is} true is that $\Ext{-}$ is strong monoidal
+from $(\Cont,\dir,y)$ to $([\Set,\Set],\text{Day-of-}\times,\id)$ --- into the
+Dirichlet convolution, not into the pointwise product. The comparison there is
+the co-Yoneda isomorphism, and it is not an identity.)
+
+\subsection{An effective test}
+
+Theorem~B is an existence statement; to \emph{use} it one wants to inspect a
+given $\star$ and decide. That is what the next definition does.
+
+\begin{Definition}[Comparison map]\label{def:kappa}
+Let $(\star,I)$ be monoidal on $\Set$ with $I\cong\varnothing$. The
+\emph{comparison map} $\kappa_{A,B}\colon A+B\to A\star B$ is the copairing of
+\[
+  A\cong A\star\varnothing\xrightarrow{\,A\star\,{!}_B\,}A\star B
+  \qquad\text{and}\qquad
+  B\cong\varnothing\star B\xrightarrow{\,{!}_A\star B\,}A\star B,
+\]
+using the unitors and functoriality of $\star$ along $!\colon\varnothing\to X$.
+It is natural in $A$ and $B$.
+\prov{MacBeth}
+\end{Definition}
+
+\begin{Theorem}[B$'$: test form]\label{thm:Bprime}
+$\dayt_\star$ is pointwise \textbf{iff} $I\cong\varnothing$ and $\kappa_{A,B}$
+is a bijection for all $A,B$.
+\prov{MacBeth}
+\end{Theorem}
+
+\begin{proof}
+($\Leftarrow$) $\kappa$ is then a natural isomorphism $+\cong\star$, so
+Theorem~\ref{thm:B}(2) applies.
+
+($\Rightarrow$) Suppose $\dayt_\star$ is pointwise. Then $I\cong\varnothing$
+(Proposition~\ref{prop:unitinitial}, since $J_\star=y^I$), so $\kappa$ is
+defined; and by Theorem~\ref{thm:B} there is a \emph{monoidal} natural
+isomorphism $(\varphi,\iota)\colon(\star,I)\to(+,\varnothing)$. We claim
+$\varphi\circ\kappa=\id_{A+B}$, whence $\kappa=\varphi^{-1}$ is a bijection. It
+suffices to check the two components. On the $A$-summand, $\kappa|_A$ is
+$A\xrightarrow{(\rho^\star)^{-1}} A\star I\xrightarrow{A\star !_B} A\star B$.
+Naturality of $\varphi$ in the second variable gives
+$\varphi_{A,B}\circ(A\star !_B)=(A+!_B)\circ\varphi_{A,I}$; and compatibility of
+$(\varphi,\iota)$ with the right unitors gives
+$\varphi_{A,I}\circ(\rho^\star)^{-1}=(\rho^{+})^{-1}$, the canonical
+$A\cong A+\varnothing$. Composing, $\varphi_{A,B}\circ\kappa|_A =
+(A+!_B)\circ(A\cong A+\varnothing)=\mathrm{inl}$. Symmetrically, using the left
+unitor, $\varphi_{A,B}\circ\kappa|_B=\mathrm{inr}$. So
+$\varphi\circ\kappa=[\mathrm{inl},\mathrm{inr}]=\id$.
+\end{proof}
+
+The content of the check is worth extracting: $\kappa$ is built out of unitors
+and functoriality alone, so \emph{any} monoidal isomorphism carries
+$\kappa^\star$ to $\kappa^{+}$, and $\kappa^{+}$ is visibly the identity. Since
+$\kappa$ is computable straight from the definition of $\star$, Theorem~B$'$ is
+what makes Theorem~B usable. We now run it on a proper class.
+
+%% ===========================================================================
+\section{The family is a proper class, and the unit sees nothing}
+\label{sec:properclass}
+
+If the product were distinguished among Day tensors by something cheap --- its
+unit, say, or semicartesianness --- then Theorem~B would be a curiosity. It is
+not, and the following family is why.
+
+\begin{Definition}[$\vee_S$]\label{def:veeS}
+For a set $S$, define on $\Set$:
+\[
+   A\vee_S B \;:=\; A \,+\, (A\times S\times B) \,+\, B,\qquad
+   \text{unit }\varnothing .
+\]
+\prov{Cited: Spivak \cite[eq.~(9)]{SpivakRef}, who credits R.~Garner; the case
+$S=1$ is Niu--Spivak \cite[Ex.~3.82]{NiuSpivak}}
+\end{Definition}
+
+Read $A\vee_S B$ as ``an $A$, or a $B$, or both with an $S$-labelled link''.
+Spivak asserts that this is monoidal; Niu--Spivak set the $S=1$ case as an
+exercise in \emph{associativity}. We need genuine \emph{coherence}, so we prove
+it --- and §\ref{sec:negcontrol} shows the distinction is not pedantry.
+
+\begin{Proposition}[$\vee_S$ is monoidal]\label{prop:veecoh}
+$(\vee_S,\varnothing)$ is a monoidal structure on $\Set$, and
+$\vee_{\varnothing}\cong +$.
+\prov{MacBeth (coherence); the structure is Cited: Spivak \cite[eq.~(9)]{SpivakRef}}
+\end{Proposition}
+
+\begin{proof}[Proof (coherence by normal form)]
+For $n\ge 1$ define
+\[
+  N(X_1,\dots,X_n)\;:=\;\coprod_{\varnothing\neq K\subseteq[n]}
+   \Bigl(\prod_{i\in K} X_i\Bigr)\times S^{\,|K|-1}.
+\]
+Read an element as a \emph{word}: choose a nonempty
+$K=\{i_1<\dots<i_k\}\subseteq[n]$, a letter $x_{i_j}\in X_{i_j}$ for each, and a
+separator $s_j\in S$ between each \emph{consecutive} pair,
+\[
+   x_{i_1}\cdot s_1\cdot x_{i_2}\cdot s_2\cdots s_{k-1}\cdot x_{i_k}.
+\]
+$N$ is functorial in each variable; $N(A)=A$, and
+$N(A,B)=A\sqcup(A\times S\times B)\sqcup B=A\vee_S B$, the three summands being
+$K=\{1\},\{1,2\},\{2\}$.
+
+\emph{Splitting.} For each $1\le m<n$ there is a bijection, natural in all
+$X_i$,
+\[
+  c_m\colon N(X_1,\dots,X_m)\,\vee_S\,N(X_{m+1},\dots,X_n)\;\longrightarrow\;
+   N(X_1,\dots,X_n),
+\]
+given by concatenation. Indeed, unfolding the source it is
+$N(X_{\le m})\sqcup\bigl(N(X_{\le m})\times S\times N(X_{>m})\bigr)\sqcup
+N(X_{>m})$, and every word $w$ of $N(X_1,\dots,X_n)$ falls into exactly one of
+three cases: $\supp(w)\subseteq[1,m]$; $\supp(w)\subseteq[m+1,n]$; or $\supp(w)$
+meets both. In the third case $w$ has a \emph{unique} separator straddling the
+cut $m\mid m+1$ --- separators sit between consecutive \emph{chosen} indices, and
+exactly one such pair crosses the cut --- so $w$ factors uniquely as
+$w_{\le}\cdot s\cdot w_{>}$, which is precisely the middle summand. The inverse
+is ``cut at the straddling separator''.
+
+\emph{Normal form.} For a binary bracketing $\beta$ of $X_1,\dots,X_n$ define
+$\mathrm{can}_\beta\colon\beta(X_1,\dots,X_n)\to N(X_1,\dots,X_n)$ by induction:
+$\mathrm{can}_{(1)}=\id$, and if $\beta$ splits at $m$ into $\beta_1,\beta_2$
+then $\mathrm{can}_\beta:=c_m\circ(\mathrm{can}_{\beta_1}\vee_S
+\mathrm{can}_{\beta_2})$. Each $\mathrm{can}_\beta$ is a natural bijection.
+Define the associator at any node by
+$\alpha:=\mathrm{can}_{\beta'}^{-1}\circ\mathrm{can}_\beta$. This is consistent
+with whiskering: if $\gamma=\mathrm{can}_{\beta_2'}^{-1}\circ\mathrm{can}_{\beta_2}$
+then
+\[
+ \mathrm{can}_{(\beta_1,\beta_2')}\circ(\id\vee_S\gamma)
+  = c_m\circ\bigl(\mathrm{can}_{\beta_1}\vee_S(\mathrm{can}_{\beta_2'}\circ\gamma)\bigr)
+  = c_m\circ\bigl(\mathrm{can}_{\beta_1}\vee_S\mathrm{can}_{\beta_2}\bigr)
+  = \mathrm{can}_{(\beta_1,\beta_2)},
+\]
+and symmetrically on the other side. Consequently \emph{every} morphism built by
+composing and whiskering associators, from a bracketing $\beta$ to a bracketing
+$\beta'$, equals $\mathrm{can}_{\beta'}^{-1}\circ\mathrm{can}_\beta$ --- so any
+two such morphisms $\beta\to\beta'$ are equal. The pentagon is exactly such a
+pair, so it commutes. (This proves the pentagon rather than assuming it.)
+
+\emph{Unitors and triangle.} $\varnothing\vee_S B=\varnothing+(\varnothing\times
+S\times B)+B\cong B$, and symmetrically. Substituting $X_i=\varnothing$ into $N$
+deletes every word whose support contains $i$, leaving $N$ of the remaining
+arguments; so the unitors are $\mathrm{can}$-compatible and the triangle
+commutes by the same argument. Finally $\vee_{\varnothing}$ has
+$A\times\varnothing\times B=\varnothing$, so $A\vee_{\varnothing}B\cong A+B$.
+\end{proof}
+
+\begin{Remark}[We do \emph{not} claim $\vee_S$ is symmetric]\label{rem:nosymm}
+There is an evident candidate braiding, and Spivak's construction is stated for
+symmetric monoidal structures on $\Set$. But we have not verified the hexagon,
+and we decline to assume it. The reason is specific, not fastidious: a braiding
+permutes the arguments, and a permutation changes which pairs of chosen indices
+are \emph{consecutive} --- so it must re-match the $S$-separators, and re-matching
+separators is exactly where coherence fails (§\ref{sec:negcontrol}). Nothing
+below needs symmetry.
+\end{Remark}
+
+\begin{Definition}\label{def:triS}
+$p\rhd_S q:=\dayt_{\vee_S}(p,q)=\sum_{(s,t)} y^{\,p[s]\vee_S q[t]}$.
+\prov{Cited: Spivak \cite[eq.~(12)]{SpivakRef}}
+\end{Definition}
+
+\begin{Theorem}[The unit is blind]\label{thm:blind}
+For every set $S$, $\rhd_S$ is a convolutional monoidal structure on $\Cont$
+with unit $y^{\varnothing}=1$, the \emph{terminal} object --- the same unit as the
+categorical product. The $\rhd_S$ are pairwise non-isomorphic. And
+\[
+   \rhd_S \text{ is pointwise}\iff S=\varnothing\iff \rhd_S=\times .
+\]
+\prov{MacBeth}
+\end{Theorem}
+
+\begin{proof}
+Convolutionality and the unit: Propositions~\ref{prop:dayday}
+and~\ref{prop:veecoh}. Pairwise non-isomorphic: by Theorem~\ref{thm:A} it
+suffices that the $\vee_S$ be pairwise non-isomorphic, and
+$|1\vee_S 1|=1+|S|+1=|S|+2$ separates them. Pointwise: apply
+Theorem~\ref{thm:Bprime}. The unit is already initial, and
+\[
+   \kappa_{A,B}\colon A+B\;\hookrightarrow\; A+(A\times S\times B)+B
+\]
+is the inclusion of the two outer summands (compute: $A\cong A\vee_S\varnothing$
+is the first summand, and functoriality along $\varnothing\to B$ includes it into
+the first summand of $A\vee_S B$; symmetrically for $B$). So $\kappa$ is a
+bijection for all $A,B$ iff $A\times S\times B=\varnothing$ for all $A,B$, iff
+$S=\varnothing$. And $\rhd_{\varnothing}=\dayt_{\vee_\varnothing}=\dayt_{+}=\times$
+by Proposition~\ref{prop:veecoh} and Example~\ref{ex:twoare}.
+\end{proof}
+
+\begin{Corollary}[The sharp form of ``unique'']\label{cor:sharp}
+$\Cont$ carries a \emph{proper class} of pairwise non-isomorphic convolutional
+monoidal structures, \emph{all of which have the terminal object as unit} --- and
+exactly one of them, the case $S=\varnothing$, is the categorical product.
+\prov{MacBeth}
+\end{Corollary}
+
+So the product is \emph{not} singled out among Day tensors by its unit, nor by
+coproduct preservation, nor by semicartesianness (every $\rhd_S$ is
+semicartesian). The property that singles it out is precisely pointwiseness, and
+Theorem~B$'$ is what detects it. The obstruction is always the same object: the
+middle summand $A\times S\times B$, the ``both, linked'' words that $+$ cannot
+see.
+
+\subsection{A negative control, and what it says about the literature}
+\label{sec:negcontrol}
+
+All of the above was checked by machine on finite containers (see
+§\ref{sec:provenance}). One item of that verification deserves to be in the text,
+because it changes how one should read the sources.
+
+We constructed a \emph{label-swapping variant} $\alpha'$ of the $\vee_S$
+associator: it is a natural bijection, it matches cardinalities, and it \emph{is
+associative}. It nonetheless \textbf{fails the pentagon} --- first at
+$|A|=|B|=|C|=|D|=1$ with $|S|=2$, where the two legs send
+\[
+ \bigl(\text{both}, (\text{both},(\text{both},(a,k_0,b)),k_1,c),k_1,d\bigr)
+\]
+to words differing in which separator label sits where. Two consequences.
+
+\begin{enumerate}
+\item The pentagon test has \emph{teeth}: our PASS on the true associator is not
+  vacuous. Note it takes $|S|\ge 2$ to see the difference --- a test suite with
+  $|S|\le1$ would have blessed the impostor.
+\item Proposition~\ref{prop:veecoh} was not pedantry. Spivak
+  \cite[eq.~(9)]{SpivakRef} asserts monoidality; Niu--Spivak
+  \cite[Ex.~3.82]{NiuSpivak} ask the reader for a bijection
+  $(A\vee B)\vee C\cong A\vee(B\vee C)$ and unitality, and nothing more. The
+  negative control exhibits a natural, associative bijection that is \emph{not} a
+  monoidal associator. Associativity-as-a-bijection genuinely does not suffice,
+  so the coherence proof --- on which Corollary~\ref{cor:sharp} depends --- fills a
+  real gap rather than restating a source.
+\end{enumerate}
+
+The moral generalises past this chapter: \emph{when a construction is asserted
+to be monoidal, run a negative control.} Build a plausible impostor associator
+and check that your test rejects it. If it does not, your test proved nothing.
+
+%% ===========================================================================
+\section{How the four relate: the comparitor is a coreflection counit}
+\label{sec:comparitor}
+
+We return to the near miss of Table~\ref{tab:sorting}. The sequential operator
+satisfies (D2) and fails only (D1), and only in the right variable. Its
+restriction to representables --- $(A,B)\mapsto A\times B$, unit $1$ --- is
+\emph{the same} as the Dirichlet tensor's. By Theorem~A that restriction
+determines a unique convolutional tensor. So there is exactly one candidate for
+``the coproduct-preserving shadow of $\tri$'', and it is $\dir$.
+
+The literature knows a map between them. Niu--Spivak
+\cite[Ex.~6.85]{NiuSpivak} and Spivak \cite[eq.~(32)]{SpivakRef} record a natural
+transformation $o_{p,q}\colon p\dir q\to p\tri q$ --- the \emph{comparitor} ---
+usually obtained by feeding $y$ into the duoidal interchanger
+$(p\tri p')\dir(q\tri q')\to(p\dir q)\tri(p'\dir q')$
+\cite{SpivakSrinivasan}. That derivation tells you the map exists. It does not
+tell you what it \emph{is}. Theorem~C does.
+
+\begin{Theorem}[C]\label{thm:C}
+Write $J:=y^{(-)}\colon\Set^{\mathrm{op}}\to\Cont$ for the representable
+embedding, and fix $p\in\Cont$. Put $\Phi_p:=(p\tri -)$ and $\Psi_p:=(p\dir -)$.
+Then:
+\begin{enumerate}[label=(\arabic*)]
+\item $p\tri y^B\cong p\dir y^B$ naturally: $\Phi_p\circ J\cong\Psi_p\circ J$.
+\item $\Psi_p\cong\Lan_J(\Phi_p\circ J)$. That is, \textbf{$p\dir(-)$ is the left
+  Kan extension of $p\tri(-)$ along the representable embedding} --- equivalently,
+  the free coproduct-preserving functor agreeing with $p\tri(-)$ on
+  representables.
+\item The comparitor $o_{p,q}\colon p\dir q\to p\tri q$ is the \textbf{counit of
+  the adjunction $\Lan_J\dashv\mathrm{res}_J$} at $\Phi_p$.
+\item Hence $p\dir(-)$ is the \emph{coreflection} of $p\tri(-)$ into
+  coproduct-preserving endofunctors: for every coproduct-preserving
+  $F\colon\Cont\to\Cont$, postcomposition with the comparitor is a bijection
+  \[
+     \Nat(F,\,p\dir -)\;\cong\;\Nat(F,\,p\tri -).
+  \]
+  $p\dir(-)$ is the terminal coproduct-preserving approximation to $p\tri(-)$.
+\end{enumerate}
+\prov{MacBeth; part (1) is Cited: Spivak \cite[eq.~(33)]{SpivakRef}, Niu--Spivak
+\cite[Ex.~6.84]{NiuSpivak}. The comparitor itself is
+Cited: Niu--Spivak \cite[Ex.~6.85]{NiuSpivak}; MacBeth, Lean-verified:
+\texttt{Dirichlet.lean} (\texttt{Container.dirToSeq})}
+\end{Theorem}
+
+\begin{proof}
+\emph{(1)} $p\tri y^B$ has shapes $\sum_s(p[s]\to 1)\cong S_p$ and positions
+$\sum_{i\in p[s]}B=p[s]\times B$; $p\dir y^B$ has shapes $S_p\times 1\cong S_p$
+and positions $p[s]\times B$. The evident map is the identity on both.
+
+\emph{(2)} By Lemma~\ref{lem:lan}, left Kan extension along $J$ is ``extend by
+coproducts'': $(\Lan_J G)(q)=\sum_{t\in S_q}G(q[t])$. Taking $G=\Phi_p\circ J$,
+i.e.\ $G(B)=p\tri y^B\cong p\dir y^B$ by (1),
+\[
+  \bigl(\Lan_J(\Phi_p\circ J)\bigr)(q)
+  =\sum_{t\in S_q}\bigl(p\dir y^{q[t]}\bigr)
+  =\sum_{t\in S_q}\sum_{s\in S_p} y^{\,p[s]\times q[t]}
+  =\sum_{(s,t)} y^{\,p[s]\times q[t]}
+  = p\dir q .
+\]
+
+\emph{(3)} The counit $\varepsilon\colon\Lan_J(\Phi_p\circ J)\Rightarrow\Phi_p$
+is, at $q$, the map induced on the coproduct $\sum_{t\in S_q}(p\tri y^{q[t]})$ by
+the family $p\tri\iota_t$, where $\iota_t\colon y^{q[t]}\to q$ is the $t$-th
+coproduct injection (shape $\ast\mapsto t$, positions the identity on $q[t]$).
+Compute $p\tri\iota_t$: a shape of $p\tri y^{q[t]}$ is $(s,f\colon p[s]\to 1)$,
+i.e.\ just $s$, and it is sent to $(s,\ \mathrm{const}_t)$; on positions it is
+the identity of $\sum_{i\in p[s]}q[t]$. Under the identification of (2) the
+source is $p\dir q$, with shape $(s,t)$ and positions $p[s]\times q[t]$. So
+\[
+   \varepsilon:\quad
+   \text{shapes } (s,t)\mapsto (s,\mathrm{const}_t),\qquad
+   \text{positions } \id\colon p[s]\times q[t]=\textstyle\sum_{i\in p[s]}q[t],
+\]
+which is precisely the comparitor.
+
+\emph{(4)} $\Lan_J\dashv\mathrm{res}_J$ (Lemma~\ref{lem:lan}) gives
+$\Nat(\Lan_J G,\Phi)\cong\Nat(G,\Phi\circ J)$ for \emph{every} $\Phi$ ---
+in particular for $\Phi=\Phi_p$, which does not preserve coproducts. Every
+coproduct-preserving $F$ satisfies $F\cong\Lan_J(F\circ J)$
+(Lemma~\ref{lem:up}), and $\Lan_J$ is fully faithful, since the unit of the
+adjunction is invertible: $(\Lan_J G)(y^A)=\sum_{t\in 1}G(A)=G(A)$ by the
+formula of Lemma~\ref{lem:lan}, $y^A$ having a single shape with positions $A$.
+Hence
+\[
+  \Nat(F,\Phi_p)\cong\Nat(F\circ J,\Phi_p\circ J)
+   \cong\Nat\bigl(\Lan_J(F\circ J),\Lan_J(\Phi_p\circ J)\bigr)\cong\Nat(F,\Psi_p),
+\]
+and unwinding, the composite bijection is postcomposition with the counit
+$\varepsilon=o_{p,-}$.
+\end{proof}
+
+\begin{Corollary}[What the comparitor \emph{is}]\label{cor:whatitis}
+The Dirichlet tensor is the Day-ification of the sequential operator: $\dir$ is
+the unique convolutional tensor agreeing with $\tri$ on representables
+(Theorem~\ref{thm:A}), and the comparitor is the universal map out of it. Two of
+the three standard facts about the comparitor become corollaries rather than
+computations:
+\begin{itemize}[nosep]
+\item \emph{it exists at all} --- it is a counit (the duoidal derivation is a
+  consequence of what it is, not the reason it is there);
+\item \emph{it is invertible when $q$ is representable}
+  \cite[eq.~(33)]{SpivakRef} --- because the counit of $\Lan_J\dashv\mathrm{res}_J$
+  is invertible on the image of $J$, $J$ being fully faithful. No computation
+  needed.
+\end{itemize}
+\prov{MacBeth}
+\end{Corollary}
+
+The third standard fact --- compatibility with the associators --- we verify by
+hand rather than appeal to a general monoidal-Kan-extension principle we have
+not checked.
+
+\begin{Proposition}[Coherence of the comparitor]\label{prop:ocoh}
+The family $o_{p,q}\colon p\dir q\to p\tri q$ makes $\id_{\Cont}$ a lax monoidal
+functor $(\Cont,\tri,y)\to(\Cont,\dir,y)$: it commutes with the associators and
+the unitors.
+\prov{Content Cited: Niu--Spivak \cite[Ex.~6.85, Prop.~6.87]{NiuSpivak}, Spivak
+\cite[eq.~(32)]{SpivakRef}; proof MacBeth}
+\end{Proposition}
+
+\begin{proof}
+Both composites $(a\dir b)\dir c\to a\tri(b\tri c)$ have source shapes
+$(s_a,s_b,s_c)$ and source positions $a[s_a]\times b[s_b]\times c[s_c]$, and
+every map involved is the identity on positions (each $o$ is, by
+Theorem~\ref{thm:C}(3); the associators are canonical rebracketings). So it
+suffices to compare shape maps. Along the top,
+$o\dir 1$ sends $((s_a,s_b),s_c)\mapsto((s_a,\lambda i.\,s_b),s_c)$; then $o$
+gives $((s_a,\lambda i.\,s_b),\lambda(i,j).\,s_c)$; then the $\tri$-associator
+(Proposition~\ref{prop:seqassoc}) yields
+$\bigl(s_a,\ \lambda i.(s_b,\ \lambda j.\,s_c)\bigr)$. Along the bottom, the
+$\dir$-associator gives $(s_a,(s_b,s_c))$; then $1\dir o$ gives
+$(s_a,(s_b,\lambda j.\,s_c))$; then $o$ gives
+$\bigl(s_a,\ \lambda i.(s_b,\ \lambda j.\,s_c)\bigr)$ --- the same shape. For the
+unitors, $y\dir q=q=y\tri q$ and $p\dir y=p=p\tri y$ with $o$ the identity in
+both cases (the shape map $(s,\ast)\mapsto(s,!)$ is the identity, $p[s]\to 1$
+having a unique element).
+\end{proof}
+
+\begin{Remark}[A convention clash, resolved]
+Niu--Spivak \cite[Ex.~6.85]{NiuSpivak} write the source as $\dir$ and the target
+as $\tri$; Spivak \cite[eq.~(32)]{SpivakRef} writes it the other way. Only the
+latter type-checks under the usual definition of \emph{lax}: a lax
+$F\colon(\mathcal C,\dayt_{\mathcal C})\to(\mathcal D,\dayt_{\mathcal D})$ has
+structure map $Fa\dayt_{\mathcal D}Fb\to F(a\dayt_{\mathcal C}b)$, which for
+$F=\id$, source $\tri$, target $\dir$ reads $p\dir q\to p\tri q$. The
+mathematical content --- ``$o$ commutes with associators and unitors'' --- is the
+same either way, and is what Proposition~\ref{prop:ocoh} proves.
+\end{Remark}
+
+\subsection{Exactly where the comparitor is invertible}
+
+\begin{Proposition}[Trichotomy]\label{prop:tricho}
+The position component of $o_{p,q}$ is always the identity, so $o_{p,q}$ is an
+isomorphism iff its shape map is a bijection. That shape map is the coproduct
+over $s\in S_p$ of
+\[
+   c_s\colon S_q\longrightarrow S_q^{\,p[s]},\qquad t\mapsto\mathrm{const}_t ,
+\]
+and therefore:
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+ & $o_{p,q}$ is an isomorphism iff \dots\\
+\midrule
+$q$ representable ($|S_q|=1$) & \textbf{always}\\
+$q=0$ ($S_q=\varnothing$) & every $p[s]\neq\varnothing$\\
+$|S_q|\ge 2$ & \textbf{$p$ is linear} (every $p[s]$ a singleton)\\
+\bottomrule
+\end{tabular}
+\end{center}
+\prov{MacBeth; the sufficient direction is Cited: Spivak \cite[eq.~(33)]{SpivakRef}}
+\end{Proposition}
+
+\begin{proof}
+If $|p[s]|=1$ then $S_q^{p[s]}\cong S_q$ and $c_s$ is the identity. If
+$p[s]=\varnothing$ then $S_q^{\varnothing}=1$ and $c_s\colon S_q\to 1$ is
+bijective iff $|S_q|=1$. If $|p[s]|\ge 2$ then $c_s$ is surjective iff every
+$f\colon p[s]\to S_q$ is constant, i.e.\ iff $|S_q|\le 1$; and if
+$S_q=\varnothing$ then $S_q^{p[s]}=\varnothing$ too and $c_s$ is a bijection.
+Assembling the cases gives the table.
+\end{proof}
+
+The reading of Proposition~\ref{prop:tricho} is the sentence this chapter has
+been walking towards:
+
+\begin{quote}
+\emph{Coproduct-preservation in the second variable is precisely non-dependence
+of the inner shape on the outer position.} A shape of $p\tri q$ is
+$(s,\ f\colon p[s]\to S_q)$ --- a choice of inner shape \emph{for each} position
+of the outer one. A shape of $p\dir q$ is $(s,t)$: the case where $f$ is
+constant. A linear $p$ has one position per shape, so there is nothing for $f$
+to depend on --- and there the two agree exactly.
+\end{quote}
+
+\begin{Proposition}[The comparitor is neither monic nor epic]\label{prop:notmonoepi}
+Take $p=1=y^{\varnothing}$. Then $1\dir q=\sum_{t\in S_q}y^{\varnothing\times
+q[t]}=S_q\cdot y^{\varnothing}$, the constant container at $S_q$, while
+$1\tri q=\Ext 1\circ\Ext q=1$. So $o_{1,q}\colon S_q\cdot 1\to 1$ collapses
+everything, and is not injective on shapes as soon as $|S_q|\ge2$. And for
+$p=y^2$, $q=2$ the shape map $S_p\times S_q\to\sum_s S_q^{p[s]}$ is
+$2\to 4$, not surjective.
+\prov{MacBeth, Lean-verified: \texttt{Dirichlet.lean}
+(\texttt{dirToSeq\_not\_surjective})}
+\end{Proposition}
+
+Both failures are informative, and in \emph{opposite} directions.
+
+\begin{itemize}
+\item \textbf{Not surjective:} $\tri$ has genuinely dependent shapes that $\dir$
+  cannot reach. This is the dependency that $\tri$ has and $\dir$ lacks.
+\item \textbf{Not injective:} when an outer shape has \emph{no} positions, $\tri$
+  cannot see the inner choice at all --- there is nowhere to put it --- but $\dir$
+  still records it. The comparitor forgets it.
+\end{itemize}
+
+So the failure of $o$ to be an isomorphism measures \emph{dependency} in one
+direction and \emph{vacuity} in the other. That is why $\dir$ is a coreflection
+of $\tri$ and not a subobject of it.
+
+\begin{quote}
+\textbf{The sentence to remember.} $\dir$ is $\tri$ with the dependency switched
+off --- not by fiat, but universally: $p\dir(-)$ is the terminal
+coproduct-preserving approximation to $p\tri(-)$, and the comparitor is its
+counit. It fails to be surjective exactly where $\tri$ is dependent, and fails to
+be injective exactly where $\tri$ is vacuous.
+\end{quote}
+
+%% ===========================================================================
+\section{Closing the structures}
+\label{sec:closed}
+
+A monoidal category invites one question above all others: is the tensor
+\emph{closed}? For $\times$ and $+$ the answers are the classical ones --- $\Cont$
+has finite products and coproducts, and $(\Cont,\times,1)$ is cartesian closed
+(below). This section records the two answers that are specific to $\Cont$: the
+Dirichlet tensor is closed, with an internal hom whose \emph{shapes are the
+morphisms}; and we can say exactly what closure of a general convolutional tensor
+looks like. Almost everything here is cited. What is ours is a Lean
+certification, and one uniform formula.
+
+\subsection{The Dirichlet closure}
+
+\begin{Definition}[Internal hom for $\dir$]\label{def:ihom}
+For containers $q,r$ define
+\[
+   \ihom qr\;:=\;\Bigl(\Cont(q,r),\ (u,\varphi)\mapsto
+     \textstyle\sum_{t\in S_q} r[u\,t]\Bigr)
+   \;=\;\sum_{\varphi\colon q\to r} y^{\,\sum_{t\in S_q} r[\varphi_1 t]} .
+\]
+Its \emph{shapes are the container morphisms} $q\to r$; over a shape $(u,\varphi)$
+(shape map $u\colon S_q\to S_r$, position map $\varphi$) the positions are the
+pairs $(t,i)$ with $t\in S_q$ and $i\in r[u\,t]$.
+\prov{Cited: Niu--Spivak \cite[Ex.~4.78, eq.~(4.79)]{NiuSpivak}; Spivak
+\cite[eq.~(44)]{SpivakRef}; Spivak--Srinivasan \cite[Prop.~2.8]{SpivakSrinivasan2305}}
+\end{Definition}
+
+\begin{Theorem}[$\dir$ is closed]\label{thm:dirclosed}
+For each $q$ the functor $(-\dir q)$ is left adjoint to $\ihom q{-}$: there is a
+bijection
+\[
+   \Cont(p\dir q,\ r)\;\cong\;\Cont\bigl(p,\ \ihom qr\bigr),
+\]
+natural in $p$ and in $r$. Hence $(\Cont,\dir,y)$ is a (symmetric) closed
+monoidal category.
+\prov{Cited: Niu--Spivak \cite[Ex.~4.78]{NiuSpivak}; MacBeth,
+Lean-verified: \texttt{DirichletClosed.lean} (\texttt{dirichlet\_closure})}
+\end{Theorem}
+
+\begin{proof}[Proof (the transpose, in one breath)]
+Unfold both sides and rearrange. A morphism $p\dir q\to r$ is a shape map
+$U\colon S_p\times S_q\to S_r$ together with position maps
+$r[U(s,t)]\to p[s]\times q[t]$. Splitting each position map into its two
+components ($\Hom$ out of a fixed object preserves products) and applying the
+type-theoretic axiom of choice twice --- once to pull the $S_r$-choice out over
+$S_q$, once to pull the whole package out over $S_p$ --- turns the datum into: for
+each $s\in S_p$, a morphism $q\to r$ (this is where the $q$-component of the
+position map becomes part of a \emph{shape}) together with a map
+$\bigl(\sum_{t} r[u_s\,t]\bigr)\to p[s]$. That is exactly a morphism
+$p\to\ihom qr$. The transpose is a bijection because each rearrangement is; it is
+natural in $p$ (contravariantly, by precomposition) and in $r$ (covariantly, by
+postcomposition).
+\end{proof}
+
+The formula is not ours: it is Niu--Spivak's Exercise~4.78 and Spivak's
+``Dirichlet closure''. The derivation above reproduces it character for
+character. What \emph{is} ours is a mechanisation.
+
+\begin{Remark}[Machine-checked closure]\label{rem:leanclosed}
+The file \texttt{DirichletClosed.lean} constructs $\ihom q{-}$, the currying
+bijection \texttt{dirCurry}/\texttt{dirUncurry}, \emph{both} round-trip
+identities, and naturality in each variable. Every proof is \texttt{rfl}: the
+currying bijection is a rearrangement of a $\Sigma/\times$ telescope, and Lean's
+definitional $\eta$ for $\Sigma$, $\times$ and the morphism structure identifies
+the two round trips on the nose --- no transports, no funext. The declaration
+\texttt{dirichlet\_closure} depends on no axioms. To our knowledge this is the
+first machine-checked internal hom for the Dirichlet tensor. It matters for the
+book's larger claim that these structures are \emph{formally} under control:
+closure, the subtlest of the four questions, is here the cheapest.
+\prov{MacBeth, Lean-verified: \texttt{DirichletClosed.lean}}
+\end{Remark}
+
+\subsection{Closure of a general convolutional tensor}
+
+Theorem~A makes it natural to ask for the closure of \emph{every} Day tensor at
+once, not just $\dir$. There is a uniform formula, and it explains a small
+mystery in the literature.
+
+\begin{Remark}[A uniform closure formula]\label{rem:uniformclosed}
+Let $(\star,I)$ be monoidal on $\Set$ and suppose each functor $R\star(-)$ is
+polynomial (preserves wide pullbacks); write $\odot_\star$ for the induced Day
+tensor (Definition~\ref{def:day}). Then $\odot_\star$ is closed, with internal
+hom
+\[
+   \ihom pq_\star\;=\;\prod_{I\in S_p} q\tri\bigl(p[I]\star y\bigr),
+   \qquad\text{i.e.}\qquad
+   \Ext{\ihom pq_\star}A\;=\;\prod_{I\in S_p}\Ext q\bigl(A\star p[I]\bigr),
+\]
+the one-line derivation being
+\[
+   \Cont\bigl(r\odot_\star p,\ q\bigr)
+   \;=\;\prod_{J\in S_r}\prod_{I\in S_p}\Ext q\bigl(r[J]\star p[I]\bigr)
+   \;=\;\Cont\bigl(r,\ \ihom pq_\star\bigr).
+\]
+For the three named cases this recovers exactly Spivak's
+eqs.~(38), (39), (40) \cite{SpivakRef} --- the closures of $\times$, $\dir$ and
+$\rhd_S$ --- which appear there \emph{written side by side and never unified};
+the specialisation $\star=\times$ recovers Definition~\ref{def:ihom}. We grade
+this \textsf{[computed]}: the displayed identity is verified on finite containers
+(§\ref{sec:provenance}) and by the derivation above, but we have \emph{not}
+checked the coherence of the adjunction in this generality.
+\prov{MacBeth [computed]; the three instances are Cited: Spivak
+\cite[eqs.~(38)--(40)]{SpivakRef}}
+\end{Remark}
+
+\begin{Remark}[A tempting converse, and why we do not claim it]\label{rem:speculative}
+Remark~\ref{rem:uniformclosed} together with Theorem~A suggests a clean
+statement --- \emph{the convolutional structures whose $\star$ has $R\star(-)$
+polynomial are exactly the closed convolutional structures on $\Cont$} --- but the
+necessity direction (that a \emph{closed} convolutional tensor forces
+$R\star(-)$ polynomial) we have not argued. We flag it \textsf{[speculative]} and
+leave it open.
+\prov{Open [speculative]}
+\end{Remark}
+
+\subsection{The sequential operator, and cartesian closure}
+
+The sequential operator is not symmetric, so ``closed'' bifurcates. It is not
+closed on the left, but it does have a \emph{right coclosure}: a functor
+$\coclose q{-}$ with $\Cont(p, q\tri r)\cong\Cont(\coclose qp, r)$, computed by
+Josh Meyers.
+
+\begin{Theorem}[Coclosure of $\tri$]\label{thm:tricoclose}
+The substitution product $\tri$ admits a right coclosure.
+\prov{Cited: Spivak \cite[eqs.~(68)--(69)]{SpivakRef}; Niu--Spivak
+\cite[Prop.~6.57]{NiuSpivak}, attributed to J.~Meyers}
+\end{Theorem}
+
+\begin{Remark}[A naming clash to be aware of]\label{rem:coclosenaming}
+The same isomorphism is called a \emph{left} coclosure by Niu--Spivak
+\cite[Prop.~6.57]{NiuSpivak} and a \emph{right} coclosure by Spivak
+\cite[eq.~(68)]{SpivakRef}. The variance convention differs, not the
+mathematics; a reader collating the two sources should expect the labels to
+disagree.
+\end{Remark}
+
+Finally, the cartesian structure. This is the closure that would matter for type
+theory, and the answer is a cautionary one.
+
+\begin{Theorem}[$\Cont$ is cartesian closed but not locally cartesian closed]
+\label{thm:ccc}
+$(\Cont,\times,1)$ is cartesian closed, with exponential
+$\Ext{q^p}\cong\prod_{s\in S_p}\Ext q\circ(-+p[s])$. But $\Cont$ is \emph{not}
+locally cartesian closed: its slices are not all cartesian closed, so $\Cont$
+does not model extensional dependent type theory.
+\prov{Cited: Altenkirch--Levy--Staton \cite{ALS10}; the CCC structure is
+Niu--Spivak \cite[Thm.~5.31, eq.~(5.28)]{NiuSpivak}}
+\end{Theorem}
+
+The contrast with the Dirichlet closure is the point worth carrying away. $\Cont$
+\emph{is} closed for the tensor whose extension is \emph{not} pointwise ($\dir$),
+and \emph{fails} to be closed in the strong (local) sense for the tensor whose
+extension \emph{is} pointwise ($\times$). Closure and pointwiseness pull in
+opposite directions --- which is a second reading of the erratum of
+§\ref{sec:erratum}: there is no bridge between ``pointwise'' and ``closed''.
+
+%% ===========================================================================
+\section{How the four interact: the duoidal category and its double comonoids}
+\label{sec:duoidal}
+
+The final question a family of monoidal structures raises is how they fit
+\emph{together}. For $\dir$ and $\tri$ the fit has a name.
+
+\begin{Theorem}[The normal duoidal structure]\label{thm:duoidal}
+$(\Cont,\dir,\tri)$ is a \emph{normal duoidal category}: $\dir$ and $\tri$ share
+the unit $y$, and there is an interchange
+\[
+   \zeta\colon (p_1\tri p_2)\dir(q_1\tri q_2)\;\longrightarrow\;
+     (p_1\dir q_1)\tri(p_2\dir q_2),
+\]
+natural and coherent, making $\dir$ a lax and $\tri$ an oplax functor for one
+another.
+\prov{Cited: Spivak--Srinivasan \cite[eq.~(29)]{SpivakSrinivasan}}
+\end{Theorem}
+
+Feeding $y$ into $\zeta$ recovers the comparitor $o_{p,q}\colon p\dir q\to p\tri
+q$ of §\ref{sec:comparitor}; that is how the comparitor is usually produced. So
+the interchange is the \emph{spine} of the interaction, and Theorem~C already
+told us what sits on it: the comparitor is the counit exhibiting $\dir$ as the
+Day-ification of $\tri$. We now use the duoidal structure for the object it was
+built to study.
+
+\subsection{Double comonoids}
+
+A duoidal category has \emph{double comonoids}: objects carrying compatible
+comonoid structures for both tensors. For $(\Cont,\tri,\dir)$ the
+$\tri$-comonoids are exactly the directed containers --- the small categories
+(Chapter~[directed containers]; the identification is Ahman--Uustalu
+\cite{AhmanUustalu}, and in $\tri$-comonoid form the $\mathcal C=1$ case of
+Dorta--Jarvis--Niu \cite[Thm.~4.3]{DJN23}) --- so a double comonoid is a small
+category with an extra, $\dir$-compatible comultiplication. Which small
+categories admit one?
+
+The natural guess, from Spivak's eq.~(33) [Cited], is ``the degenerate ones'':
+$c=y^A$ (one object) or $c=Ay$ (discrete), because those are exactly where the
+comparitor $o_{c,c}$ is invertible. The guess is wrong --- in both directions ---
+and the true answer is sharper and prettier.
+
+\begin{Theorem}[Double comonoids are the sets of commutative monoids]
+\label{thm:doublecomonoid}
+A directed container $c$ is a double comonoid in the normal duoidal category
+$(\Cont,\tri,\dir)$ if and only if its underlying category is a coproduct of
+one-object categories on \emph{commutative} monoids:
+\[
+   c\;=\;\sum_{I} y^{M_I},\qquad\text{each }M_I\text{ a commutative monoid.}
+\]
+When it exists the $\dir$-comonoid structure is unique: the counit is the family
+of identities, the comultiplication is the diagonal $I\mapsto(I,I)$ on objects
+and the monoid multiplication $\mu_I$ on each fibre.
+\prov{MacBeth; the ingredients Cited as below}
+\end{Theorem}
+
+\begin{proof}[Proof (the shape of it)]
+By the ``comonoids in comonoids'' principle \cite{AguiarMahajan}, a double
+comonoid is a $\dir$-comonoid object in the category of $\tri$-comonoids, and
+$\dir$ lifts to that category (which is $\Cathash$, categories and cofunctors) as
+the \emph{product of categories} \cite[Prop.~8.79]{NiuSpivak}. So the data are a
+cofunctor counit $c\to\mathbb 1$ and a cofunctor comultiplication $c\to c\times
+c$, satisfying the comonoid laws. Three steps.
+
+\emph{Step 1 (everything is an endomorphism).} The counit's lifting property
+forces the $\dir$-counit to select identities. The comultiplication's object map
+is the diagonal (by the counit law), and the cofunctor codomain axiom applied to
+the diagonal forces $\cod(g)=I$ for every arrow $g$ out of every object $I$
+(take the second component to be an identity). A category all of whose arrows are
+endomorphisms is a coproduct of one-object categories --- a \emph{set of monoids}
+$c=\sum_I y^{M_I}$.
+
+\emph{Step 2 (Eckmann--Hilton).} On the fibre $M_I$ the comultiplication is a map
+$m_I\colon M_I\times M_I\to M_I$, and the cofunctor composition axiom says
+precisely that $m_I$ is a homomorphism from the \emph{product} monoid
+$(M_I\times M_I,\ \cdot\times\cdot)$ to $(M_I,\cdot)$, sharing the unit
+$\id_I$. Two operations on a set with a common unit, one a homomorphism for the
+other, coincide and are commutative (Eckmann--Hilton): $m_I=\mu_I$ and $M_I$ is
+commutative.
+
+\emph{Step 3 (converse).} Conversely, for a set of commutative monoids, define
+the counit by identities and the comultiplication by the diagonal and the fibre
+multiplications. The composition axiom is the equation
+$(g_1h_1)(g_2h_2)=(g_1g_2)(h_1h_2)$, which holds \emph{because} each $M_I$ is
+commutative; the comonoid laws are associativity and unitality of $\mu_I$;
+everything is per-fibre, so there is no cross-object obstruction.
+\end{proof}
+
+\begin{Corollary}[The guess, corrected]\label{cor:corrected}
+The degenerate polynomials are strict special cases, and the guess fails both
+containments:
+\begin{itemize}[nosep]
+\item $y^A$ (one object, monoid $A$) is a double comonoid \emph{iff $A$ is
+  commutative} --- so $y^{S_3}$ is not one, though the guess admits it;
+\item multi-object examples such as $2y^2=\{\mathbb Z/2,\ \mathbb Z/2\}$ \emph{are}
+  double comonoids, though the guess excludes them.
+\end{itemize}
+Thus $\{\text{degenerate}\}\subsetneq\{\text{sets of commutative monoids}\}
+=\{\text{double comonoids}\}$.
+\prov{MacBeth}
+\end{Corollary}
+
+\begin{Remark}[What is cited and what is ours]\label{rem:nogohonest}
+Spivak owns the moving parts: the comparitor \cite[eq.~(32)]{SpivakRef}, its
+invertibility locus eq.~(33) --- which \emph{is} the degenerate diagonal --- and
+the classification of $\dir$-comonoids as ``sets of monoids''
+\cite{SpivakRef}. What is ours is (i) the descent analysis --- the observation
+that a double comonoid needs the comultiplication to land in the
+order-independent image, which is available for \emph{any} set of monoids, not
+only where $o$ is invertible; (ii) the identification of the compatibility as a
+fibrewise Eckmann--Hilton square; and hence (iii) the corrected classification.
+So this is properly read as ``eq.~(33) on the diagonal, plus the converse'', and
+the delta is the converse together with the commutativity it forces. The
+Eckmann--Hilton reduction is corroborated by an exhaustive machine check over a
+monoid library (§\ref{sec:provenance}); the proof itself rests on the two-line
+lemma, not the check.
+\end{Remark}
+
+\subsection{The wider landscape}
+
+Beyond the comparitor and the double comonoids, the four structures relate in
+many ways --- distributive laws, the $\dir$/$\times$ comparison, the semicartesian
+$\rhd_S$ family --- and Jules Hedges has remarked informally that there are of the
+order of ten interesting relationships among them. We do not attempt a census of
+those here: the ones we can state at the grade this book demands are the
+interchange $\zeta$ (Theorem~\ref{thm:duoidal}), the comparitor and its universal
+property (Theorem~C), the closures (§\ref{sec:closed}), and the double-comonoid
+classification (Theorem~\ref{thm:doublecomonoid}). A complete and honestly graded
+enumeration --- matching each folklore relationship to a proof or a citation --- is
+worthwhile future work, and we flag it as such rather than manufacture a list.
+
+%% ===========================================================================
+%% ---------------------------------------------------------------------------
+%% Section "Beyond the census: the Dialectica tensors" was RELOCATED on
+%% 2026-07-19 to papers/dialectica-tensors-deferred.tex (Neil, uid-65/68/69):
+%% the lXtimes/rXtimes Dialectica tensors are deferred to a later Cont(C)
+%% chapter and are not part of the core three-chapter programme. This chapter
+%% now closes on the census and the duoidal interaction.
+%% ---------------------------------------------------------------------------
+%% ===========================================================================
+\section{Provenance, machine-checking, and what is open}
+\label{sec:provenance}
+
+\subsection*{Cited, not ours}
+
+\begin{itemize}[nosep]
+\item Day convolution on $\Poly$; the formula
+  $p\dayt q\cong\sum y^{p[s]\star q[t]}$; distribution over coproducts;
+  and the identifications $\times=\mathrm{Day}(+,\varnothing)$,
+  $\dir=\mathrm{Day}(\times,1)$ --- Niu--Spivak
+  \cite[Prop.~3.79, eqs.~(3.80)--(3.81)]{NiuSpivak}; Spivak \cite{SpivakRef}.
+\item $A\vee_S B=A+(A\times S\times B)+B$ and the induced $\rhd_S$ on $\Poly$ ---
+  Spivak \cite[eqs.~(9),(12)]{SpivakRef}, who credits R.~Garner; the $S=1$ case
+  is Niu--Spivak \cite[Ex.~3.82]{NiuSpivak}. (Monoidality is \emph{asserted}
+  there; the coherence proof is Proposition~\ref{prop:veecoh}.)
+\item The comparitor $p\dir q\to p\tri q$, its lax monoidality, and its
+  invertibility for representable $q$ --- Niu--Spivak
+  \cite[Ex.~6.84, Ex.~6.85, Prop.~6.87]{NiuSpivak}; Spivak
+  \cite[eqs.~(32),(33)]{SpivakRef}. The duoidal interchanger it is usually
+  derived from --- Spivak--Srinivasan \cite{SpivakSrinivasan}.
+\item $\tri$ is not cocontinuous in the right variable --- Niu--Spivak
+  \cite[Ex.~6.56]{NiuSpivak}.
+\item The internal hom for $\dir$ (Definition~\ref{def:ihom},
+  Theorem~\ref{thm:dirclosed}) --- Niu--Spivak \cite[Ex.~4.78,
+  eq.~(4.79)]{NiuSpivak}; Spivak \cite[eq.~(44)]{SpivakRef}; Spivak--Srinivasan
+  \cite[Prop.~2.8]{SpivakSrinivasan2305}. The three named convolutional closures
+  --- Spivak \cite[eqs.~(38)--(40)]{SpivakRef}.
+\item The right coclosure of $\tri$ (Theorem~\ref{thm:tricoclose}) --- Spivak
+  \cite[eqs.~(68)--(69)]{SpivakRef}; Niu--Spivak \cite[Prop.~6.57]{NiuSpivak},
+  due to J.~Meyers.
+\item $\Cont$ cartesian closed, not locally cartesian closed
+  (Theorem~\ref{thm:ccc}) --- Altenkirch--Levy--Staton \cite{ALS10}; the CCC
+  exponential is Niu--Spivak \cite[Thm.~5.31]{NiuSpivak}.
+\item That a $\tri$-comonoid is a small category (equivalently, a directed
+  container is a polynomial comonad), with cofunctors for morphisms ---
+  Ahman--Uustalu \cite{AhmanUustalu}; in $\tri$-comonoid form the $\mathcal C=1$
+  case of Dorta--Jarvis--Niu \cite[Thm.~4.3]{DJN23}. We claim no part of this
+  identification as new: only its Lean formalisation
+  (\texttt{Comonoid.lean}, \texttt{ComonoidConverse.lean}, both round trips) is
+  ours, and we believe it the first machine-checked proof of the equivalence.
+\item $(\Cont,\dir,\tri)$ normal duoidal (Theorem~\ref{thm:duoidal}) ---
+  Spivak--Srinivasan \cite[eq.~(29)]{SpivakSrinivasan}. That $\dir$ lifts to
+  $\Cathash$ as the product of categories --- Niu--Spivak
+  \cite[Prop.~8.79]{NiuSpivak}. Comonoids-in-comonoids --- Aguiar--Mahajan
+  \cite{AguiarMahajan}.
+\item The comparitor's invertibility locus eq.~(33) and the classification of
+  $\dir$-comonoids as ``sets of monoids'' --- Spivak \cite{SpivakRef}.
+\item Full faithfulness of $\Ext{-}$ --- Abbott--Altenkirch--Ghani \cite{AAG05}.
+\item $\Cont\cong\Fam(\Set^{\mathrm{op}})$ --- folklore in the polynomial-functor
+  literature; Lemma~\ref{lem:fam} records an elementary proof and claims no
+  originality.\footnote{Locators are deferred to a citation pass; we prefer no
+  citation to a citation we have not personally verified.}
+\item The identification of the two non-Day tensors of Dorta--Jarvis--Niu with
+  the Dialectica products of G\"odel's functional interpretation has been
+  \emph{relocated} to the companion held file
+  \texttt{papers/dialectica-tensors-deferred.tex} (deferred to a later
+  $\Cont(C)$ chapter); its citations and provenance travel with it.
+\end{itemize}
+
+\subsection*{New here}
+
+\begin{itemize}[nosep]
+\item \textbf{Theorem~\ref{thm:A}} --- the classification. The sources state only
+  the existence direction (``for any monoidal structure on $\Set$ there
+  \emph{is} one on $\Poly$''). Theorem~A supplies the converse and identifies
+  the two conditions (D1), (D2) that cut out the essential image.
+\item \textbf{Lemma~\ref{lem:unitfree}} --- representability of the unit is a
+  \emph{consequence} of (D1)+(D2), so ``convolutional'' is a condition on the
+  tensor alone.
+\item \textbf{Theorems~\ref{thm:B}, \ref{thm:Bplus}, \ref{thm:Bprime}} --- the
+  product is the unique pointwise monoidal structure on $\Cont$ (no Day
+  hypothesis), with an effective test.
+\item \textbf{Lemma~\ref{lem:rigidity}} --- rigidity of the coproduct on $\Set$;
+  surely folklore, but we have not found it stated, and it is what makes
+  (2)$\Rightarrow$(3) of Theorem~B go through.
+\item \textbf{Corollary~\ref{cor:sharp}} --- a proper class of convolutional
+  structures, all with terminal unit, exactly one cartesian: the family is
+  unit-blind.
+\item \textbf{Theorem~\ref{thm:C}} --- the comparitor is the counit of a
+  coreflection, $p\dir(-)=\Lan_J\bigl((p\tri-)\circ J\bigr)$. In the literature
+  the comparitor is always \emph{derived} from the duoidal interchanger;
+  Theorem~C says what it \emph{is}, and the standard facts about it become
+  corollaries.
+\item \textbf{Proposition~\ref{prop:tricho}} --- the invertibility locus is
+  \emph{exactly} linear-or-representable; the sources give the sufficient
+  direction only.
+\item \textbf{Proposition~\ref{prop:notmonoepi}} --- the comparitor is not
+  injective either; the vacuous-shape phenomenon.
+\item The explicit container-level associator and unitors for $\tri$, the
+  flattening proof of the pentagon, and the flat-tuple argument on positions
+  (§\ref{sec:seq}).
+\item \textbf{Theorem~\ref{thm:doublecomonoid}} --- the double comonoids of
+  $(\Cont,\tri,\dir)$ are exactly the sets of commutative monoids, by a fibrewise
+  Eckmann--Hilton collapse (Remark~\ref{rem:nogohonest} scopes the delta against
+  Spivak's eq.~(33): the converse direction and the commutativity it forces).
+\item \textbf{Remark~\ref{rem:uniformclosed}} --- the single uniform closure
+  formula $\ihom pq_\star=\prod_I q\tri(p[I]\star y)$ specialising to Spivak's
+  three, graded \textsf{[computed]}.
+\item The \textbf{Lean certification} of the Dirichlet closure
+  (Remark~\ref{rem:leanclosed}); the formula is cited, the machine-checked
+  closed monoidal category is, we believe, the first of its kind.
+\item The identification of DJN's uninterpreted tensors $\ltimes,\rtimes$ with
+  de~Paiva's Dialectica tensor and its directed variant --- answering the open
+  question of \cite[\S6]{DJN23} --- has been \emph{relocated} to the companion
+  held file \texttt{papers/dialectica-tensors-deferred.tex}, together with the
+  closed forms, the non-convolutional placement, and the novelty sweep. It is
+  deferred from the core programme, not withdrawn.
+\end{itemize}
+
+\subsection*{The closest neighbour}
+
+The nearest work in the literature is Dorta--Jarvis--Niu \cite{DJN23}, and it is
+worth saying precisely where they meet us and where they do not. They study
+monoidal structures on the \emph{generalized} polynomial categories
+$\Sigma\Pi\mathcal C$ --- the free coproduct completion of the free product
+completion of a monoidal category $\mathcal C$, with objects the formal sums
+$\sum_i\prod_a c_{i,a}$ whose entries $c_{i,a}$ live in $\mathcal C$. Taking
+$\mathcal C$ terminal recovers exactly our setting: $\Sigma\Pi 1\simeq\Cont$.
+They transport both the Day tensor $\dir$ and the substitution tensor $\tri$ up
+to $\Sigma\Pi\mathcal C$, and their Theorem~4.3 identifies the $\tri$-comonoids
+with enriched categories and enriched cofunctors --- whose $\mathcal C=1$ case is
+the Ahman--Uustalu statement, recalled above, that a $\tri$-comonoid is a small
+category. That theorem, not this chapter, is the source for the fact that a
+directed container is a $\tri$-comonoid; §\ref{sec:seq} and §\ref{sec:duoidal}
+use it only as standing background.
+
+Their generalisation runs along an axis \emph{orthogonal} to ours, which is why
+the three main theorems survive intact. Dorta--Jarvis--Niu vary the
+\emph{predicate} axis --- enriching each position and direction by an object of an
+arbitrary monoidal $\mathcal C$, so that $\Sigma\Pi 2$ is de~Paiva's
+$\mathrm{Dial}(\Set)$, and $\mathcal C$ metric gives weighted categories --- and
+they \emph{construct} the Day convolution (their Prop.~3.1) without classifying
+it: there is no equivalence, no uniqueness statement, and no universal
+characterisation of the comparitor anywhere in their paper. We instead fix
+$\mathcal C=1$ and vary the \emph{base} axis --- the monoidal structure on
+$\Set$ --- and fill exactly that gap. Theorem~\ref{thm:A} upgrades the Day
+construction from one direction to an equivalence $\{\text{monoidal structures on
+}\Set\}\simeq\{\text{convolutional structures on }\Cont\}$;
+Theorem~\ref{thm:Bplus} proves the product is the unique pointwise structure;
+Theorem~\ref{thm:C} identifies the comparitor as a coreflection counit. None of
+the three has a counterpart in \cite{DJN23}. Finally, their §6 records two
+further monoidal structures on $\Sigma\Pi\mathcal C$ (written $\ltimes$,
+$\rtimes$) that they cannot yet interpret --- a concrete second instance of the
+``why exactly these?'' question. On the $\Set$ side Theorem~\ref{thm:A} answers
+it; the answer on \emph{their} side --- $\ltimes$ as de~Paiva's Dialectica tensor
+extended to all of $\Poly$, and $\rtimes$ as its directed variant --- is
+developed in the companion held file
+\texttt{papers/dialectica-tensors-deferred.tex}, deferred to a later
+$\Cont(C)$ chapter.
+
+\subsection*{Machine-checked}
+
+All four monoidal structures are formalised in Lean~4 as
+\texttt{MonoidalCategory} instances: \texttt{contCoprodMonoidal} and
+\texttt{contProdMonoidal} (\texttt{FourMonoidal.lean}),
+\texttt{contDirichletMonoidal} (\texttt{Dirichlet.lean}), \texttt{ContMonoidal}
+(\texttt{Monoidal.lean}); together with the extension laws
+$\Ext{p\tri q}=\Ext p\circ\Ext q$, $\Ext{p\times q}\cong\Ext p\times\Ext q$, and
+the comparitor \texttt{Container.dirToSeq} with its non-surjectivity. The
+sequential pentagon and triangle (Theorem~\ref{thm:pentagon}) close by
+\texttt{rfl}. The \textbf{Dirichlet closure} (Theorem~\ref{thm:dirclosed}) is
+formalised in full in \texttt{DirichletClosed.lean}: the internal hom, the
+currying bijection with both round trips, and naturality in each variable, all
+\texttt{rfl} and axiom-free.
+
+The finite-container computations behind §\ref{sec:properclass} --- the $\vee_S$
+pentagon and triangle, the $\kappa$ test, the comparitor trichotomy, and the
+negative control of §\ref{sec:negcontrol} --- are Python, not Lean; bijections are
+constructed and compared elementwise rather than counted. The uniform closure
+formula (Remark~\ref{rem:uniformclosed}) is checked on $5197$ finite triples with
+three negative controls; the Eckmann--Hilton reduction behind
+Theorem~\ref{thm:doublecomonoid} is corroborated by an exhaustive search over a
+monoid library (commutative $\Rightarrow$ a unique $m=\mu$; $S_3,T_2$ admit
+none). \textbf{Not yet machine-checked, and flagged as such:} Theorems~A, B$^+$,
+C, and~\ref{thm:doublecomonoid} themselves; the $\vee_S$ coherence proof; the
+uniform closure adjunction in the generality of Remark~\ref{rem:uniformclosed}.
+
+\subsection*{Open}
+
+\begin{Question}[Naturality-free Theorem~B]\label{q:naturality}
+Theorem~\ref{thm:B} assumes the pointwise isomorphism is natural in $p$ and $q$.
+Suppose only that for each $p,q$ there \emph{exists} an isomorphism
+$\Ext{p\dayt_\star q}\cong\Ext p\times\Ext q$ natural in $X$ alone. Then
+$A\star B\cong A+B$ for all $A,B$ as bare bijections, and
+Proposition~\ref{prop:unitinitial} still gives $I=\varnothing$, so $\kappa$
+exists --- but we cannot show $\kappa$ is bijective without naturality. \emph{Is
+there a monoidal structure $(\star,\varnothing)$ on $\Set$ with $A\star B\cong
+A+B$ for all $A,B$ but $\star\not\cong+$ as a bifunctor?} We believe not, and
+have no proof. Nothing above depends on the answer.
+\prov{Open}
+\end{Question}
+
+\begin{Question}[Symmetry of $\vee_S$]\label{q:hexagon}
+Is $(\vee_S,\varnothing)$ symmetric? The candidate braiding is evident; the
+hexagon is unverified (Remark~\ref{rem:nosymm}), and the negative control of
+§\ref{sec:negcontrol} is a specific reason for caution, since a braiding must
+re-match separators.
+\prov{Open}
+\end{Question}
+
+\begin{Question}[Closed convolutional structures]\label{q:closedconv}
+Is a convolutional tensor $\odot_\star$ closed \emph{only if} $R\star(-)$ is
+polynomial? Remark~\ref{rem:uniformclosed} gives the sufficiency; the necessity
+is unargued (Remark~\ref{rem:speculative}), and with it Theorem~A would upgrade
+to an equivalence between $\star$ with $R\star(-)$ polynomial and the closed
+convolutional structures on $\Cont$.
+\prov{Open [speculative]}
+\end{Question}
+
+\begin{Question}[A complete duoidal atlas]\label{q:atlas}
+Enumerate, at book grade, the interaction laws among the four structures ---
+matching each of the folklore relationships (§\ref{sec:duoidal}) to a proof or a
+citation, and settling which are open.
+\prov{Open}
+\end{Question}
+
+%% ===========================================================================
+\begin{thebibliography}{9}
+
+\bibitem{AAG05} M.~Abbott, T.~Altenkirch, N.~Ghani.
+  \emph{Containers: constructing strictly positive types}.
+  Theoretical Computer Science 342(1), 3--27, 2005.
+
+\bibitem{MacLane} S.~Mac~Lane.
+  \emph{Categories for the Working Mathematician}, 2nd ed.
+  Springer, 1998. (Coherence theorem for monoidal categories.)
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak.
+  \emph{Polynomial Functors: A Mathematical Theory of Interaction}.
+  arXiv:2312.00990, 2023.
+
+\bibitem{SpivakRef} D.~I.~Spivak.
+  \emph{A Reference for Categorical Structures on \textup{Poly}}.
+  arXiv:2202.00534, 2022.
+
+\bibitem{SpivakSrinivasan} D.~I.~Spivak, P.~Srinivasan.
+  \emph{$(\Poly,\otimes,\triangleleft)$ is a Normal Duoidal LDC}.
+  arXiv:2407.01849, 2024.
+
+\bibitem{SpivakSrinivasan2305} D.~I.~Spivak, P.~Srinivasan.
+  \emph{Toward a Unification of the Categorical Structures of \textup{Poly}}.
+  arXiv:2305.00167, 2023.
+
+\bibitem{ALS10} T.~Altenkirch, P.~Levy, S.~Staton.
+  \emph{Higher-order containers}.
+  In \emph{Programs, Proofs, Processes} (CiE 2010), LNCS 6158, 11--20, Springer, 2010.
+
+\bibitem{AguiarMahajan} M.~Aguiar, S.~Mahajan.
+  \emph{Monoidal Functors, Species and Hopf Algebras}.
+  CRM Monograph Series 29, American Mathematical Society, 2010.
+  (Duoidal categories and comonoids in comonoids.)
+
+\bibitem{AhmanUustalu} D.~Ahman, T.~Uustalu.
+  \emph{When Is a Container a Comonad?}
+  arXiv:1604.01187, 2016.
+  (Directed containers as small categories; polynomial comonads.)
+
+\bibitem{DJN23} Dorta, Jarvis, N.~Niu.
+  \emph{Monoidal Structures on Generalized Polynomial Categories}.
+  In \emph{Applied Category Theory 2023}, Electronic Proceedings in Theoretical
+  Computer Science 397, 84--97, 2023. arXiv:2305.05655.
+
+%% de Paiva, Lucatelli Nunes--Vakar, Capucci et al. moved with the Dialectica
+%% material to papers/dialectica-tensors-deferred.tex.
+
+\end{thebibliography}
+
+\end{document}

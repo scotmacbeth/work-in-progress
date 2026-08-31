@@ -1,0 +1,109 @@
+{
+  "conjecture": "The state object DeltaS=(S, s->S) is the codiscrete category on S under DCont~=Cat (o_s=s, s|p=p, p(+)p'=p'), with extension the store/costate comonad StoreS X = S x X^S; the reader X^S is its position fibre. A 'Worker' p->q with state S is a container morphism DeltaS (x) p -> q for the Dirichlet tensor (x); Workers form a category graded by (Set,x) whose composition MULTIPLIES the state (DeltaS(x)DeltaT=Delta(SxT) strictly), i.e. the coKleisli category of the (Set,x)-graded comonad S|->DeltaS(x)-, and its S-varying version is Gavranovic's Para construction of the (Set,x)-action S.p=DeltaS(x)p. (Neil Ghani Ch4 steer, email 2026-07-27.)",
+  "status": "proved",
+  "date_opened": "2026-07-28",
+  "date_closed": "2026-07-28",
+  "note": "PROVE session 2026-07-28. T1 (DeltaS=codiscrete cat, store comonad) and T3-core (Workers = (Set,x)-graded category, state multiplies) PROVED in coordinates + exhaustively finite-verified (D1-D5 for |S|<=3; comonad laws; 32 + 400x256 valid composites; unit laws; 512 + 1369 associativity triples up to associator). Choice of Dirichlet (x) forced: product tensor gives DeltaS x DeltaT fibres |S|+|T| != |SxT| (negcontrol.py). Two identifications remain COMPUTED (gaps): (i) literal Para-over-(Set,x) vs Para-over-Core(Set) since Delta is functorial only on bijections; (ii) exact Fujii-Katsumata-Mellies graded-comonad packaging. Proof: proofs/2026-07-28-delta-state-object-and-workers.md. Lean is natural next step (Lemma 3.1 defeq-shaped).",
+  "tree": {
+    "id": "root",
+    "approach": "DeltaS characterisation + reader/store + Workers graded category via Dirichlet tensor",
+    "trust": "proved",
+    "file": "2026-07-28-delta-state-object-and-workers.md",
+    "children": [
+      {
+        "id": "dcont-cat-hinge",
+        "approach": "The Ahman-Chapman-Uustalu correspondence DCont ~= Cat (directed container <-> small category), used to identify DeltaS with the codiscrete category. Own lean-verified hinge.",
+        "role": "premise",
+        "trust": "lean-verified",
+        "file": null,
+        "lean": "DContCat",
+        "note": "Cited, not re-proved. Own equivalence-chain registry, lean-verified DContCat.lean (see proofs/registry/equivalence-chain.json).",
+        "children": []
+      },
+      {
+        "id": "finite-verification",
+        "approach": "scratch/state-object-delta/{verify.py,run_tests.py,stress.py,negcontrol.py}: D1-D5 for |S|=1,2,3; store comonad laws for S={a,b}, X={0,1},{0,1,2}; DeltaS(x)DeltaT=Delta(SxT) & Delta1=y profiles; all 32 (tiny) + 400x256 (multi-shape) Worker composites valid container morphisms; unit laws (16 workers) up to unitor; associativity 512 (tiny) + 1369 (multi-shape) triples up to associator; negative control product-tensor fibres |S|+|T| != |SxT|.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": null,
+        "children": []
+      },
+      {
+        "id": "t1-codiscrete-store",
+        "approach": "T1: DeltaS carries directed structure o_s=s, s|p=p, p(+)p'=p' (2nd projection); D1-D5 hold; under DCont~=Cat this is the codiscrete category on S (P(s)=Sum_{s'} 1 = S). Induced comonad eps(s,v)=v(s), delta(s,v)=(s,p->(p,v)) = store/costate comonad StoreS X=SxX^S (Uustalu-Vene). Identification proved; folklore not re-graded.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-28-delta-state-object-and-workers.md",
+        "children": [
+          {
+            "id": "t1-lean",
+            "approach": "Lean 4 (core, no Mathlib): deltaS S = (S, _ -> S); deltaDC S is a DirectedContainer with root s=s, sub s p=p, shift s p q=q. D1-D5 all hold by rfl (deltaDC axiom-free). Induced store comonad: counit (s,v)=v s (deltaDC_counit), comult (s,v)=(s, p->(p,v)) (deltaDC_comult), both rfl/axiom-free; left/right counit + coassoc laws inherited from Directed.lean (deltaDC_left_counit/right_counit/coassoc, Quot.sound-only via funext).",
+            "role": "attempt",
+            "trust": "lean-verified",
+            "file": null,
+            "lean": "deltaDC",
+            "note": "Containers/StateComonad.lean. deltaDC, deltaDC_counit, deltaDC_comult, deltaDC_left_counit, deltaDC_right_counit, deltaDC_coassoc. Comonad structure reused from Containers.Directed (DirectedContainer.counit/comult/left_counit/right_counit/coassoc). DCont~=Cat hinge = DContCat.lean.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "t2-reader-store",
+        "approach": "T2: pin Dirichlet (x) (Niu-Spivak Def 3.65) and hom [q,r]=Prod_c r o (Dc.y) (Ex 4.78). ||DeltaS(x)y||=StoreS; position fibre = reader X^S=(S->X). ||DeltaS||=S x Reader_S = current-state x reader. Reader is the read-only shadow; the S x factor (writeback) is 'the more' that forces state to multiply.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-28-delta-state-object-and-workers.md",
+        "children": []
+      },
+      {
+        "id": "t3-workers-graded-category",
+        "approach": "T3 core: Lemma 3.1 DeltaS(x)DeltaT=Delta(SxT) strict, Delta1=y. Worker w:DeltaS(x)p->q unpacks (f:SxA->C; f1 writeback D(f(s,a))->S; f2 backmap ->Ba). Composition w'o(id(x)w):Delta(TxS)(x)p->r multiplies state. Workers_S(p,q):=Cont(DeltaS(x)p,q) is a (Set,x)-graded category: identity grade 1, composition grade SxT, associative/unital up to (Set,x) associator/unitors. = coKleisli of the strict (Set,x)-graded comonad S|->DeltaS(x)-. All coordinates + exhaustive finite verification.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-28-delta-state-object-and-workers.md",
+        "children": [
+          {
+            "id": "para-identification",
+            "approach": "T3 refinement (S varies): Para(p,q):=Sum_{S:Set} Cont(DeltaS(x)p,q), composed by (S,w)o(T,w')=(SxT, w'o(DeltaT(x)w)) = Gavranovic Para of the (Set,x)-action S.p=DeltaS(x)p. GAP: Delta functorial only on bijections, so literal Para holds over Core(Set); over all (Set,x) it is a graded/monoidal-on-objects reading. Identification graded COMPUTED pending line-by-line check of actegory axioms.",
+            "role": "attempt",
+            "trust": "computed",
+            "file": "2026-07-28-delta-state-object-and-workers.md",
+            "note": "Capucci-Gavranovic-Hedges-Rischel arXiv:2105.06332 (Para/categorical cybernetics); Gavranovic thesis 2024. Cited from memory/agent-summary level (not in sources index); deep-read owed before promoting above computed.",
+            "children": []
+          },
+          {
+            "id": "t3-lemma31-lean",
+            "approach": "Lean 4 (core): Lemma 3.1 machine-checked as strict container equalities. deltaS_tensor: deltaS S (x) deltaS T = deltaS (S x T) by rfl (Dirichlet tensor multiplies fibres). deltaS_unit: deltaS Unit = Container.y by rfl. Both axiom-free. This is the 'state multiplies' backbone of T3; full Worker graded-category composition is not yet Lean'd (defeq-shaped follow-on).",
+            "role": "attempt",
+            "trust": "lean-verified",
+            "file": null,
+            "lean": "deltaS_tensor",
+            "note": "Containers/StateComonad.lean: deltaS_tensor, deltaS_unit. Uses Containers.Dirichlet (x). Only Lemma 3.1 is Lean-verified; the graded-category laws of T3 remain computed (finite-verification child).",
+            "children": [
+              {
+                "id": "t3-lemma31-comonad-level-lean",
+                "approach": "Lean 4 (core): Lemma 3.1 STRENGTHENED from the bare container equality to the comonad level. Reuses DirectedContainer.prod (Containers.StateProductLifting) -- the product of directed containers, whose position fibre C.Pos s x D.Pos t IS the Dirichlet tensor on positions, so (C.prod D).toContainer = C.toContainer (x) D.toContainer by rfl (prod_toContainer_dirichlet): the product category is realised in Cont as (x). Codiscrete case: (deltaDC S).prod (deltaDC T) = deltaDC (S x T) by rfl (deltaDC_prod) -- the store comonads themselves (not just their carriers) tensor: counit/comult on SxT are literally those of the product (deltaDC_prod_counit, deltaDC_prod_comult, rfl). Unit deltaDC Unit has carrier y (deltaDC_unit_toContainer, rfl). All five axiom-free.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "file": null,
+                "lean": "deltaDC_prod",
+                "note": "Containers/StateComonadTensor.lean: prod_toContainer_dirichlet, deltaDC_prod, deltaDC_prod_counit, deltaDC_prod_comult, deltaDC_unit_toContainer. Uses Containers.StateProductLifting (DirectedContainer.prod) + Containers.StateComonad (deltaDC) + Containers.Dirichlet (x). This lifts deltaS_tensor from the underlying container to the directed container / store comonad -- the 'state multiplies' fact now certified at the level that carries the comonad. #print axioms: all five depend on NO axioms. Full library builds; zero errors/warnings.",
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "lean-worker-composition",
+            "approach": "Lean 4 (core, no Mathlib): the full (Set,x)-graded category of Workers. Worker S p q := ContainerMorphism (deltaS S (x) p) q. Worker.comp: Worker S p q -> Worker T q r -> Worker (SxT) p r written directly in coordinates (state multiplies, axiom-free). Worker.id: Worker Unit p p (grade 1). Worker.reGrade to fro: transport a worker's state along a bijection of grades (Delta on Core(Set)). Three laws, each ext'+rfl (defeq up to grade coherence, Quot.sound-only): unit_left (id o w reGraded along 1xT~=T = w), unit_right (w o id along Sx1~=S = w), assoc (((u o v) o w) reGraded along (SxT)xU~=Sx(TxU) = u o (v o w)). Confirms Lemma-3.1-is-rfl prediction: no transport slog. Full library builds; zero errors/warnings.",
+            "role": "attempt",
+            "trust": "lean-verified",
+            "file": null,
+            "lean": "Worker.comp",
+            "note": "Containers/Workers.lean: Worker, Worker.comp, Worker.id, Worker.reGrade, Worker.unit_left, Worker.unit_right, Worker.assoc. Uses Containers.StateComonad (deltaS, deltaS_tensor) + Containers.Cont (ContainerMorphism.comp/id/ext') + Containers.Dirichlet (x). comp axiom-free; the three laws Quot.sound-only (via ext'/funext). This promotes the T3-core graded-category laws from computed to lean-verified; the S-varying Para identification (para-identification child) remains computed.",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

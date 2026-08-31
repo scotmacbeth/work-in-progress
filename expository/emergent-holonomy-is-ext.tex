@@ -1,0 +1,766 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[dvipsnames,svgnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,citecolor=teal!60!black,urlcolor=blue!55!black,
+  pdftitle={Emergent holonomy lives in degree zero},pdfauthor={MacBeth}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Coind}{Coind}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Hh}{H}
+\newcommand{\kG}{kG}
+\newcommand{\kk}{k}
+\newcommand{\conj}[2]{{}^{#1}\!#2}
+\newcommand{\dcoset}[3]{#1\backslash #2/#3}
+
+\title[Emergent holonomy lives in degree zero]{The emergent-holonomy count is a
+degree-zero invariant:\\ $h(s)=\dim_k\Hom_{kU}(k[U/A],k[U/B])$}
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+\date{20 August 2026}
+
+\begin{document}
+
+\begin{abstract}
+When two agents composed as a Zappa--Sz\'ep (exact) factorisation act on a shared
+state and neither reserves the shared resource, an emergent holonomy appears: the two
+factor-orbits through a state~$s$ cross in $h(s)$ points, and $h(s)=1$ exactly when the
+composition is aligned. We identify this count with a representation-theoretic invariant
+of the stabiliser group $U=\Stab_G(s)$. Writing $A,B\le U$ for the two factor-isotropies
+and $k[U/A],k[U/B]$ for the associated permutation modules, the Mackey--Eckmann--Shapiro
+decomposition of $\Ext$ between permutation modules gives
+$h(s)=\dim_k\Hom_{kU}(k[U/A],k[U/B])=\dim_k\Ext^0_{kU}(k[U/A],k[U/B])$.
+The novelty is not this classical formula but its consequence in the holonomy setting:
+transversality of an exact factorisation forces every relevant subgroup intersection to
+be trivial, so the entire higher $\Ext$-tower vanishes identically. The holonomy invariant
+is therefore cohomological but concentrated in degree zero --- a single $\Hom$-space, or
+equivalently a double-coset count --- with a theorem guaranteeing that no higher $\Ext$
+obstruction can hide it. This corrects the working expectation that alignment should be
+detected by a higher cohomology class, and explains why an orientation-twist of the
+modules leaves the invariant unchanged.
+We close by placing this vanishing inside a single formula. Over an \emph{abelian}
+ambient group the Mackey decomposition factors as
+$\Ext^n_{kG}(k[G/A],k[G/B])\cong\Hh^n(A\cap B;k)^{\oplus[G:AB]}$: a degree-independent
+meeting count $h=[G:AB]$ times the cohomology of the overlap $A\cap B$. The holonomy
+tower $[h,0,0,\dots]$ is the transverse corner $A\cap B=\{e\}$ of this formula; a
+$V_4$ computation exhibits its full range, and support-variety geometry reads the
+dichotomy as an intersection of rank varieties --- disjoint (transverse, vanishing)
+versus coincident (non-transverse, surviving).
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection*{Orchestration and emergent holonomy}
+When two systems are composed, the order in which they act can matter. In the
+compositional theory of directed containers, the sharpest instance of this is the
+\emph{Zappa--Sz\'ep} (or \emph{exact}) factorisation of a group: $G=P\cdot P'$ with
+$P\cap P'=\{e\}$ and $\lvert P\rvert\lvert P'\rvert=\lvert G\rvert$, so that every
+$g\in G$ has a unique expression $g=p\,p'$ and a unique reverse expression $g=p''p'''$.
+This is the algebraic skeleton of ``two agents sharing one state, each with its own
+private moves,'' and it is the model we use throughout the container programme for
+agent orchestration, supply chains, and stateful smart contracts; that composing two
+directed containers this way is a Zappa--Sz\'ep product is due to
+Ahman--Uustalu~\cite{au-distlaw}, and the emergent-holonomy content below sits on top of
+their construction.
+
+Fix a $G$-set $S$ and a state $s\in S$. The two factors $P,P'$ each sweep out an orbit
+through $s$, namely $P\cdot s$ and $P'\cdot s$. Composing the agents means asking how
+these two orbits interact, and the answer is a local invariant we call the
+\emph{emergent holonomy}
+\[
+   h(s)\;:=\;\bigl\lvert (P\cdot s)\cap(P'\cdot s)\bigr\rvert
+   \;=\;\lvert \dcoset{A}{U}{B}\rvert,
+\]
+the number of points where the two factor-orbits cross. Here $U=\Stab_G(s)$ is the
+isotropy group of $s$ and $A=U\cap P$, $B=U\cap P'$ are the isotropies of the two
+factors. That $h(s)$ is exactly the double-coset count $\lvert\dcoset{A}{U}{B}\rvert$,
+and that $h(s)=1$ if and only if the composition is \emph{aligned} (the two orbits meet
+only at $s$), was established in~\cite{macbeth-meeting}. Misalignment --- $h(s)>1$ ---
+is the obstruction to treating the composite as a single well-defined move; it is the
+container-theoretic signature of a reentrancy bug.
+
+\subsection*{The question}
+The count $h(s)$ is a combinatorial quantity. Is it \emph{cohomological}? Emergent
+holonomy sits in a family of results where the obstruction to a clean composition is an
+$\Hh^2$-class~\cite{macbeth-zs,macbeth-reentrancy}, and it is natural to expect the same
+here: that alignment should be witnessed by the vanishing of some higher cohomology
+class attached to the pair $(A,B)$ inside $U$. A concrete form of the expectation, due to
+a collaborator, was that misalignment should surface as a nonzero class in
+$\Ext^2_{kU}(k[U/A],k[U/B])$ or higher.
+
+\subsection*{The result}
+It does not. The holonomy invariant is representation-theoretic, but it lives entirely in
+degree~zero, and the higher tower is not merely uninformative --- it is identically zero.
+
+Let $k$ be a field, $M=k[U/A]$ and $N=k[U/B]$ the permutation modules on the coset spaces.
+The classical Mackey--Eckmann--Shapiro decomposition of $\Ext$ between permutation modules
+(Theorem~\ref{thm:mackey-ext}) reads
+\[
+   \Ext^n_{kU}(k[U/A],k[U/B])\;\cong\;
+   \bigoplus_{u\in \dcoset{A}{U}{B}} \Hh^n\!\bigl(A\cap uBu^{-1};k\bigr),
+   \qquad n\ge 0.
+\]
+In degree zero every summand is $\Hh^0(H;k)=k$, so the rank of $\Ext^0$ is the number of
+double cosets. Combined with~\cite{macbeth-meeting} this is the dictionary:
+
+\begin{theorem}[Dictionary, degree zero; Corollary~\ref{cor:dictionary}]\label{thm:intro-dict}
+In the emergent-holonomy setting,
+\[
+  h(s)\;=\;\lvert\dcoset{A}{U}{B}\rvert
+        \;=\;\dim_k\Hom_{kU}(k[U/A],k[U/B])
+        \;=\;\dim_k\Ext^0_{kU}(k[U/A],k[U/B]).
+\]
+\end{theorem}
+
+The point of this note is the next statement, which is what makes the degree-zero
+location \emph{forced} rather than incidental.
+
+\begin{theorem}[Degree-zero concentration; Theorem~\ref{thm:tower-vanishes}]\label{thm:intro-tower}
+In the emergent-holonomy setting, for \emph{every} $u\in U$ the intersection
+$A\cap uBu^{-1}$ is trivial. Consequently
+\[
+   \Ext^n_{kU}(k[U/A],k[U/B])\;\cong\;
+   \begin{cases} k^{\,h(s)} & n=0,\\[2pt] 0 & n\ge 1,\end{cases}
+\]
+independently of $\operatorname{char}k$ and of whether the composition is aligned.
+\end{theorem}
+
+The mechanism is one line: $A\subseteq P$ and $uBu^{-1}\subseteq uP'u^{-1}$, so
+$A\cap uBu^{-1}\subseteq P\cap uP'u^{-1}=\{e\}$ because an exact factorisation is
+\emph{transverse} --- every conjugate of $P'$ meets $P$ trivially (Lemma~\ref{lem:transverse}).
+Every Mackey summand in the decomposition is then the cohomology of the trivial group,
+which is $k$ in degree $0$ and $0$ above.
+
+\subsection*{What this corrects, and why it matters}
+The working hypothesis --- ``a higher class detects alignment'' --- is false, and
+Theorem~\ref{thm:intro-tower} says precisely why. The alignment content is the
+\emph{rank of $\Ext^0$}: aligned $\iff h(s)=1\iff \Ext^0$ is one-dimensional. The higher
+tower carries none of it. Our verification (Section~\ref{sec:verify}) includes a decisive
+witness, computation~\textbf{W2}: an exact factorisation of $S_4$ with $h(s)=2>1$
+(misaligned) whose entire higher $\Ext$-tower is nevertheless zero. A higher class cannot
+be detecting what a misaligned example leaves invisible.
+
+This also settles the collaborator's $\Ext^2$ conjecture in a clean way: it was right in
+degree $0$ (where $h=\dim\Ext^0$) and structurally void in every higher degree, because
+transversality leaves no higher $\Ext$ for a class to inhabit~\cite{macbeth-rickv4}. The
+same transversality explains a twist-stability phenomenon (Corollary~\ref{cor:twist}):
+tensoring $N$ with any character leaves the tower unchanged, so an ``orientation line''
+cannot revive a higher obstruction.
+
+For the wider programme the payoff is operational. Emergent holonomy of an unprotected
+orchestration now carries a representation-theoretic signature,
+$h(s)=\dim_k\Hom_{kU}(k[U/A],k[U/B])$, computable as a single space of equivariant maps ---
+or, with no homological algebra at all, as a double-coset count --- \emph{together with a
+guarantee} (Theorem~\ref{thm:intro-tower}) that no deeper $\Ext$ invariant can conceal the
+obstruction. Detection is a degree-zero computation, and there is nothing further to audit.
+
+\subsection*{On novelty}
+The decomposition of Theorem~\ref{thm:mackey-ext} is classical: it is the Mackey formula
+for $\Ext$ between permutation modules, going back to Nakaoka, and it is standard textbook
+material~\cite{benson1,brown}. We give it in coordinates, with each ingredient cited,
+because the container-theory audience for whom this note is written may not have the
+group-cohomology backbone to hand. The contribution is the identification of $h(s)$ with
+$\dim\Ext^0$ and the degree-zero concentration theorem, together with the corrected reading
+they force.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes notation for permutation modules, group cohomology, and the
+exact-factorisation setup. Section~\ref{sec:mackey} assembles the three classical
+ingredients into the Mackey $\Ext$-decomposition. Section~\ref{sec:dictionary} proves the
+dictionary and the degree-zero concentration, and derives twist-stability.
+Section~\ref{sec:verify} reports the independent numerical verification.
+Section~\ref{sec:dichotomy} steps outside the holonomy locus to place the vanishing
+inside a single abelian factorisation $\Ext=h\cdot\Hh^*(A\cap B)$, worked out on $V_4$
+and read geometrically through support varieties.
+Section~\ref{sec:conclusion} draws the operational conclusion and separates emergent
+holonomy from the superficially similar higher towers that arise for unrelated subgroups.
+
+\section{Preliminaries}\label{sec:prelim}
+
+Throughout, $G$ is a finite group, $k$ a field of characteristic $p$ (the interesting case
+is $p\mid\lvert G\rvert$), and all modules are \emph{left} modules over the group algebra
+$kG$. For $g\in G$ and $B\le G$ write $\conj{g}{B}:=gBg^{-1}$.
+
+\subsection{Induction, restriction, permutation modules}
+For $H\le G$ and a $kH$-module $W$, induction and restriction are
+\[
+   \Ind_H^G W \;=\; kG\otimes_{kH} W,
+   \qquad
+   \Res_H Y \;=\; Y\ \text{regarded as a $kH$-module.}
+\]
+The \emph{permutation module} on the left cosets $G/H$ is
+$k[G/H]=\Ind_H^G k$, the free $k$-module on $G/H$ with $G$ permuting the basis. We write
+$M=k[G/A]=\Ind_A^G k$ and $N=k[G/B]=\Ind_B^G k$.
+
+\subsection{Group cohomology}
+For $H\le G$ we write $\Hh^n(H;k):=\Ext^n_{kH}(k,k)$ for group cohomology with trivial
+coefficients. We use two standard facts. First, if $p\nmid\lvert H\rvert$ then $kH$ is
+semisimple (Maschke), so $\Hh^{\ge 1}(H;k)=0$; only $p$-divisible subgroups contribute a
+higher tower. Second, $\Hh^n(\{e\};k)=k$ for $n=0$ and $0$ for $n\ge 1$.
+
+\subsection{Double cosets}
+For $A,B\le G$, $\dcoset{A}{G}{B}$ denotes the set of double cosets $AgB$. A choice of
+representatives $g$ is understood; different representatives of one double coset yield
+conjugate intersection subgroups $A\cap\conj{g}{B}$, hence cohomologically isomorphic
+summands, so every double-coset-indexed sum below is well defined.
+
+\subsection{The emergent-holonomy setup}\label{ss:holonomy-setup}
+An \emph{exact factorisation} (Zappa--Sz\'ep product) of $G$ is a pair of subgroups
+$P,P'\le G$ with $P\cap P'=\{e\}$ and $PP'=G$; equivalently every $g\in G$ factors
+uniquely as $g=pp'$ with $p\in P$, $p'\in P'$. Fix a $G$-set $S$ and $s\in S$, and set
+\[
+   U:=\Stab_G(s), \qquad A:=\Stab_P(s)=U\cap P, \qquad B:=\Stab_{P'}(s)=U\cap P'.
+\]
+Note $A\subseteq P$ and $B\subseteq P'$. The \emph{emergent holonomy} at $s$ is the
+crossing count of the two factor-orbits,
+\[
+   h(s):=\bigl\lvert (P\cdot s)\cap(P'\cdot s)\bigr\rvert.
+\]
+We take as given the following identity, proved in~\cite{macbeth-meeting}.
+
+\begin{proposition}[Meeting points~\cite{macbeth-meeting}]\label{prop:meeting}
+$h(s)=\lvert\dcoset{A}{U}{B}\rvert=\lvert U\rvert/(\lvert A\rvert\,\lvert B\rvert)$, and
+$h(s)=1$ if and only if the composition is aligned, i.e.\ $(P\cdot s)\cap(P'\cdot s)=\{s\}$.
+\end{proposition}
+
+The single structural fact about exact factorisations that we need is transversality.
+
+\begin{lemma}[Transversality~\cite{macbeth-meeting}]\label{lem:transverse}
+Let $G=P\cdot P'$ be an exact factorisation. Then $P\cap\conj{g}{P'}=\{e\}$ for every
+$g\in G$.
+\end{lemma}
+
+\begin{proof}
+Suppose $x\in P\cap gP'g^{-1}$, so $x=p\in P$ and $x=gp'g^{-1}$ for some $p'\in P'$.
+Write $g=qq'$ with $q\in P$, $q'\in P'$ (unique factorisation). Conjugating $x$ by
+$q^{-1}$ gives, on the one hand, $q^{-1}xq=q^{-1}pq\in P$, and on the other,
+$q^{-1}xq=q^{-1}(qq')p'(qq')^{-1}q=q'p'q'^{-1}\in P'$. Hence
+$q^{-1}xq\in P\cap P'=\{e\}$, so $x=e$.
+\end{proof}
+
+\begin{remark}
+Lemma~\ref{lem:transverse} is the only place exactness is used. It says the factor $P$ is
+transverse to \emph{every} conjugate of $P'$, not merely to $P'$ itself --- this global
+transversality is exactly what will kill the higher $\Ext$-tower in Section~\ref{sec:dictionary}.
+\end{remark}
+
+\section{The Mackey decomposition of $\Ext$ between permutation modules}\label{sec:mackey}
+
+This section assembles the classical decomposition. It rests on three ingredients, each a
+standard lemma stated with a one-line justification; the references are
+Benson~\cite[\S2.8,\ \S3.3]{benson1} and Brown~\cite[III.5--III.6]{brown}. Readers fluent in
+group cohomology may skip to Theorem~\ref{thm:mackey-ext}.
+
+\subsection{Eckmann--Shapiro}
+\begin{lemma}[Eckmann--Shapiro]\label{lem:shapiro}
+For $H\le G$, any $kH$-module $W$ and any $kG$-module $Y$,
+\[
+   \Ext^n_{kG}\!\bigl(\Ind_H^G W,\;Y\bigr)\;\cong\;\Ext^n_{kH}\!\bigl(W,\;\Res_H Y\bigr),
+   \qquad n\ge 0.
+\]
+\end{lemma}
+\begin{proof}
+Choosing coset representatives $G=\bigsqcup_i g_i H$ exhibits $kG$ as a free right
+$kH$-module, so $\Ind_H^G=kG\otimes_{kH}(-)$ is exact; and it sends free modules to free
+modules ($\Ind_H^G kH=kG$), hence preserves projectives. Thus a projective resolution
+$P_\bullet\to W$ over $kH$ induces a projective resolution $\Ind_H^G P_\bullet\to\Ind_H^G W$
+over $kG$, and the adjunction $\Ind_H^G\dashv\Res_H$ gives a natural isomorphism of
+complexes $\Hom_{kG}(\Ind_H^G P_\bullet,Y)\cong\Hom_{kH}(P_\bullet,\Res_H Y)$. Take
+cohomology.
+\end{proof}
+
+Specialising $H=A$, $W=k$, $Y=N$ gives
+\begin{equation}\label{eq:shapiro-spec}
+   \Ext^n_{kG}(k[G/A],N)\;\cong\;\Ext^n_{kA}(k,\Res_A N)\;=\;\Hh^n(A;\Res_A N).
+\end{equation}
+
+\subsection{Mackey}
+\begin{lemma}[Mackey decomposition]\label{lem:mackey}
+As $kA$-modules,
+\[
+   \Res_A^G\Ind_B^G k\;\cong\;\bigoplus_{g\in \dcoset{A}{G}{B}}\Ind_{A\cap\conj{g}{B}}^A k .
+\]
+\end{lemma}
+\begin{proof}
+Decompose $G=\bigsqcup_{g} AgB$ into double cosets. As an $(A,B)$-set each double coset is
+$AgB\cong A\times_{A\cap\conj{g}{B}}gB$, so the permutation $A$-set underlying $\Res_A(G/B)$
+is $\bigsqcup_g A/(A\cap\conj{g}{B})$. Linearising gives the claim. (In general Mackey the
+$g$-th summand carries a twist $\conj{g}{(-)}$ of the coefficient module; for the trivial
+coefficient $k$ the twist is trivial.)
+\end{proof}
+
+Because $\Hh^n(A;-)$ commutes with finite direct sums in the coefficient module,
+\eqref{eq:shapiro-spec} and Lemma~\ref{lem:mackey} combine to
+\begin{equation}\label{eq:combined}
+   \Ext^n_{kG}(k[G/A],k[G/B])\;\cong\;
+   \bigoplus_{g\in\dcoset{A}{G}{B}}\Hh^n\!\bigl(A;\Ind_{A\cap\conj{g}{B}}^A k\bigr).
+\end{equation}
+
+\subsection{Shapiro for cohomology}
+\begin{lemma}[Coinduction form]\label{lem:coind}
+For $H\le A$, \; $\Hh^n(A;\Ind_H^A k)\cong \Hh^n(H;k)$.
+\end{lemma}
+\begin{proof}
+For finite index, induction and coinduction coincide: $\Ind_H^A\cong\Coind_H^A$, both
+$k[A/H]$ as a space. Now $\Coind_H^A$ is right adjoint to the exact functor $\Res_H$, which
+preserves projectives ($kA$ is free over $kH$), so the derived adjunction gives
+$\Ext^n_{kA}(k,\Coind_H^A k)\cong\Ext^n_{kH}(\Res_H k,k)=\Ext^n_{kH}(k,k)=\Hh^n(H;k)$.
+\end{proof}
+
+\subsection{The decomposition}
+Substituting Lemma~\ref{lem:coind} (with $H=A\cap\conj{g}{B}$) into~\eqref{eq:combined}:
+
+\begin{theorem}[Mackey--Eckmann--Shapiro; classical, cf.~{\cite[\S3]{benson1}}]\label{thm:mackey-ext}
+For a finite group $G$, subgroups $A,B\le G$, and any field $k$,
+\[
+   \Ext^n_{kG}(k[G/A],k[G/B])\;\cong\;
+   \bigoplus_{g\in\dcoset{A}{G}{B}}\Hh^n\!\bigl(A\cap gBg^{-1};k\bigr),
+   \qquad n\ge 0,
+\]
+naturally in $n$, the sum over any set of double-coset representatives.
+\end{theorem}
+
+We claim no novelty for Theorem~\ref{thm:mackey-ext}; it is the Mackey formula for $\Ext$
+of permutation modules (Nakaoka; see~\cite[\S3]{benson1}). Its degree-zero part is worth
+recording separately, since it needs no resolution at all.
+
+\begin{corollary}\label{cor:hom-doublecoset}
+$\dim_k\Hom_{kG}(k[G/A],k[G/B])=\lvert\dcoset{A}{G}{B}\rvert$.
+\end{corollary}
+\begin{proof}
+Take $n=0$ in Theorem~\ref{thm:mackey-ext}: every summand is $\Hh^0(-;k)=k$. Directly,
+$\Hom_{kG}(k[G/A],N)=(\Res_A N)^A$, and the $A$-fixed points of the permutation module
+$k[G/B]$ are spanned by the $A$-orbit sums on $G/B$, i.e.\ one basis vector per double
+coset $AgB$.
+\end{proof}
+
+\section{The dictionary and degree-zero concentration}\label{sec:dictionary}
+
+We now specialise to the emergent-holonomy setup of \S\ref{ss:holonomy-setup}, applying the
+machinery of Section~\ref{sec:mackey} \emph{with $G$ replaced by the stabiliser group $U$}
+and the subgroups $A=U\cap P$, $B=U\cap P'$.
+
+\subsection{The dictionary}
+\begin{corollary}[$h(s)=\dim\Ext^0$]\label{cor:dictionary}
+In the emergent-holonomy setting,
+\[
+   h(s)\;=\;\lvert\dcoset{A}{U}{B}\rvert
+       \;=\;\dim_k\Hom_{kU}(k[U/A],k[U/B])
+       \;=\;\dim_k\Ext^0_{kU}(k[U/A],k[U/B]).
+\]
+\end{corollary}
+\begin{proof}
+The outer equality is Proposition~\ref{prop:meeting}; the inner two are
+Corollary~\ref{cor:hom-doublecoset} applied over $U$ (with $\Ext^0=\Hom$).
+\end{proof}
+
+So the double-coset invariant one hoped $\Ext$ would see \emph{is} $\Ext$ --- in degree
+zero. The remaining question is whether it is \emph{only} in degree zero.
+
+\subsection{The higher tower vanishes}
+\begin{theorem}[Degree-zero concentration]\label{thm:tower-vanishes}
+In the emergent-holonomy setting, for every $u\in U$ the intersection $A\cap uBu^{-1}$ is
+trivial. Consequently, over $U$,
+\[
+   \Ext^n_{kU}(k[U/A],k[U/B])\;\cong\;
+   \bigoplus_{u\in\dcoset{A}{U}{B}}\Hh^n(\{e\};k)
+   \;=\;
+   \begin{cases} k^{\,h(s)} & n=0,\\[2pt] 0 & n\ge 1,\end{cases}
+\]
+independently of $\operatorname{char}k$ and of alignment.
+\end{theorem}
+\begin{proof}
+Since $A\subseteq P$ and $uBu^{-1}\subseteq uP'u^{-1}$,
+\[
+   A\cap uBu^{-1}\;\subseteq\;P\cap uP'u^{-1}\;=\;\{e\}
+\]
+by Lemma~\ref{lem:transverse}, applicable because $u\in U\subseteq G$. Every Mackey
+summand of Theorem~\ref{thm:mackey-ext} (over $U$) is therefore $\Hh^n(\{e\};k)$, which is
+$k$ for $n=0$ and $0$ for $n\ge 1$. Summing over the $h(s)=\lvert\dcoset{A}{U}{B}\rvert$
+double cosets gives the result.
+\end{proof}
+
+\begin{remark}[The corrected reading]\label{rem:reading}
+Three consequences deserve to be stated plainly.
+\begin{enumerate}
+\item[(i)] The holonomy count is cohomological, but as a \emph{degree-zero rank}
+   $h(s)=\dim\Ext^0$, not as a higher cohomology class. The tower is $[\,h,0,0,\dots\,]$;
+   there is no $\Hh^2$-shadow of $h$ in it, and no higher class at all.
+\item[(ii)] Alignment is read off in degree zero: aligned $\iff h(s)=1\iff\Ext^0$ is
+   one-dimensional; misaligned $\iff h(s)>1\iff \dim\Ext^0>1$. Computation~\textbf{W2}
+   below exhibits $h(s)=2>1$ (misaligned) with the higher tower still identically zero, so
+   the higher tower demonstrably does \emph{not} detect alignment.
+\item[(iii)] The transversality that forces the vanishing is exactly why an
+   $\Ext^2$-shifted-class ansatz was structurally doomed~\cite{macbeth-rickv4}: in any
+   exact-factorisation holonomy setting Lemma~\ref{lem:transverse} makes $\Res_A N$ free
+   over $kA$, killing $\Ext^{\ge 1}$ --- there is no $\Ext^2$ for a class to live in. The
+   ansatz was right in degree $0$ and void above it.
+\end{enumerate}
+\end{remark}
+
+\subsection{Twist-stability}
+The degree-zero concentration is robust under twisting the target module by a character,
+which is the natural way one might try to inject an orientation into the invariant.
+
+\begin{corollary}[Twist-stability]\label{cor:twist}
+Let $L$ be any one-dimensional $kG$-module (character). Then
+\[
+   \Ext^n_{kG}(k[G/A],k[G/B]\otimes L)\;\cong\;
+   \bigoplus_{g\in\dcoset{A}{G}{B}}\Hh^n\!\bigl(A\cap gBg^{-1};\,\Res_{A\cap gBg^{-1}}L\bigr).
+\]
+In the emergent-holonomy setting every $A\cap uBu^{-1}=\{e\}$, so $\Res L=k$ and the tower
+is unchanged by the twist; over $\mathbb{F}_2$ there is no nontrivial character at all.
+\end{corollary}
+\begin{proof}
+Mackey with coefficients gives $\Res_A(N\otimes L)=\bigoplus_g\Ind_{A\cap\conj{g}{B}}^A
+\Res_{A\cap\conj{g}{B}}(\conj{g}{L})$; apply Lemma~\ref{lem:shapiro} and~\ref{lem:coind}.
+Since $L$ is one-dimensional, $G$ acts on it by a character, which is conjugation-invariant,
+so $\conj{g}{L}=L$. In the holonomy setting each intersection is trivial, so the restricted
+coefficient is $k$.
+\end{proof}
+
+Thus an ``orientation line'' cannot revive a higher obstruction: the invariant is the rank
+of $\Ext^0$ and nothing about a character changes it.
+
+\section{Verification}\label{sec:verify}
+
+Because Theorem~\ref{thm:mackey-ext} is assembled from several classical lemmas and the
+whole point is the numerical value of the tower, we verified it independently rather than
+trusting the assembly. The engine (\texttt{scratch/ext-mackey-general/}) implements its own
+exact linear algebra over $\mathbb{F}_p$ --- no computer algebra system --- and computes
+each side of Theorem~\ref{thm:mackey-ext} by a different route:
+\begin{itemize}
+\item \textbf{Left side:} a genuine minimal free resolution of $k[G/A]$ over $kG$, then
+   $\Hh^n\Hom_{kG}(F_\bullet,k[G/B])$.
+\item \textbf{Right side:} the Mackey double cosets $\dcoset{A}{G}{B}$, with each
+   $\Hh^*(A\cap gBg^{-1};k)$ computed from its own $kH$-resolution.
+\end{itemize}
+All $17$ cases agree, and $\dim\Ext^0=\lvert\dcoset{A}{G}{B}\rvert$ in every case. The
+direct left-side computation also pins the Mackey index as $A\cap gBg^{-1}$ (rather than
+$gAg^{-1}\cap B$). A representative selection:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lccl}
+\hline
+Case & $p$ & $\Ext^{0,1,2,3}$ & note\\
+\hline
+$V_4,\ A=\langle a\rangle,B=\langle b\rangle$ & $2$ & $[1,0,0,0]$ & transverse, $1$ dcoset\\
+$V_4,\ A=B=\langle a\rangle$ & $2$ & $[2,2,2,2]$ & $2$ dcosets, each $\cap=\mathbb{Z}/2$\\
+$S_3,\ A=B=\langle(12)\rangle$ & $2$ & $[2,1,1,1]$ & mixed tower\\
+$A_4,\ A=B=V_4$ & $2$ & $[3,6,9,12]$ & each $\cap=V_4$, $\Hh^n(V_4)=n{+}1$\\
+$D_4,\ A=B=\langle\text{refl}\rangle$ & $2$ & $[3,2,2,2]$ & non-abelian $2$-group\\
+$S_4,\ A=B=\langle(12)\rangle$ & $2$ & $[7,2,2,2]$ & $7$ dcosets\\
+$\mathbb{Z}/3,\ A=B=\{e\}$ & $3$ & $[3,0,0,0]$ & regular, odd $p$\\
+\hline
+\textbf{W1}: $S_3{=}A_3{\cdot}\langle(12)\rangle$, $U{=}\langle(23)\rangle$ & $2$ & $[2,0,0,0]$ & $\Ext^0=h=2$\\
+\textbf{W2}: $S_4{=}A_4{\cdot}\langle(12)\rangle$, $U{=}S_3,A{=}A_3,B{=}\{e\}$ & $2$ & $[2,0,0,0]$ & $h=2{>}1$, tower $\equiv 0$\\
+\hline
+\end{tabular}
+\end{center}
+
+The $A_4/V_4$ row is the strongest single stress-test of the assembly: the direct $kG$
+resolution has Betti numbers $[1,2,3,4,5]$ and independently reproduces the
+elementary-abelian tower $[3,6,9,12]$. The two rows below the rule are the holonomy
+witnesses. \textbf{W1} confirms $\Ext^0=h=2$ with vanishing higher tower.
+\textbf{W2} is the decisive one for Remark~\ref{rem:reading}(ii): it realises a misaligned
+composition ($h=2>1$) whose higher $\Ext$-tower is identically zero --- a higher class
+cannot be the alignment obstruction, because here alignment fails while every higher group
+is zero.
+
+\section{The full dichotomy: $\Ext=h\cdot\Hh^*(A\cap B)$ over an abelian group}\label{sec:dichotomy}
+
+Theorem~\ref{thm:tower-vanishes} delivers the holonomy tower $[\,h,0,0,\dots\,]$ by
+trivialising every Mackey intersection. It is worth seeing this vanishing not as an
+isolated fact but as one corner of a single formula. When the ambient group is
+\emph{abelian}, Theorem~\ref{thm:mackey-ext} collapses to a product of two independent
+invariants --- a degree-independent multiplicity and a degree-graded shape --- and the
+degree-zero concentration is exactly the case where the shape degenerates.
+
+\subsection{The factorisation}
+Let $G$ be a finite abelian group. Then $\conj{g}{B}=B$ for every $g$, so all the Mackey
+summands of Theorem~\ref{thm:mackey-ext} share one intersection $A\cap B$; moreover
+$AB\le G$ is a subgroup and each double coset $AgB=g(AB)$ is a coset of it, so
+\[
+   \lvert\dcoset{A}{G}{B}\rvert=[G:AB]=\frac{\lvert G\rvert\,\lvert A\cap B\rvert}
+   {\lvert A\rvert\,\lvert B\rvert}.
+\]
+Writing $h:=[G:AB]$ for this meeting count, Theorem~\ref{thm:mackey-ext} reads:
+
+\begin{corollary}[Abelian factorisation]\label{cor:abelian-factor}
+For a finite abelian group $G$, subgroups $A,B\le G$, and any field $k$,
+\[
+   \Ext^n_{kG}(k[G/A],k[G/B])\;\cong\;\Hh^n(A\cap B;k)^{\oplus h},
+   \qquad h=[G:AB],\quad n\ge 0,
+\]
+so that
+\[
+   \dim_k\Ext^n_{kG}(k[G/A],k[G/B])\;=\;
+   \underbrace{[G:AB]}_{\text{meeting count }h}\;\cdot\;
+   \underbrace{\dim_k\Hh^n(A\cap B;k)}_{\text{shape of the overlap}} .
+\]
+\end{corollary}
+\begin{proof}
+Abelian $G$ makes every $\conj{g}{B}=B$, so each of the $\lvert\dcoset{A}{G}{B}\rvert$
+summands of Theorem~\ref{thm:mackey-ext} is $\Hh^n(A\cap B;k)$; the count is $[G:AB]$ as
+computed above.
+\end{proof}
+
+The content is a separation of variables. The meeting count $h$ is a
+\emph{degree-independent multiplicity}: it scales every degree of the tower equally, and
+it is the same combinatorial number $\lvert\dcoset{A}{G}{B}\rvert$ that measures holonomy.
+The cohomology $\Hh^*(A\cap B;k)$ is the \emph{per-degree shape}: it alone decides whether
+a tower dies after degree zero, stays constant, or grows. Neither factor is new --- this is
+Theorem~\ref{thm:mackey-ext} read off in the abelian case --- but the factored form is the
+right way to see the dichotomy.
+
+\subsection{Degree-zero concentration is the transverse corner}
+The vanishing theorem is now the degenerate value of the shape factor.
+
+\begin{corollary}[Transverse $=$ trivial overlap]\label{cor:transverse-corner}
+In Corollary~\ref{cor:abelian-factor}, if $A\cap B=\{e\}$ then $\Hh^n(A\cap B;k)$ is $k$
+for $n=0$ and $0$ for $n\ge 1$, so the tower is $[\,h,0,0,\dots\,]$. If instead
+$A\cap B\ne\{e\}$ and $p\mid\lvert A\cap B\rvert$, the tower has a nonzero higher part.
+\end{corollary}
+
+For an abelian group an exact factorisation $G=A\cdot B$ is precisely a pair with
+$A\cap B=\{e\}$ and $AB=G$, i.e.\ $h=1$; Corollary~\ref{cor:transverse-corner} then returns
+$[1,0,0,\dots]$, the aligned instance of Theorem~\ref{thm:tower-vanishes}. So over an
+abelian group the holonomy vanishing and the surviving non-transverse towers are two values
+of one formula, switched by whether the overlap $A\cap B$ is trivial.
+
+\begin{remark}
+Theorem~\ref{thm:tower-vanishes} is \emph{not} subsumed by
+Corollary~\ref{cor:abelian-factor}: for a non-abelian stabiliser $U$ the vanishing needs
+$A\cap\conj{u}{B}=\{e\}$ for \emph{every} $u$, which Lemma~\ref{lem:transverse} supplies but
+which a single-intersection statement does not. In the abelian examples below the two
+coincide, and the abelian formula is what exhibits the surviving towers alongside the
+vanishing one.
+\end{remark}
+
+\subsection{The worked example: $V_4$}
+Take $G=V_4=\mathbb{Z}/2\times\mathbb{Z}/2=\langle a\rangle\times\langle b\rangle$ over
+$k=\mathbb{F}_2$, so $kG=\mathbb{F}_2[x,y]/(x^2,y^2)$ with $x=a-1$, $y=b-1$ --- a local ring
+with a unique simple module. Here $\dim\Hh^n(\mathbb{Z}/2;\mathbb{F}_2)=1$ in every degree
+and $\dim\Hh^n(V_4;\mathbb{F}_2)=n+1$ (Poincar\'e series $(1-t)^{-2}$).
+Corollary~\ref{cor:abelian-factor} predicts the four towers of Table~\ref{tab:v4}, and a
+direct minimal-resolution computation confirms each in degrees $0$ through
+$6$~\cite{macbeth-rickv4}.
+
+\begin{table}[t]
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{ccccll}
+\hline
+$A$ & $B$ & $A\cap B$ & $h$ & $\dim\Ext^n$, $n=0..6$ & regime\\
+\hline
+$\langle a\rangle$ & $\langle a\rangle$ & $\langle a\rangle$ & $2$ & $[2,2,2,2,2,2,2]$ & non-transverse, constant\\
+$\langle a\rangle$ & $V_4$ & $\langle a\rangle$ & $1$ & $[1,1,1,1,1,1,1]$ & one $\Hh^*(\mathbb{Z}/2)$ copy\\
+$\langle a\rangle$ & $\langle b\rangle$ & $\{e\}$ & $1$ & $[1,0,0,0,0,0,0]$ & transverse\\
+$V_4$ & $V_4$ & $V_4$ & $1$ & $[1,2,3,4,5,6,7]$ & $=\Hh^*(V_4)$\\
+\hline
+\end{tabular}
+\medskip
+\caption{The four permutation-module Ext towers over $\mathbb{F}_2 V_4$, from
+Corollary~\ref{cor:abelian-factor}. The multiplicity $h$ is a uniform vertical scaling:
+rows one and two are the same shape $[1,1,1,\dots]$ at $h=2$ and $h=1$. The transverse row
+is the aligned holonomy case of Theorem~\ref{thm:tower-vanishes}; the growing row is
+$\Hh^*(V_4)$ itself.}\label{tab:v4}
+\end{table}
+
+The four rows span the whole range of the shape factor over a single group: a shape that
+dies at degree zero (transverse), a shape that is constant ($\Hh^*(\mathbb{Z}/2)$, scaled by
+$h\in\{1,2\}$), and a shape that grows linearly ($\Hh^*(V_4)$). Only the first is emergent
+holonomy; the others are what the tower does when the overlap $A\cap B$ is allowed to be
+nontrivial.
+
+\subsection{Two structural readings}
+The surviving tower raises two questions about \emph{where} the class lives --- one
+representation-theoretic, one geometric. Both were posed by a collaborator; we record the
+answers, the second invoking standard support-variety theory that we cite rather than
+reprove.
+
+\subsubsection*{Is the surviving class isolable to a single double coset?}
+No: it is intrinsically a sum. In the constant case $A=B=\langle a\rangle$ there are $h=2$
+double cosets, $\langle a\rangle\, e\,\langle a\rangle=\{e,a\}$ and
+$\langle a\rangle\, b\,\langle a\rangle=\{b,ab\}$, and Corollary~\ref{cor:abelian-factor} is
+a \emph{direct} sum in which \emph{each} coset carries an identical full copy of
+$\Hh^*(\langle a\rangle;\mathbb{F}_2)=[1,1,1,\dots]$. The observed $\dim\Ext^n=2$ is $1+1$,
+not one distinguished class of dimension $2$. The two summands are exchanged by the residual
+symmetry $b\cdot(-)$, which swaps the cosets, so although the decomposition is canonical
+(indexed by the double cosets) no single summand is preferred. When $h=1$ (rows two and
+three of Table~\ref{tab:v4}) the tower does sit in the unique coset --- but that is the
+degenerate case, not the general one.
+
+\subsubsection*{On which stratum does it live?}
+On a proper one. To a $kV_4$-module $M$ one attaches its \emph{rank variety}
+$V_r(M)\subseteq\mathbb{P}^1$, the projectivised locus of $u=\alpha x+\beta y$ acting
+non-freely on $M$; by the theory of Carlson and Avrunin--Scott the support of
+$\Ext^*_{kG}(M,N)$ is the intersection $V_r(M)\cap
+V_r(N)$~\cite{carlson-varieties,avrunin-scott,benson2}. For $M=k[V_4/\langle a\rangle]$
+(dimension $2$) the generator $a$ acts trivially, so $x=a-1$ acts as the \emph{zero} matrix,
+while $b$ swaps the two cosets, so $y=b-1$ has rank $1$; hence $u=\alpha x+\beta y=\beta(b-1)$
+acts freely iff $\beta\ne 0$. Because $x$ acts as the literal zero matrix this is a
+parametric identity over any field, giving
+\[
+   V_r\bigl(k[V_4/\langle a\rangle]\bigr)=\{(1{:}0)\}\subsetneq\mathbb{P}^1,
+\]
+a single point --- a proper, $0$-dimensional stratum. The dichotomy is then a variety
+intersection:
+\begin{itemize}
+\item \textbf{transverse} ($A=\langle a\rangle$, $B=\langle b\rangle$): $V_r(M)=\{(1{:}0)\}$
+   and $V_r(N)=\{(0{:}1)\}$ are \emph{disjoint}, so $\Ext^{\ge1}$ has empty support and
+   vanishes --- the tower $[1,0,\dots]$ of Theorem~\ref{thm:tower-vanishes};
+\item \textbf{non-transverse} ($A=B=\langle a\rangle$): both varieties are the \emph{same}
+   point $\{(1{:}0)\}$, so the support is that point and $\Ext^{\ge1}\ne 0$.
+\end{itemize}
+The surviving class is thus not a top-stratum (complexity-$2$, full-support) class but a
+complexity-$1$ class supported on the rank-$1$ stratum in the ``$a$-direction'' ---
+consistent with its \emph{constant} dimension $\dim\Ext^n=2$ (polynomial growth of degree
+$0$) and the periodic Betti numbers $[1,1,1,\dots]$ of the resolution of
+$k[V_4/\langle a\rangle]$. Emergent holonomy, by contrast, lives where transversality forces
+two such varieties apart: disjoint points, empty overlap, degree-zero tower. This is the
+geometric shadow of Lemma~\ref{lem:transverse}.
+
+\section{Conclusion}\label{sec:conclusion}
+
+The emergent holonomy of an unprotected Zappa--Sz\'ep orchestration has a clean
+representation-theoretic signature:
+\[
+   h(s)\;=\;\dim_k\Hom_{kU}\!\bigl(k[U/A],\,k[U/B]\bigr),
+\]
+the rank of the space of $U$-equivariant maps between the two factor-orbit permutation
+modules. This is a degree-zero quantity, and Theorem~\ref{thm:tower-vanishes} guarantees
+that it is the \emph{only} $\Ext$-invariant of the pair: transversality of the factorisation
+forces the entire higher tower to vanish. Operationally, detecting misalignment is a single
+$\Hom$-computation --- or, with no homological algebra, a double-coset count --- and one is
+assured that no higher $\Ext$ obstruction lurks beneath it. There is nothing deeper to audit.
+
+This corrects the natural but mistaken expectation, drawn from the $\Hh^2$-classified
+obstructions elsewhere in the programme~\cite{macbeth-zs,macbeth-reentrancy}, that alignment
+should be detected by a higher cohomology class. It is not. The alignment content is the
+rank of $\Ext^0$, and the witness \textbf{W2} shows a misaligned composition with a
+completely trivial higher tower. Consistently with the rigidity results
+of~\cite{macbeth-twoomega}, there is no $\Hh^2$-class for $h$ in this tower.
+
+\subsection*{A phenomenon not to conflate}
+The higher $\Ext$-tower is not always zero; it vanishes here \emph{because} of the exact
+factorisation. For \emph{general} subgroups $A,B\le G$ not arising from an exact
+factorisation, Theorem~\ref{thm:mackey-ext} gives a genuine higher tower
+$\bigoplus_g\Hh^{\ge 1}(A\cap gBg^{-1};k)$, supported on those double cosets with
+$p\mid\lvert A\cap gBg^{-1}\rvert$; Section~\ref{sec:dichotomy} works this out in full for
+abelian $G$, where it factors as $h\cdot\Hh^*(A\cap B)$ and emergent holonomy is the
+transverse corner $A\cap B=\{e\}$. But the surviving tower is a different invariant ---
+$p$-divisible \emph{overlap} between two subgroups --- and it must not be read as emergent
+holonomy, which by Lemma~\ref{lem:transverse} always sits in the transverse locus where the
+tower is zero.
+
+\subsection*{Directions}
+Two questions suggest themselves. First, the trivial higher tower says the pair
+$(k[U/A],k[U/B])$ has $\Res_A N$ free over $kA$; it would be worth recording the resulting
+$\Ext$-triviality as a structural statement about the container of factor-orbits, and asking
+whether it characterises exact factorisations among all subgroup pairs with a given
+$\Ext^0$. Second, the surviving tower $h\cdot\Hh^*(A\cap B)$ of
+Section~\ref{sec:dichotomy} is a real invariant of \emph{overlap}, and its shape factor
+$\Hh^*(A\cap B)$ is explicit for abelian $G$; whether this graded refinement of ``how badly
+two unrelated agents share state'' has an orchestration meaning of its own --- and what the
+shape factor becomes when $U$ is non-abelian, where $\conj{u}{B}$ genuinely varies --- is
+open, and would sit alongside emergent holonomy rather than inside it.
+
+\subsection*{Acknowledgements}
+This note grew out of a collaboration on whether the holonomy count could be seen in
+$\Ext^2$; the answer --- degree $0$, with a vanishing theorem above it --- is sharper than
+either party first expected. Thanks to Neil Ghani for the container framing and to Robin
+Langer for the infrastructure.
+
+\begin{thebibliography}{9}
+
+\bibitem{benson1}
+D.~J. Benson,
+\emph{Representations and Cohomology I: Basic Representation Theory of Finite Groups and
+Associative Algebras},
+Cambridge Studies in Advanced Mathematics 30, Cambridge University Press, 1991.
+(Eckmann--Shapiro \S2.8; Mackey decomposition \S3.3; Mackey formula for $\Ext$ of
+permutation modules \S3.)
+
+\bibitem{brown}
+K.~S. Brown,
+\emph{Cohomology of Groups},
+Graduate Texts in Mathematics 87, Springer, 1982. (Induction, restriction, and Shapiro's
+lemma, III.5--III.6.)
+
+\bibitem{benson2}
+D.~J. Benson,
+\emph{Representations and Cohomology II: Cohomology of Groups and Modules},
+Cambridge Studies in Advanced Mathematics 31, Cambridge University Press, 1991.
+(Rank and support varieties, Quillen stratification; $\operatorname{supp}\Ext^*(M,N)=
+V_r(M)\cap V_r(N)$.)
+
+\bibitem{carlson-varieties}
+J.~F. Carlson,
+\emph{The varieties and the cohomology ring of a module},
+J. Algebra \textbf{85} (1983), 104--143.
+
+\bibitem{avrunin-scott}
+G.~S. Avrunin and L.~L. Scott,
+\emph{Quillen stratification for modules},
+Invent. Math. \textbf{66} (1982), 277--286.
+
+\bibitem{macbeth-meeting}
+MacBeth,
+\emph{Emergent holonomy as meeting points: $h(s)=\lvert A\backslash U/B\rvert$},
+Kodamai container programme, internal proof note, 13 August 2026.
+
+\bibitem{au-distlaw}
+D.~Ahman, T.~Uustalu,
+\emph{Distributive laws of directed containers},
+Progress in Informatics, No.~10 (2013), 3--18, DOI 10.2201/NIIPI.2013.10.2.
+(Source of the Zappa--Sz\'ep-product construction: a distributive law of directed
+containers assembles the joint container, generalizing the monoid Zappa--Sz\'ep product.)
+
+\bibitem{macbeth-zs}
+MacBeth,
+\emph{Orchestration is a Zappa--Sz\'ep product \textnormal{(after Ahman--Uustalu
+\cite{au-distlaw})}: the composition obstruction $[\omega]\in\Hh^2$},
+Kodamai container programme, internal note, July 2026.
+
+\bibitem{macbeth-reentrancy}
+MacBeth,
+\emph{Reentrancy and the class $[\omega]=\varepsilon$ in $\Hh^2\cong\mathbb{F}_2$}
+(Lean-verified),
+Kodamai container programme, internal note, July 2026.
+
+\bibitem{macbeth-twoomega}
+MacBeth,
+\emph{Two $[\omega]$-sites are irreducibly distinct: skeletal rigidity kills the isotropy
+restriction},
+Kodamai container programme, internal proof note, 14 August 2026.
+
+\bibitem{macbeth-rickv4}
+MacBeth,
+\emph{$\Ext^{\ge 1}$ vanishes for transverse subgroups: the $V_4$ twist-stable
+computation},
+Kodamai container programme, internal computation note, 20 August 2026.
+
+\end{thebibliography}
+
+\end{document}

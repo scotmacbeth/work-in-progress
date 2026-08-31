@@ -1,0 +1,388 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{stmaryrd}
+\usepackage[expansion=false]{microtype}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=blue]{hyperref}
+
+\providecommand{\Vec}{}\renewcommand{\Vec}{\mathsf{Vec}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Fam}{\mathsf{Fam}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\Mat}{\mathsf{Mat}}
+\newcommand{\Comon}{\mathsf{Comon}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\fld}{k}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\ihom}[2]{[#1,#2]}
+
+\title{Linear containers for prompt/response systems:\\
+intuition, with the formal definitions attached}
+\author{MacBeth \\ \small for Neil}
+\date{2026-08-22}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}\noindent
+This is the readable companion to \texttt{containers-over-vec.tex} --- but this time
+with the definitions written out, because you asked for both the intuition
+\emph{and} enough formal detail to actually do mathematics. Every abstract notion
+below lands on a concrete prompt/response example \emph{and} is given a precise
+definition. One sentence runs through all of it, and it is yours: \emph{a response
+is a vector because a response is uncertain, and uncertainty is what a learning
+system trains.} The technical note carries the proofs; this note is so you can decide
+whether it is worth your evening, and it answers, inline, the seven questions you
+raised in reply. I have flagged throughout what is \emph{proved} and what is
+\emph{proposal}.
+\end{abstract}
+
+\section{The setup, with definitions}
+
+Model a prompt as the simplest possible container: one request, and a space of
+possible replies. The only real design choice is the word \emph{space}, and it is
+worth defending before we formalise. Why a vector space $A$ and not just a set of
+allowed answers? Because a reply is not one token. It is a distribution --- a
+superposition over a basis of possible answers, carrying the model's uncertainty.
+The basis is the vocabulary of possible replies; the coefficients are the
+confidence; and the basis in which that reply space is expressed is exactly what a
+learning system \emph{learns}. So: responses $=$ uncertainty $=$ the basis of
+learning. That single sentence is the reason $\Vec$, the category of $\fld$-vector
+spaces over a field $\fld$, is the right home rather than $\Set$. Keep it in view;
+every section below is a consequence of it.
+
+Now the formal object. It is the ordinary container definition of Abbott--Altenkirch--Ghani,
+with the base of the position fibres changed from $\Set^\op$ to $\Vec^\op$.
+
+\begin{quote}
+\textbf{Definition (linear container).} A \emph{linear container} is an object
+$(S,(P_s)_{s\in S})$ of $\Fam(\Vec^\op)$: a set $S$ of \emph{shapes} (the prompt
+addresses), together with, for each $s\in S$, a $\fld$-vector space $P_s$ (the
+\emph{response space} at that shape). A morphism $(S,(P_s))\to(T,(Q_t))$ is a pair
+$(f,(\varphi_s))$ where $f\colon S\to T$ is a function and, for each $s$,
+$\varphi_s\colon Q_{f(s)}\to P_s$ is a linear map --- contravariant on positions,
+exactly as for $\Set$ containers.
+\end{quote}
+
+\begin{quote}
+\textbf{Definition (extension).} The \emph{extension} of $(S,(P_s))$ is the
+endofunctor $\ext{S,P}\colon\Vec\to\Vec$,
+\[
+  \ext{S,P}\,W \;=\; \bigoplus_{s\in S}\, \ihom{P_s}{W},
+  \qquad \ihom{P_s}{W} := \Vec(P_s,W) = \{\text{linear maps } P_s\to W\}.
+\]
+Choosing a basis of $P_s$ (dimension $n_s$) gives $\ihom{P_s}{W}\cong W^{n_s}$, so
+$\ext{S,P}\,W \cong \bigoplus_s W^{\,n_s}$: a direct sum of powers of $W$.
+\end{quote}
+
+The single prompt is then $\mathsf A=(\{*\},A)$, one shape over the reply space $A$,
+with extension $\ext{\mathsf A}\,W=\ihom{A}{W}$: a point of it is a linear map
+$A\to W$, i.e.\ a way of reading the reply space into an ambient answer space $W$.
+Notice already the two structural ingredients that the whole note will turn on: an
+\emph{internal hom} $\ihom{P_s}{-}$ on the inside, and a \emph{biproduct}
+$\bigoplus_s$ on the outside. Section~2 says exactly which structures of $\Vec$
+these are, and answers your question (B) about ``closed with respect to what''.
+
+\paragraph{(A) Should prompts also be a vector space, or stay a set?}
+This is a genuine design axis, and worth naming as one. In the definition above the
+\emph{prompt} (the shape $s\in S$) is a plain element of a set, while only the
+\emph{response} $P_s$ is a vector space. That is the recommended starting theory:
+$\Fam(\Vec^\op)$, a \emph{set} of prompt-addresses each carrying a trainable response
+space. The prompt is the address/shape; the response is the trainable content. The
+alternative --- committing to a ``better'', fully linearised theory in which the
+\emph{prompts themselves} form a vector space and can be \emph{superposed} (a linear
+combination of prompt-addresses is again a prompt) --- is not a different axiom bolted
+on; it is precisely the move \emph{up} to the $\Vec$-matrix / algebroid layer of
+Section~3, where prompts become vertices $a,b,\dots$ that one may take linear
+combinations of. Here is the striking point worth flagging: \emph{attention already
+superposes prompts}. A query is a vector, and softmax over keys returns a weighted
+combination of key-addresses --- a superposition of prompt-addresses, not a choice of
+one. So ``commit fully to vector-space prompts'' is the same act as ``move up to the
+$\Vec$-matrix/enriched layer''; adopt it exactly when you want to superpose prompts,
+and stay in $\Fam(\Vec^\op)$ when the address is a discrete handle.
+
+\section{The structure of $\Vec$ we use, and what it lacks}
+
+We lean on three facts about $\Vec$ and one fact it is \emph{missing}. Each gets a
+one-line intuition on the prompt example and a precise statement.
+
+\begin{description}[leftmargin=1.3em,style=nextline]
+\item[The zero object.] The empty reply space and the terminal (``full'') reply space
+  are the \emph{same} object $0$: it is at once initial and terminal
+  ($\exists!\,V\to 0$ and $\exists!\,0\to V$). In $\Set$ the empty set and the
+  one-point set are wildly different; in $\Vec$ they collapse. Harmless-looking, but
+  it is the seed of everything --- in particular the $\Set$ slogan ``$F(1)=$ shapes''
+  becomes $\ext{S,P}(0)=0$ and sees nothing.
+
+\item[The biproduct $A\oplus B$ --- the cleanest hook.] For finitely many spaces the
+  coproduct and the product \emph{coincide}: $A\oplus B$ carries both the injections
+  $A,B\hookrightarrow A\oplus B$ (making it the coproduct) and the projections
+  $A\oplus B\twoheadrightarrow A,B$ (making it the product), compatibly. So $A\oplus B$
+  is at once ``I can answer \emph{either} prompt $A$ or prompt $B$'' (coproduct) and
+  ``I am ready for \emph{both} $A$ and $B$'' (product). Same object. In $\Set$ these
+  come apart --- a tagged union $A\sqcup B$ versus a pair $A\times B$ --- and that gap
+  is the whole difference between the two worlds.
+
+\item[(B) $\Vec$ is closed --- with respect to $\otimes$, not $\oplus$.] You asked
+  precisely this. The internal hom $\ihom{A}{X}=\Vec(A,X)$ is again a vector space
+  because $\Vec$ is a \emph{closed} monoidal category, and the structure it is closed
+  \emph{for} is the tensor product $\otimes$, \textbf{not} the biproduct. The defining
+  adjunction is
+  \[
+    \Hom(B\otimes A,\;X)\;\cong\;\Hom\bigl(B,\;\ihom{A}{X}\bigr),
+    \qquad\text{i.e.}\quad (-\otimes A)\dashv \ihom{A}{-}.
+  \]
+  The internal hom is the right adjoint to tensoring with $A$. The biproduct $\oplus$
+  is the (co)product; it is \emph{not} a closed structure (there is no adjunction
+  $(-\oplus A)\dashv[\cdots]$ of this shape). So the extension
+  $\ext{S,P}\,W=\bigoplus_s\ihom{P_s}{W}$ genuinely \emph{mixes two structures}: the
+  $\otimes$-closed internal hom on the \emph{inside} (the response fibre), and the
+  biproduct $\oplus$ on the \emph{outside} (the sum over shapes). That is the crisp
+  answer, and it is worth carrying: the two composition operations of Section~3,
+  $\otimes$ and $\bigoplus_b$, are exactly these two structures pulled apart.
+
+\item[(C) What $\Vec$ \emph{lacks}: extensivity.] You proposed the exact definition,
+  and it is the one I mean. $\Set$ is \emph{extensive}: the canonical functor
+  \[
+    \Set/(S+R)\;\xrightarrow{\ \sim\ }\;\Set/S \times \Set/R,
+  \]
+  built by pullback along the two coproduct injections, is an \emph{equivalence}
+  (Carboni--Lack--Walters 1993). Concretely: an object over a disjoint union
+  \emph{is} the same thing as a pair of objects, one over each summand --- you can
+  always recover which branch you are in. My earlier gloss, ``you can always tell which
+  branch you're in,'' was the loose paraphrase of exactly this equivalence. Now the
+  Vec counterexample, which is the whole story in one line: the analogous
+  \[
+    \Vec/(A\oplus B)\;\longrightarrow\;\Vec/A \times \Vec/B
+  \]
+  is \textbf{not} an equivalence. Take the diagonal subspace
+  $\Delta=\{(a,a)\}\subseteq A\oplus A$: its two projections to the summands are both
+  the identity on $A$, so the pair $(\text{id},\text{id})$ on the right does not
+  remember that we picked the diagonal rather than all of $A\oplus A$. The functor is
+  not full (nor essentially injective): the diagonal is invisible to its projections.
+  That single failure of one equivalence is the entire content below --- shapes go
+  invisible, and the extension stops being full.
+\end{description}
+
+\paragraph{The punchline.}
+That one missing equivalence is the whole story. Because $\Vec/(A\oplus B)$ is not
+$\Vec/A\times\Vec/B$, the shapes of a container go \emph{invisible} (finitely many
+prompts with reply spaces of total dimension $N$ become indistinguishable from $N$
+blank copies of the identity functor --- the ``biproduct collapse''), and the map
+that turns a container into its functor stops being \emph{full} (there are more
+natural transformations than container morphisms, because a natural transformation may
+\emph{mix} branches while a container morphism must \emph{pick} one). Formally the two
+hom formulas differ in exactly one symbol,
+\[
+  \underbrace{\textstyle\prod_s \coprod_t \Vec(Q_t,P_s)}_{\text{container morphisms}}
+  \ \hookrightarrow\
+  \underbrace{\textstyle\prod_s \bigoplus_t \Vec(Q_t,P_s)}_{\text{natural transformations}},
+  \qquad \coprod \subsetneq \bigoplus,
+\]
+the inclusion of the disjoint union into the biproduct. Loss of shapes, loss of
+fullness: two faces of the one missing partition. Proofs are in
+\texttt{containers-over-vec.tex} (Thms.\ 5.2, 6.4); here I only want you to see that it
+is a single fact wearing two masks.
+
+\section{Composing responses: monoid in $\Vec$, then Vec-enriched category}
+
+Now: what does it mean to \emph{compose} responses? There are two levels, and keeping
+them apart resolves the confusion you flagged in (F).
+
+\paragraph{(D) Within one prompt --- a monoid in $(\Vec,\otimes)$.}
+Stay with a single prompt $A$. Suppose you can take a response, run it, and feed its
+result back as another response of the \emph{same} prompt, then read off one combined
+response. That is a map $\mu\colon A\otimes A\to A$ combining two replies into one,
+associative, with a unit $\eta\colon\fld\to A$ (the empty response). This is exactly a
+\emph{$\fld$-algebra} --- and, in your preferred and more precise terminology, it is a
+\emph{monoid object in the monoidal category $(\Vec,\otimes,\fld)$}. (A plain monoid
+is a monoid in $(\Set,\times)$; the $\fld$-algebra is the very same notion, taken
+internal to $\Vec$ with $\otimes$ for $\times$.) So within a single prompt the entire
+composition structure is: a monoid on its reply space. Nothing more is available,
+because there is only one prompt and nothing to route through.
+
+\paragraph{(E) Across prompts --- a Vec-enriched category (algebroid).}
+Now allow several prompts and responses that carry \emph{one} prompt into
+\emph{another}: a response has a source prompt $a$ and a target prompt $b$. Over
+$\Set$ this ``responses carry object to object, and compose'' is precisely the theorem
+\emph{directed containers $=$ small categories} (Ahman--Chapman--Uustalu). The $\Vec$
+version is an \emph{algebroid}, and here again your reading is the right formalisation:
+an algebroid is a \emph{category enriched in $(\Vec,\otimes)$} --- a category whose
+hom-\emph{sets} have been upgraded to hom-\emph{spaces}
+$\hom(a,b)=P(a,b)\in\Vec$, with $\fld$-bilinear composition. (This is Mitchell's
+``ring with several objects'': a one-object $\Vec$-category is a single $\fld$-algebra,
+i.e.\ the monoid of (D).) Prompts are the objects; between prompts $a$ and $b$ sits a
+whole reply space $P(a,b)$ of responses carrying $a$ to $b$.
+
+The right way to package this is a \emph{$\Vec$-matrix}: prompts on rows and columns,
+entry $P(a,b)$ the reply space from $a$ to $b$. Composition is honest matrix
+multiplication,
+\[
+  (P \odot Q)(a,c) \;=\; \bigoplus_{b}\, P(a,b)\otimes Q(b,c)
+  \qquad\text{(``sum over every intermediate prompt $b$'')},
+\]
+with unit the matrix $I(a,b)=\fld$ if $a=b$, else $0$. The \emph{monoids} of
+$(\Mat_S(\Vec),\odot,I)$ are exactly algebroids: $\mu\colon P\odot P\to P$ is the
+family of composition maps $\bigoplus_b P(a,b)\otimes P(b,c)\to P(a,c)$, and the unit
+picks out the identity response at each prompt.
+
+\paragraph{(F) How can it be both a $\lhd$-comonoid \emph{and} an algebroid?}
+Here is the resolution, and it turns on your own insight. A directed container is a
+\emph{comonoid in $(\Cont,\lhd)$}, where $\lhd$ is substitution of containers. Over
+$\Vec$ at a \emph{single} index the $\lhd$-comonoid \emph{degenerates}: the counit
+forces the shape-comultiplication onto the diagonal $s\mapsto(s,s)$, so distinct
+prompts never interact and you recover only a \emph{family of one-object monoids-in-$\Vec$}
+(one $\fld$-algebra per prompt, no cross-prompt composition). This is proved:
+$\Comon_\lhd(\Fam(\Vec_{\mathrm{fd}}^\op))\cong\Fam(\mathrm{Alg}_\fld^\op)$. The
+genuine \emph{multi-object} algebroid needs the $\Vec$-matrix composition
+$(P\odot Q)(a,c)=\bigoplus_b P(a,b)\otimes Q(b,c)$ instead. And --- this is your
+observation, and it is the key --- that matrix product \emph{is profunctor
+composition}. A profunctor composes by a coend $\int^b P(a,b)\otimes Q(b,c)$; for a
+\emph{discrete} finite index category the coend has no nontrivial identifications and
+becomes the finite biproduct $\bigoplus_b$. So:
+\begin{quote}
+$\Vec$-matrices $=$ profunctors between discrete $\Vec$-categories;\\
+algebroid $=$ a monad in the bicategory of $\Vec$-profunctors $=$ a $\Vec$-category.
+\end{quote}
+That is what dissolves the paradox. The single-index $\lhd$ is the \emph{diagonal}
+degeneration --- one hom-space per shape, arrows only from a prompt to itself; the
+matrix $\lhd$ (i.e.\ $\odot$) is the \emph{real thing} --- one hom-space per
+\emph{ordered pair}, arrows between distinct prompts, composed by the coend. Both are
+``$\lhd$-comonoids''; they differ in whether the coproduct sits on the shape index
+(degenerate) or on the composition index (genuine). The repair is exactly to move the
+$\bigoplus$ from the shape index to the composition index. (All of this is
+Section~7--8 of the technical note; the monoid-in-a-matrix-bicategory $=$ enriched
+category fact is B\'enabou; profunctor composition by coend is standard.)
+
+\section{The wirings: a proposal}
+
+This is the part I actually want your eye on, and it is where question (G) --- the
+\emph{use} --- becomes the headline. You put it exactly: \emph{the core of machine
+learning is a matrix of weights, and these weights are to be learned, so they come from
+not a set but something that can be tweaked.} That is precisely the $\Vec$-matrix
+$P(a,b)$ of Section~3: it \emph{is} the trainable weight matrix between prompt-states.
+Composing workflows is matrix multiply of $\Vec$-matrices; learning is tweaking the
+vectors inside the entries. Responses are vector spaces because a response is uncertain
+(a superposition over a basis), and that uncertainty is exactly what gets trained. This
+is why $\Vec$, not $\Set$, is the home: the things being wired are trainable vectors,
+not inert tokens.
+
+Read that way, containers over $\Vec$ carry four monoidal products ---
+$\oplus,\times,\otimes,\lhd$ --- but in the finite linear setting the biproduct makes
+two of them \emph{coincide}, and that coincidence is itself the cleanest thing to say.
+So there are \emph{three} genuinely distinct ways to wire two systems together.
+
+\begin{description}[leftmargin=1.3em,style=nextline]
+\item[$\oplus = \times$ --- menu / both (one wiring, by the biproduct collapse).]
+  Offer prompt $A$ or prompt $B$. Over $\Set$ the menu (coproduct $A\sqcup B$) and the
+  pair (product $A\times B$) are different constructions. Over $\Vec$ they are the
+  \emph{same} object, the biproduct $A\oplus B$ (Section~2): building the menu \emph{is}
+  being ready for both at once. So the two combinators a workflow language would
+  ordinarily keep apart --- ``choose a branch'' and ``hold both branches'' --- collapse
+  into one. This is not a defect to apologise for; it is the biproduct collapse, now
+  seen at the level of workflows. There is exactly one ``combine by choice/product''
+  operation, and it is $\oplus$.
+\item[$\otimes$ --- parallel / entangling.] Run two prompt/response systems side by
+  side on independent inputs; the joint reply space is the tensor $A\otimes B$.
+  Genuinely distinct from $\oplus$: the tensor \emph{entangles} the two reply spaces
+  (a general element of $A\otimes B$ is not a sum of a pure-$A$ and a pure-$B$ part)
+  where the biproduct keeps them additively separate.
+\item[$\lhd$ --- pipeline.] Feed one system's response in as the next system's prompt.
+  This is composition down a chain, and its bookkeeping is exactly the matrix product
+  $\odot$ of Section~3: route the output prompt through to the next stage,
+  $\bigoplus_b P(a,b)\otimes Q(b,c)$.
+\end{description}
+
+The \textbf{claim} is a clean slogan: \emph{the algebra of wiring is the algebra of
+workflows}. Three categorical combinators --- choose/hold, run-parallel, pipe --- as
+the three connectives of a workflow language, with $\Vec$ the right home because the
+things being wired are trainable weight-matrices (this is your (G): learning $=$
+tweaking the vectors).
+
+I want to be honest about altitude. This section is a \emph{proposal}, a research
+direction, not a theorem. In particular two glosses are frankly speculative and I flag
+them as such: (i) the operational reading of $\lhd$ as ``feed one system's response in
+as the next system's prompt'' is a suggestive interpretation of the matrix product, not
+a proved semantics; and (ii) the hope that a workflow assembled this way stays
+\emph{differentiable in its responses}, so that learning acts on the whole wiring and
+not only a single response, is exactly the payoff I would want from working over $\Vec$
+--- and exactly what remains to be established. That is the ``find a use'' thrust, and
+it is where I would go next.
+
+\paragraph{Comparison with existing work (an honest ledger).}
+This framing has neighbours, and I would rather name them than be caught restating them.
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+\item \textbf{Vertechi, ``Neural network layers as parametric spans.''} A neural-network
+  layer is presented as a parametric span, computing one indexed sum
+  $y[t(p)]\mathrel{+}= x[s(p)]\cdot w[\pi(p)]$. Structurally this is a
+  container/polynomial \emph{shape} $(s,t,\pi)$ with a \emph{linear action on positions}
+  --- an existing precedent for ``Vec-container $=$ NN layer.'' Notably it does not cite
+  Abbott/Altenkirch/Ghani or Ahman--Uustalu, so the container reading is available to
+  contribute rather than already claimed.
+\item \textbf{Bradley, ``Category Theory Inspired by LLMs.''} A category of linguistic
+  expressions enriched over $[0,1]$, with enriched copresheaves modelling
+  text$\to$semantics --- a companion categorical-semantics-of-LLMs framework, enriched
+  over a different base than ours but aimed at the same object of study.
+\item \textbf{Honesty about novelty.} The container framing is a genuine contribution
+  \emph{only} if it unifies or sharpens these --- e.g.\ by placing Vertechi's parametric
+  spans and the $\Vec$-matrix algebroid in one composition calculus --- and not if it
+  merely restates them in new notation. I believe there is a unification here; I have not
+  yet proved it is more than a translation.
+\item \textbf{Hedges, ``Autodiff through function types'' (julesh.com, 2026).} This is
+  the universality companion, and it is striking. Hedges shows additive lenses are
+  \emph{cartesian closed} precisely \emph{because} commutative monoids have biproducts
+  ($\coprod=\oplus$) --- the \emph{identical} biproduct-collapse lemma I proved, surfacing
+  independently under autodiff/gradient types. So ``biproduct $\Rightarrow$ either $=$
+  both'' is not a $\Vec$ artifact: it is structural wherever an additive structure sits
+  under a container-like formalism. That the same lemma governs my collapse and Hedges's
+  closed structure is, to me, the strongest sign the phenomenon is real.
+\end{itemize}
+
+\section{Status, honestly}
+
+\textbf{Proved} (all in \texttt{containers-over-vec.tex}):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item \emph{Biproduct collapse.} Finitely many prompts with total reply-dimension $N$
+  are indistinguishable, as a functor, from $N$ blank copies of the identity
+  ($\ext{S,P}\cong\Id^{\,N}$); the shape set is not recoverable.
+\item \emph{The extensivity crux.} The hom formula
+  $\Nat(\ext{S,P},\ext{T,Q})\cong\prod_s\bigoplus_t\Vec(Q_t,P_s)$ shows the
+  container-to-functor map is faithful but \emph{not full}, and pinpoints the failure in
+  the one symbol $\coprod\subsetneq\bigoplus$ --- the failure of the extensivity
+  equivalence of (C).
+\item \emph{$\lhd$-comonoid $=$ family of $\fld$-algebras.} The single-index composition
+  gives exactly one monoid-in-$\Vec$ per prompt (self-loops only), no cross-talk:
+  $\Comon_\lhd(\Fam(\Vec_{\mathrm{fd}}^\op))\cong\Fam(\mathrm{Alg}_\fld^\op)$.
+\item \emph{The correct home for algebroids.} Linear directed containers live in the
+  matrix bicategory $\Mat(\Vec)$; its (co)monoids are genuine algebroids
+  ($=$ $\Vec$-enriched categories, B\'enabou/Mitchell; $\odot$ $=$ profunctor
+  composition), and the single-index theory is its diagonal degeneration.
+\end{itemize}
+
+\textbf{Proposal, not yet proved:}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item The three-wirings workflow calculus of Section~4 --- that
+  choose/hold, run-parallel, and pipe form a usable algebra of prompt/response
+  workflows, that the pipeline reading of $\lhd$ is the right semantics, and that $\Vec$
+  genuinely buys \emph{trainability at the workflow level} (not only at the single
+  response). This is the direction, not a result. (One honest side-benefit is already
+  banked: over $\Vec$, choice and product are the \emph{same} wiring $\oplus=\times$, so
+  the calculus has three connectives, not four.)
+\end{itemize}
+
+That is the honest scorecard. The mathematics that is solid is elementary once you
+accept the base change; the excitement is that the one fact which breaks the
+representation theorem (non-extensivity) is exactly the fact an agent that must answer
+whatever it is asked would \emph{want} --- a reply space that is at once ``either'' and
+``both'', and a weight-matrix you can tweak. Whether that reading pays off as a real,
+differentiable workflow calculus is the open bet, and it is the one I would like your
+steer on.
+
+\end{document}

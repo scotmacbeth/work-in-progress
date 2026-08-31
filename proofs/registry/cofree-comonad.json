@@ -1,0 +1,76 @@
+{
+  "conjecture": "The cofree comonad on a container p=(S◁P) is the ◁-comonoid 𝔠_p=C^∞ with carrier the M-type of p-trees (shapes = tree_p, positions = vtx(t) = all finite rooted paths, NOT leaves), read-root adjunction counit ε_p, and it is the value of the RIGHT adjoint to U:Comon(Cont)→Cont. The container-coordinate proof of the couniversal property — ε_p, the induced comonoid morphism ĝ by corecursion, and the discharge of the morphism law / triangle / uniqueness against a given comonoid D — is the contribution; the construction and theorem are Niu–Spivak Prop 8.18/8.33/Thm 8.45 and Spivak 2202.00534 Eq.(244)–(249) (prior art, cited).",
+  "status": "proved",
+  "date_opened": "2026-07-25",
+  "date_closed": "2026-07-25",
+  "tree": {
+    "id": "root",
+    "approach": "Exact coordinate dual of the free-monad UP (2026-07-24). ĝ₁ by M-corecursion (anamorphism of the p-coalgebra γ(τ)=(g₁τ, λi.τ↓g♯_τ i) on D-states); ĝ♯ by finite recursion on the path using D's shift ⊕. Reduce the comonoid-morphism law / triangle / uniqueness to D1–D5 of the SOURCE comonoid D: forward (shape) components use D1/D4, backward (position) components use D2/D5, triangle uses D3; uniqueness-forward is coinduction (finality of tree_p), uniqueness-backward is path induction.",
+    "trust": "proved",
+    "file": "2026-07-25-cofree-comonad-universal-property.md",
+    "lean": null,
+    "sources": ["2202.00534"],
+    "note": "ATTRIBUTION / NOVELTY GUARD: the construction (M-type carrier, positions=VERTICES, read-root counit, U⊣𝔠) is Niu–Spivak Prop 8.18/8.33/Thm 8.45 and Spivak 2202.00534 Eq.(244)–(249) — direct-read this session (lines 3801–3853), sources.json verified-quote at these locators. These are CITED for attribution, NOT logical premises of the coordinate proof, which stands on the directed-container laws D1–D5 (Directed.lean, lean-verified) + finality of the M-type (standard). Hazard corrected: positions = vertices (finite rooted paths), NOT leaves (memory cofree-comonoid-scooped-and-wrong) — this is what keeps the backward/position layer finitely inductive.",
+    "children": [
+      {
+        "id": "dcont-laws-D1-D5",
+        "role": "premise",
+        "approach": "The five directed-container laws D1–D5 of the source comonoid D (root/sub/shift with the ACU axioms), used as hypotheses (D is a given comonoid). Comonoid in (Cont,◁,y) ≅ directed container ≅ small category (Ahman–Chapman–Uustalu).",
+        "trust": "lean-verified",
+        "file": null,
+        "lean": "Containers.DirectedContainer (lean/Containers/Containers/Directed.lean) — d1..d5 fields; comonad laws left_counit/right_counit/coassoc machine-checked",
+        "children": []
+      },
+      {
+        "id": "mtype-finality",
+        "role": "premise",
+        "approach": "tree_p = S^∞ is the final coalgebra of the Set-functor ⟦p⟧(X)=Σ_s(Ps→X): existence of the anamorphism ĝ₁ (corecursion) and uniqueness of coalgebra morphisms into it (uniqueness-forward). Spivak (249)/Lambek; Barr, Terminal coalgebras (1993). Cross-checked against Mathlib PFunctor.M (inverse-limit CofixA tower, machine-checked).",
+        "trust": "proved",
+        "file": null,
+        "sources": ["2202.00534"],
+        "children": []
+      },
+      {
+        "id": "lemma-U-comult-forward",
+        "role": "premise",
+        "approach": "(ĝ₁τ)↓^∞ v = ĝ₁(τ↓ ĝ♯_τ v) by induction on the finite path v; base = D1, step = D4. The forward (shape) component of the comultiplication morphism law.",
+        "trust": "proved",
+        "file": "2026-07-25-cofree-comonad-universal-property.md",
+        "children": []
+      },
+      {
+        "id": "lemma-S-comult-backward",
+        "role": "premise",
+        "approach": "ĝ♯_τ(shift^∞(ĝ₁τ,v,w)) = ĝ♯_τ(v) ⊕ ĝ♯_{τ↓ĝ♯_τ v}(U▸w) by induction on v; base = D2 (+D1 transport), step = D5 (+D4 shape-match). The backward (position) component; transport U▸ along Lemma U dual to Directed.lean's D5 cast.",
+        "trust": "proved",
+        "file": "2026-07-25-cofree-comonad-universal-property.md",
+        "children": []
+      },
+      {
+        "id": "triangle-and-uniqueness",
+        "role": "premise",
+        "approach": "Triangle ε_p∘U(ĝ)=g: forward definitional, backward = D3. Uniqueness: forward h₁=ĝ₁ by finality (mtype-finality); backward h♯=ĝ♯ by path induction using triangle-backward (★) + h's comult-backward law + IH.",
+        "trust": "proved",
+        "file": "2026-07-25-cofree-comonad-universal-property.md",
+        "children": []
+      },
+      {
+        "id": "extension-corollary",
+        "role": "premise",
+        "approach": "⟦𝔠_p⟧(A)=Σ_t(vtx(t)→A)≅νZ.(A×⟦p⟧Z) = cofree comonad on ⟦p⟧ (labels at all vertices). Justified directly by the vertex count and, independently, by ⟦−⟧ preserving the ω^op (connected) cofree tower (strong monoidal + connected-limit preservation, Ch3). Upgrade to 'all comonads' via AAG full-faithfulness + accessibility of ⟦p⟧.",
+        "trust": "proved",
+        "file": "2026-07-25-cofree-comonad-universal-property.md",
+        "sources": ["0906.4931"],
+        "children": []
+      },
+      {
+        "id": "computational-verification",
+        "role": "attempt",
+        "approach": "scratch/cofree_up_verify.py: concrete D (walking-arrow category X→Y), p, nontrivial g; corecursion eqs, triangle (fwd+bwd), Lemma U, Lemma S, comonoid-morphism law assembled independently via ◁-on-morphisms, counit compat, and uniqueness-backward to path length 4; three negative controls (corrupt shift / εsharp / corecursion) fire.",
+        "trust": "computed",
+        "file": null,
+        "children": []
+      }
+    ]
+  }
+}

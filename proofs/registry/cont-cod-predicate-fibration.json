@@ -1,0 +1,123 @@
+{
+  "conjecture": "Neil UID-132: 'turn cod:Set^->Set into a logic of containers; apply Cont=Fam((-)^op) to a fibration to get Cont(Set^->)->Cont(Set) as a fibration.' RESULT: Cont(cod)=Fam(cod^op) is a BIFIBRATION whose fibre over container (S,{P_s}) is prod_s (Set/P_s)^op (proof-relevant predicates on positions, fibrewise-DUALISED = von Glehn's Cont=int_Set cod^op). Its fibred quantifiers along the canonical collapse eta:(S,{1})->(S,{P_s}) form the adjoint string A |- Delta_c |- E where E=Exists=cartesian-reindexing=(Sigma_!)^op=<|, Delta_c=weakening=(!^*)^op, A=All=(Pi_!)^op -- EXACTLY Neil's proved A/E liftings (UID-94). DUALISATION THEOREM: the container hyperdoctrine is the FIBREWISE OP of the standard Set-family hyperdoctrine, swapping exists<->forall (relative to weakening: container-exists = All = Set's Pi; container-forall = Exists = Set's Sigma), AND /\\<->\\/, top<->bottom; the proof-relevant fibre is a co-topos (subtractive internal logic). Beck-Chevalley and (co-)Frobenius hold, dualised. THE TRAP (correcting the orientation): cartesian reindexing is (Sigma_rho)^op = dualised postcomposition, NOT the pullback rho^*; rho^* is the opfibration weakening Delta_c.",
+  "status": "proved",
+  "date_opened": "2026-08-28",
+  "date_closed": "2026-08-28",
+  "sources": ["2604.01303"],
+  "notes": "External ancestors cited-not-claimed (not load-bearing premises): von Glehn TAC 33 (2018) no.36 = Cont=int_Set cod^op + fibrewise op (my derivation of the fibre in section 3 is self-contained); Hermida PhD 1993 / Jacobs CLTT Ch.1 (Fam & fibrations folklore, but Lemma 2.1 is proved in full here); Streicher fundamental fibration; Aberle 2604.01303 (deep-read) only GESTURES (Def 0.4 remark), no Fam/fibration/quantifiers.",
+  "tree": {
+    "id": "cont-cod-predicate-fibration",
+    "approach": "Cont(cod)=Fam(cod^op) is a bifibration of dualised position-predicates; quantifiers = A/E liftings; the whole first-order structure is the fibrewise op of Set's.",
+    "trust": "proved",
+    "file": "2026-08-28-cont-cod-fibration.md",
+    "children": [
+      {
+        "id": "fam-preserves-fibrations",
+        "approach": "Lemma 2.1: (u,{phi_i}) is Fam(p)-cartesian IFF each phi_i is p-cartesian (both directions via singleton-family test + componentwise unique factorisation). Cor 2.2: Fam(p) fibration if p is; componentwise cartesian lift. Written in full.",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "cont-cod-bifibration",
+        "approach": "Thm 3.1: cod opfibration => cod^op fibration (op-duality of (co)cartesianness); cod bifibration (Set has pullbacks) => cod^op bifibration; Fam preserves => Cont(cod) bifibration. Cross-check via (Set^->)^op=(Set^op)^-> carrying cod to dom.",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "fibre-is-slice-op",
+        "approach": "Section 3: vertical morphism over id_(S,{P_s}) unwinds to a Set/P_s-morphism f'_s->f_s (backwards) => fibre = prod_s (Set/P_s)^op = proof-relevant predicates on positions, fibrewise-dualised. Self-contained (matches von Glehn).",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "reindexing-is-sigma-op-the-trap",
+        "approach": "Section 4: cartesian reindexing of Cont(cod) along container morphism (u,{rho_s}) is componentwise (Sigma_{rho_s})^op = dualised postcomposition g |-> rho_s . g, NOT pullback rho^*. rho^* is the OPfibration weakening. Corrects the orientation's naive guess.",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "quantifiers-are-AE-liftings",
+        "approach": "Thm 5.1: along collapse eta, E=eta^*=(Sigma_!)^op=Exists=<| (cartesian reindexing = total space), Delta_c=eta_!=(!^*)^op=weakening, A=(Pi_!)^op=All; string A |- Delta_c |- E is the op of Set's Sigma_! |- !^* |- Pi_!. Identifies the fibred quantifiers with Neil's proved UID-94 liftings.",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "premise",
+        "children": [
+          {
+            "id": "neil-A-E-predicate-liftings-cited",
+            "approach": "Proved UID-94 result (registry effect-coeffect-arrows.json node neil-A-E-predicate-liftings): All=Pi, Exists=Sigma=<| on positions; here re-identified as the fibred quantifiers.",
+            "trust": "proved",
+            "file": "2026-08-08-A-E-predicate-liftings.md",
+            "role": "premise",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "dualisation-theorem",
+        "approach": "Thm 5.2: container hyperdoctrine = fibrewise op of Set's family hyperdoctrine. Relative to common weakening Delta_c: container-exists (left adjoint) = All (Set's Pi); container-forall (right adjoint) = Exists (Set's Sigma). Also swaps /\\<->\\/ (fibre product in (Set/P)^op = coproduct in Set/P = fibrewise disjoint union of witnesses) and top<->bottom. Proof-relevant fibre = co-topos, subtractive internal logic (Boolean at the crude position-only truncation, so subtractivity is a proof-relevant/witness-level phenomenon).",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "attempt",
+        "children": []
+      },
+      {
+        "id": "beck-chevalley-dualised",
+        "approach": "Prop 6.1: BC for Cont(cod) = op+Fam transport of Set's Sigma-BC and Pi-BC over pullback squares; op preserves the mate iso, Fam is componentwise. Set instances brute-force verified.",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "attempt",
+        "children": [
+          {
+            "id": "set-bc-frobenius-verified",
+            "approach": "verify_bc_frob.py: Beck-Chevalley (Sigma and Pi) over pullback squares incl. non-surjective legs, and Frobenius(Sigma_f) -- all pass in finite Set.",
+            "trust": "computed",
+            "file": null,
+            "role": "attempt",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "co-frobenius-dualised",
+        "approach": "Prop 6.2: Frobenius reciprocity for Cont(cod) is the op of Set's Sigma-Frobenius, with fibre product replaced by fibre COPRODUCT (\\/): A(phi \\/ Delta_c psi) ~= A(phi) \\/ psi. Forced by the same op that turns the quantifiers around.",
+        "trust": "proved",
+        "file": "2026-08-28-cont-cod-fibration.md",
+        "role": "attempt",
+        "children": []
+      },
+      {
+        "id": "set-adjoint-string-verified",
+        "approach": "verify_cont_cod.py: Sigma_f |- f^* |- Pi_f verified by hom-set cardinality bijections over collapse/injective/surjective/bijective maps (empty-fibre corner exercised). op-reversal L|-R => R^op|-L^op and Fam-componentwise are then formal.",
+        "trust": "computed",
+        "file": null,
+        "role": "attempt",
+        "children": []
+      },
+      {
+        "id": "shape-level-hyperdoctrine",
+        "approach": "CLOSED 2026-08-28 (joint-bc-cont-cod.json): shape Fam-Kan quantifiers constructed; combined (shape x position) BC/Frobenius settled EXACTLY -- holds on forall side, fails on exists side by co-topos non-distributivity => Cont(cod) is a co-hyperdoctrine. This ALSO corrected 6.2 (co-Frobenius is E not A). Residual: propositional truncation Sub(Set^->) not developed; intrinsic characterisation of the general Poly-pullback BC-square class open.",
+        "trust": "proved",
+        "file": "2026-08-28-joint-bc-cont-cod.md",
+        "role": "attempt",
+        "children": [
+          {
+            "id": "joint-bc-closes-gap",
+            "approach": "See registry joint-bc-cont-cod.json: co-hyperdoctrine result closing the shape/joint gap and correcting 6.2.",
+            "trust": "proved",
+            "file": "2026-08-28-joint-bc-cont-cod.md",
+            "role": "premise",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}

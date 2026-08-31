@@ -1,0 +1,530 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{hypo}{Hypothesis}
+\renewcommand{\thehypo}{(H)}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Ab}{\mathbf{Ab}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\cod}{\operatorname{cod}}
+\newcommand{\orb}{\operatorname{orb}}
+\newcommand{\flr}[1]{\lfloor #1 \rfloor}
+\newcommand{\1}{\mathbf{1}}
+
+\title{The global-closure obstruction (G) is a cohomology class:\\
+the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\D)$}
+\author{MacBeth\\\small Kodamai}
+\date{11 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We resolve the next layer of SEED-Q2. The two-level criterion for a strict
+factorization $\K=\C\bowtie\D$ over a wide subcategory $\D$ splits into a fibrewise
+freeness condition \textnormal{(L)} and a global closure condition
+\textnormal{(G)}; the prior notes proved \textnormal{(L)}$\wedge$\textnormal{(G)}
+decides the question but described \textnormal{(G)} only as ``an obstruction.''
+Here we \emph{classify} it. Assuming \textnormal{(L)}, every transversal (choice of
+free bases) carries a \emph{defect $2$-cochain} $\omega$ valued in $\D$, with
+\textnormal{(G)} holding iff $\omega\equiv\id$. We isolate a clean hypothesis
+\ref{hyp} --- abelian vertex groups and a \emph{trivial left action} --- under
+which the free $\D$-orbits form a category $\Sk_\C$, the vertex automorphism groups
+form a presheaf $\D\colon\Sk_\C^{\mathrm{op}}\to\Ab$, the defect is a normalized
+$2$-cocycle, and re-choosing the transversal changes it by a coboundary. Hence
+$[\omega]\in H^2(\Sk_\C;\D)$ is a transversal-independent invariant and
+\[
+   \textbf{(G) holds }\iff\ [\omega]=0 .
+\]
+The set of strict factorizations, when nonempty, is a torsor under
+$Z^1(\Sk_\C;\D)$, and modulo inner relabelings under $H^1(\Sk_\C;\D)$ --- the
+$H^1$/$H^2$ pattern the conjecture predicted. We compute the ten-morphism rigid
+twist explicitly: $\Sk_\C$ is the branch $a\to x\rightrightarrows y$, $\D$ is
+$\mathbb Z/2$ concentrated at $a$, $H^2(\Sk_\C;\D)\cong\mathbb Z/2$, and the defect
+represents the \emph{nonzero} element; the cross-arrow enlargement of the pairwise
+counterexample gives the same class. Finally we delimit honestly: a nontrivial
+left action (which already occurs in two-morphism examples) breaks the descent to
+$\Sk_\C$, and the obstruction's natural home becomes the \emph{nonabelian} $H^2$ of
+the matched pair --- the Kac/Rosebrugh--Wood regime, which we state as the open
+continuation. All claims are machine-checked
+(\texttt{projects/scratch/cohomology\_holonomy.py}).
+\end{abstract}
+
+\section{Setup}
+
+Throughout, $\K$ is a small category and $\D\subseteq\K$ a wide subcategory (the
+prescribed right factor). We use the pairwise criterion of the companion note
+\cite{pairwise} freely: $\K=\C\bowtie\D$ for some wide $\C$ iff
+\begin{itemize}
+\item[\textnormal{(L)}] each hom-presheaf $\Hom_\K(-,b)$ is free as a right
+$\D$-set; and
+\item[\textnormal{(G)}] free bases $B_b\subseteq\Hom_\K(-,b)$ can be chosen so that
+$\C=\bigcup_b B_b$ is a wide subcategory.
+\end{itemize}
+We \emph{assume \textnormal{(L)} throughout}. Our object of study is the residual
+condition \textnormal{(G)}.
+
+Recall the structure of a free $\D$-set. The right $\D$-action on $\Hom_\K(-,b)$ is
+precomposition, $f\cdot d=f\circ d$ for $d\in\D$. An \emph{orbit} is a connected
+component of the action; \textnormal{(L)} says each orbit is free. A morphism
+$c\colon a\to b$ \emph{generates} its orbit $o$ iff $d\mapsto c\circ d$ is a
+bijection from the $\D$-arrows into $a$ onto $o$; equivalently every $f$ in $o$
+factors uniquely as $f=c\circ d$, $d\in\D$. We call $a=\dom(c)$ the \emph{apex} of
+$o$ (well defined up to $\D$-isomorphism). Two generators of $o$ differ by a
+$\D$-isomorphism on the right: $c'=c\circ\varphi$ with $\varphi$ a $\D$-iso into
+the apex. We write $\orb(f)$ for the orbit of $f$.
+
+\begin{definition}[Vertex groups]
+For an object $a$ put $G_a:=\Aut_\D(a)$, the group of $\D$-automorphisms of $a$.
+When $\D$ is a disjoint union of vertex groups (the single-category case
+$\D=\E$ with invertible endomorphisms), $G_a=\End_\D(a)$ and apex $=$ source.
+\end{definition}
+
+\begin{definition}[Transversal]
+A \emph{transversal} $T$ is a choice of one generator $c_o\in o$ for every orbit
+$o$ (over all targets $b$), subject to the \emph{unit normalization}: at the orbit
+of $\id_b$ (which is the regular orbit $\D(-,b)$, generated by the $\D$-automorphisms
+of $b$) we choose $c=\id_b$. The associated candidate left factor is
+$\C_T:=\{c_o\}_o$, the set of chosen generators.
+\end{definition}
+
+By \cite[Thm.~1]{pairwise}, $\C_T$ is the left factor of a strict factorization
+system $(\C_T,\D)$ iff $\C_T$ is closed under composition; this is exactly
+\textnormal{(G)} for the choice $T$.
+
+\section{The defect $2$-cochain (general)}
+
+The following is unconditional (it needs only \textnormal{(L)} and a transversal).
+
+\begin{definition}[Defect]\label{def:defect}
+Fix a transversal $T$. For composable generators $c_1\colon a\to b$ and
+$c_2\colon b\to e$ in $\C_T$, the composite $c_2\circ c_1\colon a\to e$ lies in some
+orbit at $e$; let $\flr{c_2c_1}_T\in T$ be that orbit's chosen generator. By
+freeness there is a \emph{unique} $\omega_T(c_2,c_1)\in\D$ with
+\begin{equation}\label{eq:defect}
+   c_2\circ c_1 \;=\; \flr{c_2 c_1}_T \circ\, \omega_T(c_2,c_1),
+   \qquad \omega_T(c_2,c_1)\colon a\to \dom\flr{c_2c_1}_T .
+\end{equation}
+We call $\omega_T$ the \emph{defect $2$-cochain} of $T$.
+\end{definition}
+
+\begin{proposition}[Closure $=$ vanishing of the defect]\label{prop:closure}
+\textnormal{(G)} holds for the transversal $T$ (i.e.\ $\C_T$ is a wide subcategory)
+if and only if $\omega_T(c_2,c_1)$ is an identity for every composable pair.
+\end{proposition}
+
+\begin{proof}
+$\C_T$ contains all identities (unit normalization) and is closed under composition
+iff $c_2\circ c_1\in\C_T$ for all composable generators. By \eqref{eq:defect},
+$c_2\circ c_1=\flr{c_2c_1}_T\circ\omega_T(c_2,c_1)$ with $\flr{c_2c_1}_T\in\C_T$;
+since a generator together with a nonidentity $\D$-arrow gives, by uniqueness of
+factorization, an element \emph{outside} the generating set unless the $\D$-arrow
+is an identity, we have $c_2\circ c_1\in\C_T\iff\omega_T(c_2,c_1)=\id$. (If
+$\omega_T(c_2,c_1)=\id$ then $c_2c_1=\flr{c_2c_1}_T\in\C_T$; conversely if
+$c_2c_1\in\C_T$ it is a chosen generator, hence \emph{the} generator
+$\flr{c_2c_1}_T$ of its orbit, forcing $\omega_T(c_2,c_1)=\id$ by uniqueness.)
+\end{proof}
+
+\begin{definition}[Gauge]\label{def:gauge}
+The \emph{gauge group} is $\mathcal G:=\prod_{o}\Gamma_o$, where $\Gamma_o$ is the
+group of $\D$-automorphisms of the apex of $o$ acting on generators of $o$ by right
+multiplication $c_o\mapsto c_o\circ h_o$, and $h$ is normalized ($h_o=\id$ on unit
+orbits). $\mathcal G$ acts \emph{freely and transitively} on the set of
+transversals: any two transversals differ by a unique gauge (replace each chosen
+generator by the other orbit's generator, which differ by a $\D$-iso). Write
+$T\cdot h$ for the regauged transversal.
+\end{definition}
+
+\section{The clean hypothesis and the cochain complex}
+
+The gauge transformation of $\omega$ involves \emph{post}composition by target
+automorphisms --- the left action of the matched pair --- and is nonabelian in
+general. We isolate the regime in which it is a coboundary in an abelian complex.
+
+\begin{hypo}\label{hyp}\leavevmode
+\begin{enumerate}
+\item[(i)] \emph{(abelian vertex groups)} $\D$ is a disjoint union of vertex groups,
+$\D(a,a)=G_a=\End_\D(a)$ a group and $\D(a,b)=\varnothing$ for $a\neq b$, with every
+$G_a$ abelian; equivalently $\K$ is a single small category with invertible
+endomorphisms and $\D=\E$ \cite{cocycle};
+\item[(ii)] \emph{(trivial left action)} for every generator $c\colon a\to b$ and
+every $\psi\in G_b$, the morphism $\psi\circ c$ lies in $\orb(c)$ --- equivalently
+$\psi\circ c=c\circ\varphi_c(\psi)$ for a (necessarily unique) $\varphi_c(\psi)\in
+G_a$.
+\end{enumerate}
+\end{hypo}
+
+Under \ref{hyp}(i) the apex of every orbit equals the common source of its elements
+(the $\D$-arrows into $a$ are exactly $G_a$, all $a\to a$), and for composable
+generators $c_1\colon a\to b$, $c_2\colon b\to e$ the composite $c_2\circ c_1$
+\emph{generates} its orbit: the orbit is $\{c_2c_1\circ\gamma:\gamma\in G_a\}$ and
+$\gamma\mapsto c_2c_1\circ\gamma$ is a bijection by freeness \textnormal{(L)}. Hence
+the defect $\omega_T(c_2,c_1)$ of \eqref{eq:defect} is forced to lie in the
+\emph{group} $G_a=G_{\dom c_1}$ --- the coefficient we cohomologize.
+
+\begin{lemma}[Descent to the orbit category]\label{lem:skel}
+Under \ref{hyp}(ii), the assignment $o_2\ast o_1:=\orb(c_2\circ c_1)$ (any
+generators $c_i$ of $o_i$, composable) is well defined and associative, and makes
+$\Sk_\C$ --- objects $\ob\K$, morphisms the free $\D$-orbits, identities the unit
+orbits --- a category. Under \ref{hyp} the rule $a\mapsto G_a$ on objects and
+$\varphi_c\colon G_b\to G_a$ on a generator $c\colon a\to b$ extends to a presheaf
+$\D\colon\Sk_\C^{\mathrm{op}}\to\Ab$ (a functor on $\Sk_\C^{\mathrm{op}}$).
+\end{lemma}
+
+\begin{proof}
+\emph{Well-defined composition.} Replacing $c_1$ by $c_1\circ\varphi$
+($\varphi$ a $\D$-iso into the apex) leaves $\orb(c_2\circ c_1\circ\varphi)=
+\orb(c_2\circ c_1)$ (right $\D$-translation preserves orbits). Replacing $c_2$ by
+$c_2\circ\psi$ ($\psi\in G_b$, $b$ the apex of $o_2$): by \ref{hyp}(ii),
+$\psi\circ c_1=c_1\circ\varphi_{c_1}(\psi)$, so
+$c_2\circ\psi\circ c_1=c_2\circ c_1\circ\varphi_{c_1}(\psi)$, again the same orbit.
+Associativity and unitality of $\ast$ are inherited from $\K$ because
+$\orb(-)$ depends only on the underlying $\K$-morphism, which associates.
+
+\emph{Presheaf.} $\varphi_c\colon G_b\to G_a$ is a homomorphism: for
+$\psi,\psi'\in G_b$,
+$c\circ\varphi_c(\psi'\psi)=(\psi'\psi)\circ c=\psi'\circ(\psi\circ c)
+=\psi'\circ c\circ\varphi_c(\psi)=c\circ\varphi_c(\psi')\varphi_c(\psi)$, and
+cancel $c$ on the left (it is a generator, hence left-cancellable against
+distinct $G_a$-translates). Functoriality $\varphi_{c_2\ast c_1}=\varphi_{c_1}
+\circ\varphi_{c_2}$ is the same calculation applied to $c_2\circ c_1$, using
+\ref{hyp}(ii) twice; $\varphi_{\id}=\id$. Contravariance is built into the typing
+$G_b\to G_a$ along $c\colon a\to b$.
+\end{proof}
+
+We use the standard cochain complex of a small category with coefficients in a
+presheaf \cite{baueswirsching,roos}. For $n\ge 0$,
+\[
+   C^n(\Sk_\C;\D)=\!\!\prod_{o_n,\dots,o_1\ \text{composable}}\!\! G_{\dom o_1},
+\]
+\[
+   (\delta\sigma)(o_{n+1},\dots,o_1)=
+   \varphi_{o_1}\!\big(\sigma(o_{n+1},\dots,o_2)\big)
+   +\sum_{i=1}^{n}(-1)^i\,\sigma(o_{n+1},\dots,o_{i+1}\ast o_i,\dots,o_1)
+   +(-1)^{n+1}\sigma(o_{n},\dots,o_1),
+\]
+the first face dropping the rightmost arrow $o_1$ and acting by its restriction,
+the last dropping the leftmost $o_{n+1}$; normalized cochains vanish whenever some
+$o_i$ is a unit. Concretely
+\begin{align}
+(\delta^1 h)(o_2,o_1)&=\varphi_{o_1}(h(o_2))-h(o_2\ast o_1)+h(o_1),\label{eq:d1}\\
+(\delta^2\omega)(o_3,o_2,o_1)&=\varphi_{o_1}(\omega(o_3,o_2))-\omega(o_3,o_2\ast o_1)
+   +\omega(o_3\ast o_2,o_1)-\omega(o_2,o_1).\label{eq:d2}
+\end{align}
+$\delta^2\circ\delta^1=0$ (verified directly: the eight terms cancel using
+$\varphi_{o_2\ast o_1}=\varphi_{o_1}\circ\varphi_{o_2}$);
+$H^n(\Sk_\C;\D):=\ker\delta^{n}/\operatorname{im}\delta^{n-1}$.
+
+\section{Main theorem}
+
+A transversal is the same thing as a section of $\Sk_\C$ over $\K$ (a choice of
+generator per orbit); the gauge group of Definition~\ref{def:gauge} is exactly the
+group $C^1(\Sk_\C;\D)$ of normalized $1$-cochains, $h\colon o\mapsto h_o\in
+G_{\dom o}$.
+
+\begin{theorem}[The closure obstruction is a cohomology class]\label{thm:main}
+Assume \textnormal{(L)} and \ref{hyp}. Then:
+\begin{enumerate}
+\item the defect $\omega_T$ descends to a normalized $2$-cochain on $\Sk_\C$ and is
+a $2$-cocycle: $\delta^2\omega_T=0$;
+\item regauging changes it by a coboundary: $\omega_{T\cdot h}=\omega_T+\delta^1 h$
+for every $h\in C^1(\Sk_\C;\D)$;
+\item consequently $[\omega]:=[\omega_T]\in H^2(\Sk_\C;\D)$ is independent of the
+transversal $T$, and
+\[
+   \textnormal{(G) holds}\quad\Longleftrightarrow\quad [\omega]=0 ;
+\]
+\item if nonempty, the set of strict factorization systems $(\C,\D)$ of $\K$ is a
+torsor under $Z^1(\Sk_\C;\D)$; modulo the inner relabelings
+$B^0=\operatorname{im}\delta^0$ (automorphisms of $(\K,\D)$ fixing objects) it is a
+torsor under $H^1(\Sk_\C;\D)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Throughout, additive notation in the abelian groups $G_a$. By the remark after
+\ref{hyp}, the defect $\omega_T(c_2,c_1)$ lands in the group $G_{\dom c_1}$. It
+depends only on the orbits $o_i=\orb(c_i)$: changing $c_1\mapsto c_1\gamma$
+($\gamma\in G_a$) multiplies both sides of \eqref{eq:defect} on the right by
+$\gamma$ and rescales the defect accordingly; changing $c_2\mapsto c_2\psi$
+($\psi\in G_b$) uses \ref{hyp}(ii), $\psi\circ c_1=c_1\circ\varphi_{c_1}(\psi)$, to
+absorb the change into the right $G_a$-action. So $\omega_T$ is a normalized
+$2$-cochain on $\Sk_\C$.
+
+\emph{(1) Cocycle.} Factor $c_3\circ c_2\circ c_1$ two ways and use uniqueness.
+Writing $\flr{\cdot}$ for $\flr{\cdot}_T$ and $\omega$ for $\omega_T$:
+\begin{align*}
+c_3\circ(c_2\circ c_1)
+&=c_3\circ\big(\flr{c_2c_1}\,\omega(c_2,c_1)\big)
+ =\big(c_3\circ\flr{c_2c_1}\big)\,\omega(c_2,c_1)\\
+&=\flr{c_3\,\flr{c_2c_1}}\,\omega\!\big(c_3,\flr{c_2c_1}\big)\,\omega(c_2,c_1),
+\end{align*}
+while
+\begin{align*}
+(c_3\circ c_2)\circ c_1
+&=\big(\flr{c_3c_2}\,\omega(c_3,c_2)\big)\circ c_1
+ =\flr{c_3c_2}\circ\big(\omega(c_3,c_2)\circ c_1\big)\\
+&=\flr{c_3c_2}\circ c_1\circ\varphi_{c_1}\!\big(\omega(c_3,c_2)\big)
+ =\flr{\flr{c_3c_2}\,c_1}\,\omega\!\big(\flr{c_3c_2},c_1\big)\,
+   \varphi_{c_1}\!\big(\omega(c_3,c_2)\big),
+\end{align*}
+the third equality by \ref{hyp}(ii). The two leading generators agree
+($\flr{c_3\flr{c_2c_1}}=\flr{c_3c_2c_1}=\flr{\flr{c_3c_2}c_1}$ since $\ast$ is
+associative in $\Sk_\C$). By uniqueness of the $\D$-part,
+\[
+   \omega\!\big(c_3,\flr{c_2c_1}\big)+\omega(c_2,c_1)
+   =\omega\!\big(\flr{c_3c_2},c_1\big)+\varphi_{c_1}\!\big(\omega(c_3,c_2)\big),
+\]
+which is exactly $(\delta^2\omega)(o_3,o_2,o_1)=0$ in \eqref{eq:d2}.
+
+\emph{(2) Coboundary.} Regauge $c_i\mapsto c_i\,h_{o_i}$, $h_{o_i}\in G_{\dom c_i}$.
+Then $\flr{\cdot}\mapsto\flr{\cdot}\,h_{o_2\ast o_1}$ and
+\begin{align*}
+(c_2 h_{o_2})\circ(c_1 h_{o_1})
+&=c_2\circ(h_{o_2}\circ c_1)\circ h_{o_1}
+ =c_2\circ c_1\circ\varphi_{c_1}(h_{o_2})\,h_{o_1}\\
+&=\flr{c_2c_1}\,\omega_T(c_2,c_1)\,\varphi_{o_1}(h_{o_2})\,h_{o_1}
+ =\big(\flr{c_2c_1}h_{o_2\ast o_1}\big)\,
+  \big(h_{o_2\ast o_1}^{-1}\,\omega_T(c_2,c_1)\,\varphi_{o_1}(h_{o_2})\,h_{o_1}\big),
+\end{align*}
+using \ref{hyp}(ii) for $h_{o_2}\circ c_1$. Reading off the $\D$-part for the
+regauged transversal,
+\[
+   \omega_{T\cdot h}(o_2,o_1)=\omega_T(o_2,o_1)-h_{o_2\ast o_1}
+     +\varphi_{o_1}(h_{o_2})+h_{o_1}
+   =\omega_T(o_2,o_1)+(\delta^1 h)(o_2,o_1),
+\]
+by \eqref{eq:d1}.
+
+\emph{(3) Invariance and the equivalence.} Since the gauge acts transitively on
+transversals (Definition~\ref{def:gauge}), (2) shows any two defects are
+cohomologous; with (1) this gives a well-defined class $[\omega]\in
+H^2(\Sk_\C;\D)$. If \textnormal{(G)} holds then some $T$ has $\omega_T\equiv0$
+(Proposition~\ref{prop:closure}), so $[\omega]=0$. Conversely if $[\omega]=0$ then
+$\omega_{T}=\delta^1 h$ for some $h$ and any $T$; by (2),
+$\omega_{T\cdot(-h)}=\omega_T-\delta^1 h=0$, so $T\cdot(-h)$ closes and
+\textnormal{(G)} holds.
+
+\emph{(4) Torsor.} If $T$ closes ($\omega_T=0$), then $T\cdot h$ closes iff
+$\omega_{T\cdot h}=\delta^1 h=0$ iff $h\in Z^1$. Thus the closing transversals --
+equivalently the strict factorization systems $(\C_T,\D)$ -- form a torsor under
+$Z^1(\Sk_\C;\D)$. The $0$-cochains $C^0=\prod_a G_a$ act by
+$\delta^0$ as the automorphisms of $(\K,\D)$ that fix every object and rescale the
+$\D$-action basepoints; quotienting by $B^0=\operatorname{im}\delta^0$ identifies
+SFS related by such an inner relabeling, leaving a torsor under
+$Z^1/B^0=H^1(\Sk_\C;\D)$.
+\end{proof}
+
+\begin{remark}[Why this is the right complex]
+$\Sk_\C$ is the would-be left factor $\C$ \emph{regarded only up to the right
+$\D$-action}: its morphisms are the orbits, i.e.\ the $\C$-arrows ``modulo the
+ambiguity of choosing a representative.'' The presheaf $\D$ records the residual
+torsor of choices. Theorem~\ref{thm:main} says precisely that the local
+choices (free, by \textnormal{(L)}) glue to a global section (a closed $\C$) iff a
+single $2$-dimensional obstruction vanishes --- the categorical avatar of ``a
+principal bundle with flat structure is trivial iff its holonomy class vanishes.''
+The companion equivalence ``distributive law $\lambda\colon\D\C\Rightarrow\C\D
+\leftrightarrow$ SFS'' of Rosebrugh--Wood \cite{rw} is, in this language, the
+statement that the matched-pair cocycle conditions ZS1--ZS4 \cite{pairwise} are the
+simplicial identities of which \eqref{eq:d2} is the abelianized shadow.
+\end{remark}
+
+\section{The rigid twist computes the generator of $\mathbb Z/2$}
+
+\begin{example}[Ten-morphism rigid twist]\label{ex:rt}
+Objects $a,x,y$; $\End(a)=\{\id_a,g\}$ with $g^2=\id_a$; $\End(x),\End(y)$ trivial;
+$\Hom(a,x)=\{p,pg\}$, $\Hom(a,y)=\{q,qg\}$, $\Hom(x,y)=\{s,s_2\}$, with the rigid
+twist $s\circ p=q$, $s_2\circ p=qg$ (forcing $s\circ pg=qg$, $s_2\circ pg=q$). Take
+$\D=\E$ the endomorphisms, so $G_a=\mathbb Z/2$ and $G_x=G_y=0$.
+\end{example}
+
+\begin{theorem}\label{thm:rt}
+In Example~\ref{ex:rt}, \textnormal{(L)} and \ref{hyp} hold,
+$H^2(\Sk_\C;\D)\cong\mathbb Z/2$, and the defect represents the nonzero element;
+hence \textnormal{(G)} fails and $\K$ has no strict factorization over $\E$.
+\end{theorem}
+
+\begin{proof}
+\textnormal{(L)} is the freeness of all six hom-sets over their source vertex
+group (verified in \cite{cocycle}). \ref{hyp}(i) holds ($\mathbb Z/2$ abelian).
+\ref{hyp}(ii): the only nontrivial $G_b$ is $G_a$, and the only generator into $a$
+is $\id_a$ (the regular orbit), on which $g\circ\id_a=\id_a\circ g\in\orb(\id_a)$;
+all other targets have trivial $G_b$. So the left action is trivial.
+
+The orbit category $\Sk_\C$ has, besides identities, the morphisms
+$[p]\colon a\to x$, $[q]\colon a\to y$, and $[s],[s_2]\colon x\to y$, with
+$[s]\ast[p]=\orb(s\circ p)=\orb(q)=[q]=\orb(s_2\circ p)=[s_2]\ast[p]$. The presheaf
+is $\D(a)=\mathbb Z/2$, $\D(x)=\D(y)=0$, all restriction maps zero (no nonidentity
+generator targets $a$).
+
+Normalized cochains: $C^1$ has the two coordinates $h([p]),h([q])\in\mathbb Z/2$
+(generators with source-group $\mathbb Z/2$); $C^2$ has the two coordinates
+$\omega([s],[p]),\omega([s_2],[p])\in\mathbb Z/2$ (composable pairs with
+$\dom=a$); $C^3=0$ ($y$ is a sink, so no composable triple starts at $a$). Hence
+$Z^2=C^2\cong(\mathbb Z/2)^2$. From \eqref{eq:d1} (all $\varphi=0$),
+\[
+   (\delta^1 h)([s],[p])=h([p])-h([s]\ast[p])=h([p])-h([q]),\quad
+   (\delta^1 h)([s_2],[p])=h([p])-h([q]),
+\]
+so $B^2=\{(t,t):t\in\mathbb Z/2\}$, the diagonal. Therefore
+\[
+   H^2(\Sk_\C;\D)=(\mathbb Z/2)^2/\langle(1,1)\rangle\cong\mathbb Z/2 .
+\]
+For the transversal $T=\{p,q,s,s_2,\dots\}$ the defect is
+$\omega([s],[p])=0$ (as $s\circ p=q=\flr{}\,\circ\id$) and
+$\omega([s_2],[p])=g\mapsto1$ (as $s_2\circ p=qg=q\circ g$), i.e.\
+$\omega_T=(0,1)\notin B^2$. Thus $[\omega]\neq0$ is the generator, and by
+Theorem~\ref{thm:main}(3), \textnormal{(G)} fails.
+\end{proof}
+
+The next proposition is \emph{outside} the hypothesis of Theorem~\ref{thm:main}
+(its $\D$ is not a disjoint union of vertex groups), yet exhibits the identical
+class --- evidence that the vertex-group restriction in \ref{hyp}(i) is an artifact
+of the proof, not of the phenomenon, and can likely be relaxed to ``the defect is
+group-valued and the left action is trivial.''
+
+\begin{proposition}[The cross-arrow enlargement keeps the same class]\label{prop:p4}
+Adjoin an object $w$ and a free $\langle g\rangle$-torsor $\{d,gd\}\colon w\to a$
+to $\D$, with the induced rows $\{pd,pgd\}\colon w\to x$, $\{qd,qgd\}\colon w\to y$
+in $\K$ (the pairwise counterexample of \cite{pairwise}). Then $\D$ is \emph{not} a
+groupoid ($d$ is noninvertible), so \ref{hyp}(i) fails; nonetheless
+\textnormal{(L)} holds, the cross arrows are \emph{absorbed} into existing orbits
+($\orb(p)=\{p,pg,pd,pgd\}$ with apex $a$; the only $\C$-arrow into $a$ is still
+$\id_a$), the defect remains valued in $G_a=\mathbb Z/2$, the left action is
+trivial, and the construction of Theorem~\ref{thm:main} goes through verbatim to
+give $H^2(\Sk_\C;\D)\cong\mathbb Z/2$ with the defect the nonzero class.
+\end{proposition}
+
+\begin{proof}
+Direct computation (\texttt{cohomology\_holonomy.py}): the $\D$-orbit of $p$
+contains the $w$-row because $pd=p\circ d$ with $d\in\D$, so $\Sk_\C$ is unchanged
+on $a,x,y$ and adds only the source object $w$ (a non-target of any nonidentity
+generator). Every defect lands in $\D(a,a)=G_a=\mathbb Z/2$ because each composable
+$\C$-pair has the form $(\sigma,c_1)$ with $\cod\sigma=y$, $\dom c_1=a$ and
+$\sigma\circ c_1\in\orb(q)$ (apex $a$); the left action is trivial since the only
+nontrivial vertex group sits at the \emph{source} $a$, never at a middle object.
+The $H^2\cong\mathbb Z/2$ computation is then identical to Theorem~\ref{thm:rt}.
+\end{proof}
+
+\section{Honest scope: the nonabelian boundary}
+
+Hypothesis~\ref{hyp}(ii) is not a technicality; it is the exact line past which the
+obstruction stops being an abelian $H^2$.
+
+\begin{example}[Nontrivial left action in two morphisms]\label{ex:nonab}
+Objects $a,b$; $G_a=0$, $G_b=\{\id_b,h\}$ with $h^2=\id_b$; $\Hom(a,b)=\{t,ht\}$
+with $ht:=h\circ t$. Then $\Hom(a,b)$ has two singleton free orbits $\{t\}$,
+$\{ht\}$, and the target automorphism $h$ \emph{swaps} them: $h\circ t=ht\notin
+\orb(t)$. \ref{hyp}(ii) fails.
+\end{example}
+
+When \ref{hyp}(ii) fails, $\orb(c_2\circ c_1)$ depends on the chosen generator of
+$o_2$, so $\Sk_\C$ is not a category, the presheaf $\D$ does not exist, and the
+coboundary computation in Theorem~\ref{thm:main}(2) acquires a genuinely
+\emph{nonabelian} correction: the regauging of $\omega$ mixes the left action
+$h_{o_2}\circ c_1$ with the right action, exactly as in a nonabelian $2$-cocycle.
+The correct home for the obstruction is then the \emph{nonabelian second
+cohomology of the matched pair} $(\C,\D,\lambda)$ --- the categorical analogue of
+the Kac/Masuoka classification of bicrossed (matched-pair) extensions by an $H^2$
+with the two actions entangled \cite{kac,masuoka}. We state this as the open
+continuation:
+
+\begin{quote}\itshape
+Conjecture (nonabelian holonomy). For \textnormal{(L)} without \ref{hyp}, the
+strict factorizations $(\C,\D)$ of $\K$ extending $\D$ are classified by a
+nonabelian $H^2$ of the Rosebrugh--Wood distributive law $\lambda$: the band is the
+presheaf-of-groups $a\mapsto G_a$ twisted by the left action, the obstruction to a
+$\lambda$ is a class in $H^2$ of that band, and the torsor of $\lambda$'s, when
+nonempty, is acted on simply-transitively by $H^1$.
+\end{quote}
+
+Example~\ref{ex:nonab} shows the abelian theory is genuinely a special case (there
+\textnormal{(G)} happens to hold vacuously, there being no composable $\C$-pairs;
+the point is only that $\Sk_\C$ already fails to be a category). The decisive
+positive content of this note is that the \emph{entire} single-category rigid-twist
+phenomenon --- the seed obstruction, and its crown-jewel reading as the laxator ---
+lives in the abelian regime \ref{hyp}, where it is a bona fide $H^2$ class.
+
+\section{Computational verification}\label{sec:comp}
+
+All claims are machine-checked by \texttt{projects/scratch/cohomology\_holonomy.py},
+which builds the categories, computes orbits/generators/transversals and the defect
+\eqref{eq:defect}, assembles the $\mathbb F_2$ bar complex \eqref{eq:d1}--\eqref{eq:d2},
+and locates $[\omega]$.
+\begin{itemize}
+\item \textbf{Rigid twist.} \textnormal{(L)} holds; no transversal closes;
+$\dim_{\mathbb F_2}H^2=1$ ($H^2\cong\mathbb Z/2$); all four transversals give a
+defect outside $B^2$ representing the \emph{same} nonzero class
+($(1,0)\equiv(0,1)\bmod\langle(1,1)\rangle$). Confirms Theorem~\ref{thm:rt}.
+\item \textbf{Pairwise $4$-object.} $\D$ non-groupoid; $\dim H^2=1$; same nonzero
+class on all transversals. Confirms Proposition~\ref{prop:p4}.
+\item \textbf{Triple chain $a\to x\to y\to z$ (no twist).} \textnormal{(L)} and
+\textnormal{(G)} hold; $C^3\neq\varnothing$ and $\delta^2\circ\delta^1=0$ is
+verified directly; $\dim H^2=0$. Crucially, six of the eight transversals have
+$\omega\neq0$ yet $[\omega]=0$ (they lie in $B^2$) while a closing transversal
+\emph{exists} --- demonstrating that the obstruction is the class $[\omega]$, not
+the cochain $\omega$. The full additive $2$-cocycle identity is verified on every
+composable triple.
+\item \textbf{Hypothesis check.} The script verifies abelian vertex groups and the
+trivial-left-action condition \ref{hyp}(ii) for the rigid twist and the triple
+chain (which satisfy \ref{hyp}(i)) and for the pairwise example (which does not,
+but is group-valued with trivial left action --- Proposition~\ref{prop:p4}).
+Example~\ref{ex:nonab} is exhibited with $h\circ t\notin\orb(t)$, witnessing that
+the trivial-left-action condition genuinely restricts.
+\end{itemize}
+
+\section{Grant relevance}
+
+This upgrades \textnormal{(G)} from ``a computable obstruction'' to ``a computable
+\emph{invariant}.'' For a compositional-correctness checker the practical payoff is
+sharp: after the cheap local freeness test \textnormal{(L)}, one need not search the
+whole product of transversal choices for a closed one --- one computes a single
+cohomology class $[\omega]\in H^2(\Sk_\C;\D)$, and a strict factorization exists iff
+it vanishes; the dimension of $H^2$ measures \emph{how} obstructed the system is,
+and $H^1$ enumerates the inequivalent factorizations when they exist. In the
+ga-containers framing this realizes the slogan literally: the diversity-collapse
+regime $W=1.0$ is the vanishing of a cohomology class. The honest boundary --- that
+nontrivial target automorphisms push the obstruction into a nonabelian Kac-type
+$H^2$ --- is the precise next theorem, and ties the program to the bicrossed-product
+classification literature.
+
+\begin{thebibliography}{9}
+\bibitem{pairwise} MacBeth, \emph{The pairwise Zappa--Sz\'ep criterion}, Kodamai
+note, 10 June 2026.
+\bibitem{cocycle} MacBeth, \emph{The single-category Zappa--Sz\'ep criterion:
+explicit cocycle, matched-pair axioms, and why objectwise freeness is necessary but
+not sufficient}, Kodamai note, 10 June 2026.
+\bibitem{rw} R.~Rosebrugh, R.~J.~Wood, \emph{Distributive laws and factorization},
+J.\ Pure Appl.\ Algebra 175 (2002), 327--353.
+\bibitem{baueswirsching} H.-J.~Baues, G.~Wirsching, \emph{Cohomology of small
+categories}, J.\ Pure Appl.\ Algebra 38 (1985), 187--211.
+\bibitem{roos} J.-E.~Roos, \emph{Sur les foncteurs d\'eriv\'es de $\varprojlim$},
+C.\ R.\ Acad.\ Sci.\ Paris 252 (1961), 3702--3704.
+\bibitem{kac} G.~I.~Kac, \emph{Extensions of groups to ring groups}, Math.\ USSR
+Sbornik 5 (1968), 451--474.
+\bibitem{masuoka} A.~Masuoka, \emph{Extensions of Hopf algebras and Lie bialgebras},
+Trans.\ Amer.\ Math.\ Soc.\ 352 (2000), 3837--3879.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,45 @@
+# ---- Lean build output ----
+.lake/
+build/
+lake-packages/
+*.olean
+*.ilean
+*.trace
+.cache/
+
+# ---- LaTeX build junk ----
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+
+# ---- Python ----
+__pycache__/
+*.pyc
+.venv/
+
+# ---- Editor / OS / backups ----
+.DS_Store
+*.bak-*
+*.bak
+*.swp
+*~
+
+# ---- Not ours to republish ----
+peers/
+*.SEED-COPY.*
+
+# ---- scratch: verification scripts and notes only ----
+# (data dumps, text caches and paper extracts are excluded by rsync;
+#  this belt-and-braces rule keeps them out if anything slips through)
+scratch/**/*.txt
+scratch/txtcache/
+scratch/polyidx/

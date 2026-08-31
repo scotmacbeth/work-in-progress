@@ -1,0 +1,329 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools,stmaryrd}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\tri}{\mathbin{\triangleleft}}
+\newcommand{\pd}{\partial}
+\DeclareMathOperator{\inl}{inl}
+\DeclareMathOperator{\inr}{inr}
+
+\title{A chain rule for the derivative of containers under composition}
+\author{MacBeth (Kodamai / Ghani group)}
+\date{2026-06-12}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove, at the level of containers over $\Set$, the chain rule
+\[
+  \pd(G \tri F) \;\cong\; (\pd G \tri F) \times \pd F,
+\]
+where $\tri$ is container composition (substitution), $\pd$ is the
+one-hole-context derivative of Abbott--Altenkirch--Ghani--McBride, and $\times$
+is the binary product of containers. The proof is a single explicit
+isomorphism whose content is a case split on whether a chosen position lies in
+the differentiated outer block or one of the untouched inner blocks. We first
+dispatch the atoms and the Leibniz rule, all instances of the same one-move
+template. The result is the container shadow of the Fa\`a~di~Bruno / analytic-functor
+chain rule; with composition $\tri$ as the substitution operation it does not
+appear in AAGM~2003, and is original in the classical container setting (cf.\
+Joram--Veltri arXiv:2512.17484 for the univalent case). Verified computationally
+on $23$ finite containers (explicit shape and per-shape position bijections).
+\end{abstract}
+
+\section{Setup}
+
+We work in $\Set$ with classical logic; the one place this matters is
+Lemma~\ref{lem:pointed} and is flagged there.
+
+\begin{definition}[Container, extension]
+A \emph{container} $F = S \tri P$ is a set of \emph{shapes} $S$ together with,
+for each $s : S$, a set of \emph{positions} $P\,s$. Its \emph{extension} is the
+functor $\ext{S \tri P} : \Set \to \Set$,
+\[
+  \ext{S \tri P}\,X \;=\; \textstyle\sum_{s:S}\, (P\,s \to X).
+\]
+A \emph{morphism} $(S \tri P) \to (S' \tri P')$ is a pair $(u, f)$ with
+$u : S \to S'$ and $f : \prod_{s:S} P'(u\,s) \to P\,s$ (positions run
+contravariantly). Containers and their morphisms form the category $\Cont$;
+$\ext{-} : \Cont \to [\Set,\Set]$ is fully faithful. An \emph{isomorphism} of
+containers is thus a bijection $u$ of shapes together with, for each $s$, a
+bijection $P'(u\,s) \cong P\,s$.
+\end{definition}
+
+\begin{definition}[Operations on $\Cont$]\label{def:ops}
+For $F = S \tri P$ and $G = T \tri Q$:
+\begin{itemize}
+  \item \emph{Sum.} $F + G = (S + T) \tri [P,Q]$, with positions inherited:
+  $[P,Q](\inl s) = P\,s$, $[P,Q](\inr t) = Q\,t$. Extension $\ext{F}+\ext{G}$.
+  \item \emph{Product.} $F \times G = (S \times T) \tri \lambda(s,t).\, P\,s + Q\,t$.
+  Extension $\ext{F}\times\ext{G}$.
+  \item \emph{Composition} (substitution) $G \tri F$, with
+  $\ext{G \tri F} = \ext{G} \circ \ext{F}$:
+  \[
+    \text{shapes } \;\textstyle\sum_{t:T} (Q\,t \to S),
+    \qquad
+    \text{positions at } (t,f) \;\;\textstyle\sum_{q : Q\,t} P(f\,q).
+  \]
+\end{itemize}
+The constants are $0 = \varnothing \tri\, !$ (no shapes), $1 = \mathbf 1 \tri (\lambda\_.\,\varnothing)$
+(one shape, no positions; $\ext{1} = $ constant $\mathbf 1$), and the identity
+$\mathrm{Id} = \mathbf 1 \tri (\lambda\_.\,\mathbf 1)$ (one shape, one position;
+$\ext{\mathrm{Id}} = \mathrm{Id}_\Set$). For a set $A$, $K_A = A \tri (\lambda\_.\,\varnothing)$.
+\end{definition}
+
+\begin{definition}[Derivative]\label{def:deriv}
+The \emph{derivative} of $F = S \tri P$ is
+\[
+  \pd F \;=\; \Bigl(\textstyle\sum_{s:S} P\,s\Bigr) \;\tri\;
+              \lambda(s,p_0).\,\{\,p : P\,s \mid p \neq p_0\,\}.
+\]
+A shape of $\pd F$ is a \emph{pointed} shape $(s, p_0)$ --- a shape with a chosen
+hole $p_0$ --- and its positions are the \emph{other} positions. This is the
+one-hole-context functor of Abbott--Altenkirch--Ghani--McBride (``Derivatives of
+Containers'', 2003/2005); $\ext{\pd F}\,X$ is the set of one-hole $F$-structures
+over $X$.
+\end{definition}
+
+Throughout, for a set $B$ and a point $b_0:B$ write $B \setminus b_0 := \{b:B \mid b \neq b_0\}$.
+
+\section{The atoms and the Leibniz rule}
+
+Every identity below is one move: \emph{a hole in a structured position-set is a
+choice of which summand the hole lives in, plus a hole there.} We record them
+because the chain rule is the same move applied to a \emph{dependent} sum of
+position-sets.
+
+\begin{proposition}\label{prop:atoms}
+$\pd\,\mathrm{Id} \cong 1$, \quad $\pd K_A \cong 0$ \; (in particular $\pd 1 \cong 0$).
+\end{proposition}
+\begin{proof}
+$\pd\,\mathrm{Id}$ has shapes $\sum_{s:\mathbf 1}\mathbf 1 \cong \mathbf 1$, and at
+that shape positions $\{p:\mathbf 1 \mid p\neq p_0\} = \varnothing$; so
+$\pd\,\mathrm{Id} = \mathbf 1 \tri (\lambda\_.\,\varnothing) = 1$. $\pd K_A$ has
+shapes $\sum_{a:A}\varnothing = \varnothing$, hence equals $0$.
+\end{proof}
+
+\begin{proposition}[Sum rule]\label{prop:sum}
+$\pd(F + G) \cong \pd F + \pd G$.
+\end{proposition}
+\begin{proof}
+Shapes of $\pd(F+G)$ are $\sum_{u : S+T}[P,Q]\,u = \sum_{s:S}P\,s \;+\; \sum_{t:T}Q\,t$,
+i.e.\ shapes of $\pd F$ plus shapes of $\pd G$, by the universal property of $+$.
+At $\inl(s,p_0)$ the positions are $\{p : P\,s \mid p\neq p_0\}$, exactly the
+$\pd F$ positions; symmetrically at $\inr(t,q_0)$. The bijections are identities.
+\end{proof}
+
+\begin{proposition}[Leibniz / product rule]\label{prop:leibniz}
+$\pd(F \times G) \cong (\pd F \times G) + (F \times \pd G)$.
+\end{proposition}
+\begin{proof}
+A shape of $\pd(F\times G)$ is $\bigl((s,t),\,h\bigr)$ with hole
+$h : P\,s + Q\,t$. The coproduct splits the hole:
+\[
+  \textstyle\sum_{(s,t)} (P\,s + Q\,t)
+  \;\cong\; \Bigl(\sum_{(s,t)} P\,s\Bigr) + \Bigl(\sum_{(s,t)} Q\,t\Bigr)
+  = \mathrm{sh}(\pd F\times G) + \mathrm{sh}(F\times\pd G).
+\]
+If $h = \inl p_0$, the positions $\{x : P\,s + Q\,t \mid x \neq \inl p_0\}$ are
+$(P\,s \setminus p_0) + Q\,t$, exactly the positions of $\pd F \times G$ at
+$((s,p_0),t)$. If $h = \inr q_0$, they are $P\,s + (Q\,t\setminus q_0)$, the
+positions of $F \times \pd G$ at $(s,(t,q_0))$.
+\end{proof}
+
+\section{The chain rule}
+
+The one ingredient beyond the atoms is the decomposition of a function out of a
+pointed domain.
+
+\begin{lemma}[Pointed-domain splitting]\label{lem:pointed}
+Let $B$ be a set and $b_0 : B$. The map
+$\mathbf 1 + (B\setminus b_0) \to B$, $\inl\star \mapsto b_0$,
+$\inr b \mapsto b$, is a bijection. Consequently, for any set $S$,
+\[
+  (B \to S) \;\xrightarrow{\;\cong\;}\; S \times \bigl((B\setminus b_0) \to S\bigr),
+  \qquad f \mapsto \bigl(f\,b_0,\; f|_{B\setminus b_0}\bigr).
+\]
+\end{lemma}
+\begin{proof}
+Injectivity of the first map: the images of $\inl$ and $\inr$ are disjoint
+because $b_0 \notin B\setminus b_0$, and each restriction is injective.
+Surjectivity: every $b:B$ satisfies $b = b_0$ or $b \neq b_0$ (excluded middle
+on the proposition $b = b_0$), landing in the image of $\inl$ resp.\ $\inr$.
+Applying $(-\to S)$ to $B \cong \mathbf 1 + (B\setminus b_0)$ and using
+$(\mathbf 1 + C \to S) \cong S \times (C\to S)$ gives the second statement.
+\end{proof}
+
+\begin{remark}
+Surjectivity is the only use of classical logic in this note. Over a general
+base it requires $b_0$ to be a \emph{decidable} (complemented) point of $B$;
+over $\Set$ this is automatic. This is precisely the hinge that Joram--Veltri
+(arXiv:2512.17484) must handle with care in univalent foundations, where
+$B\setminus b_0$ is the type $\sum_{b:B}(b \neq b_0)$ and the splitting holds
+after set-truncation. For directed containers over $\Set$ it is free.
+\end{remark}
+
+\begin{theorem}[Container chain rule]\label{thm:chain}
+For containers $F = S \tri P$ and $G = T \tri Q$,
+\[
+  \pd(G \tri F) \;\cong\; (\pd G \tri F) \times \pd F
+\]
+in $\Cont$.
+\end{theorem}
+
+\begin{proof}
+We exhibit a shape bijection and, over it, a position bijection.
+
+\medskip\noindent\textbf{Both sides explicitly.}
+By Definitions~\ref{def:ops}--\ref{def:deriv}:
+
+\emph{Left.} $G\tri F$ has shapes $\sum_{t:T}(Q\,t\to S)$ and positions
+$R(t,f) = \sum_{q:Q t}P(f\,q)$. Hence a shape of $\pd(G\tri F)$ is
+\[
+  (t,\,f,\,q_0,\,p_0),\qquad
+  t:T,\; f:Q\,t\to S,\; q_0:Q\,t,\; p_0:P(f\,q_0),
+\]
+(the hole is the position $(q_0,p_0)\in R(t,f)$), with positions
+\begin{equation}\label{eq:Lpos}
+  \mathrm{pos}_L = \bigl\{(q,p) : \textstyle\sum_{q:Qt}P(f\,q) \;\bigm|\; \lnot(q=q_0 \wedge p=p_0)\bigr\}.
+\end{equation}
+
+\emph{Right.} $\pd G$ has shapes $(t,q_0)$ ($t:T,\,q_0:Q\,t$) and positions
+$Q\,t\setminus q_0$. So $\pd G \tri F$ has shapes
+$\bigl(t,q_0,\,g\bigr)$ with $g : (Q\,t\setminus q_0)\to S$, and positions
+$\sum_{q':Qt\setminus q_0} P(g\,q')$. And $\pd F$ has shapes $(s_\ast,p_\ast)$
+with positions $P\,s_\ast\setminus p_\ast$. Thus a shape of the right-hand
+product is
+\[
+  \bigl((t,q_0,g),\,(s_\ast,p_\ast)\bigr),
+\]
+with positions, by the product rule of Definition~\ref{def:ops},
+\begin{equation}\label{eq:Rpos}
+  \mathrm{pos}_R = \Bigl(\textstyle\sum_{q':Qt\setminus q_0} P(g\,q')\Bigr)
+                   \;+\; \bigl(P\,s_\ast \setminus p_\ast\bigr).
+\end{equation}
+
+\medskip\noindent\textbf{Shape bijection $\varphi$.}
+Send
+\[
+  \varphi\,(t,f,q_0,p_0) \;=\; \bigl((t,\,q_0,\,f|_{Q t\setminus q_0}),\,(f\,q_0,\,p_0)\bigr).
+\]
+Holding $(t,q_0)$ fixed, this is exactly the map
+$f \mapsto (f\,q_0,\,f|_{Qt\setminus q_0})$ paired with the identity on $p_0$,
+which is a bijection by Lemma~\ref{lem:pointed} (here $B = Q\,t$, $b_0 = q_0$):
+giving $f:Q\,t\to S$ is the same as giving $s_\ast := f\,q_0 \in S$ and
+$g := f|_{Qt\setminus q_0}$, and then $p_0 : P(f\,q_0) = P\,s_\ast$ is the data
+$p_\ast$. Summing the bijection over all $(t,q_0)$ gives a bijection of shape
+sets.
+
+\medskip\noindent\textbf{Position bijection.}
+Fix a left shape $(t,f,q_0,p_0)$ and its image, so $s_\ast = f\,q_0$,
+$g = f|_{Qt\setminus q_0}$, $p_\ast = p_0$. Define
+$\psi : \mathrm{pos}_L \to \mathrm{pos}_R$ on \eqref{eq:Lpos} by the hole-case split:
+\[
+  \psi(q,p) =
+  \begin{cases}
+    \inl(q,p) & q \neq q_0,\\[2pt]
+    \inr(p)   & q = q_0.
+  \end{cases}
+\]
+\emph{Well-defined.} If $q\neq q_0$ then $p : P(f\,q) = P(g\,q)$, so $(q,p)$ is a
+valid element of the first summand of \eqref{eq:Rpos}. If $q = q_0$ then
+$p : P(f\,q_0) = P\,s_\ast$, and the constraint $\lnot(q=q_0\wedge p=p_0)$ forces
+$p \neq p_0 = p_\ast$, so $p \in P\,s_\ast\setminus p_\ast$, the second summand.
+
+\emph{Bijective.} The two cases hit $\inl$ and $\inr$ disjointly, so it suffices
+to check each is a bijection onto its summand. For the first: $q\mapsto q$,
+$p\mapsto p$ with $P(f\,q)=P(g\,q)$ is the identity on
+$\sum_{q\neq q_0}P(f\,q)=\sum_{q'\in Qt\setminus q_0}P(g\,q')$. For the second:
+$p\mapsto p$ is the identity $P(f\,q_0)\setminus p_0 = P\,s_\ast\setminus p_\ast$.
+The inverse sends $\inl(q',p')\mapsto(q',p')$ (legal since $q'\neq q_0$) and
+$\inr(p')\mapsto(q_0,p')$ (legal since $p'\neq p_\ast=p_0$).
+
+\medskip
+$(\varphi,\psi)$ is a bijection of shapes together with a bijection of positions
+over each shape, i.e.\ an isomorphism in $\Cont$.
+\end{proof}
+
+\paragraph{Where the two factors come from.}
+The composite's position-set is the \emph{dependent} (indexed) coproduct
+$\coprod_{q:Q t} P(f\,q)$ over the $G$-positions $Q\,t$. Differentiating it ---
+choosing a hole --- means choosing an index $q_0$ \emph{and} a hole inside that
+block. The leftover splits as
+\[
+  \underbrace{\coprod_{q\neq q_0} P(f\,q)}_{\text{other blocks: } \pd G\,\tri\,F}
+  \;+\;
+  \underbrace{\bigl(P(f\,q_0)\setminus p_0\bigr)}_{\text{this block: } \pd F}.
+\]
+Choosing $q_0$ and keeping the other blocks full is exactly $\pd G$ applied to
+the $Q\,t$ index with the blocks substituted by $F$ --- that is $\pd G\tri F$ ---
+while the punctured block at $q_0$ is exactly $\pd F$. Their juxtaposition is the
+product (positions add). The chain rule is Leibniz for an \emph{indexed} product.
+
+\section{Sanity checks}
+
+\begin{corollary}[The $y^2$ case fixes the convention]
+Take $G = y^2$, i.e.\ $T = \mathbf 1$, $Q\star = \mathbf 2$. Then
+$G\tri F \cong F\times F$, and the theorem reads
+$\pd(F\times F) \cong (\pd(y^2)\tri F)\times \pd F$. Since
+$\pd(y^2) = \mathbf 2 \tri \mathbf 1 = y+y$, we get
+$\pd(y^2)\tri F \cong F + F$, so the right side is
+$(F+F)\times \pd F \cong 2\,(F\times \pd F)$. The left side is, by Leibniz,
+$\pd F\times F + F\times \pd F \cong 2\,(F\times\pd F)$. They agree.
+\end{corollary}
+
+\begin{remark}[Fa\`a~di~Bruno]
+Iterating Theorem~\ref{thm:chain} together with Propositions~\ref{prop:sum} and
+\ref{prop:leibniz} reproduces the Fa\`a~di~Bruno formula for higher derivatives
+of a composite at container level; the partitions of Fa\`a~di~Bruno are the ways
+of distributing holes among the inner blocks. We do not pursue this here.
+\end{remark}
+
+\begin{remark}[Computational verification]
+The explicit pair $(\varphi,\psi)$ was checked by brute force on $23$ finite
+containers (one handcrafted family plus $20$ randomly generated $G,F$ with shape
+counts $\le 3$ and position counts $\le 3$, including empty position-sets):
+$\varphi$ is a bijection of the (finitely many) shapes, and for every left shape
+$\psi$ is a bijection onto the positions of $\varphi$ of that shape. The
+polynomial invariant $\#\ext{-}(n)$ agreed for $n \le 5$.
+\end{remark}
+
+\section{Status and scope}
+
+\begin{itemize}
+  \item \textbf{Theorem~\ref{thm:chain} [Original].} The chain rule for the
+  derivative under \emph{composition/substitution} $\tri$ is not in
+  Abbott--Altenkirch--Ghani--McBride 2003 (which give the sum and product rules
+  and a derivative \emph{definition}, but not the $\tri$ chain rule). Closest
+  prior art: Joram--Veltri, arXiv:2512.17484 (Dec.\ 2024, Cubical Agda), who
+  prove the chain rule in univalent foundations and show the classical
+  (set-truncated) case holds --- consistent with our Lemma~\ref{lem:pointed}.
+  Cite them for the univalent case and for $\pd$'s definition alongside AAGM.
+  \item \textbf{Derivation [MacBeth], container language.} Self-contained over
+  $\Set$; the only nonconstructive step is the splitting Lemma~\ref{lem:pointed},
+  flagged.
+  \item \textbf{Lean [pending].} The product, coproduct and category structure
+  on $\Cont$ are formalised (\texttt{Cont.lean}, PR \#12); a Lean proof of
+  Theorem~\ref{thm:chain} is the natural follow-on. The proof is finite and
+  bijection-based, so it should transcribe directly; the dependent transports
+  around $P(f\,q_0)=P\,s_\ast$ will need the \texttt{Ext.ext\_eq} discipline noted
+  for the D2/D5 laws.
+  \item \textbf{Forward pointer (not chased here).} $\pd$ relates to zippers and
+  to the cofree comonad; the one-hole context $\pd F$ carries a comonad structure
+  whose interaction with $\tri$ deserves its own note.
+\end{itemize}
+
+\end{document}

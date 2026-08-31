@@ -1,0 +1,425 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\usepackage[expansion=false]{microtype}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue,citecolor=blue]{hyperref}
+
+\newcommand{\Vect}{\mathsf{Vect}}
+\providecommand{\Vec}{}\renewcommand{\Vec}{\mathsf{Vec}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Fam}{\mathsf{Fam}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\Mat}{\mathsf{Mat}}
+\newcommand{\Para}{\mathsf{Para}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\fld}{k}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\AttP}{\mathsf{AttP}}
+\newcommand{\out}{\mathrm{out}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{The attention layer is not where the depth is:\\
+a stacking law for categorical accounts of attention}
+\author{MacBeth \\ \small for Neil}
+\date{2026-08-25}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}\noindent
+Several independent research programmes now recast a single attention (or neural-network)
+layer as a piece of structured linear algebra: a parametric span, an endofunctor on
+$\Vect$, a discretised Kan extension. They agree on the single layer, and none of them
+says anything a transformer engineer does not already know about it. This note argues that
+the single layer is the wrong place to look. The mathematics that a practitioner does
+\emph{not} already have is the law for how layers \emph{stack}: depth $L$ is a free
+hyperparameter in every one of these accounts, and none supplies a compositional law for
+it. We give that law. Stacking a linear self-attention layer is the free monoid on its
+parameter space --- the tensor algebra $\bigoplus_{L\ge 0}\AttP^{\otimes L}$ --- and this
+identification has two consequences a practitioner can use: the residual (skip) connection
+is exactly the algebraic \emph{unit} of that free monoid, the degree-$0$ term without which
+the construction degenerates; and a trained (data-dependent) depth-$L$ stack, with identity
+feature map, is a homogeneous polynomial of degree \emph{exactly} $3^{L}$ in its inputs, a hard, quantitative
+obstruction to collapsing a deep attention network into a single weight matrix. The same
+degree bound pins the boundary --- linear vs.\ softmax, frozen vs.\ trained --- that the
+other accounts each hit qualitatively and leave as a caveat. I flag throughout what is
+\emph{proved}, what is \emph{reported} at second hand, and what is \emph{proposal}.
+\end{abstract}
+
+\section{The question, and the one that matters}
+
+Category theory has discovered attention several times over. In the last two years at least
+three published accounts, developed independently and citing none of the others, take the
+same structural step: replace the weight matrix of a layer with a structured, linear-algebra-valued
+functor. Vertechi presents a neural-network layer as a \emph{parametric span}
+$s\leftarrow P\rightarrow t$ computing one indexed sum
+$y[t(p)]\mathrel{+}= x[s(p)]\cdot w[\pi(p)]$~\cite{vertechi}. O'Neill presents a linear
+self-attention layer as a \emph{parametric endofunctor} on $\Vect$, a $1$-morphism in
+$\Para(\Vect)$~\cite{oneill}. Mahadevan presents a layer as a weighted, discretised
+\emph{left Kan extension} --- a coend $\int^{\sigma} W(t,\sigma)\otimes X(\sigma)$ over a
+neighbourhood category~\cite{ket}. Three lineages, one move.\footnote{The pattern is wider
+than the three accounts I rely on here. At least two further categorical treatments of
+attention/deep-learning layers have been reported to me at second hand --- a
+presheaf/equivariant account and an applicative-functor account. I have not read them at
+source this cycle, so I neither cite nor rely on them; they would only strengthen the point
+below, since none of them supplies a stacking law either.}
+
+Each account is correct, and each says the same thing about a single layer: it is a weighted
+aggregation, hence a span / a functor / a coend. Here is the uncomfortable fact for anyone
+who wants category theory to earn its keep in machine learning: \emph{a transformer engineer
+already knows this}. That one layer mixes and re-weights token representations is not news;
+naming the mix a coend renames it without adding a usable fact. If the categorical content of
+attention were exhausted by the single layer, the honest verdict would be ``true, and not
+interesting.''
+
+So we should ask what these accounts \emph{leave out}, in unison. The answer is sharp. Every
+one of them models a \emph{single} layer (or a single weighted aggregation) and then treats
+the depth $L$ --- the number of stacked layers --- as an experimental hyperparameter, external
+to the mathematics. Not one of them gives a compositional law for depth: a statement of what
+object a depth-$L$ stack \emph{is}, as a function of $L$, and how the depths compose. That
+missing law is the whole subject of this note, because it is the one place where the categorical
+picture tells a practitioner something they did not already have.
+
+\paragraph{The result.} Read one linear self-attention layer as the extension of a one-shape
+\emph{linear container} $C=(\ast,\AttP)$, where $\AttP=\mathsf{QP}\oplus\mathsf{KP}\oplus\mathsf{VP}$
+is O'Neill's parameter space (the weight spaces of $W_Q,W_K,W_V$) and the induced endofunctor is
+$F(W)=\AttP\otimes W$. Then the following is a theorem (Section~\ref{sec:stacking}), proved and
+machine-checked in the linear/frozen regime.
+
+\begin{theorem}[Stacking law, informal]\label{thm:main-informal}
+Stacking linear self-attention layers is the free monoid on $\AttP$ in $(\Vect,\otimes)$: the
+depth-graded object
+\[
+  T(\AttP)\;=\;\bigoplus_{L\ge 0}\AttP^{\otimes L},
+\]
+the tensor algebra, with layer-composition given by concatenation of parameter tensors. Two
+facts about this object are usable:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+  \item the residual/skip connection is precisely the \emph{unit} of this free monoid --- the
+    degree-$0$ summand $\AttP^{\otimes 0}=\fld$ --- and without it the construction is not the
+    free monoid but a single non-terminating tower;
+  \item a trained (data-dependent) depth-$L$ stack, with identity feature map, is a homogeneous
+    polynomial map of degree \emph{exactly} $3^{L}$ in its input tokens, so it is a single weight
+    matrix only at $L=0$.
+\end{enumerate}
+\end{theorem}
+
+Part~(ii) is the quantitative form of a boundary the other accounts each hit and record as a
+caveat: Mahadevan's coend is a genuine enriched Kan extension \emph{only} in the representable
+case, and softmax weights are not representable~\cite[\S10.6]{ket}; Sargsyan proves softmax
+attention cannot be functorial for non-trivial groups~\cite{sargsyan}. The degree $3^{L}$ makes
+``linear collapses, trained does not'' an exact statement rather than a warning.
+
+\paragraph{What is new, and what is not.} The machinery --- that a monoid in a monoidal category
+of container-like objects is an enriched category, and that layer-composition is monoidal
+composition --- is not mine; it is developed by Dorta, Jarvis and Niu over a general base
+category~\cite[Thm.~4.2]{djn}, and the free-monad-as-tensor-algebra fact is classical. The
+contribution here is threefold and specific: (a) the \emph{placement} of a published transformer
+construction (O'Neill's) inside this machinery, functorially, at the level of unit and
+multiplication and not merely objects; (b) a \emph{correction} to that construction, internal to
+its own composition rule --- the free monad is the coproduct $\bigoplus_L\AttP^{\otimes L}$, not the
+colimit of the layer-powers that O'Neill names --- together with the reading of the residual
+connection as the pointing that repairs it; and (c) the degree-$3^L$ boundary, which is a fact
+about the trained network, not about the notation. None of this is a restatement of the single
+layer; all of it is about how the layers stack.
+
+\paragraph{Outline.} Section~\ref{sec:layer} fixes the concrete linear-attention layer and shows
+the three accounts on it, so that the shared gap and the shared wall are visible on one example.
+Section~\ref{sec:stacking} proves the stacking law and reads off the residual-as-unit correction.
+Section~\ref{sec:degree} proves the degree-$3^L$ boundary and locates the regime --- in-context /
+KV-cache --- where depth genuinely does collapse to matrix product. Section~\ref{sec:scorecard}
+is an honest scorecard: proved, reported, proposal, and a direct answer to whether any of this
+clears the bar of telling a practitioner something new.
+
+\section{One layer, three ways, one wall}\label{sec:layer}
+
+Fix the object of study concretely, so that every abstraction lands on it. A
+\emph{linear-attention head} is $H=(\varphi,W_Q,W_K,W_V)$ with a feature map
+$\varphi:\mathbb{R}^{d_k}\to\mathbb{R}^{d_\varphi}$ and learned linear maps $W_Q,W_K,W_V$. On a
+token sequence $x_1,\dots,x_n$ it forms keys $k_j=W_Kx_j$, values $v_j=W_Vx_j$, and the
+\emph{KV-state}
+\[
+  S \;=\; \sum_{j=1}^{n} \varphi(k_j)\otimes v_j \;\in\; \mathsf{Mat}(\Vec)(d_\varphi,d_v),
+\]
+a single matrix over $\Vec$. It reads out a query $q$ as $\out(q)=\varphi(W_Qq)^{\!\top}S$. This
+is the standard linear (kernelised) attention head; softmax attention replaces the linear
+readout by a normalised one, and we return to it in Section~\ref{sec:degree}.
+
+The three categorical accounts each describe this same head.
+
+\begin{description}[leftmargin=1.3em,style=nextline]
+\item[Span (Vertechi).] The index pattern $j\mapsto(\text{source }s(j),\text{target }t(j))$ with the
+  weight action on positions is a span $s\leftarrow P\rightarrow t$; the head's aggregation
+  $y[t(p)]\mathrel{+}=x[s(p)]\cdot w[\pi(p)]$ is its indexed sum~\cite{vertechi}. In container language
+  this is a shape/position pair with a linear action on positions --- though Vertechi does not use
+  container or polynomial-functor language anywhere; the slides contain the formula and none of the
+  vocabulary, which is precisely why the container reading is available to contribute rather than
+  already claimed.
+\item[Endofunctor (O'Neill).] Bundling the weight spaces as $\AttP=\mathsf{QP}\oplus\mathsf{KP}\oplus\mathsf{VP}$,
+  the head is a parametric $1$-morphism $(\AttP,\mathrm{att}):X\to Y$ in $\Para(\Vect)$ with
+  $\mathrm{att}:\AttP\otimes X\to Y$ linear in both arguments, inducing an endofunctor
+  $F(W)=\AttP\otimes W$ on $\Vect$~\cite[Thm.~3.1]{oneill}.
+\item[Kan extension (Mahadevan).] Taking the query's neighbourhood as an index category, the readout
+  is a weighted left Kan extension --- a coend $\int^{\sigma}W(t,\sigma)\otimes X(\sigma)$ --- with
+  ordinary attention the singleton-neighbourhood case~\cite{ket}.
+\end{description}
+
+Two observations, and they are the point of the section.
+
+\emph{None of the three gives a stacking law.} Each describes one layer. O'Neill alone even asks how
+layers compose, and answers with a free monad on $F$ --- correctly in intent, but with the wrong
+diagram named, as Section~\ref{sec:stacking} shows. Vertechi and Mahadevan leave depth entirely
+outside the formalism. So ``how does a depth-$L$ stack depend on $L$?'' is unanswered in all three.
+
+\emph{All three hit the same wall.} The clean categorical identity holds only in a linear /
+representable / frozen regime, and each account records the wall as a caveat rather than measuring it.
+Mahadevan is explicit: the coend is a genuine enriched Kan extension only when the weights are
+representable, and softmax is not representable, so generic attention is only ``Kan-style,'' an
+analogy and not an identity~\cite[\S10.6]{ket}. O'Neill declares the layer linear and defers softmax.
+Sargsyan, from an entirely different direction, proves softmax attention cannot be functorial for
+non-trivial groups~\cite{sargsyan}. The field keeps rediscovering one boundary, qualitatively.
+
+Neither observation, on its own, clears the bar of telling a practitioner something new: that a single
+attention layer is a coend, or is linear-only-until-softmax, is known. They set up the gap. The next two
+sections fill it, and that is where the new content is.
+
+\section{The stacking law: depth is a free monoid, and the residual is its unit}\label{sec:stacking}
+
+\paragraph{The container reading.} A \emph{linear container} is a pair $(S,(P_s)_{s\in S})$ --- a set
+$S$ of shapes, a finite-dimensional space $P_s$ at each --- with extension the endofunctor
+$\ext{S,P}\,W=\bigoplus_s \Hom(P_s,W)$ on $\Vect$~\cite{vcont}. One shape over the space $A$ gives
+$\ext{\ast,A}\,W=\Hom(A,W)$; in finite dimension this is the functor $A^{*}\!\otimes W$, and, taking the
+covariant reading faithful to O'Neill's $\mathrm{att}$, we write $F(W)=A\otimes W$. Containers compose by
+substitution, $\ext{C\lhd D}=\ext{C}\circ\ext{D}$, and the free monoid for $\lhd$ --- the free
+$\lhd$-monoid on a container --- is the container-theoretic free monad~\cite{djn}. Set $C=(\ast,\AttP)$,
+so $F(W)=\AttP\otimes W$ is exactly O'Neill's layer endofunctor.
+
+The one fact that drives everything is O'Neill's own composition rule. In $\Para(\Vect)$, parametric
+morphisms $(P,f)$ and $(Q,g)$ compose to $(Q\otimes P,\,h)$: \emph{parameters tensor}. Hence a depth-$L$
+stack has parameter space $\AttP^{\otimes L}$~\cite[\S3]{oneill}. This is precisely container composition.
+
+\begin{proposition}[Composition is $\lhd$]\label{prop:comp}
+For finite-dimensional $A,B$, $(\ast,A)\lhd(\ast,B)=(\ast,A\otimes B)$, and the one-shape linear containers
+under $\lhd$ are monoidally isomorphic to $(\Vect_{\mathrm{fd}},\otimes,\fld)$, with unit container
+$(\ast,\fld)=\Id$.
+\end{proposition}
+
+\begin{proof}
+$\ext{\ast,A}\circ\ext{\ast,B}\,(W)=\Hom(A,\Hom(B,W))\cong\Hom(A\otimes B,W)=\ext{\ast,A\otimes B}\,W$ by the
+tensor--hom adjunction (currying), naturally in $W$. The unit: $\ext{\ast,\fld}\,W=\Hom(\fld,W)=W$, and
+$A\otimes\fld\cong A\cong\fld\otimes A$. Associativity and unit coherence transport from $(\Vect,\otimes)$.
+\end{proof}
+
+So O'Neill's parameter-tensor composition \emph{is} the container $\lhd$, and a depth-$L$ stack is the
+$L$-fold power $(\ast,\AttP)^{\lhd L}=(\ast,\AttP^{\otimes L})$. Now take the free monoid.
+
+\begin{theorem}[The stacking object]\label{thm:stack}
+The free $\lhd$-monoid on $C=(\ast,\AttP)$ is the container $C^{*}=(\mathbb{N},(\AttP^{\otimes L})_{L\in\mathbb{N}})$:
+its shapes are layer-counts, the position space of shape $L$ is $\AttP^{\otimes L}$. Its extension is
+\[
+  \ext{C^{*}}\,W \;=\; \bigoplus_{L\ge 0}\AttP^{\otimes L}\otimes W \;=\; T(\AttP)\otimes W,
+  \qquad T(\AttP)=\bigoplus_{L\ge 0}\AttP^{\otimes L},
+\]
+the tensor algebra, with unit $\eta$ the degree-$0$ inclusion $W\cong\AttP^{\otimes 0}\otimes W$ and
+multiplication $\mu$ induced by concatenation $\AttP^{\otimes m}\otimes\AttP^{\otimes n}\to\AttP^{\otimes(m+n)}$.
+This $(T,\eta,\mu)$ is O'Neill's free monad on $F$, at the level of $(\eta,\mu)$ and not merely objects.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:comp} the one-shape linear containers under $\lhd$ are $(\Vect_{\mathrm{fd}},\otimes)$
+with $(\ast,\AttP)$ at the object $\AttP$; the free $\lhd$-monoid on it is the free monoid on $\AttP$ in
+$(\Vect,\otimes)$, which is the tensor algebra $T(\AttP)$ with concatenation and degree-$0$ unit
+(classical: the tensor algebra is the free associative algebra). As a container this is
+$(\mathbb{N},(\AttP^{\otimes L}))$ since the $L$-fold $\lhd$-power is $(\ast,\AttP^{\otimes L})$
+(Proposition~\ref{prop:comp}, induction) and the free monoid coproduces the powers. A monoid $M$ in a
+monoidal category yields the monad $M\otimes(-)$ with the monoid laws as monad laws; the universal property
+of the free monad on $M\otimes(-)$ coincides with that of the free monoid on the generating object, so the
+structures agree, not just the underlying functors. The general free-$\lhd$-monoid multiplication is
+tree-grafting~\cite{djn}; here $C$ has one shape, so its trees are paths and grafting degenerates to list
+concatenation, which is $\mu$.
+\end{proof}
+
+The engineer's payoff is in reading the unit correctly, and it also corrects the literature.
+
+\begin{proposition}[Residual is the unit; O'Neill names the wrong diagram]\label{prop:residual}
+Let $F(W)=\AttP\otimes W$ with $\dim\AttP=p\ge 2$. The free monad $\mathrm{Free}(F)$ is the coproduct
+$\bigoplus_{L\ge 0}F^{L}$ (equivalently the colimit of the Adámek chain of partial sums
+$Y_{n}=\bigoplus_{L<n}\AttP^{\otimes L}\otimes W$), \emph{not} the colimit of the chain of bare powers
+$\id\to F\to F^{2}\to\cdots$ that~\cite[Thm.~3.2]{oneill} names. The two diagrams have different colimits:
+the partial-sum stage has dimension $w\,(p^{n}-1)/(p-1)$ (a geometric \emph{series}), the bare-power stage
+$w\,p^{n}$ (a single growing \emph{term}); for $p=2,\,w=3$ these are $[3,9,21,45,\dots]$ versus
+$[3,6,12,24,\dots]$, equal only at the base. Moreover $F$ is pointable but never well-pointed
+($a\otimes u\otimes w\ne u\otimes a\otimes w$ for $a\ne 0$, $p\ge 2$), so the colimit-of-powers theorem does
+not apply. The pointing that repairs the chain is exactly the residual connection: writing a real block as
+$x\mapsto x+\mathrm{att}(\theta,x)$ gives the pointed endofunctor $F'(W)=W\oplus\AttP\otimes W$, whose unit
+$\eta=\iota_{1}:W\to F'(W)$ is the degree-$0$ ``stop'' summand, and $\mathrm{Free}(F')=\mathrm{Free}(F)=T(\AttP)\otimes(-)$.
+\end{proposition}
+
+\begin{proof}
+$\AttP\otimes(-)$ is finitary on $\Vect$ (a left adjoint, preserving filtered colimits), so by Adámek's
+theorem the initial algebra of $Y\mapsto W\oplus F(Y)$ --- that is, $\mathrm{Free}(F)(W)$ --- is the colimit
+of $Y_{0}=0$, $Y_{n+1}=W\oplus F(Y_{n})$. Computing, $Y_{1}=W$, $Y_{2}=W\oplus\AttP\otimes W$, and inductively
+$Y_{n}=\bigoplus_{L<n}\AttP^{\otimes L}\otimes W$ with the partial-sum inclusions as transitions; the colimit
+is $\bigoplus_{L\ge 0}\AttP^{\otimes L}\otimes W$, matching Theorem~\ref{thm:stack}. The bare-power chain has
+$n$-th object the single power $\AttP^{\otimes n}\otimes W$; its stage-dimensions $w\,p^{n}$ diverge from the
+partial sums for every $n\ge 1$, so the diagrams and their colimits differ. Pointability and the failure of
+well-pointedness are the displayed identities. The pointed $F'$ is the two-shape container
+$(\{\text{stop},\text{layer}\},\,P_{\text{stop}}=0,\,P_{\text{layer}}=\AttP)$, whose empty-position stop shape
+is the degree-$0$ summand turning the free monoid into the sum over layer-counts rather than one tower.
+\end{proof}
+
+There is a usable sentence here for someone who builds these networks: the residual connection is not
+decoration and not only an optimisation trick; it is the algebraic unit that makes a depth-$L$ stack a
+\emph{sum over depths} $0,1,\dots,L$ rather than a single depth-$L$ tower. Remove it and the free-monoid
+structure --- the thing that lets you reason about stacks of every depth at once --- is gone. O'Neill's
+intended object is right (his own $Q\otimes P$ rule forces the parameter space $\AttP^{\otimes L}$); the
+one-line fix is to take the coproduct over $L$, which is by construction the free $\lhd$-monoid. These
+three $\lhd$-monoid laws are formalised and machine-checked, sorry-free, in Lean~\cite{leanfree}.
+
+\section{The degree boundary: why a trained stack is not one matrix}\label{sec:degree}
+
+The stacking law of Section~\ref{sec:stacking} is exact in the linear, frozen-parameter regime O'Neill works
+in --- where a layer is the parameter-tensoring functor $\AttP\otimes(-)$. The moment the parameters (the
+KV-state) become functions of the input, as in genuine self-attention, a single clean invariant separates the
+trained network from any single matrix.
+
+\begin{theorem}[Degree of a live stack]\label{thm:degree}
+With $\varphi=\id$, one live self-attention layer sends the token matrix $X\in\mathbb{R}^{n\times d}$ to
+outputs $\out_{i}=\bigl(W_{V}X^{\!\top}X\,W_{K}^{\!\top}W_{Q}\bigr)x_{i}$, homogeneous of degree $3$ in the
+entries of $X$. A live depth-$L$ stack is homogeneous of degree \emph{exactly} $3^{L}$.
+\end{theorem}
+
+\begin{proof}
+$S=\sum_{j}k_{j}v_{j}^{\!\top}=W_{K}\bigl(\sum_{j}x_{j}x_{j}^{\!\top}\bigr)W_{V}^{\!\top}=W_{K}X^{\!\top}X\,W_{V}^{\!\top}$
+is degree $2$ in $X$; then $\out_{i}=S^{\!\top}(W_{Q}x_{i})=W_{V}X^{\!\top}X\,W_{K}^{\!\top}W_{Q}x_{i}$ multiplies
+a degree-$2$ factor by a degree-$1$ factor, giving degree $3$, every monomial with exactly three $X$-factors.
+Induction on $L$: if the depth-$(L-1)$ output $Y$ is homogeneous of degree $3^{L-1}$, then layer $L$ forms
+$W_{V}Y^{\!\top}Y\,W_{K}^{\!\top}W_{Q}Y$, of degree $2\cdot 3^{L-1}+3^{L-1}=3^{L}$.
+\end{proof}
+
+\begin{corollary}[No collapse]\label{cor:nocollapse}
+A live depth-$L$ stack with $L\ge 1$ is not any single matrix acting on its input: a matrix acts in degree $1$,
+the stack in degree $3^{L}\ge 3$, and degree is an invariant. This is the quantitative reason O'Neill must model
+stacking by a non-collapsing free monad rather than one morphism: the depths have genuinely different degrees, so
+no single object can carry the whole stack.
+\end{corollary}
+
+This is worth stating plainly to a practitioner, because the opposite is a common informal belief. Linear
+attention is often summarised as ``just a matrix $S$'' --- and in one precise regime it is. Fix the context and
+vary only the query (the in-context / KV-cache regime): the head is literally the matrix $u\mapsto u^{\!\top}S$,
+and then two operations are genuinely functorial. Contexts compose by $\oplus$ --- appending tokens adds
+KV-states, $S(C\cdot C')=S(C)\oplus S(C')$, which is exactly linear attention in its recurrent (linear-RNN)
+form. Depths compose by $\odot$, the $\Mat(\Vec)$ product $(P\odot Q)(a,c)=\bigoplus_{b}P(a,b)\otimes Q(b,c)$:
+stacking frozen heads is honest matrix multiplication. So in the KV-cache regime the ``pipeline = matrix product''
+picture is a theorem. Corollary~\ref{cor:nocollapse} says exactly where it stops: the moment the KV-state is a
+function of the input --- the moment you are looking at a \emph{trained} network rather than a frozen context ---
+the degree climbs $1\to 3\to 9\to\cdots\to 3^{L}$ and the collapse to one matrix is impossible.
+
+Softmax lies even further out. The softmax readout $\sum_{j}\mathrm{softmax}_{j}(\langle q,k_{j}\rangle)v_{j}$ is
+not $u^{\!\top}S$ for any fixed $S$: it is not homogeneous of degree $1$ (the normaliser depends nonlinearly on
+$q$) and it is bounded (a convex combination of the $v_{j}$) where $u^{\!\top}S$ is unbounded. It is not a
+$\odot$-composition at all. Sargsyan reaches the same conclusion at a categorical level: softmax attention cannot
+be functorial for non-trivial groups~\cite{sargsyan}, and Mahadevan's representability caveat~\cite[\S10.6]{ket} is
+the same wall seen through Kan extensions. The degree-$3^{L}$ statement is the arithmetic behind all three:
+representable / linear / frozen is degree $1$ and collapses; trained is degree $3^{L}$ and does not; softmax is not
+polynomial at all.
+
+\section{Honest scorecard}\label{sec:scorecard}
+
+I separate what I have established from what I have not, in the register Neil asked for.
+
+\paragraph{Proved (and, where noted, machine-checked).}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item O'Neill's free monad on the linear self-attention endofunctor is the free $\lhd$-monoid on the one-shape
+  linear container $(\ast,\AttP)$, i.e.\ the tensor algebra $\bigoplus_{L}\AttP^{\otimes L}$, functorially in
+  $(\eta,\mu)$ (Prop.~\ref{prop:comp}, Thm.~\ref{thm:stack}).
+\item The correction: the free monad is the coproduct $\bigoplus_{L}F^{L}$ (Adámek partial sums), not the colimit
+  of bare layer-powers; $F$ is pointable but not well-pointed; the residual connection is the pointing / unit
+  (Prop.~\ref{prop:residual}). The three $\lhd$-monoid laws are formalised sorry-free in Lean~\cite{leanfree}.
+\item A live depth-$L$ linear-attention stack has polynomial degree exactly $3^{L}$; hence no collapse to a single
+  matrix for $L\ge 1$ (Thm.~\ref{thm:degree}, Cor.~\ref{cor:nocollapse}). The in-context / KV-cache regime is
+  exactly where depth does collapse, to the $\Mat(\Vec)$ product $\odot$.
+\end{itemize}
+
+\paragraph{Reported, not verified this cycle.} Two further categorical accounts of attention/DL layers exist that
+I have only at second hand and therefore do not cite or lean on. Both, as reported, model a single layer and
+neither supplies a stacking law, so they fit the pattern; confirming this needs a full-text read.
+
+\paragraph{Proposal, not proved.} The full unification: that \emph{all} of these accounts are instances of linear
+containers over $\Fam(\Vec^{\op})$, with layer-stacking uniformly the $\lhd$-monoid free monad. O'Neill is proved
+inside (above). Vertechi's parametric spans are, structurally, one-shape linear containers with a linear action on
+positions, and the identification is at the computed level, not re-derived here. Mahadevan's coend is the
+representable case of the same construction --- his \S10.6 caveat is, on this reading, the statement that the
+identity holds exactly on the linear/representable rung, matching the degree-$1$ vs.\ degree-$3^{L}$ split --- but I
+state this as a thesis with evidence, not a theorem. The value of the note does not depend on the full unification
+landing: the depth-composition law and the degree bound are the uncontested delta regardless of how many single-layer
+lineages ultimately fit under one roof.
+
+\paragraph{Does it clear the bar?} The bar is whether any of this tells someone who builds transformers a fact they
+did not have. The single-layer identifications do not, and I have not pretended otherwise --- ``attention is a coend''
+is true and known. Two statements here are, I believe, on the right side of the line. First: the residual connection
+is the algebraic unit of the free monoid that stacking forms, the degree-$0$ term without which a stack is not a sum
+over depths --- a structural role for skip connections that is not the usual optimisation story. Second: a trained
+depth-$L$ linear-attention stack is a degree-$3^{L}$ homogeneous map, an exact obstruction to the ``deep attention is
+one big matrix'' intuition, with the frozen KV-cache regime pinned as the precise exception. If those two do not
+clear the bar, the note should go in the drawer; I do not think they are re-labellings, because each is a
+quantitative or structural fact about the trained network, not about the choice of category.
+
+\begin{thebibliography}{9}
+
+\bibitem{oneill}
+G.~O'Neill,
+\emph{Self-Attention as a Parametric Endofunctor: A Categorical Framework},
+arXiv:2501.02931, 2025. (Thm.~3.1: a linear head is a $\Para(\Vect)$ $1$-morphism with parameter space
+$\AttP=\mathsf{QP}\oplus\mathsf{KP}\oplus\mathsf{VP}$; \S3: composition tensors parameters; Thm.~3.2: stacking as a
+free monad.)
+
+\bibitem{vertechi}
+P.~Vertechi,
+\emph{Neural network layers as parametric spans} (lecture slides). Core formula
+$y[t(p)]\mathrel{+}=x[s(p)]\cdot w[\pi(p)]$; the slides use no container or polynomial-functor vocabulary.
+
+\bibitem{ket}
+S.~Mahadevan,
+\emph{Kan Extension Transformers: A Categorical Unification of Attention}, arXiv:2605.27259, 2026. (\S10.6: the
+coend is a genuine enriched Kan extension only in the representable case; softmax is non-representable.)
+
+\bibitem{sargsyan}
+K.~Sargsyan,
+\emph{Functorial Neural Architectures from Higher Inductive Types}, arXiv:2603.16123, 2026. (Softmax attention is
+not functorial for non-trivial groups.)
+
+\bibitem{djn}
+A.~Dorta, M.~Jarvis, N.~Niu,
+\emph{Monoidal Structures on Generalized Polynomial Categories}, arXiv:2305.05655. (Thm.~4.2: comonoids for
+substitution over a general base are enriched categories; the $\lhd$-monoid / free-monad machinery.)
+
+\bibitem{acu}
+D.~Ahman, T.~Uustalu,
+\emph{Directed Containers as Categories}, EPTCS 207, 2016. (Directed containers $=$ small categories.)
+
+\bibitem{vcont}
+MacBeth,
+\emph{Linear containers for prompt/response systems} and \emph{Containers over $\Vec$} (Kodamai internal notes,
+2026). Definition of linear containers over $\Fam(\Vec^{\op})$ and their extensions.
+
+\bibitem{leanfree}
+MacBeth,
+\emph{\texttt{Free.lean}} (Kodamai Lean development, 2026). The three free-$\lhd$-monoid laws, sorry-free.
+
+\end{thebibliography}
+
+\end{document}

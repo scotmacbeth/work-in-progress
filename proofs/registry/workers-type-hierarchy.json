@@ -1,0 +1,149 @@
+{
+    "conjecture": "How far up the type hierarchy do stateful Workers go? For the (Set,x)-graded category Workers_S(p,q)=Cont(DeltaS(x)p,q), determine which of Cont's four monoidal structures (<|,(x),x,+) and three closed structures (⊗-hom, ◁-coclosure, CCC-exponential) descend. Two frameworks: (A) grade-multiplying/Para tensor (grades combine by x, the native graded-monoidal notion), needing Phi: Delta(SxT)(x)(p*q)->(DeltaS(x)p)*(DeltaT(x)q); (B) shared-state/diagonal tensor keeping grade S, needing DeltaS(x)- oplax monoidal for *. (Neil Ghani, 2026-07-30.)",
+    "status": "proved",
+    "date_opened": "2026-07-30",
+    "date_closed": "2026-07-30",
+    "note": "PROVE session 2026-07-30. Framework A: all four monoidal structures descend to Workers as a (Set,x)-graded monoidal category; (x) is STRONG (Phi^(x) iso; ⊙ strong monoidal functor V×C->C), x and + are OPLAX (PROVED via cartesianness of (Set,x),(Cont,x) resp. cocontinuity of (x) + functorial grade-projections Delta(pi)), ◁ OPLAX (COMPUTED: interchange verified 256 cases, pentagon unwritten). Framework B (shared register): + strict, x oplax free, (x) and ◁ OBSTRUCTED -- require a monoid on the state S ((x) PROVED via Comon(Cont,(x))=Fam(Mon^op) + no natural monoid: S=empty has no unit; ◁ COMPUTED by the same two-independent-states merge). Closed: Workers is (x)-CLOSED with internal hom [p,q]_(x) of Cont (PROVED, counts match 256=256,65536=65536); x-exponential and ◁-coclosure obstructed by state entanglement (x count witness 1296!=256; reformulated exact open test [DeltaS,p=>q]_(x)=([DeltaS,q]_(x))^p). Crown: framework B = A + grade-diagonal + collapse SxS->S; the collapse needs a monoid IFF the object-tensor merges the two operands' positions ((x),◁ fibre-product/nested) vs separates them (+,x fibre-sum). Same fault line governs closure. Proof: proofs/2026-07-30-workers-type-hierarchy.md. Code: scratch/workers-type-hierarchy/.",
+    "tree": {
+        "id": "root",
+        "approach": "Which of Cont's monoidal/closed structures descend to the (Set,x)-graded Workers; frameworks A (grade-mult) and B (shared state)",
+        "trust": "proved",
+        "file": "2026-07-30-workers-type-hierarchy.md",
+        "children": [
+            {
+                "id": "workers-graded-category",
+                "approach": "Base result: Workers = (Set,x)-graded category = coKleisli of graded comonad S|->DeltaS(x)-, state multiplies (DeltaS(x)DeltaT=Delta(SxT)). Cited, not re-proved.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-07-28-delta-state-object-and-workers.md",
+                "note": "Own registry state-object-delta.json (proved); child lean-worker-composition lean-verified.",
+                "children": []
+            },
+            {
+                "id": "bare-comonoid-classification",
+                "approach": "Comon(Cont,(x),y) ~= Fam(Mon^op): (x)-comonoids on a container = a monoid on each fibre. Used to reduce 'DeltaS(x)- oplax for (x)' to 'monoid on S'. Cited, not re-proved.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-07-17-bare-dirichlet-comonoid.md",
+                "note": "Own registry bare-dirichlet-comonoid.json (proved, validates).",
+                "children": []
+            },
+            {
+                "id": "A1-tensor-strong",
+                "approach": "Framework A, (x): ⊙(S,p)=DeltaS(x)p is a STRONG symmetric-monoidal functor (Set,x)x(Cont,(x))->(Cont,(x)): ⊙(S,p)(x)⊙(T,q) =(sym) DeltaS(x)DeltaT(x)p(x)q =(Lem3.1) Delta(SxT)(x)(p(x)q). Phi^(x) natural ISO. Workers_(x) = strong monoidal graded category, grades multiply.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "A2-product-oplax",
+                "approach": "Framework A, x: (Set,x),(Cont,x) cartesian => their product cartesian => ⊙ canonically & coherently OPLAX monoidal (F(axb)-><Fpi1,Fpi2>->FaxFb). Phi^x non-iso (state duplicated) => genuinely oplax. Workers_x = oplax monoidal graded category.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "A3-coproduct-oplax",
+                "approach": "Framework A, +: (x) preserves coproducts (Day convolution cocontinuous) + functorial cartesian grade-projections Delta(pi_S):Delta(SxT)->DeltaS (image of projection functor under Delta:Cat->DCont). Phi^+ = distribute then project-per-summand, coherent. Oplax (grades projected).",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "A4-substitution-oplax",
+                "approach": "Framework A, ◁: Phi^◁: Delta(SxT)(x)(p◁q)->(DeltaS(x)p)◁(DeltaT(x)q) exists (outer grade S, inner grade T, both from base, NO merge); non-iso. Interchange law of the Para tensor verified 256 multi-shape/position cases. Oplax associativity/unit pentagon NOT hand-proved => COMPUTED.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "B1-coproduct-strict",
+                "approach": "Framework B, +: DeltaS(x)(p+q)=(DeltaS(x)p)+(DeltaS(x)q) STRICT (Day convolution preserves coproducts). DeltaS(x)- strong monoidal for +; shared-state + tensor is free.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "B2-product-oplax-free",
+                "approach": "Framework B, x: (Cont,x) cartesian => DeltaS(x)- canonically oplax via n^x_S=<DeltaS(x)pi1,DeltaS(x)pi2> (state-diagonal on shared register). Non-iso => genuinely oplax. Free, no condition on S.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "B3-tensor-needs-monoid",
+                "approach": "Framework B, (x) OBSTRUCTION: oplax structures on DeltaS(x)- for (x) <-> (x)-comonoids on DeltaS <-> monoid on fibre S (via Fam(Mon^op)). Unit laws = monoid unit laws. No natural monoid: S=empty has no unit (killer, and graded structure must exist at every grade); |S|>=2 no bijection-fixed element. => shared-state (x)-tensor does not descend; exists only per chosen monoid on S.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "B4-substitution-needs-monoid",
+                "approach": "Framework B, ◁: n^◁_S RHS position ((sp,b),(sq,d)) carries two INDEPENDENT states (outer sp, inner sq); LHS one. Backward must merge sp,sq => monoid on S, exactly as (x). 'Monoid suffices' converse by analogy with B3, not separately verified => COMPUTED.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "C1-tensor-closed",
+                "approach": "Workers is (x)-CLOSED: Workers_S(r(x)p,q)=Cont(DeltaS(x)(r(x)p),q) ~=(assoc, state beside r) Cont((DeltaS(x)r)(x)p,q) ~=(⊗-closure of Cont) Cont(DeltaS(x)r,[p,q]_(x)) = Workers_S(r,[p,q]_(x)). Internal hom = Cont's [-,-]_(x). Counts match 256=256, 65536=65536.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": []
+            },
+            {
+                "id": "C2-product-closed-open",
+                "approach": "x-exponential: DeltaS(x)(rxp) = state-SHARED product (DeltaS(x)r)x_{DeltaS}(DeltaS(x)p), not (DeltaS(x)r)xp; naive currying with q^p fails (counts 1296:256, 5308416:331776, 256:16). Exact open test via ⊗-closure: need [DeltaS,p=>q]_(x) ~= ([DeltaS,q]_(x))^p, i.e. in image of right adjoint [DeltaS,-]_(x). Conjectured NOT closed; non-existence proof is a gap.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": [
+                    {
+                        "id": "C2-product-CLOSED-resolved",
+                        "approach": "RESOLVED 2026-08-21, conjecture FLIPPED: Workers IS x-closed. Reduction Workers_S(axp,q)=Cont(DeltaS(x)(axp),q) ~=(⊗-closure) Cont(axp,[DeltaS,q]_⊗=:R) ~=(Cont CCC) Cont(a,R^p); Workers_S(a,E)~=Cont(a,[DeltaS,E]_⊗); Yoneda ⟹ closed iff R^p in image[DeltaS,-]_⊗. IT IS: E=∏_{s_p} q◁(y⊕c_{SxP_p(s_p)}), ⟦E⟧Y=∏_{s_p}⟦q⟧(Y+SxP_p(s_p)). Proof via L1 ⟦[DeltaS,r]_⊗⟧X=⟦r⟧(SxX)^S + uniform closure formula + (∏B_i)^S=∏B_i^S. State entangles curried arg P_p↦SxP_p but REPRESENTABLY. Boundary: |S|=1⟹E=q^p; p=1⟹E=q. Uniform: Workers ⊙_⋆-closed iff Sx(A⋆K) is a functor of SxA; holds for ⋆=+ (gives x) and ⋆=x (gives ⊗). Verified: R^p≅[DeltaS,E] (fibre-multiset + counts, 4 pairs); |Work(axp,q)|=|Work(a,E)| all a incl empty fibres.",
+                        "role": "attempt",
+                        "trust": "proved",
+                        "file": "2026-08-21-workers-x-closed-lhd-obstructed.md",
+                        "note": "Depends on ⊗-closure of Cont (Niu-Spivak Ex4.78, lean-verified DirichletClosed.lean) and Cont CCC (Altenkirch-Levy-Staton CiE2010).",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "C3-substitution-coclosure-open",
+                "approach": "◁-coclosure: DeltaS(x)(r◁p) spreads state over all nested positions; duoidal comparison gives only DeltaS(x)(r◁p)->(DeltaS(x)r)◁p (state on outer alone), non-iso, so Cont's ◁-coclosure does not transport. Open, obstruction identified.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-07-30-workers-type-hierarchy.md",
+                "children": [
+                    {
+                        "id": "C3-substitution-NOT-closed-resolved",
+                        "approach": "RESOLVED 2026-08-21: Workers NOT ◁-closed (p with ≥2 shapes, each ≥1 pos; |S|≥2). Reduction Workers_S(a◁p,q)~=Cont(a◁p,R), R=[DeltaS,q]_⊗. Representing object forced (eval at C_A=(1,*↦A) + Cont(c,R)=∏_{s_c}⟦R⟧(P_c s_c)): ⟦H⟧(A)=T_R(A)=∏_{γ:A→S_p}⟦R⟧(Σ_{i∈A}P_p(γi)). T_R NON-POLYNOMIAL: |T_R([n])|≥2^{2^n} double-exponential (|S_p|^n≥2^n factors, each ≥|⟦R⟧(1)|≥2), but any container has |⟦H⟧(1)|=#shapes and #shapes finite ⟹ |⟦H⟧(n)|≤#shapes·n^K poly; contradiction. Sharpest: R=Id, p=(2,1) ⟹ |T_R(n)|=n^(2^n)=0,1,16,6561,... ⟹ Cont ITSELF not ◁-closed. CLARIFICATION: obstruction inherited from Cont (S=1 already fails), NOT a state effect; consistent with Poly having only ◁-COclosure (left adjoint, NS §6), no ◁-closure. Single-shape p ⟹ T_R=R◁(|P_p|·y) polynomial (escape hatch).",
+                        "role": "attempt",
+                        "trust": "proved",
+                        "file": "2026-08-21-workers-x-closed-lhd-obstructed.md",
+                        "note": "Verified lhd_cardinality.py: t_n=[0,1,16,6561,...] (R=Id), [0,16,65536,2.8e12] (R=[DeltaS,q]); single-shape p gives [0,2,4,6,8] (polynomial).",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "finite-verification",
+                "approach": "scratch/workers-type-hierarchy/: Phi^* validity+iso (frameworkA.py, frameworkA_lhd.py, test_maps.py); INTERCHANGE of Para tensor 256 cases x4 stars all HOLD (interchange_test.py); counit coherence (coherence.py); closed-structure counts (closed_probe.py): (x)-currying matches, x-currying differs.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": null,
+                "children": []
+            }
+        ]
+    }
+}

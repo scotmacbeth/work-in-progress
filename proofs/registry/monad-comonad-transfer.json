@@ -1,0 +1,108 @@
+{
+ "conjecture": "A monad M=(M,eta,mu) on Set transfers to a comonad G on Cont by G(S,P)=(S, M o P), with counit eps backward = eta and comultiplication delta backward = mu; the three comonad laws are exactly M's three monad laws pulled back through the position-contravariance of container morphisms (counit-left <=> M right-unit; counit-right <=> M left-unit; coassociativity <=> M associativity). Dually a comonad W on Set gives a monad H(S,P)=(S, W o P) on Cont. Neil's structural why: G is the left coclosure of the substitution product <| with M in the numerator, G(S,P)={M/(S,P)}=Lan_{(S,P)} M (left Kan extension). (Neil Ghani's Ch4 item 2, email 2026-07-24.)",
+ "status": "proved",
+ "date_opened": "2026-07-25",
+ "date_closed": "2026-07-25",
+ "note": "PROVE session 2026-07-25: full coordinate proof + fibred reformulation + Neil's left-coclosure/left-Kan characterisation (PROVED via Meyers Prop 6.57 formula 6.59 + Yoneda universal property) + Poly descent. Novelty CLEARED: absent from Ahman-Uustalu (opposite direction), Purdy-Damato (horizontal distributive laws), Niu-Spivak (nearest named object = the coclosure used in the proof). Construction = fibred-category folklore specialised to Cont->Set; contribution = coordinate proof + fibred mechanism + coclosure identity + Ch4 exposition. Proof: proofs/2026-07-25-monad-comonad-transfer.md. Lean formalisation is the natural next step (LEAN trigger).",
+ "tree": {
+  "id": "root",
+  "approach": "G(S,P)=(S,M o P); eps backward = eta, delta backward = mu; comonad laws <=> monad laws by reversing arrows through the contravariant backward maps",
+  "trust": "proved",
+  "file": "2026-07-25-monad-comonad-transfer.md",
+  "children": [
+   {
+    "id": "finite-check-both-directions",
+    "approach": "scratch/monad-comonad-transfer/check.py: all 3 comonad laws PASS for M=Maybe and M=Writer/Z2 on container S={a,b},P(a)={0,1},P(b)={0}; dual H (product comonad -> monad) all 3 monad laws PASS; negative controls fire exactly (non-assoc mu breaks coassoc; wrong eta breaks only the counit laws); G preserves coproducts; eps,delta natural on nontrivial morphism",
+    "role": "attempt",
+    "trust": "computed",
+    "file": null,
+    "children": []
+   },
+   {
+    "id": "coordinate-proof",
+    "approach": "container-coordinate proof (proofs/2026-07-25-monad-comonad-transfer.md sec 1): functoriality of G (M functor); naturality of eps,delta (naturality of eta,mu); the three comonad laws are the correspondingly-named monad laws at fibre A=Ps, by reversing backward-map composition; biconditional via single-shape container (1,A)",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-25-monad-comonad-transfer.md",
+    "children": [
+     {
+      "id": "lean-coordinate-proof",
+      "approach": "Lean 4 (core, no Mathlib): abstract SetMonad structure (functor obj/map + eta/mu + naturality + 3 monad laws as fields); transfer functor G on objects (SetMonad.G) and morphisms (SetMonad.onMor) with functor laws (onMor_id via map_id, onMor_comp via map_comp); counit/comult as ContainerMorphisms (SetMonad.counit bwd=eta, SetMonad.comult bwd=mu); naturality of eps/delta (counit_natural via eta_natural, comult_natural via mu_natural); the THREE comonad laws each reduce via ContainerMorphism.ext' with rfl on shapes (no transport) to one monad-law field: counit_left=right_unit, counit_right=left_unit, coassoc=assoc.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": null,
+      "lean": "Containers.SetMonad.counit_left",
+      "note": "Lean file: lean/Containers/Containers/MonadComonadTransfer.lean, wired into root Containers.lean; full `lake build` green (37 jobs, zero errors/warnings, Lean v4.30.0). Sorry-free 2026-07-25; #print axioms = [Quot.sound] only (no sorry, no Classical) for all seven results. Declarations: SetMonad (bundled monad on Type), SetMonad.G / SetMonad.onMor (functor) with onMor_id / onMor_comp; SetMonad.counit / SetMonad.comult; counit_natural / comult_natural; the three comonad laws counit_left (=> M right-unit) / counit_right (=> M left-unit) / coassoc (=> M assoc). Mirrors DirichletComonoid.lean idiom. Formalises the coordinate proof (sec 1) only; the coclosure/left-Kan identification (sec 3) and Poly descent (sec 4) remain paper-only.",
+      "children": []
+     },
+     {
+      "id": "lean-dual-transfer",
+      "approach": "Lean 4 (core, no Mathlib): the DUAL direction. Abstract SetComonad structure (functor obj/map + counit eps/comult delta + naturality + 3 comonad laws as fields); transfer functor H on objects (SetComonad.H, H(S,P)=(S,W o P)) and morphisms (SetComonad.onMor) with functor laws (onMor_id via map_id, onMor_comp via map_comp); unit/mult as ContainerMorphisms (SetComonad.unit bwd=eps, SetComonad.mult bwd=delta); naturality of eta/mu (unit_natural via eps_natural, mult_natural via delta_natural); the THREE monad laws each reduce via ContainerMorphism.ext' with rfl on shapes (no transport) to one comonad-law field: unit_left=left_counit, unit_right=right_counit, mult_assoc=coassoc. Exact mirror of lean-coordinate-proof; closes the transfer story in Lean in BOTH directions.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": null,
+      "lean": "Containers.SetComonad.mult_assoc",
+      "note": "Lean file: lean/Containers/Containers/DualTransfer.lean, wired into root Containers.lean; full `lake build` green (38 jobs, zero errors/warnings, Lean v4.30.0). Sorry-free 2026-07-25 (LEAN session); #print axioms = [Quot.sound] only (no sorry, no Classical) for all seven results. Declarations: SetComonad (bundled comonad on Type), SetComonad.H / SetComonad.onMor (functor) with onMor_id / onMor_comp; SetComonad.unit / SetComonad.mult; unit_natural / mult_natural; the three monad laws unit_left (=> W left-counit) / unit_right (=> W right-counit) / mult_assoc (=> W coassoc). Exact dual of MonadComonadTransfer.lean; formalises the coordinate proof of the dual noted in the root conjecture and finite-check child.",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "fibred-comonad-mechanism",
+    "approach": "conceptual proof (sec 2): G = pushforward (M^op)_* of the comonad M^op along the fibration Cont->Set; monad on Set = comonad on Set^op; fibrewise comonad stable under reindexing = fibred comonad = comonad on total category Cont. Fibre = (Set^op)^S proved elementarily in one line (a vertical morphism is a family of backward maps = a map in (Set^S)^op); fibred=>total is textbook. Von Glehn TAC 33 (2018) is attribution for the fibrational viewpoint, not a load-bearing premise.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-25-monad-comonad-transfer.md",
+    "children": [
+     {
+      "id": "lean-fibred-comonad-cert",
+      "approach": "Lean 4 (core, no Mathlib): FibredTransfer.lean certifies G_M is a cartesian VERTICAL FIBRED comonad. (1) G_reindex: reindexing-stability u*(G_M Y)=G_M(u* Y) by rfl (both (S,M o Q o u)); (2) onMor_cartesian: G_M sends cartesian morphisms to cartesian for EVERY M (backward M f a bijection by functoriality, NO cartesian-M hypothesis) via hand-rolled TwoSidedInverse; (3) onMor_vertical/counit_vertical/comult_vertical: verticality (identity on shapes) by rfl.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": null,
+      "lean": "Containers.SetMonad.onMor_cartesian",
+      "note": "Lean file lean/Containers/Containers/FibredTransfer.lean (imports MonadComonadTransfer.lean), wired into root Containers.lean; `lake build` green (45 jobs). #print axioms: G_reindex/onMor_vertical/counit_vertical/comult_vertical = NO axioms; onMor_cartesian = [Quot.sound] only (no sorryAx/Choice/propext). Certifies the fibred (reindexing-stable + cartesian-preserving-for-all-M) structure of G_M underpinning the 2026-08-05 fibrational front; the harder T_M-side (cartesian <=> M cartesian, where branching bites) noted as next Lean target.",
+      "children": []
+     },
+     {
+      "id": "lean-tm-cartesian-boundary",
+      "approach": "Lean 4 (core, no Mathlib): TMCartesianBoundary.lean certifies the T_M-side boundary of cartesian preservation (companion to lean-fibred-comonad-cert, the G_M side). POSITIVE (Maybe, cartesian): TMaybe_onMor_cartesian proves T_Maybe preserves cartesian morphisms for EVERY cartesian phi (arity<=1: id over none, phi.onPos s over some s), reusing IsCartesian/TwoSidedInverse from FibredTransfer + Tmap/TObj from BiKleisliMaybe. NEGATIVE (Pf, non-cartesian): PfWitness models the merging base map u:{a,a'}->{c} and shape m={a,a'}; ustar_merges shows the leaf-tracking u_* is non-injective (leaf merge), ustar_surjective shows Pf drops no leaf, and consequently the induced backward product map fstar is INJECTIVE (fstar_injective) but NOT surjective (fstar_not_surjective) -- the diagonal Bool->Bool^2. TPf_fails_cartesian_preservation bundles it. Machine-checks 'T_M preserves cartesian <=> M cartesian' at the Maybe/Pf boundary (Theorem 1, proofs/2026-08-05-crown-gap-closure.md).",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": null,
+      "lean": "Containers.TMaybe_onMor_cartesian",
+      "note": "Lean file lean/Containers/Containers/TMCartesianBoundary.lean (imports FibredTransfer.lean + BiKleisliMaybe.lean), wired into root Containers.lean; `lake build` green (46 jobs), zero warnings. #print axioms: TMaybe_onMor_cartesian = NO axioms; TPf_fails_cartesian_preservation/fstar_not_surjective = NO axioms; fstar_injective = [Quot.sound] only (funext). No sorry/Choice/propext. Honesty note baked into docstring: LEAN.md's 'T_Pf backward map not injective' is imprecise -- it is the LEAF map u_* that is non-injective; the induced product map fails SURJECTIVITY (Pf never drops a leaf), per the reindexing lemma (crown-gap-closure.md sec 0). Closes the 'harder T_M-side' follow-up flagged in lean-fibred-comonad-cert. Cites Ahman-Bauer arXiv:2409.17664 Thm 6.3 (T_M).",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "left-coclosure-characterisation",
+    "approach": "Neil's why (sec 3): G(S,P)={M/(S,P)}=Sum_s y^{M(Ps)} is Meyers' left coclosure formula (6.59) with numerator M; universal property Poly(Gp,r) = [Set,Set](p, r o M) proved by Yoneda (counting-verified 6,100,600,513); = Lan_{(S,P)} M by Trimble Ex 6.63. Companion: G=Lan_y(y o M^op) via Cont=Fam(Set^op).",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-25-monad-comonad-transfer.md",
+    "sources": [
+     "2312.00990"
+    ],
+    "children": []
+   },
+   {
+    "id": "poly-descent",
+    "approach": "sec 4: [[G(S,P)]](A) = Sum_s (M(Ps) -> A); transported comonad Ghat on Poly = apply M to fibres of the direction bundle, counit/comult = re-exponentiate along eta/mu",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-25-monad-comonad-transfer.md",
+    "children": []
+   },
+   {
+    "id": "dual-comonad-to-monad",
+    "approach": "sec 1.5 / 2: comonad W on Set -> monad H(S,P)=(S,W o P), eta^H bwd=eps_W, mu^H bwd=delta_W; formal dual, same M -> (M^op)_* mechanism; computed for W=product comonad",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-25-monad-comonad-transfer.md",
+    "children": []
+   }
+  ]
+ }
+}

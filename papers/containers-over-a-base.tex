@@ -1,0 +1,1166 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{stmaryrd}   % \llbracket \rrbracket
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+%--- theorem environments -------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+%--- macros ---------------------------------------------------------------
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Vect}{\mathbf{Vec}}
+\newcommand{\Vecfd}{\mathbf{Vec}_{\mathrm{fd}}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Rel}{\mathbf{Rel}}
+\newcommand{\Prof}{\mathbf{Prof}}
+\newcommand{\Mod}{\mathbf{Mod}}
+\newcommand{\Vgen}{\mathcal{V}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\ihom}[2]{[#1,#2]}
+\renewcommand{\lhd}{\vartriangleleft}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\coprodd}{\textstyle\coprod}
+\newcommand{\prodd}{\textstyle\prod}
+\DeclareMathOperator{\Nat}{Nat}
+\DeclareMathOperator{\Lan}{Lan}
+\DeclareMathOperator{\cod}{cod}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\Sub}{Sub}
+\newcommand{\Arr}[1]{#1^{\rightarrow}}
+\newcommand{\Exists}{\mathsf{Exists}}
+\newcommand{\All}{\mathsf{All}}
+
+\newcommand{\gerund}{}
+
+%==========================================================================
+\begin{document}
+
+\title[Approaches to containers over a base]{Approaches to containers over a base:\\
+extensivity, cartesian closure, and the linear collapse}
+
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+
+\date{27 August 2026}
+
+\begin{abstract}
+The phrase ``a container in a category'' names at least four inequivalent constructions:
+external families over a base $\C$, indexed dependent-polynomial functors over a locally
+cartesian closed base, fibrational containers over a comprehension category, and Walker's
+locally subcartesian closed weakening. Over $\Set$ they coincide; off $\Set$ they diverge, and
+no map has been drawn of \emph{where}. We draw one --- a census of the bases over which the
+construction has been run, from toposes down through Weber's and Walker's weakenings to additive
+bases --- and argue that two properties of the base --- extensivity
+and local cartesian closure --- are the two axes of divergence, and we use the category of vector
+spaces, which has neither, as the discriminating example. Only the external-family construction
+$\Fam(\C^\op)$ reaches $\Fam(\Vect^\op)$; the other three cannot even form their semantics there.
+We make this quantitative with three theorems about $\Fam(\C^\op)$: the container extension is fully
+faithful iff the monoidal unit is connected (\emph{not} iff $\C$ is extensive); the Dirichlet tensor
+is closed iff a familial-representability condition holds, which over a linear base isolates the
+finite-dimensional corner; and the substitution product is left-closed exactly where it collapses
+onto the Dirichlet tensor --- so that extensivity, the obstruction to the first two, is what would
+have to fail for the third. The upshot is a two-axis classification in which $\Fam(\Vect^\op)$ forces
+the external approach. Along the way we develop the fibrational approach beyond its refereeing role
+into an explicit \emph{logic of containers}: applying the container construction to the codomain
+fibration of $\Set$ yields a bifibration whose fibred quantifiers are the $\mathsf{All}$ and
+$\mathsf{Exists}$ predicate liftings, and whose hyperdoctrine is the fibrewise opposite of the usual
+one --- container-$\exists$ is $\Set$-$\forall$, and each fibre is a co-topos.
+\end{abstract}
+
+\maketitle
+
+%==========================================================================
+\section{Introduction}
+
+\subsection{The ambiguity}
+A \emph{container} in the sense of Abbott, Altenkirch and Ghani \cite{AAG} is a set $S$ of shapes
+together with, for each shape $s$, a set $P_s$ of positions; its extension is the polynomial
+endofunctor $\ext{S,P}X = \coprodd_{s\in S} X^{P_s}$ on $\Set$. Containers are the syntax of
+strictly positive datatypes, and their theory is by now classical: containers with their morphisms
+are equivalent to a full subcategory of $[\Set,\Set]$, the substitution product models functor
+composition, directed containers are exactly (small) categories \cite{AhmanUustalu}, and the whole
+package reappears inside Spivak's category $\Poly$ of polynomial functors \cite{NiuSpivak}.
+
+The moment one asks for ``a container in a category $\C$ other than $\Set$,'' the theory forks.
+At least four constructions claim the name, and they are genuinely different functors:
+
+\begin{itemize}
+\item[(1)] \textbf{External families.} An object of $\Fam(\C^\op)$ is a \emph{set} $S$ of shapes
+together with position \emph{objects} $P_s\in\C$; the extension $\ext{S,P}=\coprodd_{s\in S}\ihom{P_s}{-}$
+uses the self-enrichment of a closed $\C$ and an \emph{external} set-indexed coproduct. This is the
+$\Sigma\Pi\mathcal{V}$ construction of Dorta, Jarvis and Niu \cite{DJN}.
+\item[(2)] \textbf{Indexed / dependent-polynomial functors.} A diagram $I\leftarrow P\rightarrow S\rightarrow O$
+\emph{internal} to a locally cartesian closed base $\C$, with semantics the composite
+$\Sigma\,\Pi\,\Delta$ of slice functors --- the polynomial functors of Gambino and Kock \cite{GambinoKock}.
+\item[(3)] \textbf{Fibrational containers.} Positions presented as a fibration over the shapes,
+with comprehension; this subsumes (1) and (2) as the family and codomain fibrations respectively, and,
+applied to the codomain fibration of $\Set$ itself, produces the bifibration \emph{logic of
+containers}.
+\item[(4)] \textbf{Subcartesian containers.} Walker's locally subcartesian closed bases \cite{Walker},
+where an \emph{affine} base-change $\nabla_f\dashv\boxtimes_f$ replaces the top adjoint of the
+$\Sigma\dashv\Delta\dashv\Pi$ chain when the base fails to be locally cartesian closed.
+\end{itemize}
+
+Over $\C=\Set$ these are one construction viewed four ways. Over a general base they are four
+constructions, and the literature offers no systematic answer to the question that then becomes
+unavoidable: \emph{for which bases do they agree, and along what axis do they diverge?}
+
+\subsection{The thesis}
+We propose a two-property answer. Call a base \emph{good} if it is both \emph{extensive}
+(coproducts are disjoint and universal --- equivalently $\C/(A+B)\simeq \C/A\times\C/B$) and
+\emph{locally cartesian closed} (every slice is cartesian closed, so pullback has a right adjoint
+$\Pi$). The claim is:
+
+\begin{quote}
+\emph{Extensivity and local cartesian closure of the base are the two axes along which the four
+notions of container diverge. When the base has both, all four agree; and each approach fails to
+reach a base precisely when that base fails one of the two properties that the approach silently
+assumes.}
+\end{quote}
+
+The sharpest instrument for separating the approaches is a base that fails \emph{both} properties.
+The category $\Vect$ of vector spaces over a field $k$ is exactly such a base: it is not extensive
+(the canonical comparison $A\amalg B \to A\oplus B$ from the coproduct-of-underlying-sets to the
+biproduct is not an isomorphism --- ``$\amalg\subsetneq\oplus$''), and it is not locally cartesian
+closed (there is no internal dependent product $\Pi$). We therefore run $\Fam(\Vect^\op)$ --- linear
+containers --- as the worked example throughout, and it does the discriminating work summarised in
+Table~\ref{tab:main}.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccccc}
+\toprule
+Base $\C$ & extensive? & LCC? & (1) $\Fam(\C^\op)$ & (2) $\Sigma\Pi\Delta$ & (4) subcartesian \\
+\midrule
+$\Set$, any topos & \checkmark & \checkmark & reaches it & forms & (LSCC) \\
+$\Vect$ (fd or gen.) & $\times$ ($\amalg\subsetneq\oplus$) & $\times$ (no $\Pi$) & \textbf{reaches it} & \textbf{cannot form $\Pi$} & \textbf{not LSCC} \\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{The discriminator. Over a base that is extensive and locally cartesian closed, all
+approaches coincide (the classical convergence: containers $\simeq$ directed containers $\simeq$
+$\Poly$-comonoids $\simeq$ categories). Over $\Vect$, which has neither property, only the external
+approach (1) survives. Approach (3) sits above the table: it presents (1) and (2) as two fibrations
+and locates their divergence exactly where the base fails the two properties. This is the honest
+reason $\Fam(\Vect^\op)$ ``needs the first approach.''}
+\label{tab:main}
+\end{table}
+
+\subsection{The quantitative face}
+The discriminator is not merely a table of yes/no answers. The obstructions have exact measures,
+and supplying them is the technical contribution of the survey. Three theorems about the external
+approach (1), each proved in Section~\ref{sec:external} in our own words, turn the two-axis
+classification into precise dichotomies. Write $\ext{-}\colon\Fam(\C^\op)\to \C\text{-}[\C,\C]$ for
+the container extension into $\C$-enriched endofunctors.
+
+\begin{theorem}[Fullness; T1, Theorem~\ref{thm:T1}]\label{thm:introT1}
+$\ext{-}$ is fully faithful if and only if the monoidal unit $I$ is \emph{connected}, i.e.\ the
+functor $\C(I,-)\colon\C\to\Set$ preserves small coproducts. This is \emph{not} extensivity of $\C$:
+the base $\Set\times\Set$ is extensive yet its unit is disconnected and $\ext{-}$ is not full, while
+over $\Vect$ the underlying-set functor $\C(k,-)$ fails to preserve $\oplus$ --- so the unit is
+disconnected in this sense --- and $\ext{-}$ is neither full nor faithful.
+\end{theorem}
+
+\begin{theorem}[$\otimes$-closedness; T2, Theorem~\ref{thm:T2}]\label{thm:introT2}
+The Dirichlet tensor $\otimes$ on $\Fam(\C^\op)$ is closed if and only if a familial-representability
+functor $\Phi$ is representable. Over a cartesian base this always holds; over the linear base it
+holds \emph{only} on the corner $\Fam_{\mathrm{fin}}(\Vecfd^\op)$ of finite shape-sets and
+finite-dimensional positions, failing over both $\Fam(\Vecfd^\op)$ and $\Fam(\Vect^\op)$ by dual
+mechanisms.
+\end{theorem}
+
+\begin{theorem}[$\lhd$-left-closedness; T4, Theorem~\ref{thm:T4}]\label{thm:introT4}
+The substitution product $\lhd$ on $\Fam(\C^\op)$ is left-closed exactly where it \emph{collapses
+onto} $\otimes$: over a base whose positions are dualizable (\emph{tiny}), $\lhd=\otimes$, and the
+left internal hom is the Dirichlet hom of Theorem~\ref{thm:introT2}. Consequently $\lhd$ is
+left-closed on $\Fam_{\mathrm{fin}}(\Vecfd^\op)$ and obstructed over every extensive base. Extensivity
+is \emph{opposed} to $\lhd$-left-closedness: the property whose failure costs fullness (T1) and
+$\otimes$-closedness (T2) is exactly what buys $\lhd$-closedness.
+\end{theorem}
+
+Theorems~\ref{thm:introT1}--\ref{thm:introT4} are the quantitative shadow of the discriminator: the
+fullness and closedness obstructions over $\Vect$ are precisely the base failing the extensive/LCC
+hypotheses that approaches (2)--(4) would need at the outset. The inversion in
+Theorem~\ref{thm:introT4} --- extensivity as villain for T1/T2 and hero-of-the-obstruction for T4
+--- is the survey's most surprising structural fact and the reason the classification is genuinely
+two-dimensional rather than a single ``goodness'' scale.
+
+\subsection{What is and is not new}
+The tensor $\otimes$ and the substitution $\lhd$ over a general base, and the theorem that
+$\lhd$-comonoids are enriched categories, are due to Dorta, Jarvis and Niu \cite{DJN}; we cite these
+as the definitions our theorems are \emph{about}, and re-prove nothing of theirs. The $\Set$ fullness
+theorem is Abbott--Altenkirch--Ghani \cite{AAG}; our contribution is to name its hidden hypothesis.
+The reconstruction of a container from an abstract familially-representable functor is Diers'
+\cite{Diers}, and uses extensivity of the codomain, not of the base --- a distinction Section~\ref{sec:external}
+turns into the resolution of the ``extensivity'' folklore. Day convolution is \cite{Day}; polynomial
+functors over LCC bases are \cite{GambinoKock}; the composition-monoid refinement of the indexed
+corner is De Pascalis--Uustalu--Veltr\`i \cite{DPUV}; the subcartesian weakening is Walker
+\cite{Walker}. In Section~\ref{sec:fibrational} the facts that $\Fam$ preserves fibrations and that
+$\cod$ is a bifibration are folklore \cite{Hermida,Jacobs}, and the fibrewise-op presentation
+$\Cont=\int_{\Set}\cod^\op$ is von Glehn's \cite{vonGlehn}. The new material is the two-axis
+discriminator, the census of Section~\ref{sec:landscape} together with the assembly of the
+individually-known weakenings (Gambino--Kock, Weber, Walker) into one totally ordered tower and the
+placement of a given base on it, the three theorems T1/T2/T4 with their named invariants, their
+assembly into a single
+classification with $\Fam(\Vect^\op)$ as the forcing example, and --- for approach (3) --- the
+explicit assembly of $\Cont(\cod)$ as the bifibration of proof-relevant predicates on positions, the
+identification of its fibred quantifiers with the $\All/\Exists$ liftings, and the dualisation reading
+that makes the container hyperdoctrine the fibrewise opposite of the standard one.
+
+\subsection{Outline}
+Section~\ref{sec:prelim} fixes the base and the two tensors. Section~\ref{sec:landscape} maps the
+territory: a census of the bases over which the construction has been run, the weakening tower that
+orders those between $\Set$ and $\Vect$, and the organising fact that off the good zone a base fails
+for exactly one of two reasons. Section~\ref{sec:external} develops the
+external approach (1) and proves T1, T2, T4. Section~\ref{sec:indexed} treats the indexed/dependent-
+polynomial approach (2) and shows why it cannot form its semantics over $\Vect$.
+Section~\ref{sec:fibrational} treats the fibrational approach (3): first as the referee that presents
+(1) and (2) as two fibrations, then as a construction in its own right, the bifibration
+$\Cont(\cod)$ whose dualised quantifiers are the logic of containers. Section~\ref{sec:subcartesian} treats Walker's approach (4) and records
+the verdict that $\Vect$ is not locally subcartesian closed. Section~\ref{sec:synthesis} assembles
+the discriminator; Section~\ref{sec:conclusion} names the single sharpest open problem the survey
+surfaces.
+
+%==========================================================================
+\section{Preliminaries}\label{sec:prelim}
+
+We collect only what the later sections use. Throughout, $(\C,\otimes,I,\ihom{-}{-})$ is a
+\emph{closed symmetric monoidal category with small coproducts} $\coprod$. Closedness gives the
+enrichment of $\C$ over itself, so that $\C(A,B)=\C(I,\ihom{A}{B})$ naturally, and the adjunction
+$-\otimes Q\dashv \ihom{Q}{-}$.
+
+\begin{definition}[Container over $\C$]\label{def:cont}
+$\Fam(\C^\op)$ is the category with objects $(S,(P_s)_{s\in S})$, where $S$ is a set of
+\emph{shapes} and each $P_s\in\C$ is a \emph{position object}, and morphisms
+$(S,P)\to(T,Q)$ the pairs $(f,(\varphi_s))$ with $f\colon S\to T$ a function and
+$\varphi_s\colon Q_{f(s)}\to P_s$ in $\C$ (contravariant on positions). Explicitly,
+\[
+\Fam(\C^\op)\bigl((S,P),(T,Q)\bigr) \;=\; \prodd_{s\in S}\ \coprodd^{\Set}_{t\in T}\ \C(Q_t,P_s),
+\]
+a choice of one $t=f(s)$ per shape plus a position map. We write $\langle Z\rangle:=(\{*\},Z)$ for
+the one-shape generator at $Z\in\C$; every object is the coproduct
+$(S,P)=\coprodd_{s\in S}\langle P_s\rangle$, so $\Fam(\C^\op)$ is the free coproduct completion of
+$\C^\op$.
+\end{definition}
+
+\begin{definition}[Extension]\label{def:ext}
+The \emph{extension} of $(S,P)$ is the $\C$-enriched endofunctor
+\[
+\ext{S,P} \;:=\; \coprodd_{s\in S}\ \ihom{P_s}{-}\ \colon\ \C\longrightarrow\C,
+\]
+a coproduct of corepresentables. Over $\Set$ (with $I=1$, $\ihom{P}{X}=X^P$) this is the classical
+$\ext{S,P}X=\coprodd_s X^{P_s}$; over $\Vect$ (with $I=k$, $\ihom{P}{W}=\Vect(P,W)$, $\coprod=\oplus$)
+it is the linear extension $\ext{S,P}W=\bigoplus_s\Vect(P_s,W)$.
+\end{definition}
+
+\begin{definition}[The two tensors]\label{def:tensors}
+On $\Fam(\C^\op)$ there are two monoidal structures whose extensions we use.
+\begin{enumerate}
+\item The \emph{Dirichlet} (parallel) tensor $(S,P)\otimes(T,Q):=(S\times T,(P_s\otimes Q_t))$, with
+unit $(\{*\},I)$. Its extension is the Day convolution \cite{Day} of the corepresentables:
+$\ext{(S,P)\otimes(T,Q)}=\coprodd_{s,t}\ihom{P_s\otimes Q_t}{-}$, using
+$\ihom{P}{-}\ast\ihom{Q}{-}=\ihom{P\otimes Q}{-}$.
+\item The \emph{substitution} (composition) product $\lhd$, the non-symmetric monoidal structure
+whose extension is functor composition: $\ext{(S,P)\lhd(T,Q)}=\ext{S,P}\circ\ext{T,Q}$
+\cite{DJN,NiuSpivak}.
+\end{enumerate}
+\end{definition}
+
+We use four properties of a base, each recalled with the only fact about it we need.
+
+\begin{definition}\label{def:props}
+Let $\C$ be as above.
+\begin{itemize}
+\item $\C$ is \emph{extensive} if finite coproducts are disjoint and universal; equivalently
+$\C/(A+B)\simeq\C/A\times\C/B$.
+\item $\C$ is \emph{locally cartesian closed} (LCC) if every slice $\C/X$ is cartesian closed;
+equivalently every pullback functor $f^*$ has a right adjoint $\Pi_f$ (dependent product).
+\item The monoidal unit $I$ is \emph{connected} if $\C(I,-)\colon\C\to\Set$ preserves small
+coproducts.
+\item An object $Z\in\C$ is \emph{tiny} if $\ihom{Z}{-}\colon\C\to\C$ preserves small coproducts.
+In a closed symmetric monoidal category every \emph{dualizable} object is tiny, since then
+$\ihom{Z}{-}=Z^*\otimes(-)$ is a left adjoint. Over $\Vect$, tiny $=$ dualizable $=$
+finite-dimensional.
+\end{itemize}
+\end{definition}
+
+\begin{remark}[The linear base is the double-negative example]\label{rem:vecbad}
+$\Vect$ fails all the good properties simultaneously. It is not extensive: the comparison
+$A\amalg B\to A\oplus B$ from the disjoint union of underlying sets to the biproduct misses every
+genuine linear combination $a+b$, so $\coprod^{\Set}\subsetneq\oplus$. It is not LCC: pullback along
+a non-mono has no right adjoint, so there is no dependent product $\Pi$ \cite{GambinoKock}. Its unit
+$k$ is a connected \emph{object} but $\C(k,-)$ --- the underlying-set functor --- does not preserve
+$\oplus$, so $k$ is \emph{not connected} in the sense of Definition~\ref{def:props}. And its tiny
+objects are exactly the finite-dimensional ones, so ``tiny'' is a genuine restriction, not
+automatic. Each clause powers one obstruction below.
+\end{remark}
+
+%==========================================================================
+\section{The landscape of bases}\label{sec:landscape}
+
+Table~\ref{tab:main} named the two endpoints of the story: the good base $\Set$, where all four
+approaches coincide, and the doubly-bad base $\Vect$, where only the external one survives. Between
+them lies a whole territory of bases over which some author has actually run the polynomial/container
+construction, each keeping part of the base structure and losing the rest. Before proving anything we
+map that territory, because the map is itself an argument for the thesis: every base that has been
+used sits at a definite point on the two axes, and which approach reaches it is decided by which axis
+it keeps.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{llccl}
+\toprule
+Base $\C$ & who ran it & ext.? & LCC? & what the construction reaches \\
+\midrule
+$\Set$, lextensive topos & \cite{AAG,GambinoKock,vonGlehn} & \checkmark & \checkmark & all four approaches coincide \\
+finite-limit category & \cite{ShapiroSpivak} & --- & $\times$ & $\lhd$-comonoids $=$ internal categories \\
+pullbacks $+$ exp.\ legs & \cite{WeberPoly} & --- & partial & (2) via distributivity pullbacks \\
+LSCC (quantale, affine) & \cite{Walker} & $\times$ & $\times$ & (4) affine $\nabla_f\dashv\boxtimes_f$ \\
+any monoidal $\Vgen$ & \cite{DJN} & --- & --- & (1) $\otimes,\lhd$; $\lhd$-comon.\ $=$ enr.\ cats \\
+any fibration $q$ & \cite{vonGlehn} & --- & --- & (3) $\Cont(q)=\Fam(q^\op)$ \\
+$\Set^I$ (indexed) & \cite{DPUV} & \checkmark & \checkmark & (1)/(2) composition monoids \\
+$\Prof$ (gen.\ species) & \cite{FGHW} & --- & --- & cartesian closed bicategory \\
+$\Vect$, $R\text{-}\mathrm{Mod}$ & this survey & $\times$ & $\times$ & \textbf{(1) only} (T1, T2, T4) \\
+$\Rel$;\ $\Mod,\Poly$ & \cite{NiuSpivak} Ch.\,9 & ? & ? & open \\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{The bases over which the polynomial/container construction has been run, ordered by
+decreasing base strength. The two centre columns are the discriminating axes of the thesis;
+``---'' marks a generality-of-base result, for which the axes are not the natural descriptor, and
+``partial'' a per-morphism weakening of $\Pi$. The middle block (finite-limit category through LSCC)
+is the weakening tower. $\Vect$ and $R\text{-}\mathrm{Mod}$ sit at the doubly-negative corner reached
+by the external approach alone.}
+\label{tab:landscape}
+\end{table}
+
+Reading down the table, the bases that keep pullbacks but lose full local cartesian closure form a
+\emph{totally ordered weakening tower}, each rung smoothing a different seam of the $\Sigma\Pi\Delta$
+machinery:
+\[
+\underbrace{\text{LCCC}}_{\text{\cite{GambinoKock}}}\ \supset\
+\underbrace{\text{pullbacks}+\text{exp.\ legs}}_{\text{Weber \cite{WeberPoly}}}\ \supset\
+\underbrace{\text{subpullbacks (LSCC)}}_{\text{Walker \cite{Walker}}}\ \supset\ \text{spans}.
+\]
+Local cartesian closure (Gambino--Kock) asks pullback to have a right adjoint globally; Weber's
+\emph{distributivity pullbacks} \cite{WeberPoly} weaken this to a per-morphism condition --- a
+canonical comparison $\delta$ is invertible iff the relevant middle leg is exponentiable --- so that
+composition of polynomials is defined leg-by-leg rather than by a blanket $\Pi$; Walker's subpullbacks
+\cite{Walker} weaken it further to an affine base-change $\nabla_f\dashv\boxtimes_f$; and at the bottom
+sit bare spans, with no base-change adjoint at all. The rungs are known individually; what has not been
+done, and what the survey needs, is to assemble them into one ordered scale and ask where a given
+base --- in particular $\Vect$ --- sits on it. The answer, developed in
+Section~\ref{sec:subcartesian}, is that $\Vect$ falls off the bottom: not even the affine rung holds.
+
+The tower refines only one of the two axes --- local cartesian closure, which controls the
+substitution product $\lhd$ and the internal homs. The other axis, extensivity, is orthogonal to it
+and controls whether the external shape-coproduct is seen correctly, hence fullness of $\ext{-}$. This
+gives the organising fact of the whole landscape.
+
+\begin{quote}
+\emph{Off the good zone, a base fails to support the classical container theory for exactly one of two
+independent reasons: loss of extensivity ($\coprod^{\Set}\subsetneq\oplus$, so shapes are no longer
+recoverable and $\ext{-}$ is no longer full) or loss of internal $\Pi$ (no dependent product, so
+$\lhd$ and closedness collapse). Toposes lose neither; quantales and affine bases lose only the
+second, which is why Walker's affine repair reaches them; additive bases such as $\Vect$ and
+$R\text{-}\mathrm{Mod}$ lose both, which is why only the external approach reaches them.}
+\end{quote}
+
+\noindent This is the two-column heading of Table~\ref{tab:landscape} promoted to the reading of the
+whole table, and it is the qualitative form of the thesis that the three theorems of
+Section~\ref{sec:external} make quantitative.
+
+\begin{remark}[Where the two proved theorems sit in Weber's work]\label{rem:weberrefile}
+The weakening tower places the substitution obstruction and the tensor obstruction in \emph{different}
+parts of Weber's work, and it is worth separating them to forestall a tempting conflation. The
+hypothesis of the collapse theorem T4 (Theorem~\ref{thm:T4}) --- that the left, composition-side
+positions be tiny (exponentiable) --- is exactly Weber's distributivity-$\delta$ condition of
+\cite{WeberPoly}: $\delta$ is invertible iff the middle leg is exponentiable, which under the
+extension transports to tininess of the left positions and is precisely what makes $\lhd$
+well-defined. The hypothesis of the closedness theorem T2 (Theorem~\ref{thm:T2}) --- that a
+functor $\Phi$ be \emph{familially representable} --- is instead a comparison from Weber's
+\emph{separate} theory of parametric right adjoints and familial functors \cite{WeberFamilial}, where a
+functor is familial iff it is fibrewise a coproduct of representables. These conditions are logically
+independent: $\delta$ constrains the left (composition) positions, $\Phi$ the right (tensor) positions
+and the target, and one can hold while the other fails --- a finite-dimensional-left,
+infinite-dimensional-right datum over $\Vect$ makes $\delta$ invertible while $\Phi$ is unrepresentable,
+and the reverse datum does the opposite. So T4 belongs to the distributivity-pullback rung of the
+tower, whereas T2 does \emph{not} lie on the tower at all: it lives in the parallel familial-functor
+theory. This re-filing is a reading of the two Weber papers against the theorems, not a theorem of its
+own, and we mark it as such.
+\end{remark}
+
+%==========================================================================
+\section{Approach (1): external families}\label{sec:external}
+
+This is the approach that reaches $\Vect$, and the one whose obstructions we can measure. We prove
+the three theorems that quantify the discriminator. All statements are at the level of the
+\emph{set} of enriched natural transformations, which exists for any closed $\C$ with coproducts; no
+completeness of $\C$ is needed.
+
+\subsection{The hom formula}
+Everything reduces to one enriched computation and one comparison map.
+
+\begin{lemma}[Enriched co-Yoneda]\label{lem:coyoneda}
+For any $\C$-endofunctor $G$ and $P\in\C$, $\Nat(\ihom{P}{-},G)\cong \C(I,GP)$, naturally.
+\end{lemma}
+\begin{proof}
+$\ihom{P}{-}=\C(P,-)$ is corepresentable; enriched Yoneda evaluates a transformation at
+$\id_P$, and $\C$-linearity of $G$ on hom-objects recovers it everywhere. Taking points
+($\C(I,-)$ of the enriched hom) gives the stated set-level form.
+\end{proof}
+
+\begin{lemma}[Transformations out of a coproduct]\label{lem:natcoprod}
+$\Nat(\coprodd_s F_s, G)\cong\prodd_s\Nat(F_s,G)$.
+\end{lemma}
+\begin{proof}
+Coproducts of endofunctors are pointwise, and a transformation out of a pointwise coproduct is a
+tuple of transformations.
+\end{proof}
+
+Combining, for the extensions,
+\begin{equation}\label{eq:homformula}
+\Nat\bigl(\ext{S,P},\ext{T,Q}\bigr)\;\cong\;\prodd_{s\in S}\ \C\Bigl(I,\ \coprodd^{\C}_{t\in T}\ihom{Q_t}{P_s}\Bigr).
+\end{equation}
+Comparing \eqref{eq:homformula} with the container hom of Definition~\ref{def:cont}, the action of
+$\ext{-}$ on morphisms is, in each shape $s$, the following canonical map.
+
+\begin{definition}[The comparison map]\label{def:gamma}
+For a family $(X_t)_{t\in T}$ in $\C$,
+\[
+\gamma_{(X_t)}\ \colon\ \coprodd^{\Set}_{t}\ \C(I,X_t)\ \longrightarrow\ \C\Bigl(I,\ \coprodd^{\C}_{t}X_t\Bigr),
+\qquad (t,\,x\colon I\to X_t)\ \longmapsto\ \mathrm{inj}_t\circ x .
+\]
+This is the comparison testing whether $\C(I,-)$ preserves the coproduct $\coprod_t X_t$. Under
+$\C(Q_t,P_s)=\C(I,\ihom{Q_t}{P_s})$, the $s$-component of $\ext{-}$ on morphisms is exactly
+$\gamma_{(\ihom{Q_t}{P_s})_t}$.
+\end{definition}
+
+\subsection{T1: fullness is unit-connectedness}\label{ss:T1}
+
+\begin{theorem}[Fullness criterion]\label{thm:T1}
+Let $\C$ be closed symmetric monoidal with small coproducts.
+\begin{enumerate}
+\item If the unit $I$ is connected then $\ext{-}\colon\Fam(\C^\op)\to\C\text{-}[\C,\C]$ is fully
+faithful.
+\item If $\ext{-}$ is full (resp.\ faithful) then for every object $Z$ and set $T$ the map $\gamma$
+is surjective (resp.\ injective) for the constant family $(Z)_{t\in T}$; equivalently $\C(I,-)$
+preserves (resp.\ reflects) all copowers $T\cdot Z$. A disconnected unit obstructs fullness.
+\item If moreover $\C$ has an object $Z_0$ with $\ihom{-}{Z_0}$ essentially surjective onto the
+objects appearing in the relevant coproducts (e.g.\ $\C=\Vecfd$, $Z_0=k$, $\ihom{-}{k}=(-)^*$), then
+$\ext{-}$ is fully faithful iff $I$ is connected.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) If $\C(I,-)$ preserves coproducts, $\gamma_{(X_t)}$ is a bijection for \emph{every} family, so
+by \eqref{eq:homformula} every shape-component of the action is a bijection.
+
+(2) Take source $(\{s\},Z)$ and target $(T,(I)_{t\in T})$, so $\ihom{I}{Z}\cong Z$ and the family is
+constant $Z$; the $s$-component of the action is $\gamma_{(Z)_{t\in T}}\colon T\cdot\C(I,Z)\to
+\C(I,T\cdot Z)$. Full forces surjectivity for all $T,Z$ (i.e.\ preservation of copowers), faithful
+forces injectivity.
+
+(3) With $Z_0$ as stated, $\{\ihom{Q}{Z_0}:Q\in\C\}$ is, up to isomorphism, all objects, so the
+families $(\ihom{Q_t}{Z_0})_t$ range over all set-indexed families; fullness plus faithfulness then
+give that $\C(I,-)$ preserves all small coproducts, i.e.\ $I$ is connected. With (1) this is the
+stated equivalence.
+\end{proof}
+
+The point of Theorem~\ref{thm:T1} is that it separates two properties the $\Set$ case fuses.
+
+\begin{corollary}[$\Set$: recovers Abbott--Altenkirch--Ghani]\label{cor:set}
+For $\C=\Set$, $I=1$ and $\Set(1,-)=\id$ preserves coproducts, so $\ext{-}$ is fully faithful ---
+the representation theorem of \cite{AAG}. The hidden hypothesis is that the terminal object of
+$\Set$ is connected.
+\end{corollary}
+
+\begin{corollary}[$\Set\times\Set$: extensive but not full]\label{cor:setset}
+$\Set\times\Set$ is (l)extensive, yet its unit $(1,1)$ is disconnected:
+\[
+\C\bigl((1,1),(X,Y)+(X',Y')\bigr)=(X+X')\times(Y+Y')\ \neq\ X{\times}Y+X'{\times}Y',
+\]
+the comparison missing the cross terms $(x,y')$. By Theorem~\ref{thm:T1}(2) $\ext{-}$ is not full:
+with source $(\{s\},(1,1))$ and target $(\{t_1,t_2\},((1,1),(1,1)))$ there are $2$ container
+morphisms but $\C((1,1),(2,2))=4$ natural transformations, the two ``crossed'' transformations
+unrealised.
+\end{corollary}
+
+\begin{corollary}[$\Vect$: the linear collapse]\label{cor:vec}
+For $\C=\Vect$, $I=k$, the functor $\Vect(k,-)$ is the underlying-set functor, which does not
+preserve $\oplus$: the comparison $\coprod^{\Set}_t X_t\to\bigoplus_t X_t$ is neither surjective (it
+misses cross-summand sums) nor injective (it collapses zeros). By Theorem~\ref{thm:T1}(2,3) with
+$Z_0=k$, $\ext{-}$ is neither full nor faithful over $\Vect$, and the failure is exactly the
+disconnectedness of $k$. This is the $\coprod^{\Set}\subsetneq\oplus$ of the non-extensivity of
+$\Vect$, now placed as one instance of the general criterion.
+\end{corollary}
+
+\begin{theorem}[The corrected slogan]\label{thm:slogan}
+Extensivity of $\C$ is neither necessary nor sufficient for $\ext{-}$ to be full. The controlling
+invariant is connectedness of the monoidal unit. ($\Set\times\Set$ is extensive but not full;
+$\Set$ is full not because it is extensive but because $1$ is connected.)
+\end{theorem}
+
+\begin{remark}[Why the folklore said ``extensivity'']\label{rem:folklore}
+Two distinct theorems have been conflated: (a) full faithfulness of the fixed extension $\ext{-}$
+(this section: $I$ connected), and (b) Diers' reconstruction \cite{Diers} of $(S,P)$ from an
+abstract familially-representable $F\colon\C\to\Set$ as $S=\pi_0(\mathrm{el}\,F)$, which genuinely
+uses extensivity of the \emph{codomain} $\Set$. For $\C=\Set$ base and codomain coincide, so (a) and
+(b) fuse and ``extensivity'' reads off both. Off $\Set$ they separate: (a) is governed by the unit of
+the enrichment base, (b) by extensivity of the value category. Similarly this is no contradiction
+with the fully internal polynomial functors of \cite{GambinoKock}: those never form an external
+set-coproduct of internal homs, so their representation theorem is untouched. The external-shape
+calculus is a $\Set$-enriched phenomenon unless the base's unit is connected.
+\end{remark}
+
+\subsection{T2: closedness of the Dirichlet tensor}\label{ss:T2}
+
+We ask when $(-)\otimes(T,Q)$ has a right adjoint inside $\Fam(\C^\op)$.
+
+\begin{theorem}[Closedness $=$ familial representability]\label{thm:T2}
+The following are equivalent.
+\begin{enumerate}
+\item $\otimes$ is closed: $(-)\otimes(T,Q)$ has a right adjoint for every $(T,Q)$.
+\item For all families $(Q_t)_{t\in T}$, $(M_r)_{r\in R}$ the functor
+$\Phi(Z)=\prodd_{t}\coprodd_{r}\C(M_r,Z\otimes Q_t)\colon\C\to\Set$ is familially representable, i.e.\
+$\Phi\cong\coprodd_u\C(N_u,-)$ for a small family $(N_u)$.
+\item For all families the atom $\Theta_{A,Q}(Z)=\prodd_{t}\C(A_t,Z\otimes Q_t)$ is familially
+representable.
+\end{enumerate}
+When they hold, $[(T,Q)\Rightarrow(R,M)]=(U,(N_u))$.
+\end{theorem}
+\begin{proof}
+$(1)\Leftrightarrow(2)$: a right adjoint at $(T,Q),(R,M)$ is an object representing
+$G:=\Fam(-\otimes(T,Q),(R,M))\colon\Fam(\C^\op)^\op\to\Set$. Since $\otimes$ distributes over the
+shape-coproduct and hom out of a coproduct is a product, $G$ sends coproducts to products, and on the
+generators $G(\langle Z\rangle)=\prodd_t\coprodd_r\C(M_r,Z\otimes Q_t)=\Phi(Z)$. By the universal
+property of the free coproduct completion (Definition~\ref{def:cont}), such a $G$ is representable
+iff its restriction to the generators is, i.e.\ iff $\Phi$ is familially representable; and the
+representing family is the internal hom.
+
+$(2)\Leftrightarrow(3)$: for sets, $\prodd_t\coprodd_r X_{t,r}=\coprodd_{\rho\colon T\to R}\prodd_t
+X_{t,\rho(t)}$ (no hypothesis on $\C$), whence $\Phi\cong\coprodd_\rho\Theta_{M\circ\rho,Q}$ (the
+identity \eqref{eq:star} below). A coproduct of familially representable functors is familially
+representable, giving $(3)\Rightarrow(2)$; and each corepresentable is connected in $[\C,\Set]$, so
+$\Theta_{A,Q}$ appears as the $\rho=\id$ summand of a familially-representable $\Phi$ and is itself
+familially representable, giving $(2)\Rightarrow(3)$.
+\end{proof}
+
+The set-distributivity used above,
+\begin{equation}\label{eq:star}
+\Phi(Z)\ \cong\ \coprodd_{\rho\colon T\to R}\ \Theta_{M\circ\rho,\,Q}(Z),\qquad
+\Theta_{M\circ\rho,\,Q}(Z)=\prodd_t\C(M_{\rho(t)},Z\otimes Q_t),
+\end{equation}
+is the engine of both regimes in which $\otimes$ is closed.
+
+\begin{theorem}[Two sufficient regimes]\label{thm:regimes}
+\begin{enumerate}
+\item \emph{(Cartesian.)} If $\otimes=\times$ (so $\C$ is cartesian closed), $\otimes$ is closed. The
+projection split $\C(A,Z\times Q)\cong\C(A,Z)\times\C(A,Q)$ makes each $\Theta_{A,Q}$ a copower of the
+corepresentable at $\coprodd_t A_t$, and
+\[
+[(T,Q)\Rightarrow(R,M)]=\Bigl(\coprodd_{\rho\colon T\to R}\prodd_t\C(M_{\rho(t)},Q_t),\ \bigl(\coprodd_t M_{\rho(t)}\bigr)_\rho\Bigr),
+\]
+the classical Dirichlet internal hom of $\Poly$ (\cite{NiuSpivak}, Ex.~4.78) over $\Set$.
+\item \emph{(Rigid.)} If every $Q_t$ is dualizable and $\C$ has the coproducts $\coprodd_t A_t\otimes
+Q_t^*$, then $\otimes$ is closed, with
+\[
+[(T,Q)\Rightarrow(R,M)]=\Bigl(R^T,\ (N_\rho)_{\rho\colon T\to R}\Bigr),\qquad N_\rho=\coprodd_t M_{\rho(t)}\otimes Q_t^*.
+\]
+Here $Z\otimes Q_t\cong\ihom{Q_t^*}{Z}$ gives $\C(A_t,Z\otimes Q_t)\cong\C(A_t\otimes Q_t^*,Z)$, so
+$\Theta_{A,Q}$ is a single corepresentable at $\coprodd_t A_t\otimes Q_t^*$.
+\end{enumerate}
+\end{theorem}
+
+Over $\Vect$ neither the projection split nor the diagonal $\Delta$ is available, so the only route
+to representability is the rigid one --- and it is also \emph{necessary}.
+
+\begin{lemma}[Single-factor representability over $\Vect$]\label{lem:vecrep}
+For $A,Q\in\Vect$ the functor $\Theta(Z)=\Vect(A,Z\otimes Q)$ is familially representable iff $Q$ is
+finite-dimensional, in which case it is corepresentable at $A\otimes Q^*$.
+\end{lemma}
+\begin{proof}
+$(\Leftarrow)$ is Theorem~\ref{thm:regimes}(2) with a single $t$. $(\Rightarrow)$: take $A=k$, so
+$\Theta(Z)=|Z\otimes Q|$ (underlying set), and $\Theta(0)=1$ forces a familial representation to be a
+single corepresentable $\Vect(N,-)$. If $\dim Q=\infty$, write $Q=k^{(I)}$; then $\Theta(Z)$ is the
+finitely-supported functions $I\to Z$, which fails to preserve an infinite product $\prodd_J k$: the
+element $(e_{i_j})_{j\in J}$ with the $i_j$ pairwise distinct lies in $\prodd_J\Theta(k)$ but has no
+finite-support preimage in $\Theta(\prodd_J k)$. So $\Theta$ is not corepresentable, hence not
+familially representable.
+\end{proof}
+
+\begin{theorem}[The linear closedness dichotomy]\label{thm:vecdicho}
+\begin{enumerate}
+\item On $\Fam_{\mathrm{fin}}(\Vecfd^\op)$ (finite shape-sets, finite-dimensional positions),
+$\otimes$ is closed, with internal hom $(R^T,(\bigoplus_t M_{\rho(t)}\otimes Q_t^*)_\rho)$, which
+stays finite-dimensional.
+\item On $\Fam(\Vecfd^\op)$ (arbitrary shape-sets), $\otimes$ is not closed: for $T=\mathbb{N}$, all
+$Q_t=k$, $R=\{r\}$, $M_r=k$, one computes $\Phi(Z)=|Z|^{\mathbb{N}}=\Vect(k^{(\mathbb{N})},Z)$, whose
+representing object $k^{(\mathbb{N})}$ is infinite-dimensional, so no object of $\Vecfd$ represents
+it.
+\item On $\Fam(\Vect^\op)$ (infinite-dimensional positions), $\otimes$ is not closed: for a single
+$Q=k^{(\mathbb{N})}$, $\Phi(Z)=|Z\otimes Q|$ is not familially representable by
+Lemma~\ref{lem:vecrep}.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}[The named obstruction, and its independence from T1]\label{rem:T2named}
+Closedness needs the hom position $N_\rho=\coprodd_t M_{\rho(t)}\otimes Q_t^*$ to (i) \emph{make
+sense} --- each $Q_t$ dualizable, forcing finite dimension over a linear base --- and (ii)
+\emph{exist} --- the coproduct present in $\C$. Over $\Vect$ these pull apart the moment $T$ is
+infinite: (i) pins positions to $\Vecfd$, (ii) needs a colimit escaping $\Vecfd$. The single
+load-bearing conjunct is thus \emph{dualizable-and-summable}, satisfiable over $\Vect$ exactly on the
+finite/fd corner. This is a different seam from T1: T1 fullness is the failure of $\C(I,-)$ to
+preserve $\oplus$ (a property of the unit), whereas T2 is a cocompleteness failure over $\Vecfd$ and
+a dualizability failure over full $\Vect$. Cartesian bases dodge the collision because the diagonal
+$\Delta$ does the work of duals at no cost --- which is why $\Set\times\Set$, though not full
+(Corollary~\ref{cor:setset}), still has $\otimes$ closed. Fullness and $\otimes$-closedness are
+independent axes.
+\end{remark}
+
+\subsection{T4: left-closedness of the substitution product}\label{ss:T4}
+
+The substitution product $\lhd$ is non-symmetric, so it has two potential internal homs. Its right
+internal hom --- the right adjoint to $(T,Q)\lhd(-)$ --- is the $\lhd$-\emph{coclosure}, which
+exists over $\Set$ and gives directed containers (\cite{NiuSpivak}, Prop.~6.57). We study the other
+one: the \emph{left} internal hom, right adjoint to $(-)\lhd(T,Q)$, the $\lhd$-\emph{closure}. Over
+$\Cont=\Fam(\Set^\op)$ it is obstructed.
+
+\begin{proposition}[The $\Set$ obstruction]\label{prop:setobstr}
+Over $\Set$, $(-)\lhd q$ has no right adjoint. Computing the extension of the generator,
+$\ext{\langle Z\rangle\lhd q}X=\ihom{Z}{\coprodd_t\ihom{Q_t}{X}}$, and the exponential distributes
+over the coproduct,
+\begin{equation}\label{eq:dist}
+\ihom{Z}{\coprodd_t B_t}=\coprodd_{\tau\colon Z\to T}\prodd_{d\in Z}B_{\tau(d)},
+\end{equation}
+so $\langle Z\rangle\lhd q$ has shape-set $T^Z$. By the universal property of the free coproduct
+completion (Definition~\ref{def:cont}), a right adjoint would be a container representing
+$(-)\lhd q$ generator by generator; but the $|T|^{|Z|}$-fold shape-set makes its shape-count grow
+double-exponentially ($|T_R([n])|\sim n^{2^n}$ in the free case), whereas every container has a
+\emph{polynomial} extension. No container carries such data, so the right adjoint does not exist for
+$|T|\ge 2$.
+\end{proposition}
+
+The obstruction \eqref{eq:dist} is created entirely by $\ihom{Z}{-}$ failing to preserve
+$\coprodd_t$ --- the distributive law of an extensive, cartesian closed base. Tininess removes it.
+
+\begin{proposition}[Collapse $\lhd=\otimes$]\label{prop:collapse}
+If every position object of $p=(S,P)$ is tiny, then $p\lhd q=p\otimes q=(S\times T,(P_s\otimes Q_t))$
+for every $q=(T,Q)$.
+\end{proposition}
+\begin{proof}
+Tininess replaces \eqref{eq:dist} by genuine coproduct-preservation:
+\[
+\ext{p\lhd q}X=\coprodd_s\ihom{P_s}{\coprodd_t\ihom{Q_t}{X}}
+=\coprodd_{s,t}\ihom{P_s}{\ihom{Q_t}{X}}
+=\coprodd_{s,t}\ihom{P_s\otimes Q_t}{X}
+=\ext{p\otimes q}X,
+\]
+using tininess of $P_s$ in the middle step and the tensor--hom adjunction at the end.
+\end{proof}
+
+Over $\Vecfd$ all objects are dualizable, hence tiny, so Proposition~\ref{prop:collapse} makes $\lhd$
+symmetric and identifies its left internal hom with the Dirichlet hom of
+Theorem~\ref{thm:vecdicho}.
+
+\begin{theorem}[$\lhd$-left-closedness over the linear base]\label{thm:T4}
+With $\lhd$ as above:
+\begin{enumerate}
+\item $\Fam_{\mathrm{fin}}(\Vecfd^\op)$ is $\lhd$-left-closed: $\lhd=\otimes$ by
+Proposition~\ref{prop:collapse}, and $\otimes$ is closed there by Theorem~\ref{thm:vecdicho}(1). The
+left internal hom is
+\[
+[(T,Q)\lhd(R,M)]=\Bigl(R^T,\ \bigl(\coprodd_t M_{\rho(t)}\otimes Q_t^*\bigr)_{\rho\colon T\to R}\Bigr).
+\]
+\item $\Fam(\Vecfd^\op)$ is not $\lhd$-left-closed (infinite shape-sets break summability, as in
+Theorem~\ref{thm:vecdicho}(2)).
+\item $\Fam(\Vect^\op)$ is not $\lhd$-left-closed (infinite-dimensional positions are not tiny, so
+the collapse itself fails, as in Theorem~\ref{thm:vecdicho}(3)).
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Extensivity is opposed to $\lhd$-left-closedness]\label{thm:inversion}
+The $\Set$ obstruction (Proposition~\ref{prop:setobstr}) and the $\Vecfd$ repair
+(Theorem~\ref{thm:T4}) are two valuations of the one fact --- the distributive law
+\eqref{eq:dist} --- with opposite sign.
+\begin{itemize}
+\item Over an extensive, cartesian closed base, $\ihom{Z}{-}$ explodes $\coprodd_t$ into $T^Z$
+branches: $\lhd\neq\otimes$, $\lhd$ is genuinely non-symmetric, and its closure is non-polynomial
+(absent). Extensivity \emph{is} the obstruction.
+\item Over a linear base, $\ihom{Z}{-}$ is additive and preserves $\coprodd_t$: $\lhd$ collapses onto
+the closed, symmetric $\otimes$. Non-extensivity \emph{is} the repair.
+\end{itemize}
+This inverts T1 and T2, where non-extensivity was the obstruction. The reason: T1/T2 measure whether
+the external $\Set$-coproduct on shapes is seen correctly by the base (non-extensivity breaks that),
+while $\lhd$-closedness needs the base's internal hom on positions \emph{not} to branch against
+coproducts --- which is exactly additivity. The same $\coprod^{\Set}\subsetneq\oplus$ seam that costs
+fullness buys $\lhd$-closedness.
+\end{theorem}
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lccccc}
+\toprule
+base $\C$ & extensive? & $\lhd$ vs $\otimes$ & $\lhd$ symmetric? & $\otimes$-closed? & $\lhd$-left-closed? \\
+\midrule
+$\Set$ (toposes) & \checkmark & $\lhd\neq\otimes$ & no & yes & \textbf{no} \\
+$\Vecfd$ (fin.\ corner) & $\times$ & $\lhd=\otimes$ & yes & yes & \textbf{yes} \\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{The inversion of Theorem~\ref{thm:inversion}: extensivity, the villain of T1/T2, is the
+hero of the $\lhd$-closure obstruction.}
+\label{tab:inversion}
+\end{table}
+
+%==========================================================================
+\section{Approach (2): indexed and dependent-polynomial functors}\label{sec:indexed}
+
+The second approach keeps the shapes \emph{internal}. A polynomial in the sense of Gambino and Kock
+\cite{GambinoKock} is a diagram
+\[
+I \xleftarrow{\ s\ } P \xrightarrow{\ f\ } S \xrightarrow{\ t\ } O
+\]
+in a base $\C$, and its extension is the composite of slice functors
+\begin{equation}\label{eq:sigmapidelta}
+\C/I \xrightarrow{\ \Delta_s\ } \C/P \xrightarrow{\ \Pi_f\ } \C/S \xrightarrow{\ \Sigma_t\ } \C/O,
+\end{equation}
+where $\Delta_s=s^*$ is pullback (reindexing), $\Pi_f$ the dependent product (right adjoint to
+$f^*$), and $\Sigma_t$ the dependent sum (left adjoint to $t^*$). Setting $I=O=1$ collapses the outer
+slices to $\C$ itself and \eqref{eq:sigmapidelta} becomes an endofunctor $\C\to\C$; a ``container in
+$\C$'' in this sense is then an internal map $P\to S$, with extension $X\mapsto\Sigma_S\Pi_P\,X$. Over
+$\Set$ this is $\coprodd_{s\in S}X^{P_s}$ --- the classical container extension, and the reason the
+two approaches coincide there.
+
+\begin{remark}[The load-bearing hypothesis]\label{rem:lcc}
+The functor $\Pi_f$ exists precisely when $\C$ is locally cartesian closed. This is not a
+convenience: without it the middle arrow of \eqref{eq:sigmapidelta} is undefined, and the approach
+cannot even \emph{form} its semantics --- there is no endofunctor to speak of. Over an extensive LCC
+base the resulting category of polynomials is itself extensive and reproduces the whole classical
+picture, which is Neil Ghani's expectation and is correct for $\Set$, any topos, and any LCC
+pretopos.
+\end{remark}
+
+\begin{proposition}[The approach cannot reach $\Vect$]\label{prop:novecpoly}
+$\Vect$ is not locally cartesian closed (Remark~\ref{rem:vecbad}), so the dependent product $\Pi_f$
+in \eqref{eq:sigmapidelta} does not exist. Approach (2) therefore cannot form its semantics over
+$\Vect$: there is no $\Sigma\Pi\Delta$ polynomial functor associated to an internal map of vector
+spaces. This is a \emph{negative} result --- not that the polynomial functors over $\Vect$ are
+badly behaved, but that they are not defined.
+\end{proposition}
+
+This is the first half of the discriminator. Where approach (1) sees $\Fam(\Vect^\op)$ directly ---
+its external set-coproduct never asks $\C$ for an internal $\Pi$ --- approach (2) is blocked at the
+definition. De Pascalis, Uustalu and Veltr\`i \cite{DPUV} give the composition-monoid refinement of
+the single-index corner of this approach (a common index, base $\Set$, dropping the cartesianness of
+\cite{GambinoKock}); their indexed containers are of the same lineage as (2), still over $\Set$, and
+we return to them in Section~\ref{sec:conclusion} as the target of the sharpest open problem.
+
+%==========================================================================
+\section{Approach (3): the fibrational referee, and the logic of containers}\label{sec:fibrational}
+
+The third approach begins as a referee. Present the position data as a fibration
+$p\colon\E\to\mathbb{B}$ with shapes in the base $\mathbb{B}$ and positions in the fibres, and give
+container semantics either by comprehension down to the base or directly in the total category. The
+two earlier approaches are then two instances of one scheme:
+
+\begin{itemize}
+\item approach (1) is the \emph{family fibration} $\Fam(\C)\to\Set$: shapes index an external set,
+fibres are objects of $\C$;
+\item approach (2) is the \emph{codomain fibration} $\cod\colon\Arr{\C}\to\C$ of an LCC base:
+shapes and positions are both internal, and $\Pi$ is the fibrewise right adjoint that the codomain
+fibration of an LCC category carries.
+\end{itemize}
+
+\begin{remark}[Where the fibrations diverge]\label{rem:fibdiverge}
+The question ``which approach'' becomes ``which fibration models your positions.'' Over an extensive
+LCC base the family and codomain fibrations agree, and the choice is presentational. Over a base that
+fails one property they genuinely diverge: $\Vect$ has a family fibration $\Fam(\Vect)\to\Set$ (so
+approach (1) is available) but no codomain fibration with dependent products (so approach (2)'s
+$\Pi$ is absent). The fibrational view thus reads the discriminator as a statement about which
+fibration exists.
+\end{remark}
+
+But the fibrational approach is more than a referee. Applying the container construction
+$\Cont(-):=\Fam((-)^\op)$ to the codomain fibration of $\Set$ itself produces a fibration
+\emph{of containers over containers} --- a bifibration whose fibres are proof-relevant predicates on
+positions. This is the ``logic of containers,'' and it is where the predicate structure that
+approaches (1) and (2) merely presuppose becomes an explicit calculus. We develop it now; it is the
+positive content of the third approach and, at the level of the quantifiers, it recovers the
+$\All$ and $\Exists$ predicate liftings on positions --- the fibred dependent sum and product.
+
+\subsection{$\Fam$ preserves fibrations}\label{ss:fampreserves}
+The construction rests on a single structural lemma. Recall $\Fam(\D)$ has objects $(I,(X_i)_{i\in I})$
+with $I\in\Set$, and morphisms $(u,(f_i))\colon(I,(X_i))\to(J,(Y_j))$ a function $u\colon I\to J$ with
+$f_i\colon X_i\to Y_{u(i)}$; for $p\colon\E\to\mathbb{B}$ set $\Fam(p)(I,(X_i))=(I,(pX_i))$.
+
+\begin{lemma}[Componentwise cartesianness]\label{lem:fampres}
+Let $p\colon\E\to\mathbb{B}$ be any functor. A morphism $(u,(f_i))$ of $\Fam(\E)$ is
+$\Fam(p)$-cartesian if and only if each $f_i$ is $p$-cartesian. Consequently, if $p$ is a fibration
+(resp.\ opfibration, bifibration) then so is $\Fam(p)$, with (op)reindexing computed componentwise.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Because $\Fam(\E)$ is the free coproduct completion, a morphism carries no cross-index datum beyond
+the reindexing function $u$; a factorisation problem for $(u,(f_i))$ therefore decomposes into one
+independent factorisation problem per index $i$, each solved uniquely exactly when $f_i$ is
+$p$-cartesian. The cartesian lift of a base morphism $(u,(\psi_i))$ into $(J,(Y_j))$ is
+$(u,(\chi_i))$, where $\chi_i$ is the $p$-cartesian lift of $\psi_i$ and the position object is
+$X_i:=\psi_i^*Y_{u(i)}$. The opcartesian statement is the same argument reversed. The verification is a
+routine diagram chase; the fact is folklore \cite[Ch.~1]{Jacobs}, \cite{Hermida}.
+\end{proof}
+
+\begin{theorem}[The bifibration of containers]\label{thm:contcod}
+The codomain functor $\cod\colon\Arr{\Set}\to\Set$ is a bifibration (opreindexing $\Sigma_\beta$ is
+post-composition; reindexing $\beta^*$ is pullback, available because $\Set$ has pullbacks). Hence
+$\cod^\op\colon\Arr{\Set}{}^\op\to\Set^\op$ is a bifibration, and by Lemma~\ref{lem:fampres}
+\[
+\Cont(\cod)\;:=\;\Fam(\cod^\op)\;\colon\;\Cont(\Arr{\Set})\longrightarrow\Cont(\Set)
+\]
+is a bifibration. Its fibre over a container $(S,(P_s)_{s\in S})$ is
+\[
+\prodd_{s\in S}\bigl(\Set/P_s\bigr)^{\op},
+\]
+the \emph{fibrewise opposite} of the slices: an object assigns to each shape $s$ and each position
+$b\in P_s$ a witness set, i.e.\ a \emph{proof-relevant predicate on positions}.
+\end{theorem}
+\begin{proof}[Proof sketch]
+$\cod$ is Streicher's fundamental fibration; the op of a bifibration is a bifibration, so
+$\cod^\op$ is one and Lemma~\ref{lem:fampres} lifts it through $\Fam$. An object of
+$\Cont(\Arr{\Set})$ is $(S,(f_s\colon A_s\to B_s))$ and $\Cont(\cod)$ returns $(S,(B_s))$; a vertical
+morphism over $\id_{(S,(P_s))}$ unwinds to a $\Set/P_s$-morphism in the \emph{backward} direction for
+each $s$, whence the fibrewise op. This is von Glehn's presentation $\Cont=\int_{\Set}\cod^\op$
+\cite{vonGlehn}.
+\end{proof}
+
+The fibrewise op is not an accident of bookkeeping: it is forced by the contravariance of container
+morphisms on positions, and it is what makes the resulting logic \emph{dual} to the familiar one.
+
+\subsection{The quantifiers are the $\mathsf{All}/\mathsf{Exists}$ liftings}\label{ss:quantifiers}
+Fix a container $(S,(P_s))$. Between the trivial predicate $(S,(1)_s)$ and $(S,(P_s))$ there is one
+canonical base morphism, the \emph{collapse} $\eta\colon(S,(1))\to(S,(P_s))$ carrying the backward
+position map ${!}\colon P_s\to 1$ (the reverse direction would require a choice of point and is not
+canonical). Because $\Set$ is locally cartesian closed, collapse along $!\colon P_s\to 1$ gives the
+standard adjoint string in each slice,
+\[
+\Sigma_{!}\ \dashv\ {!}^*\ \dashv\ \Pi_{!}
+\qquad(\ \exists\ \dashv\ \text{weakening}\ \dashv\ \forall\ ),
+\]
+with $\Sigma_{!}(f\colon A\to P_s)=A$ the total space, ${!}^*Z=(P_s\times Z\to P_s)$ the constant
+family, and $\Pi_{!}(f)=\prodd_{b}f^{-1}(b)$ the set of sections. Transporting this string through the
+fibrewise op and $\Fam$ (an adjunction $L\dashv R$ becomes $R^\op\dashv L^\op$) yields the fibred
+quantifiers of $\Cont(\cod)$ along $\eta$.
+
+\begin{theorem}[Quantifiers $=$ liftings]\label{thm:quantAE}
+Along the collapse $\eta$, the bifibration $\Cont(\cod)$ carries a two-sided adjoint string
+\[
+\All\ \dashv\ \Delta_c\ \dashv\ \Exists,
+\]
+in which the cartesian reindexing $\eta^*=(\Sigma_{!})^\op$ is $\Exists$ (the total space), the
+opreindexing $\eta_!=({!}^*)^\op=\Delta_c$ is
+weakening, and $\All=(\Pi_{!})^\op$ is the fibrewise product of witnesses. These are the
+$\All$ and $\Exists$ predicate liftings on positions: $\Exists$ is the dependent
+sum $\Sigma_{b}$ over positions, $\All$ the dependent product $\prodd_{b}$.
+\end{theorem}
+
+\begin{remark}[The reindexing is $(\Sigma_\rho)^\op$, not $\rho^*$]\label{rem:trap}
+It is tempting to guess that reindexing along a container morphism
+$(u,(\rho_s))$ is pullback $\rho_s^*$. It is not: by Lemma~\ref{lem:fampres} the cartesian lift is
+computed component\-wise from the $\cod^\op$-cartesian lift, which by op-duality is the
+$\cod$-\emph{co}cartesian lift $\Sigma_{\rho_s}$ dualised. So the cartesian reindexing of
+$\Cont(\cod)$ is post-composition $(\Sigma_\rho)^\op$, sending a predicate $g\colon C\to P'_{u(s)}$ to
+$\rho_s\circ g\colon C\to P_s$. Pullback $\rho_s^*$ reappears, but as the \emph{op}reindexing
+(weakening) of the opfibration --- the left adjoint, not the cartesian direction.
+\end{remark}
+
+\subsection{The dualisation: containers are the fibrewise-opposite hyperdoctrine}\label{ss:dual}
+The adjoint string of Theorem~\ref{thm:quantAE} is the fibrewise opposite of the $\Set$ string
+$\Sigma_{!}\dashv{!}^*\dashv\Pi_{!}$. This one fact reorganises the whole predicate logic.
+
+\begin{theorem}[Dualisation]\label{thm:dualisation}
+Relative to the common weakening $\Delta_c$, the container logic's existential (left adjoint) is
+$\All$, built from $\Set$'s dependent \emph{product} $\Pi$, and its universal (right adjoint) is
+$\Exists$, built from $\Set$'s dependent \emph{sum} $\Sigma$: container-$\exists$ is $\Set$-$\forall$
+and container-$\forall$ is $\Set$-$\exists$. In each fibre $(\Set/P_s)^\op$ the fibre product
+(container $\wedge$) is disjoint union of witness sets, the fibre coproduct (container $\vee$) is the
+fibrewise product of witnesses, $\top$ is the empty-witness predicate $\emptyset\to P_s$, and $\bot$
+is the full predicate $\id\colon P_s\to P_s$. Hence the hyperdoctrine of containers is the
+\emph{fibrewise opposite} of the standard $\Set$-family hyperdoctrine, with $\exists\leftrightarrow
+\forall$, $\wedge\leftrightarrow\vee$, $\top\leftrightarrow\bot$ all exchanged, and each fibre is a
+\emph{co-topos} whose internal logic is co-intuitionistic (subtractive).
+\end{theorem}
+
+The names $\All$ and $\Exists$ track the $\Set$ operation used to build the lifting
+($\Pi$ resp.\ $\Sigma$); Theorem~\ref{thm:dualisation} shows their \emph{logical role} in the
+container hyperdoctrine is the reverse. The subtractive flavour is genuine only at the proof-relevant
+level: the crude Boolean truncation $\Sub(P_s)=2^{P_s}$ is self-dual and hides it, whereas the
+witness-level subobject fibration $\Sub(\Arr{\Set})\to\Set$ retains it. Beck--Chevalley and Frobenius
+reciprocity hold, dualised: for squares in $\Cont(\Set)$ that are componentwise the op-image of $\Set$
+pullback squares, $\Exists$ and $\All$ commute with substitution, and $\All$ satisfies Frobenius with
+$\wedge$ replaced by the fibrewise coproduct $\vee$ (co-Frobenius).
+
+\begin{remark}[Scope of the logic]\label{rem:logicscope}
+Two honest limitations. First, Theorems~\ref{thm:quantAE}--\ref{thm:dualisation} describe the
+\emph{position-level} (fibrewise) logic only; the full first-order logic over $\Cont(\Set)$ also needs
+quantification over shapes, which is the $\Fam$ coproduct-completion structure, and we do not verify
+here that the combined shape-and-position hyperdoctrine satisfies Beck--Chevalley and Frobenius
+jointly. Second, the Beck--Chevalley squares are identified only as the op-image of $\Set$ pullback
+squares; an intrinsic characterisation in terms of container pullbacks is left open. Neither gap
+affects Theorems~\ref{thm:contcod}--\ref{thm:dualisation} as stated.
+\end{remark}
+
+\begin{remark}[Enriched Yoneda and the set-level T1]\label{rem:enriched}
+Presenting each object of $\Fam(\C^\op)$ as a presheaf $\C\to\Set$ invites an \emph{enriched}-Yoneda
+statement of full faithfulness. Our proof of Theorem~\ref{thm:T1} is deliberately set-level: it
+factors through the single comparison map $\gamma$ (Definition~\ref{def:gamma}) and needs no
+enrichment of the ambient functor category. The enriched statement --- that $\ext{-}$ is a fully
+faithful $\C$-functor --- is the same content repackaged: enriched full faithfulness is exactly the
+family of isomorphisms \eqref{eq:homformula}, whose points are the $\gamma$-bijections. The set-level
+route is preferable here because the invariant it isolates (connectedness of the unit) is a property
+of $\C(I,-)$, not of the enrichment, and this is what makes the $\Set\times\Set$ counterexample
+legible.
+\end{remark}
+
+For the discriminator, approach (3) plays two roles at once. As referee it reads ``which approach'' as
+``which fibration models your positions,'' and the fibrations part company precisely at the
+non-extensive, non-LCC bases (Remark~\ref{rem:fibdiverge}). As a construction in its own right over
+$\Set$ it supplies the predicate calculus --- the bifibration $\Cont(\cod)$ and its dualised
+quantifiers --- that names the logical structure the container of positions carries, and identifies it
+with von Glehn's fibrewise op and the $\mathsf{All}/\mathsf{Exists}$ liftings.
+
+%==========================================================================
+\section{Approach (4): the subcartesian weakening}\label{sec:subcartesian}
+
+One might hope to rescue approach (2) over $\Vect$ by weakening the requirement that costs it $\Pi$.
+Walker's \emph{locally subcartesian closed} (LSCC) categories \cite{Walker} do exactly this, along a
+lineage (Weber distributivity pullbacks, Street protocalibrations) independent of Gambino--Kock. The
+idea is to equip a category having pullbacks with a coherent choice of \emph{subpullbacks} --- chosen
+subobjects of the genuine pullbacks --- from which one builds \emph{affine} base-change functors
+$\nabla_f$ whose right adjoints $\boxtimes_f$ (the ``dependent subproduct'') can exist even when the
+top adjoint $\Delta_f\dashv\Pi_f$ of the LCC chain does not. Each slice then carries a subcartesian
+tensor $f\otimes_X g=\Sigma_g\nabla_g(f)$ that is right-closed without being cartesian closed; the
+motivating example is the Lawvere quantale, with the additive, non-cartesian slice tensor $A+B-X$.
+
+This is a genuine fourth weakening, and its additive slice tensor is structurally close to the
+$\otimes/\oplus$ shape of $\Vect$. So it sharpens the discriminator: does $\Vect$, though it fails
+full LCC, carry a coherent subpullback structure making it LSCC?
+
+\begin{remark}[Verdict: $\Vect$ is not locally subcartesian closed]\label{rem:walkerverdict}
+Reading Walker's definitions against $\Vect$ gives a negative answer, on three load-bearing points
+\cite[Def.~4.0.1, Rem.~4.0.2, Rem.~4.0.4, fn.~15]{Walker}.
+\begin{enumerate}
+\item \emph{Pullbacks are mandatory} (Rem.~4.0.4): the construction uses Dubuc's adjoint-triangle
+theorem, which needs each $\Sigma_f$ to have a right adjoint, so $\Sigma_f\dashv\Delta_f$ always
+holds and only the top adjoint is weakened. The chain does not fully fail; just its top.
+\item \emph{Closure demands genuine right adjoints} $\boxtimes_p$ (Def.~4.0.1): the slice tensor must
+be \emph{right closed}, i.e.\ each affine base-change must have an actual right adjoint. The
+``unique-if-exists'' relaxation applies only to the subpullback (the $\nabla$ side), not to the
+closure step, so it gives no back door.
+\item \emph{The nearest cousin is filed as obstructed} (Rem.~4.0.2, fn.~15): the category of
+\emph{affine spaces} is ``somewhat close to working'' --- it has a canonical $\boxtimes_{X\to 1}$
+because slice morphisms are closed under affine combinations --- but general $\boxtimes_p$ fails, the
+obstruction being \emph{cross-fiber combinations}. Walker ``mostly ignores such cases as they lack
+the desired polynomial structure.''
+\end{enumerate}
+The cross-fiber obstruction of (3) is exactly the $\coprod^{\Set}\subsetneq\oplus$ biproduct collapse
+of $\Vect$ in disguise: linear combinations that cross fibres are precisely what the biproduct adds
+and the coproduct-of-underlying-sets lacks. Walker's polynomial biequivalence (Thm.~5.2.8) is a
+recognition theorem \emph{assuming} local subcartesian closure, not a criterion certifying it for a
+given non-LCC base, so it offers no route around the obstruction.
+\end{remark}
+
+\begin{remark}[Status of the verdict]\label{rem:walkerstatus}
+Remark~\ref{rem:walkerverdict} is a reading of Walker's preprint checked against the structure of
+$\Vect$, not a theorem with a proof of our own; we state it as an understanding result. Its role in
+the survey is to close the last escape hatch: $\Vect$ fails not only extensivity and local cartesian
+closure but even Walker's weaker affine substitute. The discriminator gap is therefore not ``LCC or
+not'' but the deeper ``no affine base-change survives at all.''
+\end{remark}
+
+%==========================================================================
+\section{Synthesis: the discriminator}\label{sec:synthesis}
+
+We can now state the classification the three (four) approaches obey.
+
+\begin{theorem}[The two-axis discriminator]\label{thm:discriminator}
+Let $\C$ be a closed symmetric monoidal base.
+\begin{enumerate}
+\item If $\C$ is extensive and locally cartesian closed, all four approaches agree: the external
+family, indexed-polynomial, family-fibration and codomain-fibration constructions coincide, and one
+recovers the classical convergence --- containers $\simeq$ directed containers $\simeq$
+$\Poly$-comonoids $\simeq$ (small) categories.
+\item If $\C$ fails local cartesian closure, approach (2) cannot form its $\Sigma\Pi\Delta$ semantics
+(Proposition~\ref{prop:novecpoly}); if $\C$ additionally fails Walker's subpullback closure, approach
+(4) cannot either (Remark~\ref{rem:walkerverdict}).
+\item The external approach (1) reaches any closed $\C$ with coproducts, using external set-indexing
+and never asking $\C$ for an internal $\Pi$ or a well-behaved $\coprod$. Its obstructions are not to
+\emph{existence} but to \emph{good behaviour}, and they are measured exactly:
+\begin{itemize}
+\item full faithfulness fails iff the unit is disconnected (Theorem~\ref{thm:T1});
+\item $\otimes$-closedness fails off the cartesian bases and the finite-fd linear corner
+(Theorem~\ref{thm:vecdicho});
+\item $\lhd$-left-closedness holds only where $\lhd$ collapses onto $\otimes$, i.e.\ on the same
+finite-fd corner, and is obstructed on every extensive base (Theorems~\ref{thm:T4},
+\ref{thm:inversion}).
+\end{itemize}
+\end{enumerate}
+The base $\Vect$ realises the corner that has neither property: only approach (1) reaches
+$\Fam(\Vect^\op)$, and the three obstructions of (3) are the quantitative face of the two failed
+hypotheses.
+\end{theorem}
+
+The classification is genuinely two-dimensional. Extensivity and local cartesian closure are
+independent (Table~\ref{tab:main} has a base failing each), and they act on the container structures
+with \emph{opposite} sign on the two tensors: non-extensivity breaks fullness and
+$\otimes$-closedness (T1, T2) but repairs $\lhd$-closedness (T4), because the first two ask the base
+to see an external coproduct correctly while the third asks its internal hom not to branch against
+coproducts. A single ``goodness'' scale cannot express this; the two axes can. $\Fam(\Vect^\op)$ is
+the object that makes the two-dimensionality visible, because it is the corner where both axes are at
+their extreme.
+
+%==========================================================================
+\section{Conclusion and the sharpest open problem}\label{sec:conclusion}
+
+Four constructions answer to ``a container in a category,'' and they diverge along two independent
+properties of the base: extensivity and local cartesian closure. When the base has both, the four
+agree and the classical theory is recovered. When the base has neither --- the linear base $\Vect$
+--- only the external-family construction survives, and its survival is exactly measured by three
+dichotomies: full faithfulness tracks connectedness of the unit, $\otimes$-closedness tracks a
+dualizable-and-summable condition met only on the finite-dimensional corner, and $\lhd$-left-closedness
+holds precisely where linearity collapses the substitution product onto the Dirichlet tensor. The last
+inverts the first two: the non-extensivity that costs fullness and $\otimes$-closedness is what buys
+$\lhd$-closedness.
+
+The fibrational approach (3), beyond adjudicating the other two, yields a second thread: over $\Set$
+it is the bifibration $\Cont(\cod)=\Fam(\cod^\op)$ of proof-relevant predicates on positions, whose
+fibred quantifiers are the $\All$ and $\Exists$ liftings and whose hyperdoctrine is the fibrewise
+opposite of the standard one --- container-$\exists$ is $\Set$-$\forall$, and each fibre is a co-topos.
+We developed this only at the position level; its shape-level quantifiers, the joint Beck--Chevalley
+and Frobenius laws, and the intrinsic class of Beck--Chevalley squares (Remark~\ref{rem:logicscope})
+remain open, and are the natural next targets on that thread.
+
+We close by naming the single sharpest problem the survey surfaces, to seed the next proof.
+
+\begin{question}[Does the branching hierarchy lift index-wise?]\label{q:main}
+De Pascalis, Uustalu and Veltr\`i \cite{DPUV} classify the monoid structures on \emph{indexed}
+containers over $\Set$, dropping the cartesianness of \cite{GambinoKock} and separating a cartesian
+from a general regime. Over the single index their composition monad is exactly the substitution
+monoid $M\lhd(-)$ studied here. The external approach carries a finer, four-level branching hierarchy
+--- $\lambda$-invertible $\subsetneq$ non-branching $\subsetneq$ cartesian $\subsetneq$
+$\Pi$-Mendler --- for the liftings of $M\lhd(-)$. \emph{Does this four-level chain lift index-wise to
+the indexed containers $\mathrm{IC}_I$ of \cite{DPUV}, refining their cartesian/general dichotomy into
+a four-step tower over each index?} A positive answer would join the external approach (1) to the
+indexed approach (2) at the level of composition structure, exactly where Section~\ref{sec:indexed}
+left them disjoint, and would be the first structural bridge between the two over a base richer than
+$\Set$.
+\end{question}
+
+A second, more speculative target is whether Walker's bicategory of subcartesian polynomials
+(\cite{Walker}, Thm.~5.2.8), built from Street-style spans, is the same object as the external
+$\otimes/\lhd$ constructions of Section~\ref{sec:external}, built from family-style external
+coproducts, or genuinely disjoint --- the direct overlap check for the container-over-$\Vect$
+programme. We record it as secondary; Question~\ref{q:main} is the one to prove first.
+
+%==========================================================================
+\section*{Acknowledgements}
+This survey was written on a directive of Neil Ghani (Kodamai) to map the approaches to containers
+over a base, with $\Fam(\Vect^\op)$ as the running example. The tensor and substitution structures
+over a general base are those of Dorta, Jarvis and Niu; the errors of framing are the author's.
+
+%==========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{AAG} M.~Abbott, T.~Altenkirch, N.~Ghani.
+\emph{Containers: constructing strictly positive types.}
+Theoretical Computer Science \textbf{342} (2005), 3--27. (FoSSaCS 2003.)
+
+\bibitem{AhmanUustalu} D.~Ahman, T.~Uustalu.
+\emph{Directed containers as categories.}
+EPTCS \textbf{207} (2016), 89--98.
+
+\bibitem{Day} B.~Day.
+\emph{On closed categories of functors.}
+In: Reports of the Midwest Category Seminar IV, Lecture Notes in Mathematics \textbf{137},
+Springer, 1970, 1--38.
+
+\bibitem{Diers} Y.~Diers.
+\emph{Cat\'egories localisables.}
+Th\`ese de doctorat d'\'etat, Universit\'e Paris VI, 1977. (Familial representability.)
+
+\bibitem{DJN} S.~Dorta, A.~Jarvis, N.~Niu.
+\emph{Monoidal structures on generalized polynomial categories.}
+arXiv:2305.05655.
+
+\bibitem{DPUV} G.~De Pascalis, T.~Uustalu, N.~Veltr\`i.
+\emph{Monoid structures on indexed containers.}
+arXiv:2509.25879.
+
+\bibitem{FGHW} M.~Fiore, N.~Gambino, M.~Hyland, G.~Winskel.
+\emph{The cartesian closed bicategory of generalised species of structures.}
+Journal of the London Mathematical Society \textbf{77} (2008), 203--220.
+
+\bibitem{GambinoKock} N.~Gambino, J.~Kock.
+\emph{Polynomial functors and polynomial monads.}
+Mathematical Proceedings of the Cambridge Philosophical Society \textbf{154} (2013), 153--192.
+arXiv:0906.4931.
+
+\bibitem{Hermida} C.~Hermida.
+\emph{Fibrations, logical predicates and indeterminates.}
+PhD thesis, University of Edinburgh, 1993. (Fam preserves fibrations.)
+
+\bibitem{Jacobs} B.~Jacobs.
+\emph{Categorical Logic and Type Theory.}
+Studies in Logic and the Foundations of Mathematics \textbf{141}, North-Holland, 1999.
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak.
+\emph{Polynomial Functors: A Mathematical Theory of Interaction.}
+Book draft, 2024.
+
+\bibitem{vonGlehn} T.~von Glehn.
+\emph{Polynomials and models of type theory.}
+PhD thesis, University of Cambridge, 2015. See also Theory and Applications of Categories
+\textbf{33} (2018). (The presentation $\Cont=\int_{\Set}\cod^\op$ with fibrewise op.)
+
+\bibitem{ShapiroSpivak} B.~Shapiro, D.~I.~Spivak.
+\emph{Structures on categories of polynomials.}
+arXiv:2305.00167.
+
+\bibitem{Walker} C.~Walker.
+\emph{Locally subcartesian closed categories.}
+arXiv:2607.10242.
+
+\bibitem{WeberPoly} M.~Weber.
+\emph{Polynomials in categories with pullbacks.}
+Theory and Applications of Categories \textbf{30} (2015), 533--598. arXiv:1106.1983.
+
+\bibitem{WeberFamilial} M.~Weber.
+\emph{Familial 2-functors and parametric right adjoints.}
+Theory and Applications of Categories \textbf{18} (2007), 665--732.
+
+\end{thebibliography}
+
+\end{document}

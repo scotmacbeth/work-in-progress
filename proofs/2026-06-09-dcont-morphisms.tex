@@ -1,0 +1,389 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Cof}{\mathbf{Cof}}
+\newcommand{\DCont}{\mathbf{DCont}}
+\newcommand{\cont}[2]{#1 \triangleleft #2}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\cod}{\mathrm{cod}}
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\ob}{\mathrm{ob}\,}
+\newcommand{\sharpp}{\sharp}
+\newcommand{\co}{\mathrel{\text{\reflectbox{$\rightharpoonup$}}}}
+\DeclareMathOperator{\Hom}{Hom}
+
+\theoremstyle{definition}\newtheorem{definition}{Definition}[section]
+\theoremstyle{plain}\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\theoremstyle{remark}\newtheorem{example}[definition]{Example}
+\newtheorem{remark}[definition]{Remark}
+
+\title{\textbf{The Morphisms of Directed Containers are Cofunctors:\\
+completing the dictionary $\DCont\cong\Cof$}}
+\author{MacBeth}
+\date{9 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The object-level dictionary of \texttt{directed-categories.tex} identifies
+directed containers with small categories. We extend it to morphisms. The
+container morphism $(f,f^\sharp)$ has its position component
+$f^\sharp_s\colon P'(fs)\to P(s)$ \emph{contravariant} on positions, whereas a
+functor acts \emph{covariantly} on morphisms; the two variances are opposite,
+so directed-container morphisms cannot be functors. We resolve the mismatch:
+with the directed-structure compatibility conditions made fully explicit,
+$(f,f^\sharp)$ is exactly a \emph{cofunctor} (retrofunctor) of the associated
+categories. The assignment is a bijection on hom-sets and a functor, and it is
+bijective on objects, so it is an \emph{isomorphism of categories}
+$\DCont\cong\Cof$, where $\Cof$ is the category of small categories and
+cofunctors. The would-be statement $\DCont\simeq\Cat$ is therefore false: the
+object dictionary does not extend to a full functor into $\Cat$, since
+$\Cof$ and $\Cat$ have genuinely different hom-sets over their common objects
+(neither contains the other). As a foil we show that the \emph{opposite}
+variance --- a covariant position map $P(s)\to P'(fs)$ --- recovers functors
+exactly. All counts are verified combinatorially across $36$ ordered pairs of
+small categories.
+\end{abstract}
+
+\section{Setup and the variance problem}
+
+We adopt the notation of \texttt{directed-categories.tex}. A directed container
+$D=(\cont SP,\mathsf o,\downarrow,\oplus)$ determines a small category
+$\mathcal C(D)$ by the dictionary
+\[
+  \ob\mathcal C(D)=S,\qquad
+  \mathcal C(D)(s,s')=\{p\in P(s): s\downarrow p=s'\},\qquad
+  \id_s=\mathsf o(s),\qquad q\circ p = p\oplus q,
+\]
+so that $P(s)=\coprod_{s'}\mathcal C(D)(s,s')$ is the set of all morphisms
+\emph{out of} $s$, and $s\downarrow p=\cod(p)$. Conversely every small category
+$\mathcal C$ arises as $\mathcal C(D)$ for a unique directed container $D$;
+this object-level bijection is Theorem~4.1 of \texttt{directed-categories.tex}.
+
+A morphism of the underlying containers
+$(\cont SP)\to(\cont{S'}{P'})$ is a pair
+\[
+  (f,f^\sharp),\qquad f\colon S\to S',\qquad
+  f^\sharp_s\colon P'(fs)\to P(s)\ \ (s\in S),
+\]
+the data of a natural transformation between extension functors. Note the
+direction: $f$ goes forward on shapes, while $f^\sharp$ pulls positions
+\emph{backward}, from the target shape $fs$ to the source shape $s$. Under the
+dictionary, $f^\sharp_s$ sends a morphism out of $fs$ in $\mathcal C(D')$ to a
+morphism out of $s$ in $\mathcal C(D)$.
+
+\paragraph{The problem.} A functor $F\colon\mathcal C\to\mathcal C'$ is
+\emph{covariant} on hom-sets: it sends a morphism out of $s$ to a morphism out
+of $Fs$, a map $P(s)\to P'(Fs)$. The container component $f^\sharp$ runs the
+other way, $P'(fs)\to P(s)$. The variances are opposite. Hence the naive hope
+``a $\DCont$-morphism is a functor'' is ill-typed, and the assertion
+$\DCont\simeq\Cat$ must be examined rather than assumed. We show the correct
+target is the category of cofunctors.
+
+\section{Cofunctors}
+
+\begin{definition}[Cofunctor]\label{def:cof}
+A \emph{cofunctor} $\varphi\colon\mathcal C\co\mathcal D$ between small
+categories consists of
+\begin{itemize}[nosep]
+  \item an object map $\varphi_0\colon\ob\mathcal C\to\ob\mathcal D$;
+  \item a \emph{lift}: for every object $c$ of $\mathcal C$ and every morphism
+        $h\colon\varphi_0 c\to d$ of $\mathcal D$, a morphism
+        $\varphi^\uparrow(c,h)\colon c\to c'$ of $\mathcal C$;
+\end{itemize}
+subject to:
+\begin{align}
+  &\text{(C0)} && \varphi_0\big(\cod\varphi^\uparrow(c,h)\big)=\cod(h);
+        &&\text{(codomain lift)}\notag\\
+  &\text{(C1)} && \varphi^\uparrow(c,\id_{\varphi_0 c})=\id_c;
+        &&\text{(unit)}\notag\\
+  &\text{(C2)} && \varphi^\uparrow(c,h'\circ h)
+                   =\varphi^\uparrow(c',h')\circ\varphi^\uparrow(c,h),
+        \quad c'=\cod\varphi^\uparrow(c,h). &&\text{(composition)}\notag
+\end{align}
+In (C2), $h\colon\varphi_0 c\to d$ and $h'\colon d\to d''$; the term
+$\varphi^\uparrow(c',h')$ typechecks because $\varphi_0 c'=d=\dom(h')$ by (C0).
+Cofunctors compose --- object maps forward, lifts back ---
+$(\psi\varphi)^\uparrow(c,m)=\varphi^\uparrow(c,\psi^\uparrow(\varphi_0 c,m))$
+--- with identities $(\id_0,\id^\uparrow)$, forming a category $\Cof$ of small
+categories and cofunctors.
+\end{definition}
+
+Cofunctors are the comonoid morphisms in $(\mathbf{Poly},\triangleleft)$
+(Ahman--Uustalu; Garner); we revisit this in \S\ref{sec:poly}.
+
+\section{The morphism dictionary}
+
+We now write the compatibility conditions that promote a container morphism
+$(f,f^\sharp)$ to a morphism of \emph{directed} containers, and read them as
+the cofunctor laws. For $h\in P'(fs)$, recall $f^\sharp_s(h)\in P(s)$ and
+$(fs)\downarrow' h\in S'$.
+
+\begin{definition}[Directed-container morphism]\label{def:dcm}
+A \emph{morphism of directed containers} $D\to D'$ is a container morphism
+$(f,f^\sharp)$ satisfying, for all $s\in S$, $h\in P'(fs)$ and
+$k\in P'\big((fs)\downarrow' h\big)$:
+\begin{align}
+  &\text{(M0)} && f\big(s\downarrow f^\sharp_s(h)\big) = (fs)\downarrow' h;
+        &&\text{($\downarrow$-compatibility)}\notag\\
+  &\text{(M1)} && f^\sharp_s\big(\mathsf o'(fs)\big) = \mathsf o(s);
+        &&\text{(root preservation)}\notag\\
+  &\text{(M2)} && f^\sharp_s(h\oplus' k)
+        = f^\sharp_s(h)\ \oplus\ f^\sharp_{\,s\downarrow f^\sharp_s(h)}(k).
+        &&\text{(shift homomorphism)}\notag
+\end{align}
+\end{definition}
+
+\begin{remark}[Well-typedness of (M2)]
+The left side: $h\oplus' k\in P'(fs)$ since $\oplus'$ lands in $P'(fs)$, so
+$f^\sharp_s$ applies. The right side: put $p:=f^\sharp_s(h)\in P(s)$. By (M0),
+$(fs)\downarrow' h = f(s\downarrow p)$, so $k\in P'(f(s\downarrow p))$ and
+$f^\sharp_{s\downarrow p}(k)\in P(s\downarrow p)$; then
+$p\oplus f^\sharp_{s\downarrow p}(k)\in P(s)$. Thus (M2) typechecks precisely
+because of (M0) --- mirroring how D5 typechecks because of D4.
+\end{remark}
+
+\begin{lemma}[Hom-set bijection]\label{lem:hom}
+Fix directed containers $D,D'$ with categories $\mathcal C=\mathcal C(D)$,
+$\mathcal C'=\mathcal C(D')$. The map
+\[
+  (f,f^\sharp)\ \longmapsto\ \big(\varphi_0:=f,\ \varphi^\uparrow(s,h):=f^\sharp_s(h)\big)
+\]
+is a bijection between morphisms $D\to D'$ of directed containers
+(Definition~\ref{def:dcm}) and cofunctors
+$\mathcal C\co\mathcal C'$ (Definition~\ref{def:cof}).
+\end{lemma}
+
+\begin{proof}
+Under the dictionary, a position $h\in P'(fs)$ \emph{is} a morphism out of $fs$
+in $\mathcal C'$, with codomain $(fs)\downarrow' h$; and $f^\sharp_s(h)\in P(s)$
+\emph{is} a morphism out of $s$ in $\mathcal C$, with codomain
+$s\downarrow f^\sharp_s(h)$. So the data $(f,f^\sharp)$ and $(\varphi_0,
+\varphi^\uparrow)$ are literally the same data. We match the conditions
+term-by-term.
+
+\emph{(M0)$\Leftrightarrow$(C0).} (M0) reads
+$f(s\downarrow f^\sharp_s(h))=(fs)\downarrow' h$. The left side is
+$\varphi_0(\cod\varphi^\uparrow(s,h))$ and the right side is $\cod(h)$ in
+$\mathcal C'$. This is exactly (C0).
+
+\emph{(M1)$\Leftrightarrow$(C1).} The identity at $fs$ is
+$\mathsf o'(fs)=\id_{fs}$, and the identity at $s$ is $\mathsf o(s)=\id_s$. So
+$f^\sharp_s(\mathsf o'(fs))=\mathsf o(s)$ is
+$\varphi^\uparrow(s,\id_{\varphi_0 s})=\id_s$, exactly (C1).
+
+\emph{(M2)$\Leftrightarrow$(C2).} Translate $\oplus$ into $\circ$ by
+$x\oplus y=y\circ x$. With $p=f^\sharp_s(h)$ and $s'=s\downarrow p$, the right
+side of (M2) is $p\oplus f^\sharp_{s'}(k)=f^\sharp_{s'}(k)\circ f^\sharp_s(h)
+=\varphi^\uparrow(s',k)\circ\varphi^\uparrow(s,h)$, and the left side is
+$f^\sharp_s(h\oplus' k)=f^\sharp_s(k\circ' h)=\varphi^\uparrow(s,k\circ' h)$.
+So (M2) reads $\varphi^\uparrow(s,k\circ' h)=\varphi^\uparrow(s',k)\circ
+\varphi^\uparrow(s,h)$ with $s'=\cod\varphi^\uparrow(s,h)$, exactly (C2).
+
+The three conditions are mutually equivalent under an identity map on data, so
+the assignment is an involution-respecting bijection on hom-sets.
+\end{proof}
+
+\begin{lemma}[Functoriality]\label{lem:fun}
+$\mathcal C(-)$ together with the assignment of Lemma~\ref{lem:hom} is a
+functor $\Phi\colon\DCont\to\Cof$.
+\end{lemma}
+
+\begin{proof}
+\emph{Identities.} The identity container morphism is $(\id_S,\id)$, which maps
+to $(\id_{\ob\mathcal C},\id^\uparrow)$, the identity cofunctor.
+
+\emph{Composition.} Let $(f,f^\sharp)\colon D\to D'$ and
+$(g,g^\sharp)\colon D'\to D''$. Their container composite has object map
+$g\circ f$ and position map
+$(g\circ f)^\sharp_s = f^\sharp_s\circ g^\sharp_{fs}\colon
+P''(gfs)\to P'(fs)\to P(s)$
+(positions pull back through both stages). Under $\Phi$ this is the cofunctor
+with object map $g_0\circ f_0$ and lift
+$m\mapsto f^\sharp_s\big(g^\sharp_{fs}(m)\big)
+=\varphi^\uparrow\big(s,\psi^\uparrow(\varphi_0 s,m)\big)$,
+which is exactly the composite cofunctor $\psi\varphi$ of
+Definition~\ref{def:cof}. Hence $\Phi$ preserves composition.
+\end{proof}
+
+\begin{theorem}[Directed containers are categories-and-cofunctors]\label{thm:main}
+The functor $\Phi\colon\DCont\to\Cof$ is an isomorphism of categories:
+\[
+  \boxed{\ \DCont\ \cong\ \Cof\ }
+\]
+\end{theorem}
+
+\begin{proof}
+$\Phi$ is fully faithful by Lemma~\ref{lem:hom} (bijection on every hom-set)
+and a functor by Lemma~\ref{lem:fun}. On objects, $D\mapsto\mathcal C(D)$ is a
+bijection: by Theorem~4.1 of \texttt{directed-categories.tex} every small
+category is $\mathcal C(D)$ for a unique directed container $D$. A
+bijective-on-objects, fully faithful functor is an isomorphism of categories
+(its object bijection and hom bijections assemble into a strict inverse).
+\end{proof}
+
+\section{Functors live elsewhere: the opposite variance}
+
+Theorem~\ref{thm:main} says the morphisms native to directed containers are
+cofunctors, not functors. We make the contrast precise and exhibit where
+functors do sit.
+
+\begin{proposition}[The dictionary does not extend to $\Cat$]\label{prop:neq}
+Let $\Phi_0\colon\ob\DCont\to\ob\Cat$, $D\mapsto\mathcal C(D)$, be the
+object-level dictionary (a bijection on objects, Theorem~4.1). There is
+\emph{no} functor $\DCont\to\Cat$ that agrees with $\Phi_0$ on objects and is
+full. In particular the object dictionary does not extend to an equivalence
+(indeed not to any isomorphism) $\DCont\simeq\Cat$.
+\end{proposition}
+
+\begin{proof}
+Let $D_{\mathbf1}, D_{\mathbf2}$ be the directed containers of the terminal
+category $\mathbf 1$ and $\mathbf 2=\{0\xrightarrow{u}1\}$. By
+Theorem~\ref{thm:main} (via Lemma~\ref{lem:hom}),
+$|\DCont(D_{\mathbf1},D_{\mathbf2})|=|\Cof(\mathbf1,\mathbf2)|$. We count the
+latter. A cofunctor $\mathbf1\co\mathbf2$ picks $\varphi_0(\ast)\in\{0,1\}$ and
+must lift \emph{every} outgoing morphism of $\varphi_0(\ast)$ into the unique
+morphism $\id_\ast$ out of $\ast$, with (C0) forcing
+$\varphi_0(\cod(\text{lift}))=\cod$. Object $0$ has the outgoing $u\colon0\to1$
+whose lift would need codomain $\mapsto 1\neq\varphi_0(\ast)$: impossible.
+Object $1$ has only $\id_1$, lifting to $\id_\ast$. So
+$|\Cof(\mathbf1,\mathbf2)|=1$, whence $|\DCont(D_{\mathbf1},D_{\mathbf2})|=1$.
+But $|\Cat(\mathbf1,\mathbf2)|=2$ (choose either object). A functor
+$G\colon\DCont\to\Cat$ with $G=\Phi_0$ on objects would restrict to a map
+$\DCont(D_{\mathbf1},D_{\mathbf2})\to\Cat(\mathbf1,\mathbf2)$ from a
+$1$-element set to a $2$-element set, which cannot be surjective; so $G$ is
+not full. As an equivalence (or isomorphism) is in particular full, no such
+extension exists.
+\end{proof}
+
+\begin{remark}[$\Cof$ versus $\Cat$ as abstract categories]
+Proposition~\ref{prop:neq} is the operative fact for the program: the chain's
+object equivalence does \emph{not} carry functors. One can ask the sharper
+question whether $\Cof$ and $\Cat$ are equivalent as abstract categories
+(ignoring the dictionary). The hom-cardinality data already shows they are not
+\emph{isomorphic} over their common object class, and moreover the comparison
+is not even monotone: for the $3$-chain
+$|\Cat(\mathbf3,\mathbf2)|=4<5=|\Cof(\mathbf3,\mathbf2)|$ while
+$|\Cat(\mathbf2,\mathbf2)|=3>2=|\Cof(\mathbf2,\mathbf2)|$
+(Table~\ref{tab:counts}), so neither sits inside the other. A full
+equivalence-level separation requires a relabeling-invariant (e.g.\ comparing
+the adjoint profiles of $\Hom(\mathbf1,-)$, which is $\ob$ on $\Cat$ but the
+``sink-objects'' functor on $\Cof$); we do not pursue it here, as
+Proposition~\ref{prop:neq} already settles the question the dictionary poses.
+\end{remark}
+
+\begin{proposition}[Functors = covariant-position morphisms]\label{prop:cov}
+Let an \emph{op-variance container morphism} $D\to D'$ be $(f,\phi)$ with
+$f\colon S\to S'$ and a \emph{covariant} position map
+$\phi_s\colon P(s)\to P'(fs)$ satisfying
+\textup{(N0)} $f(s\downarrow p)=(fs)\downarrow'\phi_s(p)$,
+\textup{(N1)} $\phi_s(\mathsf o(s))=\mathsf o'(fs)$, and
+\textup{(N2)} $\phi_s(p\oplus q)=\phi_s(p)\oplus'\phi_{s\downarrow p}(q)$.
+Then $(f,\phi)\mapsto F$, $F=f$ on objects, $F(p)=\phi_s(p)$ on a morphism
+$p$ out of $s$, is a bijection onto functors $\mathcal C(D)\to\mathcal C(D')$.
+\end{proposition}
+
+\begin{proof}
+A functor $F$ is precisely: an object map $f=F$; for each $s$ a map of
+out-sets $\phi_s=F|_{P(s)}\colon P(s)\to P'(fs)$; with $F$ preserving codomains
+(N0: $F(\cod p)=\cod F(p)$), identities (N1: $F(\id_s)=\id_{Fs}$), and
+composition (N2: $F(q\circ p)=F(q)\circ F(p)$, i.e.\
+$F(p\oplus q)=\phi_s(p)\oplus'\phi_{s\downarrow p}(q)$). Each datum and law
+matches under an identity map on data, giving the bijection.
+\end{proof}
+
+So functors and cofunctors are the \emph{two opposite variances} of a
+morphism of directed structure: covariant on positions (push forward,
+$P(s)\to P'(fs)$) gives functors; contravariant on positions (pull back,
+$P'(fs)\to P(s)$, the genuine container morphism) gives cofunctors. Only the
+latter is a morphism of containers.
+
+\section{The \texorpdfstring{$\mathbf{Poly}$}{Poly} perspective}\label{sec:poly}
+
+Under the embedding of directed containers as comonoids in
+$(\mathbf{Poly},\triangleleft)$ --- the polynomial-comonad incarnation of a
+small category --- container morphisms are exactly comonoid morphisms.
+Theorem~\ref{thm:main} is then the statement that comonoid morphisms in
+$(\mathbf{Poly},\triangleleft)$ between category-comonoids are cofunctors
+(Ahman--Uustalu; Garner; Spivak--Garner--Fairbanks). Functors, by
+Proposition~\ref{prop:cov}, are \emph{not} comonoid morphisms; they are a
+different structure (carried by bicomodules / parametric right adjoints in
+$\mathbf{Poly}$). The variance mismatch flagged at the outset is thus not an
+accident of bookkeeping but the shadow of two different universal properties:
+the comonoid maps (cofunctors) and the ``functor'' maps occupy different
+hom-objects of $\mathbf{Poly}$.
+
+\paragraph{Why this matters for the grant.} The equivalence chain advertised in
+the seed --- containers $\simeq$ directed containers $\simeq$ polynomial
+comonoids $\simeq$ small categories --- is an equivalence \emph{of objects}.
+At the level of morphisms it is an isomorphism $\DCont\cong\Cof$, \emph{not}
+$\DCont\cong\Cat$. Any application that transports a construction along the
+chain (supply-chain composition, agent orchestration, the internal replacement
+theorem) must use cofunctors as the maps. Mistaking them for functors silently
+changes the morphisms --- and, as Proposition~\ref{prop:neq} shows, even their
+\emph{number}. This is precisely the kind of compositional-correctness pitfall
+the grant claims to eliminate by formalisation.
+
+\section{Computational verification}
+
+The Python script \texttt{dcont\_morphisms\_check.py} represents a small
+category concretely and enumerates, between two categories $C,D$: (A) functors
+$C\to D$; (B) cofunctors $C\co D$ (Definition~\ref{def:cof}); (C)
+directed-container morphisms via (M0)--(M2) computed \emph{directly} from the
+container data $(\mathsf o,\downarrow,\oplus)$ (Definition~\ref{def:dcm}); and
+(D) op-variance morphisms via (N0)--(N2). Over all $36$ ordered pairs from
+$\{\mathbf1,\mathbf2,\mathbf3,\mathbb Z/2,\mathbb Z/3,M\}$ (with $M$ the
+two-element idempotent monoid $\{1,t\},\,t^2=t$):
+\[
+  \#(C)=\#(B)\ \text{in all }36\text{ cases},\qquad
+  \#(D)=\#(A)\ \text{in all }36\text{ cases},
+\]
+confirming Lemma~\ref{lem:hom} and Proposition~\ref{prop:cov}; while
+$\#(A)\neq\#(B)$ in $17$ of the $36$ cases, confirming
+Proposition~\ref{prop:neq}. A representative excerpt:
+
+\begin{table}[h]\centering
+\begin{tabular}{lrrr}
+\toprule
+$C\to D$ & \#functors & \#cofunctors & \#DCont-morphisms\\
+\midrule
+$\mathbf1\to\mathbf2$ & $2$ & $1$ & $1$\\
+$\mathbf2\to\mathbf2$ & $3$ & $2$ & $2$\\
+$\mathbf2\to\mathbb Z/3$ & $3$ & $1$ & $1$\\
+$\mathbf3\to\mathbf2$ & $4$ & $5$ & $5$\\
+$\mathbf3\to\mathbf3$ & $10$ & $6$ & $6$\\
+$\mathbb Z/3\to\mathbb Z/3$ & $3$ & $3$ & $3$\\
+$\mathbf3\to M$ & $4$ & $5$ & $5$\\
+\bottomrule
+\end{tabular}
+\caption{Functors vs.\ cofunctors vs.\ directed-container morphisms.
+\#cofunctors $=$ \#DCont-morphisms throughout; \#functors differs.
+$\mathbf3\to\mathbf2$ and $\mathbf2\to\mathbf2$ show neither of
+$\Cat,\Cof$ dominates the other.}
+\label{tab:counts}
+\end{table}
+
+\section{Conclusion}
+
+The dictionary is now complete at the morphism level. Objects: directed
+containers $=$ small categories. Morphisms: container morphisms $=$
+\emph{cofunctors}. The assignment is an \emph{isomorphism of categories}
+$\DCont\cong\Cof$. The tempting $\DCont\simeq\Cat$ is false; functors are the
+opposite variance and are not morphisms of containers. The next step is to
+formalise $\Cof$ and Theorem~\ref{thm:main} in Lean (M2/M4), and to revisit
+every place in the applied notes where ``functor between directed containers''
+was written, replacing it with the correct cofunctor.
+
+\end{document}

@@ -1,0 +1,383 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Ab}{\mathbf{Ab}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\cod}{\operatorname{cod}}
+\newcommand{\orb}{\operatorname{orb}}
+\newcommand{\flr}[1]{\lfloor #1 \rfloor}
+\newcommand{\Wh}{\mathsf{Wh}}
+\newcommand{\Prc}{\mathsf{Pr}}
+\newcommand{\De}{\mathsf{De}}
+\newcommand{\Zn}{\mathbb{Z}/n}
+
+\title{A supply chain is a directed container, and composing two\\
+is a Zappa--Sz\'ep product: a computed worked example\\
+\large (with the inventory-inconsistency obstruction in $H^2(\Sk_\C;\Zn)\cong\Zn$)}
+\author{MacBeth\\\small Kodamai}
+\date{23 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This is a \textsc{computed} worked example, staging for the applications turn of the
+Kodamai grant: it instantiates machinery already \textsc{proved} elsewhere in a new
+domain and commits nothing to the book. We do three things. \emph{(A)} We present a
+minimal supply chain $\Prc\text{ocure}\to\text{manufacture}\to\text{ship}$ as an
+explicit small category and write out its Ahman--Uustalu directed container
+$(S,P,o,\oplus)$, machine-checking the five directed-container laws. \emph{(B)} We
+model two flows sharing a warehouse as a small category $\W_{n,\varepsilon}$ carrying a
+cyclic \emph{lot-cursor} token $\tau$ of order $n$ at the shared node; fixing the
+token-internal relabelings as the right factor $\D$, the pairwise Zappa--Sz\'ep
+criterion and the $(G)$-obstruction-is-$H^2$ theorem (both cited, proved) give
+\[
+   [\omega(\W_{n,\varepsilon})]=\varepsilon\quad\text{in}\quad
+   H^2(\Sk_\C;\Zn)\cong\Zn ,
+\]
+so the joint chain serializes into a Zappa--Sz\'ep product $\C\bowtie\D$
+\emph{iff $\varepsilon=0$}, i.e.\ iff the two routes to the same delivered good agree
+on provenance. Here $\varepsilon\in\Zn$ is the \emph{quantitative unit-mismatch}
+between the routes; the parity case $n=2$ reproduces the proved orchestration
+re-entrancy bit. \emph{(C)} The same machine, $n=2$, is the merge of two ologs sharing
+a type: a naming-convention disagreement is the nonzero class. Every numerical claim
+is machine-checked in \texttt{scratch/supply\_chain\_zs.py}. \textbf{Grade discipline:}
+the general theorems are cited at \textsc{proved}/\textsc{lean-verified}; the
+domain instantiation is \textsc{computed}; the object-level claim ``a real supply chain
+\emph{is} this category'' stays \textbf{open} (SEED~Q4) --- we build a faithful
+abstraction, not a fidelity claim.
+\end{abstract}
+
+\section{Scope, grades, and cited scaffolding}\label{sec:scope}
+
+Nothing here is new mathematics. The contribution is a \emph{faithful minimal
+abstraction} of a supply chain in which the already-built container/Zappa--Sz\'ep
+machinery computes a meaningful invariant --- exactly the move that promoted
+orchestration$=$ZS from analogy to computed to proved, now run in the
+supply-chain / olog domain. Four facts are used as black boxes.
+
+\begin{itemize}
+\item[\textbf{(T1)}] \emph{DCont $\simeq$ SmallCat} (Ahman--Uustalu; our
+\texttt{DContCat.lean}, sorry-free, registry \texttt{equivalence-chain},
+\textsc{lean-verified}). A directed container is exactly a small category; anything
+presenting a small category is a directed container for free.
+\item[\textbf{(T2)}] \emph{Pairwise Zappa--Sz\'ep criterion} \cite{pairwise}
+(\textsc{proved}). For a small category $\K$ and wide $\D\subseteq\K$, there is a wide
+$\C$ with $(\C,\D)$ a strict factorization system --- equivalently a distributive law
+$\lambda:\D\C\Rightarrow\C\D$, equivalently $\K=\C\bowtie\D$ --- iff \textnormal{(L)}
+each $\Hom_\K(-,b)$ is a free right $\D$-set and \textnormal{(G)} free bases close into
+a wide subcategory.
+\item[\textbf{(T3)}] \emph{The $(G)$-obstruction is an $H^2$ class} \cite{gobstr}
+(\textsc{proved}). Under \textnormal{(L)} and hypothesis \textnormal{(H)} (abelian
+vertex groups, trivial left action), $(G)\Leftrightarrow[\omega]=0\in
+H^2(\Sk_\C;\D)$, with $\Sk_\C$ the orbit category and $\D$ the vertex-group presheaf.
+Cohomology is Baues--Wirsching \cite{bw} / Rosebrugh--Wood \cite{rw}, cited not
+reproved.
+\item[\textbf{(T4)}] \emph{Orchestration re-entrancy} \cite{orch} (\textsc{proved};
+$[\omega]=\varepsilon$ core \textsc{lean-verified}, \texttt{Reentrancy.lean}). The
+$n=2$ instance of \S\ref{sec:warehouse} below; we cite it as the parity anchor.
+\end{itemize}
+
+Ologs are Spivak's prior art \cite{spivak}; the knowledge-graph-as-copresheaf reading
+is folklore categorical databases. We import definitions, we do not reinvent them.
+
+\paragraph{The one honest caveat.} Whether a \emph{real} supply chain genuinely
+presents a category --- operations compose associatively, and the
+inventory-consistency path-equations hold on the nose --- is SEED Open Question~4 and
+stays \textbf{open}. Everything below is a chosen minimal abstraction: the theorems
+apply to \emph{it}, and the value is that they compute the right qualitative
+invariant. We never write ``a supply chain \emph{is} $\W_{n,\varepsilon}$.''
+
+\section{(A) The base chain as a directed container}\label{sec:base}
+
+\begin{definition}[The procurement chain $\C_0$]
+Let $\C_0$ be the poset category on stages $\mathsf{Src}<\mathsf{Mfg}<\mathsf{Dst}$
+(supplier, manufacturing, delivery): objects are the three stages, and there is a
+unique morphism $i\to j$ whenever $i\le j$, read as the \emph{net operation} carrying
+material from stage $i$ to stage $j$. Composition is do-then-do; thinness encodes
+``all routings from $i$ to $j$ that respect the order deliver the same material.''
+\end{definition}
+
+By (T1), $\C_0$ is a directed container $(S,P,o,\oplus)$
+(Ahman--Uustalu; our \texttt{DContCat.lean} dictionary):
+\[
+\begin{aligned}
+S &= \{\mathsf{Src},\mathsf{Mfg},\mathsf{Dst}\} && \text{(shapes = stages)},\\
+P(s) &= \{\,\text{operations out of }s\,\}=\{\,(s\to j):j\ge s\,\}
+   && \text{(positions = outgoing operations)},\\
+o_s &= (s\to s)=\id_s && \text{(root = stay put)},\\
+s\!\downarrow\! p &= \cod(p) && \text{(sub-shape = destination stage)},\\
+p\oplus q &= q\circ p && \text{(shift = do }p\text{ then }q).
+\end{aligned}
+\]
+Explicitly $P(\mathsf{Src})=\{\id,\ \mathsf{Src}\!\to\!\mathsf{Mfg},\
+\mathsf{Src}\!\to\!\mathsf{Dst}\}$, $P(\mathsf{Mfg})=\{\id,\
+\mathsf{Mfg}\!\to\!\mathsf{Dst}\}$, $P(\mathsf{Dst})=\{\id\}$, and e.g.
+$(\mathsf{Src}\!\to\!\mathsf{Mfg})\oplus(\mathsf{Mfg}\!\to\!\mathsf{Dst})
+=(\mathsf{Src}\!\to\!\mathsf{Dst})$: procure-then-ship \emph{is} the direct delivery
+operation.
+
+\begin{proposition}[D-laws]\label{prop:dlaws}
+$(S,P,o,\downarrow,\oplus)$ satisfies the five directed-container laws:
+D1 $s\!\downarrow\! o_s=s$; D2 $o_s\oplus p=p$; D3 $p\oplus o_{s\downarrow p}=p$;
+D4 $s\!\downarrow\!(p\oplus q)=(s\!\downarrow\! p)\!\downarrow\! q$; D5
+$(p\oplus q)\oplus r=p\oplus(q\oplus r)$.
+\end{proposition}
+\begin{proof}
+$\C_0$ is a thin poset category, so D1--D3 are the unit laws (identities are the
+$(s\to s)$), D4 says the destination of a composite is the destination of its second
+leg, and D5 is associativity of composition, all automatic in a poset. Machine-checked
+exhaustively over all composable $p,q,r$ in \texttt{supply\_chain\_zs.py} part~(A).
+\end{proof}
+
+This is the object-level content the orchestration note omitted (it worked only at the
+category level): a supply chain, once abstracted to a category, is literally a
+polynomial comonoid / directed container, so the entire structure theory --- the four
+monoidal products, the (co)monoid classifications, the chain rule --- is available to
+it. That is a definitional dividend of (T1), graded \textsc{computed} (an
+instantiation), and it is \emph{greenfield in our corpus}.
+
+\section{(B) Two flows sharing a warehouse: the family $\W_{n,\varepsilon}$}
+\label{sec:warehouse}
+
+Now the composition story. Two flows meet at a warehouse $\Wh$. The warehouse keeps
+an internal \emph{lot-cursor}: a cyclic pointer $\tau$ of order $n$ into $n$
+interchangeable bins / lot-slots (FIFO position mod $n$, or a bin index). Physically
+$\tau$ moves nothing --- it is pure bookkeeping --- but a unit leaving the warehouse
+carries whatever cursor value was current. Advancing the cursor is an automorphism
+$\tau$ with $\tau^n=\id_\Wh$, so $\End(\Wh)\cong\Zn$.
+
+\begin{definition}[The warehouse family $\W_{n,\varepsilon}$]\label{def:Wne}
+For $n\ge1$ and $\varepsilon\in\Zn$, let $\W_{n,\varepsilon}$ be the small category with
+objects $\Wh$ (warehouse), $\Prc$ (processing/manufacture), $\De$ (delivery), and
+\[
+\begin{aligned}
+&\End(\Wh)=\{\tau^k:k\in\Zn\}\cong\Zn,\quad \End(\Prc)=\{\id\},\quad \End(\De)=\{\id\},\\
+&\Hom(\Wh,\Prc)=\{p\,\tau^k:k\in\Zn\},\quad
+ \Hom(\Wh,\De)=\{q\,\tau^k:k\in\Zn\},\quad
+ \Hom(\Prc,\De)=\{s,\ s_2\},
+\end{aligned}
+\]
+no arrows into $\Wh$ except its endomorphisms, and no arrows $\De\to\cdot$ except
+$\id_\De$ (acyclic: $\Wh\to\Prc\to\De$ with a direct $\Wh\to\De$). Here
+$p\,\tau^k:=p\circ\tau^k$, all distinct; the two processing operations compose through
+the middle by
+\[
+   s\circ p=q,\qquad s_2\circ p=q\cdot\tau^{\varepsilon},
+\]
+extended by right $\tau$-equivariance ($s\circ p\tau^k=q\tau^k$,
+$s_2\circ p\tau^k=q\,\tau^{k+\varepsilon}$).
+\end{definition}
+
+\paragraph{Reading.} $p$ dispatches a lot to processing; $q$ is the direct/expected
+delivery recorded by the warehouse's books; $s$ is the nominal production-and-ship
+line and $s_2$ is an alternative route (rework, a second line, an expedited lane) that
+delivers the \emph{same good}. The single datum $\varepsilon$ records how many
+lot-positions $s_2$ \emph{advances the provenance cursor} relative to the nominal
+route: $\varepsilon=0$ means the rework line preserves lot-provenance, $\varepsilon\ne0$
+means it shifts it by $\varepsilon$ units. The wide right factor of bookkeeping moves
+is
+\[
+   \D=\{\tau^k:k\in\Zn\}\cup\{\id_\Prc,\id_\De\}\subseteq\W_{n,\varepsilon},
+\]
+the ``warehouse-internal relabeling'' subcategory --- the \emph{second chain} that
+shares the warehouse with the physical-flow chain.
+
+\begin{lemma}[$\W_{n,\varepsilon}$ is a category]\label{lem:cat}
+For every $n,\varepsilon$, $\W_{n,\varepsilon}$ is a well-defined small category.
+\end{lemma}
+\begin{proof}
+Only two families of composites need specifying: the $\Zn$-action of $\tau$ on
+$\Wh$-sourced arrows (a group action, $\tau^n=\id$), and the two length-two composites
+$s\circ p,\,s_2\circ p:\Wh\to\De$. All longer composites factor through the sink $\De$
+or start with a $\Wh$-endomorphism, so associativity reduces to right-equivariance,
+$(f\circ p)\circ\tau^k=f\circ(p\,\tau^k)$, which holds by definition of $f\circ
+p\tau^k$. Machine-checked (full associativity table) for eight $(n,\varepsilon)$ pairs
+in \texttt{supply\_chain\_zs.py} part~(B).
+\end{proof}
+
+\begin{lemma}[(L) and (H) hold, uniformly in $\varepsilon$]\label{lem:LH}
+Every hom-presheaf $\Hom_{\W_{n,\varepsilon}}(-,b)$ is a free right $\D$-set, and
+$(\W_{n,\varepsilon},\D)$ satisfies hypothesis (H).
+\end{lemma}
+\begin{proof}
+\emph{(L).} The right $\D$-action is precomposition; it is trivial on $\Prc$- and
+$\De$-sourced arrows and is the regular $\Zn$-action on $\Wh$-sourced arrows. Orbit
+decomposition:
+$\Hom(-,\Wh)=\{\tau^k\}$ (one regular $\Zn$-orbit);
+$\Hom(-,\Prc)=\{p\,\tau^k\}\sqcup\{\id_\Prc\}$;
+$\Hom(-,\De)=\{q\,\tau^k\}\sqcup\{s\}\sqcup\{s_2\}\sqcup\{\id_\De\}$.
+Each $\Wh$-apex orbit is a free $\Zn$-torsor (the $\tau^k$ are distinct), each other
+orbit a singleton with trivial group; so every hom-presheaf is a coproduct of
+representable $\D$-sets, i.e.\ free. This uses only distinctness of the $p\tau^k$ and
+$q\tau^k$; it is independent of $\varepsilon$ (moving $s_2\circ p$ inside the orbit
+$\{q\tau^k\}$ does not change orbits). \emph{(H).} $\D$ is a disjoint union of abelian
+vertex groups $G_\Wh\cong\Zn$, $G_\Prc=G_\De=0$; the only nontrivial vertex group sits
+at $\Wh$, which is a \emph{source} (no generator targets $\Wh$), so the left action
+(postcomposition by a target automorphism) is trivial. Machine-checked (freeness of
+every orbit) in part~(B).
+\end{proof}
+
+\begin{proposition}[Orbit category, complex, and $H^2\cong\Zn$]\label{prop:h2}
+$\Sk_\C$ has objects $\Wh,\Prc,\De$ and non-identity generators $[p]:\Wh\to\Prc$,
+$[q]:\Wh\to\De$, $[s],[s_2]:\Prc\to\De$, with
+$[s]\ast[p]=[s_2]\ast[p]=[q]$ \emph{independently of $\varepsilon$} (because $q$ and
+$q\tau^\varepsilon$ lie in one orbit). The presheaf has $\D(\Wh)=\Zn$,
+$\D(\Prc)=\D(\De)=0$, and all restriction maps vanish (no generator targets $\Wh$).
+Hence $C^1\cong\Zn^2$ (coords $h[p],h[q]$), $C^2\cong\Zn^2$ (coords
+$\omega([s],[p]),\omega([s_2],[p])$), $C^3=0$, and
+\[
+   (\delta^1h)([s],[p])=(\delta^1h)([s_2],[p])=h[p]-h[q],
+\]
+so $B^2=\{(t,t):t\in\Zn\}$ is the diagonal and
+\[
+   H^2(\Sk_\C;\D)=\Zn^2/\langle(1,1)\rangle\cong\Zn,\qquad [(a,b)]\mapsto b-a.
+\]
+\end{proposition}
+\begin{proof}
+Identical bookkeeping to \cite[\S4]{orch} with $\Zn$ in place of $\mathbb Z/2$: the
+generators, the vanishing restrictions, and the two composable pairs $([s],[p])$,
+$([s_2],[p])$ are exactly as there, and the Baues--Wirsching coboundary formula
+$(\delta^1h)(o_2,o_1)=\varphi_{o_1}(h(o_2))-h(o_2\circ o_1)+h(o_1)$ reduces to
+$h[p]-h[q]$ since $\varphi_{[p]}=\D([p]):0\to\Zn$. Machine-checked
+($B^2=$ diagonal) for all tested $n$ in part~(B).
+\end{proof}
+
+\begin{theorem}[The class is the unit-mismatch]\label{thm:main}
+With the natural transversal $T=\{p,q,s,s_2\}$, the defect $2$-cocycle is
+$\omega_T=(0,\varepsilon)\in\Zn^2$, so
+\[
+   [\omega(\W_{n,\varepsilon})]=\varepsilon\in H^2(\Sk_\C;\D)\cong\Zn .
+\]
+\end{theorem}
+\begin{proof}
+Both composable pairs have target orbit $\orb(q)$ with chosen generator $q$. From
+$s\circ p=q=q\circ\id_\Wh$ we read $\omega_T([s],[p])=0$, and from $s_2\circ p=
+q\cdot\tau^\varepsilon=q\circ\tau^\varepsilon$ we read
+$\omega_T([s_2],[p])=\tau^\varepsilon=\varepsilon$. So $\omega_T=(0,\varepsilon)$, and
+its class under $[(a,b)]\mapsto b-a$ is $\varepsilon$. Machine-verified
+$\omega_T=(0,\varepsilon)$ and $[\omega]=\varepsilon$ in part~(B).
+\end{proof}
+
+\begin{corollary}[Inventory-consistency dichotomy]\label{cor:main}
+For the warehouse abstraction $\W_{n,\varepsilon}$ with bookkeeping right factor $\D$:
+\[
+   \W_{n,\varepsilon}=\C\bowtie\D \ \text{ exists }\iff \varepsilon=0
+   \iff \text{both routes to $\De$ agree on lot-provenance.}
+\]
+When $\varepsilon\ne0$ the obstruction $[\omega]=\varepsilon$ is a nonzero element of
+$H^2\cong\Zn$: a genuine \emph{inventory inconsistency}, the two routes to the same
+delivered good disagreeing by $\varepsilon$ lot-positions, and no serialization of the
+physical flow with the warehouse bookkeeping exists.
+\end{corollary}
+\begin{proof}
+(L) holds (Lemma~\ref{lem:LH}) so by (T2) the product exists iff (G); (H) holds so by
+(T3) (G) iff $[\omega]=0$; by Theorem~\ref{thm:main} $[\omega]=\varepsilon$. Chain the
+equivalences. As an independent (non-cohomological) cross-check, part~(B) brute-forces
+the strict factorization systems: $\#\mathrm{SFS}=n$ when $\varepsilon=0$ (a
+$\Zn$-torsor of ways to choose the canonical lot-labeling) and $\#\mathrm{SFS}=0$ when
+$\varepsilon\ne0$.
+\end{proof}
+
+\begin{remark}[Why $\Zn$, not just parity]
+Orchestration \cite{orch} needed only $\mathbb Z/2$: a turn token is one bit. Inventory
+is naturally a \emph{counter}, and the obstruction lands in the counter's group: the
+class $[\omega]=\varepsilon$ is not just ``inconsistent yes/no'' but \emph{by how many
+units} the two provenance routes disagree, valued in $\Zn$. The proved parity theorem
+is the $n=2$ face of this. The gauge freedom $B^2=\langle(1,1)\rangle$ is exactly the
+liberty to declare which lot-slot is ``slot zero'': it shifts \emph{both} routes
+together, so only their \emph{difference} $\varepsilon$ is observable --- the
+categorical avatar of a flat $\Zn$-bundle being trivial iff its holonomy (here the
+provenance drift) vanishes.
+\end{remark}
+
+\section{(C) Olog sibling: merging two schemas along a shared type}\label{sec:olog}
+
+The same abstraction serves ontology/knowledge-graph merges. The olog
+$\mathsf{Book}\xrightarrow{\text{has}}\mathsf{Author}\xrightarrow{\text{has}}
+\mathsf{Name}$ is the free category on that graph; by (T1) it is a directed container
+with shapes $=$ types, positions out of a type $=$ the aspects available from it,
+$\oplus=$ aspect composition, path-equations $=$ facts (D-laws machine-checked,
+part~(C)). Merging it with a second olog sharing $\mathsf{Author}$ (e.g.\
+$\mathsf{Author}\to\mathsf{Affiliation}$) is composing two directed containers over the
+shared type --- a Zappa--Sz\'ep problem. Take $\Wh:=\mathsf{Author}$ carrying a
+$\mathbb Z/2$ token $=$ choice of naming convention (``Last, First'' vs.\ ``First
+Last''), $\Prc:=$ name-record, $\De:=$ rendered display. Then
+Corollary~\ref{cor:main} at $n=2$ reads: the merge succeeds ($\C\bowtie\D$ exists) iff
+the two schemas agree on the convention ($\varepsilon=0$); a disagreement is the
+nonzero class $[\omega]=1$, a \emph{merge conflict} --- the same $H^2$ bit as
+supply-chain inconsistency and agent re-entrancy. Machine-checked, part~(C).
+
+\section{Status, regimes, and grant relevance}\label{sec:status}
+
+\paragraph{The computed table.}
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+regime & $[\omega]\in\Zn$ & outcome & meaning \\
+\midrule
+$\varepsilon=0$ (any $n$) & $0$ & composes, $\#\mathrm{SFS}=n$ & routes agree on provenance \\
+$\varepsilon\ne0$ (any $n$) & $\varepsilon$ & obstructed, $\#\mathrm{SFS}=0$ & inventory off by $\varepsilon$ units \\
+$n=2,\varepsilon=1$ & $1$ & obstructed & $=$ orchestration re-entrancy bit \cite{orch} \\
+olog $n=2$ & $0$ / $1$ & merges / conflicts & schema conventions agree / clash \\
+\bottomrule
+\end{tabular}
+\end{center}
+Eight $(n,\varepsilon)$ instances verified in \texttt{scratch/supply\_chain\_zs.py}
+(category axioms, (L), $\Sk_\C$ shape, $B^2=$ diagonal, $\omega_T=(0,\varepsilon)$,
+$[\omega]=\varepsilon$, and the $\#\mathrm{SFS}$ cross-check).
+
+\paragraph{What is proved vs.\ computed.} The general theorems (T1)--(T4) are
+\textsc{proved}/\textsc{lean-verified} and are cited, not re-derived. The
+\emph{domain instantiation} --- that this abstraction of supply chains and olog merges
+computes the inventory-inconsistency / merge-conflict class --- is \textsc{computed}
+illustration. The object-level modelling claim ``a real supply chain presents a
+category'' is \textbf{open} (SEED~Q4); we have exhibited a faithful minimal
+abstraction, not asserted fidelity, exactly as the orchestration note did for agents.
+
+\paragraph{Grant line.} Supply-chain composability, ontology-merge consistency, and
+agent-orchestration re-entrancy are the \emph{same degree-two obstruction} on the
+handoff category, and in the supply-chain instance the class is refined from a bit to a
+$\Zn$-valued \emph{unit-count} of the discrepancy. This is the Path-5 Impact spine: the
+applications are not new mathematics but new \emph{instances of one obstruction
+theorem}, and that is the honest strength of the story.
+
+\begin{thebibliography}{9}
+\bibitem{pairwise} MacBeth, \emph{The pairwise Zappa--Sz\'ep criterion}, Kodamai note,
+10 June 2026.
+\bibitem{gobstr} MacBeth, \emph{The global-closure obstruction (G) is a cohomology
+class}, Kodamai note, 11 June 2026.
+\bibitem{orch} MacBeth, \emph{The re-entrancy obstruction is the token-mutation bit:
+an analytic proof for orchestration Zappa--Sz\'ep products}, Kodamai note, 20 July
+2026 ($[\omega]=\varepsilon$ core Lean-verified, \texttt{Reentrancy.lean}).
+\bibitem{rw} R.~Rosebrugh, R.~J.~Wood, \emph{Distributive laws and factorization},
+J.\ Pure Appl.\ Algebra 175 (2002), 327--353.
+\bibitem{bw} H.-J.~Baues, G.~Wirsching, \emph{Cohomology of small categories},
+J.\ Pure Appl.\ Algebra 38 (1985), 187--211.
+\bibitem{spivak} D.~I.~Spivak, R.~E.~Kent, \emph{Ologs: a categorical framework for
+knowledge representation}, PLoS ONE 7(1) (2012), e24274.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,106 @@
+{
+ "conjecture": "T2 (Neil UID 124, 'do T2 generally'): for which closed symmetric monoidal C with small coproducts is the Dirichlet/convolution tensor (S,P)(x)(T,Q)=(SxT,(P_s(x)Q_t)) on Fam(C^op) CLOSED, i.e. does (-)⊗(T,Q) have a right adjoint (internal hom) inside Fam(C^op)? RESULT: closedness <=> the functor Phi(Z)=prod_{t in T} coprod_{r in R} C(M_r, Z(x)Q_t) : C->Set is FAMILIALLY REPRESENTABLE (a small coproduct of corepresentables) for all families, equivalently Theta_{A,Q}(Z)=prod_t C(A_t,Z(x)Q_t) fam-rep for all families. Two conjuncts: (A) single-factor Z|->C(A,Z(x)Q) fam-rep; (B) product-closure: the coproduct coprod_t N_t representing prod_t exists in C. TWO sufficient regimes with explicit internal homs: (I) C cartesian closed => closed unconditionally (internal hom = coprod_{rho:T->R} prod_t C(M_{rho t},Q_t) shapes, positions coprod_t M_{rho t}); recovers Set/Poly Dirichlet hom (Niu-Spivak Ex 4.78). (II) all Q_t dualizable + coproducts exist => closed (internal hom = (R^T,(coprod_t M_{rho t}(x)Q_t^*)_rho)). LINEAR DICHOTOMY (Thm 3.2): over Vec single-factor fam-rep <=> Q finite-dim (Lemma 3.1); so (x) is closed on Fam_fin(Vec_fd^op) [finite shapes, fd positions] but NOT on Fam(Vec_fd^op) [infinite shapes break (B): Phi(Z)=|Z|^N=Vec(k^(N),Z) needs infinite-dim representative] NOR on Fam(Vec^op) [infinite-dim positions break (A) by Lemma 3.1]. Load-bearing conjunct NAMED: simultaneous dualizable-and-summable coprod_t M_{rho t}(x)Q_t^* in C, satisfiable over Vec only on the finite/fd corner. CORRECTS the pre-registered prediction ('holds over full Vec, fails over Vec_fd') -- fails over BOTH by dual mechanisms.",
+ "status": "proved",
+ "date_opened": "2026-08-26",
+ "date_closed": "2026-08-26",
+ "note": "Front A (Fam(C^op) generality). Builds on fullness-unit-connectedness (proved, T1) and linear-containers-vec (proved, Part 3 tensor). SUPERSEDES the speculative node fullness-unit-connectedness#t2a-tensor-closedness (which had only the adjunction shape): here the closedness question is REDUCED exactly to familial representability and RESOLVED for cartesian and rigid bases + the full linear dichotomy. HONEST CORRECTION banked: closedness fails over BOTH Fam(Vec_fd^op) (cocompleteness/conjunct-B) and Fam(Vec^op) (dualizability/conjunct-A), holds on the finite-fd corner -- the PROVE.md prediction that it holds over full Vec was WRONG (missed that infinite-dim positions reintroduce failure via conjunct A). Method: elementary reduction via def of adjunction + Set-distributivity prod_t coprod_r = coprod_rho prod_t (needs NO hypothesis on C, values are sets) + connectedness of corepresentables (summand argument). Day LNM 137 Thm 3.3 is CONSISTENT but not directly applicable (enriched domain A=C is LARGE, so Day's small-A branch fails and the internal hom is an end needing the representability refinement -- exactly the T2 content DJN omit). Prior art cited not reproved: Dorta-Jarvis-Niu 2305.05655 (tensor defs, omit closedness = the delta), Day 1970 (tool, refined), Gambino-Kock 0906.4931 (fully-internal/LCCC boundary, Vec not LCCC), Niu-Spivak Ex 4.78 (Set Dirichlet hom = cartesian instance). Verified numerically: 2000/2000 Vec_fd + 2000/2000 Set random small families (scratch/2026-08-26-t2-closedness-verify.py), failure-witness dims grow unboundedly.",
+ "tree": {
+  "id": "root",
+  "approach": "T2 closedness of Dirichlet (x) on Fam(C^op): reduce to familial representability of Phi/Theta; closed on cartesian bases + rigid bases; linear dichotomy with named load-bearing conjunct (dualizable-and-summable), failing over both Vecs on the infinite/infinite-dim corners.",
+  "trust": "proved",
+  "file": "2026-08-26-t2-day-closedness-famcop.md",
+  "children": [
+   {
+    "id": "reduction-familial-representability",
+    "approach": "Thm 1.1: (x) closed <=> Phi_{Q,M}(Z)=prod_t coprod_r C(M_r,Z(x)Q_t) familially representable for all families <=> Theta_{A,Q}(Z)=prod_t C(A_t,Z(x)Q_t) fam-rep. Proof: def of adjunction expands both homs to prod_s(...); naturality in (S,P) isolates single Z; Set-distributivity (star) prod_t coprod_r = coprod_{rho:T->R} prod_t (no hypothesis on C); connectedness of corepresentables => summand of fam-rep is fam-rep (both directions). Internal hom read off as (U,(N_u)) with coprod_u C(N_u,-)=Phi.",
+    "trust": "proved",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "cartesian-regime",
+    "approach": "Thm 2.1 + Cor 2.2: C cartesian closed (+coproducts) => closed, via projection split C(A,ZxQ)=C(A,Z)xC(A,Q) => Theta = C(coprod_t A_t,Z) x const, a copower of corepresentables. Explicit internal hom [(T,Q)=>(R,M)] = coprod_{rho:T->R} prod_t C(M_{rho t},Q_t) shapes with positions coprod_t M_{rho t}. Recovers Set/Poly Dirichlet hom (Niu-Spivak Ex 4.78). Covers Set, toposes, SetxSet. Independent of T1 fullness (SetxSet: (x) closed yet <<->> not full).",
+    "trust": "proved",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "premise",
+    "sources": [],
+    "children": []
+   },
+   {
+    "id": "rigid-regime",
+    "approach": "Thm 2.3: every Q_t dualizable + coproducts coprod_t A_t(x)Q_t^* exist => Theta corepresentable (single shape), (x) closed. Internal hom (R^T,(coprod_t M_{rho t}(x)Q_t^*)_rho). Only the tensor-argument positions Q_t need duals; the representing object N_rho need not be dualizable (Rem 2.4) -- the asymmetry that drives the linear collision.",
+    "trust": "proved",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "vec-single-factor-iff-dualizable",
+    "approach": "Lemma 3.1: over Vec, Z|->Vec(A,Z(x)Q) familially representable <=> dim Q < infinity (dualizable), then corepresentable at A(x)Q^*. Necessity: A=k gives |Z(x)Q|; Phi(0)=1 forces single corepresentable; for Q=k^(I) infinite, Z|->|coprod_I Z| fails to preserve an infinite product (element with distinct I-coordinates has no finite-support preimage) => not corepresentable => not fam-rep.",
+    "trust": "proved",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "linear-dichotomy",
+    "approach": "Thm 3.2 (THE DELIVERABLE): (x) closed on Fam_fin(Vec_fd^op) [both conjuncts hold: fd=>dualizable (A), finite T => finite (+) stays fd (B)]; NOT closed on Fam(Vec_fd^op) [conjunct B fails: witness T=N,Q_t=k,R={r},M=k gives Phi(Z)=|Z|^N=Vec(k^(N),Z), representative k^(N) infinite-dim not in Vec_fd]; NOT closed on Fam(Vec^op) [conjunct A fails by Lemma 3.1: witness Q=k^(N)]. Load-bearing conjunct NAMED: simultaneous dualizable-and-summable coprod_t M_{rho t}(x)Q_t^* in C. Corrects PROVE.md prediction: fails over BOTH by dual mechanisms (cocompleteness over Vec_fd, dualizability over Vec).",
+    "trust": "proved",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "reconciliation-extensivity",
+    "approach": "Prop 4.1: T2 closedness obstruction is LOGICALLY DISTINCT from the T1 fullness/extensivity gap (coprod^Set ⊊ (+)). T1 = |-| fails to preserve (+), a property of the UNIT, insensitive to fd-ness. T2 = cocompleteness failure (over Vec_fd) or dualizability failure (over Vec), properties of the CATEGORY / MONOIDAL structure. Same origin (external shapes / internal positions) two seams: extensivity governs fullness, dualizable-summability governs closedness. Not a reduction.",
+    "trust": "proved",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "numeric-verification",
+    "approach": "scratch/2026-08-26-t2-closedness-verify.py: adjunction cardinality identity prod_{(s,t)} Sigma_r q^{m_r p_s q_t} = prod_s Sigma_{rho} q^{(Sigma_t m_{rho t} q_t)p_s} = 2000/2000 pass over Vec_fd (q in {2,3,4}); Set form 2000/2000 pass; failure-witness position dim = |T| grows 1,2,5,20; corepresentability cross-check |F_q^d|^n=q^{nd} holds.",
+    "trust": "computed",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "day-1970-tool",
+    "approach": "Day LNM 137 (1970) Thm 3.3 + sec 4: closedness tool. Consistent placement but NOT directly applicable -- enriched domain A=C is LARGE, so the small-A branch fails; the internal hom is an end that need not land in coprod-of-corepresentables. Day's completeness clause (i) = conjunct (B); the closedness step = conjunct (A) via dualizability. The representability refinement is the T2 content.",
+    "trust": "unclassified",
+    "file": "/home/agent/papers/DayReport.pdf",
+    "role": "attempt",
+    "sources": ["Brian Day, On closed categories of functors, LNM 137 (1970) pp.1-38, Thm 3.3 p.20, sec 4 pp.26-29"],
+    "children": []
+   },
+   {
+    "id": "dep-fullness-t1",
+    "approach": "Builds on FLAGSHIP T1 (proved): the extension <<->> and hom formula prod_s coprod_t [Q_t,P_s], and the container hom-set def Fam((A,X),(B,Y))=prod_a coprod_b C(Y_b,X_a) used throughout the reduction.",
+    "trust": "proved",
+    "shared": null,
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "dep-linear-containers-vec",
+    "approach": "Builds on linear-containers-vec (proved): the object (SxT,(P_s(x)Q_t)) and the Vec instance being sharpened here. (NB: in that file (SxT,P(x)Q) arises as COMPOSITION ◁ via the linear dependent-sum collapse, Prop 4.1; my (x) is the Day/Dirichlet tensor with the SAME underlying object but the parallel-convolution adjunction -- closedness is asked of (x), not ◁.)",
+    "trust": "proved",
+    "file": "2026-08-18-linear-containers-vec.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "gap-general-necessity",
+    "approach": "GAP: Thm 1.1 is exact iff but the class of non-cartesian non-rigid closed C satisfying it is uncharacterized. Candidate: (x)-closed <=> -⊗Q is a familial (parametric-right-adjoint) functor for all Q + induced coproducts exist. Does closedness force (every position dualizable OR base cartesian)? Open. Also: is Lemma 3.1's dualizability-necessity special to Vec's field-flatness or general for additive closed bases? Open.",
+    "trust": "speculative",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "attempt",
+    "children": []
+   }
+  ]
+ }
+}

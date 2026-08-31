@@ -1,0 +1,105 @@
+{
+  "conjecture": "The handoff class [omega_h] in H^2_BW(Sk_C;D) and the stabiliser class [omega_st] in H^2(B;A) -- both isomorphic to F_2 with generator epsilon, both from ZS composition -- are NOT the same class. PART 1 (negative, primary): the standard isotropy-restriction i_x*:H^2_BW(Sk_C;D)->H^2(Aut(x);D(x)) kills [omega_h] (Sk_C is automorphism-rigid, so i_x* is the zero map), so 'stabiliser = isotropy-restriction of handoff' is FALSE. PART 1.5 (scope-correction): the geometric stabiliser class is defined only when s is aligned and is then 0 (aligned+normal => split); (Z/2,Z/2,Z/4) is never realised by an internal exact factorisation. PART 2 (obstruction): for EVERY functor F:A(down_join)->Sk_C, i_s*F*[omega_h]=0, so no comparison functor rescues the identification; the two sites are irreducibly distinct.",
+  "status": "proved",
+  "date_opened": "2026-08-14",
+  "date_closed": "2026-08-14",
+  "note": "Deep-work PROVE session closing gap #3 of the ZS bridge (2026-08-12 \u00a74) and the book emergent-holonomy teachbox. Compute-first: comp1_bw_isotropy.py reproduces H^2_BW(Sk_C;D)=Z/2, B^2=<(1,1)>, omega_T=(0,eps), and confirms every Aut_{Sk_C}(x) trivial so isotropy restriction is 0 at COCHAIN level; comp2_geometric_splitting.py sweeps all exact factorisations of S3,S4,A4,D4,V4,D12,A5 -> A cap B=1 always, (C2,C2,C4) never realised, no aligned+normal nonsplit extension. Key lemma = naturality of isotropy restriction in functors (i_a* F* = F_a* i_{Fa}*); rigid target => 0. Discovery: Part 1.5 corrects the bridge's own Z/4 witness (abstract extension theory, not aligned geometry). Proof file 2026-08-14-two-omega-sites-isotropy-restriction.md. Engines projects/scratch/two-omega-sites/.",
+  "tree": {
+    "id": "root",
+    "approach": "two sites irreducibly distinct: (1) isotropy restriction ==0 on rigid Sk_C [proved]; (1.5) aligned+normal => [omega_st]=0, Z/4 geometrically impossible [proved]; (2) rigid-target obstruction kills the rescue for all F [proved]",
+    "trust": "proved",
+    "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+    "children": [
+      {
+        "id": "sk-c-rigid",
+        "approach": "Lemma 1.1: Sk_C is automorphism-rigid (only identity endomorphisms; token pushed into coefficient D(Sup)=Z/2)",
+        "trust": "proved",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "isotropy-blindness",
+        "approach": "Thm 1.2: automorphism-rigid => i_x* is zero (target H^{>=1}(1;M)=0); handoff class off-diagonal, invisible to isotropy. Cochain-level: no non-identity loops. => Part 1 refutation (Cor 1.3)",
+        "trust": "proved",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "bw-complex-witness",
+        "approach": "comp1: H^2_BW(Sk_C;D)=Z/2, B^2=<(1,1)>, omega_T=(0,eps); every Aut(x) trivial, endo-loop 2-chains empty => isotropy-restricted cochain identically 0",
+        "trust": "computed",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "attempt",
+        "children": []
+      },
+      {
+        "id": "alignment-splitting-collapse",
+        "approach": "Thm 2.5: A cap B=1; aligned+A-normal => E=A|>|B split => [omega_st]=0; (C2,C2,C4) impossible (unique involution in C4); non-aligned => E/A !~= B so class ill-typed. Scope-correction of bridge Z/4 witness",
+        "trust": "proved",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "geometric-sweep",
+        "approach": "comp2: exact factorisations of S3,S4,A4,D4,V4,D12,A5 -> A cap B=1 always, (C2,C2,C4) never, no aligned+normal nonsplit case",
+        "trust": "computed",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "attempt",
+        "children": []
+      },
+      {
+        "id": "isotropy-restriction-natural",
+        "approach": "Lemma 3.1: i_a* F* = F_a* i_{Fa}* (naturality of isotropy restriction in functors), on normalised BW cochains",
+        "trust": "proved",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "rigid-target-obstruction",
+        "approach": "Thm 3.2 / Cor 3.3: rigid target => i_a* F* Omega = 0 for all F; so i_s*F*[omega_h]=0 for every F:A(down_join)->Sk_C. Reverse BG-cospan collapses via right-cancellation (g_s=g_s2 forced), enumerated for Z/4,V4,S3",
+        "trust": "proved",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "general-cospan-open",
+        "approach": "general many-object cospan Sk_C->C<-A(down_join) with single Omega restricting to both: obstructed only when F([p]) right-cancellable; NOT claimed in full generality",
+        "trust": "speculative",
+        "file": "2026-08-14-two-omega-sites-isotropy-restriction.md",
+        "role": "attempt",
+        "children": []
+      },
+      {
+        "id": "zs-bridge-root",
+        "approach": "PREMISE (my prior file, peer-reviewed via Rick 2026-08-14): the ZS bridge -- Site S stabiliser class, aligned/emergent-holonomy setup, [omega]=eps reentrancy",
+        "trust": "peer-reviewed",
+        "file": "2026-08-12-holonomy-composition-zs-bridge.md",
+        "review": "Rick (grandparick20@gmail.com); see registry/holonomy-composition-zs-bridge.json root review field and reviews/2026-08-13-holonomy-composition-zs-bridge.md",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "reentrancy-omega-eps",
+        "approach": "PREMISE (my prior file): [omega(K_eps)]=eps in H^2(Sk_C;D)=Z/2, the handoff class (Site H). Proved/Lean",
+        "trust": "proved",
+        "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+        "role": "premise",
+        "children": []
+      },
+      {
+        "id": "bw-1985",
+        "approach": "PREMISE (external): Baues-Wirsching, Cohomology of small categories, JPAA 38 (1985) -- isotropy restriction, natural systems, H^2 classifies linear extensions",
+        "trust": "published",
+        "file": null,
+        "role": "premise",
+        "children": [],
+        "publication": "Baues & Wirsching, Cohomology of small categories, J. Pure Appl. Algebra 38 (1985) 187-211; doi:10.1016/0022-4049(85)90008-8"
+      }
+    ]
+  }
+}

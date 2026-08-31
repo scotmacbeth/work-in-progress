@@ -1,0 +1,378 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{mdframed}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\DCont}{\mathbf{DCont}}
+\newcommand{\Zn}{\mathbb{Z}/n}
+\newcommand{\Ztwo}{\mathbb{Z}/2}
+
+% grade tags
+\newcommand{\gLean}{\textsc{[lean-verified]}}
+\newcommand{\gProved}{\textsc{[proved]}}
+\newcommand{\gComputed}{\textsc{[computed]}}
+\newcommand{\gImport}{\textsc{[definitional import]}}
+\newcommand{\gOpen}{\textbf{[open]}}
+
+\title{One obstruction, three applications:\\
+supply chains, ontologies, and agent orchestration\\
+as composition problems for directed containers\\[2pt]
+\large A grant-impact outlook (staged, not for the book)}
+\author{MacBeth\\\small Kodamai}
+\date{23 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A directed container is exactly a small category; this is machine-checked in our Lean
+development. It follows that anything which presents a small category --- a supply-chain
+network, an ontology log, an orchestration of agents --- \emph{is} a directed container,
+and composing two such systems is one and the same mathematical problem: the existence
+of a Zappa--Sz\'ep product $\C\bowtie\D$. We have proved that this product exists if and
+only if a pairwise criterion $(L)\wedge(G)$ holds, and that --- under a mild hypothesis on
+the shared node --- its only obstruction is a single degree-two cohomology class
+$[\omega]\in H^2(\Sk_\C;\D)$. This outlook argues that
+one theorem thereby governs three superficially unrelated failures --- supply-chain
+inventory inconsistency, ontology-merge conflict, and agent re-entrancy --- and that in
+the supply-chain instance the class refines from a single bit to a $\Zn$-valued count of
+how badly two provenance routes disagree. We are honest about grades throughout: the
+general theorems are proved (the core is Lean-verified), the domain instantiations are
+computed worked examples, and whether a \emph{real} supply chain literally presents a
+category remains an open modelling question. This is the Impact spine of the Kodamai
+grant, presented as a program, not a finished chapter.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Three questions, from three different rooms of the building.
+
+\emph{Logistics.} Two supply chains share a warehouse. Can their flows be serialized into
+one consistent schedule, or do the two routes to a delivered good disagree about where it
+came from?
+
+\emph{Knowledge engineering.} Two teams maintain two ontologies that share a concept.
+Can the schemas be merged, or do they clash on a convention?
+
+\emph{Agent systems.} A meta-agent orchestrates two sub-agents that both touch a shared
+resource. Does the orchestration serialize, or does a re-entrant call corrupt the token?
+
+These look like three engineering problems for three specialists. This note argues they
+are \emph{one} mathematical problem with \emph{one} obstruction, and that we have already
+proved the theorem that resolves it. The bridge is a single machine-checked fact.
+
+\paragraph{The hinge.} A \emph{directed container} in the sense of Ahman--Uustalu
+\cite{au-dccat} is exactly a small category: shapes are objects, positions out of a shape
+are the morphisms out of that object, the root is the identity, and the shift operation is
+composition. We have formalised this equivalence in Lean 4 (\texttt{DContCat.lean},
+sorry-free) \gLean. Its consequence is a licence: \emph{anything that presents a small
+category is a directed container, for free}, and every structural result we have about
+directed containers --- which functors are containers, the four monoidal products, the
+comonoid classifications --- applies to it immediately.
+
+\paragraph{The claim of this note.} Supply chains, ontology logs, and orchestrated agents
+all present categories (with one honest caveat, below). Composing two of them --- wiring
+two chains, merging two ontologies, sequencing two agents --- is therefore composing two
+directed containers, which is the problem of forming a \emph{Zappa--Sz\'ep
+product} $\C\bowtie\D$ (an internal-to-$\Cat$ two-sided semidirect product; equivalently a
+distributive law $\D\C\Rightarrow\C\D$, equivalently a strict factorization system). That a
+distributive law of directed containers assembles this product --- generalizing the monoid
+Zappa--Sz\'ep product --- is Ahman--Uustalu's \cite{au-distlaw}; what we add is a
+characterization of \emph{when} it exists. We have proved:
+
+\begin{itemize}
+\item[(P1)] \textbf{Existence criterion} \cite{pairwise} \gProved. The product $\C\bowtie\D$
+exists iff a pairwise condition holds: $(L)$ every hom-set is a free right $\D$-set, and
+$(G)$ the free bases close into a wide subcategory.
+\item[(P2)] \textbf{Obstruction theorem} \cite{gobstr} \gProved. Under $(L)$ and a mild
+hypothesis (abelian vertex groups, trivial left action), $(G)$ holds iff a cohomology class
+$[\omega]\in H^2(\Sk_\C;\D)$ vanishes, where $\Sk_\C$ is the orbit category and $\D$ the
+vertex-group presheaf.
+\end{itemize}
+
+So the composite serializes iff $[\omega]=0$, and $[\omega]\neq 0$ \emph{is} the failure:
+the inventory inconsistency, the merge conflict, the re-entrancy bug. One class, three
+faces. That is the sentence this note exists to make believable, and it is the Impact
+spine of the grant: the applications are not new mathematics but new \emph{instances of
+one proved theorem}.
+
+\paragraph{What is ours and what is borrowed.} The equivalence DCont $\simeq$ SmallCat is
+Ahman--Uustalu \cite{au-dccat} (we contribute the Lean proof). The Zappa--Sz\'ep-product
+construction itself --- a distributive law of directed containers assembling the joint
+container, generalizing the monoid case --- is likewise Ahman--Uustalu's \cite{au-distlaw}.
+Ontology logs are Spivak's
+prior art \cite{spivak-ologs}; the reading of a knowledge-graph instance as a Set-valued
+copresheaf on its schema is folklore categorical databases. What is \emph{ours} is the
+\emph{existence-and-obstruction} layer over that construction: the pairwise criterion (P1)
+saying when the product exists, the $H^2$ obstruction (P2), and their
+first proved instance --- agent orchestration \cite{orch}, whose core computation
+$[\omega]=\varepsilon$ is itself Lean-verified (\texttt{Reentrancy.lean}) \gLean. The delta
+this note stakes is running that obstruction theory \emph{through} logistics and ontologies,
+where our corpus currently has only analogy.
+
+\paragraph{Grades up front.} This note mixes results at very different levels of certainty,
+and the honest thing is to say which is which before the reader invests any trust.
+
+\begin{mdframed}
+\textbf{Grade key.} \gLean\ machine-checked in Lean~4. \gProved\ proved on paper (registry
+grade). \gComputed\ verified on an explicit finite instance by computer. \gImport\ a
+definition imported from prior art, no new theorem. \gOpen\ an unresolved modelling
+question.
+
+\smallskip
+\noindent\emph{Nothing about a domain rises above} \gComputed\emph{. The object-level claim
+``a real supply chain \emph{is} a category'' stays} \gOpen \emph{(SEED Q4). We build
+faithful minimal abstractions and let the proved theorems compute on them; we never assert
+that reality is the abstraction.}
+\end{mdframed}
+
+\paragraph{Outline.} Section~\ref{sec:hinge} states the hinge. Section~\ref{sec:domains}
+places the three domains inside the equivalence, grading each. Section~\ref{sec:payoff}
+states the composition theorems and reports the computed supply-chain instance, including
+its $\Zn$ refinement and the ontology sibling. Section~\ref{sec:status} is the honest status
+table and the outlook.
+
+\section{The hinge: a directed container is a small category}\label{sec:hinge}
+
+\begin{theorem}[Ahman--Uustalu \cite{au-dccat}; our Lean proof \gLean]\label{thm:hinge}
+The category $\DCont$ of directed containers is equivalent to the category of small
+categories. Explicitly, a directed container $(S,P,o,\downarrow,\oplus)$ is the data of a
+small category: objects $S$, morphisms out of $s$ the positions $P(s)$, identities the
+roots $o_s$, composition the shift $\oplus$, and the five directed-container laws are the
+category laws.
+\end{theorem}
+
+We have machine-checked both round trips of this dictionary in \texttt{DContCat.lean}
+(sorry-free). The point for what follows is not the proof but the \emph{licence} it grants:
+
+\begin{quote}
+\emph{To exhibit a system as a directed container, it suffices to present it as a small
+category.}
+\end{quote}
+
+Every downstream structure comes along for free. In particular the morphisms of $\DCont$
+are not functors but \emph{cofunctors} (equivalently, the Put half of a delta lens
+\cite{clarke-lenses}): an object map forward, and for each object a backward lift of
+outgoing moves. This is the correct variance for the applications --- a map of systems
+propagates states forward and updates backward --- and we return to it in
+Section~\ref{sec:domains}.
+
+\section{Three domains present categories}\label{sec:domains}
+
+\subsection{Agent orchestration \gProved}
+A collection of agents with handoffs between them is a small category: agents (or agent
+states) are objects, permitted handoffs are morphisms, sequencing is composition. A
+meta-agent supervising sub-agents is a cofunctor: it routes request-shapes down and lifts a
+sub-agent's response-move back to a meta-level move \cite{clarke-lenses}. This is the domain
+where we first ran the full machine: orchestration composition is a Zappa--Sz\'ep product,
+and its re-entrancy obstruction is the class $[\omega]$, proved and Lean-verified
+\cite{orch}. It is the parity anchor ($n=2$) for the general picture below.
+
+\subsection{Supply chains \gOpen\ at the object level, \gProved\ at the morphism level}
+Neil's phrasing is that ``supply chains present categories.'' Concretely: stages or
+locations (supplier, factory, warehouse, customer) are objects, operations or flows
+(procure, manufacture, ship) are morphisms, do-then-do is composition, and the
+consistency / inventory-conservation conditions are the path-equations (two routes
+delivering the same good must agree --- the sheaf condition of the grant's Path~5).
+
+The honest content is a \emph{conditional}: a supply chain is a directed container
+\emph{iff} it genuinely presents a category --- operations compose associatively and the
+consistency path-equations hold on the nose. Whether a real network does so is a modelling
+question, SEED Open Question~4, and stays \gOpen. What is settled is the \emph{morphism}
+level: a map between supply-chain models is a cofunctor / delta-lens Put, hence a directed-
+container morphism \gProved\ \cite{coflens} --- the get is forward state propagation,
+the put is consistent backward update propagation. So the maps are pinned down even while
+the objects await a fidelity theorem.
+
+\subsection{Ontology logs and knowledge graphs \gImport}
+An \emph{olog} \cite{spivak-ologs} is a finite category schema: types are objects (``a
+book,'' ``an author''), aspects are morphisms (``a book \emph{has} an author''), and facts
+are commuting-path equations. A knowledge-graph instance or database over the schema is a
+functor $\C\to\Set$: a Set-valued copresheaf sending each type to its set of entities and
+each aspect to a function. Both are prior art; we import the definitions and do not reinvent
+them.\footnote{Provenance flag: our reading log has Spivak--Kent \cite{spivak-ologs} at
+\emph{agent-summary} grade only. We cite it by name for the \emph{definition} of an olog ---
+a definitional import, no theorem number is claimed --- and mark a deep-read of the primary
+source as a TODO before this material is promoted anywhere beyond staging.}
+
+The bridge is then definitional: by Theorem~\ref{thm:hinge} an olog, being a small category,
+\emph{is} a directed container, with types as shapes, available aspects as positions, aspect
+composition as $\oplus$, and facts as the position-equations \gImport. No new theorem --- but
+it is worth a clean statement because it places knowledge graphs \emph{inside} the container
+equivalence chain, so the whole structure theory becomes available to them. A survey of our
+corpus on 23~July~2026 found the word ``olog'' entirely absent: this is greenfield for us.
+
+\section{The payoff: composition is a Zappa--Sz\'ep product, obstructed in $H^2$}
+\label{sec:payoff}
+
+Now the existence-and-obstruction layer that is ours. Merging or wiring two of these systems is
+composing two directed containers over a shared piece --- a shared warehouse, a shared type,
+a shared resource. That is exactly the problem of forming a Zappa--Sz\'ep product --- the
+directed-container construction of Ahman--Uustalu \cite{au-distlaw} --- and the question we
+answer is \emph{when} such a product exists and what obstructs it.
+
+\begin{theorem}[Existence, (P1) \cite{pairwise} \gProved]\label{thm:exist}
+Let $\mathcal{K}$ be a small category and $\D\subseteq\mathcal{K}$ a wide subcategory.
+There is a wide $\C$ with $\mathcal{K}=\C\bowtie\D$ --- equivalently a distributive law
+$\D\C\Rightarrow\C\D$, equivalently a strict factorization system $(\C,\D)$ --- iff
+\textnormal{(L)} every $\Hom_{\mathcal{K}}(-,b)$ is a free right $\D$-set and
+\textnormal{(G)} the free bases close into a wide subcategory.
+\end{theorem}
+
+\begin{theorem}[Obstruction, (P2) \cite{gobstr} \gProved]\label{thm:obstr}
+Under \textnormal{(L)} and hypothesis \textnormal{(H)} (abelian vertex groups, trivial left
+action), $(G)\Leftrightarrow[\omega]=0\in H^2(\Sk_\C;\D)$, with $\Sk_\C$ the orbit category
+and $\D$ the vertex-group presheaf. The cohomology is that of Baues--Wirsching /
+Rosebrugh--Wood, cited as classical background, not reproved.
+\end{theorem}
+
+Chaining the two: \emph{the composite serializes iff $[\omega]=0$}. When $[\omega]\neq0$ no
+Zappa--Sz\'ep product exists --- the systems cannot be consistently interleaved --- and the
+nonzero class is the concrete failure in each domain. This is the whole story in one line;
+the rest of this section makes it concrete on a computed example.
+
+\subsection{A computed supply-chain instance \gComputed}
+We have carried this out on the minimal honest instance \cite{supplyzs}; the numerical claims
+below are machine-checked in \texttt{scratch/supply\_chain\_zs.py}.
+
+Take the procurement chain $\mathsf{Src}\to\mathsf{Mfg}\to\mathsf{Dst}$ as an explicit poset
+category and write out its directed container: shapes are the three stages, positions out of
+a stage are its outgoing operations, the root is ``stay put,'' and $\oplus$ is do-then-do
+(procure-then-ship \emph{is} the direct-delivery operation). The five directed-container laws
+hold by an exhaustive check \gComputed.
+
+Now let two flows meet at a warehouse that keeps an internal \emph{lot-cursor}: a cyclic
+pointer $\tau$ of order $n$ into $n$ interchangeable lot-slots. The cursor moves nothing
+physically --- it is pure provenance bookkeeping --- but a unit leaving carries whatever
+cursor value was current, and $\End(\mathrm{Wh})\cong\Zn$. Two routes to the same delivered
+good, a nominal line and a rework line, may advance the cursor differently; a single datum
+$\varepsilon\in\Zn$ records the discrepancy. Fixing the warehouse-internal relabelings as the
+right factor $\D$, hypotheses (L) and (H) hold uniformly in $\varepsilon$, the orbit category
+and presheaf are computed, and:
+
+\begin{theorem}[The class is the unit-mismatch \cite{supplyzs} \gComputed]\label{thm:sc}
+For this warehouse abstraction $\W_{n,\varepsilon}$,
+\[
+   H^2(\Sk_\C;\D)\cong\Zn,\qquad
+   [\omega(\W_{n,\varepsilon})]=\varepsilon .
+\]
+Hence $\W_{n,\varepsilon}=\C\bowtie\D$ exists iff $\varepsilon=0$, i.e.\ iff the two routes
+agree on lot-provenance. When $\varepsilon\neq0$ the obstruction $[\omega]=\varepsilon$ is a
+nonzero element of $\Zn$: a genuine inventory inconsistency, the two routes disagreeing by
+$\varepsilon$ lot-positions, with no serialization possible. An independent brute-force
+cross-check counts the strict factorization systems: $n$ of them when $\varepsilon=0$, none
+when $\varepsilon\neq0$.
+\end{theorem}
+
+\begin{remark}[A bit becomes a counter]\label{rmk:zn}
+Agent orchestration \cite{orch} needed only $\Ztwo$: a turn token is one bit. Inventory is
+naturally a \emph{counter}, and the obstruction lands in the counter's group. The class
+$[\omega]=\varepsilon$ is not merely ``inconsistent yes/no'' but \emph{by how many units} the
+two provenance routes disagree, valued in $\Zn$. The gauge freedom (the choice of which slot
+is ``slot zero'') shifts both routes together, so only their difference $\varepsilon$ is
+observable --- the categorical avatar of a flat $\Zn$-bundle being trivial iff its holonomy
+vanishes. The proved parity theorem is the $n=2$ face of this refinement.
+\end{remark}
+
+\subsection{The ontology sibling \gComputed}
+The same machine at $n=2$ is the merge of two ologs sharing a type. Merging the schema
+$\mathsf{Book}\to\mathsf{Author}\to\mathsf{Name}$ with a second olog sharing
+$\mathsf{Author}$ is composing two directed containers over the shared type. Let the shared
+type carry a $\Ztwo$ token --- a choice of naming convention (``Last, First'' vs.\ ``First
+Last''). Then Theorem~\ref{thm:sc} at $n=2$ reads: the merge succeeds iff the two schemas
+agree on the convention; a disagreement is the nonzero class $[\omega]=1$, a merge conflict
+--- the \emph{same} $H^2$ bit as supply-chain inconsistency and agent re-entrancy
+\gComputed.
+
+\section{Status, and what it buys the grant}\label{sec:status}
+
+\paragraph{Honest status table.}
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Claim & Grade & Where \\
+\midrule
+DCont $\simeq$ SmallCat (the hinge) & \gLean & \texttt{DContCat.lean} \cite{au-dccat} \\
+composition $=$ ZS; exists $\iff (L)\wedge(G)$ & \gProved & \cite{pairwise} \\
+failure $=[\omega]\in H^2$ (the obstruction) & \gProved & \cite{gobstr} \\
+orchestration re-entrancy $=[\omega]=\varepsilon$ & \gLean & \texttt{Reentrancy.lean} \cite{orch} \\
+supply-chain map $=$ cofunctor / lens & \gProved & \cite{coflens} \\
+computed supply-chain ZS instance ($\Zn$) & \gComputed & \cite{supplyzs} \\
+olog / KG-schema $=$ small category $=$ DCont & \gImport & \cite{spivak-ologs}; this note \\
+a real supply chain \emph{presents} a category & \gOpen & SEED Q4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{The grant line.} Supply-chain composability, ontology-merge consistency, and
+agent-orchestration re-entrancy are the \emph{same} degree-two obstruction on the handoff
+category. In the logistics instance the invariant refines from a bit to a $\Zn$-valued count
+of the discrepancy. This is exactly the shape of Impact the grant needs: not three ad hoc
+categorical analogies but three instances of one proved theorem, with the core machine-
+checked, and with a clear frontier --- the object-level modelling criterion --- honestly
+marked open.
+
+\paragraph{Open questions.} Two are worth stating precisely.
+\begin{itemize}
+\item \emph{The fidelity criterion (SEED Q4).} Give checkable conditions under which a real
+supply-chain network genuinely presents a category --- associativity of operations and the
+inventory-consistency path-equations. This upgrades the standing analogy to a criterion and
+is the one \gOpen\ row in the table.
+\item \emph{Beyond abelian vertex groups.} Theorem~\ref{thm:obstr} assumes hypothesis (H).
+For richer bookkeeping monoids at a shared node (non-abelian relabelings, non-invertible
+state), what replaces $H^2(\Sk_\C;\D)$? The answer would extend the obstruction from these
+finite instances to the full nonabelian setting the applications will eventually demand.
+\end{itemize}
+
+\paragraph{Status of this note.} Staging for the applications turn of the grant, produced for
+Neil and Robin. It commits nothing to the book. The general theorems it leans on are cited at
+their registry grades; the domain instantiations are computed; the fidelity claim is open.
+When Neil steers the applications turn, this is ready to slot in.
+
+\begin{thebibliography}{9}
+\bibitem{au-dccat} D.~Ahman, T.~Uustalu, \emph{Directed containers as categories}, EPTCS 207
+(2016), 89--98. (Our Lean proof: \texttt{DContCat.lean}, sorry-free.)
+\bibitem{au-distlaw} D.~Ahman, T.~Uustalu, \emph{Distributive laws of directed containers},
+Progress in Informatics, No.~10 (2013), 3--18, DOI 10.2201/NIIPI.2013.10.2. (Source of the Zappa--Sz\'ep-product
+construction: a distributive law of directed containers assembles the joint container,
+generalizing the monoid Zappa--Sz\'ep product.)
+\bibitem{pairwise} MacBeth, \emph{The pairwise Zappa--Sz\'ep criterion}, Kodamai note,
+10 June 2026 (proved).
+\bibitem{gobstr} MacBeth, \emph{The global-closure obstruction $(G)$ is a cohomology class},
+Kodamai note, 11 June 2026 (proved).
+\bibitem{orch} MacBeth, \emph{The re-entrancy obstruction is the token-mutation bit: an
+analytic proof for orchestration Zappa--Sz\'ep products}, Kodamai note, 20 July 2026
+(proved; $[\omega]=\varepsilon$ core Lean-verified, \texttt{Reentrancy.lean}).
+\bibitem{supplyzs} MacBeth, \emph{A supply chain is a directed container, and composing two
+is a Zappa--Sz\'ep product: a computed worked example}, Kodamai note, 23 July 2026 (computed;
+\texttt{scratch/supply\_chain\_zs.py}).
+\bibitem{coflens} MacBeth, \emph{Directed-container morphisms are cofunctors, i.e.\ the Put
+of a delta lens}, Kodamai connection note, 9--11 June 2026 (proved; building on
+Clarke \cite{clarke-lenses}).
+\bibitem{clarke-lenses} B.~Clarke, \emph{Internal lenses as functors and cofunctors}, EPTCS
+323 (2020), 183--195. (Cited by name for the cofunctor / delta-lens terminology.)
+\bibitem{spivak-ologs} D.~I.~Spivak, R.~E.~Kent, \emph{Ologs: a categorical framework for
+knowledge representation}, PLoS ONE 7(1) (2012), e24274. \emph{[Provenance: cited by name for
+the definition of an olog; deep-read of the primary source is a standing TODO before
+promotion beyond staging.]}
+\end{thebibliography}
+
+\end{document}

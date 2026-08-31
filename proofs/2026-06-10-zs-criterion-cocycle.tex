@@ -1,0 +1,555 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\lact}[2]{{}^{#1}\!#2}      % left action {}^e t
+\newcommand{\rest}[2]{#1^{\,#2}}        % restriction e^t
+
+\title{The single-category Zappa--Sz\'ep criterion:\\
+explicit cocycle, matched-pair axioms, and why\\
+objectwise freeness is necessary but not sufficient}
+\author{MacBeth\\\small Kodamai}
+\date{10 June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Building on the freeness criterion (every $\Hom(a,b)$ free as a right
+$\End(a)$-set $\iff$ the source-oriented unique factorization $f=t\circ e$ holds
+at $(a,b)$) and the collage reconstruction theorem, we extract the explicit
+Zappa--Sz\'ep cocycle of a small category. When a category $\C$ carries a
+strict factorization $\C=\T\bowtie\E$ with $\E$ the endomorphism subcategory and
+$\T$ a transversal subcategory, postcomposition by an endomorphism at the target
+permutes the transversal and twists the source endomorphism part, via
+$e\circ t=\lact{e}{t}\circ\rest{e}{t}$. We prove this mutual action is a
+\emph{matched pair of categories}: it satisfies the four Brin axioms ZS1--ZS4
+together with unit laws, and these axioms are \emph{equivalent to associativity
+of $\C$} --- each axiom is one half of one associativity instance, read off the
+two parts of the unique factorization. Conversely every matched pair assembles
+to such a $\C$. This pins the exact theorem: $\C\cong\T\bowtie\E$ iff each
+$\T(a,b)$ is a free basis of $\Hom(a,b)$ over $\End(a)$.
+
+We then \emph{correct} the SEED-Q2 conjecture. The natural reading ``$\C$ is a
+Zappa--Sz\'ep product iff every $\Hom(a,b)$ is free over $\End(a)$'' is only half
+true: the forward implication holds, but the converse \emph{fails}. Objectwise
+freeness is necessary but not sufficient, because the transversal must close up
+into a subcategory, and this closure carries a genuine global obstruction. We
+exhibit the minimal counterexample --- a $10$-morphism category on three objects
+in which every hom-set is free over its source endomorphism monoid, yet no choice
+of transversals forms a subcategory. The criterion is therefore \emph{two-level}:
+local freeness plus a global closure (holonomy) condition. All claims are
+machine-checked.
+\end{abstract}
+
+\section{Setup and the two ingredients we build on}
+
+We work with a small category $\C$, identified with a directed container as in
+the source notes. For objects $a,b$ write $\Hom(a,b)$ for the hom-set and
+$\End(a):=\Hom(a,a)$ for the endomorphism monoid (composition, unit $\id_a$).
+As established in the collage note, each $\Hom(a,b)$ is canonically an
+$(\End(b),\End(a))$-biset: the right $\End(a)$-action is precomposition
+$f\cdot e:=f\circ e$ and the left $\End(b)$-action is postcomposition
+$e'\cdot f:=e'\circ f$, and these commute by associativity.
+
+We import two results verbatim.
+
+\begin{theorem}[Freeness criterion; source note, Thm.~main]\label{thm:free}
+Fix $a,b$. For a subset $T\subseteq\Hom(a,b)$, the action map
+$\mu:T\times\End(a)\to\Hom(a,b)$, $\mu(t,e)=t\circ e$, is a bijection iff every
+$f\in\Hom(a,b)$ factors \emph{uniquely} as $f=t\circ e$ with $t\in T$,
+$e\in\End(a)$; this holds for some $T$ iff $\Hom(a,b)$ is a free right
+$\End(a)$-set, and then $T$ is exactly a free basis (one representative per
+$\End(a)$-orbit).
+\end{theorem}
+
+\begin{theorem}[Collage reconstruction; collage note]\label{thm:collage}
+$\C$ is recovered from the family of endomorphism monoids $\{\End(x)\}$ and the
+connecting bisets $\{\Hom(a,b)\}$ together with the composition maps, which
+descend to $\Hom(b,c)\otimes_{\End(b)}\Hom(a,b)\to\Hom(a,c)$. Composition in
+$\C$ is balanced over each $\End(b)$, and the category axioms transfer verbatim.
+\end{theorem}
+
+Theorem~\ref{thm:free} is purely \emph{local} (one hom-set at a time). Our task
+is the \emph{global} assembly: when do the per-hom factorizations cohere into a
+single Zappa--Sz\'ep product, and what is the resulting algebraic structure? The
+endomorphism subcategory is the carrier of the loop data.
+
+\begin{definition}[The endomorphism subcategory $\E$]
+Let $\E\subseteq\C$ be the wide subcategory with $\E(a,a)=\End(a)$ and
+$\E(a,b)=\varnothing$ for $a\neq b$. It is a subcategory: identities lie in it,
+and the only composable pairs are within a single $\End(a)$, which is closed.
+Every morphism of $\E$ is an endomorphism, so any factorization $f=t\circ e$ with
+$e\in\E$ forces $e\in\End(a)$ where $a=\operatorname{dom}(f)$ (the ``middle
+object'' is $a$).
+\end{definition}
+
+\section{The categorical matched pair}
+
+We first axiomatize the target structure abstractly, then show it is exactly a
+category, then show a strict factorization produces one.
+
+\begin{definition}[Matched pair over the endomorphisms]\label{def:matched}
+A \emph{matched pair} on an object set $O$ consists of:
+\begin{itemize}
+\item a category $\T$ with $\ob\T=O$ (the \emph{transversal} or \emph{skeleton}),
+hom-sets $\T(a,b)$, composition written $t'\circ t$, units $\id_a$;
+\item for each $x\in O$ a monoid $M_x$ with unit $1_x$ (the \emph{vertex monoid});
+\item a \emph{left action} assigning to $e\in M_b$ and $t\in\T(a,b)$ an element
+$\lact{e}{t}\in\T(a,b)$;
+\item a \emph{restriction} assigning to $e\in M_b$ and $t\in\T(a,b)$ an element
+$\rest{e}{t}\in M_a$;
+\end{itemize}
+subject to, for all composable data:
+\begin{description}
+\item[(U1)] $\lact{1_b}{t}=t$ and $\rest{(1_b)}{t}=1_a$, for $t\in\T(a,b)$;
+\item[(U2)] $\lact{e}{\id_a}=\id_a$ and $\rest{e}{\id_a}=e$, for $e\in M_a$;
+\item[(ZS1)] $\lact{e}{(t_2\circ t_1)}=\lact{e}{t_2}\circ\lact{\rest{e}{t_2}}{t_1}$,\quad
+$t_1\in\T(a,b),\,t_2\in\T(b,c),\,e\in M_c$;
+\item[(ZS2)] $\lact{(e'e)}{t}=\lact{e'}{(\lact{e}{t})}$,\quad
+$e,e'\in M_b,\,t\in\T(a,b)$;
+\item[(ZS3)] $\rest{(e'e)}{t}=\rest{(e')}{\,\lact{e}{t}}\cdot\rest{e}{t}$,\quad
+$e,e'\in M_b,\,t\in\T(a,b)$ \;(product in $M_a$);
+\item[(ZS4)] $\rest{e}{(t_2\circ t_1)}=\rest{(\rest{e}{t_2})}{t_1}$,\quad
+$t_1\in\T(a,b),\,t_2\in\T(b,c),\,e\in M_c$.
+\end{description}
+\end{definition}
+
+The four axioms are Brin's, read in the present typed (many-object) form: ZS2
+says each $M_b$ acts on $\T(a,b)$ on the left; ZS4 says restriction is a right
+action of the category $\T$ on the family $\{M_x\}$ (it lowers $M_c\to M_b\to M_a$
+along $t_2,t_1$); ZS1 and ZS3 are the crossed compatibilities of the two actions.
+
+\begin{definition}[The Zappa--Sz\'ep product]\label{def:product}
+Given a matched pair, define $\T\bowtie\E$ with object set $O$, hom-sets
+\[
+  (\T\bowtie\E)(a,b)\;=\;\T(a,b)\times M_a,
+\]
+identity $\id^{\bowtie}_a=(\id_a,1_a)$, and composition
+\[
+  (t_2,e_2)\cdot(t_1,e_1)\;=\;\bigl(\,t_2\circ\lact{e_2}{t_1}\,,\;
+  \rest{e_2}{t_1}\cdot e_1\,\bigr),
+  \qquad t_1\in\T(a,b),\,e_1\in M_a,\,t_2\in\T(b,c),\,e_2\in M_b .
+\]
+(The first slot lands in $\T(a,c)$ since $\lact{e_2}{t_1}\in\T(a,b)$ and
+$t_2\in\T(b,c)$; the second lands in $M_a$ since $\rest{e_2}{t_1},e_1\in M_a$.)
+\end{definition}
+
+\begin{theorem}[Axioms $\iff$ associativity]\label{thm:axioms-assoc}
+$\T\bowtie\E$ of Definition~\ref{def:product} is a category if and only if the
+matched-pair axioms \textnormal{(U1),(U2),(ZS1)--(ZS4)} hold. More precisely, the
+unit laws of $\T\bowtie\E$ are equivalent to \textnormal{(U1),(U2)}, and a single
+associativity instance splits into two independent equalities --- its
+$\T$-coordinate is governed by \textnormal{(ZS1)+(ZS2)} and its $M$-coordinate by
+\textnormal{(ZS3)+(ZS4)}.
+\end{theorem}
+
+\begin{proof}
+\emph{Units.} $\id^{\bowtie}_b\cdot(t,e)=(\id_b\circ\lact{1_b}{t},\,
+\rest{(1_b)}{t}\cdot e)$, which equals $(t,e)$ for all $(t,e)$ iff
+$\lact{1_b}{t}=t$ and $\rest{(1_b)}{t}=1_a$ then $1_a\cdot e=e$, i.e.\ iff (U1).
+Dually $(t,e)\cdot\id^{\bowtie}_a=(t\circ\lact{e}{\id_a},\,\rest{e}{\id_a}\cdot
+1_a)$ equals $(t,e)$ for all $(t,e)$ iff $\lact{e}{\id_a}=\id_a$ and
+$\rest{e}{\id_a}=e$, i.e.\ iff (U2). (Here $t\circ\id_a=t$ and $\id_b\circ t=t$
+use the unit laws of $\T$.)
+
+\emph{Associativity.} Take
+$(t_1,e_1):a\to b$, $(t_2,e_2):b\to c$, $(t_3,e_3):c\to d$. Compute both
+bracketings. Left bracketing:
+\[
+  \bigl((t_3,e_3)(t_2,e_2)\bigr)(t_1,e_1)
+  =\bigl(t_3\circ\lact{e_3}{t_2},\;\rest{e_3}{t_2}\,e_2\bigr)\cdot(t_1,e_1)
+  =\Bigl(\,(t_3\circ\lact{e_3}{t_2})\circ\lact{(\rest{e_3}{t_2}e_2)}{t_1}\,,\;
+  \rest{(\rest{e_3}{t_2}e_2)}{t_1}\,e_1\,\Bigr).
+\]
+Right bracketing, with $(t_2,e_2)(t_1,e_1)=(t_2\circ\lact{e_2}{t_1},\,
+\rest{e_2}{t_1}e_1)$:
+\[
+  (t_3,e_3)\bigl((t_2,e_2)(t_1,e_1)\bigr)
+  =\Bigl(\,t_3\circ\lact{e_3}{(t_2\circ\lact{e_2}{t_1})}\,,\;
+  \rest{e_3}{(t_2\circ\lact{e_2}{t_1})}\,\rest{e_2}{t_1}\,e_1\,\Bigr).
+\]
+\emph{$\T$-coordinates.} Using associativity of $\T$, the left one is
+$t_3\circ\lact{e_3}{t_2}\circ\lact{(\rest{e_3}{t_2}e_2)}{t_1}$. By (ZS2),
+$\lact{(\rest{e_3}{t_2}e_2)}{t_1}=\lact{\rest{e_3}{t_2}}{(\lact{e_2}{t_1})}$, so
+the left $\T$-coordinate is
+\[
+  t_3\circ\lact{e_3}{t_2}\circ\lact{\rest{e_3}{t_2}}{(\lact{e_2}{t_1})}.
+\]
+For the right one, (ZS1) (with $e=e_3$, $t_2'=t_2$, $t_1'=\lact{e_2}{t_1}$) gives
+$\lact{e_3}{(t_2\circ\lact{e_2}{t_1})}=\lact{e_3}{t_2}\circ
+\lact{\rest{e_3}{t_2}}{(\lact{e_2}{t_1})}$, so the right $\T$-coordinate is the
+same expression. Hence the $\T$-coordinates agree iff (ZS1) and (ZS2) hold.
+(For the converse one uses the unit laws, available once $\T\bowtie\E$ is a
+category: setting $t_3=\id,\,e_2=1_b$ collapses the equality to (ZS1), while
+setting $b=c,\,t_2=t_3=\id$ collapses it to (ZS2).)
+
+\emph{$M$-coordinates.} The left one is $\rest{(\rest{e_3}{t_2}e_2)}{t_1}\,e_1$;
+by (ZS3), $\rest{(\rest{e_3}{t_2}e_2)}{t_1}
+=\rest{(\rest{e_3}{t_2})}{\,\lact{e_2}{t_1}}\cdot\rest{e_2}{t_1}$, so it equals
+\[
+  \rest{(\rest{e_3}{t_2})}{\,\lact{e_2}{t_1}}\cdot\rest{e_2}{t_1}\cdot e_1 .
+\]
+The right one is $\rest{e_3}{(t_2\circ\lact{e_2}{t_1})}\,\rest{e_2}{t_1}\,e_1$;
+by (ZS4), $\rest{e_3}{(t_2\circ\lact{e_2}{t_1})}
+=\rest{(\rest{e_3}{t_2})}{\,\lact{e_2}{t_1}}$, so the two $M$-coordinates agree
+iff (ZS3) and (ZS4) hold. Associativity of products in $M_a$ handles the trailing
+$\cdot e_1$. This proves the stated correspondence in both directions.
+\end{proof}
+
+\section{Extracting the cocycle from a strict factorization}
+
+We now show that a category with the source-oriented unique factorization
+\emph{is} such a product, with the matched-pair data read off composition. The
+content is that the factorization defines the action and that the axioms come
+\emph{for free} from associativity in $\C$.
+
+\begin{definition}[Strict factorization with endomorphism left class]\label{def:strict}
+A \emph{$\T$-factorization} of $\C$ is a wide subcategory $\T\subseteq\C$ such
+that every $f\in\Hom(a,b)$ factors uniquely as $f=t\circ e$ with $t\in\T(a,b)$
+and $e\in\End(a)$. (Equivalently $\C=\T\bowtie\E$ as a strict factorization
+system with left class $\E$ and right class $\T$.)
+\end{definition}
+
+\begin{lemma}[The cocycle]\label{lem:cocycle}
+Let $\T$ be a $\T$-factorization of $\C$. For $e\in\End(b)$ and $t\in\T(a,b)$,
+the morphism $e\circ t\in\Hom(a,b)$ has a unique factorization; define
+$\lact{e}{t}\in\T(a,b)$ and $\rest{e}{t}\in\End(a)$ by
+\begin{equation}\label{eq:star}
+  e\circ t \;=\; \lact{e}{t}\circ\rest{e}{t}. \tag{$\star$}
+\end{equation}
+Then $(\T,\{\End(x)\},\lact{}{},\rest{}{})$ is a matched pair, and the map
+$\Phi:\T\bowtie\E\to\C$, $\Phi(t,e)=t\circ e$, is an isomorphism of categories.
+\end{lemma}
+
+\begin{proof}
+\emph{$\lact{e}{t},\rest{e}{t}$ are well defined.} $e\circ t:a\to b$ lies in
+$\Hom(a,b)$ and factors uniquely as (transversal)$\circ$(endomorphism) by
+Definition~\ref{def:strict}; \eqref{eq:star} names the two parts. Since
+$\rest{e}{t}\in\End(a)$ does not change objects, $\lact{e}{t}$ lies in the same
+hom-set $\T(a,b)$ as $t$.
+
+\emph{Units.} (U1): $\lact{1_b}{t}\circ\rest{(1_b)}{t}=1_b\circ t=t=t\circ\id_a$;
+by uniqueness $\lact{1_b}{t}=t$, $\rest{(1_b)}{t}=\id_a$. (U2): for $e\in\End(a)$,
+$\lact{e}{\id_a}\circ\rest{e}{\id_a}=e\circ\id_a=e=\id_a\circ e$ with
+$\id_a\in\T(a,a)$, $e\in\End(a)$; by uniqueness $\lact{e}{\id_a}=\id_a$,
+$\rest{e}{\id_a}=e$. (Uniqueness of factorization at $(a,a)$ holds because
+$\End(a)=\Hom(a,a)$ is the regular right $\End(a)$-set, free with basis
+$\{\id_a\}$, so $\T(a,a)=\{\id_a\}$.)
+
+\emph{ZS1 and ZS4.} Let $t_1\in\T(a,b)$, $t_2\in\T(b,c)$, $e\in\End(c)$. Compute
+$e\circ(t_2\circ t_1)$ two ways. Directly by \eqref{eq:star} applied to
+$t_2\circ t_1\in\T(a,c)$ (using closure of $\T$):
+\[
+  e\circ(t_2\circ t_1)=\lact{e}{(t_2\circ t_1)}\circ\rest{e}{(t_2\circ t_1)} .
+\]
+Re-bracketing and applying \eqref{eq:star} twice:
+\begin{align*}
+  (e\circ t_2)\circ t_1
+  &=\bigl(\lact{e}{t_2}\circ\rest{e}{t_2}\bigr)\circ t_1
+   =\lact{e}{t_2}\circ\bigl(\rest{e}{t_2}\circ t_1\bigr)\\
+  &=\lact{e}{t_2}\circ\Bigl(\lact{\rest{e}{t_2}}{t_1}\circ
+     \rest{(\rest{e}{t_2})}{t_1}\Bigr)
+   =\Bigl(\lact{e}{t_2}\circ\lact{\rest{e}{t_2}}{t_1}\Bigr)\circ
+     \rest{(\rest{e}{t_2})}{t_1},
+\end{align*}
+where the inner application of \eqref{eq:star} is to $\rest{e}{t_2}\in\End(b)$ and
+$t_1\in\T(a,b)$. Both displays are factorizations of the \emph{same} morphism
+$a\to c$ into $\T(a,c)\circ\End(a)$ (the bracketed first factors are transversal
+by closure of $\T$; the last factors are endomorphisms of $a$). By uniqueness the
+transversal parts agree --- this is (ZS1) --- and the endomorphism parts agree ---
+this is (ZS4).
+
+\emph{ZS2 and ZS3.} Let $t\in\T(a,b)$, $e,e'\in\End(b)$. Compute $(e'\circ e)\circ
+t$ two ways. Directly:
+$(e'e)\circ t=\lact{(e'e)}{t}\circ\rest{(e'e)}{t}$. Re-bracketed:
+\begin{align*}
+  e'\circ(e\circ t)
+  &=e'\circ\bigl(\lact{e}{t}\circ\rest{e}{t}\bigr)
+   =\bigl(e'\circ\lact{e}{t}\bigr)\circ\rest{e}{t}\\
+  &=\Bigl(\lact{e'}{(\lact{e}{t})}\circ\rest{(e')}{\,\lact{e}{t}}\Bigr)\circ
+     \rest{e}{t}
+   =\lact{e'}{(\lact{e}{t})}\circ\Bigl(\rest{(e')}{\,\lact{e}{t}}\cdot
+     \rest{e}{t}\Bigr),
+\end{align*}
+the inner \eqref{eq:star} applied to $e'\in\End(b)$ and
+$\lact{e}{t}\in\T(a,b)$, and the last step folding the two $\End(a)$-factors into
+their product. Again two factorizations of one morphism into
+$\T(a,b)\circ\End(a)$; uniqueness gives the transversal parts equal --- (ZS2) ---
+and the endomorphism parts equal --- (ZS3).
+
+\emph{$\Phi$ is an isomorphism.} $\Phi(t,e)=t\circ e$ is a bijection
+$\T(a,b)\times\End(a)\to\Hom(a,b)$ on each hom-set, by the unique factorization
+(Theorem~\ref{thm:free}). It preserves identities, $\Phi(\id_a,1_a)=\id_a$. It
+preserves composition:
+\[
+  \Phi\bigl((t_2,e_2)(t_1,e_1)\bigr)
+  =\bigl(t_2\circ\lact{e_2}{t_1}\bigr)\circ\bigl(\rest{e_2}{t_1}\circ e_1\bigr),
+\]
+while
+\[
+  \Phi(t_2,e_2)\circ\Phi(t_1,e_1)=(t_2\circ e_2)\circ(t_1\circ e_1)
+  =t_2\circ\bigl(e_2\circ t_1\bigr)\circ e_1
+  =t_2\circ\lact{e_2}{t_1}\circ\rest{e_2}{t_1}\circ e_1,
+\]
+using \eqref{eq:star} on $e_2\circ t_1$. The two right-hand sides are equal by
+associativity in $\C$. A bijective-on-objects, bijective-on-homs,
+composition-preserving map is an isomorphism of categories.
+\end{proof}
+
+\begin{remark}
+Lemma~\ref{lem:cocycle} is the source of Theorem~\ref{thm:axioms-assoc}'s
+``axioms hold'': in a genuine category the axioms are \emph{forced} by
+associativity. Conversely Theorem~\ref{thm:axioms-assoc} shows the axioms are also
+\emph{sufficient} --- abstract matched-pair data always assembles to a category.
+Together they give a clean equivalence between $\T$-factorizations of categories
+and matched pairs, with $\C\cong\T\bowtie\E$.
+\end{remark}
+
+\section{The criterion, and the correction to SEED-Q2}
+
+Combining the local Theorem~\ref{thm:free} with the global Lemma~\ref{lem:cocycle}
+gives the sharp statement.
+
+\begin{theorem}[Single-category Zappa--Sz\'ep criterion]\label{thm:criterion}
+Let $\C$ be a small category and $\T\subseteq\C$ a wide subcategory. The following
+are equivalent.
+\begin{enumerate}
+\item $\T$ is a $\T$-factorization: every $f\in\Hom(a,b)$ factors uniquely as
+$t\circ e$ with $t\in\T(a,b)$, $e\in\End(a)$.
+\item For every $a,b$, the set $\T(a,b)$ is a free basis of $\Hom(a,b)$ as a right
+$\End(a)$-set.
+\end{enumerate}
+When they hold, $\C\cong\T\bowtie\E$ is the Zappa--Sz\'ep product of $\T$ and the
+endomorphism subcategory $\E$, with the matched pair of Lemma~\ref{lem:cocycle};
+the matched-pair axioms hold and are equivalent to associativity of $\C$.
+\end{theorem}
+
+\begin{proof}
+(1)$\Leftrightarrow$(2) is Theorem~\ref{thm:free} applied at every pair $(a,b)$
+\emph{(}note that $\T$ being a wide subcategory is part of the hypothesis on both
+sides: in (2) the family $\{\T(a,b)\}$ is given as the hom-sets of the
+subcategory $\T$\emph{)}. The final clause is Lemma~\ref{lem:cocycle} together
+with Theorem~\ref{thm:axioms-assoc}.
+\end{proof}
+
+The subtle point is hidden in plain sight: \emph{both} conditions in
+Theorem~\ref{thm:criterion} presuppose that the chosen $\T$ is a
+\emph{subcategory} (closed under composition, containing identities). The natural
+SEED-Q2 reading drops this and asks only for objectwise freeness. That reading is
+\emph{false}.
+
+\begin{theorem}[Objectwise freeness is necessary but not sufficient]\label{thm:notsuff}
+\leavevmode
+\begin{enumerate}
+\item \emph{(Necessity.)} If $\C\cong\T\bowtie\E$ as in
+Theorem~\ref{thm:criterion}, then every $\Hom(a,b)$ is free as a right
+$\End(a)$-set.
+\item \emph{(Failure of sufficiency.)} There is a small category in which every
+$\Hom(a,b)$ is free as a right $\End(a)$-set, yet \emph{no} wide subcategory
+$\T\subseteq\C$ satisfies the equivalent conditions of
+Theorem~\ref{thm:criterion}. Hence $\C$ admits no source-oriented Zappa--Sz\'ep
+decomposition over its endomorphisms.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) is immediate from Theorem~\ref{thm:criterion}(2): freeness with the basis
+$\T(a,b)$. For (2) we exhibit the category of \S\ref{sec:ce} and prove its two
+properties there (Proposition~\ref{prop:ce}).
+\end{proof}
+
+\section{The minimal counterexample}\label{sec:ce}
+
+\begin{example}[Rigid twist; ten morphisms]\label{ex:ce}
+Let $\C$ have three objects $a,x,y$ and the following morphisms.
+\[
+  \End(a)=\{\,1_a,\;g\,\},\ g^2=1_a;\qquad \End(x)=\{1_x\};\qquad \End(y)=\{1_y\}.
+\]
+\[
+  \Hom(a,x)=\{\,p,\ pg\,\},\quad pg:=p\circ g; \qquad
+  \Hom(x,y)=\{\,s,\ s_2\,\}; \qquad
+  \Hom(a,y)=\{\,q,\ qg\,\},\quad qg:=q\circ g.
+\]
+All other non-endomorphism hom-sets are empty. Right $\End(a)$-actions are the
+free regular ones ($p\cdot g=pg$, $pg\cdot g=p$, $q\cdot g=qg$, $qg\cdot g=q$).
+The cross composites $\Hom(x,y)\circ\Hom(a,x)\to\Hom(a,y)$ are fixed by the
+\emph{rigid twist}
+\[
+  s\circ p=q,\qquad s_2\circ p=qg,
+\]
+and the remaining cross composites are then forced by the right $\End(a)$-action:
+\[
+  s\circ pg=(s\circ p)\circ g=qg,\qquad s_2\circ pg=(s_2\circ p)\circ g=q .
+\]
+\end{example}
+
+\begin{proposition}\label{prop:ce}
+Example~\ref{ex:ce} is a genuine small category. Every $\Hom(a,b)$ is free as a
+right $\End(a)$-set. No wide subcategory $\T\subseteq\C$ is a $\T$-factorization.
+\end{proposition}
+
+\begin{proof}
+\emph{It is a category.} Units are immediate. Associativity needs checking only
+on composable triples that are not all identities; since $\End(x)$ and $\End(y)$
+are trivial and $\Hom(y,-)$, $\Hom(-,a)$ (for the relevant slots) are empty, the
+only nontrivial associativity instances involve $g$ at $a$, an arrow of
+$\Hom(a,x)$, and an arrow of $\Hom(x,y)$:
+\[
+  (s\circ p)\circ g=q\circ g=qg=s\circ pg=s\circ(p\circ g),\qquad
+  (s_2\circ p)\circ g=qg\circ g=q=s_2\circ pg=s_2\circ(p\circ g),
+\]
+and the symmetric instances with $g$ on the far right, all of which hold by the
+forced definitions. (This is verified mechanically by the associativity checker;
+see \S\ref{sec:comp}.)
+
+\emph{Freeness.} $\End(a)\cong\mathbb Z/2$ acts freely on the right of each of
+$\Hom(a,x)=\{p,pg\}$, $\Hom(a,y)=\{q,qg\}$ (single free orbits of size $2$) and on
+$\End(a)$ itself (regular). $\End(x)$ and $\End(y)$ are trivial, so $\Hom(x,y)$,
+$\End(x)$, $\End(y)$ are free over them (orbits are singletons). Every hom-set is
+free over its source endomorphism monoid.
+
+\emph{No $\T$-factorization.} Suppose $\T$ were one. By
+Theorem~\ref{thm:criterion}(2), each $\T(c,d)$ is a free basis, i.e.\ one
+representative per right $\End(c)$-orbit. Thus $\T(a,x)\subseteq\{p,pg\}$ is a
+\emph{single} element ($\Hom(a,x)$ is one orbit), $\T(a,y)\subseteq\{q,qg\}$ is a
+single element, and $\T(x,y)$ is one representative per $\End(x)$-orbit --- but
+$\End(x)$ is trivial, so each of $s,s_2$ is its own orbit and
+\[
+  \T(x,y)=\{s,s_2\}\quad\text{is forced.}
+\]
+Closure of $\T$ under composition requires $\T(x,y)\circ\T(a,x)\subseteq\T(a,y)$.
+Write $\T(a,x)=\{t\}$ with $t\in\{p,pg\}$. Then both $s\circ t$ and $s_2\circ t$
+must lie in the single-element set $\T(a,y)$. But
+\[
+  \{\,s\circ t,\;s_2\circ t\,\}=
+  \begin{cases}\{q,\;qg\} & t=p,\\[2pt]\{qg,\;q\} & t=pg,\end{cases}
+\]
+in either case the \emph{two-element} set $\{q,qg\}$. A single-element set cannot
+contain both $q$ and $qg$ (they are distinct). Contradiction. Hence no wide
+subcategory $\T$ is a $\T$-factorization, and by Theorem~\ref{thm:criterion} $\C$
+has no source-oriented Zappa--Sz\'ep decomposition over its endomorphisms.
+\end{proof}
+
+\begin{remark}[Why the twist is rigid, and why three objects are needed]
+The obstruction is that $s$ and $s_2$ disagree by $g$ when pulled back along
+$\Hom(a,x)$: $s_2\circ p=(s\circ p)\circ g$. Re-choosing the transversal
+representative $p\mapsto pg$ shifts \emph{both} composites by $g$
+simultaneously, so it can never separate them --- the relative twist is invariant
+under all admissible choices. This is a one-dimensional $\mathbb Z/2$ holonomy
+around the branched path $a\to x\rightrightarrows y$. It requires (i) a
+nontrivial source endomorphism monoid (else there is no torsor of choices and
+each $\T(c,d)$ is forced to be the whole hom-set, trivially closed), and (ii) two
+distinct transversal arrows out of the middle object $x$ targeting the same orbit
+at $y$ (a branch), hence at least three objects. Ten morphisms is therefore
+essentially minimal. Note $\C$ has no nontrivial isomorphisms; a directed cycle
+in the transversal would force its arrows to be mutually inverse isomorphisms
+(their composite, an endomorphism, must equal the forced $\T(a,a)=\{\id_a\}$),
+collapsing to the groupoid case, which always splits. The obstruction is genuinely
+a feature of \emph{non-invertible}, acyclic shape with loop decorations.
+\end{remark}
+
+\section{Two levels: local freeness and global closure}
+
+Theorems~\ref{thm:criterion} and~\ref{thm:notsuff} together resolve SEED-Q2 at the
+single-category level, but not in the form originally conjectured. The decision
+procedure is \emph{two-level}.
+
+\begin{corollary}[Corrected SEED-Q2, single category]\label{cor:twolevel}
+A small category $\C$ admits a source-oriented Zappa--Sz\'ep decomposition
+$\C\cong\T\bowtie\E$ over its endomorphism subcategory if and only if
+\begin{enumerate}
+\item[\textnormal{(L)}] \emph{(local freeness)} every $\Hom(a,b)$ is free as a
+right $\End(a)$-set, \emph{and}
+\item[\textnormal{(G)}] \emph{(global closure)} the per-orbit representatives can
+be chosen to form a wide subcategory --- equivalently, the holonomy obstruction of
+Example~\ref{ex:ce} vanishes throughout $\C$.
+\end{enumerate}
+Condition \textnormal{(L)} is necessary and finitely checkable (orbit-freeness on
+each connecting biset, with the quick pre-test
+$\lvert\End(a)\rvert\mid\lvert\Hom(a,b)\rvert$). Condition \textnormal{(G)} is a
+strictly stronger, global condition: it can fail when \textnormal{(L)} holds
+(Example~\ref{ex:ce}), and is decidable by searching the finite product of
+orbit-representative choices for one closed under composition.
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:criterion}, a decomposition exists iff some wide subcategory
+$\T$ is a free-basis family; (L) is exactly objectwise freeness and (G) is exactly
+the existence of such a $\T$ among the freeness-permitted choices. Necessity of
+(L) is Theorem~\ref{thm:notsuff}(1); the gap between (L) and (L)$\wedge$(G) is
+witnessed by Example~\ref{ex:ce}. Decidability: each $\Hom(a,b)$ has finitely many
+orbit-representative systems, their product is finite, and closure under
+composition is a finite check.
+\end{proof}
+
+\begin{remark}[Relation to the collage]
+When (G) fails but (L) holds, $\C$ is \emph{not} a Zappa--Sz\'ep product, yet it
+is still the collage of its endomorphism monoids along the connecting bisets
+(Theorem~\ref{thm:collage}) --- that assembly is unconditional. Freeness makes
+each connecting biset \emph{free} (so coordinatizable as $\T(a,b)\times\End(a)$),
+but the composition cocycle across a branch need not trivialize to a strict
+product. Thus the hierarchy is: \emph{collage} (always) $\supsetneq$ \emph{free
+collage} (condition L) $\supsetneq$ \emph{Zappa--Sz\'ep product} (conditions
+L$\wedge$G). The two-atoms note found the first proper inclusion (non-free
+bisets); the present note finds the second (free but non-closing bisets).
+\end{remark}
+
+\section{Computational verification}\label{sec:comp}
+
+All claims are machine-checked by scripts in \texttt{projects/scratch/}.
+\begin{itemize}
+\item \texttt{zs\_cocycle\_check.py}: for every category admitting a closed
+transversal (connected groupoid with $\mathrm{Aut}=\mathbb Z/2$; the chains
+$0<\dots<n$; the commutative square; $\mathbb Z/n$ as one-object categories;
+source-loop torsors with $\End=\mathbb Z/2,\mathbb Z/3$), it extracts the cocycle
+$\lact{e}{t},\rest{e}{t}$ from \eqref{eq:star} and verifies the defining relation
+and all of (U1),(U2),(ZS1)--(ZS4). Every case passes, confirming
+Lemma~\ref{lem:cocycle}.
+\item \texttt{zs\_converse\_check.py}: builds $\T\bowtie\E$ from extracted
+matched-pair data and checks associativity directly on triples of pairs,
+confirming Theorem~\ref{thm:axioms-assoc} (valid data $\Rightarrow$ associative
+product).
+\item \texttt{zs\_closure\_counterexample.py}: builds Example~\ref{ex:ce},
+verifies the category axioms, verifies that all six hom-sets are free over their
+source endomorphism monoids, and exhaustively checks that none of the (four)
+admissible transversal choices is closed --- confirming
+Proposition~\ref{prop:ce} and Theorem~\ref{thm:notsuff}(2).
+\end{itemize}
+
+\section{Grant relevance}
+
+Corollary~\ref{cor:twolevel} is the corrected, implementable decision procedure
+promised by SEED-Q2 for the single-category (single directed container) case. It
+separates a cheap local test (orbit-freeness, with a divisibility pre-filter) from
+a global closure search, and it identifies precisely what a Zappa--Sz\'ep /
+distributive-law decomposition buys over the always-available collage: a strict
+unique factorization governed by a matched pair (Brin axioms) that we have shown
+is exactly associativity in coordinates. The rigid-twist obstruction is the
+finite, computable shadow of the laxator obstruction in the ga-containers framing:
+freeness kills the fibrewise part, and the residual holonomy is what an honest
+decomposition algorithm must test. The pairwise distributive-law question
+($\C\bowtie\D$) is the natural next target; the present analysis predicts the same
+two-level shape there --- a fibrewise freeness condition on the connecting biset
+between the two factors, plus a global closure/holonomy condition on the mutual
+action --- and the matched-pair calculus of \S2 is exactly the tool to state it.
+
+\end{document}

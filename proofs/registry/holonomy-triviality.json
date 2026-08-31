@@ -1,0 +1,51 @@
+{
+    "conjecture": "The reusable collapse engine of the liftings-≅-Cat completeness proofs: once ASSOC-DEEP forces a lifting's transport to factor through the codiscrete (chaotic) category K(S) on the state set S, the transport is a TRIVIAL ISO-SYSTEM — every functor F : K(S) → C sends every morphism to an isomorphism, yielding a coherent family ι a b : F.obj a ≅ F.obj b with ι a a = id and ι a b ⬝ ι b c = ι a c, so all F.obj a collapse to a single object (π₀(K(S)) = 1). This is the abstract skeleton shared by the Reader/State classifications and the cross-domain 'trivial holonomy ⟹ one global object' pattern (Categorical Belief Propagation, Thm 6.14). (MacBeth, 2026-08-11.)",
+    "status": "proved",
+    "date_opened": "2026-08-11",
+    "date_closed": "2026-08-11",
+    "note": "LEAN session 2026-08-11. Abstract endpoint-locality lemma formalised in Lean 4 core (no Mathlib), file Containers/EndpointLocality.lean, wired into the library root, `lake build` green with 0 sorry / 0 warnings and AXIOM-FREE (`#print axioms` reports 'does not depend on any axioms' for all five declarations — not even propext/Classical). Codiscrete K(S) := SmallCat with Hom a b := PUnit; all category laws by PUnit definitional eta (rfl). Functor and Iso between hand-rolled SmallCats defined locally. Core: (1) mapIso/mapIso_hom_eq — every morphism ↦ iso, forward map is literally F.map f; (2a) endpointIso_refl — ι a a = C.id; (2b) endpointIso_comp — ι a b ⬝ ι b c = ι a c; (3) collapse — every F.obj a ≅ F.obj a₀. Both triangle identities of endpointIso reduce via functoriality to F.map_id (in K(S) the round trip a→b→a IS the identity, both PUnit.unit). Specialised (example) to S=Bool connecting to StateProductLifting.lean's stateProduct=ΔBool×ℤ/2: K(Bool)=deltaDC Bool under DCont≅Cat, so State's transport collapses the two states. Proof source: proofs/2026-08-11-state-liftings-holonomy-triviality.md (§3-§4) and 2026-08-11-update-monad-liftings-holonomy-full.md (§4B, the reset-collapse degeneracy). External: DCont≅Cat = Ahman-Chapman-Uustalu arXiv:1408.5809; cross-domain skeleton = Categorical Belief Propagation arXiv:2601.04456 Thm 6.14 (deep-read, not citable).",
+    "tree": {
+        "id": "root",
+        "approach": "Endpoint-locality: a functor out of the codiscrete category K(S) is a trivial iso-system that collapses to a single object; the reusable engine of the liftings-≅-Cat completeness proofs.",
+        "trust": "proved",
+        "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+        "children": [
+            {
+                "id": "codiscrete-cat",
+                "approach": "K(S) := codiscrete/chaotic category on S: Hom a b = PUnit, unique arrow per ordered pair; all SmallCat laws hold by PUnit definitional eta (rfl). Under DCont≅Cat this is deltaDC S (state comonad), already lean-verified in StateComonad.",
+                "role": "premise",
+                "trust": "lean-verified",
+                "lean": "Codiscrete",
+                "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+                "children": []
+            },
+            {
+                "id": "map-is-iso",
+                "approach": "(1) F : K(S) → C sends every morphism to an isomorphism: inverse of F.map(a→b) is F.map(b→a), triangles reduce to F.map_id since the round trip a→b→a is the identity in K(S). Witnessing forward map is literally F.map f.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "lean": "mapIso_hom_eq",
+                "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+                "children": []
+            },
+            {
+                "id": "coherent-iso-system",
+                "approach": "(2) The endpoint iso-system ι a b : F.obj a ≅ F.obj b is coherent: ι a a = C.id (endpointIso_refl) and ι a b ⬝ ι b c = ι a c (endpointIso_comp), both from functoriality of F on the unique arrows of K(S). This is the 'trivial holonomy' datum.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "lean": "endpointIso_comp",
+                "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+                "children": []
+            },
+            {
+                "id": "collapse",
+                "approach": "(3) Payoff: every F.obj a is isomorphic to a single chosen object F.obj a₀; the classification factoring through K(S) collapses to one category, π₀(K(S))=1. Specialised to S=Bool (StateProductLifting stateProduct=ΔBool×ℤ/2): the two states are canonically isomorphic.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "lean": "collapse",
+                "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+                "children": []
+            }
+        ]
+    }
+}

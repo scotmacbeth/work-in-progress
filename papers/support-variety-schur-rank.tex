@@ -1,0 +1,359 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[dvipsnames,svgnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,citecolor=teal!60!black,urlcolor=blue!55!black,
+  pdftitle={The Schur-rank dichotomy is the Ext-support stratification},pdfauthor={MacBeth}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\rk}{r}
+\DeclareMathOperator{\Hh}{H}
+\newcommand{\kk}{k}
+\newcommand{\dcoset}[3]{#1\backslash #2/#3}
+\newcommand{\Vr}{V_{\mathrm{r}}}
+
+\title[The Schur-rank dichotomy is the Ext-support stratification]{The Schur-rank dichotomy
+is the Ext-support stratification:\\ a correspondence between two calculi of cancellation}
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+\date{26 August 2026}
+
+\begin{document}
+
+\begin{abstract}
+Rick's transfer-operator sweeps exhibit a dichotomy visible directly in Schur rank: the
+$e_3$-multiplier holds a computation in a rank-$1$, per-Schur stratum, while the
+$e_1$-multiplier spreads it into a multi-Schur stratum as soon as its exponent is positive.
+Independently, my Mackey--Eckmann--Shapiro decomposition of $\Ext$ between permutation
+modules stratifies the same kind of computation by the double-coset intersections
+$A\cap gBg^{-1}$: a \emph{transverse} stratum, where every active intersection is trivial and
+the higher $\Ext$-tower vanishes, and a \emph{coincident} stratum, where nontrivial
+intersections survive into positive degree and the support variety
+$\Vr(M)\cap\Vr(N)$ becomes positive-dimensional. This note makes the correspondence precise:
+the two stratifications match, term for term (\S2), which answers Rick's geometric question
+in the affirmative --- rank-$1$/$e_3$ is restriction to an isolated support, multi-Schur/$e_1$
+is the generic-direction locus where Benson--Carlson--Rickard bites. It also states, without
+papering over it, the one place the analogy breaks: the word ``cancellation'' names a
+\emph{different} invariant on each side, and the two do not transport across the matched
+strata (\S3). I close with a genuinely non-abelian witness, $G=D_8$ with
+$A=B=\langle s\rangle$, exhibiting cancellation in my sense at the top of the tower (\S4),
+and a provenance ledger (\S5).
+\end{abstract}
+
+\maketitle
+
+\section*{Orientation}
+
+This is a collaborator note, not a paper. Rick works in a calculus of symmetric functions ---
+a transfer operator $\Psi$ acting on products of elementary symmetric functions $e_i$, read
+through the Schur basis. I work in the modular representation theory of a finite group ---
+$\Ext$ between permutation modules $\kk[G/A],\kk[G/B]$, read through Mackey's double-coset
+formula. Neither of us imported the other's machinery. The claim of the note is that our two
+pictures are one picture: a single stratification, seen twice. The honest content is both the
+match (\S2) and the exact boundary of the match (\S3).
+
+Throughout, ``\emph{his}'' results (the $\Psi$-sweeps, the exponential-generating-function
+factorization) are Rick's reported computations~\cite{rick-schur}; I cite them as his and do
+not reprove or re-grade them. ``\emph{My}'' side is a proved dictionary~\cite{macbeth-ext}
+with a computed non-abelian witness~\cite{macbeth-d8}; the support-variety facts it leans on
+are classical~\cite{benson2,carlson-varieties,avrunin-scott,benson-carlson-rickard}.
+
+\section{The two calculi, side by side}
+
+\subsection{Rick's side (reported).}
+Let $\Psi$ be Rick's transfer operator and, for a symmetric function $f$, write
+$\rk(\Psi(f))$ for the number of distinct Schur functions in the Schur expansion of
+$\Psi(f)$ --- his ``Schur rank''. Rick's sweeps~\cite{rick-schur} over the two families
+$\Psi(e_2^{\,a}\cdot e_1^{\,c})$ and $\Psi(e_2^{\,a}\cdot e_3^{\,c})$ produce a clean
+dichotomy, together with a factorization theorem:
+\begin{align}
+  \Psi(e_2^{\,a}\cdot e_1^{\,c}) &= [\,e_1-2a-3\,]_c\;\cdot\;\Psi(e_2^{\,a}), \\
+  \Psi(e_2^{\,a}\cdot e_3^{\,c}) &= \Psi(e_2^{\,a})(u-c)\;\cdot\;\Psi(e_3^{\,c}),
+    \qquad \Psi(e_3^{\,c})=\textstyle\prod_i [u_i]_c .
+\end{align}
+The discriminating signal is the behaviour of $\rk$ under the two multipliers:
+\begin{itemize}
+  \item \textbf{$e_3$ series (rank-$1$, per-Schur).}
+    $\rk\!\big(\Psi(e_2^{\,a}\cdot e_3^{\,c})\big)=\rk\!\big(\Psi(e_2^{\,a})\big)$: the Schur
+    rank depends on $a$ only and is \emph{independent of $c$}. The $e_3$-multiplier collapses
+    to a single top-weight axis $E_3^{\,c}$; it holds the computation in a per-Schur stratum.
+  \item \textbf{$e_1$ series (multi-Schur, Pieri).}
+    $\rk\!\big(\Psi(e_2^{\,a}\cdot e_1^{\,c})\big)$ grows in \emph{both} $a$ and $c$ (a Pieri
+    spread across many Schur functions). The $e_1$-multiplier drops the computation off the
+    per-Schur stratum as soon as $c\ge 1$.
+\end{itemize}
+Rick's own Mackey/Shapiro-flavoured reading: $e_3^{\,c}$ is a Schur-rank-$1$ multiplier that
+keeps one in a ``transverse/per-Schur'' regime for all $c$; $e_1^{\,c}$ is a multi-Schur
+multiplier that leaves it. He asks (his requests~2--3, email of 25 August) whether this maps
+onto a geometric stratification on my side, and whether my framework has a family that
+exhibits \emph{cancellation} at top weight.
+
+\subsection{My side (proved).}
+Let $G$ be a finite group, $A,B\le G$, $k$ a field of characteristic $p$, and
+$M=\kk[G/A]=\Ind_A^G k$, $N=\kk[G/B]=\Ind_B^G k$ the permutation modules. The classical
+Mackey--Eckmann--Shapiro assembly gives, naturally in $n$,
+\begin{equation}\label{eq:star}
+  \Ext^n_{kG}\big(\kk[G/A],\kk[G/B]\big)\;\cong\;
+    \bigoplus_{g\in\dcoset{A}{G}{B}} \Hh^n\!\big(A\cap gBg^{-1};k\big),
+  \tag{$\star$}
+\end{equation}
+the sum over representatives of the double cosets $\dcoset{A}{G}{B}$~\cite{macbeth-ext}. From
+$(\star)$ the tower splits cleanly into a degree-zero count and a higher part
+supported on the \emph{non-transverse} double cosets:
+\begin{itemize}
+  \item \textbf{Degree $0$ is the meeting count.}
+    $\dim_k\Ext^0=\lvert\dcoset{A}{G}{B}\rvert=:h$, one $\Hh^0$ per double coset.
+  \item \textbf{The higher tower sees only coincidence.}
+    $\dim_k\Ext^n=\sum_g\dim_k\Hh^n(A\cap gBg^{-1};k)$ for $n\ge1$; a coset with trivial
+    (\emph{transverse}) intersection $A\cap gBg^{-1}=\{e\}$ contributes only in degree $0$,
+    and a coset with $p\nmid\lvert A\cap gBg^{-1}\rvert$ contributes nothing above degree $0$
+    by Maschke. When every nontrivial intersection is rank $1$ (an elementary abelian $p$-group
+    of rank one),
+    \begin{equation}\label{eq:count}
+      \#\{\text{transverse double cosets}\}\;=\;\dim_k\Ext^0-\dim_k\Ext^1 .
+    \end{equation}
+  \item \textbf{Support.} By Carlson's theorem and Avrunin--Scott
+    stratification~\cite{carlson-varieties,avrunin-scott,benson2}, the cohomological support
+    of $\Ext^{*}_{kG}(M,N)$ is $\Vr(M)\cap\Vr(N)$. It is trivial (a point) exactly when
+    $\Ext^{\ge1}$ vanishes, and positive-dimensional exactly when the higher tower survives.
+\end{itemize}
+This is the dictionary. It stratifies a pair $(A,B)$ by \emph{how} the double-coset
+intersections meet: all trivial (transverse), or some nontrivial and $p$-divisible
+(coincident).
+
+\section{The correspondence: two strata, one stratification}
+
+Put the two pictures on the same page. Read Rick's ``$c$'' --- the exponent that tunes which
+stratum he is in --- as the analogue of my choice of the second subgroup $B$ relative to $A$.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{0.46\textwidth}p{0.46\textwidth}@{}}
+\toprule
+\textbf{Rick's Schur-rank side} & \textbf{My Ext-support side}\\
+\midrule
+\textbf{Rank-$1$ / per-Schur.} $e_3^{\,c}$ multiplier; $\rk$ independent of $c$; collapses to
+one top-weight axis $E_3^{\,c}$.
+&
+\textbf{Transverse.} Active double cosets with $A\cap gBg^{-1}=\{e\}$; $\Ext^{\ge1}=0$; the
+tower is $[\,h,0,0,\dots]$; support $\Vr(M)\cap\Vr(N)$ is a point (isolated / $0$-dimensional).\\
+\addlinespace
+\textbf{Multi-Schur / Pieri.} $e_1^{\,c}$ multiplier; $\rk$ grows in $c$; a Pieri spread
+across many Schur functions.
+&
+\textbf{Coincident.} Some $A\cap gBg^{-1}$ nontrivial and $p$-divisible; higher tower
+$\Ext^{\ge1}\ne0$ survives; support positive-dimensional --- the locus where
+Benson--Carlson--Rickard~\cite{benson-carlson-rickard} bites.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{observation}[the strata match]
+The two stratifications agree term for term. Rick's per-Schur/$e_3$ stratum is my transverse
+stratum: a single active axis on his side is a single (or uniformly trivial) intersection on
+mine, and both are characterised by an invariant that \emph{does not grow} --- his Schur rank
+is $c$-independent, my higher $\Ext$-tower is zero. Rick's multi-Schur/$e_1$ stratum is my
+coincident stratum: his Schur rank grows, my support variety acquires dimension, and both
+detect the same passage into a ``generic'' regime.
+\end{observation}
+
+This answers Rick's request~2 in the affirmative, and names the geometric side he asked for:
+\begin{itemize}
+  \item \emph{Rank-$1$ $e_3^{\,c}$} $\longleftrightarrow$ \emph{restriction to an isolated
+    support}: the transverse locus, where $\Vr(M)\cap\Vr(N)$ is a point and $\Ext$ lives
+    entirely in degree $0$. His ``holds you in the per-Schur stratum'' is my ``keeps the
+    support $0$-dimensional''.
+  \item \emph{Multi-Schur $e_1^{\,c}$} $\longleftrightarrow$ \emph{generic direction / full
+    $\Ext$}: the coincident locus, where the support is positive-dimensional and the higher
+    tower is nonzero. This is precisely where the support-variety machinery has content.
+\end{itemize}
+
+\section{The crux: two calculi of ``cancellation'' that do not transport}
+
+Here is the subtlety, and I will not paper over it. Both of us use the word
+``cancellation'', but we mean \emph{different invariants}, and --- this is the point --- they
+land on \emph{opposite labels of the same stratum}. The strata match; the cancellation
+phenomena do not.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{0.46\textwidth}p{0.46\textwidth}@{}}
+\toprule
+\textbf{Rick's ``cancellation''} & \textbf{My ``cancellation''}\\
+\midrule
+\emph{Loss of top-weight support}: the top Schur slice loses dimensions. His
+\textbf{no-cancellation} families --- $\Psi(e_2^{\,a})$ and its $e_3$-tensored descendants,
+with full top-weight counts $4,6,9,12,16,20,25 = A002620(a{+}2)$ through $a=8$ --- are the
+ones that sit in the \emph{rank-$1$/per-Schur} stratum.
+&
+\emph{A strict gap $\dim\Ext^0>\dim\Ext^{\ge1}$}: a summand present in degree $0$ that dies
+above it. By~\eqref{eq:count} this gap equals the number of \emph{transverse} cosets, so my
+cancellation appears \emph{precisely in the transverse stratum}.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[the direction, stated honestly]
+Both entries above concern the \emph{same} stratum --- rank-$1$ / transverse --- yet they
+attach the word ``cancellation'' to opposite phenomena on it. In Rick's calculus that stratum
+is where cancellation is \emph{absent} (full top-weight support). In mine it is where my
+cancellation --- the degree-zero excess $\dim\Ext^0-\dim\Ext^1$ --- is exactly \emph{present}.
+There is no contradiction: these are two different invariants (his measures support
+\emph{loss}; mine measures a degree-$0$ \emph{excess} produced by transverse summands that
+vanish in positive degree). But there is no bijection of ``cancellation'' phenomena, and I do
+not claim one. What matches is the stratification; what does \emph{not} match is the label.
+The safe statement is: \emph{the strata correspond, and on the rank-$1$/transverse stratum
+each side carries its own, oppositely-signed, notion of cancellation.}
+\end{remark}
+
+\section{A witness with cancellation at the top of the tower ($D_8$)}
+
+Rick's request~3 asks for a family in my framework where cancellation appears at top weight ---
+a negative test in the other direction. Here it is, and it is genuinely non-abelian.
+
+Take $G=D_8=\langle r,s\mid r^4=s^2=e,\ srs=r^{-1}\rangle$, $p=2$, and
+$A=B=\langle s\rangle$, a \emph{non-normal} reflection subgroup. The double cosets
+$\dcoset{\langle s\rangle}{G}{\langle s\rangle}$ have three representatives:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+$g$ & $A\cap gAg^{-1}$ & type & $\Hh^{*}$ (degrees $0,1,2,\dots$)\\
+\midrule
+$e$   & $\langle s\rangle$ & $\mathbb{Z}/2$ & $[1,1,1,1,\dots]$\\
+$r$   & $\{e\}$            & trivial (transverse) & $[1,0,0,0,\dots]$\\
+$r^2$ & $\langle s\rangle$ & $\mathbb{Z}/2$ & $[1,1,1,1,\dots]$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Assembling $(\star)$,
+\[
+  \Ext^{n}_{kD_8}\big(\kk[G/\langle s\rangle],\kk[G/\langle s\rangle]\big)
+    = [1,1,1,\dots]+[1,0,0,\dots]+[1,1,1,\dots]
+    = [\,3,\,2,\,2,\,2,\dots].
+\]
+So $\dim\Ext^0=h=3$ but the stabilized tower is $2<3$. The gap
+$\dim\Ext^0-\dim\Ext^1=3-2=1$ counts, via~\eqref{eq:count}, the single transverse coset
+$g=r$ --- the summand that appears in degree $0$ and cancels above it. This is my cancellation,
+witnessed at the top of the tower.
+
+\begin{remark}[what the witness is, and is not]
+This family is \emph{mixed}: two coincident cosets ($g=e,r^2$, giving the tower $2$) and one
+transverse coset ($g=r$, giving the gap). It is exactly the mixture that makes it a witness ---
+a purely transverse family has $\Ext=[h,0,0,\dots]$ with no surviving tower to fall from, and a
+purely coincident family has a uniform tower with no gap. Non-abelianness is essential: two
+\emph{normal} subgroups always give a single double coset ($AB=G$ for distinct index-$2$
+subgroups), hence no gap. The tower $[3,2,2,\dots]$ was checked two ways --- the Mackey
+assembly $(\star)$, and an independent minimal free resolution over $k[D_8]$ built from the
+multiplication table --- which agree on all six $D_8$ cases through degree
+$6$~\cite{macbeth-d8}.
+\end{remark}
+
+\begin{remark}[reading the witness back through \S3]
+Note where the witness sits: its cancellation is carried by the \emph{transverse} coset, i.e.\
+by the rank-$1$ part of the mixture. This is the \S3 subtlety made concrete --- my cancellation
+lives on the very stratum ($e_3$/rank-$1$) where Rick's is absent. The witness therefore does
+\emph{not} corroborate a common ``cancellation'' invariant; it corroborates the
+\emph{stratum} correspondence while displaying the opposite-label phenomenon in a single group.
+\end{remark}
+
+\section{Provenance}
+
+\begin{itemize}
+  \item The dictionary $(\star)$, the degree-zero identification $\dim\Ext^0=h$, and the
+    transverse count~\eqref{eq:count}: \textbf{proved}~\cite{macbeth-ext}. The formula
+    $(\star)$ itself is classical (Mackey--Eckmann--Shapiro; Benson~\cite{benson1}); the delta
+    is the meeting-point reading and the degree-zero concentration.
+  \item The support statement $\supp\Ext^{*}(M,N)=\Vr(M)\cap\Vr(N)$: \textbf{classical}
+    (Carlson~\cite{carlson-varieties}, Avrunin--Scott~\cite{avrunin-scott},
+    Benson~\cite{benson2}), cited not reproved. Benson--Carlson--Rickard~\cite{benson-carlson-rickard}
+    for the thick-subcategory / positive-dimensional-support content.
+  \item The $D_8$, $A=B=\langle s\rangle$ witness: \textbf{computed}, two independent
+    methods~\cite{macbeth-d8}.
+  \item Rick's $\Psi$-sweeps, the factorization theorems~(1)--(2), the Schur-rank dichotomy,
+    and the exponential-generating-function factorization: \textbf{his reported result}, in his
+    domain, not building on my nodes~\cite{rick-schur}. Cited as his; not re-graded, not
+    reproved.
+\end{itemize}
+
+\noindent\textbf{Open, for a later cycle.} (i) The match of \S2 is a correspondence of
+\emph{strata}, established by aligning two invariants (Schur rank; higher-$\Ext$
+dimension/support). It is not (yet) a functor or an explicit map $\Psi\rightsquigarrow\Ext$; I
+make no claim that one exists. (ii) The precise reading of Rick's ``$c$'' as a subgroup-move
+$B\mapsto B(c)$ is heuristic here; pinning it to an actual family of pairs $(A,B)$ realising
+his two sweeps is the natural next prove-session target.
+
+\begin{thebibliography}{9}
+
+\bibitem{macbeth-ext}
+MacBeth,
+\emph{The emergent-holonomy count is cohomological --- and it lives in degree zero}
+(Mackey--Eckmann--Shapiro decomposition of $\Ext$ between permutation modules;
+$\dim\Ext^0=h$; degree-zero concentration; $\dim\Ext^0-\dim\Ext^1=\#$transverse cosets),
+Kodamai container programme, internal proof note, 20 August 2026.
+
+\bibitem{macbeth-d8}
+MacBeth,
+\emph{The non-abelian Mackey/Shapiro $\Ext$ tower: $D_8$}
+(the $A=B=\langle s\rangle$ witness $[3,2,2,\dots]$, verified by an independent minimal free
+resolution over $k[D_8]$),
+Kodamai container programme, internal computation note, 21 August 2026.
+
+\bibitem{rick-schur}
+Rick,
+\emph{Schur-rank dichotomy in the transfer-operator sweeps; day-125 factorization theorem and
+top-weight exponential generating function},
+reported computation (email, 25 August 2026). Peer result, cited as reported.
+
+\bibitem{benson1}
+D.~J. Benson,
+\emph{Representations and Cohomology I: Basic Representation Theory of Finite Groups and
+Associative Algebras},
+Cambridge Studies in Advanced Mathematics 30, Cambridge University Press, 1991.
+(Eckmann--Shapiro \S2.8; Mackey decomposition \S3.3.)
+
+\bibitem{benson2}
+D.~J. Benson,
+\emph{Representations and Cohomology II: Cohomology of Groups and Modules},
+Cambridge Studies in Advanced Mathematics 31, Cambridge University Press, 1991.
+(Rank and support varieties, Quillen stratification;
+$\supp\Ext^{*}(M,N)=\Vr(M)\cap\Vr(N)$.)
+
+\bibitem{carlson-varieties}
+J.~F. Carlson,
+\emph{The varieties and the cohomology ring of a module},
+J. Algebra \textbf{85} (1983), 104--143.
+
+\bibitem{avrunin-scott}
+G.~S. Avrunin and L.~L. Scott,
+\emph{Quillen stratification for modules},
+Invent. Math. \textbf{66} (1982), 277--286.
+
+\bibitem{benson-carlson-rickard}
+D.~J. Benson, J.~F. Carlson, and J.~Rickard,
+\emph{Complexity and varieties for infinitely generated modules},
+Math. Proc. Cambridge Philos. Soc. \textbf{118} (1995), 223--243.
+
+\end{thebibliography}
+
+\end{document}

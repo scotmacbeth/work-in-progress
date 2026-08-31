@@ -1,0 +1,452 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{mdframed}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\dir}{\mathcal{D}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\DCont}{\mathbf{DCont}}
+\newcommand{\Cof}{\mathbf{Cof}}
+\newcommand{\seq}{\vartriangleleft}
+\newcommand{\Ztwo}{\mathbb{Z}/2}
+\newcommand{\iso}{\cong}
+
+% honesty grade tags
+\newcommand{\gProved}{\textsc{[proved]}}
+\newcommand{\gLean}{\textsc{[lean]}}
+\newcommand{\gComputed}{\textsc{[computed]}}
+\newcommand{\gExternal}{\textsc{[external]}}
+\newcommand{\gSignpost}{\textsc{[signpost]}}
+\newcommand{\gOpen}{\textbf{[open]}}
+
+\title[Directed containers are the object-level model of a composable agent]{Directed
+containers are the object-level model\\ of a composable agent\\[4pt]
+\large A convergence of four programmes on one equivalence}
+\author{MacBeth}
+\address{Kodamai}
+\date{11 August 2026}
+
+\begin{document}
+\begin{abstract}
+A directed container is exactly a small category. We argue that this single equivalence ---
+Ahman--Uustalu's $\DCont\iso\Cat$ --- is the correct object-level model of a \emph{composable
+agent}, and we support the argument by exhibiting four independent lines of work that all reach
+for it. The equivalence is a \emph{classification target}: we have proved that the polynomial
+monad liftings of the Reader monad are, one level down, small categories, and that the sound
+liftings of the State monad embed one. It is
+\emph{cited infrastructure}: an external programme in compositional active inference (Smithe,
+Topos Institute\,/\,VERSES) invokes it as settled background --- verbatim, ``Famously,
+$\seq$-comonoids correspond to categories'' --- to build a substrate of open dynamical systems.
+It is a \emph{generalization frontier}: pullback-preserving comonads on $\Set$ are known to
+correspond to Grothendieck toposes with enough points, a topos-theoretic refinement approached
+from the opposite end. And it is a \emph{charted boundary}: two explicit witnesses (a bag
+functor and a multigraph comonad) sit just outside the polynomial world and pin down where the
+equivalence stops. We emphasise one honest distinction. The external programme and ours agree on
+the \emph{object} --- a composable agent is a directed container --- but compose agents by
+structurally different mechanisms: Smithe wires Bayesian lenses in a monoidal bicategory, whereas
+we weld two agent categories by a Zappa--Sz\'ep product whose obstruction is a degree-two
+cohomology class. Convergence on the object; divergence on the composition law. This is the
+object-level foundation on which the Kodamai grant's compositional-agent narrative rests.
+\end{abstract}
+
+\maketitle
+
+\begin{mdframed}[linewidth=0.5pt]
+\small\textbf{Provenance grades.} We tag each claim.
+\gProved: an author's result, established in a proof session.
+\gLean: machine-checked in the author's Lean development, \texttt{sorry}-free.
+\gComputed: a worked example or computation.
+\gExternal: another author's result, cited from a deep-read source.
+\gSignpost: a real but not-yet-load-bearing pointer (source not deep-read or untracked); named,
+not leaned on.
+\end{mdframed}
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{The object-level question}
+Before one can ask how two agents \emph{compose}, one must answer a prior question: what
+\emph{is} an agent, as a mathematical object? The applied-category-theory literature on
+multi-agent systems has several answers --- an agent is a sheaf section, a coalgebra, a lens, a
+node in a wiring diagram --- and the profusion is a symptom. Composition theorems are only as
+good as the objects they compose. If the object is wrong, the composition law inherits the
+wrongness.
+
+This note makes and defends one answer. \emph{At the object level, a composable agent is a small
+category --- equivalently, a directed container.} An agent exposes an interface: a set $S$ of
+things it can be asked (requests, prompts, states) and, for each, a set $P(s)$ of things it can
+reply. That is a container $(S \seq P)$. The agent is moreover \emph{directed}: replies can be
+composed and there is a null reply, so the container carries the extra structure that makes its
+$\Set$-endofunctor a comonad. Ahman and Uustalu proved that a directed container is exactly a
+small category \cite{AhmanUustalu}. The agent's roles are objects, its admissible reply-chains
+are morphisms, and its handoff structure is composition. \emph{The object is a category, and the
+category is a directed container.}
+
+\subsection*{The claim, and why it is not obvious}
+That a single interface \emph{is} a small category is a clean statement, but on its own it is
+just a re-description. What elevates $\DCont\iso\Cat$ from a re-description to a foundation is
+that it is \emph{load-bearing in four independent ways at once}. During a single week of the
+author's programme, the same theorem surfaced as the target of a classification, the cited
+background of an external application, the special case of a topos-theoretic generalization, and
+the interior of a boundary result. Four activities that look unrelated are one theorem seen from
+four sides. That is the empirical content of ``this is the right object'': the best objects are
+the ones many independent lines of work cannot avoid.
+
+We state the main result of the note --- which is a thesis supported by evidence, not a new
+theorem --- on this page.
+
+\begin{quote}\itshape
+The equivalence $\DCont\iso\Cat$ is the object-level model of a composable agent. It is
+simultaneously (1) a classification target for the monad liftings that model effectful agents,
+(2) the cited infrastructure of an independent programme in compositional active inference, (3)
+a special case of a topos-theoretic generalization, and (4) a theorem whose boundary is charted
+by explicit non-examples. Independent programmes converge on this object; they diverge only on
+the law by which such objects compose.
+\end{quote}
+
+\subsection*{The surprise, and the discipline it demands}
+The sharpest of the four fronts is the second. Toby Smithe's \emph{Compositional Active
+Inference II} \cite{SmitheCAI2}, written from the Topos Institute (later VERSES) and rooted in
+the free-energy / predictive-coding tradition --- a world with no obvious contact with directed
+containers --- reaches for \emph{exactly} our equivalence, and treats it as textbook background.
+At Proposition~2.7 the paper reads, verbatim, ``Famously, $\seq$-comonoids correspond to
+categories and their comonoid homomorphisms are cofunctors'' \cite[Prop.~2.7]{SmitheCAI2},
+citing Ahman--Uustalu. Two programmes that began at opposite ends --- ours from container
+combinatorics, Smithe's from Bayesian inference --- arrive at the same object.
+
+This convergence is genuine, and it is also easy to overclaim, so we impose a discipline on
+ourselves throughout. Smithe uses $\DCont\iso\Cat$ as the substrate for open \emph{dynamical
+systems} (the codiscrete comonoid $S y^S$ on a state space), not as the mechanism by which
+agents compose; in his framework agents compose as \emph{Bayesian lenses} in a monoidal
+bicategory. Our own composition law is different: a Zappa--Sz\'ep weld $\C\bowtie\D$ of two agent
+categories --- the directed-container weld of Ahman--Uustalu \cite{AhmanUustaluDL}, which we
+read into agents and equip with an $H^2$ obstruction. So the honest claim is that independent programmes
+converge on \emph{the object}, $\DCont\iso\Cat$; it is \emph{not} that anyone but us composes
+agents by the weld. Section~\ref{sec:contrast} states this contrast precisely, because getting
+it wrong would turn a real convergence into a false scoop.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} recalls the container/category dictionary and fixes the
+agent-as-container reading. Section~\ref{sec:fronts} presents the four fronts: the classification
+into the equivalence (\ref{sub:into}), its use as external infrastructure (\ref{sub:cited}), its
+generalization upward (\ref{sub:up}), and its boundary from outside (\ref{sub:boundary}).
+Section~\ref{sec:contrast} isolates the object/composition-law distinction between Smithe's
+programme and ours. Section~\ref{sec:grant} states what the convergence buys a grant that
+proposes to found a theory of compositional agents.
+
+\section{Preliminaries: the object and its dictionary}\label{sec:prelim}
+
+We recall only what the four fronts use. Proofs of the cited facts live in their sources and in
+the author's expository notes; none are reproduced here.
+
+\subsection*{Containers and directed containers}
+A \emph{container} is a pair $(S \seq P)$ of a set $S$ of \emph{shapes} and a family
+$P\colon S\to\Set$ of \emph{positions}; it presents the polynomial endofunctor
+$X\mapsto\sum_{s\in S}X^{P(s)}$ on $\Set$. A \emph{directed container} equips $(S\seq P)$ with
+operations $(o,\downarrow,\oplus)$ --- a root position, a re-indexing, and a position addition
+--- satisfying five laws (D1--D5) which are exactly the conditions making the induced functor a
+comonad \cite{AhmanUustalu}. Write $\DCont$ for the category of directed containers; the
+positions of a directed container form a $\seq$-comonoid in the category $\Poly$ of polynomial
+functors under substitution \cite{NiuSpivak}.
+
+\begin{theorem}[Ahman--Uustalu \cite{AhmanUustalu}]\label{thm:AU}
+\gExternal\ There is an equivalence $\DCont\iso\Cat$ between directed containers and small
+categories. A directed container's shapes are the objects, its positions over a shape are the
+morphisms out of that object, the root is the identity, and $\oplus$ is composition.
+Under this equivalence, directed-container morphisms are the \emph{cofunctors} (equivalently
+retrofunctors), so $\DCont\iso\Cof$ as well.
+\end{theorem}
+
+Theorem~\ref{thm:AU} is the object of this entire note. Three of its instances recur below and
+deserve names in the polynomial language.
+
+\begin{itemize}
+\item \textbf{Delooping.} A monoid $T$ is a one-object category $BT$; as a comonoid this is the
+representable $y^T$ \cite[Prop.~2.7]{SmitheCAI2}.
+\item \textbf{Codiscrete comonoid.} For a set $S$, the monomial $S y^{S}$ carries a canonical
+comonoid structure --- the codiscrete groupoid on $S$, equivalently the store comonad. We have
+elsewhere written this $\Delta S$ and shown $\Delta S \otimes \Delta T \iso \Delta(S\times T)$
+\gLean.
+\item \textbf{The fibrewise op.} The operation that reverses a container's positions fibrewise is
+what makes a container \emph{directed}, and it is the same operation that reads a monad lifting on
+$\Cont$ as a comonad --- hence a category --- on $\Set$. It is the hinge of front~\ref{sub:into}.
+\end{itemize}
+
+\subsection*{Agents are directed containers}
+The reading that turns Theorem~\ref{thm:AU} into an applied statement is due to the
+Poly/interaction school and, in the agent setting, to the framing used at Kodamai: an agent is a
+container whose shapes are the questions it can be asked and whose positions are the answers it
+can give \cite{NiuSpivak}. A morphism to the representable $y$ is a single oracle (model) call;
+a container morphism is a delegation; a comonad structure is the harness that lets an agent run.
+The directedness is not decoration --- it is precisely the composability of an agent's own
+replies, and by Theorem~\ref{thm:AU} it is exactly a category structure on the agent's roles. We
+take this reading as given and study its consequences; it is the shared premise of every front
+below.
+
+\section{Four fronts on one theorem}\label{sec:fronts}
+
+\subsection{Classified into it: effectful agents are categories one level down}\label{sub:into}
+
+An agent that carries an effect is modelled not by a bare container but by a \emph{lifting} of a
+monad along the container fibration --- a proof-relevant refinement of a predicate transformer.
+The natural question is which liftings exist, and the answer turns out to be another instance of
+Theorem~\ref{thm:AU}.
+
+\begin{theorem}[Reader and State liftings are categories; author \gProved\ \gLean]\label{thm:liftings}
+The proof-relevant polynomial monad liftings of the Reader monad $y^E$ are, one level down,
+exactly $E$-indexed small categories; the sound liftings of the State monad embed the product
+category $\mathbb{S}\times\C$, and the machine-checked instances count the small monoids on their
+fibres. In each case a lifting on $\Cont$ is, via the fibrewise op, a comonad on $\Set$ --- that
+is, a category.
+\end{theorem}
+
+The point for this note is not the classification's internal detail but its shape: the objects
+that classify effectful agents \emph{are the equivalence itself}, relocated one categorical level
+down. The equivalence $\DCont\iso\Cat$ is not merely the model of a bare agent; it recurs as the
+answer to ``which effectful agents are there?'' The hinge is the fibrewise op of
+Section~\ref{sec:prelim}, which is simultaneously what makes a container directed and what reads a
+lifting as a category. \emph{The same operation that gives us the object gives us its refinement.}
+
+\begin{remark}[Scope, honestly]
+The Reader classification and the sound half of the State classification are proved and, for the
+witnessing instances, Lean-verified. The \emph{completeness} of the State classification (that
+every sound lifting is of the exhibited form) rests on a single holonomy-triviality lemma that is
+argued but not yet fully formalised; it is \gOpen\ at the level of a machine-checked converse.
+Nothing in this note depends on that converse: front~\ref{sub:into} needs only that the
+equivalence is the classification \emph{target}, which the proved direction already establishes.
+\end{remark}
+
+\subsection{Cited as infrastructure: an external programme reaches for the same object}\label{sub:cited}
+
+The second front is the one that turns a self-assessment into external evidence. Smithe's
+\emph{Compositional Active Inference II} \cite{SmitheCAI2} builds a categorical semantics for
+predictive-coding agents. Its substrate is Spivak-style polynomial dynamics: an open dynamical
+system is a map out of the codiscrete comonoid $S y^S$ on a state space (Proposition~3.2), and
+the condition for a coalgebra to be such a system is stated as its being a
+$\seq$-comonoid homomorphism. To license this substrate the paper invokes Theorem~\ref{thm:AU}
+directly, at Proposition~2.7, in words worth quoting in full:
+\begin{quote}
+``Famously, $\seq$-comonoids correspond to categories and their comonoid homomorphisms are
+cofunctors [8]. If $T$ is a monoid, then the comonoid structure on $y^{T}$ \dots\ witnesses it as
+the category $BT$. Monomials of the form $S y^{S}$ can be equipped with a canonical comonoid
+structure witnessing the codiscrete groupoid on $S$.'' \cite[Prop.~2.7]{SmitheCAI2}
+\end{quote}
+Reference [8] there is Ahman--Uustalu. The word ``Famously'' does the sociological work: the
+equivalence is invoked as settled background, neither proved nor re-derived. Every named instance
+in that passage --- $\seq$-comonoids as categories, comonoid homs as cofunctors, $y^T$ as $BT$,
+$S y^S$ as the codiscrete groupoid --- is an instance we also use.
+
+\begin{proposition}[Independent recognition; \gExternal, deep-read verified]\label{prop:cai}
+An external programme (Smithe, Topos Institute\,/\,VERSES; active-inference community) rooted in a
+tradition disjoint from container theory uses $\DCont\iso\Cat$ as settled infrastructure for the
+dynamical-systems substrate of compositional agents. The convergence is on the \emph{object}: two
+independent programmes model a composable agent by the same equivalence.
+\end{proposition}
+
+Two caveats keep the proposition honest, and both are load-bearing for the contrast of
+Section~\ref{sec:contrast}. First, in \cite{SmitheCAI2} the equivalence underwrites the
+\emph{dynamical-systems substrate} (the state comonoids $S y^S$), not the mechanism by which
+agents are composed --- there, agents compose as Bayesian lenses, discussed next. Second, the
+citation is verified against a deep read of the source: reference [8] at Proposition~2.7,
+verbatim as quoted. We therefore lean on it; we do not paraphrase a summary of it.
+
+\subsection{Generalized upward: the topos refinement}\label{sub:up}
+
+The third front approaches Theorem~\ref{thm:AU} from above. The equivalence identifies a
+directed container with a category via a \emph{comonad} on $\Set$; asking which comonads on
+$\Set$ arise, and pushing the answer past the polynomial case, leads into topos theory.
+Pullback-preserving comonads on $\Set$ correspond to Grothendieck toposes with enough points,
+via skyscraper/stalk constructions --- a topos-theoretic generalization of the situation
+$\DCont\iso\Cat$ describes. The community reaches the theorem from the toposes-with-enough-points
+end; the container programme reaches it from the directed-container end; the target is shared.
+The most developed written treatment of comonads-as-spaces adjacent to this circle of ideas is
+Fairbanks--Carlson--Spivak, \emph{Comonads as Spaces} \cite{ComonadsAsSpaces}, which situates
+comonads (directed containers among them) in an explicitly spatial setting.
+
+\begin{remark}[Signpost, not a load-bearing citation]
+The precise topos correspondence (pullback-preserving comonads $\iff$ Grothendieck toposes with
+enough points) is community knowledge whose cleanest reference --- Garner's ``Ionads'' and the
+MathOverflow thread that assembles it --- the author has not yet deep-read. We therefore present
+front~\ref{sub:up} as a \gSignpost: the generalization exists and is worth stating as evidence of
+the theorem's reach, but it is named, not leaned on. The citable anchor here is
+\cite{ComonadsAsSpaces}, which is deep-read; the sharper topos statement awaits a promotion pass.
+\end{remark}
+
+\subsection{Bounded from outside: two witnesses at the edge}\label{sub:boundary}
+
+The fourth front charts where the equivalence \emph{stops}, which is as much a part of knowing an
+object as knowing where it holds. A directed container is a \emph{polynomial} comonad; some
+functors that look categorical are not polynomial, and fail to be categories for a common,
+diagnosable reason. Two witnesses, one on each side of the monad/comonad duality, make the
+boundary two-sided.
+
+\begin{proposition}[Two boundary witnesses; author \gProved\ / \gComputed]\label{prop:boundary}
+On the monad side, the bag (finite-multiset) functor is not a container: a direct count gives
+$|\mathrm{Bag}(2\times2)| = 10 \neq 9$, breaking the product-preservation a polynomial functor
+would satisfy. On the comonad side, the multigraph comonad
+$F(X) = (X^{3}+X^{2})/2 + X$ --- the coequalizer of the identity and the swap on the quiver
+comonad $X^{3}+X$ --- is not polynomial. Both fail the same test: neither is the kernel pair of
+its terminal map $X\to 1$, the condition characterising the polynomial (hence categorical) case.
+\end{proposition}
+
+The bag count is the author's computation; the multigraph comonad is verified verbatim against
+its source and belongs to the same spatial circle as front~\ref{sub:up}
+\cite{ComonadsAsSpaces}. The moral is that ``a composable agent is a category'' is a
+\emph{substantive} claim with a charted exterior: the quotients that identify distinct
+reply-histories (the swap on $X^3$, the multiset forgetting of order) leave the
+polynomial world, and with it the guarantee that composition is associative and unit-respecting
+on the nose. An agent whose interface secretly quotients its histories is not, in this precise
+sense, a category --- and front~\ref{sub:boundary} says exactly which quotients do the damage.
+
+\section{Object-level convergence, composition-level divergence}\label{sec:contrast}
+
+Fronts \ref{sub:into}--\ref{sub:boundary} establish that $\DCont\iso\Cat$ is the object.
+It remains to say clearly how the two programmes that share this object nonetheless
+\emph{differ}, because the difference is exactly where each programme's own contribution lives,
+and conflating them would misrepresent both.
+
+\subsection*{Smithe: composition as lens-wiring in a bicategory}
+In \cite{SmitheCAI2} agents are open dynamical systems whose interfaces are Bayesian lenses, and
+they compose in monoidal bicategories of ``hierarchical inference systems'' (Definition~3.15;
+its differential version, Definition~3.21). The systems that live over an external-hom polynomial
+and ``control optics'' are named \emph{cilia} (Definition~3.8, Remarks~3.9--3.10). Wiring uses
+Bayesian-lens composition --- a forward map paired with a state-dependent backward inversion ---
+together with a distributive law of the internal hom over the tensor (Definition~3.13) used to
+assemble the bicategory. Composition, in short, is lens-wiring, and its coherence is bicategorical.
+
+\subsection*{Ours: composition as a Zappa--Sz\'ep weld obstructed in $H^2$}
+Our composition law is different in kind. Two agents that share a resource each present their own
+handoff category, $\C$ and $\D$, and running them together is not a functor along one topology but
+an \emph{interleaving} of two. The joint system is a Zappa--Sz\'ep product $\C\bowtie\D$ ---
+equivalently a matched-pair distributive law $\lambda\colon\D\C\Rightarrow\C\D$ of one agent
+category over the other. That a distributive law of directed containers assembles this weld,
+generalizing the monoid Zappa--Sz\'ep product, is Ahman--Uustalu's \cite{AhmanUustaluDL}; what
+is the author's is the applied reading and the obstruction. Unlike a functor, such a weld can
+fail to exist, and the author has
+proved that the failure is measured in a single cohomological degree: under the standard
+hypothesis, the weld exists iff a class $[\omega]\in H^2(\Sk_\C;\dir)$ vanishes, with re-entrancy
+the canonical nonzero class ($[\omega]=\varepsilon$, Lean-verified). This is a \emph{monad}
+distributive law welding two categories; the obstruction is cohomological.
+
+\subsection*{The precise relationship}
+We state the relationship as carefully as the evidence allows.
+
+\begin{proposition}[Convergent peers; contrast, do not conflate]\label{prop:contrast}
+Smithe's programme and the author's converge on the object --- a composable agent is a directed
+container, i.e.\ a small category (Theorem~\ref{thm:AU}, Proposition~\ref{prop:cai}) --- and
+diverge on the composition law:
+\begin{itemize}
+\item[(i)] \cite{SmitheCAI2} composes agents as Bayesian lenses in a monoidal bicategory of cilia;
+\item[(ii)] the author composes agent \emph{categories} by the Zappa--Sz\'ep weld $\C\bowtie\D$
+of Ahman--Uustalu \cite{AhmanUustaluDL}, adding an obstruction in $H^2$.
+\end{itemize}
+These are structurally different mechanisms.
+\end{proposition}
+
+Two points of precision guard against the two ways this could be overstated. First,
+\cite{SmitheCAI2} is \emph{not} distributive-law-free: it contains a distributive law
+(Definition~3.13). But that is a distributive law of an internal hom over a tensor, used to build
+a bicategory --- \emph{not} a monad distributive law welding two agent categories in the
+Beck / Zappa--Sz\'ep sense. When we say our composition is a ``distributive-law weld'' we mean the
+latter; the two gadgets share a name and nothing else. Second, and correspondingly, we do
+\emph{not} claim that Smithe uses the weld, nor that anyone but the author composes agents by
+$\C\bowtie\D$. The claim of this note is the convergence on the \emph{object}. The divergence on
+the composition law is not a defect in the convergence; it is the map of where each programme's
+own frontier lies.
+
+\section{What the convergence buys}\label{sec:grant}
+
+A programme that proposes to found a theory of compositional agents must first pin down what an
+agent \emph{is}, and then earn confidence that the choice is not idiosyncratic. This note reports
+that the choice --- $\DCont\iso\Cat$ --- is load-bearing four times over, and that one of the four
+loads is external.
+
+\begin{itemize}
+\item \textbf{Foundation, not fiat.} The object is not chosen for convenience: effectful agents
+\emph{classify into} it (\ref{sub:into}), its exterior is \emph{charted} (\ref{sub:boundary}), and
+it \emph{generalizes upward} into topos theory (\ref{sub:up}). An object with a proved
+classification, a charted boundary, and a generalization frontier is a foundation.
+\item \textbf{External validation.} An independent group in a disjoint tradition reaches for the
+same equivalence and calls it ``famous'' (\ref{sub:cited}). Convergence from the active-inference
+end is the strongest available evidence that this is the field's object, not merely ours.
+\item \textbf{A clean division of labour with the frontier.} The object-level question is settled
+and shared; the live research is the \emph{composition law}. There the programmes genuinely part:
+lens-wiring for predictive coding, a cohomologically obstructed weld for shared-resource
+orchestration (\ref{sec:contrast}). The grant's own contribution --- the weld $\C\bowtie\D$ and
+its class $[\omega]\in H^2$ --- is precisely located as the composition law over an object the
+whole field already agrees on.
+\end{itemize}
+
+The hinge across all of this is the fibrewise op: the operation that makes a container directed is
+the operation that reads an effectful lifting as a category and, dually, reads a monad as a
+comonad. It is why the same equivalence can be a bare-agent model, an effectful-agent
+classification, and a topos special case at once. \emph{Fair is foul, and foul is fair}: the
+op that looks like a bookkeeping reversal is the structure doing the work. That one theorem should
+be a target, an import, a frontier, and a boundary --- and that an outside programme should reach
+for it independently --- is the operational meaning of having chosen the right object.
+
+\section*{Acknowledgements}
+To Neil Ghani for the agent-as-container framing and the fibrational vocabulary, and to Robin
+Langer for maintaining the seed. The convergence reported here was assembled from the author's
+proof and Lean sessions and from a verified deep read of \cite{SmitheCAI2}.
+
+\begin{thebibliography}{9}
+
+\bibitem{AhmanUustalu} D.~Ahman, T.~Uustalu. \emph{Directed containers as categories}. EPTCS 207
+(2016), 89--98. arXiv:1604.01187. \textup{(The equivalence $\DCont\iso\Cat$; formalised
+\texttt{sorry}-free in the author's Lean development.)}
+
+\bibitem{AhmanUustaluDL} D.~Ahman, T.~Uustalu. \emph{Distributive laws of directed containers}.
+Progress in Informatics, No.~10 (2013), 3--18, DOI 10.2201/NIIPI.2013.10.2. \textup{(Source of the weld: a distributive law
+of directed containers assembles the joint container, generalizing the monoid Zappa--Sz\'ep
+product.)}
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak. \emph{Polynomial Functors: A Mathematical Theory of
+Interaction}. arXiv:2312.00990, 2023. \textup{(Polynomial functors, the $\seq$-comonoid
+language, agents as interfaces.)}
+
+\bibitem{SmitheCAI2} T.~St.~Clere Smithe. \emph{Compositional Active Inference II: Polynomial
+Dynamics. Approximate Inference Doctrines}. arXiv:2208.12173, 2022. \textup{(Topos Institute\,/\,
+later VERSES. Cites Ahman--Uustalu as ref.~[8] at Prop.~2.7; cilia at Def.~3.8 / Rmk.~3.9--3.10;
+internal-hom-over-tensor distributive law at Def.~3.13; hierarchical inference systems at
+Def.~3.15 and Def.~3.21; open dynamical systems over $S y^S$ at Prop.~3.2. Deep-read verified,
+11 Aug 2026.)}
+
+\bibitem{ComonadsAsSpaces} A.~D.~Fairbanks, K.~Carlson, D.~I.~Spivak. \emph{Comonads as Spaces}.
+arXiv:2607.15091, 2026. \textup{(Spatial reading of comonads; source of the multigraph-comonad
+boundary witness.)}
+
+\bibitem{pairwise} MacBeth. \emph{The pairwise Zappa--Sz\'ep criterion}. Kodamai note, 10 June
+2026 (proved).
+
+\bibitem{gobstr} MacBeth. \emph{The global-closure obstruction \textnormal{(G)} is a cohomology
+class}. Kodamai note, 11 June 2026 (proved).
+
+\bibitem{analytic} MacBeth. \emph{The re-entrancy obstruction is the token-mutation bit}. Kodamai
+note, 20 July 2026 (proved; $[\omega]=\varepsilon$ core Lean-verified, \texttt{Reentrancy.lean}).
+
+\bibitem{liftings} MacBeth. \emph{Reader and State proof-relevant monad liftings are small
+categories}. Kodamai proof + Lean development, 9--11 August 2026 (Reader and sound-State proved;
+witnessing instances Lean-verified; State completeness open).
+
+\end{thebibliography}
+
+\end{document}

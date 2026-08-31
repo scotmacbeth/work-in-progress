@@ -1,0 +1,136 @@
+{
+  "conjecture": "Agent orchestration is a directed container; composing two supervisor-worker orchestrations is a Zappa-Szep product C |><| D; an unprotected re-entrancy pattern is a (G)-failure = nonzero [omega] in H^2(Sk;Z/2). CORE THEOREM (proved): for the token-parametrized family K_eps, C|><|D exists iff eps=0 (worker fixes the supervisor token), and [omega(K_eps)] = eps.(generator) in H^2 ~= Z/2.",
+  "status": "proved",
+  "date_opened": "2026-07-19",
+  "date_closed": "2026-07-20",
+  "note": "The re-entrancy obstruction dichotomy is now PROVED analytically (2026-07-20 deep-work). Parametrize the supervisor-worker category by the token-mutation bit eps in Z/2 (s2 o p = q.tau^eps). Directly verify (L) and hypothesis (H) for K_eps, compute the orbit category Sk_C (SAME for both eps), the presheaf (all restrictions zero), the complex (C^3=0 => H^2 = (Z/2)^2/diag ~= Z/2), and the natural-transversal defect omega_T = (0,eps). Hence [omega(K_eps)] = eps.(generator), and by (T2)+(T3): C|><|D exists <=> (L)&(G) <=> [omega]=0 <=> eps=0 <=> worker fixes token. NO enumeration of factorization systems, NO machine-verified iso to the rigid twist (that iso is now a corollary, not load-bearing). Proof file 2026-07-20-orchestration-reentrancy-obstruction-analytic.tex (compiles, 6pp); parametrized cross-check scratch/orchestration_zs_parametrized.py. The two illustrative regimes (independent product, S_3 coherent) remain COMPUTED context, not part of the proved core. No new cohomology; models are minimal faithful abstractions.",
+  "tree": {
+    "id": "root",
+    "approach": "supervisor-worker orchestration -> small category K_eps; two orchestrations compose (C|><|D exists) iff eps=0 (worker fixes token); re-entrancy (eps=1) = (G)-failure = nonzero [omega] in H^2 ~= Z/2",
+    "trust": "proved",
+    "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+    "children": [
+      {
+        "id": "t1-dcont-cat",
+        "approach": "handoff topology is a directed container (= small category), Ahman-Uustalu",
+        "role": "premise",
+        "trust": "lean-verified",
+        "shared": "equivalence-chain#zs-lean",
+        "lean": "see equivalence-chain (M2/M3 both directions)",
+        "file": null,
+        "children": []
+      },
+      {
+        "id": "t2-pairwise-zs",
+        "approach": "K=C|><|D over wide D iff (L) free hom-presheaf AND (G) closing basis; = distributive law ZS1-ZS4",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "pairwise-zs#root",
+        "file": "2026-06-10-pairwise-zs-criterion.tex",
+        "children": []
+      },
+      {
+        "id": "t3-g-is-h2",
+        "approach": "under (L)+(H): (G) iff [omega]=0 in H^2(Sk;D); classification of defect 2-cocycle, regauge = coboundary",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "pairwise-zs#g-obstruction-cohomology",
+        "file": "2026-06-11-G-obstruction-cohomology.tex",
+        "children": []
+      },
+      {
+        "id": "analytic-obstruction",
+        "approach": "ANALYTIC proof: verify (L) and (H) for K_eps directly; compute Sk_C, presheaf (all restrictions 0), complex (C^3=0 => H^2=(Z/2)^2/diag~=Z/2), and defect omega_T=(0,eps); conclude [omega(K_eps)]=eps.(generator); chain (T2)+(T3) to the composability dichotomy. No enumeration, no machine iso.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+        "children": [
+          {
+            "id": "L-holds-analytic",
+            "approach": "(L): each Hom(-,b) is a free right D-set (orbit decomposition; S-apex orbits are free Z/2-torsors since p!=ptau, q!=qtau; W/R-apex orbits singletons); independent of eps",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+            "children": []
+          },
+          {
+            "id": "H-holds-analytic",
+            "approach": "(H): D = disjoint abelian vertex groups (G_S=Z/2, G_W=G_R=0); trivial left action since the only nontrivial vertex group sits at the SOURCE S (no generator targets S)",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+            "children": []
+          },
+          {
+            "id": "class-equals-bit",
+            "approach": "defect of natural transversal T={p,q,s,s2}: omega_T([s],[p])=id, omega_T([s2],[p])=tau^eps => omega_T=(0,eps); B^2=diagonal => [omega]=eps.(generator)",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+            "children": [
+              {
+                "id": "lean-omega-equals-epsilon",
+                "approach": "FINITE F2 linear-algebra check of the class computation: model C2=(Z/2)^2 (Bool with xor), d1 t=(t,t) the coboundary image B^2=diag, omega eps=(0,eps), class map phi(a,b)=xor a b. Machine-checked: phi_omega (phi(omega eps)=eps), phi_ker_eq_inB2 (ker phi = B^2, so phi descends to injective H^2->Z/2), phi_surjective, omega_inB2_iff_zero ([omega]=0 <=> eps=0). Checks the finite class computation ONLY, not the categorical->complex reduction (that stays the paper's proved step).",
+                "role": "premise",
+                "trust": "lean-verified",
+                "lean": "Containers.Reentrancy.phi_omega, Containers.Reentrancy.omega_inB2_iff_zero, Containers.Reentrancy.phi_ker_eq_inB2 (lean/Containers/Containers/Reentrancy.lean)",
+                "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bug-obstructed",
+        "approach": "K_bug=K_1 (unprotected re-entry, worker flips token): (L) holds, (G) fails, [omega]=nonzero generator of Z/2, no distributive law. Now the eps=1 case of the analytic theorem (was: machine iso to rigid twist).",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+        "children": [
+          {
+            "id": "bug-iso-rigid-twist",
+            "approach": "K_1 ~= ten-morphism rigid twist of g-obstruction note (S,W,R,tau -> a,x,y,g). Now a COROLLARY (both compute the generator of the same H^2), NOT load-bearing; the analytic proof applies (T3) to K_eps directly.",
+            "role": "attempt",
+            "trust": "computed",
+            "file": "2026-07-19-orchestration-zs-instantiation.tex",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ok-composes",
+        "approach": "K_ok=K_0 (state-protected/lock, worker fixes token): (L) and (G) hold, [omega]=0, C|><|D exists (#SFS=2, Z/2-torsor). Now the eps=0 case of the analytic theorem.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-20-orchestration-reentrancy-obstruction-analytic.tex",
+        "children": []
+      },
+      {
+        "id": "s3-nontrivial-coherent",
+        "approach": "two supervisors over shared pool -> S_3 = Z/3 |><| Z/2 (dihedral matched pair); ZS1-ZS4 hold, non-abelian join; shows composition=ZS is non-vacuous. Illustrative/schematic context, NOT part of the proved core.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-19-orchestration-zs-instantiation.tex",
+        "children": []
+      },
+      {
+        "id": "indep-product",
+        "approach": "independent supervisors, trivial law delta=swap -> K = C x D = Z/2 x Z/2. Illustrative context, NOT part of the proved core.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-07-19-orchestration-zs-instantiation.tex",
+        "children": []
+      },
+      {
+        "id": "framework-literal",
+        "approach": "claim a named production framework (LangGraph etc.) IS literally one of these categories",
+        "role": "attempt",
+        "trust": "dead-end",
+        "reason": "Out of scope and unverified: the models are minimal faithful abstractions, not encodings of a specific framework. Grading the orchestration reading beyond the abstract theorem would be an overclaim per the honesty ledger; empirical instantiation (GA-style) is the future step, not done here.",
+        "file": null,
+        "children": []
+      }
+    ]
+  }
+}

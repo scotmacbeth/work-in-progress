@@ -1,0 +1,117 @@
+{
+    "conjecture": "The emergent-holonomy meeting count is cohomological: for finite G, subgroups A,B, field k of char p, Ext^n_{kG}(k[G/A],k[G/B]) ~= (+)_{g in A\\G/B} H^n(A cap gBg^-1; k)  (the Mackey/Eckmann-Shapiro/Nakaoka formula, classical). Applied over U=Stab_G(s) with A=Stab_P(s), B=Stab_{P'}(s) from an exact factorization G=P.P', degree 0 gives dim Ext^0 = |A\\U/B| = h(s), the emergent-holonomy count. OUTCOME (2026-08-20): (*) PROVED-as-assembled (Shapiro+Mackey+Shapiro), verified 17 cases both sides independently. DICTIONARY h(s)=dim Ext^0 PROVED. SHARP CORRECTION: in the holonomy setting Lemma-1 transversality forces A cap uBu^-1={e} for ALL u in U, so the entire higher Ext tower vanishes identically -- emergent holonomy is a DEGREE-0 RANK invariant, NOT a higher class. Witness W2 (h=2>1, tower=0) is decisive; explains why Rick's Ext^2 bet was structurally void.",
+    "status": "proved",
+    "date_opened": "2026-08-20",
+    "date_closed": "2026-08-20",
+    "note": "Deep-work PROVE session. Guardrail fired: computed BOTH sides of (*) agree on 17 cases (own F_p engine, scratch/ext-mackey-general/) BEFORE trusting the coordinate proof; the direct kG minimal-free-resolution LHS pins the Mackey index as A cap gBg^-1 (not gAg^-1 cap B). Strongest check A4/A=B=V4: [3,6,9,12] = 3 dcosets x H^n(V4;F2)=n+1, indep betti [1,2,3,4,5]. Honest scope: (*) is CLASSICAL (Nakaoka 1960s; Benson Rep&Cohom I sec3); the write-up of (*) routes to /expository. The delta claimed here is the holonomy dictionary (Cor 2) + degree-0 concentration (Thm 4), which CORRECTS the initial PROVE.md hypothesis 'higher tower detects alignment' (it does not -- W2). Sibling to holonomy-composition-zs-bridge.",
+    "tree": {
+        "id": "root",
+        "approach": "(*) Mackey/Shapiro decomposition of Ext between permutation modules [proved-as-assembled]; DICTIONARY h(s)=dim Ext^0_{kU}(k[U/A],k[U/B]) [proved]; degree-0 CONCENTRATION: holonomy higher tower vanishes identically by Lemma-1 transversality [proved]",
+        "trust": "proved",
+        "file": "2026-08-20-emergent-holonomy-is-ext-tower.md",
+        "children": [
+            {
+                "id": "star-formula",
+                "approach": "Theorem 1 (*): Ext^n_{kG}(k[G/A],k[G/B]) ~= (+)_{g in A\\G/B} H^n(A cap gBg^-1;k). Proof = (I) Eckmann-Shapiro Ext_{kG}(Ind_A k, N)=H^n(A;Res_A N) + (II) Mackey Res_A Ind_B k = (+)_g Ind_{A cap ^gB}^A k + (III) Shapiro coinduction H^n(A;Ind_H^A k)=H^n(H;k). Classical (Nakaoka; Benson Rep&Cohom I sec2.8, sec3.3; Brown Cohomology of Groups III.5-6). Route write-up to /expository.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-20-emergent-holonomy-is-ext-tower.md",
+                "children": []
+            },
+            {
+                "id": "compute-verify-18",
+                "approach": "Own exact F_p engine (scratch/ext-mackey-general/): LHS via genuine minimal free resolution over kG then H^n Hom(F_.,N); RHS via Mackey double cosets with each H^*(A cap gBg^-1;k) from its own kH-resolution. TWO independent computations agree on 17 cases: V4/S3/A4/D4/S4 (p=2), Z/3 (p=3), incl. mixed towers [2,1,1,1], elementary-abelian [3,6,9,12], and dim Ext^0=|A\\G/B| throughout.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-08-20-emergent-holonomy-is-ext-tower.md",
+                "children": []
+            },
+            {
+                "id": "dictionary-deg0",
+                "approach": "Corollary 2: apply (*) over U=Stab_G(s); H^0(H;k)=k for all H, so dim Ext^0_{kU}(k[U/A],k[U/B]) = |A\\U/B| = h(s). The double-coset invariant Rick wanted Ext to see IS Ext, in degree 0. Combines star-formula (deg 0) with the proved meeting-points identity h=|A\\U/B|.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-20-emergent-holonomy-is-ext-tower.md",
+                "children": [
+                    {
+                        "id": "meeting-points-h-equals-doset",
+                        "approach": "h(s):=|A\\U/B|=|Stab_G(s)|/(|Stab_P(s)||Stab_{P'}(s)|)=|(P.s) cap (P'.s)| a positive integer, =1 iff aligned. Thm 6 + Cor 7 of the meeting-points proof.",
+                        "role": "premise",
+                        "trust": "proved",
+                        "file": "2026-08-13-emergent-holonomy-meeting-points.md",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "degree0-concentration",
+                "approach": "Theorem 4: in the holonomy setting A=U cap P subset P, B=U cap P' subset P'; for EVERY u in U, A cap uBu^-1 subset P cap uP'u^-1 = {e} (Lemma 3). Hence over U every Mackey summand is H^n({e};k), so Ext^n_{kU}(k[U/A],k[U/B]) = k^{h(s)} for n=0 and 0 for n>=1. Emergent holonomy = rank of Ext^0; higher tower identically 0, independent of p and of alignment. CORRECTS 'higher tower detects alignment' -- W2 (h=2>1) has tower 0. Explains Rick's Ext^2 bet void (no Ext^2 exists to carry a class).",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-20-emergent-holonomy-is-ext-tower.md",
+                "children": [
+                    {
+                        "id": "disjointness-lemma-cite",
+                        "approach": "Lemma 3 = Lemma 1 of meeting-points: exact factorization G=P.P' => P cap gP'g^-1={e} for all g. 3-line proof; Lean-verified in the sibling program.",
+                        "role": "premise",
+                        "trust": "lean-verified",
+                        "file": "2026-08-13-emergent-holonomy-meeting-points.md",
+                        "lean": "Containers.Disjointness.disjointness",
+                        "children": []
+                    },
+                    {
+                        "id": "witness-w2-decisive",
+                        "approach": "Computation W2: S4=A4.<(12)>, s=1, U=S3, A=A3 (order 3), B={e}. h=2>1 (MISALIGNED) yet Ext tower = [2,0,0,0]. Decisive proof that the higher tower does NOT detect alignment; alignment is entirely the rank of Ext^0.",
+                        "role": "attempt",
+                        "trust": "computed",
+                        "file": "2026-08-20-emergent-holonomy-is-ext-tower.md",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "nontransverse-shakehands",
+                "approach": "Non-transverse V4 companion (Rick's follow-up, 2026-08-22). Ext^n_{kV4}(k[V4/A],k[V4/B]) over F2 computed 0..6 by minimal free resolution AND Mackey/Shapiro, agreeing in every degree, for the five cases: A=B=<a> -> [2,2,2,2,2,2,2]; A=<a>,B=G and A=G,B=<a> -> [1,1,1,1,1,1,1]; transverse A=<a>,B=<b> -> [1,0,...] (control); A=B=G -> [1,2,3,4,5,6,7]=H*(V4) (sanity). KEY SYNTHESIS: G abelian => every A cap gBg^-1 = A cap B, so Ext^n = h . dim H^n(A cap B; k) with h=|A\\G/B| a COMMON MULTIPLICITY across all degrees; transverse (A cap B={e}) => shape [1,0,...] => tower [h,0,...] recovering the degree-0 concentration. So Ext = (meeting count h) x (cohomology of the overlap subgroup): Ext^0 and higher tower do not diverge, they factor. Q1: the class is intrinsically a SUM over double cosets (2 cosets, swapped by b.(-)), not isolable to one. Q2: V_r(k[G/<a>])={(1:0)} a single point of P^1 (proven parametrically: a acts trivially => x=a-1 is zero matrix), a proper subvariety; surviving Ext is a rank-1/lower-stratum class (support = V_r(M) cap V_r(N), overlap of the two points), NOT a top-stratum full-rank class; transverse = disjoint points => empty intersection => vanishing.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "../scratch/rick-v4-ext-nontransverse/results.md",
+                "children": [
+                    {
+                        "id": "nontransverse-v8-crosscheck",
+                        "approach": "V8=(Z/2)^3 cross-check of Ext^n_{kG}(k[G/A],k[G/B]) = h . dim H^n(A cap B; k): independent minimal free resolution over F2[(Z/2)^3] reproduces the abelian Mackey/Shapiro collapse in all degrees n=0..6. Main test A=<x,y>,B=<y,z>: A cap B=Z/2, h=1, tower [1,1,1,1,1,1,1]. Controls: diagonal [2,4,6,8,10,12,14]=2.dim H*((Z/2)^2); transverse rank-1 [2,0,0,...]; V4 self-tests reproduce.",
+                        "role": "attempt",
+                        "trust": "computed",
+                        "file": "../scratch/rick-v8-ext/results.md",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "d8-nonabelian-crosscheck",
+                "approach": "FIRST NON-ABELIAN test of (*): G=D8, k=F2. Independent minimal free resolution over the genuine non-abelian k[D8] (mult table, syzygies via Nak: M/JM, J=augmentation ideal) vs Mackey/Shapiro double-coset assembly, degrees 0..6, agree in ALL 6 cases. Resolutions independently validated exact (d.d=0, ker=im). Sanity A=B=G: betti [1,2,3,4,5,6,7,8] = dim H^n(D8;F2)=n+1 (matches F2[x,y,w]/(xy)). CORRECTION to PROVE.md test case: the two Klein-four subgroups <r2,s>,<r2,rs> are BOTH NORMAL => AB=G => SINGLE double coset => tower [1,1,1,...] (collapse), NOT the intended per-coset non-collapse; two normal subgroups never give a multi-coset example. GENUINE non-collapse needs a NON-normal subgroup: A=B=<s> gives 3 double cosets (g=e,r,r2) with intersections <s>,{e},<s> => Ext = [3,2,2,2,2,2,2]. NEW NON-ABELIAN PHENOMENON: deg-0 = h = 3 (meeting count) but stabilised higher tower = 2 < 3 -- a STRICT gap, absent from the abelian uniform-multiplicity regime (there Ext^n=h.dim H^n(A cap B), deg0 = higher value). The gap deg0 - dim Ext^1 = #{transverse double cosets} (=1, the g=r meeting with A cap gBg^-1={e}) when nontrivial intersections are rank-1. Full spread computed: <s>,<rs> -> [2,0,..] (both transverse); <r2,s>,<s> -> [2,2,2,..] (two DISTINCT subgroups <s>,<r2s> but both ~Z/2, cohomologically indistinguishable); <r>=C4,<s> -> [1,0,..] (transverse single coset). Engine scratch/rick-d8-ext/ (general finite-group F2 engine generalising rick-v8-ext/). Honest scope: (*) is classical; delta = the per-coset meeting-point reading + the deg0>tower non-abelian signature + the Klein-four correction. Write-up routes to /expository.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-08-21-d8-nonabelian-ext-tower.md",
+                "peer_corroboration": "Peer corroboration: Rick (email 2026-08-21) independently confirms the alignment statistic and his 210-prediction matches; artifact peers/rick/emails/2026-08-21-d8-alignment-endorsement.md. Iso-type lower-bound caveat to be stated in write-up.",
+                "children": [
+                    {
+                        "id": "aligned-regime-sweep",
+                        "approach": "Full subgroup-pair sweep completing the deg0-Ext1 reading (2026-08-27, answering Rick's corrected ask email 2026-08-23 uid117). D8 (55 pairs), V4 (15), V8=(Z/2)^3 (120); every row cross-checked LHS minimal kG-resolution == RHS Mackey/Shapiro sum, MATCH=True over F2. Result: (Ext^0 - Ext^1) partitions by intersection rank -- (i) diff = #transverse > 0 (>=1 trivial-intersection coset); (ii) diff = 0 iff every coset has a rank-1 nontrivial intersection (fully aligned, no-transverse) -- SHARPEST witness D8 A=B=center <(13)(24)>: h=4, tower [4,4,4,4,4], diff=0, the central involution in every double-coset intersection; also V4 A=B=<a> [2,2,2,2,2]; (iii) diff < 0 when some intersection has rank>=2 (order-4 subgroup or full G) => dim Ext^1 > Ext^0, OUTSIDE the rank-1 dictionary (e.g. D8/V4 A=B=G tower [1,2,3,4,5] diff=-1). Confirms dim Ext^0 = h universally and (dim Ext^0 - dim Ext^1) = #transverse on the rank-1 stratum. Answers Rick: my side realizes diff=0 in the aligned regime (matches his 0 top-weight cancellations b=2,3,4); proposed the discriminating NONZERO test (one cancelling pair <-> one transverse coset).",
+                        "role": "attempt",
+                        "trust": "computed",
+                        "file": "../scratch/ext-mackey-general/2026-08-27-aligned-regime-table.md",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "twist-stability",
+                "approach": "Corollary 5: Ext^n_{kG}(k[G/A],k[G/B](x)L) ~= (+)_g H^n(A cap gBg^-1; Res L) for 1-dim L; in holonomy setting all intersections {e} so Res L=k, tower unchanged. Over F2 no nontrivial character exists. Explains Rick's orientation-line twist no-op.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-08-20-emergent-holonomy-is-ext-tower.md",
+                "children": []
+            }
+        ]
+    }
+}

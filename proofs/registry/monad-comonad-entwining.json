@@ -1,0 +1,86 @@
+{
+  "conjecture": "Fix a Set-monad M with the PI-cointerpretation weak Mendler algebra (Ahman-Bauer 2409.17664 Thm 6.3), giving the monad T_M(S,P)=(MS,P*) on Cont; and let G_M(S,P)=(S,M o P) be the transfer comonad. Then the oplax comparison str: M(prod_b Z_b)->prod_b M Z_b (M applied to product projections) assembles on positions into a MIXED DISTRIBUTIVE LAW (entwining) lambda: T_M G_M => G_M T_M satisfying all four entwining axioms, for every such M. The opposite orientation G_M T_M => T_M G_M (needing the lax map prod M -> M prod) FAILS the T-multiplication axiom once M genuinely branches (support size >= 2); obstruction = branching (NOT commutativity: Pf is commutative and fails), the union-of-products != product-of-unions phenomenon. For arity<=1 monads (Maybe, exception, Writer, Id) both orientations coincide (str=lax=iso).",
+  "status": "proved",
+  "date_opened": "2026-07-27",
+  "date_closed": "2026-07-27",
+  "note": "PROVE 2026-07-27. Answers state/PROVE.md: the two feeds DO entwine, canonically, but in the STANDARD orientation TG=>GT (opposite to PROVE.md's GT=>TG guess, which fails for branching M). lambda = M's oplax product-comparison str, transported to positions. E1(unit-T via i=id on singleton products), E3(counit-G via naturality of eta), E4(comult-G via naturality of mu) proven in full coordinates; E2(mult-T) reduced to naturality of str w.r.t. the product-reindexing = A-B Def 6.2 j-naturality, and machine-verified for the PI-Mendler class incl. branching commutative Pf. Reverse GT=>TG refuted by explicit Pf counterexample (X=({a,b},a:2,b:1)). Proof: proofs/2026-07-27-monad-comonad-entwining.md. Harness: scratch/monad-comonad-transfer/entwine.py.",
+  "tree": {
+    "id": "root",
+    "approach": "str: M(prod)->prod M (oplax product-comparison) gives lambda:T_M G_M => G_M T_M; four entwining axioms reduce to naturality of eta,mu,str (+ Mendler i,j); reverse orientation obstructed by branching",
+    "trust": "proved",
+    "file": "2026-07-27-monad-comonad-entwining.md",
+    "children": [
+      {
+        "id": "TM-is-a-monad",
+        "approach": "T_M(S,P)=(MS,P*) with the PI-cointerpretation weak Mendler algebra P*(m)=prod_{leaf b}P(x_b) is a monad on Cont (Ahman-Bauer Thm 6.3; examples 6.1 Pf, 6.5 exception A+1). Deep-read Sec 6 (Def 6.2 + Thm 6.3) from PDF this session.",
+        "role": "premise",
+        "trust": "published",
+        "file": null,
+        "publication": "Ahman & Bauer, Comodule Representations of Second-Order Functionals, JLAMP 146 (2025); arXiv:2409.17664",
+        "sources": ["2409.17664"],
+        "children": []
+      },
+      {
+        "id": "GM-is-a-comonad",
+        "approach": "G_M(S,P)=(S,M o P) is a comonad on Cont (the transfer), counit bwd=eta, comult bwd=mu; = Lan_{(S,P)}M. Own prior result, proved + Lean-verified.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-25-monad-comonad-transfer.md",
+        "lean": "Containers.SetMonad.counit_left",
+        "children": []
+      },
+      {
+        "id": "str-canonical-direction",
+        "approach": "The two composites at shape m have positions M(prod_b Z_b) [GT] and prod_b M Z_b [TG]; the only canonical comparison is str=(M pi_b)_b, existing for EVERY functor. Container morphisms run backward on positions, so str is the backward map of lambda: T_M G_M X -> G_M T_M X (orientation TG=>GT, the standard mixed-DL). lambda natural in X.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-27-monad-comonad-entwining.md",
+        "children": []
+      },
+      {
+        "id": "axioms-E1-E3-E4",
+        "approach": "E3 counit-G = naturality of eta at pi_b; E1 unit-T = Mendler i is identity on singleton products; E4 comult-G = naturality of mu at pi_b (both paths reduce to (mu_{Z_b} o MM pi_b)_b). Full coordinate proofs.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-27-monad-comonad-entwining.md",
+        "children": []
+      },
+      {
+        "id": "axiom-E2-mult-T",
+        "approach": "E2 mult-T reduces to naturality of str w.r.t. the product-reindexing rho (= A-B Def 6.2 j-naturality, restriction for Pf). Conceptual reduction complete; fully general symbolic index-chase over arbitrary weak Mendler j not written out. Machine-verified for M in {Maybe, Pf(branching,commutative), Writer/Z2, Writer/T2(non-commutative)} x 3 containers.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-27-monad-comonad-entwining.md",
+        "note": "GAP (mechanical, not conceptual): general-j index-chase. Proved for the verified PI-Mendler examples; universal-M claim rests on the naturality reduction.",
+        "children": [
+          {
+            "id": "entwine-finite-check",
+            "approach": "scratch/monad-comonad-transfer/entwine.py: forward lambda:TG=>GT all four axioms PASS across 12 cases ({Maybe,Pf,Writer/Z2,Writer/T2} x {A1(a:2,b:1),A2(a:3),A3(a:2,b:2)}); lambda well-typed + natural on nontrivial morphism; str verified non-iso.",
+            "role": "attempt",
+            "trust": "computed",
+            "file": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "reverse-orientation-fails",
+        "approach": "GT=>TG (PROVE.md's guessed orientation) needs the lax map prod M -> M prod. Even for commutative Pf it satisfies unit-T, counit-G, comult-G but FAILS mult-T (E2): explicit witness at double shape {{a,b},{a}} in Pf Pf S gives correlated 2-set (union-of-products) vs full 4-set (product-of-unions). Passes on single-shape A2 and for all arity<=1 monads. Obstruction = BRANCHING (M's mu merging leaves), not non-commutativity. Proved negative (computed counterexample).",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-27-monad-comonad-entwining.md",
+        "children": []
+      },
+      {
+        "id": "general-mendler-algebra",
+        "approach": "Whether a canonical lambda exists for a general (non-PI) weak Mendler algebra (-)* : no evident map M(P*)->(MP)* without the product structure. OPEN.",
+        "role": "attempt",
+        "trust": "dead-end",
+        "reason": "Not pursued: str crucially uses product projections of the PI-extension; no canonical comparison for arbitrary (-)*. Scoped out, flagged as Gap 2 in the proof. Not refuted, just outside this session's scope.",
+        "refutation": "judgment",
+        "file": null,
+        "children": []
+      }
+    ]
+  }
+}

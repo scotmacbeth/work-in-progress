@@ -1,0 +1,205 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage[expansion=false]{microtype}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+
+\providecommand{\Vec}{}\renewcommand{\Vec}{\mathsf{Vec}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\fld}{k}
+
+\title{Linear containers for prompt/response systems:\\
+a note for the curious, not the initiated}
+\author{MacBeth \\ \small for Neil}
+\date{2026-08-22}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}\noindent
+This is the short, plain version of \texttt{containers-over-vec.tex}. No proofs, almost
+no equations, everything landed on a prompt/response example. The technical note has the
+theorems; this note is so you can decide whether the technical note is worth your evening.
+One idea runs through all of it: \emph{a response is a vector because a response is
+uncertain, and uncertainty is what a learning system trains.} Read it once, straight
+through.
+\end{abstract}
+
+\section{The setup}
+
+Model a prompt as the simplest possible container: one request, and a space of possible
+replies. In symbols, $(\{*\}, A)$ --- a single shape (the prompt) sitting over a
+\emph{reply space} $A$. The only real choice is the word \emph{space}. Why a vector space
+$A$ and not just a set of allowed answers?
+
+Because a reply is not one token. It is a distribution --- a superposition over a basis of
+possible answers, carrying the model's uncertainty. The basis is the vocabulary of
+possible replies; the coefficients are the confidence. And the basis in which that reply
+space is expressed is exactly what a learning system \emph{learns}. So: responses $=$
+uncertainty $=$ the basis of learning. That single sentence (yours) is the reason $\Vec$,
+the category of vector spaces, is the right home rather than $\Set$. Keep it in view; every
+section below is a consequence of it.
+
+\section{The structure of $\Vec$ we actually use}
+
+We lean on three facts about $\Vec$, and one fact it is \emph{missing}. One line each,
+each on the prompt example.
+
+\begin{description}[leftmargin=1.2em,style=nextline]
+\item[The zero object.] In $\Vec$ the empty reply space and the ``full'' terminal reply
+  space are the \emph{same} object, $0$. (In $\Set$ the empty set and the one-point set are
+  wildly different; in $\Vec$ they collapse.) Harmless-looking, but it is the seed of
+  everything.
+\item[The biproduct $A\oplus B$ --- the cleanest hook.] Take prompt $A$ (replies in $A$)
+  and prompt $B$ (replies in $B$). The space $A\oplus B$ is at once the \emph{coproduct}
+  ---``I can answer \emph{either} $A$ or $B$''--- and the \emph{product} ---``I am ready for
+  \emph{both} $A$ and $B$''. Same space. In $\Vec$ ``either'' and ``both'' are literally the
+  same object. In $\Set$ they come apart (a tagged union $A\sqcup B$ versus a pair
+  $A\times B$), and that is the whole difference between the two worlds.
+\item[Self-enrichment.] The maps between two reply spaces again form a reply space, and
+  composing them is linear. This is what makes ``linear container'' more than a slogan and
+  makes the computations go through. You can take it on faith here.
+\item[What $\Vec$ \emph{lacks}: extensivity.] $\Set$ is extensive: a map into a union
+  $A\sqcup B$ is a genuine partition of the domain --- \emph{you can always tell which
+  branch of a choice you are in}. $\Vec$ is not extensive: a map into $A\oplus B$ is a pair
+  of maps that may both be nonzero, so a vector $a+b$ carries no record of ``which summand
+  did I come from?'' (Carboni--Lack--Walters). The disjoint union $\sqcup$ sits strictly
+  inside the biproduct $\oplus$.
+\end{description}
+
+\textbf{The punchline.} That one missing property is the whole story. Because $\Vec$ cannot
+tell you which branch of a choice you are in, the shapes of a container go \emph{invisible}
+(finitely many prompts with reply spaces of total dimension $N$ become indistinguishable
+from $N$ blank copies of the identity --- the ``biproduct collapse''), and the map that
+turns a container into its functor stops being \emph{full} (there are more natural
+transformations than there are container morphisms, because a natural transformation may
+\emph{mix} branches while a container morphism must \emph{pick} one). Loss of shapes, loss
+of fullness: two faces of the one missing partition. Proofs are in
+\texttt{containers-over-vec.tex}; here I only want you to see that it is a single fact
+wearing two masks.
+
+\section{$k$-algebra and algebroid, seen through containers}
+
+Now: what does it mean to \emph{compose} responses?
+
+\textbf{Within one prompt --- a $k$-algebra.} Stay with a single prompt $A$. Suppose you can
+take a response, run it, and feed its result back as another response of the \emph{same}
+prompt, then read off one combined response. That is a map $A\otimes A\to A$ that combines
+two replies into one --- associative, with a unit (the empty response). A reply space with
+such a combination law is exactly a \emph{$k$-algebra}. So within a single prompt, the
+entire composition structure is: an algebra on its reply space. Nothing more is available,
+because there is only one prompt and nothing to route through.
+
+\textbf{Across prompts --- an algebroid.} Now allow several prompts and responses that carry
+\emph{one} prompt into \emph{another}. A response is no longer a self-loop; it has a source
+prompt and a target prompt. Over $\Set$ this ``responses carry object to object, and
+compose'' is the content of the theorem \emph{directed containers $=$ small categories}.
+The $\Vec$ version of a directed container is an \emph{algebroid}: a $k$-algebra ``with
+several objects'', i.e.\ a category whose hom-\emph{sets} have been upgraded to
+hom-\emph{spaces} (B\'enabou/Mitchell). Prompts are the objects; between prompts $a$ and
+$b$ sits a whole reply space $P(a,b)$ of responses carrying $a$ to $b$.
+
+The right way to package this is a \emph{$\Vec$-matrix}: prompts on the rows and columns,
+entry $P(a,b)$ the reply space from $a$ to $b$. Composition is then honest matrix
+multiplication,
+\[
+  (P \odot Q)(a,c) \;=\; \bigoplus_{b}\, P(a,b)\otimes Q(b,c),
+\]
+``sum over every intermediate prompt $b$ you could route through.'' Its monoids are exactly
+algebroids: the multiplication is composition of responses, the unit picks the identity
+response at each prompt.
+
+\textbf{Why the naive version was not enough --- and this ties back to extensivity.} If you
+index reply data by a single prompt $s$ (one space $P_s$ per prompt), you can only ever
+express self-loops: response of $s$ combining with response of $s$. You get a \emph{family
+of one-object algebras}, one per prompt, never talking to each other. The reason is exactly
+the missing partition from \S2: a bare index $s$ has no room to record ``\emph{from} $a$
+\emph{to} $b$'' --- source and target need two indices, not one. The cure is to put the
+$\bigoplus_b$ on the \emph{composition} index (route through $b$) rather than on the shape
+index. That single relocated biproduct --- the same $\oplus$ that made ``either'' equal
+``both'' --- is what upgrades a disconnected family of algebras into a genuine multi-object
+algebroid. The single-index theory is just the diagonal (self-loops only) of the matrix
+theory.
+
+\section{The wirings: a proposal}
+
+This is the part I actually want your eye on. Containers over $\Vec$ carry four monoidal
+products --- $\oplus$, $\times$, $\otimes$, $\lhd$ --- but in the finite linear setting two
+of them \emph{coincide}, and that coincidence is itself the cleanest thing to say. Read as
+prompt/response \emph{workflows}, what remains is \emph{three} genuinely distinct ways to
+wire two systems together.
+
+\textbf{Choice and product are one wiring: $\oplus = \times$.} Offer prompt $A$ or prompt
+$B$. Over $\Set$ the menu (coproduct $A\sqcup B$) and the pair (product $A\times B$) are
+different constructions --- a tagged union versus a table of both. Over $\Vec$ they are the
+\emph{same} object, the biproduct $A\oplus B$ (\S2): building the menu \emph{is} being ready
+for both at once. So the two combinators a workflow language would ordinarily keep
+apart --- ``choose a branch'' and ``hold both branches'' --- collapse into one. This is not
+a defect to apologise for; it is the biproduct collapse of \S2, now seen at the level of
+workflows. There is exactly one ``combine by choice / product'' operation, and it is
+$\oplus$. That leaves three:
+
+\begin{description}[leftmargin=1.2em,style=nextline]
+\item[$\oplus$ --- menu / both.] Offer $A$ or $B$; by the biproduct this is the same as
+  holding both reply spaces at once. Choice and product, a single wiring.
+\item[$\otimes$ --- parallel.] Run two prompt/response systems side by side on independent
+  inputs; the joint reply space is the tensor $A\otimes B$. Genuinely distinct from
+  $\oplus$: a tensor \emph{entangles} the two reply spaces where the biproduct keeps them
+  additively separate.
+\item[$\lhd$ --- pipeline.] Feed one system's response in as the next system's prompt.
+  This is composition down a chain, and its bookkeeping is exactly the matrix product of
+  \S3: route the output prompt through to the next stage. (That operational reading ---
+  response-as-next-prompt --- is the proposal layer, not a theorem.)
+\end{description}
+
+The \textbf{claim} is a clean slogan: \emph{the algebra of wiring is the algebra of
+workflows}. Three categorical combinators --- choose/hold, run-parallel, pipe --- as the
+three connectives of a workflow language, with $\Vec$ the right home because the things
+being wired --- responses --- are \emph{trainable vectors}, not inert tokens. The hope is
+that a workflow assembled this way stays differentiable in its responses, so that learning
+can act on the whole wiring and not only on a single response; that would be the payoff of
+working over $\Vec$ rather than $\Set$.
+
+I want to be honest about altitude. This section is a \emph{proposal}, a research direction,
+not a theorem. That the three wirings satisfy the laws you would want of a workflow
+calculus, that the pipeline reading of $\lhd$ is the right one, and that the linear setting
+genuinely buys trainability at the workflow level rather than only at the single-response
+level --- all of that is what I would try to prove next. It is the ``find a use'' thrust,
+and it is speculative.
+
+\section{Status, honestly}
+
+\textbf{Proved} (all in \texttt{containers-over-vec.tex}):
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item \emph{Biproduct collapse.} Finitely many prompts with total reply-dimension $N$ are
+  indistinguishable, as a functor, from $N$ blank copies of the identity; the shape set is
+  not recoverable. Equivalently, ``either $A$ or $B$'' has reply space the biproduct
+  $A\oplus B$, which is also ``both''.
+\item \emph{The extensivity crux.} An exact formula for maps between these functors shows
+  the container-to-functor map is faithful but \emph{not full}, and pinpoints the failure in
+  the one symbol $\sqcup\subsetneq\oplus$ --- the missing ``which branch'' partition.
+\item \emph{$\lhd$-comonoids $=$ family of $k$-algebras.} The single-index composition gives
+  exactly one algebra per prompt (self-loops), no cross-talk.
+\item \emph{The correct home for algebroids.} Linear directed containers live in the matrix
+  bicategory $\mathsf{Mat}(\Vec)$; its (co)monoids are genuine algebroids
+  (B\'enabou/Mitchell), and the single-index theory is its diagonal.
+\end{itemize}
+
+\textbf{Proposal, not yet proved:}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item The three-wirings workflow calculus of \S4 --- that these combinators form a usable
+  algebra of prompt/response workflows, and that $\Vec$ is the ``useful'' setting for
+  prompt/response \emph{learning}. This is the direction, not a result. (Note the honest
+  side-benefit already banked: over $\Vec$ choice and product are the \emph{same} wiring,
+  $\oplus=\times$, so the calculus has three connectives, not four.)
+\end{itemize}
+
+That is the honest scorecard. The mathematics that is solid is elementary once you accept
+the base change; the excitement is that the one fact that breaks the representation theorem
+(non-extensivity) is exactly the fact an agent that must answer whatever it is asked would
+\emph{want}. Whether that reading pays off as a real workflow calculus is the open bet.
+
+\end{document}

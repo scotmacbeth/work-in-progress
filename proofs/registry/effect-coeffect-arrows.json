@@ -1,0 +1,858 @@
+{
+ "conjecture": "Fix a PI-cointerpretation Set-monad M with its two Cont-liftings: the effect monad T_M(S,P)=(MS,P*) (Ahman-Bauer) and the coeffect comonad G_M(S,P)=(S,M o P) (the transfer). Define effect-coeffect ARROWS p~>q := Cont(G_M p, T_M q). These form a CATEGORY (the biKleisli / coKleisli-of-Kleisli category, identity eta^T o eps, composition mu^T o Tg o kappa_q o Gf o delta_p) IF AND ONLY IF M is NON-BRANCHING (every m in MS has support <=1). The compositor is kappa: G_M T_M => T_M G_M (the LAX product-comparison on positions) -- the REVERSE of the proved entwining lambda: T_M G_M => G_M T_M -- and kappa satisfies the four mixed-DL axioms iff M non-branching (E2'/associativity is the sole obstruction; branching = union-of-products != product-of-unions). For branching M (Pf, List) the arrows are NOT a category: composition is non-associative (explicit Pf witness). What survives for ALL M is lambda, which is not a compositor but a Turi-Plotkin BIALGEBRA/entwining (G_M lifts to T_M-algebras, T_M to G_M-coalgebras). Dichotomy: arrow/Freyd face (kappa, non-branching) vs bialgebra face (lambda, all M), coinciding only for arity<=1.",
+ "status": "proved",
+ "date_opened": "2026-07-29",
+ "date_closed": "2026-07-29",
+ "note": "PROVE 2026-07-29 (Neil's 07-29 steer). Corrects PROVE.md's orientation guess: the compositor is kappa=GT=>TG (lax), NOT the proved lambda=TG=>GT (oplax str). Theorem A: category exists <=> comonad G_M lifts to Kl(T_M) <=> kappa satisfies E1'-E4' <=> M non-branching. Category axioms unwind as: unit laws = E1'/E3'; associativity = E2' (mult-T). Reverse direction (branching => no category) proved by explicit Pf non-associativity witness. Answers Neil's Plotkin-Turi question: YES for the lambda-direction (EM bialgebra, all M), NOT the kappa/arrow direction. Proof: proofs/2026-07-29-effect-coeffect-arrows.md. Harness: scratch/monad-comonad-transfer/bikleisli.py (Maybe/Writer categories confirmed; Pf non-assoc witness). UPDATE 2026-07-30 (PROVE): T1 POSITIVE CLASSIFICATION + T2 E2'-gap CLOSED, node affine-classification. The non-branching class = writer-with-absorbing-exceptions M=E+A*X (A monoid, E left A-set); E2' holds throughout it (product-comparison degenerates to <=1-factor rewrap). Proof: proofs/2026-07-30-affine-classification.md. UPDATE 2026-07-31 (PROVE): added companion node branching-commutativity-independent (proved) -- pairwise independence of P1 non-branching / P2 commutative / P3 affine, with full E+AxX commutativity criterion (Lemma A, 3 sources), magma medial non-comm (Lemma B), and the unique dependency non-branching&affine=>commutative (Thm C). Proof: proofs/2026-07-31-branching-commutativity-affine-independence.md. UPDATE 2026-07-31 (PROVE pm): node atkey-index-degree (proved, NEGATIVE). The PROVE.md 'graded Freyd tower' conjecture is refuted AS STATED: index-collapse to a PLAIN Freyd cat = M=Id (Prop2.1), STRICTLY inside non-branching; Atkey's index measures the coeffect W=G_M (M!=Id), orthogonal to & coarser than branching (Cor2.3). Arity gap: cartesian max-arity in {<=1,infinity}, no finite rung>=2 (Thm3.1). Natural leaf-count grade destroyed by the merging branching forces (sec4). Proof: proofs/2026-07-31-atkey-index-degree.md. UPDATE 2026-08-04 (PROVE): node branching-full-morphism-lift (proved) UPGRADES the branching non-associativity from computed->proved. The fibre E2'-failure NECESSARILY LIFTS to a genuine non-associative triple of full Cont-morphisms (differ at shape b, pos (1,0): empty vs {0}); forced finite calculation + no-downstream-cancellation (transport maps are single-leaf bijections) + identification with the sec2 fibre config. So 'arrow category <=> non-branching' is an iff at the FULL container-morphism level, not merely fibrewise. Also Proposition 0: PROVE.md's proposed M=1+X^2 is NOT a cartesian monad (arity gap 2->4), corrected to M=Pf. Proof: proofs/2026-08-04-branching-full-morphism-lift.md.",
+ "tree": {
+  "id": "root",
+  "approach": "Effect-coeffect arrows Gp->Tq form the biKleisli category; compositor = kappa:GT=>TG (lax, reverse of proved lambda); category <=> kappa mixed-DL axioms <=> M non-branching. Dichotomy arrow(kappa)/bialgebra(lambda).",
+  "trust": "proved",
+  "file": "2026-07-29-effect-coeffect-arrows.md",
+  "children": [
+   {
+    "id": "kappa-dichotomy",
+    "approach": "The reverse law kappa:G_M T_M => T_M G_M (lax product-comparison prod_b M Z_b -> M(prod_b Z_b)) satisfies E1',E3',E4' for every M, and E2'(mult-T) iff M non-branching; branching Pf fails E2' (union-of-products != product-of-unions, witness X=({a,b},a:2,b:1)). This IS the reverse-orientation result of the entwining registry.",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-07-27-monad-comonad-entwining.md",
+    "shared": null,
+    "note": "Inherits the entwining node's mechanical E2 index-chase gap for the universal-M claim; specific M (Maybe, Writer, Pf) fully machine-verified.",
+    "children": []
+   },
+   {
+    "id": "lambda-entwining",
+    "approach": "The proved entwining lambda:T_M G_M => G_M T_M (all M), giving the Turi-Plotkin bialgebra face: G_M lifts to a comonad on Alg(T_M), T_M to a monad on Coalg(G_M).",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-07-27-monad-comonad-entwining.md",
+    "children": []
+   },
+   {
+    "id": "TM-monad",
+    "approach": "T_M(S,P)=(MS,P*) monad on Cont (Ahman-Bauer Thm 6.3).",
+    "role": "premise",
+    "trust": "published",
+    "file": null,
+    "publication": "Ahman & Bauer, Comodule Representations of Second-Order Functionals, JLAMP 146 (2025); arXiv:2409.17664",
+    "sources": [
+     "2409.17664"
+    ],
+    "children": []
+   },
+   {
+    "id": "GM-comonad",
+    "approach": "G_M(S,P)=(S,M o P) comonad on Cont (the transfer), proved + Lean.",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-07-25-monad-comonad-transfer.md",
+    "lean": "Containers.SetMonad.counit_left",
+    "children": []
+   },
+   {
+    "id": "bikleisli-is-lift-to-kleisli",
+    "approach": "A lifting of a comonad G to Kl(T) = a mixed distributive law kappa:GT=>TG with 4 axioms; the coKleisli category of the lift is the category of arrows Gp->Tq, identity eta^T o eps, composition mu^T o Tg o kappa o Gf o delta. Unit laws <=> E1',E3'; associativity <=> E2' (G-tilde preserves Kleisli composition). FRAMING/attribution only: the proved core (theoremA-forward/reverse) re-derives the associativity<=>E2' equivalence directly on Cont-morphisms, so the theorem does NOT stand on this citation.",
+    "role": "attempt",
+    "trust": "unclassified",
+    "file": null,
+    "sources": [],
+    "note": "Folklore (Power-Watanabe, Combining a monad and a comonad, TCS 280 (2002); Uustalu-Vene 2008; Brookes-Geva). Cited, below boundary; the arrow-level associativity<=>E2' correspondence is independently machine-verified below, so the theorem does not rest on this citation alone.",
+    "children": [
+     {
+      "id": "lean-bikleisli-unit-laws",
+      "approach": "Lean 4 (Mathlib-free, over the self-contained Category typeclass): abstract mixed distributive law kappa:GT=>TG bundling axioms E1'-E4' + kappa-naturality; biKleisli arrows Hom p q = C(Gp,Tq), arrId = eps>>eta, acomp = delta>>Gf>>kappa>>Tg>>mu. UNIT LAWS unit_left(=E1') and unit_right(=E3') proved from ONLY the (co)monad unit laws, eps/eta naturality, and E1'/E3' -- NOT E2'/E4' -- machine-confirming the paper's claim that the unit laws hold for ALL M (the unconditional part). ALSO: transfer comonad G_M packaged as a Comonad (SetMonad.toComonad, reusing the Lean-verified transfer), identity-monad instance, and the T=Id coKleisli category (Workers/coeffect slice, sec 3.1) with full associativity coKleisli_acomp_assoc. Formalises the (1)=>(3) unit-law direction of Theorem A; the (3)<=>(4) non-branching step (E2') is NOT formalised (that is the computational/paper result).",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": "2026-07-29-effect-coeffect-arrows.md",
+      "lean": "Containers.MixedDistrib.unit_left",
+      "note": "Containers/BiKleisli.lean, sorry-free, zero warnings. unit_left/unit_right depend on NO axioms (pure); coKleisli_acomp_assoc on propext only; SetMonad.toComonad on Quot.sound (inherited from the transfer). UPDATE 2026-07-30 (LEAN): the general abstract associativity MixedDistrib.acomp_assoc is NOW proved from the full axiom set E1'-E4' (7-rewrite chase: E2' at r, mu-nat at h, monad-assoc at s, coassoc at p, delta-nat at f, E4' at q, kappa-nat at g). Concrete T_M/kappa for Maybe now built too -- see node bikleisli-maybe-lean.",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "theoremA-forward-noncrossbranch",
+    "approach": "M non-branching => kappa satisfies all axioms => biKleisli is a category. Directly verified as a real Cont-morphism category: Maybe (1536/1536 assoc triples, unit laws, well-typed) and Writer/Z2 (4608/4608) over p=r=({0},{0}), q=z=A1.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-29-effect-coeffect-arrows.md",
+    "children": [
+     {
+      "id": "bikleisli-maybe-writer-check",
+      "approach": "scratch/monad-comonad-transfer/bikleisli.py: builds delta/Gf/kappa/Tg/mu composite as Cont morphism; Maybe & Writer/Z2 associativity + identity laws all PASS.",
+      "role": "attempt",
+      "trust": "computed",
+      "file": null,
+      "children": []
+     },
+     {
+      "id": "bikleisli-maybe-lean",
+      "approach": "Lean 4 (Mathlib-free): instantiate the abstract biKleisli skeleton at M=Maybe end-to-end. Maybe:SetMonad; T_Maybe(S,P)=(Option S, P*) as a Monad Container with P*(none)=PUnit (empty product), P*(some s)=P s -- the degenerate arity-<=1 PI-cointerpretation; kappa:G_Maybe T_Maybe => T_Maybe G_Maybe (id on shapes, eta-padding 1->Option 1 on none, id on some); ALL FOUR mixed-DL axioms E1'-E4' DISCHARGED for Maybe, in particular E2'/distrib_mult (the branching-obstructed one, holds because PI is over <=1 leaf). Composing with the abstract MixedDistrib.acomp_assoc yields the full ASSOCIATIVE arrow category for Maybe (arr_unit_left, arr_unit_right, arr_assoc). Machine-checks the 'Maybe is a genuine category (1536/1536)' half of Theorem A.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": "2026-07-29-effect-coeffect-arrows.md",
+      "lean": "Containers.BiKleisliMaybe.arr_assoc",
+      "note": "Containers/BiKleisliMaybe.lean, sorry-free, zero warnings; arr_assoc depends on [propext, Quot.sound], the four-axiom instance mixedDistrib on [Quot.sound]. Backward position maps transport-free; non-rfl Option.join/Option.map shape identities absorbed by definitional proof irrelevance for Eq (via ext'). Branching (Pf) side of Theorem A remains computed-only (scratch bikleisli.py), not formalised.",
+      "children": []
+     },
+     {
+      "id": "bikleisli-writer-lean",
+      "approach": "Lean 4 (Mathlib-free): instantiate the abstract biKleisli skeleton at M=Writer over an ARBITRARY monoid W (Mon = bare carrier+one+mul+3 laws), the writer generator A*(-) of the affine class. Writer W:SetMonad (functor/naturality rfl; 3 monad laws = W's one_mul/mul_one/mul_assoc); T_Writer(S,P)=(A*S, P o pi2) as a Monad Container (single-fibre PI-cointerpretation, arity=1, no nullary leaf); kappa:G_W T_W => T_W G_W is the IDENTITY morphism (both sides defeq: shape A*S, fibre A*P s). ALL FOUR mixed-DL axioms E1'-E4' DISCHARGED, in particular E2'/distrib_mult (degenerate, PI over exactly one leaf). Composing with MixedDistrib.acomp_assoc yields the ASSOCIATIVE arrow category for Writer W (arr_unit_left/right, arr_assoc), and arr_assoc_Z2 the concrete \u2124/2 (Bool/xor) witness. With Maybe (E+(-)) this spans the two generators E+A*X of the affine classification.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": "2026-07-30-affine-classification.md",
+      "lean": "Containers.BiKleisliWriter.arr_assoc",
+      "note": "Containers/BiKleisliWriter.lean, sorry-free, zero warnings; arr_assoc_Z2 depends on [propext, Quot.sound], Tright_unit/Tassoc on [Quot.sound]. General over any Mon (stronger than the \u2124/2 ask; \u2124/2 = instance Z2). kappa = identity (cleaner than Maybe's eta-padding: no nullary leaf). Only non-rfl step: the 3 monoid-shaped T-monad laws, whose shape map rearranges mul (one_mul/mul_one/mul_assoc); the P s fibre is independent of the mutated A-coordinate, so the ext' transport is absorbed by heq_pos (HEq (h |> p) p, via subst) + eq_of_heq. Branching (Pf) side remains computed-only, not formalised.",
+      "children": []
+     },
+     {
+      "id": "bikleisli-affine-general",
+      "approach": "Lean 4 (Mathlib-free): instantiate the abstract biKleisli skeleton at the WHOLE non-branching class M=E+A*X at once (FUSING the Maybe E+(-) and Writer A*(-) generators), for arbitrary monoid A and an arbitrary left A-set E. Aff = bundle (A,E,one,mul,act,one_mul,mul_one,mul_assoc,one_act,mul_act). MAff W:SetMonad (mu absorbs outer exception, lets the log ACT on an inner exception inr(a,inl e')|->inl(a.e'), multiplies two logs; the 3 monad laws = one_mul/mul_one/mul_assoc AND one_act/mul_act). T_M(S,P)=(E+A*S,P*) as a Monad Container: P*(inl e)=PUnit (nullary/exception), P*(inr(a,s))=P s (single leaf); a Sum case-split runs the Maybe apparatus on inl and the Writer apparatus on inr. kappa:G_M T_M => T_M G_M = id on shapes, eta^M-padding inr(one,unit) over inl (nullary, Maybe-style), id over inr (unary, Writer-style). ALL FOUR mixed-DL axioms E1'-E4' DISCHARGED for the entire class, in particular E2'/distrib_mult. Composing with MixedDistrib.acomp_assoc gives the ASSOCIATIVE arrow category for every writer-with-absorbing-exceptions monad (arr_unit_left/right, arr_assoc), and arr_assoc_Z2E2 a concrete |E|=2,|A|=2 witness (A=Bool/xor, E=Bool, trivial action -- the case PROVE.md flagged). Machine-checks T1+T2 (node affine-classification): E2' holds across the whole non-branching class, subsuming Maybe (A=1) and Writer (E=empty) as boundary instances.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": "2026-07-30-affine-classification.md",
+      "lean": "Containers.BiKleisliAffine.arr_assoc",
+      "note": "Containers/BiKleisliAffine.lean, sorry-free, zero warnings; arr_assoc/arr_assoc_Z2E2 depend on [propext, Quot.sound], mixedDistrib/arr_unit_* on [Quot.sound]; no sorryAx, no Classical.choice. This UPGRADES the two-generator Lean coverage (bikleisli-maybe-lean, bikleisli-writer-lean) to the whole classified family in one instance. Non-rfl content confined to (a) the 3 T-monad laws (monoid + ACTION shape maps one_mul/mul_one/mul_assoc/one_act/mul_act; position transport absorbed by heq_pos+eq_of_heq, as in Writer), and (b) two kappa-axiom branches: E1' unary + E2' deepest unary need M.map id reduced by casing the position; E4' nullary needs one_mul (the Maybe-trivial-monoid rfl becomes mul one one=one here). Branching (Pf) side still computed-only, not formalised.",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "theoremA-reverse-branching-nogo",
+    "approach": "M branching => associativity fails. Explicit Pf triple f,g,h:G(A1)->T(A1) (all fwd a|->{a},b|->{a,b}) with (h.g).f != h.(g.f), differing at shape b pos (1,0): empty vs {0}. Identity laws still hold (E1',E3' survive), so failure is precisely associativity=E2'.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-29-effect-coeffect-arrows.md",
+    "children": [
+     {
+      "id": "bikleisli-pf-nonassoc",
+      "approach": "scratch/monad-comonad-transfer/bikleisli.py hunt_pf_nonassoc over branch-rich pools: violation found after 2014 triples; witness printed.",
+      "role": "attempt",
+      "trust": "computed",
+      "file": null,
+      "children": []
+     },
+     {
+      "id": "branching-full-morphism-lift",
+      "approach": "PROVE 2026-08-04. UPGRADES bikleisli-pf-nonassoc computed->proved: the branching obstruction is a FULL-morphism obstruction, not merely fibrewise. Theorem: for M=Pf over A1=({a,b},{a:2,b:1}) there is a triple f,g,h:A1~>A1 (all fwd a|->{a},b|->{a,b}) with (h.g).f != h.(g.f) as full Cont-morphisms; the two agree on shapes (Lemma F: forward map of * = relational composition in Kl(Pf), associative) and on EVERY backward component except source shape b, target position (1,0), where they take distinct values empty vs {0} in Pf({0}). PROOF = (a) forced finite calculation of both 5-stage backward chains at (b,(1,0)) (each of the 10 stage-values is one structural map's coordinate formula at one point; independently re-derived in independent_check.py); (b) identification: both bracketings pass through the SAME overlap shape {{a,b},{a}} in Pf(Pf S) where mu^T merges leaf a -- the exact fibre config of E2'-failure (sec2) -- and differ only in the kappa/mu^T application order (product-then-merge vs merge-then-merge = the sec2 table's 4-vs-2 tuples); (c) no downstream cancellation: every transport map (eta^T proj i, mu^T restriction j, delta union, Pf-images) is a BIJECTION at the single un-merged leaf, so the fibre inequality cannot be erased. Uses only the SUFFICIENCY direction E2'=>assoc (constructive Beck/Power-Watanabe) for the causal attribution 'had E2' held this triple would compose associatively'; the non-associativity itself does not rest on that citation. ALSO establishes Proposition 0 (arity gap): M=1+X^2 as proposed in PROVE.md is NOT a cartesian monad (a binary op self-plugs 2->4 leaves under cartesian mu, forcing unbounded arity); the honest minimal branching witness is Pf. Reader^2 excluded (repeated leaf labels break mu^T's label-matching j).",
+      "role": "attempt",
+      "trust": "proved",
+      "file": "2026-08-04-branching-full-morphism-lift.md",
+      "note": "Proof proofs/2026-08-04-branching-full-morphism-lift.md. Harness: scratch/monad-comonad-transfer/{bikleisli.py, trace_known.py, independent_check.py, reader_test.py}. Gaps (honest): (1) assoc<=>E2' cited not re-derived at container level (only E2'=>assoc used, and only for attribution, not for the non-assoc claim); (2) no-cancellation proved for Pf/A1's specific maps, argued generally -- a uniform 'every branching PI-monad lifts to some explicit triple' needs a detection/Yoneda step (abstract equivalence already gives EXISTENCE for any branching M); (3) scope = PI-cointerpretation, commutative M. Sets up the Finset LEAN target (full-morphism distrib_mult non-assoc) mirroring BranchingObstruction.lean one level up.",
+      "children": [
+       {
+        "id": "branching-obstruction-lean-premise",
+        "approach": "The fibre-level E2'-failure (product-of-unions != union-of-products at a shared branching leaf) that this lift transports. Lean-verified, axiom-free decide.",
+        "role": "premise",
+        "trust": "lean-verified",
+        "file": "2026-07-29-effect-coeffect-arrows.md",
+        "lean": "Containers.BranchingObstruction.kappa_distrib_mult_fails",
+        "children": []
+       },
+       {
+        "id": "full-morphism-lift-independent-check",
+        "approach": "scratch/monad-comonad-transfer/independent_check.py: re-derives the two critical composite values L#_b(1,0)=empty, R#_b(1,0)={0} and the two intermediate values (g*f)#_b(1,0)=empty, (h*g)#_b(1,0)={0}, plus the sec2 fibre sides by hand (2 vs 4 tuples) matching the pipeline. trace_known.py: full 5-stage trace of both bracketings, both through overlap {{a},{a,b}}.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": null,
+        "children": []
+       }
+      ]
+     },
+     {
+      "id": "branching-obstruction-lean",
+      "approach": "Lean 4 (Mathlib-free): the NEGATIVE witness completing the Theorem A iff in Lean. E2' (MixedDistrib.distrib_mult) is an equation of Cont-morphisms G_M(T_M T_M X)->T_M(G_M X); both sides act by mu^M on shapes, so E2' can only fail in the BACKWARD POSITION MAP at a branching leaf, where it reads 'kappa commutes with mu': rho(A1 u A2)(B1 u B2) = rho A1 B1 u rho A2 B2, with rho = the cartesian product-comparison (lax_Pf) and mu = union. Modelling the finite powerset Mathlib-free by characteristic functions Pf T := T->Bool (= covariant powerset over a Fintype; union = pointwise or, rho = pointwise and of projections), kappa_distrib_mult_fails machine-checks (kernel decide, NO axioms) that this coherence FAILS at the off-diagonal position (0,1): product-of-unions (full 2x2 square) strictly exceeds union-of-products (its diagonal) -- the exact 4-vs-2 gap the Pf harness reports. Mirror oneLeaf_E2_holds: an arity-<=1 leaf has no product, kappa degenerates to id, and the same square holds by rfl (non-branching => E2' holds). This formalises the POSITION-FIBRE content of the branching E2'-failure (the datum the full-container diagram inflates via T_M/G_M); the container-level MixedDistrib assembly for Pf is NOT built (no Finset in Lean-core), so the full-morphism non-associativity remains computed-only (bikleisli-pf-nonassoc).",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": "2026-07-29-effect-coeffect-arrows.md",
+      "lean": "Containers.BranchingObstruction.kappa_distrib_mult_fails",
+      "note": "Containers/BranchingObstruction.lean, sorry-free, zero warnings; kappa_distrib_mult_fails / kappa_not_distributive_over_union / oneLeaf_E2_holds depend on NO axioms (pure kernel decide, not even propext). SCOPE (honest): this machine-checks the fibrewise obstruction product-of-unions != union-of-products that IS the position content of E2'-failure, NOT the full container-level distrib_mult inequality (which needs Pf as a Cont-monad = Finset, unavailable Mathlib-free; that transport is the positive apparatus of BiKleisliAffine run in reverse, still computed-only in bikleisli.py). Pf chosen as the minimal branching monad whose Ahman-Bauer T_M even exists (idempotent+commutative mu => distinct leaf-labels => mu^T well-defined); bounded-arity branching (1+X^2) fails earlier (mu^T backward ill-defined). Complements the positive Lean coverage (bikleisli-affine-general) with the negative half.",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "plotkin-turi-answer",
+    "approach": "Neil's Plotkin-Turi question: YES for lambda (EM bialgebra, all M) via lambda-entwining; the kappa/arrow face is the operational dual, obstructed by branching. Two dual faces coincide only for arity<=1.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-29-effect-coeffect-arrows.md",
+    "children": []
+   },
+   {
+    "id": "affine-classification",
+    "approach": "T1+T2 (PROVE 2026-07-30). POSITIVE classification of mode 3 + E2' gap closure. TFAE for cartesian M: (i) Arr_M exists; (ii) M non-branching; (iii) M=E+A*X as a functor. NEW: (ii)<=>(iii) by splitting M1=E|_|A by arity. MONAD PIN two levels: (Set-monad) structures on E+A*(-) <=> monoids N=E|_|A, unit in A, E a two-sided ideal of LEFT ZEROS (aborting gamma:AxA->E+A allowed) -- CORRECTS PROVE.md 'A a monoid'. (Polynomial/cartesian, where T_M lives) = NON-aborting <=> A a submonoid + E a left A-set = writer-with-absorbing-exceptions M=E+A*X. Aborting monoids (e.g. nilpotent z^2=0) are valid Set-monads but mu^M destroys a leaf => non-cartesian => Ahman-Bauer T_M undefined => outside arrow class. T2: E2' holds for ALL non-branching M (every P* product has <=1 factor => kappa = identity(unary)/eta^M(nullary) => E2' degenerates to associativity of N; the >=2-leaf product-comparison obstruction never forms), closing the inherited general-j gap.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-30-affine-classification.md",
+    "note": "Corrects PROVE.md guess. 'affine' clash flagged: arity<=1 (M1 unrestricted) != Kock-affine (M1=1, forces Id). Gaps: line-by-line E1'/E3'/E4' nullary chase not written (degenerate, machine-verified); Dirichlet-tensor and Lean of the bijection are next targets.",
+    "children": [
+     {
+      "id": "affine-monad-monoid-bijection",
+      "approach": "scratch/monad-comonad-transfer/affine_classify.py: enumerate all (e_A,sigma,gamma) vs all monoids on N=E|_|A with unit in A + E left-zero ideal; EXACT bijection, 0 mismatch up to |E|=3,|A|=2 (911250 candidates) and |E|=1,|A|=3. Sanity: |E|=1,|A|=1->Maybe; |E|=2,|A|=1->exception E+(-); |E|=0,|A|=2->4 two-elt monoids.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": null,
+      "children": [],
+      "lean": "Containers.AffineClassification.classification_1_1"
+     },
+     {
+      "id": "cartesian-bifurcation-and-E2prime",
+      "approach": "scratch/monad-comonad-transfer/affine_e2prime.py: builds affine monads from monoids; mu_cartesian True for 2+3X(A=Z/3),1+2X(A=Z/2), False (leaf destroyed) for nilpotent z^2=0 and auto-found aborting |E|=2 (T_M's mu crashes for want of a backward value). E1',E3',E4',E2' ALL PASS for 2+3X and 1+2X on U1,A1({a:2,b:1}),A3({a:2,b:2}); biKleisli arrow-assoc 0 violations (15625, 729).",
+      "role": "attempt",
+      "trust": "computed",
+      "file": null,
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "arrow-freyd-costrength",
+    "approach": "Theorem B (PROVE 2026-07-29 pm): with tensor = CARTESIAN product x on Cont, the non-branching biKleisli category IS a genuine Hughes arrow / Freyd category. arr(phi)=eta^T.phi.eps (id-on-objects functor, Prop 1); first(f)=tau_{q,c}.(f x id).sigma_{p,c}. G_M ALWAYS costrong (sigma_G, Lemma 2, all M); T_M strong for x IFF non-branching (Lemma 3). Hughes laws L3-L8 exhaustive PASS for Maybe & Writer/Z2 (span affine E+A*X normal form). MAIN: Arr_M is a Hughes arrow/Freyd category <=> M non-branching (Thm A + B). Branching fails TWICE: assoc/E2' (merging) AND no natural strength (leaf-symmetry).",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-29-effect-coeffect-arrows-first.md",
+    "note": "Resolves Gap 3 of the morning result. Packaging cites Uustalu-Vene/Power-Robinson/Atkey/Jacobs-Heunen-Hasuo (folklore). Gaps: symbolic L3-L8 for arbitrary affine M (mechanical); single uniform (=>) for all branching M (proved by 2 symmetry-types: Pf transposition, List merge).",
+    "children": [
+     {
+      "id": "costrength-sigma-all-M",
+      "approach": "Lemma 2: sigma_G : G(pxc)->Gp x c natural for EVERY M (G-positions are a single M-structure, no product over leaves; M(inl) + eta.inr). Coeffects always costrong. Machine-verified natural under merge for Pf & Maybe.",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-07-29-effect-coeffect-arrows-first.md",
+      "children": []
+     },
+     {
+      "id": "strength-tau-iff-nonbranching",
+      "approach": "Lemma 3: a NATURAL tensorial strength tau_T : T_M(-) x (=) => T_M(- x =) for x exists IFF M non-branching. (<=) canonical (|lv|<=1), natural, strength unit+mult hold (Maybe/Writer). (=>) branching: backward = distributivity prod_b(A_b (+) C) -> (prod_b A_b)(+)C; Yoneda on A_b=empty forces d=leaf-projection pi_i (fixed leaf), then leaf-transposition (Pf, symmetric) or leaf-reindexing (List, ordered) contradicts fixed i. Total non-natural strengths exist (priority rule, passes strength-mult) => obstruction is NATURALITY/symmetry, DISTINCT from E2'/associativity.",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-07-29-effect-coeffect-arrows-first.md",
+      "note": "Corrects the a-priori guess 'no total strength': total strengths exist but break leaf-symmetry. Machine-witnessed: Pf swap a<->b (distinct c-vals u vs v), List merge; Yoneda projection count (2 nat maps C^2->C, both proj) verified.",
+      "children": [
+       {
+        "id": "arrows-first-harness",
+        "approach": "scratch/monad-comonad-transfer/arrows_first.py: builds x, sigma_G, tau_T, first, arr; L3-L8 exhaustive for Maybe (L5 up to 144) & Writer/Z2 (L5 1024/1024); Pf priority-tau total+strength-axioms but naturality FALSE (witness printed); List merge witness.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": null,
+        "children": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "branching-commutativity-independent",
+    "approach": "P1=non-branching (E+AxX, arity<=1), P2=commutative (Kock double strength), P3=affine (M1=1) are PAIRWISE logically independent on Set-monads (all three 2x2 faces realised by explicit witnesses). Cube has ONE hole: non-branching & affine => commutative (=Id or const-1, Thm C), i.e. non-comm affine => branching. Delivers the standalone papers Related-conditions novelty remark: non-branching is NOT a restatement of commutativity/affineness.",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-07-31-branching-commutativity-affine-independence.md",
+    "note": "PROVE 2026-07-31. Load-bearing companion to affine-classification. Lemma A: full E+AxX commutativity criterion = (A comm) & (|E|<=1) & (trivial action) -- THREE independent non-comm sources (writer/exception/action); load-bearing writer-over-noncomm-monoid case done by hand + machine. Lemma B: magma monads non-comm via medial-law failure (Kock: comm monad => ops are homs => * medial). Thm C: the unique dependency. All witnesses machine-verified (scratch/branching-commutativity/).",
+    "sources": [],
+    "children": [
+     {
+      "id": "ea-commutativity-criterion",
+      "approach": "Lemma A: monad E+AxX commutative <=> A commutative AND |E|<=1 AND action trivial. Hand double-strength chase (4 cases) + exhaustive sweep of all 73 structures |A|<=3,|E|<=2, 0 mismatches. Includes load-bearing: Writer over noncomm N3={1,a,b} non-comm (Psi=(a.b)!=(b.a)=Phi).",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-07-31-branching-commutativity-affine-independence.md",
+      "note": "commutativity.py + criterion_sweep.py. Independent sanity: reproduces exception monad E+(-) non-comm iff |E|>=2.",
+      "children": []
+     },
+     {
+      "id": "magma-medial-noncomm",
+      "approach": "Lemma B: free magma and free idempotent magma monads non-commutative, via exhibited finite medial-law-violating models (2-elt magma; 3-elt idempotent magma). Uses Kock/Linton: commutative monad => every operation a homomorphism => binary op medial in all algebras (contrapositive). Idempotent magma affine (M1=1); free magma non-affine (M1 Catalan).",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-07-31-branching-commutativity-affine-independence.md",
+      "note": "magma_search.py. Sanity: left-zero band IS medial (so a*b!=b*a alone does NOT witness monad non-commutativity).",
+      "sources": [],
+      "children": []
+     },
+     {
+      "id": "hole-nonbranch-affine-implies-comm",
+      "approach": "Theorem C: non-branching & affine => M1=|E+A|=1 => M=Id or const-1 monad => commutative. The unique cube hole (T,F,T); equivalently every non-commutative affine monad is branching.",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-07-31-branching-commutativity-affine-independence.md",
+      "children": []
+     },
+     {
+      "id": "pairwise-faces-assembled",
+      "approach": "Assembly: witness cube realises 7/8 cells (hole (T,F,T)); all three 2x2 faces P1xP2, P1xP3, P2xP3 fully populated => pairwise independence. Machine-assembled from live comm/affine checks.",
+      "role": "attempt",
+      "trust": "computed",
+      "file": "2026-07-31-branching-commutativity-affine-independence.md",
+      "note": "assemble.py: faces FULL, unique hole confirmed.",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "atkey-index-degree",
+    "approach": "PROVE 2026-07-31. Conjecture (PROVE.md): the non-branching dichotomy is a GRADED Freyd statement -- Atkey's index of Arr_M graded by M's arity, arity<=1 = index-collapse = bottom of a tower arity<=n. RESOLVED NEGATIVE. (R1/Cor2.3) The conjecture conflates two DISTINCT NESTED boundaries: index-collapse to a PLAIN (non-indexed) Freyd category = W=G_M=Id = M=Id (Prop2.1), STRICTLY STRONGER than non-branching (M=E+AxX contains Maybe/Writer with W!=Id). So {M=Id} strictsubset {non-branching} strictsubset {all M}; by Thm B non-branching M!=Id give genuine Hughes arrows = INDEXED Freyd cats (W!=Id), NOT plain ones. Atkey's index measures the COEFFECT (M!=Id), orthogonal to & coarser than branching. (R2/Thm3.1) ARITY GAP: cartesian max-arity in {<=1, infinity}; a max-arity-n>=2 shape self-plugs to n^2>n, contradiction. No finite rung >=2 -- the conjectured tower is EMPTY of monads. (R3/sec4) The natural (N,x) leaf-count grade FAILS: Pf uniform-leaf arrows still non-assoc (12/13824), grade non-multiplicative (grade(f)=2,grade(g)=1->grade(g.f)=1) because idempotent union mu^T MERGES; and within the PI-coint class branching FORCES merging (mu_T distinct-labels assertion excludes multiset/List), so branching/merging inseparable and Thm A stands. Net: the dichotomy is Boolean because its invariant (max arity) is two-valued on the valid monads; no arity grade exists.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-07-31-atkey-index-degree.md",
+    "note": "Negative resolution of the PROVE.md conjecture AS STATED. Proved: Prop2.1 (G_M=Id<=>M=Id), Cor2.3 (nested boundaries), Thm3.1 (arity gap). Computed: sec4 leaf-grade failure (graded.py, Pf). Reasoned: branching/merging inseparable in PI-coint class. Does NOT claim 'no grading whatsoever' (would quantify over all PCMs) -- refutes the two natural gradings + corrects the Atkey identification. OPEN (gap 2): coeffect-side graded-comonad grade (Vollmer-Paviotti-Orchard Gmd, CT2026) -- inaccessible this session (no-browse). Atkey ENTCS 229 exact indexed-Freyd def deferred (gap 3); sec2 avoids depending on it. Corrects PROVE.md's 'non-branching = index collapse' guess.",
+    "sources": [],
+    "children": [
+     {
+      "id": "nested-boundaries",
+      "approach": "Prop2.1: G_M=Id (as comonad on Cont) <=> M=Id (M o P =~ P naturally forces M=~Id). Cor2.3: {M=Id} strictsubset {non-branching E+AxX} strictsubset {all}; index-collapse=M=Id is a PROPER sub-condition of non-branching; Maybe/Writer are non-branching with W=G_M!=Id => INDEXED (not plain) Freyd. Refutes 'non-branching = index collapse'. Rests only on Thm B + elementary iso-chase, NOT on Atkey's precise def.",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-07-31-atkey-index-degree.md",
+      "children": []
+     },
+     {
+      "id": "arity-gap",
+      "approach": "Thm3.1: cartesian Set-monad has max leaf-arity in {<=1, infinity}. Cartesian mu preserves leaves (leaf-set of mu(t)=disjoint sum); a max-arity-n>=2 shape s plugged into each of its n leaves is an M-shape of arity n*n>n, contradiction. No finite rung >=2. Sanity: free-magma arities 2,3,4,8,... (self-plug n->n^2).",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-07-31-atkey-index-degree.md",
+      "children": []
+     },
+     {
+      "id": "leaf-grade-fails",
+      "approach": "sec4: the natural (N,x) leaf-count grade does not restore associativity for branching M. graded.py (Pf, A1): uniform-leaf arrows 12/13824 assoc violations; 128 grade-multiplicativity violations (grade(f)=2,grade(g)=1->grade(g.f)=1) because Pf mu^T=union is idempotent/merging. Multiset outside PI-coint class (mu_T:234 distinct-labels assertion fails on [a,a,b]) => within class branching forces merging => Thm A ('category<=>non-branching') stands uncorrected.",
+      "role": "attempt",
+      "trust": "computed",
+      "file": null,
+      "note": "scratch/monad-comonad-transfer/graded.py. Conceptual reason (merging inseparable from branching in PI-coint) is reasoned, not machine-checked over all A.",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "crown-tfae-splits-strict-chain",
+    "approach": "REFUTATION + corrected result (2026-08-05 fibrational-crown PROVE). The conjectured TFAE [(1) T_M preserves cartesian morphisms <=> (2) M cartesian monad <=> (3) lambda invertible / strict Beck-Chevalley <=> (4) reverse kappa exists <=> (5) M non-branching] is FALSE. The five conditions form a STRICT 4-level chain: (3) lambda-inv/strict-BC = PURE WRITER A x (-)  (STRICT SUBSET) (5)=(4) non-branching = writer+exception E + A x (-)  (STRICT SUBSET) (2)=(1) cartesian monad = T_M preserves cartesian morphisms  (STRICT SUBSET) polynomial/Pi-Mendler. Only (4)<=>(5) is a biconditional (the arrow core, already proved). Splitters (MacBeth-verified): LIST is a cartesian monad (free monoid, no leaf-merging) yet BRANCHING (arity N) => (2) does NOT imply (5); MAYBE=X+1 is non-branching but str at the nullary shape is (1+1)->1, not iso => (5) does NOT imply (3); strict BC forces M1=1 => pure writer. Slogan 'containers preserve cartesian morphisms = M non-branching = strict BC' conflates three inequivalent levels and is retracted from book+grant. G_M-side 'preserves cartesian morphisms for all M' remains TRUE (Lean-certified) and is NOT the same statement.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-08-05-cartesian-preservation-nonbranching.md",
+    "children": [
+     {
+      "id": "crown-boundary-table",
+      "approach": "Theorem 1 (proved 2026-08-05, crown-gap-closure.md): within Pi-Mendler, (1) T_M preserves cartesian morphisms <=> (2) M cartesian monad. Lemma 1.1 (functor half, pullback/reindexing): (1)<=>cartFun, since T_M(u,f) backward = (prod_b f_{x_b}) o (u_*)^*, a bijection iff the leaf-tracking map u_*:lv(m)->lv(Mu m) is bijective (product-reindexing lemma) -- the T_M-shadow of the Lean G_M onMor_cartesian (reindex along u_* vs identity fibre). Lemma 1.2 (2)=>(1) trivial. Lemma 1.3 unary unit = Mendler i_P. Lemma 1.4 (1)+PiMendler=>(2): kappa_mu:I->>lv(mu mm) surjective from support/parametricity (no creation), injective from cartFun label-freeness + kappa_mu label-preservation (no merge) => bijective => cartMu. Reader/State (polynomial functor, non-cartesian mu) are the general (1)!=(2) split, excluded from Pi-Mendler -- the two MISMATCH rows. [CORRECTED 2026-08-06, state-reader-ladder-census.md: the exclusion reason is NOT 'no i_P' (a natural UNIT laxator i_P DOES exist, project to any leaf) but 'no j' -- Reader's diagonal mu / State's threading DROP off-diagonal inner leaves => kappa_mu:I(mm)->lv(mu mm) NOT total => no multiplication laxator j => no mu^T.] Verified boundary_table.py + gap_closure.py. ADDENDUM (heartbeat-4 adversarial re-audit, sec 7): Lemma 1.4's phrase 'cartFun => polynomial' is FALSE in general -- Bag (free commutative monoid / multisets) is cartFun AND leaf-cartMu yet NOT a cartesian monad (fails the connected pullback {a,a'}->z0<-{b,b'}: |Bag P|=10 vs |pullback|=9, bag_probe.py). Gap CLOSED by new Lemma 1.4' (label-rigidity): Pi-Mendler leaves admit no label-fixing automorphism (else P*=prod_{lv}P is ill-defined), so within Pi-Mendler cartFun DOES force polynomial; Bag is excluded precisely because {a,a}'s two leaves carry the multiplicity swap (bag_pimendler_obstruction.py). Theorem 1 conclusion unchanged; Bag now joins Reader/State as an outside-Pi-Mendler witness from the OPPOSITE side (leaf-cartesian-but-analytic vs polynomial-but-mu-merges), showing the Pi-Mendler hypothesis = label-rigidity = exactly what makes cartFun equivalent to polynomial.",
+      "role": "attempt",
+      "trust": "proved",
+      "file": "2026-08-05-crown-gap-closure.md",
+      "children": []
+     },
+     {
+      "id": "lambda-inv-implies-nonbranching-general",
+      "approach": "Theorem 2 (proved 2026-08-05, crown-gap-closure.md): (3) lambda-invertible => (5) non-branching, all arities. Engine = image shape-correlation (Lemma 2.1): str(w)=(M pi_b w)_b has all components of one shape M!(w). Lemma 2.2: if a shape has k>=2 leaves and |M1|>=2, str is NON-SURJECTIVE at arity k (build codomain tuple with two different component-shapes alpha!=beta, outside the image). Lemma 2.3: |M1|>=2 automatic, since unit shape has 1 leaf (i_P, Lemma 1.3) differs from the k>=2 shape. So (3) forces str iso at arity k, contradiction => no arity>=2. Reader escapes only because |M1|=1 and unit non-unary => not Pi-Mendler (correctly excluded). Cleaner than the companion cross-term sketch. Verified gap_closure.py (unitArity, str surjectivity, missing shape-mismatch tuples for List/Pf).",
+      "role": "attempt",
+      "trust": "proved",
+      "file": "2026-08-05-crown-gap-closure.md",
+      "children": []
+     },
+     {
+      "id": "state-reader-outside-pi-mendler",
+      "approach": "REFUTATION of the PROVE.md 2026-08-06 census claim 'Reader/State are Pi-Mendler non-cartesian monads witnessing cartesian STRICT-SUBSET Pi-Mendler'. PROVED FALSE (2026-08-06-state-reader-ladder-census.md). Lemma 1 (Yoneda): a natural multiplication laxator j:P*(mu mm)->(P*)*(mm) = Prod_{lv(mu mm)}->Prod_{I(mm)} exists IFF a TOTAL label-preserving kappa_mu:I(mm)->lv(mu mm) exists (j = reindexing along kappa_mu); kappa injective <=> mu cartesian, kappa NON-total <=> mu drops a leaf => NO j. Reader (mu=diagonal) and State (mu=state-threading) DROP off-diagonal/off-state inner leaves whose labels are generically absent from mu mm => kappa_mu not total => NO mu^T => Reader/State NOT Pi-Mendler (T_M is an endofunctor with a unit but no multiplication). The compute pass's 'i_P=Delta:E->ExE single-valued' is the WRONG-VARIANCE section of kappa_mu, not j; its single-valuedness is irrelevant. CORRECTS crown Lemma 1.3 'no i_P' reason: a natural UNIT laxator i_P DOES exist (project to any leaf, Nat(Prod_{lv eta s}ev_s,ev_s) nonempty); the real obstruction is the MULTIPLICATION j. Crown CONCLUSION (Reader/State outside Pi-Mendler) unchanged and reinforced. Corrected census = TRICHOTOMY of non-cartesian mu: MERGE (Pf, kappa total non-injective, INSIDE Pi-Mendler, witnesses cartesian STRICT-SUBSET Pi-Mendler) vs DROP (Reader/State, kappa non-total, OUTSIDE) vs SYMMETRY (Bag, P* ill-defined, OUTSIDE). cartesian STRICT-SUBSET Pi-Mendler keeps its classical witness Pf, NOT Reader/State. Verified kappa_test.py (Reader/State non-total S=3, |E|=2..5; Pf/List total; Pf forced-merge |I|=3>|lv|=2). GENERAL-CASE CLOSURE (2026-08-06 supplement, item C): the drop is proved for ALL |E|,|S|>=2 at minimal |X|>=2 via a UNIFORM witness (constant diagonal + one fresh off-diagonal); the |X| bound is |X|>=2, NOT 'large enough'. State reduced to the Reader diagonal by taking outer shape h=id (State's mu(mm)(s0)=F(s0)(s0) = Reader's mu(G)(e)=G(e)(e) on X-labels); its S^S extra shapes are irrelevant to the drop. Lemma 1 Yoneda chain independently re-derived (Prod_L ev_{a_L}=Hom(Coprod_L y_{a_L},-); Nat(...,Hom(y_b,-))=Coprod_L[a_L=b]) and the laxator direction I(mm)->lv(mu mm) reconfirmed forced by 'mu^T backward = target->source'. Exhaustive no-total-kappa in general_drop.py (|E|,|S| in 2..8).",
+      "role": "attempt",
+      "trust": "proved",
+      "file": "2026-08-06-state-reader-ladder-census.md",
+      "children": [
+       {
+        "id": "kappa-totality-yoneda",
+        "approach": "Lemma 1: Nat_P(Prod_L ev_{a_L}, Prod_i ev_{b_i}) = Prod_i {L : a_L=b_i}, via Prod_L ev_{a_L}=Hom(coprod_L y_{a_L},-) + Yoneda. => natural j exists iff every inner-leaf label is realized in lv(mu mm) (kappa_mu total); j is then reindexing. Also gives unit laxator i_P always exists. Rigorous, definition-agnostic (directions forced by 'T_M is a monad on Cont').",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-08-06-state-reader-ladder-census.md",
+        "children": []
+       },
+       {
+        "id": "kappa-totality-compute",
+        "approach": "kappa_test.py: enumerate mm; test existence of total label-preserving kappa_mu:I(mm)->lv(mu mm). Reader/State NON-total (drop witnesses); Pf/List total; Pf forced non-injective (merge). General |E|=2..5 off-diagonal drop.",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-08-06-state-reader-ladder-census.md",
+        "children": []
+       },
+       {
+        "id": "reader-state-drop-lean",
+        "approach": "Lean 4 (core, no Mathlib): ReaderStateOutsidePiMendler.lean machine-checks the DROP rung of the trichotomy -- the finite combinatorial core of Lemma 1 (kappa_mu-totality), decide-based. ReaderKappaTotal G := forall inner token i:BoolxBool, exists diagonal leaf e:Bool, G e e = G i.1 i.2 (the pointwise 'total label-preserving kappa_mu exists' criterion). Reader witness Gw=![![l0,l0],![l1,l0]] (labels in bespoke 3-elt Lbl ~= Fin 3, chosen so decide stays axiom-free; Fin's DecidableEq routes through propext): reader_kappa_not_total shows the off-diagonal token (true,false) [label l1] is matched by no diagonal leaf [all l0] (reader_diagonal_drops), so no total kappa_mu => no j => Reader NOT Pi-Mendler. StateKappaTotal + Fw (S=Bool, threading) give the same DROP for State (state_kappa_not_total, state_threading_drops: inner token (false,true) [label l2] dropped, mu Fw all l0). reader_kappa_total_of_const: honest non-vacuity -- constant G IS total, so the failure is label-specific (census sec 2 'pick G e e' absent from diagonal'), not structural. Bundle: reader_state_outside_pi_mendler. Contrasts the MERGE rung (Pf, TMCartesianBoundary.lean, kappa total non-injective, INSIDE Pi-Mendler) and cartesian rung (Maybe, same file). Does NOT re-formalise the Yoneda reduction (Lemma 1, node kappa-totality-yoneda); certifies the finite datum it lands on.",
+        "role": "attempt",
+        "trust": "lean-verified",
+        "lean": "Containers.ReaderStateOutsidePiMendler.reader_state_outside_pi_mendler",
+        "file": "2026-08-06-state-reader-ladder-census.md",
+        "children": []
+       },
+       {
+        "id": "reader-state-drop-general-uniform",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-08-06-state-reader-ladder-census.md",
+        "approach": "PROVED (symbolic, via Lemma 1): for the explicit mm = constant diagonal + one fresh off-diagonal (G(e)(e)=0, G(0)(1)=1), mu(G) is all-0-labelled while inner token (0,1) has label 1, so NO total label-preserving kappa_mu:I(mm)->lv(mu mm) => (Lemma 1) no natural j. Uniform for all |E|,|S|>=2 at minimal |X|>=2. State reduced to Reader diagonal at outer shape h=id. Computation general_drop.py (sizes 2..8) is confirmatory (exhaustive no-total-kappa), not load-bearing. Closes PROVE.md item (C).",
+        "children": []
+       },
+       {
+        "id": "proof-relevance-boundary",
+        "approach": "Reader/State carry the box (proof-irrelevant forall) predicate MONAD lifting but not the proof-relevant Pi (Ahman-Bauer T_M) monad; boundary = proof-relevance, as the two opposite total-directions of the same label-matching relation R. Answers Neil UID-91.",
+        "trust": "proved",
+        "file": "2026-08-07-proof-relevance-boundary.md",
+        "role": "attempt",
+        "children": [
+         {
+          "id": "box-mult-iff-reverse-total",
+          "approach": "MAIN NEW: box predicate monad lifting M-hat(X,P)=(MX, forall-leaf P) has its multiplication condition (forall P: box-box P(mm) => box P(mu mm)) hold IFF reverse-total(mm). Both directions general (all M): (<=) trivial; (=>) instantiate single test predicate P0=Lab(I(mm)). Unit always lifts. box = direct-image M(-) on subobjects (Hermida-Jacobs / Katsumata).",
+          "trust": "proved",
+          "file": "2026-08-07-proof-relevance-boundary.md",
+          "role": "premise",
+          "children": []
+         },
+         {
+          "id": "pi-forward-total-recap",
+          "approach": "RECAP (Part 1): Pi T_M-monad multiplication laxator j exists iff forward-total, by Yoneda (Lemma 1). Direction forced by backward container map target->source. Cited from census.",
+          "trust": "proved",
+          "file": "2026-08-06-state-reader-ladder-census.md",
+          "role": "premise",
+          "children": []
+         },
+         {
+          "id": "reader-state-reverse-total-universal",
+          "approach": "Part 3: reverse-total holds for ALL mm, all E,S,X. Reader: surviving leaf e IS diagonal token (e,e). State: surviving leaf s0 IS threaded token (s0,h(s0)). So box lifts for Reader/State; forward fails (census witness) so Pi does not. The boundary.",
+          "trust": "proved",
+          "file": "2026-08-07-proof-relevance-boundary.md",
+          "role": "premise",
+          "children": []
+         },
+         {
+          "id": "fourfold-z2-grading",
+          "approach": "BONUS: four canonical leaf-liftings Pi/Sigma/box/diamond have monad-mult exist iff R total in direction = (is-limit) XOR (is-proof-relevant). {Pi,diamond}->forward, {Sigma,box}->reverse. Verified brute-force over all P: box<=>reverse, diamond<=>forward, zero mismatches (Reader (2,2),(2,3),(3,2); State (2,2)).",
+          "trust": "computed",
+          "file": "2026-08-07-proof-relevance-boundary.md",
+          "role": "attempt",
+          "children": []
+         },
+         {
+          "id": "sigma-monad-reader-state-proved",
+          "approach": "PROVED for Reader (all E) and State (all St). File 2026-08-07-sigma-monad-proved.md. Method: REDUCTION LEMMA -- every backward position map of eta^Sigma/mu^Sigma/T(-) is a coproduct-pushforward Sigma_alpha along a label-preserving index function; Sigma is FAITHFUL (test at constant singleton family P=1), so each monad law <=> a single index-function identity; forward parts are M's own unit/assoc. The three backward identities: (U1) inner(sigma(eta_MS m,L))=L, (U2) outer(sigma(M(eta)m,L))=L, (A) section pentagon (threads associatively). Reader: sigma=constant diagonal (e->(e,e)), both components=L => U1,U2 free; diagonal composes to triple-diagonal => A. State: sigma=threaded (s->(s,h(s))), outer always=L => U2 free; eta next-state=id => U1; threading assoc = State's own mu-assoc => A. Verified exhaustively: State St=2 ALL 16384 depth-3 nestings PASS; Reader E=2 over 2-shape base (256) PASS; larger Reader E=4/State St=3 sampled PASS; negative control fails. SCOPE: 'reverse-total => Sigma-monad' in FULL generality is NOT proved -- reverse-total gives sigma pointwise (mult DEFINED) but (U1,U2,A) COHERENCE is strictly stronger; Reader/State supply it via diagonal/threading. General theorem = Theorem 3.1: Sigma-monad IFF shape-natural label-preserving section satisfying (U1,U2,A). LEAN 2026-08-08: BOTH rungs machine-checked in ReaderStateOutsidePiMendler.lean -- reader_sigma_monad_lifting (SS7) + state_sigma_monad_lifting (SS9), each the three monad laws by rfl at leaf-index E=St=Bool over an ARBITRARY base container (S,P : Type u), axiom-free (paper's all-E/all-St generality on the monad parameter stays paper-proved, same Bool-witness convention as the DROP + box rungs in this file). Triptychs reader_proof_relevance_triptych/state_proof_relevance_triptych display Pi-fails/box-holds/Sigma-holds at one base monad.",
+          "trust": "lean-verified",
+          "file": "2026-08-07-sigma-monad-proved.md",
+          "lean": "Containers.ReaderStateOutsidePiMendler.state_sigma_monad_lifting",
+          "role": "attempt",
+          "children": [
+           {
+            "id": "sigma-reduction-lemma",
+            "approach": "Lemma 2.1+2.2: backward maps are Sigma-pushforwards; Sigma faithful (P=1). Monad law <=> index-function identity. Forward parts = M monad laws.",
+            "trust": "proved",
+            "file": "2026-08-07-sigma-monad-proved.md",
+            "role": "premise",
+            "children": []
+           },
+           {
+            "id": "sigma-reader-diagonal-coherent",
+            "approach": "Reader diagonal section sigma(mm,e)=(e,e) satisfies (U1),(U2),(A) all E; A = diagonal composes to triple-diagonal. LEAN 2026-08-07: ReaderStateOutsidePiMendler.lean SS7-8, reader_sigma_left_unit/right_unit/assoc all rfl, leaf-index E=Bool over arbitrary base (S,P), axiom-free (all-E stays paper-proved).",
+            "trust": "lean-verified",
+            "file": "2026-08-07-sigma-monad-proved.md",
+            "lean": "Containers.ReaderStateOutsidePiMendler.reader_sigma_monad_lifting",
+            "role": "premise",
+            "children": []
+           },
+           {
+            "id": "sigma-state-threading-coherent",
+            "approach": "State threading section sigma(mm,s)=(s,h(s)) satisfies (U1: eta next-state=id),(U2: outer=s always),(A: threading assoc = State mu-assoc) all St. LEAN 2026-08-08: ReaderStateOutsidePiMendler.lean SS9-10, state_sigma_left_unit/right_unit/assoc all rfl, leaf-index St=Bool over arbitrary base (S,P), axiom-free (all-St stays paper-proved); threaded section = genuinely different (U1,U2,A) instance from Reader's diagonal; key defeq sMu(sDd)=sMu(sEe) = State mu-assoc.",
+            "trust": "lean-verified",
+            "file": "2026-08-07-sigma-monad-proved.md",
+            "lean": "Containers.ReaderStateOutsidePiMendler.state_sigma_monad_lifting",
+            "role": "premise",
+            "children": []
+           },
+           {
+            "id": "reverse-total-implies-coherent-section-REFUTED",
+            "approach": "RESOLVED 2026-08-08 (file 2026-08-08-sigma-monad-is-triangle-monoid.md): reverse-total does NOT imply Sigma-monad. KEY IDENTITY: T^Sigma_M(C) = M <| C (left composition-product); so Sigma-monad <=> M is a <|-monoid in Cont (a CONTAINER MONAD) <=> (via Cont~=Poly ff strong-monoidal into [Set,Set]) M a Set-monad with polynomial structure. The 'canonical section' sigma is exactly mu_M's backward position map; (U1,U2,A) ARE the <|-monoid unit/assoc laws read on positions (hence automatic once M is a container monad -- explains the whole 08-07 Reader/State computation: they are <|-monoids, Reader=diagonal comonoid E, State=store). COUNTEREXAMPLE = Bag (finite multiset monad): leaf-supported and reverse-total (mu=union is a leaf-BIJECTION, sigma=id) but NOT a container functor -- fails connected-pullback preservation Bag(AxB) !~= BagA x_{Bag1} BagB (|Bag(2x2)|_2=10 != 9; witness {(0,0),(1,1)} vs {(0,1),(1,0)} same (projA,projB), Bag forgets pairing). So T^Sigma_Bag is not even a FUNCTOR on Cont (restrict to Set<->Cont: functoriality would give Bag a natural label-preserving leaf assignment = container structure, which Bag lacks). reverse-total = pointwise/object-level shadow; container-monad structure (analytic vs polynomial) is the real content. Meta-pattern intact, 6-for-6.",
+            "trust": "proved",
+            "file": "2026-08-08-sigma-monad-is-triangle-monoid.md",
+            "role": "attempt",
+            "children": [
+             {
+              "id": "sigma-lifting-is-triangle-mult",
+              "approach": "Prop 2.1: T^Sigma_M(C)=M<|C on objects (shapes MS = M applied to C-shapes; positions COPROD_{lv(m)}P(x_b) = composite polynomial positions) and morphisms (M<|phi); eta^Sigma=eta_M<|(-), mu^Sigma=mu_M<|(-). Position identity verified against harness T_container for Reader/State.",
+              "trust": "proved",
+              "file": "2026-08-08-sigma-monad-is-triangle-monoid.md",
+              "role": "premise",
+              "children": []
+             },
+             {
+              "id": "sigma-monad-iff-container-monad",
+              "approach": "Thm 3.1: T^Sigma_M monad on Cont <=> M a <|-monoid in (Cont,<|,y) <=> M a Set-monad with polynomial structure. Proof: (2<=>3) Cont~=Poly ff strong-monoidal (<|->o, y->Id) reflects/creates monoids; (2=>1) monoid A gives A(x)- a monad; (1=>2) structure maps are whiskered eta_M<|-, mu_M<|-, evaluate at C=y. (U1,U2,A) = backward parts of <|-monoid laws => automatic. Recovers 08-07 Reader/State.",
+              "trust": "proved",
+              "file": "2026-08-08-sigma-monad-is-triangle-monoid.md",
+              "role": "premise",
+              "children": [
+               {
+                "id": "lean-sigma-triangle-monoid-general",
+                "approach": "Lean 4 (core, no Mathlib): the general identity T^Sigma_M C = M <| C (Container.sigmaLift_eq_seq, defeq) and the theorem \"<|-monoid M => M <| - is a monad on Cont\" (Container.sigmaMonad). eta^Sigma = eta_M <| -, mu^Sigma = mu_M <| -; the three monad laws (sigma_monad_left_unit/right_unit/assoc) reduce to Ms <|-monoid laws whiskered by C, glued by monoidal coherence (unitors/associator/pentagon/triangle) which is transport-free (rfl) in Cont. Reader (diagonal <|-monoid on E) and State (store <|-monoid on S) recovered as one-line corollaries readerSigmaMonad/stateSigmaMonad, all monoid laws rfl. Axiom-clean (Quot.sound only).",
+                "trust": "lean-verified",
+                "lean": "Containers.Container.sigmaMonad",
+                "file": "2026-08-08-sigma-monad-is-triangle-monoid.md",
+                "role": "attempt",
+                "children": []
+               }
+              ]
+             },
+             {
+              "id": "bag-not-container-reverse-total",
+              "approach": "Lemma 4.1 (Bag reverse-total: mu=union is leaf-bijection I(mm)~=lv(mu mm)) + Lemma 4.2 (Bag not a container: fails connected pullback A->1<-B; PROOF = cardinality gap |Bag(AxB)|_n=C(n+3,3) vs (n+1)^2 for A=B=2, symbolic not sampled, plus the standard theorem 'polynomial functors preserve connected/wide pullbacks', my seed book-chapter3-which-functors / containers-preserve-connected-not-empty) + Thm 4.3 (T^Sigma_Bag not a functor on Cont, via Set<->Cont restriction forcing a container structure on Bag). Computation scratch/sigma-monad-coherence/bag_not_container.py CONFIRMS (10!=9, 20!=16, explicit collision) and validates the discriminator: List (a container) PASSES the same test (zip bijection).",
+              "trust": "proved",
+              "file": "2026-08-08-sigma-monad-is-triangle-monoid.md",
+              "role": "premise",
+              "children": []
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "id": "proof-relevance-box-lean",
+          "approach": "Lean 4 (core, no Mathlib): ReaderStateOutsidePiMendler.lean extended (sec 4-6) to machine-check the SURVIVING (proof-irrelevant box) side of the boundary, alongside the already-certified DROP failure (reader_kappa_not_total / state_kappa_not_total). For Reader (E=Bool, X=bespoke Lbl~=Fin3) with a genuine propositional predicate P:Lbl->Prop: ReaderBox P m := forall e, P(m e); box UNIT (reader_box_unit: P x => box P (eta x)) and box MULT (reader_box_mult: box-box P mm => box P (mu mm), the diagonal-surviving direction, term fun h e => h e e) both hold unconditionally. reader_box_mult_iff_reverse_total: the box-mult law (forall P) at a fixed mm is EQUIVALENT to reverse-total(mm) -- (=>) instantiates the single test predicate P0 y := exists token i, lab i = y (= Lab(I(mm))), (<=) rewrites each surviving leaf along its witnessing token; reader_reverse_total_always shows reverse-total holds for every mm (each diagonal leaf e IS token (e,e), rfl). State mirror (state_box_unit/state_box_mult/state_box_mult_iff_reverse_total/state_reverse_total_always, threading token (s0,(F s0).1)). Contrast packaged: reader_proof_relevance_boundary and proof_relevance_boundary_reader_state juxtapose FAIL(Pi/kappa) vs HOLD(box) at the same monad. ALL new declarations depend on NO axioms at all (checked #print axioms) -- pure terms / rw / obtain, no decide, no propext. Certifies exactly Neil UID-91's distinction: predicate lifting exists, container monad does not.",
+          "trust": "lean-verified",
+          "lean": "Containers.ReaderStateOutsidePiMendler.proof_relevance_boundary_reader_state",
+          "file": "2026-08-07-proof-relevance-boundary.md",
+          "role": "attempt",
+          "children": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "neil-A-E-predicate-liftings",
+    "approach": "PROVE 2026-08-08 (Neil UID-94). His two canonical predicate liftings of a container X -- All X Y (s,g)=Prod_p Y(g p) and Exists X Y (s,g)=Sum_p Y(g p) -- are our Pi/Sigma liftings; the two bifunctors A X Y=(<<X>>S_Y, All X P_Y) and E X Y=(<<X>>S_Y, Exists X P_Y) satisfy E=<| (composition product) and answer Neil's two flags. (P1) A is a bifunctor Cont_cart x Cont -> Cont: functorial in the 2nd arg for ALL morphisms (rho acts pointwise inside each Pi-factor) but in the 1st arg ONLY on cartesian morphisms. Obstruction = a single Yoneda count (Lemma 1): natural pushforwards A X Y->A X' Y over alpha=(u,phi) <=> sections of the backward position map phi <=> Prod_p phi^{-1}(p); EMPTY if phi non-surjective (NO map exists -- the decisive 'A not on all polynomial functors'), SINGLETON (canonical=phi^{-1}) iff phi bijective. Pi is contravariant in its index, so a container morphism reindexes it the wrong way; E=Sigma pushes forward covariantly along phi (no section needed). THIS IS T_M-lifts-<=>-M-cartesian one categorical level down (instance alpha=mu_M). (P2) A X(A Y C)=A(X<|Y)C=A(E X Y)C, equality of containers: positions by Fubini Prod_p Prod_q=Prod_{(p,q)}, shapes by AC-distributivity + currying; unit A y C=C. Hence A is a LEFT ACTION / left module of the <|-monoidal (Cont,E,1)=(Cont,<|,y) on Cont (object law unconditional; functorial action on Cont_cart). Base-monad-FREE and STRICT -- contrast Orestis's oplax Lambda-join subseteq (the interaction with a base monad's join, a different layer that degrades P2's = to subseteq exactly when the base mu is non-cartesian). Dually E X(E Y C)=E(X<|Y)C is <|-associativity. (P3) mixed law A X(E Y C) vs E(A X Y)C is NOT an equality; comparison = distributivity (kappa entwining), iso IFF every shape of X carries exactly one position (X LINEAR, <<X>>=~S_X x -), STRICTLY finer than non-branching (|P_Xs|<=1): an empty-position shape breaks it (Sum_empty=0 != 1=Prod_empty).",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-08-08-A-E-predicate-liftings.md",
+    "note": "Answers Neil UID-94 directly; feeds greenlit book note on predicate liftings over the Cont->Set fibration. Verified scratch/prove-A-E-verify.py: E=<| 1000/1000; units 500/500; P2 2000/2000 (shape+position multisets); P1 section-count vs exists-surjective/unique-bijective 3000/3000 incl empty edges; P3 iso exactly for linear X ([1],[1,1],[1,1,1] pass; [0],[1,0],[2] fail). Gaps (honest): P2 stated as canonical iso, definitional-= depends on encoding (Lean rung flagged not done); module PENTAGON/TRIANGLE coherence 2-cells not verified (automatic for a strict/rfl encoding, else open) -- flagged speculative. 'No larger 1st-arg subcategory' softened to 'no CANONICAL extension'; the all-polynomial-functors flag rests on the non-surjective NON-existence, which is airtight.",
+    "children": [
+     {
+      "id": "A-first-arg-functorial-iff-cartesian",
+      "approach": "P1. Lemma 1 (Yoneda in Set^P=Prod_p Set): Nat_B(Prod_{p'} B(phi p'), Prod_p B(p)) =~ Prod_p phi^{-1}(p) = {sections of phi}, via Prod_{p'}B(phi p')=Set^P(D,-) with D(p)=phi^{-1}(p) and ev_p=Set^P(y^p,-). Trichotomy: non-surjective=>empty=>no map; surjective-non-injective=>>=2=>no canonical; bijective=>singleton=>canonical phi^{-1}=>functor. 2nd-arg functorial for all morphisms (rho pointwise). RESTATES proof-relevance-boundary (T_M lifts <=> M cartesian) at a single morphism alpha (mu_M instance).",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-08-08-A-E-predicate-liftings.md",
+      "children": []
+     },
+     {
+      "id": "A-module-action-fubini",
+      "approach": "P2. A X(A Y C)=A(X<|Y)C by Prod_p Prod_q=Prod_{(p,q)} (Fubini) on positions and Prod-over-Sigma distributivity (AC)+currying on shapes; unit A y C=C. A = left action of (Cont,<|,y). Strict, base-monad-free; contrasts Orestis oplax Lambda-join subseteq. Builds on E=<| (sigma-monad-is-triangle-monoid) and <|-monoidal (lean-monoidal-coherence). LEAN 2026-08-08: formalised as a ContainerIso (the honest form; shapes are curried/uncurried nested Sigmas, bijective not defeq -- matches how the <|-associator is stated). actionAll_assoc + unit A I C = C (actionAll_unit) + 2nd-arg functoriality for ALL morphisms (actionAll_snd, actionAll_snd_id/_comp). Positions = dependent-Pi Fubini, transport-free (cases+rfl). actionAll_assoc uses only Quot.sound (funext via ext'); the rest fully axiom-free.",
+      "role": "premise",
+      "trust": "lean-verified",
+      "lean": "Containers.Container.actionAll_assoc",
+      "file": "2026-08-08-A-E-predicate-liftings.md",
+      "children": []
+     },
+     {
+      "id": "proof-relevance-boundary-cited",
+      "approach": "P1's engine, cited proved: T_M(=A=Pi) lifts to a monad <=> M cartesian; the multiplication-drop for Reader/State is the alpha=mu_M instance of Lemma 1's non-surjective/non-cartesian obstruction.",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-08-07-proof-relevance-boundary.md",
+      "children": []
+     },
+     {
+      "id": "E-is-triangle-cited",
+      "approach": "E=Exists=Sigma=<| (composition product), cited proved (T^Sigma_M=M<|-, sigma-monad-is-triangle-monoid; <|-monoidal Lean-verified). Gives E X(E Y C)=E(X<|Y)C = <|-associativity, the contrast partner to P2.",
+      "role": "premise",
+      "trust": "proved",
+      "file": "2026-08-08-sigma-monad-is-triangle-monoid.md",
+      "children": []
+     },
+     {
+      "id": "A-E-verify-harness",
+      "approach": "scratch/prove-A-E-verify.py: containers as position-count lists, composites built explicitly. E=<| 1000/1000; A y C=C & E y C=C 500/500; P2 2000/2000; P1 section-count trichotomy 3000/3000 (empty edges incl); P3 linear-X iso boundary confirmed.",
+      "role": "attempt",
+      "trust": "computed",
+      "file": null,
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "reader-liftings-are-categories",
+    "approach": "REDUCE (fibred endofunctor over R=y^E \u2194 aggregator L:Set^E\u2192Set; monad \u2194 (L,\u03b5,\u03b4)+3 laws) \u2192 FORCE STRUCTURE (unit \u27f9 marked position per shape; \u03b4 \u27f9 inner shapes pure; LU \u27f9 \u03b4 preserves outer; RU \u27f9 every shape pure/single-leaf) \u2192 ASSEMBLE (pure-leaf-v part = polynomial comonad = small category C_v) \u2192 L(B)=\u2294_v\u2294_{i\u2208Ob C_v}B_v^{C_v(i,\u2192)}. Verified by two independent engines (monad-law enum vs category-axiom count). Analytic rivals excluded by the counit.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-08-09-reader-liftings-are-categories.md",
+    "note": "PROVE.md 'pi-sigma-dichotomy-exhaustive' RESOLVED (7th meta-instance): clean \u220f/\u03a3/mix FALSE. Fibred proof-relevant POLYNOMIAL monad liftings of Reader y^E \u2245 E-indexed families of SMALL CATEGORIES (E-indexed polynomial comonads, one categorical level down). \u220f EXCLUDED (R non-cartesian); \u03a3_U=discrete cats; \u2124/2 groupoid (B_0\u00b2 swap)=genuine non-\u220f/non-\u03a3 lifting; analytic killed by counit. Welds predicate liftings to DCont\u2245Cat (grant Path 2).",
+    "children": [
+     {
+      "id": "reader-groupoid-lifting-lean",
+      "approach": "LEAN: the \u2124/2 one-object groupoid lifting at E=1 as a DirectedContainer (Shape=Unit, Pos=Z2, root=e, shift=group mul). Three comonad laws = \u2124/2 group axioms (D1/D4 Unit-eta; D2/D3/D5 = left-id/right-id/assoc of Z2.mul). Neither \u220f (reader_kappa_not_total: T_Reader has no \u03bc) NOR \u03a3 (non-discrete: g\u2260e with g\u00b7g=e, vs discrete deltaDC Unit subsingleton hom). Main separation theorems axiom-free; comonad-law wrappers use only Quot.sound (funext). File Containers/ReaderGroupoidLifting.lean; decls reader_groupoid_is_neither_pi_nor_sigma, readerGroupoid_not_pi, readerGroupoid_not_sigma.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "lean": "Containers.ReaderGroupoid.reader_groupoid_is_neither_pi_nor_sigma",
+      "note": "Certifies the crown's load-bearing witness (\u00a74 table row 'B_0\u00b2 swap \u03b4 = one-object groupoid \u2124/2'). \u220f exclusion reuses node state-reader-outside-pi-mendler (reader_kappa_not_total). DCont\u2245Cat = Ahman-Chapman-Uustalu arXiv:1408.5809.",
+      "children": []
+     },
+     {
+      "id": "reader-lifting-reduction",
+      "approach": "Generic cartesian \u03b1_m=(m,id):(E,P\u2218m)\u2192(S,P); fibred \u27f9 T\u03b1_m cartesian \u27f9 P\u0303(m)\u2245L(P\u2218m). Monad \u2194 \u03b5_A:L(\u27e8A\u27e9)\u2192A, \u03b4_D:L(b\u21a6D(b,b))\u2192L(b\u21a6L(c\u21a6D(b,c))) +3 laws.",
+      "role": "premise",
+      "trust": "proved",
+      "note": "Prop 2.1. Uses fibredness essentially.",
+      "children": []
+     },
+     {
+      "id": "delta-inner-shapes-pure",
+      "approach": "Dom(D)=L(\u0394*D) has \u2205 arity at off-diagonal (b,c); container morphism Dom\u21d2Cod can't map nonempty\u2192\u2205 \u27f9 every inner Cod-shape v-pure. Corollary: \u220f (only shape impure, no pure shape) has NO \u03b4.",
+      "role": "premise",
+      "trust": "proved",
+      "note": "Step B. Yoneda on arities.",
+      "children": []
+     },
+     {
+      "id": "unit-forces-pure-marked-shapes",
+      "approach": "Nat(A^{Q_s},A)=Q_s \u27f9 \u03b5=marked position e_s\u2208Q_s (all Q_s\u2260\u2205). LU (L(\u03b5)\u2218\u03b4=id) \u27f9 \u03b4 outer=s. RU (\u03b5_outer\u2218\u03b4=id) \u27f9 inner at marked outer position = s; with inner-pure \u27f9 s is \u03bb(s)-pure. So EVERY shape pure.",
+      "role": "premise",
+      "trust": "proved",
+      "note": "Steps A,C,D \u2014 the linchpin.",
+      "children": []
+     },
+     {
+      "id": "per-leaf-polynomial-comonad-is-category",
+      "approach": "Pure-leaf-v part (L_v,\u03b5,\u03b4) is a polynomial COMONAD on Set (\u03bc^T backward = comultiplication; monad\u2194comonad fibrewise op). Reconstructed as small category C_v (obj=shapes, arrows-out=positions, \u03b5=ids, \u03b4=comp; laws=cat axioms). = Ahman-Chapman-Uustalu 'poly comonads \u2245 cats'; verified independently.",
+      "role": "premise",
+      "trust": "proved",
+      "note": "Step E.",
+      "children": []
+     },
+     {
+      "id": "analytic-excluded-by-counit",
+      "approach": "Prop 5.1: natural counit \u27f9 canonical element per element \u27f9 symmetric/analytic summands excluded. Sym\u00b2(B_0),Bag_2(B_0) have NO natural \u03b5 (analytic.py); ordered B_0\u00b2 does. Polynomial is the boundary (7-for-7 polynomial-vs-analytic).",
+      "role": "premise",
+      "trust": "proved",
+      "note": "Prop 5.1 + analytic.py.",
+      "children": []
+     },
+     {
+      "id": "enum-vs-catcount-match",
+      "approach": "Independent engines agree: enum.py/monad.py (3 monad laws; complete (\u03b5,\u03b4) enum for polynomial L) vs catcount.py (category axioms). [2]\u21924=#Mon(2), [1,1]\u21921, [2,1]\u21926, B_0\u00b2+B_1\u21924=4\u00b71; \u220f\u21920, \u220f+pures\u21920.",
+      "role": "attempt",
+      "trust": "computed",
+      "note": "scratch/dichotomy-exhaustiveness/.",
+      "children": []
+     },
+     {
+      "id": "reader-liftings-general-M-conjecture",
+      "approach": "OPEN: liftings of a general container monad M \u2194 categories internal to/fibred over M (Reader=y^E discrete \u27f9 E-indexed cats). State (store \u25c1-monoid) first test. Also open: drop 'L polynomial' via 'accessible Set-comonad w/ counit \u27f9 polynomial'. | REFUTED 2026-08-11: holonomy-free/pi0-indexed-families is FALSE for general varying-P container monads (update monads). pi0 does NOT determine the classification: Reader and Z2_triv both have pi0=2 but admit 1 vs 4 liftings. Correct classifier is Fun(A(down),Cat) with genuine holonomy. See child update-monad-liftings-holonomy-full.",
+      "role": "attempt",
+      "trust": "dead-end",
+      "note": "Next PROVE target; State + general-M.",
+      "children": [
+       {
+        "id": "update-monad-liftings-holonomy-full",
+        "trust": "proved",
+        "role": "attempt",
+        "file": "2026-08-11-update-monad-liftings-holonomy-full.md",
+        "approach": "Update monad Upd_{(S,P,down)} (Ahman-Uustalu TYPES 2013). Position-threading action = monoid action down:P|>S; its action category A(down). ASSOC-DEEP => transport rho is a functor A(down)->Cat (COMP: rho_{s,p+q}=rho_{s.p,q}orho_{s,p}). Degree-1 liftings ~= Fun(A(down),Cat). HOLONOMY-FULL: isotropy of A(down) acts on fibres. Refutation is a finite EXHAUSTIVE counterexample (proved). Reader=discrete A, State=overwrite has RESET elements => endpoint-locality => codiscrete collapse: the two holonomy-trivial degeneracies.",
+        "children": [
+         {
+          "id": "update-COMP-functoriality",
+          "trust": "proved",
+          "role": "premise",
+          "children": [],
+          "approach": "Deepest-object component of Upd associativity, with constant f,g ranging p,q over P, gives rho_{s,p+q}=rho_{s.p,q} o rho_{s,p}, rho_{s,o}=id => transport is a functor A(down)->Cat. Derived from mult formula + census exhaustive (update_engine.build_deg1)."
+         },
+         {
+          "id": "update-Z2-triv-holonomy",
+          "trust": "proved",
+          "role": "premise",
+          "children": [],
+          "approach": "P=Z/2 trivial action (s.p=s): EXHAUSTIVE over all 16384 Upd^3 shapes => exactly 4 law-satisfying transports = involution(id/swap) per orbit; per-state-relabel iso-check => 4 PAIRWISE NON-ISOMORPHIC liftings. Genuine Z/2 holonomy per orbit. Contrast Z2_swap (free action): 2 transports, 1 iso-class (codiscrete collapse)."
+         },
+         {
+          "id": "update-reset-collapse-explains-State",
+          "trust": "proved",
+          "role": "premise",
+          "children": [],
+          "approach": "State=Upd(overwrite); overwrite monoid has reset w_m with s.w_m=m for all s => associativity instance with reset middle erases the label => endpoint-locality => codiscrete collapse => single Cat. Explains state-holonomy-triviality and why it does NOT generalize to reset-free monoids."
+         },
+         {
+          "id": "holonomy-full-witness-lean",
+          "trust": "lean-verified",
+          "role": "premise",
+          "lean": "Containers.HolonomyWitness.holonomy_survives",
+          "children": [],
+          "approach": "Lean 4 (core, axiom-free) DUAL of EndpointLocality.lean. Containers/HolonomyWitness.lean: builds BZ2 (one-object cat, Hom=Z2, comp=group mult = the action category A for a single free Z/2 orbit), the discrete target D=DiscreteBool with idF/swapF self-functors (swapF_involutive: not(not b)=b certifies the only nontrivial functor law g.g|->swap^2=id), and the two liftings actTriv/actSwap : Z2 -> Functor D D (F_triv, F_swap : BZ2 => Cat). Payoff no_natTrans_triv_to_swap: NO natural transformation F_triv=>F_swap (naturality at g forces not(alpha b)=alpha b, impossible in Bool), a fortiori no_natIso_triv_swap. Machine-checks update-Z2-triv-holonomy (the >=2 non-isomorphic liftings) and BZ2_hom_not_subsingleton shows BZ2 is NOT codiscrete, so EndpointLocality.collapse does not apply. #print axioms: none."
+         }
+        ]
+       }
+      ],
+      "reason": "REFUTED 2026-08-11: the holonomy-free / pi0-indexed-families conjecture is FALSE for general varying-P container monads. See child update-monad-liftings-holonomy-full. pi0 does not determine the classification (Reader and Z2_triv both pi0=2, admit 1 vs 4 liftings)."
+     },
+     {
+      "id": "ahman-chapman-uustalu-poly-comonads-cats",
+      "approach": "CITED (not deep-read this session): Ahman-Chapman-Uustalu, 'When is a container a comonad?' FoSSaCS 2014; Spivak Cat#. Polynomial comonads \u2245 small categories. Used as NAME for Step-E construction, reconstructed & verified independently \u27f9 not load-bearing as unread black box.",
+      "role": "attempt",
+      "trust": "unclassified",
+      "note": "See memory cat-hash-is-dcont-cof, dcont-morphisms-are-cofunctors.",
+      "children": []
+     },
+     {
+      "id": "pi-sigma-dichotomy-exhaustive",
+      "approach": "Flat 'Reader/State monad liftings = Pi/Sigma/mix' is FALSE. Liftings along cod:Cont->Set are comonads (delta-comonoids): the multiplication is a backward map = comultiplication. Sharp Reader answer = E-indexed small categories (morning file). Unifying law: Pi-over-I comonad iff I monoid; Sigma (coproduct) always = T_M-monad-iff-cartesian one level down. This file adds the general-M reduction + unification + independent corroboration; State/general-M OPEN.",
+      "role": "attempt",
+      "trust": "proved",
+      "file": "2026-08-09-lifting-dichotomy-exhaustiveness.md",
+      "children": [
+       {
+        "id": "reader-liftings-are-categories-cited",
+        "approach": "Cited: polynomial monad liftings of R_E = E-indexed small categories; Pi excluded, Sigma_U discrete, analytic excluded by counit (file 2026-08-09-reader-liftings-are-categories.md).",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-08-09-lifting-dichotomy-exhaustiveness.md",
+        "children": []
+       },
+       {
+        "id": "general-M-reduction",
+        "approach": "Prop A': fibred liftings of container monad M=(S_M,P_M) along cod <-> families (A_sigma:Set^{P_M sigma}->Set)_{sigma in S_M}, one aggregator per shape; cartesian-arrow preservation + Yoneda at generic shape. Reader S_M=1; State shapes S^S.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-08-09-lifting-dichotomy-exhaustiveness.md",
+        "children": []
+       },
+       {
+        "id": "monoid-comonoid-unification",
+        "approach": "Lemma U. (Sigma) A(Q)=coprod_{k in K}Q(e_k) monad lifting of R_E for all (K,e:K->E) [canonical comonoid on K]; weight>=2 outside Pi/Sigma/mix. (Pi) A(Q)=Q(e0)^M monad lifting for all monoids M via ev_{e0}:R_E=>Id pulled back over reader-comonad C_M(S,P)=(S,P^M). Slogan: Pi needs monoid, Sigma nothing = cartesian boundary one level down.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-08-09-lifting-dichotomy-exhaustiveness.md",
+        "children": [
+         {
+          "id": "weighted-sigma-monad-law-check",
+          "approach": "liftings.py: L^A genuine Cont-endofunctor; unit as morphism composites, assoc as coassoc of position-comonoid; pass Sigma,W0=2,proj,W0=2/W1=3.",
+          "role": "attempt",
+          "trust": "computed",
+          "file": "2026-08-09-lifting-dichotomy-exhaustiveness.md",
+          "children": []
+         },
+         {
+          "id": "exp-comonad-and-ev-morphism-check",
+          "approach": "comonad_check.py: Q^M comonad laws hold Z/2 & AND-monoid, fail non-unital; ev_{e0}:R_E=>Id monad morphism E=2,3.",
+          "role": "attempt",
+          "trust": "computed",
+          "file": "2026-08-09-lifting-dichotomy-exhaustiveness.md",
+          "children": []
+         },
+         {
+          "id": "empty-preservation-search",
+          "approach": "search.py: cross-leaf Q0*Q1 fails empty-preservation (no natural mult); Q0,Q0+Q1,Q0^2 pass.",
+          "role": "attempt",
+          "trust": "computed",
+          "file": "2026-08-09-lifting-dichotomy-exhaustiveness.md",
+          "children": []
+         }
+        ]
+       },
+       {
+        "id": "state-liftings-holonomy-free",
+        "approach": "State liftings are HOLONOMY-FREE. Reduction+purity PROVED; threading = \ud835\udd4a-composition (\ud835\udd4a=action cat of S^S\u21b7S). SOUNDNESS (constructed+machine-verified): \ud835\udd4a\u00d7C lifts for every small category C (Cat \u21aa liftings); single-object profile count = #monoids (Reader mechanism). REFUTED (computed): nontrivial \ud835\udd4a-action / discrete Conduch\u00e9 fibration over \ud835\udd4a breaks assoc; per-state variation impossible (\ud835\udd4a connected). CONJECTURE (completeness OPEN): State liftings \u2245 Cat via C\u21a6\ud835\udd4a\u00d7C; general M \u2194 \u03c0_0(position-threading)-indexed families of categories, holonomy-free. The predicted 'finer S^S-graded category' is REFUTED \u2014 the honest object is COARSER (grading collapses). [UPDATE 08-10 pt II: GRADE-INDEPENDENCE CRUX PROVED (state-grade-independence, 2026-08-10-state-liftings-grade-independence.md): object sets J_t^s grade-independent via (star)+RU1; A_t\u2245A_id. Completeness now reduced to a SINGLE residual lemma: holonomy-triviality (source-independence + trivial S-transport), still computed. Completeness node stays speculative.]",
+        "role": "attempt",
+        "trust": "computed",
+        "file": "2026-08-10-state-liftings-holonomy-free.md",
+        "children": [
+         {
+          "id": "state-purity-and-threading",
+          "trust": "proved",
+          "role": "premise",
+          "file": "2026-08-10-state-liftings-holonomy-free.md",
+          "approach": "Inner purity (naturality) + full purity (LU); threading formula \u03c3(s)=t_s(T(s)) = \ud835\udd4a-composition. |S|=2, polynomial hyp.",
+          "children": []
+         },
+         {
+          "id": "state-soundness-Cat-embeds",
+          "trust": "proved",
+          "role": "premise",
+          "file": "2026-08-10-state-liftings-holonomy-free.md",
+          "approach": "C\u21a6\ud835\udd4a\u00d7C gives a lifting for every small category C (explicit construction, all 3 monad laws machine-verified on \u03a3,BM,arrow,disc via honest finite-container engine + cross-validated sampling-assoc). Cat \u21aa liftings.",
+          "children": []
+         },
+         {
+          "id": "state-refutes-conduche-over-S",
+          "trust": "computed",
+          "role": "attempt",
+          "file": "2026-08-10-state-liftings-holonomy-free.md",
+          "reason": "REFUTED. Discrete Conduch\u00e9 fibrations / copresheaves over \ud835\udd4a (representables, twisted actions) FAIL associativity; only trivial (product) action survives. Grade \u03c3=thread \u2260 single \ud835\udd4a-arrow.",
+          "approach": "nontrivial \ud835\udd4a-holonomy obstructed by assoc; per-state-different unroutable; vertical-only fails everywhere-defined.",
+          "children": []
+         },
+         {
+          "id": "state-completeness-Cat-OPEN",
+          "trust": "speculative",
+          "role": "attempt",
+          "file": "2026-08-10-state-liftings-holonomy-free.md",
+          "approach": "CONJECTURE: C\u21a6\ud835\udd4a\u00d7C onto. RESOLVED (object-level) 2026-08-11 by state-holonomy-triviality: endpoint-locality (from the deepest-object component of associativity) forces the transport to a coherent trivial iso-system => single C => completeness at the object level, RIGOROUS. Morphism-level trivial by mirror + decisive enumeration (state-morphism-holonomy-trivial, computed). Node kept at speculative only for the residual morphism-level symbolic-derivation gap; the completeness THEOREM (State liftings \u2245 Cat) is proved modulo that. Original evidence: profile [(2,0),(0,2)] count = 4 = #monoids-on-2.",
+          "children": []
+         },
+         {
+          "id": "state-grade-independence",
+          "trust": "proved",
+          "role": "premise",
+          "file": "2026-08-10-state-liftings-grade-independence.md",
+          "approach": "CRUX (state/PROVE.md) \u2014 OBJECT-SET grade-independence PROVED |S|=2 polynomial: J_t^s grade-independent. sh_t=delta_out^{(id,(t))}:J_t^s->J_id^s and pr_t=delta_out^{(t,(t'_s)),thread=id} are inverse bijections, via (star) delta_out-functoriality (=outermost-object component of associativity) + RU1 delta_out^{(t,(id))}=id. Verified: (star) 32768 instances (Sigma,SxZ2), tracks assoc under corruption; sh/pr inverse bijections on SxC. Out-degree preservation (=> A_t\u2245A_id as FULL functors) is the position-level mirror, still COMPUTED \u2014 carried as an attempt child, not a premise.",
+          "children": [
+           {
+            "id": "state-P1-Aid-is-S-indexed-cat",
+            "trust": "proved",
+            "role": "premise",
+            "file": "2026-08-10-state-liftings-grade-independence.md",
+            "approach": "(P1): A_id restricted to (id,(id)) factorizations = Reader comult/counit with E:=S; State monad laws specialise to Reader (RU),(LU),(A); by Reader theorem A_id \u2245 S-indexed family of small categories (C\u0303_s). Threading trivial at grade id.",
+            "children": []
+           },
+           {
+            "id": "state-delta-out-functoriality-star",
+            "trust": "proved",
+            "role": "premise",
+            "file": "2026-08-10-state-liftings-grade-independence.md",
+            "approach": "(star): delta_out^{(T,tau)}=delta_out^{(T,tvec)}\u2218delta_out^{(sigma',rho_.T.)} \u2014 outermost-object component of associativity \u03bcT\u03bc=\u03bc\u03bcT; threading identities sigma=thread(T,tau)=thread(sigma',rho_.T.) verified all cases. Directly verified 32768 instances (Sigma,SxZ2); tracks assoc under corruption (disagree=0).",
+            "children": []
+           },
+           {
+            "id": "state-degree-grade-independent",
+            "trust": "computed",
+            "role": "attempt",
+            "file": "2026-08-10-state-liftings-grade-independence.md",
+            "approach": "Out-degree grade-independence (position-level (star) on backward beta; mirror of object argument). Object-level fully proved; position-level verified on SxC (Z/2,Z/3,arrow,disc3) but full backward-map derivation flagged. => A_t\u2245A_id as full functors.",
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "state-holonomy-triviality",
+          "trust": "proved",
+          "role": "premise",
+          "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+          "approach": "HOLONOMY-TRIVIALITY (the last lemma) \u2014 OBJECT-LEVEL PROVED |S|=2 polynomial, argument uniform in S. Engine: (ASSOC-DEEP) the deepest-object component of associativity \u03bcT\u03bc=\u03bc\u03bcT: tau^{sigma'}(s,c)=tau^{t_s}(T(s),tau^T(s,c)) with sigma'(s')=t_{s'}(T(s')) (both formulas machine-verified, fit_general.py 0/196608 for GENERIC random transport). LHS depends only on (T,t_s,s,c); sigma' mixes ALL middles => off-source middles free (S^S transitive) => ENDPOINT-LOCALITY: tau^g(s,c) depends on g only via g(s) (proof: ASSOC-DEEP with T=id, t_{s'}=const_{g(s')}; common RHS). Then COMP (all middles=b) gives functoriality psi_{m->n}\u2218psi_{s->m}=psi_{s->n}; unit (U) tau^{id}=id (identity's target=source) gives psi_{s->s}=id => psi_{s->m} BIJECTIONS O_s\u2245O_m (H1) and, as a functor out of CODISCRETE K(S), a coherent TRIVIAL iso-system => single C, trivial transport (H2) => lifting = \ud835\udd4a\u00d7C. Completeness (C\u21a6\ud835\udd4a\u00d7C bijection): State liftings \u2245 Cat. Object-level rigorous+new; morphism-level (child) mirror+decisive-enum. targeted.py: endpoint-locality genuinely forced (functorial-but-nonlocal fails assoc); units force tau^{id}=id.",
+          "children": [
+           {
+            "id": "state-endpoint-locality",
+            "trust": "proved",
+            "role": "premise",
+            "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+            "approach": "ENDPOINT-LOCALITY: tau^g(s,c) depends on g only via g(s). From (ASSOC-DEEP) + transitivity of S^S\u21b7S (constant-function middles realize any sigma'). Fully rigorous; uses no unit. Verified deepest-object formulas 0/196608 (fit_general.py); T3 (targeted.py) confirms it is genuinely needed (copresheaf is functorial but non-local => fails assoc).",
+            "children": []
+           },
+           {
+            "id": "state-morphism-holonomy-trivial",
+            "trust": "computed",
+            "role": "attempt",
+            "file": "2026-08-11-state-liftings-holonomy-triviality.md",
+            "approach": "MORPHISM-LEVEL triviality (hom-holonomy vanishes) \u2014 position/beta-component of (ASSOC-DEEP), identical form to object level (mirror of grade-independence 3.2). Decisive machine verification: enum_hom.py FREE hom-transport (1 obj/state, deg 2) => exactly 4 survivors = 4 monoids on 2 elts, ALL trivial transport, robust nsamp=1500; twist_test.py: \ud835\udd4a\u00d7Z/n twisted by automorphism alpha_g lifts IFF alpha\u2261id (Z/3 inversion on arrow/loop/global all fail units/assoc). Symbolic backward-map derivation flagged (not written in closed form) => carried as attempt, not premise.",
+            "children": []
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

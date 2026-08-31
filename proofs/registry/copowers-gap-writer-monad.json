@@ -1,0 +1,87 @@
+{
+ "conjecture": "(Q) For the unit I of a closed symmetric monoidal C with small coproducts, does C(I,-) preserving all COPOWERS kappa.I (the one-parameter test gamma_kappa: kappa x End(I) -> C(I,kappa.I) iso) imply C(I,-) preserves ALL small coproducts (I connected)? This is the follow-on gap to flagship T1 (fullness-unit-connectedness): T1's necessity is stated on copowers, its sufficiency on all coproducts; (Q) asks whether the copower test certifies fullness. RESULT: (A) copower-of-unit preservation <=> the induced Set-monad T=C(I,(-).I) of the copower adjunction (-).I -| C(I,-) is the WRITER MONAD (-)xM, M=End(I) commutative; and (C) all-coproduct preservation <=> the Eilenberg-Moore comparison K:C->M-Set, K(X)=(C(I,X), precomposition), preserves coproducts. UPGRADE under extensivity: extensive C => (A)<=>(B)<=>(C)<=> I indecomposable & non-initial, so the copower test decides fullness over EVERY extensive base (Set, presheaf/Grothendieck toposes, Set x Set). Additive/pointed/thin bases FAIL (A) already; Day/gluing bases satisfy both; so no standard base separates. Raw (A)=>(C) without extensivity reduced to 'K preserves coproducts', obstruction = a mixed point not lifting through coprod_t eps_{X_t}; existence of a non-extensive separator (Q') left OPEN.",
+ "status": "proved",
+ "date_opened": "2026-08-26",
+ "date_closed": null,
+ "note": "Deep-work PROVE session resolving flagship-T1 gap-general-iff-no-cogenerator. Two clean reductions (writer monad; M-Set comparison) + extensivity upgrade discharge (Q) for every INTENDED base. Honest residual (Q') = non-extensive separator, reduced+obstruction-identified, not resolved. Method: copower adjunction (-).I -| C(I,-) is a monoidal adjunction (F=(-).I strong monoidal from (Set,x), U=C(I,-) lax); its monad is writer iff (A); EM(writer)=M-Set; forgetful M-Set->Set creates colimits so (C)<=>K preserves coproducts; gamma = U(coprod eps).eta so surjectivity <= liftability through counit-coproduct (single-object counit is U-split but the coproduct need not be -- the exact crack). Extensivity Thm via the decomposition formula C(I,coprod X_t)=coprod_{decomps} prod C(A_t,X_t): (A) forbids nontrivial decompositions of I (a nontrivial I=A0+A1 gives a map not in im(gamma_2)), forcing I indecomposable+non-initial=connected. Computationally verified: Gl((-)^2) satisfies (A) and (C) (non-separator), scratch/2026-08-26-gluing-copower-check.py.",
+ "tree": {
+  "id": "root",
+  "approach": "(Q) does copower-of-unit preservation upgrade to all-coproduct preservation? Reduction to writer monad + extensivity upgrade + honest residual",
+  "trust": "proved",
+  "file": "2026-08-26-copowers-gap-writer-monad.md",
+  "children": [
+   {
+    "id": "parent-flagship-t1",
+    "approach": "Builds on FLAGSHIP T1 (registry fullness-unit-connectedness, node gap-general-iff-no-cogenerator): <<->> fully faithful iff C(I,-) preserves small coproducts; necessity stated on copowers, sufficiency on all coproducts -- the (Q) gap is exactly the copower/coproduct distance.",
+    "trust": "proved",
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "copower-adjunction",
+    "approach": "Lemma 1.1-1.2: (-).I -| C(I,-) always (C(S.I,X)=Set(S,C(I,X))); F=(-).I is STRONG symmetric monoidal from (Set,x) (using (S.I)(x)(S'.I)=(SxS').I via tensor cocontinuity + I(x)I=I), U=C(I,-) lax monoidal, M=End(I) commutative (Eckmann-Hilton). A monoidal adjunction.",
+    "trust": "proved",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "reduction-A-writer-monad",
+    "approach": "Theorem 1.3 (Reduction A): (A) copowers-of-I preserved <=> the induced Set-monad T=UF=C(I,(-).I) is the WRITER MONAD (-)xM for M=End(I). Unit s|->(s,id_I), mult via monoid product. Explains why disconnected bases fail (A) not merely (C): a zero object makes T(kappa) carry sums.",
+    "trust": "proved",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "reduction-B-EM-comparison",
+    "approach": "Theorem 2.2 (Reduction B): EM(writer (-)xM)=M-Set; comparison K:C->M-Set, K(X)=(C(I,X), precomposition by End(I)); U=forgetful.K and forgetful M-Set->Set CREATES colimits, so under (A): (C) <=> K preserves all coproducts. K always preserves copowers of I (=exactly (A)). So (Q) becomes: K preserving one family (copowers of I) => K preserves all coproducts?",
+    "trust": "proved",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "gamma-is-points-of-counit-coproduct",
+    "approach": "Lemma 2.3 + Rem 2.4: gamma_{(X_t)} = U(e).eta_A with e=coprod_t eps_{X_t}: (coprod_t C(I,X_t)).I -> coprod_t X_t. So U(e) surjective => gamma surjective. Single-object counit eps_X has U(eps_X) split epi in Set (via eta) so points always lift for ONE object; but eta is a Set-map not a C-map, so coprod_t eps_{X_t} need not be U-surjective -- THE EXACT CRACK: a mixed point I->coprod X_t not lifting = gamma non-surjective with (A) still holding.",
+    "trust": "proved",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "extensivity-upgrade",
+    "approach": "Theorem 3.1 (THE DELIVERABLE): C extensive => (A)<=>(B)<=>(C)<=> I indecomposable & non-initial <=> I connected. Proof: (A)=>I non-initial (else C(I,kappa.I)=1!=kappa); (A)=>I indecomposable via the extensive decomposition formula C(I,coprod X_t)=coprod_{I=coprod A_t} prod_t C(A_t,X_t): a nontrivial decomposition I=A0+A1 yields a map I->I+I outside im(gamma_2) (disjointness), contradicting (A); then indecomposable+non-initial => connected. Discharges (Q) for every extensive base. Cor 3.2: Set, presheaf/Grothendieck toposes, Set x Set all decided by the one-parameter copower test.",
+    "trust": "proved",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "no-standard-base-separates",
+    "approach": "Sec 4: additive/pointed/semiadditive (Vec,R-Mod,CMon,Set_*,Rel) FAIL (A) (zero object => T(kappa) carries sums); thin/quantale FAIL (A) (coprod_kappa I=I idempotent join); extensive bases satisfy the equivalence (Thm 3.1); Day-convolution bases have connected unit (U=ev_i preserves all colimits); Artin gluing Gl((-)^2) satisfies (A) AND (C) (point-selecting diagonal subobject is coproduct-local). None separates.",
+    "trust": "proved",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "gluing-computation",
+    "approach": "Verify Gl((-)^2): CCC (non-extensive), I=(1,1,diag), M=1, C(I,(A,B,beta))=beta^{-1}(Diag_B). Copowers of I have exactly kappa points (A holds); 100 random binary coproducts preserve points (C holds) -- a non-separator. scratch/2026-08-26-gluing-copower-check.py, 0 mismatches.",
+    "trust": "computed",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "residual-Q-prime-open",
+    "approach": "OPEN (Q'): does a NON-extensive closed symmetric monoidal base satisfy (A) but fail (C)? Equivalent (Thm 2.2) to K:C->M-Set preserving copowers of I but not all coproducts; obstruction = mixed point non-lifting through coprod eps (Rem 2.4). Necessary conditions on any separator: non-extensive, non-additive/no-zero, non-thin, I not a strong generator -- ruling out every standard base. Sufficient conditions making (A)=>(C): {extensive; U monadic; I strong generator coproduct-projective}. Assessment: closedness controls maps OUT of coproducts (vacuous) not INTO them, so no monoidal a-priori reason for the upgrade -- expect a separator to exist in some exotic base but NOT constructed. Honest boundary.",
+    "trust": "in-progress",
+    "file": "2026-08-26-copowers-gap-writer-monad.md",
+    "role": "attempt",
+    "children": []
+   }
+  ]
+ }
+}

@@ -1,0 +1,380 @@
+{
+ "conjecture": "Directed Containers = Polynomial Comonads = Small Categories (equivalence chain, Lean milestones M1-M6)",
+ "status": "in-progress",
+ "date_opened": "2026-06-09",
+ "date_closed": null,
+ "tree": {
+  "id": "root",
+  "approach": "verify the three-way equivalence DCont = PolyComon = SmallCat at objects and morphisms, with Lean formalization",
+  "trust": "in-progress",
+  "file": null,
+  "children": [
+   {
+    "id": "m1-representation",
+    "approach": "M1: container representation theorem (full and faithful)",
+    "role": "premise",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "Container.repr_full_faithful",
+    "children": []
+   },
+   {
+    "id": "m2-comonad-laws",
+    "approach": "M2: comonad laws from D1-D5 (forward direction)",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "DirectedContainer.comonad_laws",
+    "sources": [
+     "1604.01187"
+    ],
+    "children": []
+   },
+   {
+    "id": "m2b-converse",
+    "approach": "M2b: comonad implies directed container (converse, both round-trips by rfl)",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "ComonadConverse.recover_forward_eq_id",
+    "sources": [
+     "1604.01187"
+    ],
+    "children": []
+   },
+   {
+    "id": "m4-dcont-cof",
+    "approach": "M4: DCont = Cof (morphism-level iso of categories)",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "Containers.DContMorphism.toCofunctor",
+    "note": "PROVENANCE CORRECTION 2026-07-14: the original Cofunctor.lean (decl DCont_iso_Cof) was NOT lost. It was pushed to RaggedR/macbeth-seed on branches lean-consolidate and lean-composition-product. What happened: PR #12 was closed during the 5 July repo reorg, which orphaned the stacked PRs #13 and #17 above it. The artifacts were on branches of the same repo the whole time — lost to a merge queue, not an OOM. DContCat.lean is a rebuild of a file that was already there. Lesson (corrected): a lean-verified claim on a feature branch is one PR-close away from invisible. Merge or back up before stacking.",
+    "sources": [
+     "1604.01187"
+    ],
+    "children": [
+     {
+      "id": "morphisms-are-functors",
+      "approach": "naive reading: DCont morphisms = functors between the induced categories",
+      "role": "attempt",
+      "trust": "dead-end",
+      "file": null,
+      "reason": "WRONG: the position map f_s: P'(fs)->P(s) is CONTRAVARIANT, so a DCont-map is ill-typed as a functor. Correct: DCont = Cof (cofunctors). Verified: #functors != #cofunctors in 17 of 36 test pairs.",
+      "refutation": "computed",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "zs-lean",
+    "approach": "Lean ZS: matched pair associativity iff ZS1-ZS4",
+    "role": "premise",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "MatchedPair.zs_iff_assoc",
+    "children": []
+   },
+   {
+    "id": "pairwise-zs",
+    "approach": "pairwise ZS criterion: (L) freeness AND (G) global closure (split into its own registry 2026-07-04; subtree lives at the canonical node)",
+    "role": "attempt",
+    "trust": "proved",
+    "shared": "pairwise-zs#root",
+    "file": null,
+    "children": []
+   },
+   {
+    "id": "free-cofree",
+    "approach": "free monad and cofree comonad of a container, as containers. NOVELTY DEMOTED 2026-07-14: the COFREE half is prior art in full; the FREE half is an open question in the source that scoops the cofree half.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-06-11-cofree-free-containers.md",
+    "sources": [
+     "2312.00990"
+    ],
+    "note": "TRUST STAYS 'proved' -- the mathematics is correct (trust grades the mathematics, not the novelty). NOVELTY IS DEMOTED TO ZERO ON THE COFREE HALF. Full-PDF audit of Niu-Spivak arXiv:2312.00990 (2026-07-14): the cofree comonad is SCOOPED IN FULL, not merely 'the fact is cited while the container-language derivation and D1-D5 packaging are mine'. Prop. 8.18 (p. 297) gives the carrier t_p := Sigma_{T in tree_p} y^{vtx(T)}. Prop. 8.33 (p. 306) gives THE CATEGORY, item for item: objects = p-trees; a morphism out of T is a rooted path; its codomain is the subtree at the path's end; the identity is the empty path (the root); composition is concatenation. That IS o=root / down=subtree / oplus=concat -- so the D1-D5 packaging claimed as the MacBeth delta is Prop. 8.33. Thm. 8.45 (p. 314): U : Cat# -> Poly has right adjoint T_(-), Poly(c,p) = Cat#(C,T_p), which with Remark 7.18 (polynomial comonoid = comonad) IS the cofree-comonad theorem. (The book credits nobody for any of it, but priority is priority.) Also Prop. 8.57: every T_p is free on a graph. FACTUAL CORRECTION, independent of the novelty question: the directions at T are ALL FINITE ROOTED PATHS, equivalently ALL VERTICES vtx(T) = Sigma_{n in N} p^{lhd n}[pi^{(n)} T] (p. 296) -- NOT leaves and NOT root-to-leaf (maximal) paths, which is how the old note's 'nodes-as-finite-paths' / 'M-tree lhd paths' wording was being read. Maximal paths appear once in the book (Ex. 8.50); an infinite path is a 'ray'. A category whose morphisms out of T were only the maximal paths would have no identities, so the old model was self-refuting. Further: the book never displays a fixed-point equation for tree_p; the closest is Exercise 8.16 (p. 295), 'tree_p is the terminal p-coalgebra', itself uncredited (classically Adamek/Barr) -- so the nu-Y presentation must be attributed to the coalgebra literature, not to this book. WHAT SURVIVES, AND IT IS A PROMOTION: the book NEVER CONSTRUCTS THE FREE MONAD (no free-monad, initial-algebra or W-type section in Ch. 6-9), and characterizing monads in Poly is Chapter 9, Question 11 -- an EXPLICIT OPEN QUESTION. So the free-monad half (C* = (mu Y. 1 + Sigma_s (P(s) -> Y)) lhd (variable-leaf set), monad laws as grafting-monoid laws, and any co-directed D1-D5-style packaging) is NOT prior art and is a live target = Neil's Phase 2. Prior art to clear first: Gambino-Kock arXiv:0906.4931 (free monad on a polynomial is polynomial; positions = P-trees, directions = LEAVES -- for the free monad it genuinely is leaves, which is exactly the distinction the old note collapsed). Caveat on Ch. 9: it cites no one and hedges that its questions 'may or may not be known' -- evidence of the authors' ignorance, not of open-ness in the literature; an independent audit is still owed.",
+    "children": []
+   },
+   {
+    "id": "chain-rule",
+    "approach": "chain rule for container derivative under composition: d(G lhd F) = (dG lhd F) x dF",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-06-12-container-chain-rule.tex",
+    "note": "NOVELTY CONFIRMED, NOT DEMOTED (2026-07-14 full-PDF audit of Niu-Spivak arXiv:2312.00990, the same audit that scooped the cofree half of free-cofree). Derivatives appear in that book exactly once, at Example 3.22 (p. 52), with the line 'we will not use derivatives very much in the rest of this text'; there is NO chain rule for lhd anywhere in Ch. 6-9. The book cites Abbott-Altenkirch-Ghani-McBride 'Derivatives of containers' and McBride for p. 51 -- the same prior art already known to lack the lhd rule. The [Original] tag stands. Recorded here so a future pruning pass does not remove it out of caution.",
+    "children": []
+   },
+   {
+    "id": "monoidal-coherence",
+    "approach": "monoidal coherence of four structures on Cont (pentagon+triangle for lhd and otimes)",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": "2026-06-13-monoidal-coherence-four-structures.tex",
+    "lean": "ContMonoidal",
+    "sources": [
+     "2312.00990",
+     "2407.01849"
+    ],
+    "note": "Trust stays lean-verified: what ContMonoidal certifies is the pentagon+triangle for the sequential operator lhd, which is untouched by the 2026-07-14 refutation. The refutation is confined to the Dirichlet sub-claim, recorded in the child node dirichlet-strict-monoidal.",
+    "children": [
+     {
+      "id": "dirichlet-strict-monoidal",
+      "approach": "phi = identity for the Dirichlet tensor, so the extension functor is STRICT monoidal",
+      "role": "attempt",
+      "trust": "dead-end",
+      "refutation": "proved",
+      "file": "2026-06-13-monoidal-coherence-four-structures.tex",
+      "sources": [
+       "2312.00990"
+      ],
+      "reason": "REFUTED 2026-07-14. Category error: otimes_Dir was DEFINED by reading off the container presentation (S,P), i.e. the tensor was transported along the extension functor and the functor was then observed to preserve it. Circular. Intrinsically the Dirichlet tensor is the Day convolution on [Set,Set] w.r.t. (Set,x,1), and the comparison map is the co-Yoneda/density ISOMORPHISM out of a coend, not an identity: the extension functor is STRONG monoidal, not strict. The companion claim 'otimes is not pointwise BECAUSE it is a Day convolution' is also refuted: the product x on Cont is ALSO a Day convolution (of (Set,+,0)) and IS pointwise. The correct criterion is whether the corepresentable splits the domain tensor -- y^(A+B) = y^A x y^B (exponential law) so Day-of-+ is pointwise, while y^(AxB) admits no splitting so Day-of-x is not. Witness: y^3 otimes y^3 = y^9 vs pointwise y^6. NOVELTY CORRECTION: 'Dirichlet tensor = Day convolution' is NOT MacBeth's -- it is Niu-Spivak, arXiv:2312.00990, Prop 3.79 (pp. 69-71), with essentially the same proof (species analogue: Maia-Mendez arithmetic product, arXiv:math/0503436). Refuted by argument (the co-Yoneda/coend argument), not by judgment.",
+      "children": [],
+      "note": "EXPLAINED 2026-07-14 by Theorem B+ (2026-07-14-day-family-classification.md, Cor. 4.5): the extension functor is strong monoidal into the POINTWISE product iff the tensor IS the cartesian one. So no reformulation of the Dirichlet claim could ever have been true. The dead end was structural, not a bookkeeping slip."
+     },
+     {
+      "id": "four-monoidal-lean",
+      "approach": "All four monoidal structures on Cont machine-checked in Lean 4: coproduct (+,0) as contCoprodMonoidal, product (x,1) as contProdMonoidal, Dirichlet tensor (otimes,y) as contDirichletMonoidal, sequential operator (lhd,I) as ContMonoidal -- each with bifunctorial morphism action, associator, both unitors, three naturality squares, pentagon and triangle; plus extension-functor comparison isos (both round-trips each) for [[C+D]]X = [[C]]X + [[D]]X, [[CxD]]X = [[C]]X x [[D]]X, [[y]]X = X, [[1]]X = Unit, [[0]]X = Empty. PRs #18 and #19 on RaggedR/macbeth-seed; lake build clean, 0 errors, 0 warnings, zero sorry.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": null,
+      "lean": "contDirichletMonoidal",
+      "note": "Axiom findings (#print axioms): contDirichletMonoidal depends on NO axioms at all -- every coherence is rfl. The other three (contCoprodMonoidal, contProdMonoidal, ContMonoidal) each depend on [Quot.sound] only. So the Dirichlet tensor is the most definitionally well-behaved of the four, contrary to MacBeth's prior belief that it was 'the subtle one'. Also machine-checked here: Container.dirichletExt_normalForm, a definitional unfolding of [[C otimes D]]. That is a COMPUTATION RULE, not a strictness or monoidal-functor claim -- the strictness claim was refuted 2026-07-14 (see sibling dead-end node dirichlet-strict-monoidal).",
+      "children": []
+     },
+     {
+      "id": "dirichlet-is-uniform-fragment-of-seq",
+      "approach": "Canonical container morphism C otimes D --> C lhd D exhibits the Dirichlet tensor as the uniform (non-dependent) fragment of the sequential operator (inner shape constant rather than depending on the outer position; transport-free, fibres agree on the nose); not surjective (machine-checked counterexample dirToSeq_not_surjective: y^2 otimes 2 has 2 shapes vs y^2 lhd 2 has 4). Depends on no axioms.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": null,
+      "lean": "dirToSeq",
+      "note": "NOVELTY AUDIT COMPLETED 2026-07-14 (full search of the seed). VERDICT: the MAP IS PRIOR ART, six independent statements. It is the duoidal *comparitor* (Shapiro-Spivak, 'Duoidal Structures for Compositional Dependence', eq. 5); *Indep* (Spivak, 'A Reference for Categorical Structures on Poly', arXiv:2202.00534, eq. 32); the lens o_{p,q} (Niu-Spivak arXiv:2312.00990, Ex. 6.85 and Prop. 6.87); Spivak-Garner-Fairbanks 'Functorial Aggregation' Prop. 7.10; Spivak 2020 eq. (15). Its lax monoidality (commutes with associators/unitors) is Niu-Spivak Ex. 6.85. Its invertibility for linear p or representable q is Spivak eq. (33) / Niu-Spivak Ex. 6.84(2)(7). DO NOT CLAIM THE MAP. The Lean construction and the non-surjectivity counterexample remain machine-checked and correct; trust stays lean-verified because that grades the MATHEMATICS, not the novelty. What IS new is the UNIVERSAL PROPERTY of the map -- see sibling node comparitor-coreflection.",
+      "children": []
+     },
+     {
+      "id": "day-family-classification",
+      "approach": "THEOREM A: the Day construction (monoidal structures on Set) -> (monoidal structures on Cont) is an EQUIVALENCE onto the 'convolutional' ones, i.e. those whose tensor (D1) preserves coproducts in each variable and (D2) sends representables to representables. Every source in the literature states only the EXISTENCE direction ('for any monoidal structure on Set there IS one on Poly'); no converse, no essential image, no fullness. Mechanism: Cont = Fam(Set^op) is the FREE COPRODUCT COMPLETION of Set^op, so a tensor satisfying (D1) is determined by its restriction to representables, and (D2) says that restriction lands in Set^op.",
+      "role": "attempt",
+      "trust": "proved",
+      "file": "2026-07-14-day-family-classification.md",
+      "sources": [
+       "2312.00990",
+       "2202.00534"
+      ],
+      "note": "CITATIONS ARE PRIORITY ATTRIBUTIONS, NOT PREMISES. Every theorem here is proved from scratch: Prop 2.2 (the Day family is monoidal) is proved directly, not quoted; Prop 5.2 (coherence of Spivak's vee_S) is proved because Spivak only ASSERTS monoidality; Prop 6.2 (invertibility locus of the comparitor) is proved, recovering Spivak eq. (33). So no step rests on 2202.00534, whose extraction level is only agent-summary. 2312.00990 is deep-read (Prop 3.79 quoted verbatim) and is cited for the IDENTIFICATION of the family with Day convolution -- terminology, not a load-bearing lemma. Also: no coend is ever formed, so the size worry about the coend over Set^2 dissolves (Remark 1.4). Lemma 3.2: representability of the unit is a CONSEQUENCE of (D1)+(D2), not an assumption.",
+      "children": [
+       {
+        "id": "poly-is-fam-setop",
+        "approach": "Cont is ISOMORPHIC (not merely equivalent) to Fam(Set^op), the free coproduct completion of Set^op; and restriction along y^(-) is an equivalence between functors Cont^n -> E preserving coproducts SEPARATELY IN EACH VARIABLE and arbitrary n-ary functors on Set^op. This is the single structural input; everything else is mechanical.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-07-14-day-family-classification.md",
+        "note": "Lemmas 1.1-1.3. Prior art in generalized form: Spivak-Garner-Fairbanks 'Functorial Aggregation' Prop. 3.6 (Set[c] = Fam((c-Set)^op)); Kondyrev-Spivak eq. (5) (Poly = Set[{y}]). NOT stated anywhere in the bare form 'Poly = Fam(Set^op)', and absent from all of MacBeth's prior writing. Proved here from scratch (one line: a container IS a family of sets).",
+        "children": []
+       },
+       {
+        "id": "pointwise-uniqueness",
+        "approach": "THEOREM B: for a monoidal (star,I) on Set, the Day tensor is POINTWISE (natural iso p (x) q = p X q, equivalently the extension functor is strong monoidal into ([Set,Set], pointwise product)) iff star = + as bifunctors iff (star,I) = (+,0) monoidally. THEOREM B+: the Day hypothesis is REMOVABLE -- the cartesian structure is the unique pointwise monoidal structure on Cont, among ALL monoidal structures (pointwise forces (D1),(D2), which are invariant under natural iso of the bifunctor, so Theorem A applies). THEOREM B': effective test -- with unit initial, pointwise iff the canonical kappa : A + B -> A star B is a bijection.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-14-day-family-classification.md",
+        "note": "Key sub-lemma 4.4 (RIGIDITY OF THE COPRODUCT): the coproduct on Set admits exactly ONE natural associator and unitors -- they are forced BEFORE coherence is imposed, because Nat(Id_Set, Id_Set) = {id} and a natural map out of a coproduct is its components. Surely folklore but not found stated; it is what makes (star = + as bifunctors) ==> (monoidally iso to (+,0)) go through. Corollary 4.5 retro-explains the dead-end sibling node dirichlet-strict-monoidal. The informal criterion this theorem formalises was already sitting, unproved, in a doc-comment in MacBeth's own Dirichlet.lean -- CHECK OWN LEAN BEFORE CLAIMING. | VERIFIED: kappa is an iso iff S = empty (Thm 5.4). SHARPENING recorded: for a FIXED pair (A,B) with A or B empty, kappa_{A,B} is bijective for EVERY S (the middle piece A x S x B vanishes trivially). Correct statements: kappa_{A,B} bijective iff |A|.|S|.|B| = 0; kappa bijective for ALL A,B iff S = empty. Both Thm B' and Thm 5.4 quantify over all A,B, so both are correct as stated. kappa is ALWAYS injective -- it is the inclusion of the two outer summands, and its image always misses exactly the middle piece. That middle piece IS the obstruction.",
+        "children": [
+         {
+          "id": "vee-S-coherence",
+          "approach": "Spivak's family A vee_S B := A + A x S x B + B (Reference eq. 9, credited to R. Garner; Haskell's `These`; S=1 case is Niu-Spivak Ex. 3.82) is a MONOIDAL structure on Set with unit 0 (SYMMETRY IS *NOT* CLAIMED -- hexagon unverified; see note), proved by a NORMAL FORM argument: the n-fold tensor is the disjoint union over nonempty K subset [n] of (prod_{i in K} X_i) x S^(|K|-1) -- increasing subsequences with S-separators. Pentagon/triangle = both routes are the identity on the normal form. Consequence (Cor 5.5): Cont carries a PROPER CLASS of pairwise non-isomorphic convolutional monoidal structures ALL SHARING THE TERMINAL OBJECT AS UNIT, exactly one of which (S=0) is the cartesian product.",
+          "role": "premise",
+          "trust": "proved",
+          "file": "2026-07-14-day-family-classification.md",
+          "sources": [
+           "2202.00534"
+          ],
+          "note": "Spivak ASSERTS monoidality without proof (Reference eq. 9); Niu-Spivak Ex. 3.82 asks the reader to check associativity for S=1 only. The coherence proof is supplied here because Cor. 5.5 needs it. The punchline is that this family DEFEATS EVERY CHEAP INVARIANT: same unit as the product, symmetric, convolutional -- only kappa (Theorem B') separates them. This answers the PROVE.md worry 'is the Day family actually large?' with a proper class. | VERIFIED 2026-07-14 (scratch/day-family/): pentagon and triangle checked ELEMENTWISE (243 size-tuples, |A|,|B|,|C|,|D|,|S| in {0,1,2}, plus size-3 spot checks; the two composites are equal AS FUNCTIONS, not merely equinumerous). CRUCIALLY, a NEGATIVE CONTROL was run: the label-SWAPPING variant alpha' of the associator is a natural bijection AND is associative, yet FAILS THE PENTAGON (16/243 size-tuples, first at |A|=|B|=|C|=|D|=1, |S|=2 -- it needs |S|>=2 to be visible). So (a) the pentagon PASS on the true alpha is not vacuous, and (b) Prop 5.2 is NOT pedantry: Spivak merely ASSERTS monoidality and Niu-Spivak Ex. 3.82 asks only for ASSOCIATIVITY-as-a-bijection, and the negative control exhibits a natural associative bijection that is NOT a monoidal associator. The coherence proof fills a real gap in the cited sources. | SYMMETRY DELIBERATELY NOT CLAIMED: there is an evident candidate braiding and Spivak states his (.) construction for SYMMETRIC monoidal structures on Set, but MacBeth never checked the hexagon. A braiding must re-match the S-separators, and the negative control shows separator-rematching is EXACTLY where coherence fails. Nothing needs symmetry (Cor 5.5 needs only monoidal + pairwise non-isomorphic), so the claim was dropped rather than assumed. Open if anyone wants it.",
+          "children": []
+         }
+        ]
+       },
+       {
+        "id": "comparitor-coreflection",
+        "approach": "THEOREM C: the comparitor o_{p,q} : p (x) q -> p <| q is the COUNIT OF A CORFLECTION. Precisely, p (x) - = Lan_J((p <| -) . J) along the representable embedding J : Set^op -> Cont; i.e. p (x) - is the free coproduct-preserving functor agreeing with p <| - on representables, and for every coproduct-preserving F, postcomposition with the comparitor is a bijection Nat(F, p (x) -) = Nat(F, p <| -). So p (x) - is the TERMINAL coproduct-preserving approximation to p <| -. Reason it exists: <| satisfies (D2) exactly and (D1) only in the LEFT variable, and its restriction to representables is (A,B) -> A x B -- the SAME restriction as the Dirichlet tensor. So (x) is the Day-ification of <|, and the comparitor is the universal map.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-07-14-day-family-classification.md",
+        "sources": [
+         "2312.00990",
+         "2202.00534"
+        ],
+        "note": "THE MAP ITSELF IS PRIOR ART (see sibling dirichlet-is-uniform-fragment-of-seq for the six citations). What is new is the UNIVERSAL PROPERTY: in the literature the comparitor is always DERIVED by plugging y into the duoidal interchanger (p<|p')(x)(q<|q') -> (p(x)q)<|(p'(x)q'). Theorem C says what it IS, and two known facts become corollaries: it exists (it is a counit), and it is invertible when q is representable (the counit of Lan_J is invertible on the image of a fully faithful J). Prop 6.1.1 verifies the associator coherence BY HAND rather than appealing to an unchecked monoidal-Kan principle -- note Niu-Spivak Ex. 6.85 and Spivak eq. (32) state the lax monoidality with OPPOSITE source/target; only Spivak's direction type-checks. Prop 6.2 sharpens Spivak eq. (33) to an EXACT trichotomy (iso iff q representable, or q=0 with every p[s] nonempty, or |S_q|>=2 and p linear). Prop 6.3: the comparitor is NOT INJECTIVE either (p=1=y^0 collapses all shapes of q) -- MacBeth's earlier note recorded only non-surjectivity. Non-surjectivity measures where <| is DEPENDENT; non-injectivity measures where <| is VACUOUS. That is why (x) is a coreflection of <| and not a subobject of it. | VERIFIED: iso-criterion exhaustive over all C,D with <=2 shapes and <=2 positions/shape, no counterexample; non-injectivity and non-surjectivity witnesses explicit; C (x) y^B = C <| y^B on 244 pairs. NOTE the verification run's own summary mis-stated the criterion as '|p[s]|=1 or |S_q|<=1'; that is WRONG for S_q = empty with p[s] = empty (c_s : empty -> empty^empty = 1 is not surjective). Prop 6.2's trichotomy is correct and cross-checks against Lemma 2.4: 1 (x) 0 = 0 but 1 <| 0 = 1. Sub-agent summaries are 'computed' at best -- re-derive before trusting.",
+        "children": []
+       },
+       {
+        "id": "closed-day-structures",
+        "approach": "WHICH Day-convolutional monoidal structures on Cont are CLOSED, and by what formula? (Opened 2026-07-14 at Neil's request. Attached as an ATTEMPT so its open/refuted children cannot constrain the proved parent.)",
+        "role": "attempt",
+        "trust": "in-progress",
+        "file": null,
+        "children": [
+         {
+          "id": "closed-iff-corepresentable-preserves-star",
+          "approach": "CLAIM (2026-07-14, MacBeth): a Day-convolutional structure (x)_star on Cont is CLOSED iff the corepresentable Set(R,-) preserves star; with the narrative of a 'pointwise/closed duality' (x is pointwise but hard to close; (x)_Dir is not pointwise but easy to close).",
+          "role": "attempt",
+          "trust": "dead-end",
+          "refutation": "proved",
+          "file": null,
+          "sources": [
+           "2312.00990"
+          ],
+          "reason": "REFUTED 2026-07-14, same day it was made. COUNTEREXAMPLE to the ==> direction: the categorical product x on Cont IS the Day convolution of (Set,+,0) (Niu-Spivak 2312.00990 Prop 3.79; registry sibling day-family-classification). The corepresentable Set(R,-) does NOT preserve + (for |R| >= 2, Set(R,A+B) is not Set(R,A) + Set(R,B)). Yet Cont IS cartesian closed (Niu-Spivak 2312.00990 Thm 5.31, r^q = prod_{j in q(1)} r o (y + q[j])). So a structure whose corepresentable fails to preserve star is nevertheless closed: the criterion is FALSE. The 'pointwise/closed duality' narrative dies with it -- there is no duality, x is BOTH pointwise AND closed. Refuted by argument against an established theorem (refutation: proved), not by taste. WHAT SURVIVES, and must not be over-pruned: the POINTWISE criterion 'does the corepresentable SPLIT the domain tensor (y^(A+B) = y^A x y^B, y^(AxB) does not split)' is a DIFFERENT claim, it is about pointwiseness, not closedness, and it stands (see sibling pointwise-uniqueness). The correct closedness condition is recorded at sibling uniform-closure-formula: R star (-) is a POLYNOMIAL functor for every set R.",
+          "children": []
+         },
+         {
+          "id": "dirichlet-internal-hom",
+          "approach": "The Dirichlet tensor is closed: shapes of [q,r] = the container morphisms Cont(q,r); positions at f = Sigma_{t : S_q} r[f_1 t]. Derivation correct -- but PRIOR ART, zero novelty (see note).",
+          "role": "attempt",
+          "trust": "proved",
+          "file": null,
+          "sources": [
+           "2312.00990",
+           "2202.00534"
+          ],
+          "note": "NOVELTY: NONE. Verified at FULL-PDF depth against the seed 2026-07-14. This is Niu-Spivak arXiv:2312.00990 Exercise 4.78 and Eq. (4.79), and Spivak arXiv:2202.00534 Eq. (44) ('the Dirichlet closure'). MacBeth's derivation reproduces Eq. (4.79) CHARACTER-FOR-CHARACTER. Trust is 'proved' because that grades the MATHEMATICS, not the novelty -- same convention as the sibling node dirichlet-is-uniform-fragment-of-seq. DO NOT CLAIM. | INDEPENDENT COMPUTED CHECK (scratch/dirichlet_closure_check.py, re-run 2026-07-14): the adjunction |Cont(p (x) q, r)| = |Cont(p, [q,r])| holds on 2197 exhaustive + 3000 random triples, 0 failures; 1,248,025 naturality-in-p squares, 0 failures; [y,r] = r on all small r. ANTI-MIRROR: three deliberately wrong internal homs were run as NEGATIVE CONTROLS and all three were caught (1284 / 1436 / 1302 failures). So this test could print False, and does when it should. | This is the star = x instance of the sibling uniform-closure-formula.",
+          "children": []
+         },
+         {
+          "id": "seq-right-coclosure",
+          "approach": "The sequential operator <| has a right COclosure: Poly([q/p], p') = Poly(p, p' <| q). Derivation correct -- but PRIOR ART, zero novelty (see note).",
+          "role": "attempt",
+          "trust": "proved",
+          "file": null,
+          "sources": [
+           "2202.00534",
+           "2312.00990"
+          ],
+          "note": "NOVELTY: NONE. Verified at FULL-PDF depth against the seed 2026-07-14. This is Spivak arXiv:2202.00534 Eqs. (68)-(69) and Niu-Spivak arXiv:2312.00990 Prop. 6.57, where it is attributed to JOSH MEYERS. MacBeth's derivation is correct and independent, but the result is not his. DO NOT CLAIM. Trust 'proved' grades the mathematics, not the novelty. NB this is a CO-closure (a left adjoint to p' <| -, not an internal hom), which is why it is NOT an instance of the uniform-closure-formula: <| is not convolutional (it preserves coproducts in the LEFT variable only -- see sibling comparitor-coreflection).",
+          "children": []
+         },
+         {
+          "id": "uniform-closure-formula",
+          "approach": "THE SALVAGE (new, modest, believed true). UNIFORM CLOSURE FORMULA: for a Day-convolutional (x)_star on Cont, the internal hom is [p,q]_star = Prod_{I : p(1)} q <| (p[I] star y), i.e. [p,q]_star(A) = Prod_{I} q(A star p[I]). One-line proof: Poly(r (x)_star p, q) = Prod_{J,I} q(r[J] star p[I]) = Poly(r, [p,q]_star). EXISTENCE CONDITION (corrected today): R star (-) must be a POLYNOMIAL functor (preserve wide pullbacks) for every set R -- NOT, as first claimed, that star be closed on Set. Substituting star = + gives the cartesian closure (Niu-Spivak Thm 5.31), star = x gives the Dirichlet closure (Eq. 4.79), star = vee_S gives Spivak's third family. Spivak's Eqs. (38)/(39)/(40) are exactly these three instances written SIDE BY SIDE -- the general theorem is never stated in the book. That gap is the claim.",
+          "role": "attempt",
+          "trust": "computed",
+          "file": null,
+          "lean": null,
+          "sources": [
+           "2202.00534",
+           "2312.00990"
+          ],
+          "note": "GRADE JUSTIFICATION -- why 'computed' and not 'proved', 2026-07-14. FOR: the one-line proof is a genuine argument, and three independent literature instances (Thm 5.31; Eq. 4.79 / Eq. 44; Spivak's Eqs. 38/39/40) are recovered by substitution, each verified at full-PDF depth today. The star = x instance additionally passes an anti-mirror computational check with negative controls (see sibling dirichlet-internal-hom). AGAINST 'proved': (i) the one-line proof has been checked BY HAND BY MACBETH ONCE, in the same session in which the sibling closedness criterion was found FALSE and two other claims turned out to be prior art -- same-session confidence has a bad record here; (ii) the general computational verification WAS STILL RUNNING when this node was written, and a sub-agent's computation is 'computed', never higher; (iii) Lean is IN PROGRESS, not landed; (iv) THERE IS NO WRITE-UP ARTIFACT (file: null) -- nothing on disk a future session can re-check, which is exactly the state the registry exists to expose. PROMOTION PATH: write it up in proofs/ and let the verification run land => 'proved'; Lean declaration sorry-free => 'lean-verified'. Do not promote on memory.",
+          "children": []
+         },
+         {
+          "id": "closed-convolutional-classification",
+          "approach": "COROLLARY (conjectural as stated). Combining Theorem A (parent node: Day convolution is an EQUIVALENCE onto the convolutional monoidal structures on Cont) with the uniform closure formula: {monoidal star on Set with R star (-) polynomial for every R} = {CLOSED convolutional monoidal structures on Cont}.",
+          "role": "attempt",
+          "trust": "speculative",
+          "file": null,
+          "sources": [
+           "2312.00990",
+           "2202.00534"
+          ],
+          "note": "GRADE JUSTIFICATION -- why 'speculative', 2026-07-14. TWO independent reasons, either alone sufficient. (1) INHERITANCE: it leans on uniform-closure-formula, which is only 'computed'; a corollary cannot be better-evidenced than its lemma. (2) A MISSING DIRECTION: the formula supplies SUFFICIENCY (R star (-) polynomial ==> [p,q]_star exists ==> closed). The NECESSITY direction (closed ==> R star (-) preserves wide pullbacks for every R) was NOT argued in the session -- only asserted. An 'equivalence' with one direction unargued is a conjecture, and today's dead-end sibling closed-iff-corepresentable-preserves-star is precisely what an unargued biconditional looks like when it goes wrong. Theorem A itself (the other input) IS proved -- the gap is not there. TO PROMOTE: supply the necessity direction, then inherit whatever grade uniform-closure-formula has reached.",
+          "children": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "comparitor-comonoid-nogo",
+      "approach": "CONJECTURE (comparitor no-go). Id : (Cont,lhd,y) -> (Cont,otimes,y) is LAX monoidal with structure map the comparitor o_{p,q} : p otimes q -> p lhd q (its coherence IS the duoidal interchange, Spivak 2202.00534 Eq. 29 -- CHECK, do not assume). Lax transports MONOIDS, not comonoids. Hence: every container monad (a lhd-monoid) is a Dirichlet monoid, via A otimes A --o--> A lhd A --mu--> A. But a directed container (a lhd-comonoid, registry m3-comonoid-forward) does NOT descend to a Dirichlet comonoid: that needs A lhd A -> A otimes A, the comparitor REVERSED, which is not invertible (non-surjectivity machine-checked, see dirichlet-is-uniform-fragment-of-seq). Predicted boundary, from Spivak Eq. 33 (Indep iso when p linear or q representable) on the diagonal p=q=C: transfer survives IFF C is degenerate -- C = y^A (one shape; the directed container is a monoid on A) or C = Ay (one position per shape; a discrete category). GENERAL LESSON: an approximation is a one-way street -- it builds maps OUT of a tensor, never INTO one; variance of the structure map decides which structures survive Day-ification.",
+      "role": "attempt",
+      "trust": "speculative",
+      "file": null,
+      "lean": null,
+      "sources": [
+       "2202.00534",
+       "2407.01849",
+       "2312.00990"
+      ],
+      "note": "Consequence of comparitor-coreflection (Thm C) x m3-comonoid-forward (M3) -- NOT a premise of either; deliberately attached as an attempt so it cannot constrain their grades. Write-up: memory/connections/comparitor-points-the-wrong-way.md. NOVELTY UNAUDITED -- duoidal monoid-transfer is plausibly folklore. Deep-read 2202.00534 (Eq. 29/32/33) and 2407.01849 BEFORE claiming. Two honesty conditions: (i) Eq. 33 gives SUFFICIENT conditions for Indep iso -- necessity unchecked, so the 'iff' is not yet earned; (ii) 'C carries SOME otimes-comonoid structure' is a DIFFERENT question from 'M3's delta TRANSFERS' -- this node is about transfer only. Opened 2026-07-14 (dream 6). Cheap to test: both monoidal structures + Comonoid.lean are already machine-checked.",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "m5-enriched-dcont-cof",
+    "approach": "M5: enriched DCont = Cof",
+    "role": "attempt",
+    "trust": "unclassified",
+    "file": null,
+    "sources": [
+     "2209.01144"
+    ],
+    "note": "Clarke-Di Meglio 2022 state this is open. No sequel since.",
+    "children": []
+   },
+   {
+    "id": "m6-infinity-dcont",
+    "approach": "M6: infinity-DCont = Cat (Kan Chen's Conj 7.2)",
+    "role": "attempt",
+    "trust": "speculative",
+    "file": null,
+    "sources": [
+     "2601.22968"
+    ],
+    "children": []
+   },
+   {
+    "id": "fibrational-comonoid-layer",
+    "approach": "Is 'directed container = internal category' a theorem about Pi, or about composition? Target (PROVE.md 2026-07-14): DirCont(q) = Cat(B) over a fibration/comprehension category with no Pi. RESULT: TRUE (with correction Cat(B) -> Cat_D(B), source a display map) but SCOOPED IN FULL. The equivalence, at objects AND cofunctor morphisms, AND the exact observation that Pi is needed only for the <|-monoidal packaging and not for the equivalence, are all prior art. The answer to Neil's question -- 'it is about composition, not Pi' -- is SETTLED, not open.",
+    "role": "attempt",
+    "trust": "peer-reviewed",
+    "file": "2026-07-14-comonoid-layer-over-fibration.md",
+    "sources": [
+     "2305.00167"
+    ],
+    "review": "Full-PDF novelty audit 2026-07-14 (two independent sweeps: local seed + notes; arXiv competitor deep-read). KILL LINE: Shapiro-Spivak arXiv:2305.00167 Remark 3.16 -- 'Poly_E is a full subcategory of the category of dependent lenses [Spivak 1908.02202 Ex 3.5] whose objects are ALL morphisms in E; allowing such objects does not interfere with the CATEGORY, only the MONOIDAL STRUCTURE required the objects to be exponentiable.' That IS 'the equivalence needs only pullbacks; only <| needs Pi.' Plus SS23 Thm 5.6 (comonoids in Poly_E = internal categories with exponentiable source, any finite-limit E), Cor 5.12 (morphisms = internal cofunctors, adopting Clarke Def 12), Example 5.10 (exponentiable-source is a PROPER restriction: not every double category is Conduche). Deeper roots: Ahman-Chapman-Uustalu LMCS 2014 SECTION 7 DEFINES directed polynomials in a pullbacks category (stipulates s exponentiable in the DATA, uses it in NONE of the 5 laws -- no theorem, definitions only); Ahman-Uustalu 2016 section 3.2 ('the data and laws of a directed polynomial are just those of a small category', over Set); Clarke TAC 2020 Def 2.10 / EPTCS 2019 Def 12 (internal cofunctors, pullbacks only). von Glehn TAC 33 owns the carrier Poly_F over a display class but has ZERO comonoid content. Verdict: no new theorem. Review artifact = the proofs/ file sections 6-9 + memory/for-collaborator/2026-07-14-comonoid-layer-scooped.md.",
+    "note": "GRADE = peer-reviewed and NOT proved-as-novel: 'peer-reviewed' here grades that the equivalence is an established, refereed result (SS23 is published: Theory and Applications of Categories / cited widely), NOT that MacBeth proved something new -- he did not. What is MacBeth's, and is ONLY expository (not registry-worthy as a theorem): (i) the 5+2=7 law accounting -- two internal-category axioms absorbed into the dependent typing of o and oplus -- and the reading of every dependent cast as a pullback-mediation obligation discharged by an earlier law (D1 enables the left-unit mediating map; D2 enables the associativity source map); (ii) the correction Cat(B) -> Cat_D(B) (source = display map; = Cat(B) iff q = cod_B); (iii) a fresh witness that the <|-packaging is strictly lossy off LCC -- (Q,+) as a one-object topological category in Top has non-exponentiable source (Q not core-compact; Day-Kelly), an instance of SS23 Example 5.10's phenomenon in a new base -- and the tidy iff: Cat(E) = Comon(Poly_E) iff E is LCC. Computational confirmation: scratch/dircont_vs_cat.py, two independently-coded sides match to profile (3,2)=288; triangulated by labelled monoids 1,4,33. This is the SEVENTH full-PDF reproof the METHOD has caught. The live novelty is the sibling m6-infinity-dcont (Chen Conj 7.2, open).",
+    "children": [
+     {
+      "id": "conjecture-was-Cat-B-not-Cat-D-B",
+      "approach": "PROVE.md conjectured DirCont(q) = Cat(B) (all internal categories).",
+      "role": "attempt",
+      "trust": "dead-end",
+      "file": "2026-07-14-comonoid-layer-over-fibration.md",
+      "reason": "OVER-STRONG CONCLUSION. C1 = S.P is a comprehension, so dom : C1 -> C0 is a DISPLAY map, not an arbitrary map. Essential image is Cat_D(B) (display source), = Cat(B) iff every map is display iff q = cod_B. Counterexample: D = fibres of size <=2 in Set; Z/3 is an internal category (one of the 33 at profile (3,)) whose source is not in D, hence not a directed container over that q. Corrected in the write-up (section 4).",
+      "refutation": "computed",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "m3-comonoid-forward",
+    "approach": "M3: a directed container is a comonoid in the monoidal category (Cont, ◁, I) — laws stated internally to Cont (no Ext, no [Set,Set]). Right counit = D3 (transport-free); left counit = D1+D2; coassoc = D4+D5.",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "Containers.DirectedContainer.toComonoid",
+    "sources": [
+     "1604.01187"
+    ],
+    "note": "Axioms: Quot.sound only (via funext). Dependent casts isolated in ContainerMorphism.ext_eq + Container.seq_pos_transport. Source: lean/Containers/Containers/Comonoid.lean (repo root, not proofs/).",
+    "children": []
+   },
+   {
+    "id": "m3b-comonoid-converse",
+    "approach": "M3b: every comonoid in (Cont, ◁, I) is a directed container (converse + round-trips). Linchpin: the RIGHT counit law forces (δ.onShapes s).1 = s — read off the shape component of the morphism equation, no probing at a generic element needed. Then the ComonadConverse.lean template applies verbatim.",
+    "role": "attempt",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "Containers.Container.Comonoid.toDirectedContainer_toComonoid",
+    "sources": [
+     "1604.01187"
+    ],
+    "children": [],
+    "lean_note": "M3b converse fully verified AND both round trips now certified (sorry-free, Quot.sound only). directed->comonoid->directed = toComonoid_toDirectedContainer (rfl); comonoid->directed->comonoid = Container.Comonoid.toDirectedContainer_toComonoid (2026-07-15): counit rfl, comult by ContainerMorphism.ext_eq with shape half seq_shape_norm and the outer-shape position transport isolated in the new Container.seq_pos_norm (generalise cShape s to a free var, cases collapses it). This upgrades M3/M3b to a full isomorphism of packagings DirectedContainer C = Comonoid C. Also added Container.Comonoid.ext (proof-irrelevance for the three law fields). File Containers/ComonoidConverse.lean."
+   }
+  ]
+ }
+}

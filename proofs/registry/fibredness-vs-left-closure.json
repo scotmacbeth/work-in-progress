@@ -1,0 +1,112 @@
+{
+ "conjecture": "Sub-Q2 of workers-grading-vs-bhm-polynomial-grading: is Braithwaite-Hedges-Mihejevs' claim 'the composition product |> is not fibred in its left variable' (Polylang, ACT 2026 extended abstract, sec 3, one unproved parenthetical) THE SAME obstruction as MacBeth's proved T4-left failure of the <|-left-closure (right adjoint to (-)<|q)? ANSWER: NO. Relative to MacBeth's own Definition 1.3 (fibred endofunctor over the shape fibration pi: Fam(C^op)->Set, pi(S,P)=S, = the family fibration of C^op; vertical = the F_0=Id case), three conditions on q=(T,Q): (V) L_q=(-)<|q vertical, (F) L_q fibred, (C) L_q has a right adjoint. THEOREM A (over Set): (V)<=>(F)<=>(C)<=>|T|=1 (q a monomial y^Q). THEOREM B (over Vec_fd, where tininess collapses <| to (x)): (F) holds ALWAYS; (V)<=>|T|=1; (C)<=>#{t:Q_t!=0} FINITE. Hence (V) STRICTLY-IN (C) STRICTLY-IN (F), witnesses q_2=(2,k) [closed, not vertical] and q_omega=(N,k) [fibred, NOT closed]. The separation is two-sided, so the answer is NO under EITHER reading of 'fibred'. BONUS: <| IS fibred in its RIGHT variable for every q, with base functor literally the polynomial functor [[q]] itself (pi(q<|p)=Sigma_t (pi p)^{Q_t}); and BOTH variables preserve cartesian morphisms unconditionally, so non-fibredness of <| is purely a failure of BASE-FUNCTORIALITY, never of cartesianness. DIAGNOSIS: both conditions are the one test 'is G_r(Z)=Fam(<Z> <| q, r) familially representable?' at different PROBING objects r -- the shape probe r=(R,0) sees only pi(<Z> <| q) and IS fibredness; the position probe r=<I> sees only whether the forced position object exists in the base. Fibredness = COLLAPSE of the shape object; left-closure = collapse AND SUMMABILITY in the base. Over Set the only collapse mechanism is |T|=1, which trivialises summability too, so they coincide; over a linear base collapse is generic (tininess) and they decouple.",
+ "status": "proved",
+ "date_opened": "2026-08-30",
+ "date_closed": "2026-08-30",
+ "note": "Front: Workers<->BHM (sub-Q2), after the 08-29 retract theorem. Delta over BHM: they assert non-fibredness in ONE parenthetical clause of a 2-page extended abstract, with no definition, no proof and no theorem number -- the definition and the proof are supplied here. Delta over my own T4-left: Theorem A is a STRICT STRENGTHENING of Workers Thm 2 (2026-08-21), whose counting argument (|H([n])| >= 2^{2^n} super-polynomial) only covers finite T; the least-support lemma (Lemma 3.4) covers ALL |T|>=2 finite or infinite AND the degenerate |T|=0 case the counting argument never addressed. Theorem B(3) also SHARPENS T4-left Thm 3.1(2): the boundary over Vec_fd is not 'T infinite' but 'infinitely many NON-ZERO positions' -- a q with infinitely many shapes carrying the zero position object IS left-closed, because zero positions contribute no summand. The Set analogue of that refinement is FALSE (q=(2,empty) is not left-closed), which is itself an instance of the two-probe diagnosis. Third occurrence of the 'two canonical-looking conditions constrain different legs of one formula' pattern (after weber-delta-vs-t2-phi-distinct and the T2 conjuncts A/B) -- now treated as a METHOD: write the single formula both conditions are about, identify which factor each constrains. Verified in scratch/fibredness-vs-closure/verify.py, six independent checks all green (see the writeup's section 6). A hostile-referee pass caught and fixed a wrong shape action in Lemma 2.1 (it is tau . phi-sharp_s, NOT tau . (phi-sharp_s)^{-1}; the latter does not typecheck for non-cartesian phi) -- caught by the explicit-morphism functoriality check, 183/183 after the fix.",
+ "sources": ["act2026:braithwaite-hedges-mihejevs-polylang", "2601.15420"],
+ "tree": {
+  "id": "root",
+  "approach": "NO -- fibredness of (-)<|q and existence of its right adjoint are distinct conditions that coincide over Set (both <=> |T|=1) and separate strictly over Vec_fd (V strictly-in C strictly-in F). Fibredness = shape-collapse; closure = collapse + summability.",
+  "trust": "proved",
+  "file": "2026-08-30-fibredness-vs-left-closure.md",
+  "children": [
+   {
+    "id": "cartesian-preservation-free",
+    "approach": "Lemma 2.1 + Prop 2.2: for every q, BOTH (-)<|q and q<|(-) carry pi-cartesian morphisms to pi-cartesian morphisms (the position map is a reindexing along the iso phi-sharp_s, hence an iso); and q<|(-) IS fibred, with base functor pi(q<|p)=Sigma_t (pi p)^{Q_t} = [[q]](pi p). So the only possible failure in the LEFT variable is base-functoriality. Verified: 183/183 functoriality, 400/400 cartesian lifts.",
+    "trust": "proved",
+    "file": "2026-08-30-fibredness-vs-left-closure.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "theorem-A-set-tfae",
+    "approach": "Theorem A: over Poly=Fam(Set^op), (V)<=>(F)<=>(C)<=>|T|=1. (F)=>|T|=1 in one line: <empty> and <1> have the same shape set but pi(<empty><|q)=T^empty=1 and pi(<1><|q)=T. |T|=1 => closure exists with [q<|r]=(Sigma_rho Q^{M_rho}, M_rho). (C)=>|T|=1 via the shape probe r=2=(2,empty), G_2(Z)=2^{T^Z}, killed by the least-support lemma at Z=N.",
+    "trust": "proved",
+    "file": "2026-08-30-fibredness-vs-left-closure.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "right-adjoint-familial-criterion",
+      "approach": "Lemma 3.1: (-)<|q preserves coproducts and Fam(C^op) is the free coproduct completion of C^op, so a right adjoint exists iff for every r the functor G_r(Z)=Fam(<Z><|q, r) is familially representable (over Set: a polynomial functor). Both directions proved (restrict the natural iso to p=<Z>).",
+      "trust": "proved",
+      "file": "2026-08-30-fibredness-vs-left-closure.md",
+      "role": "premise",
+      "children": []
+     },
+     {
+      "id": "support-lemma-polynomial-functors",
+      "approach": "Lemma 3.4 (least support): for F = coprod_u Set(N_u,-) and A subset Z, x=(u,g) in F(Z) lies in im(F(A)->F(Z)) iff im(g) subset A; hence the supports of x are closed under arbitrary intersection. Elementary form of Carboni-Johnstone 'familially representable = preserves wide pullbacks' -- the general theorem is NOT used, only this two-line lemma. Kills 2^{T^Z} at Z=N with A_n = N minus {n}: the 'eventually t_0' subset is invariant under every single-coordinate change but is neither empty nor everything.",
+      "trust": "proved",
+      "file": "2026-08-30-fibredness-vs-left-closure.md",
+      "role": "premise",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "theorem-B-vecfd-separation",
+    "approach": "Theorem B: over Fam(Vec_fd^op) with <|=(x), (F) always (pi(p<|q)=SxT, F_0=(-)xT); (V) iff |T|=1; (C) iff T'={t:Q_t!=0} finite. Witnesses q_2 (closed, not vertical) and q_omega=(N,Q_t=k) (fibred, NOT closed). THE SEPARATION, and it is two-sided.",
+    "trust": "proved",
+    "file": "2026-08-30-fibredness-vs-left-closure.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "collapse-lhd-eq-tensor-tiny",
+      "approach": "Prop 1.4 (= my proved T4-left Prop 2.1 / linear-containers Prop 4.1): tiny positions => [[p<|q]] = [[p(x)q]], so on Fam(Vec_fd^op) <| = (x) = (SxT, P_s(x)Q_t). NOTE the honesty caveat carried forward: [[-]] is NOT full over Vec (T1: fullness <=> connected unit), so Prop 1.4 pins the EXTENSION, not the object; <| := (x) is taken as the DEFINITION on the tiny locus and Theorem B is literally a theorem about (-)(x)q.",
+      "trust": "proved",
+      "file": "2026-08-27-t4-left-closedness-lhd-famcop.md",
+      "role": "premise",
+      "children": []
+     },
+     {
+      "id": "vecfd-closed-iff-finite-nonzero-support",
+      "approach": "Theorem B(3). Sufficiency: infinite distributivity in Set + dualizability of fd Q_t gives G_r = coprod_{rho in R^T} C(oplus_{t in T'} M_{rho t}(x)Q_t^*, -), the direct sum finite hence in Vec_fd. Necessity (T' infinite): position probe r=<k>; Z=0 forces |U|=1 because C(N,0)=1 in a POINTED base (this is exactly where extensivity would have saved the shape count); then Yoneda on id_N gives a k-LINEAR surjection N^* ->> prod_{t in T'} Q_t from an n-dimensional space onto a space of dimension >= |T'| >= aleph_0. Field-independent. Verified 4000/4000 over F_2 for finite T.",
+      "trust": "proved",
+      "file": "2026-08-30-fibredness-vs-left-closure.md",
+      "role": "premise",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "diagnosis-two-probes",
+    "approach": "Section 5. Prop 5.1: L_q fibred iff Z |-> pi(<Z><|q) is constant (pi and L_q both preserve coproducts, cartesianness is free) -- fibredness is a SHAPE-LEVEL statement. Prop 5.2: in any base with an initial 0 satisfying C(0,X)=1, the shape probe r=(R,0) gives G_r(Z)=R^{W(Z)}, a necessary condition for closure. Cor 5.3: over Set that probe forces |T|=1, so closed => fibred CONCEPTUALLY (not by classification); over Vec_fd the shape probe is vacuous (W constant, constant functors are familially representable) and the obstruction migrates to the position probe.",
+    "trust": "proved",
+    "file": "2026-08-30-fibredness-vs-left-closure.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "same-obstruction-conjecture",
+    "approach": "The conjecture this session was opened to test: BHM's non-fibredness IS my <|-left-closure obstruction (they do look identical -- same variable, same Sigma_s T^{P_s} formula, same escape hatch |T|=1 over Set).",
+    "trust": "dead-end",
+    "reason": "REFUTED by Theorem B. Over Fam(Vec_fd^op) the two conditions separate in BOTH directions: q_omega=(N,k) is fibred but has no right adjoint, and q_2=(2,k) has a right adjoint but is not vertical. The Set coincidence of Theorem A is an artefact of Set having exactly ONE collapse mechanism (|T|=1), which happens to trivialise summability as well. Confirms the 08-30 recon's computed guess, now derived by hand.",
+    "refutation": "proved",
+    "file": "2026-08-30-fibredness-vs-left-closure.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "bhm-clause-as-lemma",
+    "approach": "Use BHM's '|> is not fibred in its left variable' as a citable lemma, per the original sub-Q2 framing.",
+    "trust": "dead-end",
+    "reason": "The primary source (papers/BHM-polylang-ACT2026.pdf) is a TWO-PAGE extended abstract and the entire claim is one parenthetical clause in sec 3 with no definition of 'fibred', no proof, no theorem number. Citable as corroboration of the phenomenon ONLY. Definition 1.3 and all proofs are supplied here instead. Side observation (Remark 2.3): under Definition 1.3 their stated reason does not obstruct the three fixpoints they list -- mu X.1+A(x)X, 1+AxX, 1+A|>X are all RIGHT-variable hence all fibred; what it does obstruct is their own graded monad T_P(X)=X|>P.",
+    "refutation": "judgment",
+    "file": "2026-08-30-fibredness-vs-left-closure.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "pp26-fibration-identification",
+    "approach": "Discharge the attribution: is Pradic-Price 2601.15420's 'fibred endofunctor over the fibrewise-opposite-of-the-codomain-fibration' the same as Definition 1.1/1.3? sources.json records their framing verbatim as the fibrewise-op of cod, which IS Cont = int_Set (cod)^op with projection = the shape map; but the 2026-07-15 deep-read was grep-targeted at derivative/chain-rule, and memory/reading/2026-07-29-browse3.md still lists the identity question as OPEN, and their definition of 'fibred endofunctor' ((F,F_0) vs vertical) was never extracted.",
+    "trust": "in-progress",
+    "reason": null,
+    "file": null,
+    "role": "attempt",
+    "sources": ["2601.15420"],
+    "children": []
+   }
+  ]
+ }
+}

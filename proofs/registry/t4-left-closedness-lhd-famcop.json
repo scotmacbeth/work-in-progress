@@ -1,0 +1,65 @@
+{
+ "conjecture": "T4-left (Neil UID 125, 'left closedness too, if possible'): does the NON-SYMMETRIC substitution product (S,P)<|(T,Q) on Fam(C^op) admit a LEFT internal hom = the <|-CLOSURE = right adjoint to (-)<|q (PROVE.md 'curry the LEFT argument'), distinct from the KNOWN <|-COCLOSURE=directed containers=right adjoint to q<|(-)? RESULT: YES over a rigid/tiny base, via COLLAPSE. Prop 2.1: if positions are tiny ([Z,-] preserves coproducts; = dualizable in a closed SMC; = finite-dim in Vec) then <| = (x) as bifunctors, (S,P)<|(T,Q)=(SxT,(P_s(x)Q_t)) (the Vec_fd instance is my proved Prop 4.1). So <| becomes SYMMETRIC and its left internal hom = the (x)-internal-hom of T2. Thm 3.1: <|-left-closed on Fam_fin(Vec_fd^op) [finite shapes, fd positions] with [(T,Q)<|(R,M)]=(R^T,(oplus_t M_{rho t}(x)Q_t^*)_{rho:T->R}); NOT on Fam(Vec_fd^op) [inf shapes, conjunct B] NOR Fam(Vec^op) [inf-dim positions break tininess=collapse itself, conjunct A]. Prop 4.1: EXTENSIVITY is OPPOSED to <|-left-closedness -- over extensive Set the distributive law [Z,coprod_t B]=coprod_{tau:Z->T}prod_d B branches into T^Z shapes, <|!=(x), <| genuinely non-symmetric, <|-closure OBSTRUCTED (non-polynomial, my Workers Thm 2) while (x) closes; over linear Vec_fd the internal hom is additive, preserves coproducts, <| collapses onto the closed symmetric (x). Non-extensivity, the OBSTRUCTION of T1(fullness)/T2((x)-closedness), is here the REPAIR. Load-bearing conjunct inherited from T2: dualizable-and-summable oplus_t M_{rho t}(x)Q_t^*, satisfiable over Vec only on the finite/fd corner. Set escape hatch: <|-closure exists even over Set iff q is a MONOMIAL (|T|=1, no branching).",
+ "status": "proved",
+ "date_opened": "2026-08-27",
+ "date_closed": "2026-08-27",
+ "note": "Front A (Fam(C^op) closedness cluster), the <| axis after T2's (x) axis. SYNTHESIS of three of my own proved results: Prop 4.1 (linear-containers-vec, <|=(x) over Vec_fd), T2 (t2-day-closedness-famcop, (x)-closedness criterion+rigid hom+Vec dichotomy), Workers Thm 2 (workers-x-closed-lhd-obstructed, <|-closure fails over Set). Delta over DJN 2305.05655 (who define <| over a general base + comonoids=enriched cats but treat NO closed structure for <|): the <|-closure verdict, exactly as closedness was the T2 delta over their (x). Disambiguation banked (PROVE.md's explicit worry): the TARGET is the <|-CLOSURE (right adjoint to (-)<|q, obstructed over Set), NOT the known <|-COCLOSURE (=DCont, right adjoint to q<|(-), a Lan, exists over Set) -- these are genuinely different adjoints and the note does not re-prove the coclosure. Neil's hint ('left Kan preserves representability then coproducts') decoded as T2's rigid dualization (-)(x)Q_t^* preserving corepresentability then prod_t->oplus_t, recognized as the <|-closure via the collapse. Verified: 20000/20000 collapse (compose==tensor dims) + 3000/3000 closure adjunction cardinality identity over F_2 (scratch/lhd-left-closedness-verify.py); Set double-exp obstruction in workers-type-hierarchy/lhd_cardinality.py. HONESTY: the positive result holds only where <| DEGENERATES to (x); the genuinely-non-symmetric <| (Set) is NOT left-closed. Gaps: general iff for the collapse (converse tiny<=?=<|=(x) proved only over Set/Vec); what <| IS off the tiny locus (full Vec, DJN's exact <|); other non-extensive bases.",
+ "tree": {
+  "id": "root",
+  "approach": "T4-left: the <|-left-closure on Fam(C^op). Over a tiny/rigid base <| collapses to the closed symmetric (x) (Prop 2.1), so the left internal hom exists on Fam_fin(Vec_fd^op) (=T2 rigid hom) and fails on both larger linear categories; over extensive Set <|!=(x) and the <|-closure is obstructed. Extensivity is OPPOSED to <|-left-closedness.",
+  "trust": "proved",
+  "file": "2026-08-27-t4-left-closedness-lhd-famcop.md",
+  "children": [
+   {
+    "id": "collapse-lhd-eq-tensor",
+    "approach": "Prop 2.1: positions tiny ([Z,-] preserves coproducts; dualizable in closed SMC) ⟹ ⟦p<|q⟧=∐_s[P_s,∐_t[Q_t,X]]=∐_{s,t}[P_s(x)Q_t,X]=⟦p(x)q⟧, so p<|q=p(x)q=(SxT,(P_s(x)Q_t)). Cause: tininess collapses the substitution's dependent-sum shape set Σ_s Dec_T(P_s) to the plain product SxT. Consequence: <| symmetric, left hom = right hom = (x)-hom.",
+    "trust": "proved",
+    "file": "2026-08-27-t4-left-closedness-lhd-famcop.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "prop41-lhd-eq-tensor-vecfd",
+      "approach": "Prop 4.1 (mine, proved): over Fam(Vec_fd^op), (S,P)<|(T,Q)=(SxT,(P_s(x)Q_t)) -- the Vec_fd instance of the collapse, established independently of DJN and verified over F_2.",
+      "trust": "proved",
+      "file": "2026-08-19-vec-comonoids-algebras.md",
+      "role": "premise",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "t2-tensor-closedness",
+    "approach": "T2 (mine, proved): (x) closed <=> Phi familially representable; rigid regime hom [(T,Q)=>(R,M)]=(R^T,(oplus_t M_{rho t}(x)Q_t^*)); closed on Fam_fin(Vec_fd^op), fails on Fam(Vec_fd^op)[conjunct B] and Fam(Vec^op)[conjunct A]. Supplies the closure once <|=(x).",
+    "trust": "proved",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "workers-lhd-obstructed-set",
+    "approach": "Workers Thm 2 (mine, proved): over Cont=Fam(Set^op), (-)<|q has NO right adjoint -- the representing functor T_R(A)=∏_{gamma:A->T}⟦R⟧(Σ Q) is non-polynomial (double-exp shape growth |T|^A). Supplies the Set obstruction: <| genuinely not left-closed over the extensive base.",
+    "trust": "proved",
+    "file": "2026-08-21-workers-x-closed-lhd-obstructed.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "extensivity-opposition",
+    "approach": "Prop 4.1 of the writeup: the distributive law (DIST) [Z,coprod_t B]=coprod_{tau:Z->T}prod_d B is the single fact -- over extensive bases it branches (T^Z, obstruction), over linear bases it degenerates (additive hom, collapse). Extensivity ⊥ <|-left-closedness; inverts T1/T2 (villain->hero).",
+    "trust": "proved",
+    "file": "2026-08-27-t4-left-closedness-lhd-famcop.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "general-iff-collapse",
+    "approach": "GAP: converse of Prop 2.1 (does <|-left-closure force positions tiny?) proved only over Set (double-exp) and Vec (Lemma 3.1). Exact class of non-cartesian non-rigid C admitting <|-closure OPEN. Candidate: <|-left-closed <=> every position tiny OR q monomial.",
+    "trust": "speculative",
+    "file": "2026-08-27-t4-left-closedness-lhd-famcop.md",
+    "role": "attempt",
+    "reason": "converse unproven in general; same open frontier as T2 Gap 1",
+    "children": []
+   }
+  ]
+ }
+}
