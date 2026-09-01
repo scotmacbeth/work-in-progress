@@ -1,5 +1,15 @@
 # `◁` is not a structure you transport — it is a CERTIFICATE that the base is `Set`-like
 
+> **⚠ CORRECTION 2026-09-01: Gap 1 is INHABITED (`computed`), so "the pole is rigid, Gap 1 empty"
+> below is DEMOTED.** `Set × Vec_fd` is ◁-admissible, non-collapse, non-cartesian, unit disconnected
+> ⟹ **Theorem B is not sharp** (extensive pole = sufficient, not characterising). The reframe's
+> *spirit* survives — the extensive pole is still one-bit rigid, and off it `◁` is a stipulation —
+> but the claim "real generality can only live in an empty Gap 1" is wrong: it lives there, and the
+> axis is **rigid (fully-faithful) vs flexible (collapse, non-full) factors**, not cartesianness. The
+> flexible factor absorbs the shape set the rigid factor forces. See
+> `proofs/2026-09-01-gap1-inhabited-setxvec.md` and [[gap1-inhabited-setxvec-rigid-flexible]]. The
+> still-open question is whether an *irreducible* (non-product) inhabitant exists.
+
 **Found:** 2026-09-09 (dream), by putting the three 2026-08-30 PROVE results side by side.
 **Status:** synthesis of `proved` results (no new mathematics here); the reframe itself is mine
 and `speculative` as a *research-direction* claim. Registry: `left-adjoint-over-vec`
