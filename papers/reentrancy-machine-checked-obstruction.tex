@@ -286,7 +286,10 @@ Section~\ref{sec:complex} is transcribed into Lean~4 and machine-checked. The de
 sorry-free and uses no external library --- in particular no Mathlib --- matching the pure-core style
 of the author's container development (\texttt{Basic.lean}, \texttt{ZappaSzep.lean}); this is possible
 because the entire computation is finite, so the substantive facts close by \texttt{decide} or by case
-exhaustion. The file is \texttt{Containers/Reentrancy.lean}. We quote it, rather than paraphrase it.
+exhaustion. The file is \texttt{Containers/Reentrancy.lean}. The listings below transcribe it faithfully, with
+Unicode replaced by ASCII for typesetting: \texttt{exists} is $\exists$, \texttt{<->} is
+$\leftrightarrow$, \texttt{<-} is the reverse rewrite $\leftarrow$, \texttt{x} is the product
+$\times$, \texttt{e} is $\varepsilon$, and $\langle\,\cdot\,\rangle$ is the anonymous constructor.
 
 \subsection*{The model}
 The two-element field $\FF$ is modelled as \texttt{Bool} with \texttt{false}${}=0$,
@@ -303,9 +306,8 @@ def omega (e : Z2) : C2 := (false, e)                 -- transversal defect omeg
 def phi (x : C2) : Z2 := xor x.1 x.2                  -- class map (a,b) |-> b - a
 \end{lstlisting}
 
-\noindent(The listing renders \texttt{Z2}, \texttt{C2}, \texttt{d1}, \texttt{InB2}, \texttt{omega},
-\texttt{phi} for $\FF$, $C^2$, $\delta^1$, $B^2$, $\omega_T$, $\varphi$; the ASCII \texttt{x} is the
-product $\times$ and \texttt{e} is $\varepsilon$.)
+\noindent Here \texttt{Z2}, \texttt{C2}, \texttt{d1}, \texttt{InB2}, \texttt{omega}, \texttt{phi} are
+$\FF$, $C^2$, $\delta^1$, $B^2$, $\omega_T$, $\varphi$ respectively.
 
 \subsection*{The certified theorems}
 Three facts establish $H^2\cong\FF$ via $\varphi$: that $\varphi$ kills the coboundary, that its kernel
