@@ -1,0 +1,1150 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}     % \llbracket \rrbracket
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+% ---- theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+% ---- macros ----
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\Setb}{\mathbf{Set}}
+\newcommand{\Vecb}{\mathbf{Vec}}
+\newcommand{\Vecfd}{\mathbf{Vec}_{\mathrm{fd}}}
+\newcommand{\Gl}{\mathrm{Gl}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\comp}{\mathbin{\triangleleft}}
+\newcommand{\compDJN}{\mathbin{\triangleleft_{\mathrm{DJN}}}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\gena}[1]{\langle #1 \rangle}
+\newcommand{\pizero}{\pi_0}
+\DeclareMathOperator{\supp}{supp}
+
+\begin{document}
+
+\title[Admissibility of the composition product over a base]
+{When does substitution exist? \\ Admissibility of the composition product on $\Fam(\C^{\op})$}
+
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+
+\date{September 2026}
+
+\begin{abstract}
+A polynomial functor is a coproduct of representables, and substituting one into the variable
+of another gives the composition product $\comp$ that organises polynomial functors into a
+monoidal category. Fixing a closed symmetric monoidal base $\C$ and taking positions in $\C$
+yields the external-shape category $\Fam(\C^{\op})$, with extension $\ext{S,P}X=\coprod_{s}[P_s,X]$;
+one then asks for which bases $\C$ this category still carries $\comp$. We show the question is not
+graded but nearly dichotomous. A single necessary condition -- the \emph{Shape Lemma}, that
+$[P,\,T\cdot\one]$ must be a copower of the terminal object -- forces the answer on both extremes.
+On any nontrivial infinitary-lextensive cartesian-closed base the mere existence of $\comp$ forces
+the monoidal unit to be \emph{connected}, whence the extension is fully faithful, substitution is
+canonical, and the slot-reindexing left adjoint $F_q\dashv({-})\comp q$ exists for every $q$. On this
+pole we obtain a complete characterisation: $\Fam(\C^{\op})$ carries $\comp$ if and only if the
+connected-components functor $\pizero$ preserves finite products. This one criterion unifies the two
+ways admissibility can fail -- a disconnected unit (as for $\Setb\times\Setb$) and, more subtly, a
+connected unit whose $\pizero$ is still not multiplicative. The latter is realised by the Artin
+gluing $\Gl((-)^2)$, a Grothendieck topos with a \emph{connected} unit that is nonetheless
+inadmissible because $\pizero(K\times K)=2\neq1$ for the single edge $K$ (Weichsel's theorem); so
+connectedness of the unit is necessary but not sufficient. On an additive base substitution collapses
+to the Dirichlet tensor and the unit is always disconnected. Between the poles the admissible region
+is thin but non-empty: $\Setb\times\Vecfd$ is admissible with a disconnected unit, so the
+extensive-pole characterisation does not extend to a global one. The organising fact is that when the
+unit is connected the extension is injective on objects, so $\comp$ is determined by $\C$; when it is
+disconnected $\comp$ is a choice, and the base-change question stops being about $\C$ at all.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection*{The problem}
+A polynomial functor $\Setb\to\Setb$ is a coproduct of representables,
+\[
+   \ext{S,P}\,X \;=\; \coprod_{s\in S} X^{P_s},
+\]
+indexed by a set $S$ of \emph{shapes} with a set $P_s$ of \emph{positions} at each shape.
+Two polynomial functors compose to a third, and the resulting operation -- plugging one polynomial
+into the variable of another -- is the \emph{composition product} $\comp$, characterised by
+$\ext{p\comp q}\cong\ext p\circ\ext q$. It makes polynomial functors the objects of a monoidal
+category whose comonoids are exactly small categories \cite{NiuSpivak,DJN}, and it is the algebraic
+heart of the ``polynomial'' account of interaction, dynamics, and data.
+
+Nothing in the definition of a polynomial functor needs the exponents to be indexed by \emph{sets}.
+Fix instead a closed symmetric monoidal cocomplete base $(\C,\otimes,I,[-,-])$. An object of
+$\Fam(\C^{\op})$ is a set $S$ of shapes together with \emph{position objects} $P_s\in\C$, and its
+extension uses the internal hom:
+\[
+   \ext{S,P}\,X \;=\; \coprod_{s\in S}[P_s,X]\;:\;\C\to\C .
+\]
+For $\C=\Setb$ this is the classical construction and $\ext{-}$ is fully faithful -- the
+Abbott--Altenkirch--Ghani representation theorem \cite{AAG}. For $\C=\Vecb$ it is the category of
+linear containers. Dorta, Jarvis and Niu \cite{DJN} study a closely related \emph{generalised
+polynomial} category over a base and build a Dirichlet-style tensor and a (weighted) composition
+product on it; they explicitly leave conditions on the base for future work
+(\cite[\S6]{DJN}). This paper answers, for the external-shape category $\Fam(\C^{\op})$, the most
+basic such question:
+\begin{center}
+\emph{for which bases $\C$ does $\Fam(\C^{\op})$ carry the composition product $\comp$ at all?}
+\end{center}
+
+\subsection*{The gap: the question has the wrong shape}
+It is tempting to expect a graded answer, as one gets for the Dirichlet tensor
+$p\otimes q=(S\times T,\,P_s\otimes Q_t)$, which exists over \emph{every} closed monoidal base and
+whose finer properties (closedness, and so on) degrade continuously as the base varies. The
+composition product is not like this. It \emph{mostly does not exist}, and where it does exist its
+existence is not a matter of degree: on the natural ``set-like'' bases the mere availability of
+$\comp$ already forces a rigid package of further structure, while on ``linear'' bases $\comp$
+degenerates into $\otimes$ and the interesting adjoints vanish. The right output is therefore not a
+gradation but a \emph{map} of the space of bases into a small number of qualitatively distinct
+regions -- and the boundaries between them are sharp theorems, not thresholds.
+
+\subsection*{The results}
+We call $\C$ \emph{$\comp$-admissible} if the image of $\ext{-}$ is closed under composition:
+for all $p,q$ there is an object $p\comp q$ with $\ext{p\comp q}\cong\ext p\circ\ext q$
+(Definition~\ref{def:admissible}). This is the weakest possible reading of ``$\comp$ exists'', so
+every negative result below is as strong as it can be. Everything is controlled by one necessary
+condition.
+
+\begin{theorem}[Shape Lemma, Lemma~\ref{lem:shape}]
+If $\C$ is $\comp$-admissible then for every object $P$ and every set $T$ the internal hom
+$[P,\;T\cdot\one]$ is a copower of the terminal object $\one$, where $T\cdot\one=\coprod_T\one$.
+\end{theorem}
+
+The terminal object $\one=[0,X]$ always exists (Lemma~\ref{lem:terminal}), and the Shape Lemma says
+the base must be able to \emph{see} the external shape set inside itself, as a copower of $\one$.
+Over $\Setb$ this is vacuous ($\one=1$ generates); over $\Vecb$ it is vacuous the other way
+($\one=0$, so every copower is $0$ and the shape data is invisible). Between the degeneracies it has
+teeth, and it dictates the whole map.
+
+\emph{The extensive pole is rigid.} On the set-like extreme, admissibility is not just consistent
+with the rest of the structure -- it \emph{forces} it.
+
+\begin{theorem}[Extensive rigidity, Theorem~\ref{thm:B} and Theorem~\ref{thm:leftadj}]
+\label{intro:B}
+Let $\C$ be nontrivial, infinitary lextensive and cartesian closed. If $\C$ is $\comp$-admissible
+then its unit $\one$ is \emph{connected} (i.e.\ $\C(\one,-)$ preserves small coproducts).
+Consequently the extension $\ext{-}$ is fully faithful, and the reindexing functor
+$F_q=\Fam(\ext q^{\op})$ is left adjoint to $({-})\comp q$ for \emph{every} $q$.
+\end{theorem}
+
+So on this pole admissibility hands over the whole package at once: a connected unit, a fully faithful
+extension, and the reindexing left adjoint for every $q$. In particular $\Setb\times\Setb$ is
+inadmissible, because its unit $(1,1)$ is disconnected. The converse fails, however -- connectedness
+alone does \emph{not} suffice -- and pinning down exactly which extensive bases are admissible is the
+next result.
+
+\emph{The extensive pole is completely characterised.} Rigidity extracts connectedness from
+admissibility but does not run backwards. The exact condition is that the Shape Lemma, necessary in
+general, becomes sufficient -- equivalently, that the connected-components functor is multiplicative.
+
+\begin{theorem}[Characterisation, Corollary~\ref{cor:char}]\label{intro:char}
+Let $\C$ be nontrivial, infinitary lextensive and cartesian closed. Then $\C$ is $\comp$-admissible if
+and only if the Shape Lemma holds, i.e.\ $[P,\,T\cdot\one]$ is a copower of $\one$ for all $P$ and all
+$T$. When $\C$ admits a connected-components functor $\pizero\dashv(-)\cdot\one$ (as every Grothendieck
+topos does) this reads: $\C$ is $\comp$-admissible if and only if $\pizero$ preserves finite products.
+\end{theorem}
+
+The single criterion $\pizero(X\times Y)\cong\pizero X\times\pizero Y$ subsumes both obstructions
+below: the disconnected unit of $\Setb\times\Setb$ and the connected-unit-but-non-multiplicative
+gluing $\Gl((-)^2)$ are one phenomenon, not two.
+
+\emph{The additive pole is flexible.} On the linear extreme, every object is
+\emph{copower-tiny} ($[P,-]$ preserves coproducts), $\comp$ collapses to $\otimes$, and:
+
+\begin{theorem}[Collapse, Lemma~\ref{lem:D} and Theorem~\ref{thm:2}]\label{intro:D}
+If every object of $\C$ is copower-tiny then the unit is disconnected, and $({-})\comp q$ has a left
+adjoint if and only if $q$ has a single shape.
+\end{theorem}
+
+\emph{The middle is thin but inhabited.} The characterisation above is confined to the extensive
+pole; it does not extend to a global one, because there is an admissible base off the pole, with a
+disconnected unit, that is neither extreme.
+
+\begin{theorem}[Theorem~\ref{thm:setxvec}]\label{intro:setxvec}
+The base $\Setb\times\Vecfd$ is $\comp$-admissible on its natural locus, non-collapse, non-cartesian,
+and has a disconnected unit. Hence the hypotheses of Extensive rigidity are essential:
+admissibility alone does not force connectedness.
+\end{theorem}
+
+Its admissibility comes from combining a \emph{rigid} distributive factor ($\Setb$) with a
+\emph{flexible} copower-tiny factor ($\Vecfd$); admissibility is a per-object property
+(Proposition~\ref{prop:absorptive}), and the two factors supply the two mechanisms.
+
+\emph{Connected is not enough.} The sharpest boundary phenomenon is that connectedness of the unit,
+which Extensive rigidity extracts \emph{from} admissibility, does not conversely \emph{imply} it.
+
+\begin{theorem}[Gluing obstruction, Theorem~\ref{thm:G}]\label{intro:G}
+The Artin gluing $\Gl((-)^2)$ is a Grothendieck topos with a connected unit that is nonetheless
+$\comp$-inadmissible. The obstruction is that its connected-components functor $\pizero$ is not
+multiplicative: for the single edge $K$ one has $\pizero(K\times K)=2\neq 1$ (Weichsel's theorem).
+\end{theorem}
+
+\emph{The organising fact.} Behind the whole map is one dichotomy about the extension itself.
+
+\begin{theorem}[Determinacy, Theorem~\ref{thm:determinacy}]\label{intro:determinacy}
+If $\one$ is connected then $\ext{-}$ is injective on objects up to isomorphism, so $p\comp q$ is
+\emph{determined} by $\C$ and ``$({-})\comp q$ has a left adjoint'' is a property of $\C$. If $\one$
+is disconnected this can fail: over $\Vecfd$ the objects $(\{*\},k^2)$ and $(\{1,2\},k)$ present the
+same functor $X\mapsto X\oplus X$ but are not isomorphic, so $\comp$ is a \emph{choice}.
+\end{theorem}
+
+Determinacy is why the base-change question changes character across the map: exactly when the unit
+is disconnected, $\comp$ stops being pinned down by $\C$, so ``the'' composition product -- and hence
+its adjoints -- become properties of a choice rather than of the base.
+
+The whole map is summarised in Table~\ref{tab:map}.
+
+\begin{table}[h]
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4pt}
+{\footnotesize
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+base $\C$ & adm.? & unit conn.? & $\pizero$ mult.? & verdict / mechanism \\
+\midrule
+$\Setb$, conn.\ topos & yes & yes & yes & always (Thm.~\ref{thm:leftadj})\\
+$\Vecfd$, additive & on locus & no (forced) & --- & iff $|T|=1$ (Thm.~\ref{thm:2})\\
+$\Setb\times\Vecfd$ & yes (locus) & no & --- & rigid $\times$ flexible (Thm.~\ref{thm:B})\\
+$\Setb\times\Setb$ & no & no & no & $\pizero$ non-mult (Cor.~\ref{cor:unif})\\
+$\Setb_*$ (pointed) & no & no & --- & off pole; degree $a=-4$ (Thm.~\ref{thm:A})\\
+$\Gl((-)^2)$ (gluing) & no & \textbf{yes} & \textbf{no} & $\pizero$ non-mult (Thm.~\ref{thm:G})\\
+\bottomrule
+\end{tabular}
+}
+\medskip
+\caption{The map of bases. On the extensive pole (rows with a $\pizero$ column) admissibility
+\emph{is} $\pizero$-multiplicativity (Corollary~\ref{cor:char}); the last two such rows share one
+mechanism despite differing on connectedness. A dash marks a base off the extensive pole, where
+$\pizero$ need not exist. The gluing row is the crux: a connected unit does not suffice.}
+\label{tab:map}
+\end{table}
+
+\subsection*{Method}
+Two tools do all the work. The first is the Shape Lemma, obtained by evaluating any candidate
+$p\comp q$ at the terminal object. The second is the \emph{probe method}: a single comparison map
+\[
+   \gamma_{(X_d)}\;:\;\coprod_{d}\C(\one,X_d)\;\longrightarrow\;\C\!\Big(\one,\coprod_d X_d\Big),
+   \qquad (d,f)\mapsto \iota_d\circ f,
+\]
+controls fullness of $\ext{-}$, existence of the left adjoint, and (through variants that replace the
+probe $\one$ by another object) the collapse verdict. Connectedness of the unit is exactly
+``$\gamma$ is always a bijection'', and this one map is why fullness of the extension and existence of
+the reindexing adjoint are, as we note in Remark~\ref{rem:onelemma}, the same lemma applied twice.
+
+\subsection*{Scope}
+Throughout, $\Fam(\C^{\op})$ has a \emph{single external} shape set, with positions in $\C$; this is
+the setting of \cite{AAG} and of \cite{DJN}. The distinction matters: internal (Gambino--Kock)
+polynomial functors in a topos are always closed under composition \cite{GambinoKock}, and the
+Gluing obstruction (Theorem~\ref{intro:G}) is precisely the gap between the internal composition and
+the external-shape one, localised to a base where it bites. We use $\comp$ throughout for the
+composition-representing product $\ext{p\comp q}\cong\ext p\circ\ext q$; this is \emph{not}
+the weighted product $\compDJN$ of \cite{DJN}, which carries an extra factor and agrees with $\comp$
+only when $\C=1$ (Remark~\ref{rem:djn}). Their Dirichlet tensor, however, does coincide with ours.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes the category $\Fam(\C^{\op})$ and the two invariants (connected unit,
+copower-tiny object). Section~\ref{sec:shape} proves the Shape Lemma. Section~\ref{sec:extensive} is
+the extensive pole (Extensive rigidity and the forced package). Section~\ref{sec:char} shows the
+Shape Lemma is also sufficient there and derives the $\pizero$-multiplicativity characterisation.
+Section~\ref{sec:collapse} is the
+additive pole. Section~\ref{sec:inadmissible} collects the three inadmissible bases and the
+``connected is not sufficient'' phenomenon. Section~\ref{sec:middle} exhibits the inhabited middle
+region. Section~\ref{sec:determinacy} proves Determinacy and explains the shape of the whole map.
+Section~\ref{sec:conclusion} states what remains open.
+
+\subsection*{Provenance and status}
+All numbered results are proved. The results about $\Setb\times\Vecfd$ (Section~\ref{sec:middle}) are
+proved on an explicitly stated locus; the general additive case with infinite shape sets is open
+(Remark~\ref{rem:gap1}). The topos-theoretic and graph-theoretic inputs to
+Theorem~\ref{thm:G} -- that Artin gluing of a left-exact functor is a topos \cite{MacLaneMoerdijk,
+CarboniJohnstone}, and Weichsel's theorem on the graph tensor product \cite{Weichsel} -- are
+classical; the specific computations they feed ($\pizero(K\times K)=2$, the explicit internal hom
+$[K,2\cdot\one]$) were checked independently. The external distributive law and the composite formula
+underlying Section~\ref{sec:char} (Theorem~\ref{thm:Dsuff}, Theorem~\ref{thm:char}) were verified as
+natural isomorphisms by exhaustive computation over finite sets, with no failures.
+Conjecture~\ref{conj:decomp} is flagged as such.
+
+\section{Preliminaries}\label{sec:prelim}
+
+Fix a closed symmetric monoidal category $(\C,\otimes,I,[-,-])$ with small coproducts $\coprod$;
+write $0$ for the initial object. Closedness makes each $[-,X]$ a right adjoint, hence
+$[-,X]$ sends coproducts to products and $Y\otimes-$ preserves the initial object.
+
+\begin{definition}[Containers over $\C$]
+$\Fam(\C^{\op})$ has objects $p=(S,P)$ with $S$ a small set of \emph{shapes} and $P_s\in\C$ a
+\emph{position object} for each $s\in S$; a morphism $(S,P)\to(T,Q)$ is a function $f:S\to T$
+together with maps $\varphi_s:Q_{f(s)}\to P_s$ in $\C$. Equivalently
+\begin{equation}\label{eq:hom}
+   \Fam(\C^{\op})\big((S,P),(T,Q)\big)\;=\;\prod_{s\in S}\ \coprod_{t\in T}\ \C(Q_t,P_s).
+\end{equation}
+We write $\gena{Z}:=(\{*\},Z)$ for the one-shape container on $Z$, so every object is
+$\coprod_{s}\gena{P_s}$. The \emph{extension} is $\ext{S,P}X=\coprod_{s\in S}[P_s,X]$, a functor
+$\Fam(\C^{\op})\to[\C,\C]$. The \emph{Dirichlet tensor} is $p\otimes q=(S\times T,\,P_s\otimes Q_t)$,
+and $T\cdot X:=\coprod_{t\in T}X$ denotes the copower.
+\end{definition}
+
+For $\C=\Setb$ this is the usual container calculus, $\ext{S,P}X=\coprod_s X^{P_s}$; for $\C=\Vecb$,
+$\ext{S,P}W=\bigoplus_s\Vecb(P_s,W)$.
+
+\begin{definition}[Admissibility]\label{def:admissible}
+$\C$ is \emph{$\comp$-admissible} if for all $p,q\in\Fam(\C^{\op})$ there is an object
+$p\comp q\in\Fam(\C^{\op})$ with $\ext{p\comp q}\cong\ext p\circ\ext q$.
+\end{definition}
+
+\begin{lemma}[Terminal object; {\cite[Lemma~1.0]{proofconv}}]\label{lem:terminal}
+$\C$ has a terminal object $\one:=[0,X]$ (independent of $X$), and $[Q,\one]\cong\one$ for all $Q$.
+\end{lemma}
+\begin{proof}
+$\C(Y,[0,X])\cong\C(Y\otimes 0,X)\cong\C(0,X)=1$ since $Y\otimes-$ preserves $0$; and
+$\C(Y,[Q,\one])\cong\C(Y\otimes Q,\one)=1$.
+\end{proof}
+
+\begin{lemma}[Isomorphisms in a free coproduct completion]\label{lem:iso}
+$(S,P)\cong(S',P')$ in $\Fam(\D)$ if and only if there is a bijection $\beta:S\to S'$ with
+$P_s\cong P'_{\beta s}$ for all $s$.
+\end{lemma}
+\begin{proof}
+Mutually inverse morphisms are bijections on shapes with mutually inverse position legs; the converse
+is clear from \eqref{eq:hom}.
+\end{proof}
+
+The two invariants of the base that govern everything are the following.
+
+\begin{definition}[Connected unit; the comparison map $\gamma$]\label{def:connected}
+For a small family $(X_d)_{d\in D}$ let
+\[
+   \gamma_{(X_d)}\;:\;\coprod_{d\in D}\C(\one,X_d)\;\longrightarrow\;\C\!\Big(\one,\coprod_{d\in D}X_d\Big),
+   \qquad (d,f)\mapsto\iota_d\circ f .
+\]
+The unit $\one=I$ is \emph{connected} if $\gamma_{(X_d)}$ is a bijection for every small family, i.e.\
+$\C(\one,-):\C\to\Setb$ preserves small coproducts.
+\end{definition}
+
+For $\C=\Setb$, $\C(1,-)=\mathrm{Id}$ and the unit is connected. For $\C=\Vecb$, $\C(k,-)$ is the
+forgetful functor and $\gamma:\coprod_d V_d\to\bigoplus_d V_d$ is neither injective (the zero vector
+sits in every summand) nor surjective (cross-summand sums are missed): the unit is disconnected. Any
+base with a zero object has a disconnected unit.
+
+\begin{definition}[Copower-tiny object]\label{def:tiny}
+$P\in\C$ is \emph{copower-tiny} if $[P,-]$ preserves small coproducts, i.e.\ the canonical
+$\coprod_t[P,X]\to[P,\,T\cdot X]$ is an isomorphism for all $X$ and all sets $T$.
+\end{definition}
+
+Over $\Vecfd$ every object is copower-tiny; over $\Setb$ the tiny objects are the subterminals.
+The extension records the exact link between connectedness and fullness.
+
+\begin{theorem}[{Fullness criterion, \cite[Thm.~2.1]{proofT1}}]\label{thm:T1}
+For $\C$ closed symmetric monoidal with small coproducts, the extension
+$\ext{-}:\Fam(\C^{\op})\to[\C,\C]$ is fully faithful if and only if the unit $\one$ is connected. In
+particular the action of $\ext{-}$ on hom-sets is $\prod_s$ of the comparison map
+$\gamma_{([Q_t,P_s])_t}$.
+\end{theorem}
+
+This is the general form of the Abbott--Altenkirch--Ghani theorem \cite{AAG}, whose hidden hypothesis
+is that the terminal object of $\Setb$ is connected; extensivity is neither necessary nor sufficient
+(see $\Setb\times\Setb$, Corollary~\ref{cor:setxset} below). We use only that connectedness gives
+full faithfulness, hence injectivity on objects up to isomorphism.
+
+\section{The Shape Lemma}\label{sec:shape}
+
+Admissibility has exactly one elementary consequence, extracted by evaluating any candidate
+composite at the terminal object.
+
+\begin{lemma}[Shape Lemma]\label{lem:shape}
+If $\C$ is $\comp$-admissible then for every $P\in\C$ and every small set $T$, the object
+$[P,\,T\cdot\one]$ is a copower of $\one$.
+\end{lemma}
+\begin{proof}
+Fix $T$ and take any $q=(T,Q)$ with shape set $T$ (e.g.\ $Q_t:=0$). By Lemma~\ref{lem:terminal},
+$\ext q(\one)=\coprod_{t}[Q_t,\one]\cong T\cdot\one$. Put $p:=\gena{P}$, so
+$\ext p(\ext q(\one))\cong[P,\,T\cdot\one]$. By admissibility there is $p\comp q=(D,N)$ with
+$\ext{p\comp q}\cong\ext p\circ\ext q$; evaluating at $\one$ and using Lemma~\ref{lem:terminal}
+again,
+\[
+   \ext{p\comp q}(\one)=\coprod_{d\in D}[N_d,\one]\cong\coprod_{d\in D}\one=D\cdot\one .
+\]
+Hence $[P,\,T\cdot\one]\cong D\cdot\one$.
+\end{proof}
+
+\begin{remark}[Why it has teeth only in the middle]\label{rem:teeth}
+The shape set $D$ of $p\comp q$ is an \emph{external} set -- one set, not one per ``component'' of
+$\C$ -- and the Shape Lemma says the base must realise it internally as a copower of $\one$. Over
+$\Setb$ this is vacuous: $\one=1$ generates and every set is a copower of it, the copower count being
+the decoration set $T^{P}$. Over $\Vecb$ it is vacuous for the opposite reason: $\one=0$ so
+$E\cdot\one=0$ for every $E$, and the shape data is invisible to $\ext{-}$ -- which is exactly the
+failure of faithfulness in Theorem~\ref{thm:T1}. Between the two degeneracies the Shape Lemma is a
+genuine, falsifiable demand, and Sections~\ref{sec:extensive} and \ref{sec:inadmissible} are its two
+edges.
+\end{remark}
+
+\section{The extensive pole: admissibility forces the package}\label{sec:extensive}
+
+Throughout this section $\C$ is \emph{nontrivial} ($\one\not\cong 0$), \emph{infinitary lextensive}
+(finite limits, and $\C/\!\coprod_d A_d\simeq\prod_d\C/A_d$ for all small coproducts) and
+\emph{cartesian closed}, so $\otimes=\times$, $I=\one$, $[X,Y]=Y^X$. In such a $\C$ coproducts are
+disjoint and $0$ is strict; these are the only extensivity facts we use (see \cite{CLW} for the
+theory).
+
+\subsection{Rigidity of the terminal object}
+
+\begin{lemma}\label{lem:E1}
+If $\one\cong\one\sqcup Z$ then $Z\cong 0$.
+\end{lemma}
+\begin{proof}
+Let $\theta:\one\sqcup Z\xrightarrow{\ \sim\ }\one$ with injections $i:\one\to\one\sqcup Z$,
+$j:Z\to\one\sqcup Z$. Then $\theta i:\one\to\one$ is a map into the terminal object, so
+$\theta i=\mathrm{id}_{\one}$. Disjointness makes the pullback of $i$ along $j$ initial; as $\theta$
+is invertible, so is the pullback of $\theta i=\mathrm{id}_{\one}$ along $\theta j:Z\to\one$, which is
+$Z$ itself. Hence $Z\cong 0$.
+\end{proof}
+
+\begin{lemma}\label{lem:E2}
+If $\one\not\cong 0$ and $E\cdot\one\cong\one$ for a set $E$, then $|E|=1$.
+\end{lemma}
+\begin{proof}
+$E=\varnothing$ gives $0\cong\one$, excluded. If $|E|\ge 2$, pick $e_0\in E$ and set
+$Z:=(E\setminus\{e_0\})\cdot\one$, so $\one\cong\one\sqcup Z$ and Lemma~\ref{lem:E1} gives $Z\cong 0$.
+But then $\one$ is a coproduct summand of $Z\cong 0$, giving a map $\one\to 0$; strictness of $0$
+forces $\one\cong 0$, excluded.
+\end{proof}
+
+\begin{lemma}[Disconnected implies decomposable]\label{lem:E0}
+If $\one\not\cong 0$ and $\one$ is not connected, then $\one\cong A\sqcup B$ with $A,B\not\cong 0$.
+\end{lemma}
+\begin{proof}
+Let $(X_d)_{d\in D}$ witness the failure of $\gamma$. Here $\gamma$ is always injective: if
+$\iota_{d_0}f=\iota_{d_1}g$ with $f:\one\to X_{d_0}$, $g:\one\to X_{d_1}$ and $d_0\neq d_1$, the
+disjointness pullback yields $\one\to 0$, excluded; and if $d_0=d_1$ then $f=g$ because injections are
+monic. So $\gamma$ fails to be surjective: some $h:\one\to\coprod_d X_d$ factors through no injection.
+Pulling the coproduct decomposition back along $h$, infinitary extensivity gives
+$\one\cong\coprod_d A_d$ with $A_d:=h^*X_d$. Not all $A_d$ are initial (else $\one\cong 0$); not
+exactly one is non-initial (else $h$ factors through an injection); so at least two are, and grouping
+gives $\one\cong A\sqcup B$ with both summands non-initial.
+\end{proof}
+
+\subsection{Extensive rigidity}
+
+\begin{theorem}[Extensive rigidity]\label{thm:B}
+Let $\C$ be nontrivial, infinitary lextensive and cartesian closed. If $\C$ is $\comp$-admissible,
+then $\one$ is connected.
+\end{theorem}
+\begin{proof}
+Suppose $\one$ is not connected. By Lemma~\ref{lem:E0}, $\one\cong A\sqcup B$ with $A,B\not\cong 0$,
+and extensivity gives an equivalence $\C\simeq\C/A\times\C/B=:\C_1\times\C_2$; both factors are
+infinitary lextensive and nontrivial. Since $\C_1\times\C_2\simeq\C$ is cartesian closed, so is each
+factor, and all structure is computed componentwise -- limits, colimits, and exponentials
+$Y^X=(Y_1^{X_1},Y_2^{X_2})$; in particular $Y^0\cong\one$ and $Y^{\one}\cong Y$ in each factor. Under
+the equivalence $\one\leftrightarrow(\one_{\C_1},\one_{\C_2})$ and
+$A\leftrightarrow(\one_{\C_1},0)$. Take any $T$ with $|T|\ge 2$; then
+\[
+   [A,\,T\cdot\one]\;=\;\big((T\cdot\one_{\C_1})^{\one_{\C_1}},\,(T\cdot\one_{\C_2})^{0}\big)
+   \;\cong\;\big(T\cdot\one_{\C_1},\,\one_{\C_2}\big).
+\]
+By the Shape Lemma there is a set $E$ with $[A,\,T\cdot\one]\cong E\cdot\one=(E\cdot\one_{\C_1},\,
+E\cdot\one_{\C_2})$. Componentwise: $\one_{\C_2}\cong E\cdot\one_{\C_2}$ gives $|E|=1$ by
+Lemma~\ref{lem:E2} in $\C_2$, and then $T\cdot\one_{\C_1}\cong\one_{\C_1}$ gives $|T|=1$ by
+Lemma~\ref{lem:E2} in $\C_1$ -- contradicting $|T|\ge 2$.
+\end{proof}
+
+In one sentence: $\Fam(\C^{\op})$ gives an object \emph{one} external shape set, but when $\C$ splits
+the composite $\ext p\ext q$ demands one shape set per factor, and $[A,\,T\cdot\one]=(T\cdot\one_1,
+\one_2)$ is exactly the demand for the two incompatible counts $|T|$ and $1$ at once.
+
+\begin{corollary}\label{cor:setxset}
+$\Setb\times\Setb$ is not $\comp$-admissible: its unit $(1,1)$ is disconnected, and the obstruction
+is already visible at $p=\gena{A}$ for $A$ a nontrivial summand of $\one$.
+\end{corollary}
+
+\subsection{The forced package}
+
+On the extensive pole, admissibility hands over connectedness, and connectedness hands over the rest.
+The following holds over \emph{any} closed base and is the reason the left adjoint is unconditional
+in $q$.
+
+\begin{theorem}[Reindexing left adjoint]\label{thm:leftadj}
+Let $\C$ be closed symmetric monoidal with small coproducts and connected unit $\one$. Let
+$q=(T,Q)$, and suppose $p\comp q$ exists for every $p$. Then
+\[
+   F_q\;\dashv\;({-})\comp q,\qquad F_q(R,U):=\big(R,\ \rho\mapsto\ext q(U_\rho)\big)=\Fam(\ext q^{\op}),
+\]
+with no condition on $q$.
+\end{theorem}
+\begin{proof}
+Write $p\comp q=(D,N)$, so $\coprod_d[N_d,X]\cong\ext p\ext q(X)=\coprod_s[P_s,\ext q X]$ naturally.
+Fix $r=(R,U)$. Using \eqref{eq:hom}, then $\C(N,U)\cong\C(\one,[N,U])$ (closedness), then $\gamma$
+twice (connectedness):
+\[
+\begin{aligned}
+   \Fam(r,\,p\comp q)
+   &=\prod_\rho\coprod_{d}\C(N_d,U_\rho)
+    =\prod_\rho\coprod_{d}\C(\one,[N_d,U_\rho])\\
+   &\cong\prod_\rho\C\Big(\one,\coprod_d[N_d,U_\rho]\Big)
+    =\prod_\rho\C\big(\one,\ext p(\ext q U_\rho)\big)\\
+   &=\prod_\rho\C\Big(\one,\coprod_s[P_s,\ext q U_\rho]\Big)
+    \cong\prod_\rho\coprod_s\C(\one,[P_s,\ext q U_\rho])\\
+   &=\prod_\rho\coprod_s\C(P_s,\ext q U_\rho)
+    =\Fam\big(F_q r,\,p\big).
+\end{aligned}
+\]
+Every step is a natural isomorphism, so the composite is natural in $r$ and $p$.
+\end{proof}
+
+\begin{remark}[One comparison map, two theorems]\label{rem:onelemma}
+The proof uses $\gamma$ and nothing else -- no distributivity, and no chosen presentation of
+$p\comp q$. It is literally the same map $\gamma$ that Theorem~\ref{thm:T1} inverts for fullness.
+Thus \emph{fullness of $\ext{-}$ and existence of the reindexing left adjoint are the same lemma
+applied twice}: to the probe families $([Q_t,Z])_t$ for fullness, and to $([N_d,U_\rho])_d$ and
+$([P_s,\ext q U_\rho])_s$ for the adjunction. Over $\Setb$, $\gamma=\mathrm{id}$ and the reindexing
+adjoint recovers \cite[Prop.~6.57]{NiuSpivak}.
+\end{remark}
+
+\begin{corollary}\label{cor:extensive-equiv}
+For $\C$ nontrivial infinitary-lextensive cartesian-closed and $\comp$-admissible, the unit $\one$ is
+connected, the extension $\ext{-}$ is fully faithful, and $({-})\comp q$ has a left adjoint for every
+$q$. This package is one-directional: the converse of Theorem~\ref{thm:B} fails, since connectedness
+alone does not imply admissibility (Theorem~\ref{thm:G}). The exact admissibility criterion on this
+pole is the subject of Section~\ref{sec:char}.
+\end{corollary}
+
+\section{The extensive-pole characterisation}\label{sec:char}
+
+The Shape Lemma is necessary (Lemma~\ref{lem:shape}). On the extensive pole it is also
+\emph{sufficient}, and this turns the necessary condition into a complete, checkable characterisation
+of admissibility. The engine is an \emph{external distributive law}; the subtlety -- the reason a
+connected-unit topos can still fail, as $\Gl((-)^2)$ will in Section~\ref{sec:inadmissible} -- is that
+this external law is strictly stronger than the internal distributivity that every topos already
+carries.
+
+Throughout this section $\C$ is infinitary lextensive; from Theorem~\ref{thm:char} on, also cartesian
+closed. Extensivity supplies, for any map $c:P\to T\cdot\one$ into a copower of the terminal, a
+canonical decomposition $P\cong\coprod_{t\in T}P^c_t$, where $P^c_t$ is the pullback of $c$ along the
+$t$-th injection $\one\to T\cdot\one$ (coproducts are disjoint and universal, so $\C/(T\cdot\one)\simeq
+\prod_t\C/\one$).
+
+\begin{definition}[Shape condition and external distributive law]\label{def:SD}
+Write \textbf{(S)} for the standing conclusion of the Shape Lemma: for every $P$ and every set $T$,
+$[P,\,T\cdot\one]$ is a copower of $\one$. Write \textbf{(D)} for the \emph{external distributive law}:
+for every $P$, every set $T$ and every family $(Y_t)_{t\in T}$, the canonical comparison
+\[
+   \kappa:\ \coprod_{c\in\C(P,\,T\cdot\one)}\ \prod_{t\in T}[P^c_t,\,Y_t]
+   \ \longrightarrow\ \Big[P,\ \coprod_{t\in T}Y_t\Big],
+\]
+which on the $c$-th summand sends a tuple $(g_t:P^c_t\to Y_t)_t$ to
+$P\cong\coprod_t P^c_t\xrightarrow{\coprod g_t}\coprod_t Y_t$, is an isomorphism, naturally in
+$(Y_t)$.
+\end{definition}
+
+Putting every $Y_t=\one$ collapses (D) to (S), so \emph{(D)}$\Rightarrow$\emph{(S)} is immediate. The
+substance is the two harder directions.
+
+\begin{theorem}[The external distributive law is sufficient]\label{thm:Dsuff}
+Let $\C$ be infinitary-extensive closed symmetric monoidal and cocomplete, and suppose \emph{(D)}
+holds. Then $\C$ is $\comp$-admissible. Explicitly, for $p=(S,P)$ and $q=(T,Q)$ the composite
+$\ext p\circ\ext q$ is $\ext{r}$ for
+\[
+   r\;=\;\coprod_{s\in S} r_s,\qquad
+   r_s\;=\;\Big(\,\C(P_s,\,T\cdot\one),\ \big(\textstyle\coprod_{t\in T}P^c_t\otimes Q_t\big)_{c}\,\Big).
+\]
+\end{theorem}
+\begin{proof}
+Fix $P$ and $q=(T,Q)$, and put $Y_t:=[Q_t,X]$, functorial in $X$. Then, naturally in $X$,
+\[
+\begin{aligned}
+   [P,\,\ext q X]
+   &=\Big[P,\ \coprod_{t}[Q_t,X]\Big]\\
+   &\cong\;\coprod_{c\in\C(P,\,T\cdot\one)}\ \prod_{t}\,[P^c_t,\,[Q_t,X]]
+     &&\text{(D)}\\
+   &\cong\;\coprod_{c}\ \prod_{t}\,[P^c_t\otimes Q_t,\ X]
+     &&\text{(tensor--hom)}\\
+   &\cong\;\coprod_{c}\ \Big[\,\coprod_{t}(P^c_t\otimes Q_t),\ X\Big]
+     &&\big([-,X]\text{ preserves }\coprod\big).
+\end{aligned}
+\]
+Thus $[P,\,\ext q(-)]\cong\ext{r_P}$ with $r_P:=\big(\C(P,T\cdot\one),(\coprod_t P^c_t\otimes Q_t)_c\big)$,
+an object of $\Fam(\C^{\op})$ (the shape set is small by local smallness, each position object exists by
+cocompleteness). Summing over the shapes of $p$,
+$\ext p\ext q(-)=\coprod_s[P_s,\ext q(-)]\cong\coprod_s\ext{r_{P_s}}=\ext{\coprod_s r_{P_s}}$. Every
+step but (D) is the closed structure or the universal property of the coproduct.
+\end{proof}
+
+Sufficiency needs only a closed monoidal -- not cartesian -- structure, and it constructs $\comp$
+explicitly. Its converse over an extensive cartesian-closed base is exactly the Shape condition.
+
+\begin{theorem}[The Shape condition \emph{is} the distributive law]\label{thm:char}
+For $\C$ nontrivial infinitary-extensive cartesian closed, \emph{(S)}$\iff$\emph{(D)}.
+\end{theorem}
+\begin{proof}
+$(\Leftarrow)$ is above. For $(\Rightarrow)$ assume (S): $[P,\,T\cdot\one]\cong E\cdot\one$ with
+$E:=\C(P,\,T\cdot\one)$, for all $P,T$. Fix $P,T,(Y_t)$ and compare the two sides of (D) through their
+representables $\C(X,-)$, naturally in $X$. Three standard facts of an infinitary-extensive
+cartesian-closed category are used:
+\begin{itemize}[leftmargin=1.5em]
+\item[(U)] \emph{Universality:} a map $W\to\coprod_i B_i$ is the same data as a decomposition
+$W\cong\coprod_i W_i$ with legs $W_i\to B_i$, so
+\[
+   \C\Big(W,\coprod_i B_i\Big)\cong\coprod_{\{W\cong\coprod_i W_i\}}\ \prod_i\C(W_i,B_i).
+\]
+This is what \emph{fails} in an additive category, and is why Theorem~\ref{thm:char} is confined to
+the extensive pole.
+\item[(P)] \emph{Partitions:} taking $B_i=\one$ in (U) identifies $\C(W,\,T\cdot\one)$ with the set of
+$T$-indexed decompositions $W\cong\coprod_{t}W_t$.
+\item[(Dist)] $(-)\times P$ is a left adjoint, hence preserves coproducts.
+\end{itemize}
+\emph{Right-hand side.} With $W_c:=\prod_t[P^c_t,Y_t]$, by (U) then the cartesian-closed adjunction,
+\[
+   \C\Big(X,\ \coprod_{c\in E}W_c\Big)\cong
+   \coprod_{\{X\cong\coprod_{c}X_c\}}\ \prod_{c\in E}\prod_{t}\C(X_c\times P^c_t,\ Y_t).
+\]
+\emph{Left-hand side.} By the adjunction then (U),
+\[
+   \C\big(X,\ [P,\textstyle\coprod_t Y_t]\big)\cong\C\big(X\times P,\ \textstyle\coprod_t Y_t\big)\cong
+   \coprod_{\{X\times P\cong\coprod_t Z_t\}}\ \prod_{t}\C(Z_t,Y_t).
+\]
+\emph{The shape indices biject.} By (P), the cartesian-closed adjunction, (S), and (P) again,
+\[
+\begin{aligned}
+   \{X\times P\cong\textstyle\coprod_t Z_t\}
+   &=\C(X\times P,\,T\cdot\one)\cong\C(X,[P,\,T\cdot\one])\\
+   &=\C(X,\,E\cdot\one)=\{X\cong\textstyle\coprod_{c\in E}X_c\},
+\end{aligned}
+\]
+naturally in $X$. \emph{The fibres match.} Tracing the decomposition $\psi$ named by $\varphi$: the map
+$X\times P\to T\cdot\one$ restricts on $X_c\times P$ (for $c\in E=\C(P,T\cdot\one)$) to
+$X_c\times P\xrightarrow{\mathrm{pr}}P\xrightarrow{c}T\cdot\one$, and since $c$ decomposes
+$P\cong\coprod_t P^c_t$, (Dist) gives $X_c\times P\cong\coprod_t X_c\times P^c_t$. Summing over $c$ with
+$X\cong\coprod_c X_c$ yields $Z_t=\coprod_{c\in E}X_c\times P^c_t$, whence
+$\prod_t\C(Z_t,Y_t)=\prod_{c\in E}\prod_t\C(X_c\times P^c_t,Y_t)$ -- exactly the right-hand fibre. Both
+sides therefore represent the same functor of $X$ (naturally in $(Y_t)$), and Yoneda gives
+$[P,\coprod_t Y_t]\cong\coprod_{c\in E}\prod_t[P^c_t,Y_t]$, which is (D).
+\end{proof}
+
+The single load-bearing use of (S) is the step $\C(X,[P,T\cdot\one])=\C(X,\,E\cdot\one)$: it converts
+the internal shape \emph{object} $[P,T\cdot\one]$ into an external \emph{partition} of $X$ indexed by
+the \emph{set} $E$. Without it the shape stays internal -- and the coproduct $\coprod_{c\in E}$ on the
+right cannot even be formed over a set. This is precisely the internal/external seam of
+Remark~\ref{rem:internal}, and precisely what $\Gl((-)^2)$ violates.
+
+When $\C$ carries a connected-components functor the Shape condition becomes a statement about it. The
+following reduction (used again for the gluing base) is the bridge to the multiplicativity criterion.
+
+\begin{proposition}\label{prop:reduction}
+Let $\C$ be cocomplete cartesian closed with a components adjunction $\pizero\dashv(-)\cdot\one$ and
+$\pizero(\one)\cong 1$. Then \emph{(S)} holds if and only if $\pizero$ preserves finite products, and
+$T=2$ already detects failure.
+\end{proposition}
+\begin{proof}
+$[P,\,T\cdot\one]$ represents $X\mapsto\C(X\times P,\,T\cdot\one)=\Setb(\pizero(X\times P),T)$. If
+$\pizero$ preserves $(-)\times P$ this is $\Setb(\pizero X\times\pizero P,T)=\C(X,(T^{\pizero P})\cdot
+\one)$, so $[P,\,T\cdot\one]\cong(T^{\pizero P})\cdot\one$ is a copower of $\one$. Conversely, if
+$[P,\,T\cdot\one]\cong E\cdot\one$, evaluating the representable at $X=\one$ (using $\one\times P\cong
+P$, $\pizero\one\cong 1$) gives $E=T^{\pizero P}$, so
+$\Setb(\pizero(X\times P),T)\cong\Setb(\pizero X\times\pizero P,T)$ naturally in $X$ for every $T$;
+as $2$ cogenerates $\Setb$, the canonical comparison $\pizero(X\times P)\to\pizero X\times\pizero P$
+is a bijection.
+\end{proof}
+
+\begin{corollary}[Characterisation]\label{cor:char}
+For $\C$ nontrivial infinitary-extensive cartesian closed, the following are equivalent:
+$\C$ is $\comp$-admissible; the Shape condition \emph{(S)} holds; the external distributive law
+\emph{(D)} holds. When moreover $\C$ has a components adjunction $\pizero\dashv(-)\cdot\one$ with
+$\pizero(\one)\cong1$ (e.g.\ any Grothendieck topos), these hold if and only if $\pizero$ preserves
+finite products.
+\end{corollary}
+\begin{proof}
+Admissible $\Rightarrow$ (S) is the Shape Lemma (Lemma~\ref{lem:shape}); (S)$\Rightarrow$(D) is
+Theorem~\ref{thm:char}; (D)$\Rightarrow$ admissible is Theorem~\ref{thm:Dsuff}. The $\pizero$
+reformulation is Proposition~\ref{prop:reduction}.
+\end{proof}
+
+\begin{corollary}[The two obstructions are one]\label{cor:unif}
+On the extensive pole, failure of $\pizero$-multiplicativity is the \emph{single} obstruction to
+admissibility. In particular the disconnected-unit failure of $\Setb\times\Setb$ and the
+connected-unit failure of $\Gl((-)^2)$ are the same phenomenon, $\pizero(X\times Y)\not\cong\pizero
+X\times\pizero Y$. Furthermore $\pizero$-multiplicativity implies a connected unit -- via
+Corollary~\ref{cor:char} and Theorem~\ref{thm:B}, admissible $\Rightarrow$ connected -- while the
+converse fails ($\Gl$), so connectedness of the unit is strictly weaker than admissibility.
+\end{corollary}
+\begin{proof}
+Only the $\Setb\times\Setb$ identification is new. There $\pizero=(X_1,X_2)\mapsto X_1\sqcup X_2$ (left
+adjoint to the diagonal $(-)\cdot\one:T\mapsto(T,T)$), and for the componentwise product
+$\pizero\big((X_1,X_2)\times(Y_1,Y_2)\big)=X_1Y_1\sqcup X_2Y_2$, whereas
+$\pizero(X)\times\pizero(Y)=(X_1\sqcup X_2)\times(Y_1\sqcup Y_2)$; these differ, so $\pizero$ is not
+multiplicative. The rest is Corollary~\ref{cor:char}, Theorem~\ref{thm:B}, and
+Corollary~\ref{cor:connected-not-sufficient}.
+\end{proof}
+
+\begin{remark}[Internal versus external, again]\label{rem:char-internal}
+Every Grothendieck topos supports composition of \emph{internal} (Gambino--Kock) polynomial functors
+\cite{GambinoKock}; that is the internal distributive law, and it holds unconditionally. What
+Theorem~\ref{thm:char} isolates is the \emph{external} law (D), which governs the external-shape
+functors $\coprod_s[P_s,-]$, and which is equivalent to (S). The two coincide exactly when the shape
+object $[P,T\cdot\one]$ is a copower of $\one$ -- a discrete object -- and $\pizero$ measures the
+discrepancy. This is why admissibility is not automatic on the extensive pole, and why our
+connected-unit counterexample $\Gl((-)^2)$ is exactly a base where $[P,T\cdot\one]$ acquires a
+non-discrete summand.
+\end{remark}
+
+\section{The additive pole: collapse}\label{sec:collapse}
+
+On the opposite extreme every object is copower-tiny, $\comp$ degenerates to $\otimes$, and the
+adjunction survives only trivially.
+
+\begin{lemma}\label{lem:collapse-tensor}
+If every $P_s$ is copower-tiny then $p\comp q=p\otimes q$; this holds in particular over $\Vecfd$, and
+over $\Vecb$ whenever $T$ is finite.
+\end{lemma}
+\begin{proof}
+$[P_s,\ext q X]=[P_s,\coprod_t[Q_t,X]]\cong\coprod_t[P_s,[Q_t,X]]=\coprod_t[P_s\otimes Q_t,X]$ using
+copower-tininess and the tensor--hom adjunction; sum over $s$. For finite $T$ over additive $\Vecb$,
+$\coprod_t=\prod_t$ and every $[P_s,-]$ preserves finite limits, giving the same identity without
+tininess.
+\end{proof}
+
+\begin{lemma}[Collapse disconnects the unit]\label{lem:D}
+If every object of $\C$ is copower-tiny then $\one$ is not connected.
+\end{lemma}
+\begin{proof}
+Suppose $\one$ were connected. With $T=\{1,2\}$ and $X=\one$, the map
+$\mu:\C(\one\sqcup\one,\one)\sqcup\C(\one\sqcup\one,\one)\to\C(\one\sqcup\one,\one\sqcup\one)$,
+$(d,f)\mapsto\iota_d\circ f$, is the composite of canonical isomorphisms
+\[
+   \C(\one\sqcup\one,\one\sqcup\one)\cong\C(\one,[\one\sqcup\one,\,2\cdot\one])
+   \cong\C(\one,\,2\cdot[\one\sqcup\one,\one])
+   \cong 2\cdot\C(\one,[\one\sqcup\one,\one]),
+\]
+the last term being $\C(\one\sqcup\one,\one)^{\sqcup 2}$,
+where the middle step is copower-tininess of $\one\sqcup\one$ and the next is $\gamma$. Each factor is
+post-composition with $\iota_d$, so $\mu$ is a bijection. Hence $\mathrm{id}_{\one\sqcup\one}=
+\iota_{d_0}\circ f$ for a unique pair, say $d_0=1$ with $f:\one\sqcup\one\to\one$. Pre-composing with
+$\iota_2$ gives $\iota_2=\iota_1\circ(f\circ\iota_2)$. But now $\gamma$ at $2\cdot\one$ sends the two
+\emph{distinct} elements $(2,\mathrm{id}_{\one})$ and $(1,f\circ\iota_2)$ of
+$\C(\one,\one)\sqcup\C(\one,\one)$ to the same map $\iota_2$, contradicting injectivity.
+\end{proof}
+
+No cardinality argument appears above, and this is essential: for $\C=\Vecfd$ over $\mathbb F_2$ with
+$\dim=1$ both sides of $\gamma$ have four elements, so a count would pass -- the failure is visible
+only in the map. (When $\C$ has a zero object, disconnection is immediate: the zero map lies in every
+summand, so $\gamma$ is non-injective.)
+
+\begin{theorem}[Collapse verdict]\label{thm:2}
+Let $q=(T,Q)$ with $p\comp q=p\otimes q$ for all $p$ (e.g.\ under Lemma~\ref{lem:collapse-tensor}).
+Then $({-})\comp q$ has a left adjoint if and only if $|T|=1$, in which case
+$F_q(R,U)=(R,[Q,U_\rho])=\Fam(\ext q^{\op})$.
+\end{theorem}
+\begin{proof}
+\emph{Sufficiency.} For $q=(\{*\},Q)$, tensor--hom gives $\Fam(r,p\otimes q)=\prod_\rho\coprod_s
+\C(P_s\otimes Q,U_\rho)=\prod_\rho\coprod_s\C(P_s,[Q,U_\rho])=\Fam((R,[Q,U_\rho]),p)$, naturally.
+\emph{Necessity.} A right adjoint preserves the terminal object $\one=\gena{0}$
+(Lemma~\ref{lem:terminal}), and $\one\comp q=\one\otimes q=(T,0)$ since $0\otimes Q_t\cong 0$; by
+Lemma~\ref{lem:iso}, $(T,0)\cong(\{*\},0)$ iff $|T|=1$. Independently, and using no zero object:
+products in $\Fam(\C^{\op})$ are $p\times p'=(S\times S',\,P_s\sqcup P'_{s'})$, so for
+$p=p'=\gena{I}$ the shape set of $(p\times p')\otimes q$ is $T$ while that of
+$(p\otimes q)\times(p'\otimes q)$ is $T\times T$; preservation forces $|T|=|T|^2$.
+\end{proof}
+
+The two necessity arguments differ in robustness. The binary-product argument survives any
+re-selection of $\comp$ that keeps shape sets multiplicative and (for finite $T$) already forces
+$|T|=1$; the terminal-object argument is convention-sensitive, since for infinite $T$ one has
+$|T|=|T|^2$ and $({-})\comp q$ can preserve all binary products while failing to preserve the empty
+one. The binding probe is the \emph{empty} limit -- the same phenomenon by which containers preserve
+connected but not all limits.
+
+\begin{remark}[The probe method, made explicit]\label{rem:fatalprobe}
+The comparison map behind Theorem~\ref{thm:2} is $\gamma$ with the probe $\one$ replaced by an
+arbitrary object $B$: $\kappa_{B,Z}:\coprod_t\C(B,[Q_t,Z])\to\C(B,\coprod_t[Q_t,Z])$. The probe
+$B=\one$ is connectedness; the \emph{fatal} probe is $B=0$, where the left side has $|T|$ elements and
+the right side one, forcing $|T|=1$. One functional, the probe varying, decides both poles.
+\end{remark}
+
+\section{Three inadmissible bases}\label{sec:inadmissible}
+
+Off the two poles the Shape Lemma turns into an obstruction. We record three inadmissible bases.
+Two of them, $\Setb\times\Setb$ and $\Gl((-)^2)$, lie on the extensive pole and so fall under the
+characterisation of Section~\ref{sec:char}: both fail by the \emph{single} mechanism of
+$\pizero$-non-multiplicativity (Corollary~\ref{cor:unif}), though they differ on whether the unit is
+connected. The third, $\Setb_*$, lies off the pole and fails for an unrelated, polynomial-degree
+reason. The sharpest consequence is the gluing case: connectedness of the unit is necessary but not
+sufficient.
+
+\subsection{$\Setb\times\Setb$: a disconnected unit}
+This is Corollary~\ref{cor:setxset}: the unit is disconnected and the Shape Lemma fails already at
+$p=\gena{A}$. It is now an instance of a theorem rather than a computation, and by
+Corollary~\ref{cor:unif} the failure is the same $\pizero$-non-multiplicativity that defeats the
+gluing base below -- here $\pizero(X_1,X_2)=X_1\sqcup X_2$ does not preserve the componentwise
+product.
+
+\subsection{Pointed sets: a polynomial-degree obstruction}
+Let $\Setb_*$ be pointed sets under smash, with $I=S^0$, coproduct the wedge $\vee$, and
+$0\cong\one=*$ a zero object. Since $\one$ is a zero object, one might expect $\Setb_*$ to behave like
+the linear pole; it does not.
+
+\begin{theorem}\label{thm:A}
+$\Setb_*$ is not $\comp$-admissible.
+\end{theorem}
+\begin{proof}
+Take $p=\gena{S^0\vee S^0}$ and $q=(\{1,2\},(S^0,S^0))$. Since $[S^0,X]\cong X$ and a pointed map out
+of a wedge is a pair of pointed maps, $\ext q X\cong X\vee X$ and $\ext p Y\cong Y\times Y$, so
+$\ext p\ext q X\cong(X\vee X)\times(X\vee X)$. Suppose $p\comp q=(D,N)$ existed, so
+$\bigvee_{d\in D}[N_d,X]\cong(X\vee X)^2$ naturally. Writing $m=|X|-1$ and $n_d=|N_d|-1$, this is the
+polynomial identity, for all $m\ge 0$,
+\[
+   1+\sum_{d\in D}\big((m+1)^{n_d}-1\big)=(2m+1)^2=4m^2+4m+1. \tag{$*$}
+\]
+Only finitely many $n_d\ge 1$ can survive (else the left side is infinite at $m=1$), and each
+$(m+1)^{n}-1$ has degree $n$ with all coefficients positive, so no cancellation occurs and every
+$n_d\in\{1,2\}$. Writing $a=\#\{n_d=1\}$, $b=\#\{n_d=2\}$, $(*)$ reads $am+b(m^2+2m)=4m^2+4m$, whence
+$b=4$ and $a+2b=4$, i.e.\ $a=-4$, not a cardinality.
+\end{proof}
+
+$\Setb_*$ sits on neither pole: $S^0$ is tiny but $S^0\vee S^0$ is not, and there is no
+distributivity or additivity to compensate. Its disconnection is by \emph{non-injectivity} of
+$\gamma$ (basepoints are identified), unlike the linear pole's zero-object disconnection. It also
+refutes a natural conjecture -- that a zero object suffices for admissibility -- in one line, and
+shows the two poles are not jointly exhaustive.
+
+\subsection{Artin gluing: connected but inadmissible}\label{sub:gluing}
+The decisive base is the Artin gluing $\Gl((-)^2)=(\Setb\downarrow(-)^2)$, whose objects are directed
+graphs $(A,B,\beta)$ -- a vertex set $B$, an edge set $A$, and endpoints $\beta:A\to B\times B$.
+
+\begin{proposition}\label{prop:gl-topos}
+$\Gl((-)^2)$ is a Grothendieck topos; in particular cartesian closed, cocomplete, and infinitary
+lextensive. Its terminal object $\one$ is a single looped vertex, its product is the tensor
+(Kronecker) product of graphs, and $T\cdot\one=(T,T,\mathrm{diag})$ is $T$ looped vertices.
+\end{proposition}
+\begin{proof}
+$(-)^2=\Setb(2,-)$ is right adjoint to $2\times(-)$, hence left exact; Artin gluing of a left-exact
+functor between Grothendieck toposes is a Grothendieck topos \cite[A2.1.12]{MacLaneMoerdijk},
+\cite{CarboniJohnstone}, and every Grothendieck topos is infinitary extensive. The description of the
+finite (co)limits is the standard comma-category computation.
+\end{proof}
+
+The base carries two $\Setb$-valued functors that must not be confused. \emph{Points}
+$U=\C(\one,-)$ sends a graph to its set of loops $\{a:\beta(a)_0=\beta(a)_1\}$; loops do not cross
+components, so $U$ preserves coproducts and \emph{the unit is connected}. \emph{Components}
+$\pizero$ sends a graph to its set of connected components; it is left adjoint to $(-)\cdot\one$,
+because a morphism $X\to T\cdot\one=(T,T,\mathrm{diag})$ is exactly a map $B\to T$ constant on edges,
+i.e.\ $\Hom(X,T\cdot\one)=\Setb(\pizero X,T)$. The reduction of the Shape condition to
+$\pizero$-multiplicativity is Proposition~\ref{prop:reduction}.
+
+\begin{theorem}[Gluing obstruction]\label{thm:G}
+$\Gl((-)^2)$ is not $\comp$-admissible; the Shape Lemma fails at $P=K$, $T=2$, where $K$ is the single
+edge.
+\end{theorem}
+\begin{proof}
+$K$ (vertices $\{0,1\}$, edges $\{0\to1,1\to0\}$) is connected and bipartite, so $\pizero K=1$. By
+Weichsel's theorem \cite{Weichsel}, the tensor product of two connected bipartite graphs has exactly
+two components, so $\pizero(K\times K)=2\neq1=\pizero K\cdot\pizero K$: $\pizero$ is not
+multiplicative, and by Proposition~\ref{prop:reduction} the Shape Lemma fails. Concretely, if
+$[K,\,2\cdot\one]$ were a copower of $\one$ it would be $2\cdot\one$ (forced by evaluation at $\one$),
+but $\Hom(K,[K,2\cdot\one])=\Hom(K\times K,2\cdot\one)=\Setb(\pizero(K\times K),2)=4\neq2$. Indeed
+$[K,\,2\cdot\one]\cong 2\cdot\one\sqcup K$: two looped vertices carrying the two points, plus a
+\emph{bald edge} -- a component with no loop, hence no point -- which is exactly the summand
+obstructing the Shape Lemma.
+\end{proof}
+
+\begin{corollary}[Connected is not sufficient]\label{cor:connected-not-sufficient}
+Connectedness of the unit is necessary for $\comp$-admissibility on the extensive pole
+(Theorem~\ref{thm:B}) but not sufficient: $\Gl((-)^2)$ has a connected unit yet is inadmissible.
+\end{corollary}
+
+Thus the extensive pole itself splits, exactly along the characterisation of
+Corollary~\ref{cor:char}. Where $\pizero$ is multiplicative (e.g.\ $\Setb$, where
+$\pizero=\mathrm{Id}$) the base is admissible; where pairing two connected objects can disconnect
+them, it is not. This does \emph{not} weaken the sufficiency of the Shape Lemma -- $\Gl$ is
+inadmissible precisely because it \emph{fails} the Shape Lemma, $[K,2\cdot\one]$ not being a copower
+of $\one$ -- but it shows the weaker hypothesis of a merely connected unit is not enough: what
+admissibility needs is the full Shape condition, equivalently $\pizero$-multiplicativity.
+
+\begin{remark}[Internal versus external]\label{rem:internal}
+The topos $\Gl((-)^2)$ \emph{does} carry composition of internal (Gambino--Kock) polynomial functors
+\cite{GambinoKock}; what fails is closure of the external-shape functors $\coprod_s X^{P_s}$. The
+composite $\ext{\gena{K}}\circ\ext{(2,(0,0))}$ equals $[K,2\cdot\one]\cong 2\cdot\one\sqcup K$, which
+needs a shape of size $3$ with one position object $K\not\cong\one$: a genuine object of
+$\Fam(\Gl^{\op})$, but not the copower
+of $\one$ that admissibility would force. Theorem~\ref{thm:G} is precisely this external/internal gap,
+localised to a base where it bites.
+\end{remark}
+
+\section{The middle region is inhabited}\label{sec:middle}
+
+Extensive rigidity (Theorem~\ref{thm:B}) is a \emph{sufficient} condition for connectedness, not a
+characterisation of admissibility. We show its hypotheses are essential by exhibiting an admissible
+base with a disconnected unit that is neither pole.
+
+Let $\C=\Setb\times\Vecfd$ over a field $k$, with componentwise structure: $\otimes=(\times,\otimes_k)$,
+unit $I=(1,k)$, internal hom $[X,Y]=(Y_s^{X_s},\Hom_k(X_v,Y_v))$, and coproduct
+$X\sqcup Y=(X_s\sqcup Y_s,\ X_v\oplus Y_v)$ (the $\Vecfd$-factor is the biproduct). Objects of
+$\Fam(\C^{\op})$ are $p=(S,(A_s,V_s))$ with $A_s$ a set and $V_s$ finite-dimensional, and
+\[
+   \ext p(X)=\Big(\coprod_{s} X_s^{A_s},\ \bigoplus_s\Hom_k(V_s,X_v)\Big).
+\]
+
+\begin{proposition}[Coordinates]\label{prop:coords}
+$\C=\Setb\times\Vecfd$ is non-collapse, non-cartesian, and has a disconnected unit.
+\end{proposition}
+\begin{proof}
+\emph{Non-collapse}: $(A,V)$ is copower-tiny iff $(-)^A$ preserves $\sqcup$ on the $\Setb$-factor,
+i.e.\ $|A|\le 1$; objects with $|A|\ge2$ are not tiny. \emph{Non-cartesian}: the categorical product
+has $\Vecfd$-part $X_v\oplus Y_v$ (the biproduct), and $\oplus_k\neq\otimes_k$, so $\times\neq\otimes$.
+\emph{Disconnected unit}: $\C(I,-)=(-)_s\times|(-)_v|$ where $|-|:\Vecfd\to\Setb$ is the underlying-set
+functor, which does not preserve $\oplus$ (a clean witness: $\C(I,(2,k^2))$ has $2|k|^2$ elements
+while $\coprod_{i=1,2}\C(I,I)$ has $2|k|$, unequal for $|k|\ge2$).
+\end{proof}
+
+\begin{theorem}\label{thm:setxvec}
+On the locus $\mathcal P\subseteq\Fam(\C^{\op})$ of objects with finite \emph{vec-support}
+$\{s:V_s\neq0\}$, the base $\Setb\times\Vecfd$ is $\comp$-admissible: for all $p,q\in\mathcal P$ there
+is $r=p\comp q\in\mathcal P$ and an explicit natural isomorphism $\ext r\cong\ext p\circ\ext q$.
+Consequently the hypotheses of Theorem~\ref{thm:B} are essential -- admissibility does not imply
+connectedness.
+\end{theorem}
+\begin{proof}[Proof sketch]
+The locus is forced: the $\Vecfd$-part of $\ext p(X)$ is $\bigoplus_s[V_s,X_v]$, finite-dimensional for
+all fd $X_v$ iff the vec-support is finite (Lemma~\ref{lem:1.1} below). On $\mathcal P$ the two factors
+compose independently. The $\Setb$-part is the classical container composite, with shape
+$D=\coprod_s T^{A_s}$ and positions $C_{(s,f)}=\coprod_{a\in A_s}B_{f(a)}$; the bijection
+$(s,f,g)\mapsto(s,h)$, $h(a)=(f(a),g|_{B_{f(a)}})$, is a natural isomorphism. The $\Vecfd$-part, using
+that each $V_s$ is copower-tiny in $\Vecb$ and the sums are finite, is
+\[
+   \bigoplus_s[V_s,\textstyle\bigoplus_t[W_t,X_v]]=\bigoplus_{s,t}[V_s\otimes W_t,X_v],
+\]
+a finite biproduct, which we realise by \emph{concentrating} it at a single chosen slot $d_0\in D$:
+$U_{d_0}=\bigoplus_{s,t}V_s\otimes W_t$, $U_d=0$ otherwise. The comparison is the composite of
+tensor--hom and regrouping isomorphisms, natural in $X_v$. Both components are natural isomorphisms and
+a morphism of $\Setb\times\Vecfd$ is a pair, so the product is a natural isomorphism $\ext r\cong
+\ext p\ext q$; and $r\in\mathcal P$ since its vec-support is $\subseteq\{d_0\}$. As $\C$ is
+non-cartesian with disconnected unit (Proposition~\ref{prop:coords}), Theorem~\ref{thm:B} does not
+apply, and no contradiction arises.
+\end{proof}
+
+\begin{lemma}\label{lem:1.1}
+$\ext p$ restricts to an endofunctor of $\Setb\times\Vecfd$ iff $p$ has finite vec-support.
+\end{lemma}
+\begin{proof}
+$\bigoplus_s[V_s,X_v]$ is finite-dimensional for all fd $X_v$ iff only finitely many $[V_s,X_v]$ are
+nonzero, i.e.\ iff $\{s:V_s\neq0\}$ is finite; the $\Setb$-part is a set for any $S,A_s$.
+\end{proof}
+
+The mechanism is a \emph{factoring} of two sources of admissibility.
+
+\begin{proposition}[Admissibility is per-object]\label{prop:absorptive}
+Call $P\in\C$ \emph{absorptive} if $X\mapsto[P,\ext q X]$ is an extension for every $q$. Then $\C$ is
+$\comp$-admissible iff every object of $\C$ is absorptive. There are two sources of absorptivity: a
+copower-tiny (\emph{flexible}) $P$ gives $[P,\ext q X]=\coprod_t[P\otimes Q_t,X]$; and a
+distributive (\emph{rigid}) $P$ gives $[P,\coprod_t Y_t]=\coprod_{f:P\to T}\prod_a Y_{f(a)}$.
+\end{proposition}
+\begin{proof}
+$\ext p\ext q X=\coprod_s[P_s,\ext q X]$: a coproduct of extensions is an extension, so if every $P_s$
+is absorptive then $\C$ is admissible; conversely take $p=\gena{P}$. The two formulas are the tiny and
+distributive computations.
+\end{proof}
+
+In $\Setb\times\Vecfd$ an object $(A,V)$ is absorptive because $A$ is rigid (the $\Setb$-factor is
+distributive) and $V$ is flexible ($\Vecfd$ is all-tiny). This is exactly why $\Setb\times\Setb$, with
+\emph{both} factors rigid but a disconnected unit, is inadmissible while $\Setb\times\Vecfd$ is not:
+the operative dichotomy is rigid versus flexible, not cartesian versus non-cartesian. We record the
+resulting picture as a conjecture.
+
+\begin{conjecture}[Decomposition]\label{conj:decomp}
+Over a closed symmetric monoidal cocomplete base, every absorptive object is a tensor of a
+copower-tiny part and a distributive part; consequently every ``nice'' admissible base decomposes as
+\emph{rigid-extensive $\times$ flexible-additive}, and every ``nice'' inhabitant of the middle region
+so decomposes. If true, no \emph{irreducible} (indecomposable) inhabitant exists among nice bases.
+\end{conjecture}
+
+\begin{remark}[The open irreducible case]\label{rem:gap1}
+Whether an \emph{irreducible} middle inhabitant exists is open. Such a base would be indecomposable,
+admissible, non-collapse, with disconnected unit. By Proposition~\ref{prop:absorptive} it is not any
+$\mathrm{fg}$-module category (all such are all-tiny, hence collapse). If additive it needs a non-tiny
+object and infinite direct sums -- exactly the open case of $\comp$ on $\Fam(\Vecb^{\op})$ with
+infinite shape sets. If non-additive its unit is disconnected by non-injectivity of $\gamma$, and the
+only such base known, $\Setb_*$, is inadmissible (Theorem~\ref{thm:A}). The irreducible case is thus
+pinned between two identified open doors.
+\end{remark}
+
+\section{Why the question has this shape}\label{sec:determinacy}
+
+The map assembled above -- rigid extensive pole, flexible additive pole, thin inhabited middle,
+three inadmissible bases -- is organised by a single fact about the extension. On the extensive pole,
+admissibility already forces the extension to be injective on objects; off it, it need not be, and
+then $\comp$ is not even determined by $\C$.
+
+\begin{theorem}[Determinacy]\label{thm:determinacy}
+\begin{enumerate}[leftmargin=2em]
+\item If $\one$ is connected then $\ext{-}$ is fully faithful (Theorem~\ref{thm:T1}), hence injective
+on objects up to isomorphism; so for admissible $\C$ the object $p\comp q$ is determined up to
+canonical isomorphism by $\ext{p\comp q}\cong\ext p\ext q$, and ``$({-})\comp q$ has a left adjoint''
+is a property of $\C$.
+\item If $\one$ is disconnected this can fail. Over $\Vecfd$, the objects $(\{*\},k^2)$ and
+$(\{1,2\},k)$ both present $X\mapsto X\oplus X$ but are not isomorphic (Lemma~\ref{lem:iso}, shape sets
+of sizes $1$ and $2$); so $p\comp q$ is not pinned down, and $\comp$ is a \emph{choice}.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) A fully faithful functor reflects isomorphisms and is injective on objects up to isomorphism.
+(2) $\ext{(\{*\},k^2)}X=[k^2,X]\cong X\oplus X$ and $\ext{(\{1,2\},k)}X=[k,X]\oplus[k,X]\cong X\oplus
+X$.
+\end{proof}
+
+Determinacy explains every feature of the map. On the extensive pole (Section~\ref{sec:extensive}),
+$\comp$ is canonical, so admissibility hands over connectedness, full faithfulness, and the reindexing
+adjoint (Corollary~\ref{cor:extensive-equiv}), while admissibility itself is pinned exactly by
+$\pizero$-multiplicativity (Corollary~\ref{cor:char}). In the middle region (Section~\ref{sec:middle}), the
+disconnected unit is exactly why the construction of $\comp$ on $\Setb\times\Vecfd$ had to
+\emph{choose} a concentration slot $d_0$: there is no canonical element of $\coprod_s T^{A_s}$, so
+$(p\comp q)\comp r$ and $p\comp(q\comp r)$ are different presentations of the same functor and $\comp$
+has no canonical monoidal structure -- only a choice-dependent one, living canonically only in the
+image $\ext{\mathcal P}\subseteq[\C,\C]$. On the collapse pole, the same non-faithfulness is why the
+convention $\comp:=\otimes$ cannot be discharged, and why (Theorem~\ref{thm:2}) the binary-product
+necessity argument -- immune to re-choice -- is load-bearing while the terminal-object one is not.
+
+In short: \emph{the hypothesis that makes the reindexing adjoint exist is the same hypothesis that
+makes the base-change question well-posed}. Exactly when $\one$ is disconnected, there is nothing left
+for ``the'' composition product to be until one names a $\comp$; and for the two conventions in actual
+use -- container substitution over $\Setb$, and $\otimes$ over the additive pole -- the answers to the
+adjoint question are respectively ``always'' and ``only for a single shape'', matching connectedness
+exactly.
+
+\section{Conclusion}\label{sec:conclusion}
+
+Whether $\Fam(\C^{\op})$ carries the composition product is not a graded question. A single condition,
+the Shape Lemma, is necessary in general and -- this is the paper's main quantitative result -- also
+sufficient on the extensive pole, where it becomes a complete characterisation: $\Fam(\C^{\op})$
+carries $\comp$ if and only if the connected-components functor $\pizero$ preserves finite products.
+This forces a near-dichotomy. On the extensive pole admissibility forces a
+connected unit, hence a fully faithful extension, a canonical $\comp$, and the reindexing left adjoint
+for every $q$; on the additive pole $\comp$ collapses to $\otimes$ and the adjoint survives only for a
+single shape. The two poles do not exhaust the admissible bases -- $\Setb\times\Vecfd$ inhabits the
+middle by combining a rigid and a flexible factor -- but they bound it, and the characterisation shows
+the two extensive obstructions are one: connectedness of the unit, which admissibility yields, does
+not conversely suffice, because the Artin gluing $\Gl((-)^2)$ is a connected-unit topos whose
+$\pizero$ is still not multiplicative. Behind all of this is Determinacy: a connected unit makes
+$\comp$ a property of $\C$, a disconnected one makes it a choice.
+
+\subsection*{A design principle}
+For the applications that motivate the polynomial calculus -- process substitution, plug-in
+composition, resource semantics -- the map reads as a constraint on the resource base $\C$. A
+compositional substitution calculus is available only when $\C$ is set-like enough for a connected
+unit \emph{and} its notion of joint resource is ``cartesian-like'' rather than ``tensor-like'': its
+connected-components functor must be multiplicative under pairing. A base where combining two
+connected resources can disconnect them admits no external substitution operation, even when it is a
+topos with a connected unit. By Corollary~\ref{cor:char} this test is not merely necessary but
+exactly complete on the cartesian side: test $\pizero(X\times Y)\cong\pizero X\times\pizero Y$, and
+the external composition operator exists precisely when the test passes.
+
+\subsection*{Open problems}
+The extensive-pole question -- \emph{is the Shape Lemma sufficient?} -- is settled affirmatively by
+Corollary~\ref{cor:char}: it is, and the exact content is the \emph{external} distributive law (D),
+not the internal distributivity every topos already has. What remains open lies off that pole.
+\begin{enumerate}[leftmargin=2em]
+\item \emph{A global criterion.} Corollary~\ref{cor:char} characterises admissibility by
+$\pizero$-multiplicativity on the extensive pole; the additive pole is admissible instead by
+copower-tininess (Lemma~\ref{lem:collapse-tensor}), a different mechanism with no $\pizero$ available
+($\one\cong0$). Is there a single criterion covering both poles and the mixed region between them?
+Conjecture~\ref{conj:decomp} is one precise form.
+\item \emph{Is there an irreducible middle inhabitant?} Remark~\ref{rem:gap1} pins this between the
+open additive case ($\Fam(\Vecb^{\op})$, infinite shape sets and infinite-dimensional positions) and
+the conjecture that every $\gamma$-non-injective closed base is inadmissible -- a strengthening of
+Theorem~\ref{thm:A}.
+\item \emph{Does $\comp$ extend to full $\Vecb$ for infinite shape sets?} A non-tiny position breaks
+the collapse presentation; whether $X\mapsto[P,\bigoplus_t[Q_t,X]]$ is ever an extension there is
+unsettled.
+\item \emph{Decomposition.} Prove or refute Conjecture~\ref{conj:decomp}.
+\end{enumerate}
+
+\subsection*{Relation to generalised polynomials}
+Dorta, Jarvis and Niu \cite{DJN} construct a Dirichlet tensor and a composition product over a general
+base and leave base conditions for future work; the characterisation of Section~\ref{sec:char}
+(Corollary~\ref{cor:char}) answers, for the external-shape category, a question in that direction. Their composition product is a confirming
+instance rather than a competitor: it is defined on a free product completion with no coproducts, so
+the hypotheses of Theorem~\ref{thm:B} never apply while its conclusion always holds. Their product is
+also \emph{weighted} and differs from ours off the point base (Remark~\ref{rem:djn}); their Dirichlet
+tensor agrees with ours.
+
+\begin{remark}[$\comp$ versus $\compDJN$]\label{rem:djn}
+Under the identification of the two categories, our composition-representing product $\comp$ and the
+weighted product $\compDJN$ of \cite{DJN} have the same shapes and direction-indexing but different
+direction objects: at a position they multiply in an extra outer weight, so they agree exactly when
+$\C=1$ and diverge already at $\C=2$. Our defining property $\ext{p\comp q}\cong\ext p\circ\ext q$ is
+moreover unavailable on their category for $\C\neq1$, since their embedding does not land in
+endofunctors. We therefore keep the symbols distinct throughout.
+\end{remark}
+
+\begin{thebibliography}{99}
+
+\bibitem{AAG}
+M.~Abbott, T.~Altenkirch, and N.~Ghani,
+\emph{Containers: constructing strictly positive types},
+Theoretical Computer Science \textbf{342} (2005), 3--27
+(preliminary version, \emph{Categories of containers}, FoSSaCS 2003).
+
+\bibitem{CLW}
+A.~Carboni, S.~Lack, and R.~F.~C.~Walters,
+\emph{Introduction to extensive and distributive categories},
+Journal of Pure and Applied Algebra \textbf{84} (1993), 145--158.
+
+\bibitem{CarboniJohnstone}
+A.~Carboni and P.~T.~Johnstone,
+\emph{Connected limits, familial representability and Artin glueing},
+Theory and Applications of Categories (1995).
+
+\bibitem{DJN}
+J.~Dorta, P.~Jarvis, and N.~Niu,
+\emph{Monoidal structures on generalized polynomial categories},
+arXiv:2305.05655 (2023).
+
+\bibitem{GambinoKock}
+N.~Gambino and J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Mathematical Proceedings of the Cambridge Philosophical Society \textbf{154} (2013), 153--192;
+arXiv:0906.4931.
+
+\bibitem{MacLaneMoerdijk}
+S.~Mac Lane and I.~Moerdijk,
+\emph{Sheaves in Geometry and Logic: A First Introduction to Topos Theory},
+Springer, 1992.
+
+\bibitem{NiuSpivak}
+N.~Niu and D.~I.~Spivak,
+\emph{Polynomial Functors: A Mathematical Theory of Interaction},
+arXiv:2312.00990 (2023).
+
+\bibitem{Weichsel}
+P.~M.~Weichsel,
+\emph{The Kronecker product of graphs},
+Proceedings of the American Mathematical Society \textbf{13} (1962), 47--52.
+
+\bibitem{proofT1}
+MacBeth,
+\emph{The fullness criterion for the container extension over a closed base},
+Kodamai research note, 2026.
+
+\bibitem{proofconv}
+MacBeth,
+\emph{Left and right adjoints of the composition product over a base},
+Kodamai research note, 2026.
+
+\end{thebibliography}
+
+\end{document}
