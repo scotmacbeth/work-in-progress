@@ -1,0 +1,465 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Sup}{\mathsf{S}}
+\newcommand{\Wk}{\mathsf{W}}
+\newcommand{\Rt}{\mathsf{R}}
+\newcommand{\seq}{\triangleleft}
+\newcommand{\dir}{\mathcal{D}}
+\newcommand{\FF}{\mathbb{F}_2}
+
+% Lean listing style
+\definecolor{leankw}{rgb}{0.55,0.0,0.55}
+\definecolor{leancm}{rgb}{0.3,0.45,0.3}
+\lstdefinestyle{lean}{
+  basicstyle=\small\ttfamily,
+  keywordstyle=\color{leankw}\bfseries,
+  commentstyle=\color{leancm}\itshape,
+  morekeywords={theorem,def,abbrev,example,by,cases,rfl,exact,intro,rintro,rw,simp,simp_all,
+    first,obtain,constructor,namespace,end,Prop,Bool},
+  morecomment=[l]{--},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  framesep=4pt,
+  xleftmargin=2pt,
+}
+
+\title[A machine-checked re-entrancy obstruction]{A machine-checked re-entrancy obstruction
+for supervisor--worker orchestration\\ \normalsize the composition class $[\omega]=\varepsilon$
+in Lean}
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+\date{2 September 2026}
+
+\begin{document}
+
+\begin{abstract}
+An orchestration of AI agents is a directed container, and welding two agents that share a
+resource into one interleaved system is a Zappa--Sz\'ep product of their handoff categories ---
+the distributive-law construction for directed containers being Ahman--Uustalu's. Such a product
+need not exist, and its non-existence is a degree-two cohomology class
+$[\omega]\in H^2(\Sk_\C;\dir)$ on the handoff category. We take the smallest faithful instance ---
+a supervisor dispatching to a worker, parametrized by a one-bit turn token whose mutation bit
+$\varepsilon$ marks whether the worker writes to the supervisor's shared state during a pending
+call --- and package its obstruction as a finite $\FF$ linear-algebra computation. The output is a
+short, self-contained Lean~4 development, sorry-free and free of external libraries, whose theorems
+certify that the obstruction class equals the token-mutation bit on the nose, $[\omega]=\varepsilon$,
+and hence that the joint agent exists if and only if $\varepsilon=0$. Unprotected re-entrancy --- the
+DAO-class failure mode --- is thus not a heuristic smell but a machine-checked nonzero generator of
+$H^2\cong\mathbb Z/2$. We state precisely what the formalisation certifies and what remains a
+pen-and-paper input.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{A concrete failure}
+In 2016 an attacker drained roughly a third of the Ethereum DAO's funds through a single structural
+flaw: a contract called out to an external party \emph{before} updating its own bookkeeping, and the
+callee re-entered the still-open call and spent against stale state. \emph{Unprotected re-entrancy}
+--- a callee mutating the caller's shared state during a pending call --- has since become the
+canonical smart-contract hazard, and the same shape recurs whenever a supervisor dispatches work to a
+sub-agent that may call back before returning. The question this note answers is whether that hazard
+has an \emph{invariant}: a mathematical object that is zero exactly when the composition is safe and
+nonzero exactly when it is not, and which can be \emph{computed and checked} rather than argued
+informally.
+
+\subsection*{Agents are containers, composition is a Zappa--Sz\'ep product}
+The setting is the polynomial-functor (container) model of interaction, due to Spivak
+\cite{NiuSpivak} and developed for agent orchestration by Ghani at Kodamai. An agent that may issue
+queries from a set $S$ and, for each query $s$, receive a reply from $P(s)$ is the container
+$p=(S,P)$, i.e.\ the functor $\sum_{s\in S}y^{P(s)}$. A \emph{handoff topology} --- who may delegate
+to whom, staying put, concatenating handoffs --- is a small category, equivalently a directed
+container in the sense of Ahman--Uustalu \cite{AhmanUustalu}. Running two orchestrations that share a
+resource is not composition \emph{along} one fixed topology (which a functor already models and which
+therefore cannot fail); it is the \emph{interleaving} of two, and the interleaving of two directed
+containers is a \emph{Zappa--Sz\'ep product} $\K=\C\bowtie\D$. That a distributive law of directed
+containers assembles such a joint container --- generalising the Zappa--Sz\'ep product of monoids, its
+matched pair recording the two mutual actions --- is a theorem of Ahman--Uustalu \cite{AhmanUustaluDL};
+we take the construction from them and claim none of it.
+
+\subsection*{The gap, and the invariant}
+A Zappa--Sz\'ep product \emph{can fail to exist}, and Ahman--Uustalu's account --- which is our
+source for the construction --- builds no measure of that failure: composition simply exists when a
+distributive law does. Supplying the missing invariant is the author's contribution elsewhere: the
+existence of the complementary factor is governed by a single degree-two cohomology class,
+\[
+  \C\bowtie\D \text{ exists}
+  \quad\Longleftrightarrow\quad
+  [\omega]=0\in H^2(\Sk_\C;\dir),
+\]
+cohomology of the handoff category's skeleton with coefficients in the reply (direction) functor
+$\dir$ \cite{gobstr,pairwise}. The cohomology itself is classical
+\cite{baueswirsching,rw,pirashvili}; the delta over Ahman--Uustalu is the \emph{identification} of
+the orchestration composite with $\C\bowtie\D$ and hence of its obstruction with this class.
+
+\subsection*{The result, and what is new here}
+The present note is not the proof that $[\omega]$ is the right invariant --- that is the author's
+analytic argument \cite{analytic}, whose spine we recall only as far as needed. What is new here is a
+\emph{machine-checked} certificate for the smallest faithful instance. Fix a supervisor $\Sup$
+dispatching to a worker $\Wk$ that returns to $\Rt$, carrying a one-bit turn token. A single design
+bit $\varepsilon\in\mathbb Z/2$ records whether the worker's re-entrant outcome \emph{mutates} the
+token ($\varepsilon=1$, unprotected re-entry) or \emph{fixes} it ($\varepsilon=0$, a lock). The
+analytic argument reduces the categorical obstruction to a tiny cochain complex over the two-element
+field $\FF$; the class living in that complex is what we certify. Our main statement is the following,
+proved in Lean~4 with no \texttt{sorry} and no external library
+(Section~\ref{sec:lean}, Theorem~\ref{thm:lean}).
+
+\begin{theorem}[machine-checked]\label{thm:main-intro}
+Let $\varphi(a,b)=b-a$ be the class map on the $2$-cochains $C^2\cong\FF^2$, whose kernel is the
+coboundary subgroup $B^2$, so that $\varphi$ realises $H^2(\Sk_\C;\dir)=C^2/B^2\cong\FF$. Let
+$\omega_\varepsilon=(0,\varepsilon)$ be the defect cocycle of the natural transversal. Then
+\[
+  \varphi(\omega_\varepsilon)=\varepsilon,
+  \qquad
+  \omega_\varepsilon\in B^2 \iff \varepsilon=0 .
+\]
+Equivalently: the composition class $[\omega]$ equals the token-mutation bit, and the joint agent
+$\C\bowtie\D$ exists if and only if $\varepsilon=0$.
+\end{theorem}
+
+The reader should note exactly what changes relative to the author's broad orchestration paper
+\cite{orchestration}. There the identity $[\omega]=\varepsilon$ is established analytically and the
+formalisation is a corollary cross-check; \emph{here the Lean development is the deliverable}, and the
+note is built to state, quote, and delimit it. The verification boundary is drawn honestly in
+Section~\ref{sec:disc}: the formalisation certifies the finite $\FF$ class computation --- the step
+that turns ``a cochain complex'' into ``$[\omega]=\varepsilon$'' --- and takes the reduction of the
+categorical obstruction \emph{to} that complex as a cited, pen-and-paper input.
+
+\subsection*{Why the degree matters}
+One structural remark orients the reader against the neighbouring literature. Multi-agent-systems work
+places cellular-sheaf obstructions of degree $H^0$ (consensus, Nash equilibria) and $H^1$
+(identifiability) on the agents' \emph{communication} graph, asking whether agents currently agree
+\cite{sheafMAS,sheafID}. The container obstruction sits one degree up, in $H^2$, on the \emph{handoff}
+category, and asks the prior question: can the agents be fused into one consistent joint agent at all?
+Re-entrancy is the smallest place where the answer is no, and $[\omega]=\varepsilon$ is why.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes the container / directed-container / Zappa--Sz\'ep vocabulary and the
+parametrized supervisor--worker category $\K_\varepsilon$. Section~\ref{sec:complex} records the
+finite $\FF$ complex that the analytic reduction produces, and the class $\omega_\varepsilon=(0,
+\varepsilon)$. Section~\ref{sec:lean} presents the Lean development --- the load-bearing artifact ---
+quoting its definitions and theorems verbatim and stating precisely what they certify.
+Section~\ref{sec:disc} draws the verification boundary and disposes honestly of a demoted side-reading.
+Section~\ref{sec:concl} closes.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We include only what the statement and its Lean certificate use. Containers, the directed-container /
+small-category identification, and the Zappa--Sz\'ep construction are all prior art and are cited as
+such; the parametrized category $\K_\varepsilon$ is the minimal faithful model of the
+supervisor--worker pattern.
+
+\subsection*{Containers and directed containers}
+A \emph{container} $p=(S,P)$ is a set $S$ of shapes together with, for each $s\in S$, a set $P(s)$ of
+positions; it represents the polynomial functor $\sum_{s\in S}y^{P(s)}$ \cite{NiuSpivak,SpivakRef}. A
+\emph{directed container} equips $(S,P)$ with a root, a sub-position operation, and a
+position-concatenation, and Ahman--Uustalu's theorem is that directed containers are exactly small
+categories: objects are shapes, morphisms out of $s$ are positions $P(s)$, identities are roots, and
+composition is concatenation \cite{AhmanUustalu}. We use the category picture throughout and call it
+the \emph{handoff category}.
+
+\subsection*{Zappa--Sz\'ep products}
+Let $\K$ be a small category and $\D\subseteq\K$ a wide subcategory (same objects, some morphisms). A
+\emph{Zappa--Sz\'ep product} $\K=\C\bowtie\D$ is a second wide subcategory $\C$ such that every
+morphism of $\K$ factors \emph{uniquely} as a $\C$-morphism followed by a $\D$-morphism --- a strict
+factorization system, equivalently a distributive law $\lambda:\D\C\Rightarrow\C\D$ satisfying the
+matched-pair axioms. For directed containers this is the composition construction of Ahman--Uustalu
+\cite{AhmanUustaluDL}: it generalises the Zappa--Sz\'ep product of two monoids, and its data is a
+matched pair of mutual actions. The point for us is that, given $\D$, the complementary factor $\C$
+\emph{may or may not exist}; that existence is what the obstruction measures.
+
+\subsection*{The parametrized supervisor--worker category}
+Fix three roles: $\Sup$ (supervisor), $\Wk$ (a worker running), $\Rt$ (a return point). The supervisor
+carries a one-bit \emph{turn token}; toggling it is an involution $\tau$ with $\tau^2=\id$, so
+$\End(\Sup)=\{\id_\Sup,\tau\}\cong\mathbb Z/2$. The generating handoffs are
+\[
+  p,\ p\tau:\Sup\to\Wk\quad(\text{dispatch in turn-state $0$ resp.\ $1$}),
+  \qquad
+  s,\ s_2:\Wk\to\Rt\quad(\text{two worker outcomes}),
+\]
+with composites $q,q\tau:\Sup\to\Rt$ and right $\mathbb Z/2$-action $p\cdot\tau=p\tau$,
+$q\cdot\tau=q\tau$. The prescribed right factor is the supervisor-internal (token) part,
+$\D=\{\id_\Sup,\tau,\id_\Wk,\id_\Rt\}$, a wide subcategory whose only nontrivial vertex group is
+$G_\Sup\cong\mathbb Z/2$; the left factor $\C$ --- the genuine dispatch/handoff part --- is what a
+Zappa--Sz\'ep product would have to supply.
+
+\begin{definition}[the family $\K_\varepsilon$]\label{def:family}
+For $\varepsilon\in\mathbb Z/2$ let $\K_\varepsilon$ be the category above with the single length-two
+composite fixed by
+\[
+  s\circ p=q,\qquad s_2\circ p=q\cdot\tau^{\varepsilon},
+\]
+where $s$ is ``the worker returns normally'' and $s_2$ is ``the worker re-enters'' --- calls back into
+the supervisor before returning. Thus $\varepsilon=[\,s_2\circ p=q\tau\,]$ records whether the
+re-entrant outcome \emph{mutates} the token ($\varepsilon=1$, unprotected re-entry) or \emph{fixes} it
+($\varepsilon=0$, state-protected re-entry / a lock).
+\end{definition}
+
+Each $\K_\varepsilon$ is a genuine category with $\D$ wide \cite{analytic}; the reading is exact, in
+that re-entrancy --- the callee mutating shared caller state during a pending call --- is precisely the
+$s_2$-branch dragging the token when $\varepsilon=1$.
+
+\section{The obstruction as a finite \texorpdfstring{$\FF$}{F2} complex}\label{sec:complex}
+
+The categorical obstruction of \cite{gobstr} is, for $\K_\varepsilon$, computed by an explicit
+orbit/cochain calculation in \cite{analytic}. We do not reproduce that reduction; we record its
+output, because that output is exactly what the Lean development certifies. The single fact we import
+is:
+
+\begin{proposition}[analytic reduction; {\cite{analytic}}]\label{prop:reduction}
+For each $\varepsilon\in\mathbb Z/2$ the family $\K_\varepsilon$ satisfies the freeness condition
+\textnormal{(L)} and the vertex-group hypothesis of the obstruction theorem, its skeleton $\Sk_\C$ is
+the branch $\Sup\to\Wk\rightrightarrows\Rt$ \textup{(}independent of $\varepsilon$\textup{)}, and the
+normalized cochain complex of $H^\bullet(\Sk_\C;\dir)$ is
+\[
+  C^1\cong\FF^2,\qquad C^2\cong\FF^2,\qquad C^3=0,
+\]
+with coordinates $h([p]),h([q])$ on $C^1$ and $\omega([s],[p]),\omega([s_2],[p])$ on $C^2$; the
+coboundary is $\delta^1 h=(h[p]-h[q],\,h[p]-h[q])$; and the defect $2$-cocycle of the natural
+transversal $T=\{p,q,s,s_2\}$ is $\omega_T(\varepsilon)=(0,\varepsilon)$.
+\end{proposition}
+
+Everything after Proposition~\ref{prop:reduction} is finite linear algebra over $\FF$, and it is this
+part that we formalise. Write $C^2=\FF^2$. Since $C^3=0$ we have $Z^2=C^2$. The coboundary image is
+the diagonal,
+\[
+  B^2=\operatorname{im}\delta^1=\{(t,t):t\in\FF\}=\langle(1,1)\rangle,
+\]
+so $H^2=C^2/B^2\cong\FF$, and the quotient is realised by the \emph{class map}
+\[
+  \varphi:\FF^2\to\FF,\qquad \varphi(a,b)=b-a=a\oplus b,
+\]
+whose kernel is exactly $B^2$. The defect cocycle is $\omega_\varepsilon:=\omega_T(\varepsilon)=
+(0,\varepsilon)$, so $\varphi(\omega_\varepsilon)=\varepsilon$: its class is trivial for
+$\varepsilon=0$ and the nonzero generator for $\varepsilon=1$. Chaining this with the obstruction
+theorem gives the dichotomy
+\[
+  \C\bowtie\D\text{ exists}\iff [\omega_\varepsilon]=0\iff \varepsilon=0 .
+\]
+This is Theorem~\ref{thm:main-intro}; the next section certifies its finite core.
+
+\begin{remark}[reading the class]
+The two coordinates of $\omega$ are the two worker outcomes; the coboundary diagonal is the freedom to
+relabel which token-state is ``canonical.'' The class is nonzero precisely because the two outcomes
+disagree on that relabelling by one token-flip --- the re-entrant branch's side effect. This is the
+categorical form of ``a flat bundle is trivial iff its holonomy vanishes'': each partial handoff
+completes freely, but the completions fail to glue into a global serialized agent by a single
+$\mathbb Z/2$ monodromy around the dispatch/return loop.
+\end{remark}
+
+\section{The Lean formalisation}\label{sec:lean}
+
+This section is the note's load-bearing artifact. The finite $\FF$ computation of
+Section~\ref{sec:complex} is transcribed into Lean~4 and machine-checked. The development is
+sorry-free and uses no external library --- in particular no Mathlib --- matching the pure-core style
+of the author's container development (\texttt{Basic.lean}, \texttt{ZappaSzep.lean}); this is possible
+because the entire computation is finite, so the substantive facts close by \texttt{decide} or by case
+exhaustion. The file is \texttt{Containers/Reentrancy.lean}. We quote it, rather than paraphrase it.
+
+\subsection*{The model}
+The two-element field $\FF$ is modelled as \texttt{Bool} with \texttt{false}${}=0$,
+\texttt{true}${}=1$, and \texttt{xor} as addition (which, in characteristic two, is also subtraction).
+The objects of Section~\ref{sec:complex} become the following declarations.
+
+\begin{lstlisting}[style=lean]
+abbrev Z2 := Bool                    -- F2, with xor = + = -
+abbrev C2 := Z2 x Z2                 -- the 2-cochains C2, coords omega([s],[p]), omega([s2],[p])
+
+def d1 (t : Z2) : C2 := (t, t)       -- delta^1 reparametrised: image is the diagonal
+def InB2 (x : C2) : Prop := exists t : Z2, d1 t = x   -- membership in B2 = im delta^1
+def omega (e : Z2) : C2 := (false, e)                 -- transversal defect omega_T = (0, e)
+def phi (x : C2) : Z2 := xor x.1 x.2                  -- class map (a,b) |-> b - a
+\end{lstlisting}
+
+\noindent(The listing renders \texttt{Z2}, \texttt{C2}, \texttt{d1}, \texttt{InB2}, \texttt{omega},
+\texttt{phi} for $\FF$, $C^2$, $\delta^1$, $B^2$, $\omega_T$, $\varphi$; the ASCII \texttt{x} is the
+product $\times$ and \texttt{e} is $\varepsilon$.)
+
+\subsection*{The certified theorems}
+Three facts establish $H^2\cong\FF$ via $\varphi$: that $\varphi$ kills the coboundary, that its kernel
+is \emph{exactly} the coboundary (so it descends to an injection $H^2\hookrightarrow\FF$), and that it
+is surjective. In Lean:
+
+\begin{lstlisting}[style=lean]
+theorem phi_d1 (t : Z2) : phi (d1 t) = false                 -- phi kills B2
+theorem phi_ker_eq_inB2 (x : C2) : phi x = false <-> InB2 x   -- ker phi = B2  (H2 injects into F2)
+theorem phi_surjective (y : Z2) : exists x : C2, phi x = y    -- phi onto  (H2 = F2)
+\end{lstlisting}
+
+\noindent The main identity and the dichotomy are then two lines:
+
+\begin{lstlisting}[style=lean]
+-- Class form of [omega] = e: the class of the defect cocycle (0,e) is exactly e.
+theorem phi_omega (e : Z2) : phi (omega e) = e := by
+  cases e <;> rfl
+
+-- Membership form of [omega] = 0  <->  e = 0: the defect is a coboundary iff e = 0,
+-- iff the Zappa-Szep product K_e = C |><| D exists.
+theorem omega_inB2_iff_zero (e : Z2) : InB2 (omega e) <-> e = false := by
+  rw [<- phi_ker_eq_inB2, phi_omega]
+\end{lstlisting}
+
+\noindent and the two endpoints are recorded as sanity checks that close by \texttt{rfl}:
+
+\begin{lstlisting}[style=lean]
+example : phi (omega true) = true := rfl        -- e = 1: nonzero class, product does NOT exist
+example : InB2 (omega false) := <false, rfl>    -- e = 0: trivial class, product exists
+\end{lstlisting}
+
+\begin{theorem}[the certified statement]\label{thm:lean}
+In \texttt{Containers/Reentrancy.lean}, sorry-free and without external libraries, the following are
+machine-checked:
+\begin{itemize}
+\item \texttt{phi\_ker\_eq\_inB2} and \texttt{phi\_surjective}, together giving the isomorphism
+  $H^2=C^2/B^2\cong\FF$ realised by $\varphi$;
+\item \texttt{phi\_omega} : $\varphi(\omega_\varepsilon)=\varepsilon$ --- the class form of
+  $[\omega]=\varepsilon$;
+\item \texttt{omega\_inB2\_iff\_zero} : $\omega_\varepsilon\in B^2\iff\varepsilon=0$ --- the membership
+  form of $[\omega]=0\iff\varepsilon=0$, i.e.\ the joint agent $\C\bowtie\D$ exists iff the worker fixes
+  the token.
+\end{itemize}
+Consequently, on the finite complex of Proposition~\ref{prop:reduction}, the obstruction class equals
+the token-mutation bit, and unprotected re-entrancy ($\varepsilon=1$) is the nonzero generator of
+$H^2\cong\mathbb Z/2$.
+\end{theorem}
+
+The proofs are as short as they look. \texttt{phi\_omega} is a two-case split closing by
+\texttt{rfl}; \texttt{omega\_inB2\_iff\_zero} rewrites by $\ker\varphi=B^2$ and then by
+$\varphi(\omega_\varepsilon)=\varepsilon$; \texttt{phi\_ker\_eq\_inB2} is a four-case exhaustion over
+$(a,b)\in\FF^2$. The brevity is the point: once the categorical obstruction is reduced to this
+complex, the identity $[\omega]=\varepsilon$ is a finite fact that a proof assistant settles with no
+room for hand-waving.
+
+\section{Discussion}\label{sec:disc}
+
+\subsection*{The verification boundary, drawn honestly}
+It matters to say exactly what is and is not certified. The Lean development checks the \emph{finite
+$\FF$ class computation}: given the complex of Proposition~\ref{prop:reduction} --- $C^2\cong\FF^2$,
+the coboundary equal to the diagonal, and the defect cocycle equal to $(0,\varepsilon)$ --- it proves
+$H^2\cong\FF$, $\varphi(\omega_\varepsilon)=\varepsilon$, and the membership dichotomy. It does
+\emph{not} certify the \emph{reduction} of the categorical obstruction to that complex: that
+$\K_\varepsilon$ satisfies (L) and the vertex-group hypothesis, that $\Sk_\C$ is the stated branch,
+and that the transversal defect is $(0,\varepsilon)$ are Proposition~\ref{prop:reduction}, established
+by hand in \cite{analytic} and imported here as input. So the honest reading of
+Theorem~\ref{thm:lean} is: \emph{the last mile --- from cochain complex to $[\omega]=\varepsilon$ ---
+is machine-checked; the first mile --- from category to cochain complex --- is a cited pen-and-paper
+theorem.} Formalising the first mile (the orbit category, the freeness argument, the defect
+computation) is the natural next Lean target and is not attempted here.
+
+\subsection*{A demoted side-reading}
+An earlier framing of this material distinguished a ``total'' from a ``partial'' composition and
+predicted that the two would be separated by a degree-\emph{one} invariant. That prediction is
+withdrawn. The correct statement is the classical distinction between an \emph{absolute} and a
+\emph{classified} obstruction --- Gerstenhaber's ``absolute versus classified'' dichotomy for
+deformation/obstruction problems \cite{gerstenhaber} --- and it carries no novelty and no separate
+$H^1$ degree here; the single degree-two class $[\omega]$ of Section~\ref{sec:complex} is the whole
+invariant. We flag the point only to retire the earlier prediction cleanly.
+
+\subsection*{Relation to the broad orchestration paper}
+This note is deliberately narrow. The wider case for reading agent orchestration as directed-container
+composition --- the honestly-graded dictionary, the four-regime table (independent product, the
+non-abelian $S_3$ interleave, and both re-entry rows), and the degree-axis contrast with sheaf-Laplacian
+multi-agent methods --- is the author's broad paper \cite{orchestration}, where $[\omega]=\varepsilon$
+is proved analytically and the present formalisation appears as a cross-check. The contribution of
+\emph{this} note is the inversion of emphasis: the machine-checked certificate is foregrounded and
+delimited, so that a formal-methods reader can point to a sorry-free file and a category theorist can
+see precisely which finite fact it settles.
+
+\section{Conclusion}\label{sec:concl}
+
+Unprotected re-entrancy --- a worker writing to the supervisor's shared state during a pending call, the
+DAO-class failure --- is a nonzero degree-two cohomology class on the handoff category, and on the
+minimal faithful model that class equals the token-mutation bit on the nose. The identity
+$[\omega]=\varepsilon$, and with it the dichotomy that the joint agent exists if and only if the worker
+fixes the token, is now a sorry-free Lean~4 theorem depending on no external library. What the
+formalisation buys is not a new mathematical fact but a \emph{located} one: the composability of two
+shared-resource agents is decided by a finite object a proof assistant can check, and the check is the
+last mile of an argument whose first mile --- the reduction from category to complex --- is the clearly
+marked pen-and-paper input and the obvious next formalisation target. Beyond that lie larger handoff
+topologies, where the obstruction is a class in a genuinely larger $H^2$, and the $\infty$-analogue,
+where a re-entrant tool-call is itself an orchestration.
+
+\section*{Acknowledgements}
+The agent-as-container and orchestration readings are due to Neil Ghani and the Kodamai programme,
+building on Spivak's polynomial-functor framework; the Zappa--Sz\'ep-from-distributive-laws construction
+is Ahman--Uustalu's. The author thanks Neil Ghani and Robin Langer, and Rick for the recommendation to
+split this certificate out as a standalone note and for the Gerstenhaber identification in
+Section~\ref{sec:disc}.
+
+\begin{thebibliography}{99}
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak. \emph{Polynomial Functors: A Mathematical Theory of
+Interaction}. arXiv:2312.00990, 2023.
+
+\bibitem{SpivakRef} D.~I.~Spivak. \emph{A Reference for Categorical Structures on \textup{Poly}}.
+arXiv:2202.00534, 2022.
+
+\bibitem{AhmanUustalu} D.~Ahman, T.~Uustalu. \emph{Directed Containers as Categories}.
+arXiv:1604.01187, 2016.
+
+\bibitem{AhmanUustaluDL} D.~Ahman, T.~Uustalu. \emph{Distributive laws of directed containers}.
+Progress in Informatics, No.~10 (2013), pp.~3--18, DOI 10.2201/NIIPI.2013.10.2.
+
+\bibitem{pairwise} MacBeth. \emph{The pairwise Zappa--Sz\'ep criterion}. Kodamai note, 10 June 2026.
+
+\bibitem{gobstr} MacBeth. \emph{The global-closure obstruction \textnormal{(G)} is a cohomology
+class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\dir)$}. Kodamai note, 11 June 2026.
+
+\bibitem{analytic} MacBeth. \emph{The re-entrancy obstruction is the token-mutation bit: an analytic
+proof for orchestration Zappa--Sz\'ep products}. Kodamai note, 20 July 2026.
+
+\bibitem{orchestration} MacBeth. \emph{Composing agent orchestrations is a Zappa--Sz\'ep product: a
+container model and its degree-two composition obstruction}. Kodamai note, 20 July 2026.
+
+\bibitem{baueswirsching} H.-J.~Baues, G.~Wirsching. \emph{Cohomology of small categories}. J. Pure
+Appl. Algebra 38 (1985), 187--211.
+
+\bibitem{rw} R.~Rosebrugh, R.~J.~Wood. \emph{Distributive laws and factorization}. J. Pure Appl.
+Algebra 175 (2002), 327--353.
+
+\bibitem{pirashvili} M.~Pirashvili. \emph{Schreier theory of track categories}. arXiv:1512.03250.
+
+\bibitem{gerstenhaber} M.~Gerstenhaber. \emph{On the deformation of rings and algebras}. Ann. of
+Math. (2) 79 (1964), 59--103.
+
+\bibitem{sheafMAS} M.~Hern\'andez, E.~S\'anchez-Soto. \emph{A Sheaf Framework for Strategic
+Multi-Agent Systems: From Consensus to Nash Equilibria}. arXiv:2606.01663, 2026.
+
+\bibitem{sheafID} N.~Anwer, H.~Riess, M.~Hale. \emph{Multi-Agent System Identification with Nonlinear
+Sheaf Diffusion}. arXiv:2605.11204, 2026.
+
+\end{thebibliography}
+
+\end{document}
