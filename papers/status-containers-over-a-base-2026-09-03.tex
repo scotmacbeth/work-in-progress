@@ -1,0 +1,382 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{stmaryrd}   % \llbracket \rrbracket
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+
+%--- theorem environments -------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\theoremstyle{definition}
+\newtheorem{question}{Question}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+%--- macros ---------------------------------------------------------------
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Vect}{\mathbf{Vec}}
+\newcommand{\Vecfd}{\mathbf{Vec}_{\mathrm{fd}}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Gl}{\mathrm{Gl}}
+\newcommand{\Add}{\mathrm{Add}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\ihom}[2]{[#1,#2]}
+\renewcommand{\lhd}{\vartriangleleft}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\pizero}{\pi_0}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\cod}{\mathrm{cod}}
+\newcommand{\one}{\mathbf{1}}
+\DeclareMathOperator{\Nat}{Nat}
+\DeclareMathOperator{\Ext}{Ext}
+\newcommand{\All}{\mathsf{All}}
+\newcommand{\Exists}{\mathsf{Exists}}
+
+\setlength{\parskip}{2pt}
+
+%==========================================================================
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Containers over a base --- state of the program}\\[6pt]
+{\normalsize A status memo}\\[10pt]
+\begin{tabular}{rl}
+\textbf{Author:} & MacBeth\\
+\textbf{Date:} & 2026-09-03\\
+\textbf{For:} & Neil Ghani (PI)\\
+\end{tabular}
+\end{center}
+
+\noindent\rule{\textwidth}{0.4pt}\par
+\begin{sloppypar}
+{\small\emph{Corresponds to work-in-progress commit \texttt{53db0f7}; detailed write-ups:
+\texttt{containers-over-a-base.pdf} (the approaches survey, with the three closedness theorems) and
+\texttt{admissibility-composition-product.pdf} (the $\pizero$ characterisation) in
+\texttt{scotmacbeth/work-in-progress}.}}
+\end{sloppypar}
+\noindent\rule{\textwidth}{0.4pt}
+
+\medskip
+\noindent Neil --- a fast catch-up on where the ``containers over different categories'' program
+stands. The theory has crystallised into a clean two-paper package plus one live frontier. Sections
+1--2 are the settled map and ledger; \S3--\S4 are the admissibility spine and the novelty gate;
+\textbf{\S5 is the open-questions section you asked for and is the one to read}; \S6 corrects one point
+in the thread you were replying to. I keep proofs to a one-line mechanism throughout --- everything
+below is written up in full in the two PDFs.
+
+%==========================================================================
+\section{The question, and the map}
+
+A \emph{container} in a category $\C$ is a pair (shapes, positions): a set $S$ of shapes together with
+a position object $P_s\in\C$ for each $s$, extending to the endofunctor
+$\ext{S,P}X=\coprod_{s}\ihom{P_s}{X}$. Over $\Set$ this is Abbott--Altenkirch--Ghani \cite{AAG}. The
+moment one asks for ``a container over a base $\C\neq\Set$'', the notion forks into
+three-or-four inequivalent constructions:
+\begin{itemize}
+\item[(1)] \textbf{External families}, $\Fam(\C^\op)$: an \emph{external} $\Set$-indexed coproduct of
+internal homs, $\ext{S,P}=\coprod_s\ihom{P_s}{-}$. This is the only one that reaches additive bases
+such as $\Vect$ (Dorta--Jarvis--Niu's $\Sigma\Pi\C$ construction \cite{DJN}).
+\item[(2)] \textbf{Indexed / dependent-polynomial} $\Sigma\Pi\Delta$ over a locally cartesian closed
+(LCC) base --- Gambino--Kock \cite{GambinoKock}.
+\item[(3)] \textbf{Fibrational / comprehension}: positions as a fibration over shapes; subsumes (1) and
+(2) as the family and codomain fibrations.
+\item[(4)] \textbf{Walker's locally-subcartesian-closed} bases \cite{Walker}: an affine base-change
+$\nabla_f\dashv\boxtimes_f$ (subpullbacks) replacing the top adjoint when the base is not LCC.
+\end{itemize}
+
+\paragraph{The organising insight.} These are not four rival definitions but a \emph{totally ordered
+tower of weakenings} of the $\Sigma\Pi\Delta$ machinery, refining the local-cartesian-closure axis:
+\[
+\underbrace{\text{LCCC}}_{\text{G--K \cite{GambinoKock}}}\ \supset\
+\underbrace{\text{pullbacks}}_{\text{Weber \cite{WeberPoly}}}\ \supset\
+\underbrace{\text{subpullbacks}}_{\text{Walker \cite{Walker}}}\ \supset\
+\text{spans}.
+\]
+LCC asks pullback to have a right adjoint globally; Weber's distributivity pullbacks weaken this to a
+per-morphism (exponentiable-leg) condition; Walker weakens it further to an affine adjoint; at the
+bottom sit bare spans with no base-change adjoint at all.
+
+\paragraph{Where $\Vect$ falls.} $\Fam(\Vect^\op)$ falls off the \emph{bottom} of the tower: $\Vect$
+fails every rung, always for the same two reasons. It is \textbf{non-extensive} --- the comparison
+$A\amalg B\to A\oplus B$ from the disjoint union of underlying sets to the biproduct misses every
+genuine linear combination, so $\coprod^{\Set}\subsetneq\oplus$ (coproduct $\neq$ biproduct). And it
+has \textbf{no internal $\Pi$} --- it is not LCC, exponentiability fails. So \emph{only} approach (1)
+can even form its semantics over $\Vect$. This is the honest reason the linear world needs the external
+construction: not a preference, a forced move. (Von Glehn \cite{vonGlehn}, TAC 33 (2018), identifies
+approach (2) with the codomain fibration and (1) with the family fibration; the two diverge exactly on
+non-extensive / non-LCC bases.) The two axes --- extensivity and local cartesian closure --- are the
+genuine coordinates of the whole landscape, and $\Vect$, failing both, is the discriminating example.
+
+%==========================================================================
+\section{Proved results: a ledger}
+
+All four statements below are proved in full in \texttt{containers-over-a-base.pdf}. I give each as a
+theorem plus its one-line mechanism. Write $\ext{-}\colon\Fam(\C^\op)\to[\C,\C]$ for the extension.
+
+\begin{theorem}[T1, flagship --- fullness is unit-connectedness]
+$\ext{-}$ is \emph{fully faithful} $\iff$ the monoidal unit $I$ is \emph{connected}, i.e.\
+$\C(I,-)\colon\C\to\Set$ preserves small coproducts.
+\end{theorem}
+\noindent\emph{Mechanism:} the action on homs is $\prod_s$ of the comparison $\gamma\colon
+\coprod_t\C(I,X_t)\to\C(I,\coprod_t X_t)$, and connectedness is exactly ``$\gamma$ always
+bijective.'' \emph{This is not extensivity.} $\Set\times\Set$ is lextensive yet $\ext{-}$ is not full:
+its unit $(1,1)$ is disconnected, so for source $(\{s\},(1,1))$ and target $(\{t_1,t_2\},((1,1),(1,1)))$
+there are $2$ container morphisms against $4$ natural transformations --- the two ``crossed'' maps are
+unrealised. This corrects the folklore that read ``extensivity'' off the $\Set$ case (where base and
+value category coincide, fusing two different theorems --- ours, and Diers' reconstruction \cite{Diers}
+which uses extensivity of the \emph{codomain}).
+
+\begin{theorem}[T2 --- Dirichlet $\otimes$ closedness]
+$\otimes$ on $\Fam(\C^\op)$ is closed $\iff$ the functor
+$\Phi(Z)=\prod_t\coprod_r\C(M_r,Z\otimes Q_t)$ is familially representable.
+\end{theorem}
+\noindent\emph{Mechanism:} a right adjoint at $(T,Q),(R,M)$ represents a functor whose restriction to
+the one-shape generators is $\Phi$; representability transfers through the free coproduct completion.
+Closed on cartesian-closed bases (recovering the $\Poly$ Dirichlet hom, Niu--Spivak Ex.~4.78
+\cite{NiuSpivak}) and on $\Fam_{\mathrm{fin}}(\Vecfd^\op)$ \emph{only}; it \textbf{fails} over both
+$\Fam(\Vecfd^\op)$ and $\Fam(\Vect^\op)$ by \emph{dual} mechanisms --- infinitely many shapes break
+product-closure, infinite-dimensional positions break single-factor representability. The single
+load-bearing condition is simultaneous \emph{dualizability-and-summability}, met over $\Vect$ exactly
+on the finite/finite-dimensional corner.
+
+\begin{theorem}[T4-left --- $\lhd$ left-closedness is collapse]
+The substitution product $\lhd$ is \emph{left}-closed $\iff$ it \emph{collapses}: positions tiny
+($=$ dualizable $=$ finite-dimensional over $\Vect$) forces $\lhd=\otimes$, symmetric.
+\end{theorem}
+\noindent\emph{Mechanism:} tininess turns $\ihom{Z}{\coprod_t B_t}$ from the branching
+$\coprod_{\tau\colon Z\to T}\prod_d B_{\tau(d)}$ (which makes the $\Set$ closure non-polynomial, hence
+absent) into a genuine coproduct, whence $\lhd=\otimes$. Holds on
+$\Fam_{\mathrm{fin}}(\Vecfd^\op)$. \textbf{The crown inversion:} extensivity, the property whose
+\emph{failure} costs T1 and T2, is here the \emph{obstruction} --- non-extensivity is the \emph{repair}.
+Extensivity $\perp$ $\lhd$-left-closedness. This is the survey's most surprising structural fact and is
+why the classification is genuinely two-dimensional rather than a single ``goodness'' scale.
+
+\begin{theorem}[Approach (3) anchored --- the logic of containers]
+$\Cont(\cod)=\Fam(\cod^\op)$ is a \emph{bifibration} and a \emph{co-hyperdoctrine}. The fibre over
+$(S,\{P_s\})$ is $\prod_s(\Set/P_s)^\op$; the quantifiers along the shape-collapse are the $\All/\Exists$
+predicate liftings ($\All=\Pi$, $\Exists=\Sigma$).
+\end{theorem}
+\noindent\emph{Mechanism / dualisation:} the container hyperdoctrine is the \emph{fibrewise opposite}
+of the standard $\Set$-family hyperdoctrine --- container-$\exists$ is $\All$, container-$\forall$ is
+$\Exists$, $\wedge\leftrightarrow\vee$, and each fibre is a \emph{co-topos}. Consequently joint
+Beck--Chevalley / Frobenius is \emph{one-sided}: the right-adjoint quantifiers carry it, the
+left-adjoint ones fail, obstructed by co-topos non-distributivity. (Fibrational folklore --- $\Fam$
+preserves fibrations \cite{Hermida}, $\cod$ is a bifibration \cite{Jacobs}; the fibrewise-op
+presentation is von Glehn \cite{vonGlehn}.)
+
+%==========================================================================
+\section{The admissibility program (the spine of the generality question)}
+
+This is where your ``for which bases does it generalise?'' question actually lives. Say $\C$ is
+\emph{$\lhd$-admissible} if $\Fam(\C^\op)$ carries the composition product at all: for all $p,q$ there
+is $p\lhd q$ with $\ext{p\lhd q}\cong\ext p\circ\ext q$. Per-object this is
+\emph{absorptivity}: every object $X$ has $X\mapsto\ihom{P}{\ext q X}$ a coproduct of representables.
+The whole story is in \texttt{admissibility-composition-product.pdf}.
+
+\paragraph{Trichotomy.} The space of bases splits into three regimes.
+\begin{itemize}
+\item \textbf{Extensive pole.} admissible $\Rightarrow$ unit connected $\Rightarrow$ $\ext{-}$ fully
+faithful and $(-)\lhd q$ has a \emph{left adjoint for every $q$}. One comparison map $\gamma$ powers
+both fullness and the adjoint --- ``the same lemma applied twice.''
+\item \textbf{Collapse pole.} admissible with unit $\cong 0$ (every object copower-tiny, $\lhd=\otimes$);
+$(-)\lhd q$ has a left adjoint iff $|T|=1$.
+\item \textbf{Inadmissible.} $\Set\times\Set$, $\Set_*$ (pointed sets), $\Gl((-)^2)$.
+\end{itemize}
+
+\paragraph{Extensive-CCC pole --- completely characterised (the headline).}
+\begin{theorem}[$\pizero$-characterisation]
+On a nontrivial infinitary-lextensive cartesian-closed base, $\Fam(\C^\op)$ is $\lhd$-admissible
+$\iff$ the connected-components functor $\pizero$ preserves finite products.
+\end{theorem}
+\noindent This single criterion (Lemma~S: the shape object $[P,T\cdot\one]$ must be a copower of
+$\one$) \emph{unifies the two inadmissible extensive bases into one phenomenon}: $\Set\times\Set$ fails
+because its unit is disconnected ($\pizero(X\times Y)=X_1Y_1\sqcup X_2Y_2\neq(X_1\sqcup X_2)\times
+(Y_1\sqcup Y_2)$), and $\Gl((-)^2)$ fails despite a \emph{connected} unit because
+$\pizero(K\times K)=2\neq 1$ for the single edge $K$ (Weichsel's theorem on the graph tensor product
+\cite{Weichsel}; $\Gl$ is a Grothendieck topos \cite{MacLaneMoerdijk,CarboniJohnstone}).
+
+\paragraph{Connectedness is necessary but NOT sufficient.} $\Gl((-)^2)$ is the witness: a topos, a
+connected unit, still inadmissible. So ``connected unit'' is strictly weaker than admissibility, and
+the gap is exactly the external-vs-internal distributive law (internal composition of Gambino--Kock
+polynomials holds in \emph{every} topos; the external-shape law is what $\pizero$-multiplicativity
+controls).
+
+\paragraph{Gap~1 is inhabited.} The region (admissible $\wedge$ non-collapse $\wedge$ non-cartesian) is
+non-empty: $\Set\times\Vecfd$ is $\lhd$-admissible on its natural locus, with an explicit $\lhd$ and a
+natural isomorphism --- the rigid $\Set$ factor forces the shape set $\coprod_s T^{A_s}$, the flexible
+$\Vecfd$ factor absorbs it by biproduct collapse. Its unit is \emph{disconnected}, so the
+extensive-pole extraction (admissible $\Rightarrow$ connected) genuinely needs its hypotheses:
+admissibility alone does not force connectedness. The extensive pole is a \emph{sufficient} condition
+for one-bit rigidity, not a characterisation of it.
+
+%==========================================================================
+\section{Novelty gate}
+
+Dorta--Jarvis--Niu (arXiv:2305.05655, \cite{DJN}) build a $\otimes$ over a general base that matches
+mine exactly under the identification $\Sigma\Pi\C=\Fam((\Pi\C)^\op)$. But $\Pi\C$ is the
+\emph{coproduct-free} product completion, so the infinitary-lextensive-CCC hypotheses of the
+admissibility theorems \emph{never hold there} --- DJN is therefore neither prior art for, nor a
+counterexample to, the admissibility results. They prove no fullness/faithfulness result and pose the
+base-condition question explicitly as future work (\cite[\S6]{DJN}). MacBeth's delta is: fullness (T1),
+closedness (T2/T4), and change-of-enrichment (T3). \emph{One caveat, flagged:} their composition
+product is \emph{weighted} and coincides with mine only at $\C=1$ (their direction object multiplies in
+an outer factor $u_{i,a}$ that mine omits) --- the general comparison of $\lhd_{\mathrm{DJN}}$ with
+$\lhd$ is open.
+
+%==========================================================================
+\section{Open questions (the part you asked for)}
+
+\subsection*{THE FRONTIER --- Conjecture 6.2, the absorptive dichotomy}
+
+\begin{conjecture}[Absorptive dichotomy]
+Every absorptive object is a tensor of a \emph{copower-tiny} (flexible) part and a \emph{distributive}
+(rigid) part. Hence every ``nice'' admissible base $=$ (rigid-extensive) $\times$ (flexible-additive),
+and there is \textbf{no irreducible Gap-1 inhabitant}.
+\end{conjecture}
+
+\noindent A scoping result reduces the \emph{whole} conjecture to a single question:
+\begin{question}
+Is full (infinite-dimensional) $\Vect$ $\lhd$-admissible?
+\end{question}
+The reduction: any additive base is non-extensive, so it has no rigid factor; if it were admissible it
+would be an \emph{irreducible} Gap-1 inhabitant, i.e.\ a counterexample to 6.2. So 6.2 holds
+$\iff$ full $\Vect$ is \emph{inadmissible}. This in turn reduces to a homological question in the
+additive functor category $\Add(\Vect,\Vect)$:
+\begin{question}
+Is $F=\Hom(k^{(\mathbb{N})},\bigoplus_{\mathbb{N}}-)=\prod_{\mathbb{N}}(\bigoplus_{\mathbb{N}}-)$
+\emph{projective} in $\Add(\Vect,\Vect)$ --- equivalently, a coproduct of representables?
+\end{question}
+
+\noindent\textbf{Status: OPEN.} What is settled this cycle (``computed''), and what I want you to know
+before spending time on it:
+\begin{itemize}
+\item The naive ``$\infty$-copower obstruction'' --- that $F$ fails to preserve coproducts/products,
+hence cannot be a coproduct of representables --- is \textbf{not rigorous}. Every candidate separator
+turns out to be a \emph{non-obstruction}: a coproduct of representables with infinite-dimensional
+summands \emph{also} fails to preserve infinite coproducts/products. Preservation is simply the wrong
+diagnostic here.
+\item A Yoneda finite-row-support rigidity lemma (\textbf{Lemma R}) is \emph{proved}, but it kills only
+one candidate summand, not the dichotomy.
+\item The Baer--Specker / slenderness engine that refutes the $\mathbf{Ab}$-analogue \textbf{does not
+transport}: over a field every vector space is free, so there are no slender objects to run the argument
+on. (Cited in prose only --- see flag in the report.)
+\item A rigorous resolution needs $\Ext^1(F,-)\neq 0$ in $\Add(\Vect,\Vect)$: honest
+functor-category homological algebra over a field. This is the single highest-value open problem in the
+program.
+\end{itemize}
+\emph{Honest current bet:} direction A (full $\Vect$ inadmissible $\Rightarrow$ dichotomy holds), by
+analogy only --- no proof.
+
+\subsection*{Secondary open questions}
+\begin{itemize}
+\item \textbf{Wildcard: nuclear / topological vector spaces} (where tiny $\neq$ finite-dimensional) ---
+the one corner the extensive-pole screen could not close.
+\item \textbf{Arity gap.} The closed convolutional tensors on $\Cont$ are $\otimes$ and $\triangleright_S$
+(bounded arity); the infinite-arity case is open.
+\item \textbf{Front C (``prompts vary'').} Does the branching stratification
+$\lambda\text{-inv}\subsetneq\text{non-branch}\subsetneq\text{cartesian}\subsetneq\Pi\text{-Mendler}$
+lift index-wise to the indexed-container monoid structures of De Pascalis--Uustalu--Veltr\`i
+(arXiv:2509.25879, \cite{DPUV})? This is the self-contained fallback --- fully within reach without the
+homological machinery.
+\end{itemize}
+
+%==========================================================================
+\section{One correction to the thread you were replying to}
+
+You asked whether $\delta\overset{?}{=}\Phi$ --- i.e.\ whether T2 closedness \emph{is}
+Weber-distributivity. \textbf{Refuted; they are distinct axes.} Weber's $\delta$ tests the \emph{left}
+position ($P_s$ exponentiable/tiny) --- that is exactly my T4-left collapse condition. T2's $\Phi$
+tests the \emph{right} position and the target ($Q_t$ dualizable-and-summable) and \emph{never sees}
+$P_s$. The two are two-way separable over $\Vect$ (a finite-dimensional-left, infinite-dimensional-right
+datum makes $\delta$ invertible while $\Phi$ is unrepresentable, and the reverse datum does the
+opposite). So \textbf{T2 does not fold into the LCC-weakening tower} --- it belongs to Weber's
+\emph{other} machinery (parametric right adjoints / familial functors, \cite{WeberFamilial}), which
+sits parallel to the tower, not on it. T4-left is the rung on the tower; T2 is off it.
+
+%==========================================================================
+\section*{Where I would go next}
+
+The homological attack on projectivity of $F$ in $\Add(\Vect,\Vect)$ --- establishing
+$\Ext^1(F,-)\neq 0$ over a field --- is the single highest-value open problem: it collapses the whole
+absorptive dichotomy (Conjecture 6.2) to a yes/no, and it is the last thing standing between the
+admissibility program and a complete classification. It is also genuinely hard, and none of the naive
+separators work. Front C (the branching stratification lifting to indexed containers of \cite{DPUV})
+is the self-contained fallback: fully within reach with the tools already built, and a clean
+publishable increment if the homological front stalls. My plan is to open both --- a PROVE session on
+$\Ext^1$ and an expository pass on the DPUV monoid structures --- and let whichever moves first set the
+pace.
+
+%==========================================================================
+\begin{thebibliography}{99}
+
+\bibitem{AAG} M.~Abbott, T.~Altenkirch, N.~Ghani.
+\emph{Containers: constructing strictly positive types.}
+Theoretical Computer Science \textbf{342} (2005), 3--27 (FoSSaCS 2003).
+
+\bibitem{CarboniJohnstone} A.~Carboni, P.~T.~Johnstone.
+\emph{Connected limits, familial representability and Artin glueing.}
+Mathematical Structures in Computer Science / TAC (1995).
+
+\bibitem{Diers} Y.~Diers.
+\emph{Cat\'egories localisables.}
+Th\`ese de doctorat d'\'etat, Universit\'e Paris VI, 1977. (Familial representability.)
+
+\bibitem{DJN} S.~Dorta, A.~Jarvis, N.~Niu.
+\emph{Monoidal structures on generalized polynomial categories.}
+arXiv:2305.05655.
+
+\bibitem{DPUV} G.~De Pascalis, T.~Uustalu, N.~Veltr\`i.
+\emph{Monoid structures on indexed containers.}
+arXiv:2509.25879.
+
+\bibitem{GambinoKock} N.~Gambino, J.~Kock.
+\emph{Polynomial functors and polynomial monads.}
+Math. Proc. Cambridge Philos. Soc. \textbf{154} (2013), 153--192. arXiv:0906.4931.
+
+\bibitem{Hermida} C.~Hermida.
+\emph{Fibrations, logical predicates and indeterminates.}
+PhD thesis, University of Edinburgh, 1993.
+
+\bibitem{Jacobs} B.~Jacobs.
+\emph{Categorical Logic and Type Theory.}
+Studies in Logic and the Foundations of Mathematics \textbf{141}, North-Holland, 1999.
+
+\bibitem{MacLaneMoerdijk} S.~Mac Lane, I.~Moerdijk.
+\emph{Sheaves in Geometry and Logic.} Springer, 1992.
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak.
+\emph{Polynomial Functors: A Mathematical Theory of Interaction.}
+Book draft / arXiv:2312.00990, 2023--2024.
+
+\bibitem{vonGlehn} T.~von Glehn.
+\emph{Polynomials and models of type theory.}
+PhD thesis, University of Cambridge, 2015; see also Theory Appl. Categ. \textbf{33} (2018).
+
+\bibitem{Walker} C.~Walker.
+\emph{Locally subcartesian closed categories.}
+arXiv:2607.10242.
+
+\bibitem{WeberPoly} M.~Weber.
+\emph{Polynomials in categories with pullbacks.}
+Theory Appl. Categ. \textbf{30} (2015), 533--598. arXiv:1106.1983.
+
+\bibitem{WeberFamilial} M.~Weber.
+\emph{Familial 2-functors and parametric right adjoints.}
+Theory Appl. Categ. \textbf{18} (2007), 665--732.
+
+\bibitem{Weichsel} P.~M.~Weichsel.
+\emph{The Kronecker product of graphs.}
+Proc. Amer. Math. Soc. \textbf{13} (1962), 47--52.
+
+\end{thebibliography}
+
+\end{document}
