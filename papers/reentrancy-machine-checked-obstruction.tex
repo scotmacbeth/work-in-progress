@@ -2,6 +2,7 @@
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage[margin=1in]{geometry}
 \usepackage{booktabs}
+\usepackage{enumitem}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{hyperref}
@@ -19,6 +20,8 @@
 
 \newcommand{\Hom}{\operatorname{Hom}}
 \newcommand{\End}{\operatorname{End}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\orb}{\operatorname{orb}}
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\C}{\mathcal{C}}
 \newcommand{\D}{\mathcal{D}}
@@ -85,6 +88,13 @@ pen-and-paper input.
 \begin{center}\small\itshape
 For: Rick (grandpa-rick), reviewer \quad|\quad 2026-09-03 \quad|\quad
 corresponds to scotmacbeth/work-in-progress commit \texttt{fad5f3c}
+\end{center}
+
+\begin{center}\footnotesize
+Load-bearing artifact: \texttt{Containers/Reentrancy.lean},\\
+SHA-256 \texttt{e28da311102740f36698a42f1416a15d697549bfa8e86cc240867304e352dc2c}\\
+(the Lean file is unchanged since the reviewed commit \texttt{fad5f3c}; this revised note
+touches no Lean).
 \end{center}
 
 \section{Introduction}\label{sec:intro}
@@ -177,7 +187,8 @@ finite $\FF$ complex that the analytic reduction produces, and the class $\omega
 \varepsilon)$. Section~\ref{sec:lean} presents the Lean development --- the load-bearing artifact ---
 quoting its definitions and theorems verbatim and stating precisely what they certify.
 Section~\ref{sec:disc} draws the verification boundary and disposes honestly of a demoted side-reading.
-Section~\ref{sec:concl} closes.
+Section~\ref{sec:concl} closes. Appendix~\ref{app:defect} exposes, in pen-and-paper form, the one
+load-bearing numeric $\omega_T=(0,\varepsilon)$ that the Lean development takes as data.
 
 \section{Preliminaries}\label{sec:prelim}
 
@@ -244,17 +255,31 @@ output, because that output is exactly what the Lean development certifies. The 
 is:
 
 \begin{proposition}[analytic reduction; {\cite{analytic}}]\label{prop:reduction}
-For each $\varepsilon\in\mathbb Z/2$ the family $\K_\varepsilon$ satisfies the freeness condition
-\textnormal{(L)} and the vertex-group hypothesis of the obstruction theorem, its skeleton $\Sk_\C$ is
-the branch $\Sup\to\Wk\rightrightarrows\Rt$ \textup{(}independent of $\varepsilon$\textup{)}, and the
-normalized cochain complex of $H^\bullet(\Sk_\C;\dir)$ is
+For each $\varepsilon\in\mathbb Z/2$:
+\begin{enumerate}[label=\textup{(\alph*)}, ref=\thetheorem(\alph*), leftmargin=*, itemsep=3pt]
+\item\label{prop:red-hyp} the family $\K_\varepsilon$ satisfies the freeness condition
+\textnormal{(L)} \textup{(}each hom-presheaf is a free right $\dir$-set\textup{)} and the vertex-group
+hypothesis of the obstruction theorem \textup{(}$\dir$ a disjoint union of abelian vertex groups with
+trivial left action\textup{)};
+\item\label{prop:red-branch} its skeleton orbit category $\Sk_\C$ is the branch
+$\Sup\to\Wk\rightrightarrows\Rt$, with both middle arrows $[s],[s_2]$ composing after $[p]$ to the
+single arrow $[q]$, \emph{independent of $\varepsilon$};
+\item\label{prop:red-complex} the normalized \textup{(}Baues--Wirsching\textup{)} cochain complex of
+$H^\bullet(\Sk_\C;\dir)$ is
 \[
   C^1\cong\FF^2,\qquad C^2\cong\FF^2,\qquad C^3=0,
 \]
 with coordinates $h([p]),h([q])$ on $C^1$ and $\omega([s],[p]),\omega([s_2],[p])$ on $C^2$; the
 coboundary is $\delta^1 h=(h[p]-h[q],\,h[p]-h[q])$; and the defect $2$-cocycle of the natural
 transversal $T=\{p,q,s,s_2\}$ is $\omega_T(\varepsilon)=(0,\varepsilon)$.
+\end{enumerate}
 \end{proposition}
+
+The three parts are the three separable pen-and-paper imports, isolated so that each is an explicit
+future formalisation target: \ref{prop:red-hyp} is a freeness/orbit argument on $\K_\varepsilon$,
+\ref{prop:red-branch} identifies the base category, and \ref{prop:red-complex} is the
+Baues--Wirsching complex of that base together with the one load-bearing numeric $\omega_T=(0,
+\varepsilon)$, whose short derivation we expose in Appendix~\ref{app:defect}.
 
 Everything after Proposition~\ref{prop:reduction} is finite linear algebra over $\FF$, and it is this
 part that we formalise. Write $C^2=\FF^2$. Since $C^3=0$ we have $Z^2=C^2$. The coboundary image is
@@ -357,7 +382,7 @@ machine-checked:
   form of $[\omega]=0\iff\varepsilon=0$, i.e.\ the joint agent $\C\bowtie\D$ exists iff the worker fixes
   the token.
 \end{itemize}
-Consequently, on the finite complex of Proposition~\ref{prop:reduction}, the obstruction class equals
+Consequently, on the finite complex of Proposition~\ref{prop:red-complex}, the obstruction class equals
 the token-mutation bit, and unprotected re-entrancy ($\varepsilon=1$) is the nonzero generator of
 $H^2\cong\mathbb Z/2$.
 \end{theorem}
@@ -373,26 +398,35 @@ room for hand-waving.
 
 \subsection*{The verification boundary, drawn honestly}
 It matters to say exactly what is and is not certified. The Lean development checks the \emph{finite
-$\FF$ class computation}: given the complex of Proposition~\ref{prop:reduction} --- $C^2\cong\FF^2$,
+$\FF$ class computation}: given the complex of Proposition~\ref{prop:red-complex} --- $C^2\cong\FF^2$,
 the coboundary equal to the diagonal, and the defect cocycle equal to $(0,\varepsilon)$ --- it proves
-$H^2\cong\FF$, $\varphi(\omega_\varepsilon)=\varepsilon$, and the membership dichotomy. It does
-\emph{not} certify the \emph{reduction} of the categorical obstruction to that complex: that
-$\K_\varepsilon$ satisfies (L) and the vertex-group hypothesis, that $\Sk_\C$ is the stated branch,
-and that the transversal defect is $(0,\varepsilon)$ are Proposition~\ref{prop:reduction}, established
-by hand in \cite{analytic} and imported here as input. So the honest reading of
-Theorem~\ref{thm:lean} is: \emph{the last mile --- from cochain complex to $[\omega]=\varepsilon$ ---
-is machine-checked; the first mile --- from category to cochain complex --- is a cited pen-and-paper
-theorem.} Formalising the first mile (the orbit category, the freeness argument, the defect
-computation) is the natural next Lean target and is not attempted here.
+$H^2\cong\FF$, $\varphi(\omega_\varepsilon)=\varepsilon$, and the membership dichotomy. One arithmetic
+fact is folded silently into that setup: because $C^3=0$ every $2$-cochain is a cocycle, so
+$Z^2=C^2$; the Lean model takes $Z^2=C^2$ \emph{as a definition} (it works directly with
+\texttt{C2}), reflecting the pen-and-paper fact $C^3=0$ of Proposition~\ref{prop:red-complex} rather
+than deriving it. The development does \emph{not} certify the \emph{reduction} of the categorical
+obstruction to that complex: that $\K_\varepsilon$ satisfies (L) and the vertex-group hypothesis
+(Proposition~\ref{prop:red-hyp}), that $\Sk_\C$ is the stated branch (Proposition~\ref{prop:red-branch}),
+and that the transversal defect is $(0,\varepsilon)$ (Proposition~\ref{prop:red-complex}) are
+established by hand in \cite{analytic} and imported here as input; the last of these, the load-bearing
+numeric, is derived explicitly in Appendix~\ref{app:defect} but remains pen-and-paper. So the honest
+reading of Theorem~\ref{thm:lean} is: \emph{the last mile --- from cochain complex to
+$[\omega]=\varepsilon$ --- is machine-checked; the first mile --- from category to cochain complex ---
+is a cited pen-and-paper theorem.} Formalising the first mile (the orbit category, the freeness
+argument, the defect computation) is the natural next Lean target and is not attempted here.
 
 \subsection*{A demoted side-reading}
 An earlier framing of this material distinguished a ``total'' from a ``partial'' composition and
 predicted that the two would be separated by a degree-\emph{one} invariant. That prediction is
-withdrawn. The correct statement is the classical distinction between an \emph{absolute} and a
-\emph{classified} obstruction --- Gerstenhaber's ``absolute versus classified'' dichotomy for
-deformation/obstruction problems \cite{gerstenhaber} --- and it carries no novelty and no separate
-$H^1$ degree here; the single degree-two class $[\omega]$ of Section~\ref{sec:complex} is the whole
-invariant. We flag the point only to retire the earlier prediction cleanly.
+withdrawn. What it was reaching for is the ordinary deformation-theoretic split between the
+\emph{obstruction to a structure's existence} and the \emph{cohomology that classifies it once it
+exists} --- the pattern Gerstenhaber set for associative algebras, where infinitesimal deformations
+are governed by one cohomology group and the obstructions to integrating them by the next
+\cite{gerstenhaber}; one may informally call these the \emph{absolute} (existence) and
+\emph{classified} (moduli) sides. The distinction is real, but it carries no novelty and no separate
+$H^1$ degree here: the single degree-two class $[\omega]$ of Section~\ref{sec:complex} is the whole
+invariant, both the obstruction to $\C\bowtie\D$ existing and --- via $H^2\cong\FF$ --- the label of
+which system one has. We flag the point only to retire the earlier prediction cleanly.
 
 \subsection*{Relation to the broad orchestration paper}
 This note is deliberately narrow. The wider case for reading agent orchestration as directed-container
@@ -418,12 +452,61 @@ marked pen-and-paper input and the obvious next formalisation target. Beyond tha
 topologies, where the obstruction is a class in a genuinely larger $H^2$, and the $\infty$-analogue,
 where a re-entrant tool-call is itself an orchestration.
 
+\appendix
+
+\section{The transversal defect \texorpdfstring{$\omega_T=(0,\varepsilon)$}{omega_T=(0,e)}}
+\label{app:defect}
+
+This appendix exposes the single load-bearing numeric of the reduction --- the defect cocycle
+$\omega_T=(0,\varepsilon)$ asserted in Proposition~\ref{prop:red-complex} --- so that a reader can
+check it by eye rather than take it on citation. The computation is short. It is, however, still
+\emph{pen-and-paper}: it lives on the first mile (category to complex), and the Lean development of
+Section~\ref{sec:lean} takes its output $(0,\varepsilon)$ as data. Machine-checking this step ---
+the orbit/transversal/defect layer --- is the natural extension of the first-mile formalisation
+target flagged in Section~\ref{sec:disc}; it is not attempted here. We reproduce the argument from
+the analytic note \cite{analytic}.
+
+Recall the base $\Sk_\C$ of Proposition~\ref{prop:red-branch}: objects $\Sup,\Wk,\Rt$ and
+non-identity generators $[p]:\Sup\to\Wk$, $[q]:\Sup\to\Rt$, $[s],[s_2]:\Wk\to\Rt$, with
+$[s]\ast[p]=[s_2]\ast[p]=[q]$. The coefficient presheaf is $\dir(\Sup)=\mathbb Z/2=\{\id_\Sup,\tau\}$
+and $\dir(\Wk)=\dir(\Rt)=0$; we identify $\dir(\Sup)\cong\FF$ by $\id_\Sup\mapsto0$, $\tau\mapsto1$.
+
+Choose the \emph{natural transversal} $T=\{p,q,s,s_2\}$: one lift per non-regular free orbit
+(together with the identities), each being the ``untwisted'' representative. For a composable pair
+$(c_2,c_1)$ of chosen generators, the Baues--Wirsching defect $\omega_T(c_2,c_1)\in\dir(\dom c_1)$ is
+the unique coefficient element for which
+\[
+  c_2\circ c_1 \;=\; \lfloor c_2c_1\rfloor_T \circ\, \omega_T(c_2,c_1),
+\]
+where $\lfloor c_2c_1\rfloor_T$ is the chosen lift of the target orbit $\orb(c_2\ast c_1)$
+(\cite{gobstr}, definition of the defect). Only pairs with $\dom c_1=\Sup$ contribute, since
+$\dir$ vanishes elsewhere; these are exactly $([s],[p])$ and $([s_2],[p])$, and both have target
+orbit $\orb([q])$ with chosen lift $q$. Using the composition law
+$s\circ p=q$, $s_2\circ p=q\cdot\tau^{\varepsilon}$ of $\K_\varepsilon$ (Definition~\ref{def:family}):
+\[
+  s\circ p \;=\; q \;=\; q\circ\id_\Sup
+  \quad\Longrightarrow\quad
+  \omega_T([s],[p]) \;=\; \id_\Sup \;=\; 0,
+\]
+\[
+  s_2\circ p \;=\; q\cdot\tau^{\varepsilon} \;=\; q\circ\tau^{\varepsilon}
+  \quad\Longrightarrow\quad
+  \omega_T([s_2],[p]) \;=\; \tau^{\varepsilon} \;=\; \varepsilon,
+\]
+the last identification reading $\tau^0=\id_\Sup\mapsto0$ and $\tau^1=\tau\mapsto1$. Hence
+$\omega_T=\big(\omega_T([s],[p]),\,\omega_T([s_2],[p])\big)=(0,\varepsilon)$, as
+Proposition~\ref{prop:red-complex} states. This is the one input that makes the class map take the
+value $\varphi(\omega_\varepsilon)=\varepsilon$ \emph{on the nose}, rather than merely landing
+somewhere in $H^2\cong\FF$: the second coordinate is the token-mutation bit, and the coboundary
+freedom $B^2=\langle(1,1)\rangle$ cannot move it off $\varepsilon$ without moving the first coordinate
+too.
+
 \section*{Acknowledgements}
 The agent-as-container and orchestration readings are due to Neil Ghani and the Kodamai programme,
 building on Spivak's polynomial-functor framework; the Zappa--Sz\'ep-from-distributive-laws construction
 is Ahman--Uustalu's. The author thanks Neil Ghani and Robin Langer, and Rick for the recommendation to
-split this certificate out as a standalone note and for the Gerstenhaber identification in
-Section~\ref{sec:disc}.
+split this certificate out as a standalone note, for pointing to the deformation-theoretic framing of
+Section~\ref{sec:disc}, and for the referee report that shaped the present revision.
 
 \begin{thebibliography}{99}
 

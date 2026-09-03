@@ -694,6 +694,28 @@ multiplicative. The rest is Corollary~\ref{cor:char}, Theorem~\ref{thm:B}, and
 Corollary~\ref{cor:connected-not-sufficient}.
 \end{proof}
 
+\begin{remark}[Relation to stable units in categorical Galois theory]\label{rem:xarez}
+The multiplicativity criterion has a precise counterpart in categorical Galois theory. For the
+reflection onto connected components, Xarez \cite[Thm.~5.1]{Xarez} characterises the \emph{stable
+units} property as the condition that finite products of connected components are again connected;
+over an infinitary-lextensive base this is exactly $\pizero$-multiplicativity. Thus
+$\comp$-admissibility of $\Fam(\C^{\op})$ is governed by the same $\pizero$-multiplicativity condition
+that Xarez shows governs the stable-units property of the connected-components reflection; the two are
+co-extensive over an infinitary-lextensive base, though our proof proceeds via an external
+distributive law (the Shape Lemma~(S) and the external law~(D)) rather than Galois descent.
+
+We are careful not to overstate the match. Xarez's own notion of \emph{admissible} reflection is the
+weaker semi-left-exactness \cite[Thm.~4.1]{Xarez} -- each single connected-components object connected
+-- whereas the products condition is the strictly stronger stable-units property
+\cite[Thm.~5.1]{Xarez}; it is the latter, not his ``admissible,'' that coincides with our criterion.
+The ambient framework is that of Cassidy--H\'ebert--Kelly \cite{CHK} and
+Carboni--Janelidze--Kelly--Par\'e \cite{CJKP}. The criterion's \emph{failures}, however, are ours
+alone: both of Xarez's running examples satisfy stable units, so his work supplies no prior instance
+of the obstruction, and our inadmissible bases -- the disconnected unit of $\Setb\times\Setb$ and the
+connected-unit gluing $\Gl((-)^2)$, the latter via Weichsel's theorem
+(Section~\ref{sec:inadmissible}) -- are new.
+\end{remark}
+
 \begin{remark}[Internal versus external, again]\label{rem:char-internal}
 Every Grothendieck topos supports composition of \emph{internal} (Gambino--Kock) polynomial functors
 \cite{GambinoKock}; that is the internal distributive law, and it holds unconditionally. What
@@ -1134,6 +1156,21 @@ arXiv:2312.00990 (2023).
 P.~M.~Weichsel,
 \emph{The Kronecker product of graphs},
 Proceedings of the American Mathematical Society \textbf{13} (1962), 47--52.
+
+\bibitem{Xarez}
+J.~J.~Xarez,
+\emph{Admissibility, stable units and connected components},
+arXiv:1112.4277 (2011).
+
+\bibitem{CHK}
+C.~Cassidy, M.~H\'ebert, and G.~M.~Kelly,
+\emph{Reflective subcategories, localizations and factorization systems},
+Journal of the Australian Mathematical Society (Series A) \textbf{38} (1985), 287--329.
+
+\bibitem{CJKP}
+A.~Carboni, G.~Janelidze, G.~M.~Kelly, and R.~Par\'e,
+\emph{On localization and stabilization for factorization systems},
+Applied Categorical Structures \textbf{5} (1997), 1--58.
 
 \bibitem{proofT1}
 MacBeth,
