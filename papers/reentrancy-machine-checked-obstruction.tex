@@ -251,37 +251,40 @@ $s_2$-branch dragging the token when $\varepsilon=1$.
 
 The categorical obstruction of \cite{gobstr} is, for $\K_\varepsilon$, computed by an explicit
 orbit/cochain calculation in \cite{analytic}. We do not reproduce that reduction; we record its
-output, because that output is exactly what the Lean development certifies. The single fact we import
-is:
+output, because that output is exactly what the Lean development certifies. The facts we import are
+the following three, each a separable pen-and-paper input and hence an explicit future formalisation
+target. Fix $\varepsilon\in\mathbb Z/2$.
 
-\begin{proposition}[analytic reduction; {\cite{analytic}}]\label{prop:reduction}
-For each $\varepsilon\in\mathbb Z/2$:
-\begin{enumerate}[label=\textup{(\alph*)}, ref=\thetheorem(\alph*), leftmargin=*, itemsep=3pt]
-\item\label{prop:red-hyp} the family $\K_\varepsilon$ satisfies the freeness condition
-\textnormal{(L)} \textup{(}each hom-presheaf is a free right $\dir$-set\textup{)} and the vertex-group
-hypothesis of the obstruction theorem \textup{(}$\dir$ a disjoint union of abelian vertex groups with
-trivial left action\textup{)};
-\item\label{prop:red-branch} its skeleton orbit category $\Sk_\C$ is the branch
+\begin{proposition}[hypotheses of the obstruction theorem; {\cite{analytic}}]\label{prop:red-hyp}
+The family $\K_\varepsilon$ satisfies the freeness condition \textnormal{(L)} \textup{(}each
+hom-presheaf is a free right $\dir$-set\textup{)} and the vertex-group hypothesis of the obstruction
+theorem \textup{(}$\dir$ a disjoint union of abelian vertex groups with trivial left action\textup{)}.
+\end{proposition}
+
+\begin{proposition}[the base category; {\cite{analytic}}]\label{prop:red-branch}
+The skeleton orbit category $\Sk_\C$ of $\K_\varepsilon$ is the branch
 $\Sup\to\Wk\rightrightarrows\Rt$, with both middle arrows $[s],[s_2]$ composing after $[p]$ to the
-single arrow $[q]$, \emph{independent of $\varepsilon$};
-\item\label{prop:red-complex} the normalized \textup{(}Baues--Wirsching\textup{)} cochain complex of
-$H^\bullet(\Sk_\C;\dir)$ is
+single arrow $[q]$, \emph{independent of $\varepsilon$}.
+\end{proposition}
+
+\begin{proposition}[the finite complex and the defect cocycle; {\cite{analytic}}]\label{prop:red-complex}
+The normalized \textup{(}Baues--Wirsching\textup{)} cochain complex of $H^\bullet(\Sk_\C;\dir)$ is
 \[
   C^1\cong\FF^2,\qquad C^2\cong\FF^2,\qquad C^3=0,
 \]
 with coordinates $h([p]),h([q])$ on $C^1$ and $\omega([s],[p]),\omega([s_2],[p])$ on $C^2$; the
 coboundary is $\delta^1 h=(h[p]-h[q],\,h[p]-h[q])$; and the defect $2$-cocycle of the natural
 transversal $T=\{p,q,s,s_2\}$ is $\omega_T(\varepsilon)=(0,\varepsilon)$.
-\end{enumerate}
 \end{proposition}
 
-The three parts are the three separable pen-and-paper imports, isolated so that each is an explicit
-future formalisation target: \ref{prop:red-hyp} is a freeness/orbit argument on $\K_\varepsilon$,
-\ref{prop:red-branch} identifies the base category, and \ref{prop:red-complex} is the
-Baues--Wirsching complex of that base together with the one load-bearing numeric $\omega_T=(0,
-\varepsilon)$, whose short derivation we expose in Appendix~\ref{app:defect}.
+The three propositions are the three separable pen-and-paper imports, isolated so that each is an
+explicit future formalisation target: Proposition~\ref{prop:red-hyp} is a freeness/orbit argument on
+$\K_\varepsilon$, Proposition~\ref{prop:red-branch} identifies the base category, and
+Proposition~\ref{prop:red-complex} is the Baues--Wirsching complex of that base together with the one
+load-bearing numeric $\omega_T=(0,\varepsilon)$, whose short derivation we expose in
+Appendix~\ref{app:defect}.
 
-Everything after Proposition~\ref{prop:reduction} is finite linear algebra over $\FF$, and it is this
+Everything after Proposition~\ref{prop:red-complex} is finite linear algebra over $\FF$, and it is this
 part that we formalise. Write $C^2=\FF^2$. Since $C^3=0$ we have $Z^2=C^2$. The coboundary image is
 the diagonal,
 \[
