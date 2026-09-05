@@ -1,0 +1,526 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage{stmaryrd}   % \llbracket \rrbracket
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage[htt]{hyphenat}   % allow long \texttt{} file paths to break
+
+%--- theorem environments -------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{conjecture}{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{question}{Question}
+\newtheorem{example}{Example}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+%--- macros ---------------------------------------------------------------
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Vect}{\mathbf{Vec}}
+\newcommand{\Vecfd}{\mathbf{Vec}_{\mathrm{fd}}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Alg}{\mathbf{Alg}}
+\newcommand{\Add}{\mathrm{Add}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\ihom}[2]{[#1,#2]}
+\renewcommand{\lhd}{\vartriangleleft}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\pizero}{\pi_0}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\one}{\mathbf{1}}
+\DeclareMathOperator{\Nat}{Nat}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\dm}{dim}
+
+\setlength{\parskip}{2pt}
+
+%==========================================================================
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Vector-space containers ($\mathbf{VCont}$)}\\[4pt]
+{\large A self-contained treatment: the biproduct collapse, algebraic structure,\\
+ and the admissibility frontier}\\[10pt]
+\begin{tabular}{rl}
+\textbf{Author:} & MacBeth (Kodamai)\\
+\textbf{Date:} & 2026-09-05\\
+\textbf{For review by:} & Rick\\
+\textbf{Corresponds to:} & \texttt{scotmacbeth/work-in-progress} commit \texttt{WIPHASHVCONT}\\
+\end{tabular}\\[8pt]
+{\itshape\bfseries Draft --- work in progress; not yet neighbour-reviewed.
+Subject matter prepared for Neil Ghani / an external requester.}
+\end{center}
+
+\noindent\rule{\textwidth}{0.4pt}
+\begin{center}
+\begin{minipage}{0.92\textwidth}\small
+\emph{Reading guide and honesty note.} Every theorem below is tagged in prose with its
+epistemic grade: \textbf{proved} (a complete pen-and-paper proof exists in the cited internal
+file), \textbf{lean-verified} (machine-checked, \texttt{sorry}-free, in Lean~4), or
+\textbf{OPEN} (a precisely stated conjecture that is \emph{not} settled). The headline result of
+\S2 is proved and lean-verified. The frontier question of \S4 (``Question~(Q)'') is \textbf{OPEN}
+and is conjectured independent of ZFC; it is presented as such and nowhere treated as settled.
+This note has not yet had a neighbour review.
+\end{minipage}
+\end{center}
+\noindent\rule{\textwidth}{0.4pt}
+
+\medskip
+\noindent
+Fix a field $k$. A \emph{container} in a category $\C$ is a pair (shapes, positions): a set $S$
+together with a position object $P_s\in\C$ for each $s\in S$, extending to an endofunctor
+$\ext{S,P}$ of $\C$. Over $\C=\Set$ this is the classical theory of Abbott, Altenkirch and Ghani:
+containers are precisely the polynomial functors, and the extension functor is a full and faithful
+embedding. This note asks what survives when the positions are \emph{vector spaces} --- the base
+$\C=\Vecfd$ of finite-dimensional $k$-vector spaces --- and reports the answers the programme has
+established. The one-line summary: \emph{the coproduct/product distinction that makes $\Set$
+containers rigid becomes a biproduct over $\Vect$, and much of what the $\Set$ theory reads off
+``for free'' collapses.}
+
+%==========================================================================
+\section{Definition of $\mathbf{VCont}$ and its extension functor}
+\label{sec:def}
+
+Write $\Vect=\Vect_k$ for all $k$-vector spaces, $\Vecfd$ for the finite-dimensional ones, and
+$\Vect(P,W)$ for the hom vector space. All functors below are $\Vect$-functors: their action on
+homs $\Vect(V,W)\to\Vect(FV,FW)$ is $k$-linear.
+
+\begin{definition}[linear / vector-space container]
+\label{def:vcont}
+A \emph{vector-space container} (object of $\mathbf{VCont}:=\Fam(\Vect^\op)$, or of
+$\Fam(\Vecfd^\op)$ when finiteness is imposed) is a pair $(S,(P_s)_{s\in S})$ with $S$ a set (the
+\emph{shapes}) and each $P_s\in\Vect$ a \emph{position space}. A morphism
+$(S,(P_s))\to(T,(Q_t))$ is a pair $(f,(\varphi_s))$ with $f\colon S\to T$ a function and, for each
+$s\in S$, a linear map $\varphi_s\colon Q_{f(s)}\to P_s$ --- \emph{covariant on shapes, contravariant
+on positions}, exactly as for $\Set$ containers. Write $n_s:=\dm P_s$.
+\end{definition}
+
+\begin{definition}[extension]
+\label{def:ext}
+The \emph{extension} of $(S,P)$ is the functor $\ext{S,P}\colon\Vect\to\Vect$,
+\[
+   \ext{S,P}\,W \;:=\; \bigoplus_{s\in S}\Vect(P_s,\,W).
+\]
+Choosing a basis of $P_s$ gives $\Vect(P_s,W)\cong W^{n_s}$ naturally in $W$, so
+$\ext{S,P}\,W\cong\bigoplus_{s\in S} W^{\oplus n_s}$, a ``direct sum of powers''. On a morphism
+$(f,(\varphi_s))$ the natural transformation is $(g_s)_s\mapsto\bigl(g_{f(s)}\circ\varphi_s\bigr)_s$.
+Writing $h_P:=\Vect(P,-)$ for the corepresentable at $P$, we have
+$\ext{S,P}=\bigoplus_{s\in S}h_{P_s}$ and $h_k=\Vect(k,-)\cong\mathrm{Id}$.
+\end{definition}
+
+Two features of $\Vect$ shape everything that follows.
+
+\emph{Coproduct $=$ product $=$ biproduct.} A finite coproduct in $\Vect$ is a biproduct, hence
+\emph{equals} the product. Thus although the outer sum $\bigoplus_{s\in S}$ in Definition~\ref{def:ext}
+is written as a coproduct (a ``$\Sigma$ over shapes'' of the hom-spaces $\Vect(P_s,X)$), for finite
+$S$ its underlying space is equally the product $\prod_{s\in S}\Vect(P_s,X)$ --- a ``$\Pi$ over
+shapes''. This $\Sigma\!\rightsquigarrow\!\Pi$ coincidence is the \emph{biproduct collapse}, and it
+is the single change from the set-level extension $\ext{S,P}X=\coprod_{s\in S}X^{P_s}$ (a genuine
+disjoint union). It is made fully explicit in the Lean formalisation of \S\ref{sec:lean}, where the
+linear extension is literally $\mathtt{LExt}\,(S,\mathrm{Pos})\,X=(s:S)\to(\mathrm{Pos}\,s\to X)$.
+
+\emph{Finite positions distribute over $\oplus$.} If $\dm P<\infty$ then
+$\Vect(P,\bigoplus_t V_t)\cong\bigoplus_t\Vect(P,V_t)$ naturally; equivalently, $h_P$ preserves
+coproducts iff $P$ is finite-dimensional (a finite-support argument on a basis of $P$). This is why
+we usually restrict positions to $\Vecfd$; the infinite-dimensional case is the source of the
+frontier in \S\ref{sec:admiss}.
+
+\begin{example}
+\label{ex:small}
+Take $S=\{a,b\}$ with $P_a=k^2$, $P_b=k$. Then
+$\ext{S,P}\,W=\Vect(k^2,W)\oplus\Vect(k,W)\cong W^2\oplus W\cong W^3$, so
+$\ext{S,P}\cong\mathrm{Id}^3$. Numerically $\dm\ext{S,P}(k^d)=3d$ for every $d$
+(verified computationally, $d=0,\dots,4$). The two integers that produced this functor --- the
+shape $S$ and the partition $3=2+1$ --- have already vanished from the answer: only the total
+$N=\sum_s n_s=3$ remains. That disappearance is the subject of \S\ref{sec:collapse}.
+\end{example}
+
+%==========================================================================
+\section{The collapse: $\ext{-}$ is faithful but not full, and not injective on objects}
+\label{sec:collapse}
+
+Over $\Set$ the extension functor $\ext{-}\colon\Fam(\Set^\op)\to[\Set,\Set]$ is \textbf{full and
+faithful} (Abbott--Altenkirch--Ghani): the container data $(S,P)$ can be recovered from the functor,
+with $S=\ext{S,P}(1)$ the value at a one-element set. Over $\Vect$ this recovery fails at its root.
+
+\begin{remark}[the terminal slogan dies]
+The terminal object of $\Vect$ is the zero object $0$, so
+$\ext{S,P}(0)=\bigoplus_s\Vect(P_s,0)=0$: the shapes are invisible at the terminal object, and the
+$\Set$ slogan ``$F(1)=S$'' has no analogue.
+\end{remark}
+
+\subsection{The finite collapse (headline; proved and lean-verified)}
+
+\begin{theorem}[finite collapse; \textbf{proved}]
+\label{thm:collapse}
+Let $S$ be finite and every $n_s=\dm P_s$ finite, and put $N:=\sum_{s\in S}n_s=\dm\bigl(\bigoplus_s
+P_s\bigr)$. Then there is a natural isomorphism $\ext{S,P}\cong\mathrm{Id}^N$. Consequently:
+\begin{enumerate}
+\item $\ext{S,P}\cong\ext{S',P'}$ as functors \textbf{iff} $N=N'$; a finite vector-space container
+is classified up to isomorphism of its extension by the single number $N$.
+\item Since $\End(\mathrm{Id})=k$ is local and $\End(\mathrm{Id}^N)=M_N(k)$ is semiperfect,
+Krull--Schmidt--Azumaya makes the decomposition into indecomposables unique; the recovered invariant
+is exactly the multiplicity $N$. The shape set $S$ and the partition $N=\sum_s n_s$ are \emph{not}
+recoverable.
+\end{enumerate}
+\end{theorem}
+
+\noindent This is proved in \texttt{proofs/2026-08-18-linear-containers-vec.md} (Theorem~2.1;
+registry \texttt{linear-containers-vec.json}, node \texttt{part1-finite-collapse}, grade
+\textbf{proved}), with the co-Yoneda lemma $\Nat(h_P,G)\cong G(P)$ and the additivity of
+$P\mapsto h_P$ as the engine.
+
+\begin{theorem}[the explicit witness; \textbf{proved}, \textbf{lean-verified}]
+\label{thm:witness}
+The two containers
+\[
+   p=(\{\ast\},\,k^2)\qquad\text{and}\qquad p'=(\{1,2\},\,(k,k))
+\]
+both have extension $\mathrm{Id}^2$, i.e.\ both present the functor $X\mapsto X\oplus X$, yet they
+are \textbf{not isomorphic as containers}: their shape sets have different cardinalities
+($1\neq2$). Hence $\ext{-}$ is \emph{not injective on objects}.
+\end{theorem}
+
+\noindent Contrast $\Set$: there the analogous containers $(\{\ast\},2)$ and $(\{1,2\},(1,1))$ have
+\emph{distinct} extensions $X^2$ and $2\cdot X$, separated already at $X=1$. The collapse is
+precisely the failure of that separation. Theorem~\ref{thm:witness} is machine-checked; see
+\S\ref{sec:lean}.
+
+\subsection{Why: the hom formula and the failure of extensivity}
+
+The mechanism is visible one categorical level up, on hom-sets. Both computations below are proved
+in \texttt{2026-08-18-linear-containers-vec.md} (Theorems~3.1--3.3; registry nodes
+\texttt{part2-hom-formula}, \texttt{part2-extensivity-crux}, both \textbf{proved}).
+
+\begin{proposition}[hom formula; \textbf{proved}]
+\label{prop:hom}
+For vector-space containers $(S,P)$, $(T,Q)$,
+\begin{align*}
+  \Nat\bigl(\ext{S,P},\ext{T,Q}\bigr)&\;\cong\;\prod_{s\in S}\ \bigoplus_{t\in T}\Vect(Q_t,P_s),\\
+  \Fam(\Vect^\op)\bigl((S,P),(T,Q)\bigr)&\;\cong\;\prod_{s\in S}\ \coprod_{t\in T}\Vect(Q_t,P_s),
+\end{align*}
+where $\coprod$ is the coproduct in $\Set$ (disjoint union): a container morphism assigns to each
+$s$ a single choice $t=f(s)$ together with a linear map in $\Vect(Q_{f(s)},P_s)$.
+\end{proposition}
+
+\begin{theorem}[faithful, not full; \textbf{proved}]
+\label{thm:notfull}
+The functor $\ext{-}$ induces on each hom the canonical comparison
+\[
+   \prod_{s}\ \coprod_{t}\Vect(Q_t,P_s)\;\longrightarrow\;\prod_{s}\ \bigoplus_{t}\Vect(Q_t,P_s),
+\]
+componentwise the inclusion of the disjoint union $\coprod_t$ into the biproduct $\bigoplus_t$
+sending a choice $(t,\varphi)$ to the element supported at $t$. This map is \emph{injective away from
+the zero maps} --- so $\ext{-}$ is \textbf{faithful} --- but it \textbf{fails to be surjective}
+(hence $\ext{-}$ is \emph{not full}) as soon as some shape $s$ admits two shapes $t\neq t'$ with
+$\Vect(Q_t,P_s)\neq0\neq\Vect(Q_{t'},P_s)$: any natural transformation whose $s$-component is a
+genuine linear combination $\varphi_t+\varphi_{t'}$ supported on two shapes is not in the image of a
+shape-function.
+\end{theorem}
+
+The point is a single symbol. Over $\Set$ the same computation gives
+$\Nat(\ext{S,P},\ext{T,Q})\cong\prod_s\bigoplus_t\Set(Q_t,P_s)$ where now $\bigoplus_t=\coprod_t$ is
+the coproduct \emph{in $\Set$}, i.e.\ the disjoint union: container-hom equals $\Nat$, and $\ext{-}$
+is full and faithful. \textbf{$\Set$ is extensive} --- its coproduct is the disjoint union --- and
+that is exactly what makes $\ext{-}$ full. \textbf{$\Vect$ is not extensive} --- its coproduct is a
+biproduct --- and the fullness gap
+\[
+   \coprod_t \ \subsetneq\ \bigoplus_t
+\]
+is the precise, quantified manifestation of that failure. The object-level collapse
+(Theorem~\ref{thm:collapse}) and the morphism-level fullness gap (Theorem~\ref{thm:notfull}) are
+\emph{one} phenomenon: the failure of extensivity under the base change $\Set\rightsquigarrow\Vect$.
+
+\begin{remark}[what survives; \textbf{proved}]
+The collapse used both finiteness of $S$ and finite-dimensionality of positions; drop either and
+content returns. With infinite $S$ and all $P_s=k$, $\ext{S,P}=\mathrm{Id}^{\oplus|S|}$ is a genuine
+coproduct, not a product, of copies of $\mathrm{Id}$; and for a single infinite-dimensional $P$,
+$h_P=\Vect(P,-)$ is an infinite-product functor, not built from $\mathrm{Id}$ under $\oplus$, and $P$
+\emph{is} recovered from the representable (Lemma~1.2/1.3 of the source file). The finite recovery is
+sharp: $\ext{-}$ determines the total space $\bigoplus_s P_s$ up to isomorphism, and nothing about
+its partition into shapes (Corollary~3.4, \textbf{proved}).
+\end{remark}
+
+%==========================================================================
+\section{Algebraic structure}
+\label{sec:algebra}
+
+Composition of vector-space containers is available on the finite-dimensional locus, and it too is
+shaped by the collapse.
+
+\begin{proposition}[composition; \textbf{proved}]
+\label{prop:comp}
+For containers with finite-dimensional positions,
+\[
+   \ext{S,P}\circ\ext{T,Q}\;\cong\;\ext{\,S\times T,\ (P_s\otimes Q_t)_{(s,t)}\,},
+\]
+so on $\Fam(\Vecfd^\op)$ the composition product is
+$(S,P)\lhd(T,Q)=(S\times T,(P_s\otimes Q_t))$, with unit $I=(\{\ast\},k)$ (extension $\mathrm{Id}$).
+\end{proposition}
+
+\noindent This is \emph{not} the $\Set$ container composition, whose shapes form the dependent sum
+$\coprod_{s\in S}T^{P_s}$: linearity flattens the dependency (a linear map $P_s\to\bigoplus_t V_t$ is
+a \emph{sum of components}, not a \emph{choice of branch}) into the plain product $S\times T$.
+Proved in \texttt{2026-08-18-linear-containers-vec.md}, Prop.~4.1 (registry node
+\texttt{part3-composition}, \textbf{proved}).
+
+The comonoids for this product identify a clean algebraic species.
+
+\begin{theorem}[$\lhd$-comonoids are families of algebras; \textbf{proved}]
+\label{thm:comonoid}
+Let $C=(S,P)\in\Fam(\Vecfd^\op)$ with $S$ an arbitrary set and each $P_s$ finite-dimensional. The
+$\lhd$-comonoid structures $(\delta,\varepsilon)$ on $C$ in $(\Fam(\Vecfd^\op),\lhd,I)$ are in
+natural bijection with families $(A_s)_{s\in S}$ of unital associative $k$-algebra structures
+$A_s=(P_s,\mu_s,\eta_s)$, one on each position space. The bijection is
+$\delta_{\mathrm{shape}}=\Delta$ (the diagonal), $\delta^\sharp_s=\mu_s$,
+$\varepsilon^\sharp_s=\eta_s$. On morphisms this upgrades to an isomorphism of categories
+\[
+   \mathrm{Comon}_\lhd\bigl(\Fam(\Vecfd^\op)\bigr)\ \cong\ \Fam(\Alg_k^\op),
+\]
+the cocommutative comonoids forming the full subcategory $\Fam(\mathbf{CAlg}_k^\op)$.
+\end{theorem}
+
+\noindent Proved in \texttt{proofs/2026-08-19-vec-comonoids-algebras.md} (registry node
+\texttt{part3-comonoid-algebras}, grade \textbf{proved}; hypotheses sharpened to
+finite-dimensional positions only, $S$ arbitrary). The counit forces the shape comultiplication to
+the diagonal (the unique $(\Set,\times)$-comonoid on $S$); contravariance turns $\delta^\sharp_s$
+into a multiplication $P_s\otimes P_s\to P_s$ and $\varepsilon^\sharp_s$ into a unit $k\to P_s$;
+the comonoid laws become associativity and the two-sided unit law.
+
+\begin{remark}[the algebroid guess, refuted in finite dimension; \textbf{proved}]
+Over $\Set$ the analogous fact is $\lhd$-comonoid $\cong$ small category (Ahman--Uustalu; $\Cont\cong
+\Fam(\Set^\op)$). One might hope $\lhd$-comonoid over $\Vect$ $\cong$ $k$-linear category (algebroid,
+Mitchell). This is \emph{false} in finite dimension: because the counit forces
+$\delta_{\mathrm{shape}}=\Delta$, the comultiplication never reaches an off-diagonal block
+$P_a\otimes P_b$ ($a\neq b$), so there is no hom-between-distinct-objects composition. The structure
+is a disjoint family of one-object $k$-linear categories $=$ $k$-algebras. A genuine algebroid
+requires double-indexed positions and a matrix (bimodule) composition
+$(P\circ Q)_{a,c}=\bigoplus_b P_{a,b}\otimes Q_{b,c}$ --- the $\bigoplus_b$ restoring the extensivity
+coproduct whose absence caused the strict collapse. That identification is classical
+(B\'enabou; Mitchell) and is treated separately; the finite single-index result stands as above.
+\end{remark}
+
+\subsection*{Which monoidal / closed structures survive (high level)}
+
+Three companion results from the wider ``containers over a base'' programme locate the collapse
+inside the closed-structure theory. They are stated here at high level and \emph{not} re-proved; each
+is proved in its own source file.
+\begin{itemize}
+\item \textbf{T1 (unit connectedness; proved).} For a closed symmetric monoidal cocomplete base
+$\C$, the extension functor $\ext{-}\colon\Fam(\C^\op)\to[\C,\C]$ is full and faithful \emph{iff} the
+monoidal unit is \emph{connected} ($\C(I,-)$ preserves coproducts). Over $\Vect$ the unit is
+\emph{disconnected} (the zero object makes $|{-}|\colon\Vecfd\to\Set$ fail to preserve coproducts),
+which is exactly why $\ext{-}$ is not full --- a base-general explanation of \S\ref{sec:collapse}.
+\item \textbf{T2 (Dirichlet / Day tensor; proved).} The pointwise Dirichlet tensor on
+$\Fam(\C^\op)$ is Day convolution, and its closedness is controlled by a familial-representability
+condition that fails over both $\Vect$ and $\Vecfd$.
+\item \textbf{T4-left (left closure; proved).} The composition product $\lhd$ is left-closed on the
+copower-tiny (collapse) locus, where $p\lhd q=p\otimes q$; this is the locus on which
+Proposition~\ref{prop:comp} lives.
+\end{itemize}
+(These are internal results of MacBeth's programme; grades are as recorded in memory and are cited,
+not re-derived, here.)
+
+%==========================================================================
+\section{Composition and admissibility}
+\label{sec:admiss}
+
+Proposition~\ref{prop:comp} defines $\lhd$ on \emph{finite-dimensional} positions. The general
+question is whether $\Fam(\Vect^\op)$ carries a composition product at all.
+
+\begin{definition}[$\lhd$-admissibility]
+$\Fam(\C^\op)$ is \emph{$\lhd$-admissible} if the image of $\ext{-}$ in $[\C,\C]$ is closed under
+composition: for all $p,q$ there is $r$ with $\ext{r}\cong\ext{p}\circ\ext{q}$.
+\end{definition}
+
+\begin{proposition}[admissibility is per-object; \textbf{proved}]
+\label{prop:absorptive}
+Call $P\in\C$ \emph{absorptive} if $X\mapsto\ihom{P}{\ext{q}X}$ is an extension for every $q$. Then
+$\Fam(\C^\op)$ is $\lhd$-admissible \textbf{iff} every object of $\C$ is absorptive. There are two
+sources of absorptivity: \emph{copower-tiny} (flexible) objects, where $\ihom{P}{\coprod_t
+Y_t}=\coprod_t\ihom{P}{Y_t}$; and \emph{distributive/extensive} (rigid) objects, via the $\Set$-style
+mechanism.
+\end{proposition}
+
+\noindent Proposition~6.1 of \texttt{proofs/2026-09-01-gap1-setxvec-proved.md} (\textbf{proved}). In
+$\Vecfd$ every object is copower-tiny (finite-dimensional $=$ finitely generated $=$ copower-tiny;
+Lemma~5.1 there, \textbf{proved}), so $\Fam(\Vecfd^\op)$ is admissible on the collapse locus with
+$\lhd=\otimes_k$ --- this is Proposition~\ref{prop:comp} again.
+
+\subsection{A proved positive result: $\Set\times\Vecfd$ is admissible}
+
+\begin{theorem}[Gap~1 inhabited; \textbf{proved}]
+\label{thm:gap1}
+On the finite-vec-support locus $\mathcal P\subseteq\Fam((\Set\times\Vecfd)^\op)$ (shape $S$ and
+set-positions $A_s$ arbitrary; $\{s:V_s\neq0\}$ finite), the base $\C=\Set\times\Vecfd$ is
+$\lhd$-admissible: for all $p,q\in\mathcal P$ there is $r=p\lhd q\in\mathcal P$ and an
+\emph{explicit natural isomorphism} $\Theta\colon\ext{p\lhd q}\Rightarrow\ext{p}\circ\ext{q}$ ---
+both components built as maps (the $\Set$-component a bijection with explicit inverse, the
+$\Vect$-component a natural composite of hom-out-of-coproduct, tensor--hom, and finite-support
+isomorphisms), \emph{not} matched merely by cardinality.
+\end{theorem}
+
+\noindent Theorem~3.1 of \texttt{proofs/2026-09-01-gap1-setxvec-proved.md} (\textbf{proved}; the map
+was built and its bijectivity, invertibility, and naturality confirmed computationally with zero
+failures). The base $\Set\times\Vecfd$ is non-collapse, non-cartesian, and has a disconnected unit,
+so it exhibits admissibility \emph{without} unit-connectedness: it factors a rigid (extensive)
+$\Set$ part against a flexible (copower-tiny) $\Vect$ part. One honesty caveat, itself proved: the
+product $\lhd$ carries \emph{no canonical} monoidal structure --- the construction must choose a
+concentration slot --- and the obstruction to canonicity is exactly the non-faithfulness of
+$\ext{-}$ on objects (Theorem~\ref{thm:witness}). A non-canonical monoidal structure does exist.
+
+\subsection{The open frontier: is full $\Vect$ admissible? (Question (Q), \textbf{OPEN})}
+
+For \emph{finite-dimensional} positions everything works. For \emph{full} $\Vect$ the issue is that
+an infinite-dimensional position $P$ is not copower-tiny, so $\ihom{P}{\bigoplus_t(-)}$ need not be
+an extension. By Proposition~\ref{prop:absorptive} the whole question reduces to a single test
+object. The sharpest one is $E:=k^{(\mathbb N)}$ (countable-dimensional, free, non-tiny) against
+$q=(\mathbb N,(k))$, giving $\ext{q}X=\bigoplus_{\mathbb N}X$ and
+
+\begin{question}[the frontier; \textbf{OPEN}]
+\label{q:Q}
+Is
+\[
+   F(X)\ :=\ \Hom\bigl(E,\ \textstyle\bigoplus_{\mathbb N}X\bigr)\ =\ \prod_{\mathbb N}\Bigl(\bigoplus_{\mathbb N}X\Bigr)
+\]
+\[
+   (\text{row-finite }\mathbb N\times\mathbb N\text{ matrices over }X)
+\]
+naturally isomorphic to a coproduct of representables $\bigoplus_{j}\Hom(N_j,-)$ in the additive
+functor category $\Add(\Vect,\Vect)$? Equivalently: is $F$ a \emph{projective} object of
+$\Add(\Vect,\Vect)$?
+\end{question}
+
+\noindent The stakes: \textbf{(Q) YES} would give an irreducible admissible base beyond
+Theorem~\ref{thm:gap1}; \textbf{(Q) NO} would confirm the ``absorptive dichotomy'' conjecture (every
+nice admissible base decomposes as rigid-extensive $\times$ flexible-additive). \emph{This is the one
+deep open problem in the theory and we state it as unsettled.}
+
+What \emph{is} proved is a precise homological reduction, all in ZFC, in
+\texttt{proofs/2026-09-02-vec-admissibility-rigidity.md} and
+\texttt{proofs/2026-09-04-Q-homological-reduction-and-target-dimension-dichotomy.md}:
+\begin{itemize}
+\item \textbf{Lemma R (Yoneda rigidity; proved).} Every $\alpha\in\Nat(F,\mathrm{id})$ has
+$\alpha\circ\mathrm{in}_n=0$ for all but finitely many rows $n$. The engine is pure Yoneda:
+$\prod_{\mathbb N}=h_E$ and $\Nat(h_E,\mathrm{id})=E=k^{(\mathbb N)}$ is finite-support. This
+resurrects Baer--Specker-type rigidity \emph{over a field}, where module slenderness fails.
+\item \textbf{Theorem E (homological reduction; proved, ZFC).} With $F_{\mathrm{fin}}:=\bigoplus_n
+A\subseteq F$ ($A:=\bigoplus_m\mathrm{id}$) and $Q:=F/F_{\mathrm{fin}}$, for every $M$ there is an
+exact sequence $0\to\coker(\rho_M)\to\Ext^1(Q,M)\to\Ext^1(F,M)\to0$. Hence
+\[
+   F\text{ is projective}\ \Longleftrightarrow\ \Ext^1(F,M)=0\ \text{for all }M.
+\]
+So (Q) is exactly the single homological question ``is $\Ext^1(F,-)\equiv0$?''.
+\item \textbf{Theorem H (cardinality is neutral; proved, ZFC).} The $\mathrm{id}$-dual
+$D(h_N)=\Nat(h_N,\mathrm{id})=N$ has \emph{no} $2^{\dm}$ blow-up (unlike
+$\Hom_{\mathbb Z}(\mathbb Z^{(\kappa)},\mathbb Z)$), so no cardinal invariant $\dm F(X)$ or
+$\dm\Nat(F,M)$ separates $F$ from a free functor. Both classical decision routes --- single-target
+rigidity (all such $\Nat$-groups vanish on $Q$) and cardinality --- are thereby \emph{provably
+closed}; any resolution must engage $\Ext^1(F,-)$ at an infinite-dimensional target.
+\end{itemize}
+
+\begin{remark}[status of (Q); \textbf{OPEN}, conjectured independent of ZFC]
+Question~\ref{q:Q} is \textbf{not settled}. Because both the cardinality engine (Theorem~H) and the
+single-target engine are provably unavailable over a field, the residual is a Whitehead-type
+extension problem on the syzygies of $F$. The current \emph{conjecture} --- theorem-supported but
+\emph{not} proved --- is that (Q) is \textbf{independent of ZFC}: plausibly NO under
+$2^{\aleph_0}<2^{\aleph_1}$ and possibly YES under a failure of that hypothesis plus a
+uniformisation. Settling (Q) requires genuine set-theoretic input (Shelah; Eklof--Mekler transported
+to functor categories) and is the flagged frontier of the programme.
+\end{remark}
+
+%==========================================================================
+\section{Formalisation}
+\label{sec:lean}
+
+The object-level collapse (Theorem~\ref{thm:witness}) is machine-checked in Lean~4 core, with
+\emph{no} Mathlib dependency, in \texttt{lean/Containers/Containers/VecCollapse.lean}. Positions are
+carried by their finite basis types ($k^2$ by \texttt{Bool}, $k$ by \texttt{Unit}), and the linear
+extension is modelled as the $\Pi$-over-shapes
+$\mathtt{LExt}\,(S,\mathrm{Pos})\,X=(s:S)\to(\mathrm{Pos}\,s\to X)$ --- the single
+$\Sigma\!\rightsquigarrow\!\Pi$ shift that \emph{is} the biproduct collapse. The two containers
+$p=(\{\ast\},k^2)$ and $p'=(\{1,2\},k)$ appear as \texttt{VecCollapse.p} and \texttt{VecCollapse.p'}.
+The theorem \texttt{Containers.VecCollapse.collapseIso} exhibits a full natural isomorphism
+\texttt{LinNatIso p p'} (both directions, both triangle identities, and naturality in $X$), while
+\texttt{Containers.VecCollapse.shapes\_not\_equiv} certifies (\texttt{sorry}-free, and axiom-free ---
+\texttt{\#print axioms} reports \texttt{[]}) that the shape sets \texttt{Unit} and \texttt{Bool}
+admit no bijection. Together they are the machine-checked witness that $\ext{-}$ presents the same
+functor $X\mapsto X\oplus X$ by two non-isomorphic containers --- Theorem~D(ii), \textbf{lean-verified}.
+The isomorphism \texttt{collapseIso} depends only on \texttt{Quot.sound} (function extensionality).
+
+%==========================================================================
+\section{Summary and outlook}
+\label{sec:summary}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}p{0.45\textwidth} p{0.29\textwidth} p{0.18\textwidth}@{}}
+\toprule
+\textbf{Statement} & \textbf{Source} & \textbf{Grade}\\
+\midrule
+Extension $\ext{S,P}W=\bigoplus_s\Vect(P_s,W)$; $\Sigma\!\to\!\Pi$ biproduct form
+  & 2026-08-18, Def.\ 0.2 & definition\\
+Finite collapse $\ext{S,P}\cong\mathrm{Id}^N$; classified by $N$ alone (Thm~\ref{thm:collapse})
+  & 2026-08-18, Thm~2.1 & \textbf{proved}\\
+Witness $(\{\ast\},k^2)\not\cong(\{1,2\},k)$, same functor $X\mapsto X\oplus X$ (Thm~\ref{thm:witness})
+  & 2026-08-18 / VecCollapse.lean & \textbf{proved}, \textbf{lean-verified}\\
+$\ext{-}$ faithful but not full; gap $=\coprod\subsetneq\bigoplus$ (Thm~\ref{thm:notfull})
+  & 2026-08-18, Thm~3.3 & \textbf{proved}\\
+Composition $(S,P)\lhd(T,Q)=(S\times T,(P_s\otimes Q_t))$ (Prop~\ref{prop:comp})
+  & 2026-08-18, Prop~4.1 & \textbf{proved}\\
+$\lhd$-comonoids $\cong$ families of $k$-algebras (Thm~\ref{thm:comonoid})
+  & 2026-08-19, Thm~7 & \textbf{proved}\\
+Admissibility $\Leftrightarrow$ every object absorptive (Prop~\ref{prop:absorptive})
+  & 2026-09-01, Prop~6.1 & \textbf{proved}\\
+$\Set\times\Vecfd$ is $\lhd$-admissible (Thm~\ref{thm:gap1})
+  & 2026-09-01, Thm~3.1 & \textbf{proved}\\
+Homological reduction: $F$ proj.\ $\Leftrightarrow\Ext^1(F,-)\equiv0$ (Thm~E)
+  & 2026-09-04, Thm~E & \textbf{proved} (ZFC)\\
+No cardinal invariant separates $F$ from free (Thm~H)
+  & 2026-09-04, Thm~H & \textbf{proved} (ZFC)\\
+\textbf{(Q)} Is full $\Vect$ admissible / $F$ projective? (Question~\ref{q:Q})
+  & 2026-09-02/04 & \textbf{OPEN} (conj.\ indep.\ ZFC)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\noindent\textbf{Outlook.} The theory of vector-space containers is complete and clean on the
+finite-dimensional locus: the extension functor is faithful but neither full nor injective on
+objects, the failure is exactly the non-extensivity of $\Vect$, comonoids are families of algebras,
+and $\Set\times\Vecfd$ realises admissibility off the connected-unit pole. The single deep frontier
+is Question~(Q) --- whether \emph{infinite-dimensional} linear resources can still absorb external
+shape --- now sharpened to a precise, ZFC-reduced homological question ($\Ext^1(F,-)\equiv0$?) with
+both classical decision routes provably closed and independence of ZFC conjectured. Settling it is
+the natural next step and would either produce a genuinely new irreducible composition base or
+complete the absorptive-dichotomy classification.
+
+\vfill
+\noindent\rule{\textwidth}{0.4pt}\par
+\begin{sloppypar}\raggedright
+{\small\emph{Draft --- work in progress. Prepared for Neil Ghani / external requester, 2026-09-05.
+Internal sources: \texttt{proofs/2026-08-18-linear-containers-vec.md},
+\texttt{proofs/2026-08-19-vec-comonoids-algebras.md},
+\texttt{proofs/2026-09-01-gap1-setxvec-proved.md},
+\texttt{proofs/2026-09-02-vec-admissibility-rigidity.md},
+\texttt{proofs/2026-09-04-Q-homological-reduction-and-target-dimension-dichotomy.md},
+\texttt{lean/\allowbreak Containers/\allowbreak Containers/\allowbreak VecCollapse.lean}.
+Grades per the corresponding registry files.}}
+\end{sloppypar}
+
+\end{document}

@@ -1,0 +1,884 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{stmaryrd} % \llbracket \rrbracket
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+% ---- theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question}
+
+% ---- notation ----
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Kl}{\mathrm{Kl}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\extM}[1]{\llbracket #1 \rrbracket_{M}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\tri}{\triangleleft}
+\newcommand{\triM}{\triangleleft_{M}}
+\newcommand{\y}{\mathsf{y}}
+\newcommand{\D}{\mathsf{D}}
+\newcommand{\Maybe}{\mathsf{Maybe}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\supp}{\mathrm{supp}}
+\DeclareMathOperator{\im}{im}
+
+\begin{document}
+
+\title[Codensity and polynomiality of effectful containers]
+{Two invariants of an effect monad: \\ codensity governs fullness, polynomiality governs composition}
+
+\author{MacBeth}
+\address{Kodamai}
+\email{}
+\date{5 September 2026}
+
+\begin{abstract}
+Fix a monad $M$ on $\Set$. An \emph{$M$-container} is an ordinary container $(S,P)$ whose
+positions are read out in the Kleisli category of $M$; its extension is the endofunctor
+$\extM{S,P}(X)=\sum_{s\in S}\Kl(M)(P_s,X)$, the effectful reading of a data type whose
+observations may fail, branch, consult a context, or return a distribution. We prove three
+things about the extension functor $\extM{-}\colon M\text{-}\mathbf{Cont}\to[\Set,\Set]$.
+First, $M$-containers are exactly $\Fam(\Kl(M)^{\op})$ and the extension factors as
+$\extM{-}=\ext{-}\circ M$: an $M$-container functor is an ordinary polynomial functor
+post-composed with the effect monad. Second, $\extM{-}$ is \emph{always faithful}, and it is
+\emph{full} if and only if $M$ is \emph{codense} --- the canonical map $M\Rightarrow\Ran_M M$
+into its own codensity monad is an isomorphism --- and each functor $\Set(A,M{-})$ is connected;
+consequently probability distributions keep fullness while error, partiality, read-only context
+and nondeterminism destroy it. Third, the essential image of $\extM{-}$ is closed under
+composition if and only if $M$ is a \emph{polynomial} functor --- sufficiency for all $M$, with
+$p\triangleleft_M q=p\triangleleft\lceil M\rceil\triangleleft q$, and necessity for every monad that
+arises, via a dichotomy (super-polynomial growth, or an $\mathrm{Aut}(X)$-stabilizer invariant that
+separates $M\circ M$ from a polynomial), the sole residual being a species-theoretic plethysm statement
+no known monad inhabits. The affine-plus-commutative folklore criterion is false ($\D$ is affine and
+commutative but does not compose; $\mathsf{Maybe}$ is neither yet does). Fullness and composition are thus governed by two independent
+Kan-theoretic invariants of $M$ that trade oppositely: probability is faithful but not composable,
+error is composable but not faithful.
+\end{abstract}
+
+\maketitle
+
+\begin{center}\small
+\fbox{\begin{minipage}{0.92\textwidth}\centering
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 5 September 2026.\qquad
+\emph{For review by:} Rick.\\[2pt]
+\emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{commit}
+\texttt{WIPHASHMCONT}.\\[2pt]
+\textbf{Draft --- work in progress; not yet neighbour-reviewed.}
+\end{minipage}}
+\end{center}
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{Containers, and what happens when the positions become effectful}
+A \emph{container} $(S,P)$ --- a set $S$ of shapes together with a set $P_s$ of positions over
+each shape --- presents a datatype through its extension, the endofunctor
+\[
+  \ext{S,P}(X)\;=\;\sum_{s\in S}\Set(P_s,X)\;=\;\sum_{s\in S}X^{P_s},
+\]
+which sends $X$ to ``a shape together with an $X$-labelling of its positions'' \cite{GambinoKock,NiuSpivak}.
+The extensions of containers are exactly the \emph{polynomial functors}, and
+$\ext{-}$ is fully faithful: a natural transformation between two such functors is precisely a
+container morphism. This tight correspondence --- a syntax of shapes and positions on one side, a
+class of functors on the other --- is what makes containers a usable calculus for datatypes.
+
+Now suppose the positions are not read out purely but \emph{through an effect}. Reading a position
+might fail, or return several answers, or consult an environment, or produce a probability
+distribution over answers. All of these are captured by a monad $M$ on $\Set$: an effectful read
+of a $P_s$-position landscape into $X$ is a Kleisli map $P_s\to X$ in $\Kl(M)$, i.e.\ a function
+$P_s\to MX$. This yields the \emph{$M$-container} extension
+\[
+  \extM{S,P}(X)\;=\;\sum_{s\in S}\Kl(M)(P_s,X)\;=\;\sum_{s\in S}(MX)^{P_s}.
+\]
+The passage $\Cont\to M\text{-}\Cont$ that reinterprets a container's positions in $\Kl(M)$ is a
+change of base of exactly the kind one wants for modelling effectful data structures and effectful
+agents: an $M$-container is a device that, presented with a request, chooses a shape and then reads
+its positions with the ambient effect. When $M=\Maybe$, an ``agent may decline'' a position; when
+$M=\D$ (finite distributions), it answers probabilistically.
+
+\subsection*{Two questions, and the temptation to conflate them}
+For the pure calculus, the extension functor is fully faithful and strong monoidal: it names
+functors faithfully, and those functors compose. Two properties, one embedding. When we move to
+$M$-containers, both properties become genuine questions:
+\begin{enumerate}[label=(Q\arabic*)]
+\item\label{q:full} \textbf{Faithful naming.} Is $\extM{-}\colon M\text{-}\Cont\to[\Set,\Set]$
+  full and faithful? That is, does every natural transformation between $M$-container functors come
+  from a (unique) $M$-container morphism?
+\item\label{q:comp} \textbf{Composition.} Is the essential image of $\extM{-}$ closed under functor
+  composition? That is, if $F$ and $G$ are $M$-container functors, is $F\circ G$ one too, presented
+  by some container built from theirs?
+\end{enumerate}
+It is tempting to expect that these rise and fall together --- that ``$M$-containers behave well''
+is a single condition on $M$. The main discovery of this note is that \ref{q:full} and \ref{q:comp}
+are controlled by \emph{two different} invariants of $M$, and that across the standard effects they
+trade against each other.
+
+\subsection*{Results}
+Throughout, $M=(M,\eta,\mu)$ is a monad on $\Set$, $\Kl(M)$ its Kleisli category, and
+$\ext{-}\colon\Cont\to[\Set,\Set]$ the ordinary (polynomial) extension.
+
+The first theorem identifies the players and provides the lever for everything else.
+
+\begin{theorem}[Identification and factorisation; \S\ref{sec:identify}]\label{thm:1}
+The category of $M$-containers is $\Fam(\Kl(M)^{\op})$: an object is an ordinary container
+$(S,P\colon S\to\Set)$, and a morphism $(S,P)\to(S',P')$ is a shape map $f\colon S\to S'$ together
+with, for each $s$, a Kleisli map $\rho_s\in\Kl(M)(P'_{fs},P_s)=\Set(P'_{fs},MP_s)$. Moreover, as
+functors $\Set\to\Set$ and naturally in $(S,P)$,
+\[
+  \extM{S,P}\;=\;\ext{S,P}\circ M .
+\]
+\end{theorem}
+
+So an $M$-container functor is an \emph{ordinary polynomial functor pre-composed with the effect
+monad $M$}. Neil Ghani's ``change of base'' $\Cont\to M\text{-}\Cont$ is precomposition with the
+Kleisli inclusion $F\colon\Set\to\Kl(M)$, and every structural question about $\extM{-}$ becomes a
+question about the single trailing $M$.
+
+The second theorem answers \ref{q:full}. Recall that the \emph{codensity monad} of a functor
+$M\colon\Set\to\Set$ is the right Kan extension $\Ran_M M$; there is a canonical monad map
+$\iota_M\colon M\Rightarrow\Ran_M M$, and $M$ is called \emph{codense} when $\iota_M$ is an
+isomorphism (Definition~\ref{def:codense}). Call $M$ \emph{affine} if $M1\cong 1$.
+
+\begin{theorem}[Faithfulness always; fullness $=$ codensity; \S\ref{sec:full}]\label{thm:2}
+The extension $\extM{-}\colon M\text{-}\Cont\to[\Set,\Set]$ is \emph{always faithful}. It is
+\emph{full} --- hence fully faithful --- if and only if
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item each functor $\Set(A,M{-})$ is connected, and
+\item $M$ is codense.
+\end{enumerate}
+If $M$ is affine then \textup{(i)} holds; hence \emph{$M$ affine and codense $\Rightarrow$ fully
+faithful}. The finite distribution monad $\D$ is affine and codense, so $\extM[\D]{-}$ is fully
+faithful \textup{(}modulo the rigidity Lemma~\ref{lem:Drigid}\textup{)}; whereas $\Maybe$,
+exceptions, the writer $E\times(-)$, the reader $(-)^R$ and nonempty powerset all fail codensity and
+so lose fullness.
+\end{theorem}
+
+The correct invariant is the codensity monad, \emph{not} preservation of coproducts. The natural
+first guess --- ``$\extM{-}$ is fully faithful iff $M$ preserves coproducts'' --- is wrong for the
+target $[\Set,\Set]$: it is the criterion for a coarser, Kleisli-enriched target, and it gives the
+wrong verdict on $\D$. The writer monad $E\times(-)$ preserves coproducts yet fails fullness for
+$|E|\ge 2$, a clean refutation (\S\ref{sec:correction}).
+
+The third theorem answers \ref{q:comp}. Call $M$ \emph{polynomial} if $M\cong\sum_{i\in I}(-)^{B_i}$
+for some family $(B_i)_{i\in I}$; equivalently $M=\ext{\ceil M}$ for a container $\ceil M$.
+
+\begin{theorem}[Composition $=$ polynomiality; \S\ref{sec:comp}]\label{thm:3}
+\emph{(Sufficiency.)} If $M$ is polynomial, then for all $M$-containers $p,q$ the ordinary container
+\[
+  p\triangleleft_M q\;:=\;p\triangleleft\ceil M\triangleleft q
+\]
+satisfies $\extM{p\triangleleft_M q}\cong\extM{p}\circ\extM{q}$, naturally in $X$. The operation
+$\triangleleft_M$ is associative and has a unit up to ordinary container isomorphism only when
+$M=\Id$; so the essential image of $\extM{-}$ is closed under composition.
+\emph{(Necessity.)} Conversely, if the essential image is closed under composition then $M$ is
+polynomial --- proved for every monad that arises, by a dichotomy. Either $M$ grows
+super-polynomially, and $|M(MX)|$ cannot agree on the values of $|MX|$ with a fixed polynomial
+(excluding powerset, nonempty powerset, distributions, ultrafilter, continuation); or $M$ is analytic,
+and a new $\mathrm{Aut}(X)$-stabilizer invariant separates $M\circ M$ from $\ext{r}\circ M$ (excluding
+the multiset and symmetric-power monads). The only residual is a species-theoretic \emph{Plethysm
+Lemma} \textup(Lemma~\ref{lem:plethysm}\textup) for general non-free analytic monads, which no known
+monad inhabits; modulo it the theorem is a genuine biconditional \textup(Theorem~\ref{thm:3final}\textup).
+\end{theorem}
+
+Combining the two theorems gives the punchline.
+
+\begin{corollary}[Independence and trade-off]\label{cor:tradeoff}
+Fullness \textup{(codensity)} and composability \textup{(polynomiality)} are independent invariants
+of $M$. The writer monad $E\times(-)$ is polynomial, hence composes, but is not codense, hence not
+full. The distribution monad $\D$ is affine and codense, hence full, but is not polynomial, hence
+does not compose. \emph{Probability keeps faithful naming but loses composition; error keeps
+composition but loses faithful naming.}
+\end{corollary}
+
+\subsection*{Method}
+Everything runs off the factorisation $\extM{-}=\ext{-}\circ M$ of Theorem~\ref{thm:1}. For
+faithfulness, the Kleisli unit $\eta$ is a section, so container data can be read back off the
+induced natural transformation. For fullness, precomposition $(-)\circ M$ has a right adjoint
+$\Ran_M$, and every hom-set $\Nat(\Set(A,M{-}),H)$ is a value of a right Kan extension along $M$;
+the fullness obstruction is exactly the failure of the unit $M\Rightarrow\Ran_M M$ to be invertible.
+For composition, two applications of the factorisation put every composite $\extM{p}\circ\extM{q}$
+in the form $G\circ M$ with $G=\ext{p}\circ M\circ\ext{q}$; this is again an $M$-extension precisely
+when $G$ is polynomial, which for all $p,q$ forces $M$ itself to be polynomial (for every monad that
+arises; \S\ref{sec:stab}), and then AAG strong monoidality delivers the splice
+$p\triangleleft\ceil M\triangleleft q$. The converse rests on a monad retract reduction
+(Lemma~\ref{lem:R0}) and an $\mathrm{Aut}(X)$-stabilizer invariant (Lemma~\ref{lem:stab}) rather than
+on cancelling the trailing $M$, which Proposition~\ref{prop:inert} shows to be impossible.
+
+\subsection*{Why it matters}
+Beyond the pleasing tension of Corollary~\ref{cor:tradeoff}, the result sharpens the compositional
+picture of effectful agents. Modelling ``an agent may decline'' as a $\Maybe$-container, one keeps
+composition (agents chain into agents) at the price of faithfulness (distinct declining strategies
+can induce the same functor). Modelling ``an agent answers probabilistically'' as a
+$\D$-container, one keeps faithful naming (strategies are recoverable from behaviour) but loses
+strict composition (a chain of probabilistic agents is not itself presented by a single
+probabilistic container --- the marginal-to-joint gap). The invariant that decides each is now
+explicit and computable: codensity for the first question, polynomiality for the second.
+
+\subsection*{Provenance and honesty}
+Theorems~\ref{thm:1} and \ref{thm:2} (faithfulness, the codensity criterion, the affine lemma, the
+examples) are proved. Theorem~\ref{thm:3} is proved in its sufficiency direction, and in its necessity
+direction for every monad that arises: the cardinality law disposes of the super-polynomial monads and
+the stabilizer invariant (Lemma~\ref{lem:stab}, Theorem~\ref{thm:multiset}) disposes of the analytic
+ones. The only step not supplied unconditionally is the species-theoretic Plethysm
+Lemma~\ref{lem:plethysm} for general non-free analytic monads, which no known monad inhabits; it is
+marked \emph{open} where it occurs. Full faithfulness for $\D$ rests on a standard rigidity fact,
+$\Nat(\D,\D)=\{\id\}$, which we isolate as Lemma~\ref{lem:Drigid} and assume rather than reprove.
+These boundaries are marked at each occurrence.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes notation: monads and Kleisli categories, the container extension and
+its composition monoidal structure, families over an opposite category, and right Kan extensions and
+codensity monads. Section~\ref{sec:identify} proves Theorem~\ref{thm:1} and the always-faithfulness.
+Section~\ref{sec:full} proves the codensity criterion (Theorem~\ref{thm:2}), works the examples, and
+explains why coproduct preservation is the wrong criterion. Section~\ref{sec:comp} proves
+Theorem~\ref{thm:3}, proving the converse for every monad that arises and isolating the one residual
+species-theoretic statement. Section~\ref{sec:conc} draws the trade-off and lists open problems.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We work over $\Set$. All the constructions below have counterparts over a general base along the
+lines of $\Fam(\mathcal C^{\op})$ \cite{DJN}, but the codensity and polynomiality phenomena are
+already visible, and cleanest, over $\Set$.
+
+\subsection{Monads and Kleisli categories}
+A monad $M=(M,\eta,\mu)$ on $\Set$ has unit $\eta\colon\Id\Rightarrow M$ and multiplication
+$\mu\colon MM\Rightarrow M$. Its \emph{Kleisli category} $\Kl(M)$ has sets as objects,
+$\Kl(M)(A,B)=\Set(A,MB)$, identity $\eta_A$, and composition $g\bullet f=\mu\circ Mg\circ f$. The
+free functor $F\colon\Set\to\Kl(M)$ is the identity on objects and sends $g\colon A\to B$ to
+$\eta_B\circ g$; it is faithful and bijective on objects, is a left adjoint (so preserves colimits),
+and is \emph{not} full for nontrivial $M$. We call $M$ \emph{affine} if $M1\cong1$, and
+\emph{commutative} if its two canonical strengths $MA\times MB\to M(A\times B)$ agree.
+
+\subsection{Containers and the polynomial extension}
+A \emph{container} is a pair $(S,P)$ with $S$ a set and $P\colon S\to\Set$ (write $P_s$ for the
+fibre). The category $\Cont$ has as morphisms $(S,P)\to(S',P')$ the pairs $(f,\varphi)$ of a shape
+map $f\colon S\to S'$ and a reindexing $\varphi_s\colon P'_{fs}\to P_s$; equivalently
+$\Cont=\Fam(\Set^{\op})$ (see below). The \emph{extension} is
+\[
+  \ext{S,P}(X)=\sum_{s\in S}\Set(P_s,X),\qquad \ext{S,P}(g)=\textstyle\sum_s(g\circ-).
+\]
+The functor $\ext{-}\colon\Cont\to[\Set,\Set]$ is fully faithful, with essential image the
+\emph{polynomial functors} $\sum_{i\in I}(-)^{B_i}$ \cite[\S1]{GambinoKock},\cite{NiuSpivak}. We say
+$M$ is \emph{polynomial} when $M$ lies in this image, and write $\ceil M$ for a container with
+$\ext{\ceil M}=M$.
+
+$\Cont$ carries the \emph{composition} monoidal structure $(\Cont,\triangleleft,\y)$, where $\y=(1,
+1\mapsto1)$ is the identity container ($\ext{\y}=\Id$) and $\triangleleft$ is defined so that
+$\ext{-}$ is strong monoidal:
+\begin{equation}\label{eq:AAGmon}
+  \ext{c\triangleleft d}\;\cong\;\ext{c}\circ\ext{d},\qquad \ext{\y}=\Id,
+\end{equation}
+naturally, and $\triangleleft$ is associative up to coherent isomorphism
+\cite[Thm.~1.12]{GambinoKock},\cite{NiuSpivak}. Directed containers --- containers whose
+$\triangleleft$-structure is a comonoid --- are the categories internal to this calculus
+\cite{AhmanUustaluDCC}.
+
+\subsection{Families over an opposite category}
+For a category $\mathcal C$, the category $\Fam(\mathcal C)$ has objects $(S,X\colon S\to\mathrm{Ob}\,
+\mathcal C)$ and morphisms $(S,X)\to(S',X')$ given by a function $f\colon S\to S'$ and a family of
+$\mathcal C$-maps $X_s\to X'_{fs}$. Thus $\Fam(\mathcal C^{\op})$ has the same objects but morphisms
+whose component maps run $X'_{fs}\to X_s$ in $\mathcal C$. In particular $\Cont=\Fam(\Set^{\op})$.
+
+\subsection{Right Kan extensions and the codensity monad}
+Precomposition $M^{*}=(-)\circ M\colon[\Set,\Set]\to[\Set,\Set]$ has a right adjoint, the right Kan
+extension $\Ran_M\colon[\Set,\Set]\to[\Set,\Set]$ along $M$. The defining adjunction gives, for
+$H\colon\Set\to\Set$ and any representable $\Set(A,-)$,
+\begin{equation}\label{eq:kan}
+\begin{aligned}
+  \Nat\bigl(\Set(A,M{-}),\,H\bigr)
+  &=\Nat\bigl(\Set(A,-)\circ M,\,H\bigr)\\
+  &=\Nat\bigl(\Set(A,-),\,\Ran_M H\bigr)=(\Ran_M H)(A),
+\end{aligned}
+\end{equation}
+using the Yoneda lemma in the last step. Applying this with $H=M$ produces the \emph{codensity
+monad} of $M$.
+
+\begin{definition}\label{def:codense}
+The \emph{codensity monad} of $M$ is $\Phi:=\Ran_M M$; by \eqref{eq:kan},
+$\Phi(A)=\Nat(\Set(A,M{-}),M)$. The unit $\eta$ of the adjunction $M^{*}\dashv\Ran_M$, evaluated at
+$M$, is a natural monad map $\iota_M\colon M\Rightarrow\Phi$, explicitly
+$\iota_{M,A}(m)=[\,k\mapsto\mu_A(Mk\,(m))\,]$. We call $M$ \emph{codense} when $\iota_M$ is an
+isomorphism.
+\end{definition}
+
+\begin{definition}\label{def:connected}
+A functor $G\colon\Set\to\Set$ is \emph{connected} if $\Nat(G,-)$ preserves coproducts:
+$\Nat(G,\sum_j H_j)=\sum_j\Nat(G,H_j)$ for every family $(H_j)$. Equivalently, every natural
+transformation out of $G$ into a coproduct factors through a single summand.
+\end{definition}
+
+\section{The identification, and always-faithfulness}\label{sec:identify}
+
+\begin{definition}\label{def:mcont}
+An \emph{$M$-container} is a container $(S,P)$; its \emph{$M$-extension} is
+\[
+  \extM{S,P}(X)=\sum_{s\in S}\Kl(M)(P_s,X)=\sum_{s\in S}\Set(P_s,MX),
+\]
+with action $\extM{S,P}(g)=\sum_s(Mg\circ-)$ on a map $g\colon X\to X'$.
+A morphism $(S,P)\to(S',P')$ of $M$-containers is a shape map $f\colon S\to S'$ together with, for
+each $s$, a Kleisli map $\rho_s\in\Kl(M)(P'_{fs},P_s)=\Set(P'_{fs},MP_s)$; composition uses
+$\bullet$ in $\Kl(M)$.
+\end{definition}
+
+\begin{proof}[Proof of Theorem~\ref{thm:1}]
+\emph{(a) $M\text{-}\Cont=\Fam(\Kl(M)^{\op})$.} Objects of $\Fam(\Kl(M)^{\op})$ are pairs
+$(S,P\colon S\to\mathrm{Ob}\,\Kl(M))$, and $\mathrm{Ob}\,\Kl(M)=\Set$, so they are exactly
+containers. A morphism $(S,P)\to(S',P')$ is $f\colon S\to S'$ together with, per $s$, a
+$\Kl(M)^{\op}$-map $P_s\to P'_{fs}$, i.e.\ a $\Kl(M)$-map $P'_{fs}\to P_s$, i.e.\ a function
+$P'_{fs}\to MP_s$ --- exactly Definition~\ref{def:mcont}. Identities match ($\Fam$'s identity uses
+$\id$ in $\Kl(M)^{\op}$, i.e.\ $\eta$, the $M$-container identity), and composition matches
+($\Fam$ composes shapes in $\Set$ and positions by $\bullet$ in the opposite order). The two
+categories are equal on objects, hom-sets, identities and composition.
+
+\emph{(b) $\extM{S,P}=\ext{S,P}\circ M$.} On objects,
+$\ext{S,P}(MX)=\sum_s\Set(P_s,MX)=\extM{S,P}(X)$; on $g\colon X\to X'$ both sides act by
+$\sum_s(-\circ Mg)$. For naturality in $(S,P)$, a morphism $(f,\rho)$ induces
+$\alpha_X(s,k)=(fs,\,k\bullet\rho_s)=(fs,\,\mu_X\circ Mk\circ\rho_s)$, which is precisely $\ext{-}\circ
+M$ applied to the underlying shape/position data.
+\end{proof}
+
+Part (b) is the lever: \emph{an $M$-container functor is a polynomial functor with a trailing $M$.}
+
+\begin{proposition}[Always faithful]\label{prop:faithful}
+$\extM{-}\colon M\text{-}\Cont\to[\Set,\Set]$ is faithful.
+\end{proposition}
+
+\begin{proof}
+Suppose $(f,\rho)$ and $(\tilde f,\tilde\rho)$ induce the same natural transformation $\alpha$.
+Evaluate at $X=P_s$ on the element $(s,\eta_{P_s})\in\extM{S,P}(P_s)$:
+$\alpha_{P_s}(s,\eta_{P_s})=(fs,\,\eta_{P_s}\bullet\rho_s)=(fs,\rho_s)$, since $\eta$ is the Kleisli
+identity. Equality of $\alpha$ therefore forces $fs=\tilde fs$ and $\rho_s=\tilde\rho_s$ for every
+$s$. Hence $(f,\rho)=(\tilde f,\tilde\rho)$.
+\end{proof}
+
+\begin{remark}
+Faithfulness uses only that $\eta$ is a section of the Kleisli identity; it holds for every monad.
+This already separates $M$-containers from linear (vector-space) containers, whose extension is not
+faithful because the analogue of $\eta$ is not a section.
+\end{remark}
+
+\section{Fullness is codensity}\label{sec:full}
+
+Fix $M$-containers $(S,P)$ and $(S',P')$. By Theorem~\ref{thm:1}(b), $\extM{S,P}=p\circ M$ and
+$\extM{S',P'}=p'\circ M$ with $p=\ext{S,P}$, $p'=\ext{S',P'}$. Since $p=\sum_s\Set(P_s,-)$ is a
+coproduct of representables,
+\begin{equation}\label{eq:homnat}
+  \Nat(p\circ M,\;p'\circ M)=\prod_{s}\Nat\Bigl(\Set(P_s,M{-}),\;\sum_{s'}\Set(P'_{s'},M{-})\Bigr),
+\end{equation}
+while the $M$-container hom-set is $\prod_s\sum_{s'}\Set(P'_{s'},MP_s)$. Comparing, fullness
+holds for all pairs if and only if, for every set $A$ (playing the role of $P_s$) and every family
+$(P'_{s'})$, the map
+\begin{equation}\label{eq:star}\tag{$\star$}
+\begin{aligned}
+  \sum_{s'}\Set(P'_{s'},MA)&\;\longrightarrow\;\Nat\Bigl(\Set(A,M{-}),\;\sum_{s'}\Set(P'_{s'},M{-})\Bigr),\\
+  (s',\rho)&\;\mapsto\;[\,k\mapsto(s',k\bullet\rho)\,],
+\end{aligned}
+\end{equation}
+is a bijection.
+
+\subsection{The Kan engine and the split}
+By \eqref{eq:kan} with $A$, every natural transformation out of $\Set(A,M{-})$ is a value of a right
+Kan extension along $M$. Two features of $\Set$ let us split \eqref{eq:star} cleanly. First, a
+single summand is a product of copies of $M$: $\Set(B,M{-})=\prod_{b\in B}M$, so
+$\Nat(\Set(A,M{-}),\Set(B,M{-}))=\Nat(\Set(A,M{-}),M)^{B}=\Phi(A)^B$ by
+Definition~\ref{def:codense}. Second, the coproduct over $s'$ is handled exactly when
+$\Set(A,M{-})$ is connected. This yields:
+
+\begin{proof}[Proof of Theorem~\ref{thm:2}]
+Faithfulness is Proposition~\ref{prop:faithful}. For fullness we show \eqref{eq:star} is a bijection
+for all $A,(P'_{s'})$ iff (i) and (ii) hold.
+
+\emph{(ii) handles a single summand.} With one summand $B=P'_{s'}$, \eqref{eq:star} becomes
+$\Set(B,MA)\to\Nat(\Set(A,M{-}),\Set(B,M{-}))=\Phi(A)^B$, which is $\bigl(MA\to\Phi(A)\bigr)^B$; and
+the map is $\iota_{M,A}$ in each coordinate. So the single-summand case for all $B$ is a bijection
+iff $\iota_{M,A}\colon MA\to\Phi(A)$ is a bijection for all $A$ --- that is, iff $M$ is codense.
+
+\emph{(i) handles the coproduct.} Given codensity, the general \eqref{eq:star} is a bijection iff the
+canonical comparison, with $G_{s'}=\Set(P'_{s'},M{-})$,
+\[
+  \textstyle\sum_{s'}\Nat(\Set(A,M{-}),G_{s'})\;\longrightarrow\;\Nat(\Set(A,M{-}),\sum_{s'}G_{s'})
+\]
+is a bijection --- that is, iff $\Set(A,M{-})$ is connected.
+
+Hence \eqref{eq:star} for all data $\iff$ (i)$\wedge$(ii), proving the criterion.
+\end{proof}
+
+\begin{lemma}[Affine $\Rightarrow$ connected]\label{lem:affine}
+If $M$ is affine then each $\Set(A,M{-})$ is connected; hence $M$ affine and codense $\Rightarrow$
+$\extM{-}$ is fully faithful.
+\end{lemma}
+
+\begin{proof}
+Since $M1\cong1$, $\Set(A,M1)=(M1)^A\cong1$: the functor $\Set(A,M{-})$ has a single global point.
+Let $\alpha\colon\Set(A,M{-})\Rightarrow\sum_{s'}G_{s'}$. The unique point of $\Set(A,M1)$ maps to a
+single summand $s'_0$ of $\sum_{s'}G_{s'}(1)$. For any $X$, the terminal map $!\colon X\to1$ gives a
+commuting square; since $\sum_{s'}G_{s'}(!)$ preserves summands and the image of the global point
+lies in $s'_0$, naturality forces $\alpha_X$ to land in the $s'_0$-summand for every $X$. Thus
+$\alpha$ factors through $s'_0$, which is connectedness.
+\end{proof}
+
+\subsection{The examples}
+For a polynomial monad $M=\sum_{i\in I}(-)^{B_i}$ the whole comparison is computable by
+\eqref{eq:AAGmon}: $\Set(A,M{-})$ is again polynomial, with shapes $\varphi\colon A\to I$ and
+positions $\sum_{a}B_{\varphi a}$, so that
+\[
+  |MA|=\sum_{i}|A|^{|B_i|},\qquad
+  |\Phi(A)|=\prod_{\varphi\colon A\to I}\;\sum_{i\in I}\Bigl(\textstyle\sum_a
+  |B_{\varphi a}|\Bigr)^{|B_i|}.
+\]
+Codensity is the equality $|MA|=|\Phi(A)|$ for all $A$. Exact computation gives:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lllcc}
+\hline
+$M$ & $M1$ & $|MA|$ vs $|\Phi(A)|$ ($A=0,1,2,3$) & codense? & full?\\
+\hline
+$\Id$ & $1$ & $0,1,2,3$ \; \textbf{=} \; $0,1,2,3$ & yes & \textbf{yes}\\
+$\Maybe$ $(X{+}1)$ & $2$ & $1,2,3,4$ vs $1,2,\mathbf{12},\mathbf{864}$ & no & no\\
+exception $X{+}2$ & $3$ & $2,3,4,5$ vs $2,\mathbf{12},\mathbf{5184},\dots$ & no & no\\
+writer $2{\times}X$ & $2$ & $0,2,4,6$ vs $0,\mathbf{4},\mathbf{256},\dots$ & no & no\\
+reader $X^{2}$ & $1$ & $0,1,4,9$ vs $0,\mathbf{4},\mathbf{16},\mathbf{36}$ & no & no\\
+\hline
+\end{tabular}
+\end{center}
+
+Beyond a low threshold $|\Phi(A)|>|MA|$ strictly in every nontrivial case: the surplus natural
+transformations are ``case-analysis'' operations --- inspecting $\bot$, or duplicating a reader
+argument --- that are natural for pure maps but not Kleisli-natural.
+
+\begin{example}[Reader: affine but not codense]\label{ex:reader}
+The reader monad $(-)^R$ is affine ($M1=1$, so (i) holds by Lemma~\ref{lem:affine}) yet fails (ii):
+$\Phi(A)=(RA)^{R}\ne A^{R}=MA$ for $|R|\ge2$. Affineness alone does not give fullness; codensity is a
+genuinely separate necessary condition.
+\end{example}
+
+\begin{example}[Distributions: affine and codense]\label{ex:D}
+Let $\D$ be the finitely-supported distribution monad. It is affine ($\D1\cong1$). We claim it is
+codense: $\Phi(A)=\Nat(\D^{A},\D)=\D A$, i.e.\ the natural $A$-ary operations on $\D$ are exactly the
+affine (convex) combinations. Given $\alpha\colon\D^{A}\Rightarrow\D$ and a tuple
+$(\mu_a)_a\in(\D X)^A$, put $K=\bigsqcup_a\supp(\mu_a)$, let $\nu_a\in\D K$ be the block-$a$ copy of
+$\mu_a$, and $p\colon K\to X$ the projection; then $(\mu_a)=\D^{A}(p)((\nu_a))$, so
+$\alpha_X((\mu_a))=\D p\,(\alpha_K((\nu_a)))$. Collapsing the blocks by $c\colon K\to A$ gives
+$\D c\,(\alpha_K((\nu_a)))=\alpha_A((\delta_a))=:\omega\in\D A$. Reducing one block at a time (collapse
+all but one block to a point) reduces to classifying $\Nat(\D,\D(-\sqcup F))$ for finite $F$: the
+$F$-marginal is constant (it factors through $\D1=1$) and the remaining marginal is a natural
+sub-probability-valued endofunctor of $\D$, hence a scalar $\lambda\cdot\sigma$. Thus
+$\alpha_K((\nu_a))=\sum_a\omega_a\nu_a$ and $\alpha_X((\mu_a))=\sum_a\omega_a\mu_a$. So $\D$ is
+codense, and by Lemma~\ref{lem:affine} \emph{$\extM[\D]{-}$ is fully faithful} --- modulo the base
+rigidity Lemma~\ref{lem:Drigid}.
+\end{example}
+
+\begin{lemma}[Rigidity of $\D$; assumed]\label{lem:Drigid}
+The only natural endomorphism of $\D$ is the identity, and every natural sub-probability-valued
+endofunctor of $\D$ is a scalar multiple of the identity: $\Nat(\D,\D)=\{\id\}$.
+\end{lemma}
+
+This is a standard rigidity fact for the affine functor $\D$; we assume it rather than reprove it,
+and we mark the full faithfulness of $\extM[\D]{-}$ as conditional on it. The reduction in
+Example~\ref{ex:D} is unconditional.
+
+\subsection{Why coproduct preservation is the wrong criterion}\label{sec:correction}
+A natural first guess is that $\extM{-}$ is fully faithful iff $M$ preserves coproducts. This is
+false for the target $[\Set,\Set]$, for a structural reason. Factor
+\[
+  \extM{-}\;=\;R\circ\ext{-}^{\Kl},\qquad R=(-\circ F),
+\]
+where $\ext{-}^{\Kl}\colon\Fam(\Kl(M)^{\op})\to[\Kl(M),\Kl(M)]$ is the free-coproduct-completion
+extension (always fully faithful) and $R$ restricts along the free functor $F\colon\Set\to\Kl(M)$.
+``$M$ preserves coproducts'' is the fullness criterion for the coarser target
+$[\Kl(M),\Kl(M)]$ --- the connected-unit condition for $\ext{-}^{\Kl}$ --- and $\ext{-}^{\Kl}$ is
+already fully faithful. All the genuine content is in $R$, i.e.\ in the gap between pure-naturality
+and Kleisli-naturality, and that gap is measured by the codensity monad, not by coproduct
+preservation.
+
+The verdicts differ concretely. Coproduct preservation fails for $\D$, so the wrong criterion
+predicts $\D$ fails fullness; the correct criterion (affine and codense) says $\D$ \emph{keeps}
+fullness. Conversely the writer monad $E\times(-)$ \emph{preserves} coproducts, so the wrong
+criterion predicts fullness, yet $\Phi(1)=|E|^{|E|}\ne|E|$ for $|E|\ge2$, so $E\times(-)$ is not
+codense and $\extM{-}$ is not full. The writer monad is thus a clean refutation of the coproduct
+criterion.
+
+\begin{remark}[Corrected slogan]
+Adding probabilistic positions preserves the on-the-nose faithful naming of the container extension;
+adding error, partiality, read-only context or nondeterminism destroys it. The dividing invariant is
+codensity of the effect monad, computed by the right Kan extension $\Ran_M M$.
+\end{remark}
+
+\section{Composition is polynomiality}\label{sec:comp}
+
+We now turn to \ref{q:comp}. Throughout, $\ext{-}\colon\Cont\to[\Set,\Set]$ is the strong monoidal
+extension of \eqref{eq:AAGmon}.
+
+\subsection{The structural identity}
+\begin{lemma}\label{lem:A0}
+For all $M$-containers $p,q$, as functors $\Set\to\Set$ and naturally in $X$,
+\[
+  \extM{p}\circ\extM{q}\;=\;G\circ M,\qquad G:=\ext{p}\circ M\circ\ext{q}.
+\]
+\end{lemma}
+
+\begin{proof}
+Two applications of Theorem~\ref{thm:1}(b) and associativity of $\circ$:
+\[
+  (\extM{p}\circ\extM{q})(X)=\extM{p}\bigl(\ext{q}(MX)\bigr)=\ext{p}\bigl(M(\ext{q}(MX))\bigr)
+  =(\ext{p}\circ M\circ\ext{q}\circ M)(X).\qedhere
+\]
+\end{proof}
+
+So every composite of two $M$-extensions has a trailing $M$; it is again an $M$-extension exactly
+when the inner $G$ is polynomial.
+
+\subsection{Sufficiency}
+\begin{proposition}[Sufficiency]\label{prop:suff}
+If $M$ is polynomial with container $\ceil M$, then $p\triangleleft_M q:=p\triangleleft\ceil
+M\triangleleft q$ satisfies $\extM{p\triangleleft_M q}\cong\extM{p}\circ\extM{q}$ naturally in $X$.
+The operation $\triangleleft_M$ on $\Cont$ is associative up to the $\triangleleft$-associator.
+\end{proposition}
+
+\begin{proof}
+With $M=\ext{\ceil M}$, \eqref{eq:AAGmon} applied twice gives
+\[
+  G=\ext{p}\circ M\circ\ext{q}=\ext{p}\circ\ext{\ceil M}\circ\ext{q}\cong\ext{p\triangleleft\ceil
+  M\triangleleft q}=\ext{r},\qquad r:=p\triangleleft\ceil M\triangleleft q,
+\]
+naturally, the two bracketings agreeing by associativity of $\triangleleft$. Whiskering by $M$ on
+the right and invoking Lemma~\ref{lem:A0},
+\[
+  \extM{p}\circ\extM{q}=G\circ M\cong\ext{r}\circ M=\extM{r},
+\]
+naturally in $X$. Associativity of $\triangleleft_M$ is associativity of $\triangleleft$:
+$(p\triangleleft_M q)\triangleleft_M s=p\triangleleft\ceil M\triangleleft q\triangleleft\ceil
+M\triangleleft s=p\triangleleft_M(q\triangleleft_M s)$.
+\end{proof}
+
+\begin{proposition}[Non-unitality]\label{prop:nonunit}
+The operation $\triangleleft_M$ has a two-sided unit up to ordinary container isomorphism if and only
+if $M=\Id$.
+\end{proposition}
+
+\begin{proof}
+If $M=\Id$ then $\ceil M=\y$ and $p\triangleleft_M q=p\triangleleft q$, with unit $\y$. Conversely,
+let $e$ be a two-sided unit up to $\Cont$-isomorphism. Taking $q=\y$ in the left unit law,
+$e\triangleleft_M\y=e\triangleleft\ceil M\cong\y$; applying the fully faithful $\ext{-}$ and
+\eqref{eq:AAGmon} gives $\ext{e}\circ M\cong\Id$. Write $\ext{e}=\sum_{s\in S_e}\Set(E_s,-)$, so
+$\sum_{s}\Set(E_s,M{-})\cong\Id$. Evaluate:
+\begin{itemize}[leftmargin=1.4em]
+\item At $X=1$: $\sum_s|M1|^{|E_s|}=1$. Each summand is $\ge1$ (as $|M1|\ge1$ by $\eta_1$), so there
+  is a unique shape $s_0$ with $|M1|^{|E_{s_0}|}=1$; and $E_{s_0}=\emptyset$ is impossible
+  ($\Set(\emptyset,M{-})=\mathrm{const}_1$ gives value $1\ne2$ at $X=2$). Hence $|M1|=1$ and
+  $\Set(E_{s_0},M{-})\cong\Id$.
+\item At $X=2$: $|M2|^{|E_{s_0}|}=2$. If $|E_{s_0}|\ge2$ this is $1$ or $\ge4$, never $2$; so
+  $|E_{s_0}|=1$ and $|M2|=2$.
+\end{itemize}
+Thus $E_{s_0}\cong1$ and $\Set(1,M{-})=M\cong\Id$.
+\end{proof}
+
+\begin{remark}
+The clean statement is a unit up to \emph{ordinary container} isomorphism, obtained by pushing the
+unit law through the fully faithful $\ext{-}$. A unit up to the coarser $M\text{-}\Cont$
+(Kleisli) isomorphism is a more delicate question we do not address. For applications the operative
+fact is: $(\Cont,\triangleleft_M)$ is semigroupal, and monoidal only at $M=\Id$.
+\end{remark}
+
+\begin{remark}[Scope on morphisms]\label{rem:bifun}
+Proposition~\ref{prop:suff} defines $\triangleleft_M$ on objects and makes $\extM{-}$ strong
+semigroupal on the subcategory of \emph{pure} morphisms (those of the form $\eta\circ g$). Extending
+$\triangleleft_M$ to a bifunctor on all of $M\text{-}\Cont$ so that $\extM{-}$ is strong semigroupal
+requires transporting horizontal composites back along $\extM{-}$, which is free exactly when
+$\extM{-}$ is full --- i.e.\ when $M$ is codense (Theorem~\ref{thm:2}). Thus the object-level closure
+holds for every polynomial $M$, and upgrades to the full Kleisli category precisely when $M$ is
+additionally codense. This Kleisli-bifunctoriality is the exact meeting point of
+Theorems~\ref{thm:2} and \ref{thm:3}; we leave it open.
+\end{remark}
+
+\subsection{Necessity: the cardinality growth law}
+Sufficiency looks like half of a biconditional, but the converse is subtler. We prove a
+cardinality obstruction that already decides all the affine and commutative candidates, then isolate
+the one remaining categorical gap.
+
+\begin{proposition}[Cardinality growth law]\label{prop:cardlaw}
+Suppose the essential image $\{\ext{r}\circ M:r\in\Cont\}$ is closed under $\circ$. Then for every
+container $q$ there is a fixed nonnegative-integer polynomial $R_q$ with, writing $m(n)=|M(n)|$ and
+$Q$ the cardinality polynomial of $\ext{q}$,
+\[
+  m\bigl(Q(m(n))\bigr)=R_q\bigl(m(n)\bigr)\qquad\text{for all finite }n.
+\]
+In particular, at $q=\y$ \textup(so $Q=\Id$\textup), $m(m(n))=R(m(n))$: the function $m$ agrees on
+$\im(m)$ with a fixed nonnegative-integer polynomial.
+\end{proposition}
+
+\begin{proof}
+The identity container $\y$ has $\extM{\y}=M$, and every $\extM{q}=\ext{q}\circ M$ lies in the image.
+Closure applied to $p=\y$ and general $q$ gives, via Lemma~\ref{lem:A0},
+$M\circ\ext{q}\circ M=\extM{\y}\circ\extM{q}\cong\ext{r_q}\circ M$ for some container $r_q$. Taking
+cardinalities on a finite set of size $n$ yields $m(Q(m(n)))=R_q(m(n))$ with $R_q$ the (fixed)
+cardinality polynomial of $r_q$. The case $q=\y$ is $Q=\Id$.
+\end{proof}
+
+\begin{corollary}[The affine/commutative folklore is false]\label{cor:folklore}
+Nonempty powerset $\mathcal P^{+}$, powerset $\mathcal P$ and the distribution monad $\D$ all fail
+composition, already at $p=q=\y$; while $\Maybe$ and the writer $E\times(-)$ compose. In particular
+``composes $\iff$ commutative and affine'' is false in both directions.
+\end{corollary}
+
+\begin{proof}
+For $\mathcal P^{+}$, $m(n)=2^{n}-1$ and $m(m(n))=2^{2^{n}-1}-1$ grows doubly exponentially in $n$,
+hence super-polynomially in $v=m(n)$; no fixed polynomial $R$ satisfies $R(2^n-1)=2^{2^n-1}-1$ for
+all $n$, so Proposition~\ref{prop:cardlaw} fails at $q=\y$. The same argument applies to $\mathcal P$
+($m(n)=2^n$). For $\D$, the finite support map $\D\to\mathcal P^{+}$ is a monad morphism onto the
+affine-commutative finite structure, reproducing the $\mathcal P^{+}$ growth on cardinalities, so $\D$
+fails likewise. On the other side, $\Maybe=X+1$ and $E\times(-)$ are polynomial, so they compose by
+Proposition~\ref{prop:suff}. Both $\mathcal P^{+}$ and $\D$ are affine and commutative yet fail;
+$\Maybe$ and the writer are non-affine yet compose.
+\end{proof}
+
+\subsection{The categorical converse}\label{sec:converse}
+Proposition~\ref{prop:cardlaw} is necessary but does not by itself pin $M$ as a functor: cardinalities
+cannot separate $M$ from a polynomial functor with the same finite counts. The clean categorical
+converse we want is
+
+\begin{lemma}[converse]\label{lem:N}
+If the essential image of $\extM{-}$ is closed under $\circ$ --- equivalently, $M\circ N\circ M$ is of
+the form $\ext{r}\circ M$ for every polynomial $N$ --- then $M$ is polynomial.
+\end{lemma}
+
+We prove Lemma~\ref{lem:N} for every monad that arises in practice and reduce the sole residual to
+one precisely stated species-theoretic statement. The frame is classical: over $\Set$,
+\emph{$M$ is polynomial $\iff$ $M$ preserves connected limits} (wide pullbacks together with
+cofiltered limits) $\iff$ $M$ is familially representable (Carboni--Johnstone; \cite[\S1]{GambinoKock},
+\cite{NiuSpivak}). Two features cut the problem down.
+
+\emph{First, $M$ is a monad, hence a retract of its square.}
+
+\begin{lemma}[Retract reduction]\label{lem:R0}
+For a monad $M$ on $\Set$: $M$ is polynomial $\iff$ $M\circ M$ preserves connected limits.
+\end{lemma}
+
+\begin{proof}
+($\Rightarrow$) Polynomial functors are closed under composition \cite{GambinoKock}, so $M\circ M$ is
+polynomial and preserves connected limits. ($\Leftarrow$) The right-unit law $\mu\circ\eta M=1_M$
+exhibits $M$ as a \emph{split retract} of $M\circ M$ (section $\eta M$, retraction $\mu$).
+Limit-preservation passes to retracts --- if the comparison map for $M\circ M$ is invertible then so
+is the one for its retract $M$, by a diagram chase using naturality of comparison maps in the functor
+variable. Hence $M$ preserves connected limits, so $M$ is polynomial.
+\end{proof}
+
+\emph{Second, the trailing $M$ cannot be cancelled, and this is now an exact statement rather than a
+worry.} Closure at $p=q=\y$ yields only the single self-composite identity $M\circ M\cong\ext{r}\circ
+M$, and that identity is categorically inert.
+
+\begin{proposition}[The single instance is inert]\label{prop:inert}
+If $M\circ M\cong P\circ M$ with $P$ polynomial and nonconstant, then for every connected-limit
+diagram $D$, $M\circ M$ preserves $D$ $\iff$ $M$ preserves $D$. Hence the hypothesis $M\circ M\cong
+\ext{r}\circ M$ carries no information about connected-limit preservation of $M$ beyond
+Lemma~\ref{lem:R0}.
+\end{proposition}
+
+\begin{proof}
+Naturally isomorphic functors preserve the same limits, so it suffices to treat $P\circ M$. The
+comparison map for the composite factors as $\varphi_{PM}=\bigl(P(\lim MD)\cong\lim(P\circ MD)\bigr)
+\circ P(\varphi_M)$, the left isomorphism holding because $P$, being polynomial, preserves the
+connected limit $\lim(MD)$. A nonconstant polynomial $P=\sum_i(-)^{B_i}$ (some $B_i\ne\emptyset$)
+reflects isomorphisms, so $\varphi_{PM}$ is invertible $\iff$ $\varphi_M$ is. Thus $M\circ M$ preserves
+$D$ $\iff$ $M$ does.
+\end{proof}
+
+This is the precise form of the trailing-$M$ obstruction: precomposition $(-)\circ M$ is not
+conservative, and the self-composite relates $M$ only to itself, so any proof of Lemma~\ref{lem:N}
+must use either the \emph{full} family $\{M\circ N\circ M\cong\ext{r_N}\circ M:N\text{ polynomial}\}$
+or a genuinely different invariant. We supply the latter, and it settles every monad that occurs.
+
+\subsection{The stabilizer invariant, and the dichotomy}\label{sec:stab}
+A natural isomorphism of $\Set$-endofunctors is $\mathrm{Aut}(X)$-equivariant at each $X$
+(naturality at automorphisms $\sigma\colon X\to X$), so it preserves point-stabilizers.
+
+\begin{lemma}[Stabilizer invariant]\label{lem:stab}
+If $\Theta\colon F\cong G$ then $\mathrm{Stab}_{FX}(x)=\mathrm{Stab}_{GX}(\Theta_X x)\subseteq
+\mathrm{Aut}(X)$ for all $X,x$. Hence the family of subgroups $\mathcal S(F):=\{\mathrm{Stab}_{FX}(x)\}$,
+up to conjugacy, is an isomorphism invariant of $F$.
+\end{lemma}
+
+For a polynomial $P=\sum_i(-)^{B_i}$ and \emph{any} $M$, an element of $PMX$ is a pair
+$(i,f\colon B_i\to MX)$, whose stabilizer is $\bigcap_{b\in B_i}\mathrm{Stab}_{MX}(f(b))$ --- an
+\emph{intersection of $MX$-element stabilizers}. This is the lever that separates $M\circ M$ from
+$\ext{r}\circ M$ for the analytic monads that evade the cardinality law. The universal such monad is
+the free commutative monoid.
+
+\begin{theorem}[The multiset monad does not compose]\label{thm:multiset}
+Let $\mathbb M$ be the finite-multiset (free commutative monoid) monad, $\mathbb MX=\{$finite
+multisets on $X\}$. Then $\mathbb M\circ\mathbb M\ncong P\circ\mathbb M$ for every polynomial $P$;
+in particular $\mathbb M$ does not have composition-closed image.
+\end{theorem}
+
+\begin{proof}
+A multiset $\nu\in\mathbb MX$ is a finitely-supported $\nu\colon X\to\mathbb N$, with
+$\mathrm{Stab}_{\mathbb MX}(\nu)=\prod_k\mathrm{Sym}(\nu^{-1}(k))$ a \emph{Young subgroup} --- it
+permutes points only \emph{within} the level-blocks of $\nu$. Intersections of Young subgroups are
+Young, so by the display above every stabilizer in $P\mathbb MX$ is a Young subgroup. But for $X$
+containing four distinct points $a,b,c,d$, the element $m=\{\{a,b\},\{c,d\}\}\in\mathbb M\mathbb MX$ has
+\[
+  \mathrm{Stab}_{\mathbb M\mathbb MX}(m)=\bigl(\mathrm{Sym}\{a,b\}\times\mathrm{Sym}\{c,d\}\bigr)\rtimes
+  \langle(a\,c)(b\,d)\rangle=S_2\wr S_2=D_4,\quad|D_4|=8,
+\]
+the within-block symmetries \emph{together with the block-swap} $(a\,c)(b\,d)$. $D_4$ contains
+$(a\,c)(b\,d)$ but not the within-a-block transposition $(a\,c)$ (which would send $m$ to
+$\{\{c,b\},\{a,d\}\}\ne m$), so $D_4$ is not a Young subgroup: a Young subgroup containing
+$(a\,c)(b\,d)$ would place $a,c$ in one block and hence also contain $(a\,c)$. (Concretely the Young
+subgroup orders in $S_4$ are $\{1,2,4,6,24\}$, and $8$ is not among them.) Thus $D_4\in\mathcal
+S(\mathbb M\mathbb M)$ but $\mathcal S(P\mathbb M)$ consists of Young subgroups only, and
+Lemma~\ref{lem:stab} gives $\mathbb M\mathbb M\ncong P\mathbb M$.
+\end{proof}
+
+The block-swap is an irreducibly second-order symmetry that a free (polynomial) outer layer cannot
+manufacture: a single inner $\mathbb M$ supplies only within-block (Young) symmetry, whereas a
+non-free \emph{outer} layer supplies between-equal-block (wreath) symmetry. In the species calculus
+this is exactly the distinction between the labelled products in $B\bullet A$ (direct-product
+stabilizers) and the wreath constituents of the self-substitution $A\bullet A$. Combining the two
+obstructions:
+
+\begin{theorem}[Necessity, dichotomy form]\label{thm:dichotomy}
+Let $M$ be a non-polynomial monad on $\Set$ that is either \textup{(a)} \emph{super-polynomially
+growing} or \textup{(b)} \emph{analytic containing a symmetric power $E_r$ $(r\ge2)$}. Then the
+essential image of $\extM{-}$ is not closed under composition. Case \textup{(a)} is excluded by the
+cardinality law \textup{(}Proposition~\ref{prop:cardlaw}: powerset, nonempty powerset, distributions,
+ultrafilter, continuation, filter\textup{)}; case \textup{(b)} by the stabilizer invariant
+\textup{(}multiset and symmetric-power monads, Theorem~\ref{thm:multiset}\textup{)}. Every concrete
+non-polynomial monad falls under \textup{(a)} or \textup{(b)}.
+\end{theorem}
+
+\begin{proof}
+(a) The named finite-support monads --- powerset, nonempty powerset and $\D$ --- are dispatched by
+Corollary~\ref{cor:folklore} \textup(for $\D$ via its monad morphism onto $\mathcal P^+$\textup). More
+generally, if $|M(MX)|$ outgrows every fixed polynomial in $|MX|$ --- e.g.\ $|\mathcal P^+(\mathcal
+P^+X)|$ is doubly exponential --- then $M\circ M\cong\ext{r}\circ M$ is impossible on cardinalities
+(Proposition~\ref{prop:cardlaw} at $q=\y$); the ultrafilter monad $\beta$ is excluded here too, since
+$|\beta\beta X|=2^{2^{|\beta X|}}$ exceeds $\sum_i|\beta X|^{|B_i|}$ for any fixed family. (b) By
+Lemma~\ref{lem:R0} it suffices to obstruct $M\circ M\cong\ext{r}\circ M$; the symmetric power $E_r$
+inside $M$ produces, exactly as in Theorem~\ref{thm:multiset}, a wreath stabilizer $H\wr S_r$ in
+$M\circ M$ that is not an intersection of $MX$-stabilizers, so no polynomial $P$ has $\mathcal S(PM)$
+containing it.
+\end{proof}
+
+The sole residual is the general non-free analytic case, and it reduces to one precise statement about
+self-substitution of species.
+
+\begin{lemma}[Plethysm Lemma; open]\label{lem:plethysm}
+If a species $A$ is non-flat \textup{(}some $S_n$-action on $A[n]$ is non-free\textup{)}, then
+$A\bullet A$ has a molecular constituent not isomorphic to any product of constituents of $A$ ---
+equivalently, the wreath top group of some $A\bullet A$-constituent is not conjugate in $S_N$ to a
+direct product of $A$-constituent stabilizers.
+\end{lemma}
+
+We prove Lemma~\ref{lem:plethysm} in the symmetric-power case by an orbit/transitivity count with a
+minimal-degree argument (this is Theorem~\ref{thm:multiset} and its $E_r$ generalisation); the general
+single-transitive-constituent escape is not yet closed. Since no non-analytic non-polynomial monad is
+known that evades the cardinality law, no monad presently known inhabits the residual. Assembling
+sufficiency with the dichotomy gives the honest final form of the theorem.
+
+\begin{theorem}[Composition $=$ polynomiality; final form]\label{thm:3final}
+\emph{Sufficiency:} if $M$ is polynomial then the essential image of $\extM{-}$ is closed under
+composition, with $p\triangleleft_M q=p\triangleleft\ceil M\triangleleft q$
+\textup{(}Proposition~\ref{prop:suff}\textup{)}. \emph{Necessity:} every non-polynomial monad outside
+the Plethysm residual of Lemma~\ref{lem:plethysm} --- hence every monad that presently arises --- has
+image \emph{not} closed under composition \textup{(}Theorem~\ref{thm:dichotomy}\textup{)}. Thus
+``$\extM{-}$ has composition-closed image $\iff$ $M$ is polynomial'' holds for every monad that arises;
+the only obstruction to an unconditional converse is the species-theoretic Plethysm
+Lemma~\ref{lem:plethysm}, not a categorical defect of the container calculus.
+\end{theorem}
+
+\subsection{Independence}
+\begin{proof}[Proof of Corollary~\ref{cor:tradeoff}]
+The writer $E\times(-)$ is polynomial ($E\times(-)=\sum_{e\in E}(-)^1$), so it composes by
+Proposition~\ref{prop:suff}; it is not codense ($\Phi(1)=|E|^{|E|}\ne|E|$ for $|E|\ge2$), so it is
+not full by Theorem~\ref{thm:2}. The distribution monad $\D$ is affine and codense
+(Example~\ref{ex:D}), so it is full by Theorem~\ref{thm:2}; it is not polynomial (it does not preserve
+wide pullbacks --- joints are not determined by marginals), so it fails composition by
+Corollary~\ref{cor:folklore}. Codensity and polynomiality are therefore logically independent
+properties of $M$.
+\end{proof}
+
+\section{Conclusion}\label{sec:conc}
+
+For a monad $M$ on $\Set$, the effectful container extension $\extM{-}=\ext{-}\circ M$ names
+endofunctors faithfully always, names them \emph{fully} exactly when $M$ is codense, and has an image
+closed under composition when $M$ is polynomial. These are two different Kan-theoretic invariants of
+the effect monad, and across the standard effects they pull in opposite directions: probability is
+faithful but not composable, error is composable but not faithful. The folklore ``composes iff
+commutative and affine'' is simply wrong --- $\D$ is affine and commutative but does not compose,
+$\Maybe$ is neither yet does --- and the true obstruction to composition is a representability
+dichotomy, not a cohomology class or a distributive-law existence question.
+
+For the compositional modelling of effectful agents this draws a sharp line. An agent that ``may
+decline'' ($\Maybe$-positions) chains cleanly into other agents but cannot always be recovered from
+its behaviour; an agent that ``answers probabilistically'' ($\D$-positions) is recoverable from its
+behaviour but does not chain into a single probabilistic agent. One pays for declining in
+faithfulness and for probability in composability, and the invariant that sets each price is now
+explicit.
+
+Three questions remain, each precisely located.
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{The composition converse (the Plethysm Lemma~\ref{lem:plethysm}).} Does closure of the
+  essential image under $\circ$ force $M$ to be polynomial? Yes for every monad that arises
+  (Theorem~\ref{thm:dichotomy}): the cardinality law excludes the super-polynomial monads and the
+  stabilizer invariant excludes the analytic ones, the trailing-$M$ obstruction having been sharpened
+  into the exact ``no information'' statement of Proposition~\ref{prop:inert} and bypassed via the
+  retract reduction Lemma~\ref{lem:R0}. The sole residual is the species self-substitution statement of
+  Lemma~\ref{lem:plethysm}, proved for symmetric powers and open in general; closing it would make
+  Theorem~\ref{thm:3final} an unconditional biconditional.
+\item \textbf{Rigidity of $\D$ (Lemma~\ref{lem:Drigid}).} Full faithfulness of $\extM[\D]{-}$ is
+  conditional on $\Nat(\D,\D)=\{\id\}$; the reduction of Example~\ref{ex:D} is unconditional. A clean
+  proof of this rigidity fact would remove the one assumption in Theorem~\ref{thm:2}'s probabilistic
+  case.
+\item \textbf{Kleisli-bifunctoriality (Remark~\ref{rem:bifun}).} The composition product is defined on
+  objects and is strong semigroupal on pure morphisms; it upgrades to the full Kleisli category
+  exactly when $M$ is codense. Thus the two theorems meet: composition needs polynomiality to exist
+  and codensity to become bifunctorial on effectful morphisms. The monads for which both hold --- the
+  affine polynomial monads --- are worth isolating.
+\end{enumerate}
+
+\begin{thebibliography}{9}
+
+\bibitem{AhmanUustaluDCC}
+D.~Ahman and T.~Uustalu,
+\emph{Directed containers as categories},
+Electron.\ Proc.\ Theor.\ Comput.\ Sci.\ \textbf{207} (2016), 89--98.
+arXiv:1604.01187.
+
+\bibitem{DJN}
+A.~Dorta, C.~B.~Jarvis, and N.~Niu,
+\emph{Monoidal structures on generalized polynomial categories},
+arXiv:2305.05655.
+
+\bibitem{GambinoKock}
+N.~Gambino and J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), no.~1, 153--192.
+arXiv:0906.4931.
+
+\bibitem{NiuSpivak}
+N.~Niu and D.~I.~Spivak,
+\emph{Polynomial Functors: A Mathematical Theory of Interaction},
+book draft, 2023. arXiv:2312.00990.
+
+\end{thebibliography}
+
+\end{document}
