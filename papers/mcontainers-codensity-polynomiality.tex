@@ -18,6 +18,7 @@
 \newtheorem{example}[theorem]{Example}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{question}[theorem]{Question}
+\newtheorem{conjecture}[theorem]{Conjecture}
 
 % ---- notation ----
 \newcommand{\Set}{\mathbf{Set}}
@@ -49,7 +50,7 @@
 \author{MacBeth}
 \address{Kodamai}
 \email{}
-\date{5 September 2026}
+\date{6 September 2026}
 
 \begin{abstract}
 Fix a monad $M$ on $\Set$. An \emph{$M$-container} is an ordinary container $(S,P)$ whose
@@ -66,9 +67,12 @@ consequently probability distributions keep fullness while error, partiality, re
 and nondeterminism destroy it. Third, the essential image of $\extM{-}$ is closed under
 composition if and only if $M$ is a \emph{polynomial} functor --- sufficiency for all $M$, with
 $p\triangleleft_M q=p\triangleleft\lceil M\rceil\triangleleft q$, and necessity for every monad that
-arises, via a dichotomy (super-polynomial growth, or an $\mathrm{Aut}(X)$-stabilizer invariant that
-separates $M\circ M$ from a polynomial), the sole residual being a species-theoretic plethysm statement
-no known monad inhabits. The affine-plus-commutative folklore criterion is false ($\D$ is affine and
+arises, via a trichotomy: super-polynomial growth is killed by a cardinality law; every analytic monad
+with $M\emptyset=\emptyset$ is killed by \emph{right-cancellation of plethysm} in the ring of
+cycle-index series (with no bound on degree or nesting depth, so free magmas and free operad monads are
+covered); and every bounded-degree analytic monad is killed by a support-splitting stabilizer invariant.
+The only monads left uncovered are analytic with $M\emptyset$ nonempty-finite \emph{and} unbounded degree
+\emph{and} unbounded nesting depth --- a corner we argue is vacuous. The affine-plus-commutative folklore criterion is false ($\D$ is affine and
 commutative but does not compose; $\mathsf{Maybe}$ is neither yet does). Fullness and composition are thus governed by two independent
 Kan-theoretic invariants of $M$ that trade oppositely: probability is faithful but not composable,
 error is composable but not faithful.
@@ -78,11 +82,14 @@ error is composable but not faithful.
 
 \begin{center}\small
 \fbox{\begin{minipage}{0.92\textwidth}\centering
-\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 5 September 2026.\qquad
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 6 September 2026.\qquad
 \emph{For review by:} Rick.\\[2pt]
 \emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{commit}
-\texttt{b94bc32}.\\[2pt]
-\textbf{Draft --- work in progress; not yet neighbour-reviewed.}
+\texttt{PENDING}.\\[2pt]
+\textbf{Draft --- work in progress; not yet neighbour-reviewed. This revision supersedes the version
+sent to Rick on 5 September (commit \texttt{b94bc32}): Theorem~\ref{thm:3}'s necessity direction now
+closes the analytic converse via plethysm right-cancellation (\S\ref{sec:cancel}), retiring the
+previously open Plethysm Lemma.}
 \end{minipage}}
 \end{center}
 
@@ -189,13 +196,16 @@ satisfies $\extM{p\triangleleft_M q}\cong\extM{p}\circ\extM{q}$, naturally in $X
 $\triangleleft_M$ is associative and has a unit up to ordinary container isomorphism only when
 $M=\Id$; so the essential image of $\extM{-}$ is closed under composition.
 \emph{(Necessity.)} Conversely, if the essential image is closed under composition then $M$ is
-polynomial --- proved for every monad that arises, by a dichotomy. Either $M$ grows
+polynomial --- proved for every monad that arises, by a trichotomy. Either $M$ grows
 super-polynomially, and $|M(MX)|$ cannot agree on the values of $|MX|$ with a fixed polynomial
-(excluding powerset, nonempty powerset, distributions, ultrafilter, continuation); or $M$ is analytic,
-and a new $\mathrm{Aut}(X)$-stabilizer invariant separates $M\circ M$ from $\ext{r}\circ M$ (excluding
-the multiset and symmetric-power monads). The only residual is a species-theoretic \emph{Plethysm
-Lemma} \textup(Lemma~\ref{lem:plethysm}\textup) for general non-free analytic monads, which no known
-monad inhabits; modulo it the theorem is a genuine biconditional \textup(Theorem~\ref{thm:3final}\textup).
+(excluding powerset, nonempty powerset, distributions, ultrafilter, continuation); or $M$ is analytic
+with $M\emptyset=\emptyset$, and \emph{right-cancellation of plethysm} in the cycle-index ring forces
+$M$ polynomial with no bound on degree or nesting depth (Theorem~\ref{thm:P}, covering free magmas and
+free operad monads); or $M$ is analytic of bounded degree, and a support-splitting stabilizer invariant
+separates $M\circ M$ from $\ext{r}\circ M$ (Theorem~\ref{thm:S}, subsuming the multiset and
+symmetric-power monads). The only monads uncovered are analytic with $M\emptyset$ nonempty-finite,
+unbounded degree and unbounded nesting depth, a corner argued vacuous (Conjecture~\ref{conj:vacuous});
+modulo that the theorem is an unconditional biconditional \textup(Theorem~\ref{thm:3final}\textup).
 \end{theorem}
 
 Combining the two theorems gives the punchline.
@@ -217,10 +227,16 @@ the fullness obstruction is exactly the failure of the unit $M\Rightarrow\Ran_M 
 For composition, two applications of the factorisation put every composite $\extM{p}\circ\extM{q}$
 in the form $G\circ M$ with $G=\ext{p}\circ M\circ\ext{q}$; this is again an $M$-extension precisely
 when $G$ is polynomial, which for all $p,q$ forces $M$ itself to be polynomial (for every monad that
-arises; \S\ref{sec:stab}), and then AAG strong monoidality delivers the splice
-$p\triangleleft\ceil M\triangleleft q$. The converse rests on a monad retract reduction
-(Lemma~\ref{lem:R0}) and an $\mathrm{Aut}(X)$-stabilizer invariant (Lemma~\ref{lem:stab}) rather than
-on cancelling the trailing $M$, which Proposition~\ref{prop:inert} shows to be impossible.
+arises; \S\ref{sec:stab}--\ref{sec:cancel}), and then AAG strong monoidality delivers the splice
+$p\triangleleft\ceil M\triangleleft q$. The trailing $M$ cannot be cancelled at the level of
+connected-limit preservation --- Proposition~\ref{prop:inert} shows the single self-composite
+$M\circ M\cong\ext r\circ M$ carries no such information beyond the retract reduction
+Lemma~\ref{lem:R0}. The converse therefore uses a \emph{finer, faithful} invariant: an
+$\mathrm{Aut}(X)$-stabilizer statistic (Lemma~\ref{lem:stab}) for bounded degree, and, for analytic
+$M$ with $M\emptyset=\emptyset$, right-cancellation of plethysm on the cycle-index series
+(Lemma~\ref{lem:cancel}) --- a genuine cancellation of the trailing $M$, now on the level of species
+isomorphism rather than limit preservation, reaching the unbounded-nesting monads no stabilizer count
+can touch.
 
 \subsection*{Why it matters}
 Beyond the pleasing tension of Corollary~\ref{cor:tradeoff}, the result sharpens the compositional
@@ -235,11 +251,18 @@ explicit and computable: codensity for the first question, polynomiality for the
 \subsection*{Provenance and honesty}
 Theorems~\ref{thm:1} and \ref{thm:2} (faithfulness, the codensity criterion, the affine lemma, the
 examples) are proved. Theorem~\ref{thm:3} is proved in its sufficiency direction, and in its necessity
-direction for every monad that arises: the cardinality law disposes of the super-polynomial monads and
-the stabilizer invariant (Lemma~\ref{lem:stab}, Theorem~\ref{thm:multiset}) disposes of the analytic
-ones. The only step not supplied unconditionally is the species-theoretic Plethysm
-Lemma~\ref{lem:plethysm} for general non-free analytic monads, which no known monad inhabits; it is
-marked \emph{open} where it occurs. Full faithfulness for $\D$ rests on a standard rigidity fact,
+direction for every monad that arises: the cardinality law disposes of the super-polynomial monads;
+plethysm right-cancellation (Lemma~\ref{lem:cancel}, Theorem~\ref{thm:P}) disposes of every analytic
+monad with $M\emptyset=\emptyset$, degree and nesting depth unbounded; and the support-splitting
+stabilizer invariant (Lemma~\ref{lem:stab}, Theorems~\ref{thm:multiset} and \ref{thm:S}) disposes of
+every bounded-degree analytic monad. The cancellation engine (Lemma~\ref{lem:cancel}) is elementary and
+computationally verified; Theorems~\ref{thm:P} and \ref{thm:S} additionally invoke two standard facts of
+combinatorial-species theory --- Joyal's full faithfulness of the species-to-analytic-functor embedding,
+and the identity of species substitution with plethysm of cycle-index series (Joyal;
+Bergeron--Labelle--Leroux) --- which we name as background rather than re-derive. The single class of
+monads not covered (analytic, $M\emptyset$ nonempty-finite, unbounded degree and nesting depth) is
+argued \emph{vacuous} in Conjecture~\ref{conj:vacuous}; that vacuity is the one statement we leave as a
+conjecture, marked where it occurs. Full faithfulness for $\D$ rests on a standard rigidity fact,
 $\Nat(\D,\D)=\{\id\}$, which we isolate as Lemma~\ref{lem:Drigid} and assume rather than reprove.
 These boundaries are marked at each occurrence.
 
@@ -249,8 +272,9 @@ its composition monoidal structure, families over an opposite category, and righ
 codensity monads. Section~\ref{sec:identify} proves Theorem~\ref{thm:1} and the always-faithfulness.
 Section~\ref{sec:full} proves the codensity criterion (Theorem~\ref{thm:2}), works the examples, and
 explains why coproduct preservation is the wrong criterion. Section~\ref{sec:comp} proves
-Theorem~\ref{thm:3}, proving the converse for every monad that arises and isolating the one residual
-species-theoretic statement. Section~\ref{sec:conc} draws the trade-off and lists open problems.
+Theorem~\ref{thm:3}: sufficiency, the cardinality law, the stabilizer invariant, and the plethysm
+right-cancellation that closes the analytic converse, leaving only a corner argued vacuous.
+Section~\ref{sec:conc} draws the trade-off and lists open problems.
 
 \section{Preliminaries}\label{sec:prelim}
 
@@ -661,8 +685,8 @@ If the essential image of $\extM{-}$ is closed under $\circ$ --- equivalently, $
 the form $\ext{r}\circ M$ for every polynomial $N$ --- then $M$ is polynomial.
 \end{lemma}
 
-We prove Lemma~\ref{lem:N} for every monad that arises in practice and reduce the sole residual to
-one precisely stated species-theoretic statement. The frame is classical: over $\Set$,
+We prove Lemma~\ref{lem:N} for every monad that arises in practice, reducing the sole residual to a
+single corner we argue is vacuous (Conjecture~\ref{conj:vacuous}). The frame is classical: over $\Set$,
 \emph{$M$ is polynomial $\iff$ $M$ preserves connected limits} (wide pullbacks together with
 cofiltered limits) $\iff$ $M$ is familially representable (Carboni--Johnstone; \cite[\S1]{GambinoKock},
 \cite{NiuSpivak}). Two features cut the problem down.
@@ -752,57 +776,146 @@ The block-swap is an irreducibly second-order symmetry that a free (polynomial) 
 manufacture: a single inner $\mathbb M$ supplies only within-block (Young) symmetry, whereas a
 non-free \emph{outer} layer supplies between-equal-block (wreath) symmetry. In the species calculus
 this is exactly the distinction between the labelled products in $B\bullet A$ (direct-product
-stabilizers) and the wreath constituents of the self-substitution $A\bullet A$. Combining the two
-obstructions:
+stabilizers) and the wreath constituents of the self-substitution $A\bullet A$.
 
-\begin{theorem}[Necessity, dichotomy form]\label{thm:dichotomy}
-Let $M$ be a non-polynomial monad on $\Set$ that is either \textup{(a)} \emph{super-polynomially
-growing} or \textup{(b)} \emph{analytic containing a symmetric power $E_r$ $(r\ge2)$}. Then the
-essential image of $\extM{-}$ is not closed under composition. Case \textup{(a)} is excluded by the
-cardinality law \textup{(}Proposition~\ref{prop:cardlaw}: powerset, nonempty powerset, distributions,
-ultrafilter, continuation, filter\textup{)}; case \textup{(b)} by the stabilizer invariant
-\textup{(}multiset and symmetric-power monads, Theorem~\ref{thm:multiset}\textup{)}. Every concrete
-non-polynomial monad falls under \textup{(a)} or \textup{(b)}.
+The multiset argument reaches only \emph{bounded} nesting: it pits one wreath $H\wr S_r$ against Young
+subgroups. For monads whose structures nest to unbounded depth --- the free (commutative) magma, free
+operad-algebra monads, with automorphism towers $S_2\wr\cdots\wr S_2$ --- no fixed stabilizer count
+suffices, and we replace the combinatorics with one algebraic identity.
+
+\subsection{Cycle-index cancellation, and the necessity trichotomy}\label{sec:cancel}
+Recall the analytic/species dictionary (Joyal; Bergeron--Labelle--Leroux). An \emph{analytic} functor
+is one of the form $\tilde A(X)=\sum_{n\ge0}A[n]\times_{S_n}X^{n}$ for a \emph{species} $A$ (each $A[n]$
+a finite $S_n$-set); its \emph{cycle-index series} is
+\[
+  Z_A=\sum_{n\ge0}\frac1{n!}\sum_{\sigma\in S_n}\mathrm{fix}(A[\sigma])\,p_\sigma\in
+  R:=\mathbb Q[[p_1,p_2,\dots]],\qquad p_\sigma=\textstyle\prod_k p_k^{c_k(\sigma)}.
+\]
+Three standard facts. \textbf{(J1)} $A\mapsto\tilde A$ is fully faithful: $\tilde A\cong\tilde B$ iff
+$A[n]\cong B[n]$ as $S_n$-sets for all $n$. \textbf{(F)} $\tilde A$ is polynomial iff its species is
+\emph{flat} (every $S_n$-action on $A[n]$ free), iff $Z_A\in\mathbb Q[[p_1]]$ (only $p_1$-powers: a
+non-identity permutation fixing a structure contributes a $p_\lambda$ with $\lambda\ne(1^n)$).
+\textbf{(C)} if $B[0]=\emptyset$ then species substitution is plethysm on cycle indices,
+$Z_{A\bullet B}=Z_A\circ Z_B$, where $\circ$ is the unique $\mathbb Q$-algebra endomorphism of $R$ with
+$p_k\circ H=H[p_i\mapsto p_{ki}]$. Writing $a_0=|A[0]|=|M\emptyset|$ and $a_1=|A[1]|$, a monad has
+$a_1\ge1$ (the unit $\Id\Rightarrow\tilde A$ requires an $S_1$-fixed point of $A[1]$).
+
+The engine is elementary.
+
+\begin{lemma}[Plethysm right-cancellation]\label{lem:cancel}
+Let $H\in R$ have zero constant term and nonzero linear coefficient, $H=a_1p_1+(\deg\ge2)$ with
+$a_1\ne0$. Then $(-)\circ H\colon R\to R$ is injective: $F\circ H=G\circ H\Rightarrow F=G$.
+\end{lemma}
+
+\begin{proof}
+$(-)\circ H$ is a $\mathbb Q$-algebra endomorphism, so it suffices that $D\circ H=0\Rightarrow D=0$.
+Since $H$ has bottom degree $1$ with $H^{(1)}=a_1p_1$, plethysm gives $p_\lambda\circ
+H=a_1^{\ell(\lambda)}p_\lambda+(\deg>|\lambda|)$. If $D\ne0$, let $m$ be its bottom degree; then
+$(D\circ H)^{(m)}=\sum_{|\lambda|=m}c_\lambda\,a_1^{\ell(\lambda)}p_\lambda$, and linear independence of
+$\{p_\lambda\}_{|\lambda|=m}$ together with $a_1\ne0$ forces every $c_\lambda=0$, contradicting
+minimality.
+\end{proof}
+
+The hypothesis $a_1\ne0$ is sharp: with $a_1=0$ (e.g.\ $H=p_2+\tfrac12p_1^2$) plethysm collapses in low
+degree. Both the injectivity and its failure at $a_1=0$ are computationally verified.
+
+\begin{theorem}[Cancellation converse; $M\emptyset=\emptyset$]\label{thm:P}
+Let $M=\tilde A$ be an analytic monad with $A[0]=\emptyset$. If the essential image of $\extM{-}$ is
+closed under composition then $M$ is polynomial --- with no bound on degree or nesting depth.
 \end{theorem}
 
 \begin{proof}
-(a) The named finite-support monads --- powerset, nonempty powerset and $\D$ --- are dispatched by
-Corollary~\ref{cor:folklore} \textup(for $\D$ via its monad morphism onto $\mathcal P^+$\textup). More
-generally, if $|M(MX)|$ outgrows every fixed polynomial in $|MX|$ --- e.g.\ $|\mathcal P^+(\mathcal
-P^+X)|$ is doubly exponential --- then $M\circ M\cong\ext{r}\circ M$ is impossible on cardinalities
-(Proposition~\ref{prop:cardlaw} at $q=\y$); the ultrafilter monad $\beta$ is excluded here too, since
-$|\beta\beta X|=2^{2^{|\beta X|}}$ exceeds $\sum_i|\beta X|^{|B_i|}$ for any fixed family. (b) By
-Lemma~\ref{lem:R0} it suffices to obstruct $M\circ M\cong\ext{r}\circ M$; the symmetric power $E_r$
-inside $M$ produces, exactly as in Theorem~\ref{thm:multiset}, a wreath stabilizer $H\wr S_r$ in
-$M\circ M$ that is not an intersection of $MX$-stabilizers, so no polynomial $P$ has $\mathcal S(PM)$
-containing it.
+Closure at $p=q=\y$ gives $M\circ M\cong\ext r\circ M$ for a polynomial $\ext r$. As $M\circ M$ is
+analytic it is finitary, so $\ext r\circ\tilde A$ is finitary; and $\tilde AX\supseteq A[1]\times X$
+(using $a_1\ge1$) is unbounded in $|X|$, so an infinite exponent $B_s$ in $\ext r=\sum_s(-)^{B_s}$
+would make $(-)^{B_s}\circ\tilde A$ fail to preserve a filtered colimit --- forcing all $B_s$ finite.
+Thus $\ext r=\tilde B$ for a \emph{flat} species $B$ (fact (F)). Evaluating the isomorphism at $\emptyset$ and using $\tilde A\emptyset=A[0]=\emptyset$ gives
+$B[0]=\tilde B\emptyset=\emptyset$. So $A\bullet A$ and $B\bullet A$ are finitary species with
+$\widetilde{A\bullet A}=\tilde A\circ\tilde A$ and $\widetilde{B\bullet A}=\tilde B\circ\tilde A$; the
+functor isomorphism and (J1) give $A\bullet A\cong B\bullet A$, hence equal cycle indices, and by (C)
+\[
+  Z_A\circ Z_A=Z_{A\bullet A}=Z_{B\bullet A}=Z_B\circ Z_A.
+\]
+Here $H:=Z_A$ has zero constant term ($a_0=0$) and $a_1\ge1$, so Lemma~\ref{lem:cancel} cancels $Z_A$
+on the right: $Z_A=Z_B$. But $B$ is flat, so $Z_B\in\mathbb Q[[p_1]]$; hence $Z_A\in\mathbb Q[[p_1]]$,
+i.e.\ $A$ is flat and $M$ is polynomial (F).
 \end{proof}
 
-The sole residual is the general non-free analytic case, and it reduces to one precise statement about
-self-substitution of species.
+This is precisely the cancellation of the trailing $M$ that Proposition~\ref{prop:inert} forbade at the
+level of limit preservation --- legitimate here because it operates on the \emph{faithful} cycle-index
+invariant, which the single self-composite does determine. It reaches the monads no stabilizer count
+can: the free commutative magma (structure counts $1,1,3,15,105,\dots=(2n-3)!!$, $a_0=0$, a balanced
+$2^k$-leaf tree with automorphism group $S_2\wr\cdots\wr S_2$, $k$ factors) has unbounded nesting depth
+yet falls to Theorem~\ref{thm:P} in one stroke.
 
-\begin{lemma}[Plethysm Lemma; open]\label{lem:plethysm}
-If a species $A$ is non-flat \textup{(}some $S_n$-action on $A[n]$ is non-free\textup{)}, then
-$A\bullet A$ has a molecular constituent not isomorphic to any product of constituents of $A$ ---
-equivalently, the wreath top group of some $A\bullet A$-constituent is not conjugate in $S_N$ to a
-direct product of $A$-constituent stabilizers.
-\end{lemma}
+For $M\emptyset\ne\emptyset$ the self-composite is non-finitary and its cycle index diverges; the
+bounded-degree case is recovered by a sharpening of the stabilizer invariant.
 
-We prove Lemma~\ref{lem:plethysm} in the symmetric-power case by an orbit/transitivity count with a
-minimal-degree argument (this is Theorem~\ref{thm:multiset} and its $E_r$ generalisation); the general
-single-transitive-constituent escape is not yet closed. Since no non-analytic non-polynomial monad is
-known that evades the cardinality law, no monad presently known inhabits the residual. Assembling
-sufficiency with the dichotomy gives the honest final form of the theorem.
+\begin{theorem}[Support-splitting converse; bounded degree]\label{thm:S}
+Let $M=\tilde A$ be a bounded-degree analytic monad ($e_{\max}:=\sup_l\deg<\infty$; equivalently
+$\tilde A$ finitary), with any $M\emptyset$. If $A$ is non-flat then $\tilde A\circ\tilde A\ncong\ext
+r\circ\tilde A$ for every polynomial $\ext r$; hence closure forces $M$ polynomial.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+For $K\le\mathrm{Sym}(\Omega)$ the support-splittings ($\mathrm{supp}(K)=\bigsqcup_t C_t$ with
+$K=\prod_t K_t$, $K_t=\{k\in K:\mathrm{supp}(k)\subseteq C_t\}$) are closed under common refinement, so
+there is a unique finest one; the multiset of \emph{factor degrees} $\{|C_t|\}$ is a conjugacy
+invariant (this refines Lemma~\ref{lem:stab}). With $\ext r=\tilde B$, $B$ flat and bounded, every
+constituent of $B\bullet A$ is a Young product of $A$-stabilizers, whose support-indecomposable factors
+have degree $\le e_{\max}$. But a non-flat constituent $X^d/H$ ($H\ne1$), fed the constant colouring by
+a maximal-degree constituent $X^{e_{\max}}/H_c$, yields in $A\bullet A$ a wreath $K=(H_c)^d\rtimes H$ in
+which some $h\in H$ links two size-$e_{\max}$ blocks, producing a support-indecomposable factor of
+degree $\ge2e_{\max}$. The invariant separates: $A\bullet A\ncong B\bullet A$. This subsumes
+Theorem~\ref{thm:multiset} (for $\mathbb M$, $e_{\max}$ was there avoided by hand).
+\end{proof}
+
+Assembling the three obstructions:
+
+\begin{theorem}[Necessity, trichotomy]\label{thm:dichotomy}
+Let $M$ be a non-polynomial monad on $\Set$. The essential image of $\extM{-}$ is not closed under
+composition whenever $M$ is
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item \emph{super-polynomially growing} --- excluded by the cardinality law
+  (Proposition~\ref{prop:cardlaw}: powerset, nonempty powerset, distributions, ultrafilter,
+  continuation, filter); or
+\item \emph{analytic with $M\emptyset=\emptyset$} --- excluded by plethysm right-cancellation
+  (Theorem~\ref{thm:P}), at any degree and any nesting depth: free magmas, free operad-algebra monads;
+  or
+\item \emph{analytic of bounded degree}, any $M\emptyset$ --- excluded by the support-splitting
+  invariant (Theorem~\ref{thm:S}): the multiset and symmetric-power monads, every bounded-arity
+  finite-signature monad.
+\end{enumerate}
+The only monads not covered are analytic with $M\emptyset$ nonempty-finite, unbounded degree \emph{and}
+unbounded nesting depth.
+\end{theorem}
+
+\begin{conjecture}[The uncovered corner is vacuous]\label{conj:vacuous}
+For a finitary analytic monad ($A[n]$ finite for all $n$), $a_0=|M\emptyset|$ finite and unbounded
+nesting depth are incompatible: unbounded nesting forces arbitrarily deep balanced iterated structures,
+and a monad multiplication that builds these from a nonempty constant part substitutes closed terms
+into the leaves, generating infinitely many closed structures ($a_0=\infty$) --- outside the finitary
+hypothesis. Hence a finitary analytic monad with $a_0>0$ has bounded nesting depth and is covered by
+case \textup{(c)}; the corner of Theorem~\ref{thm:dichotomy} is empty.
+\end{conjecture}
+
+We do not claim Conjecture~\ref{conj:vacuous} as proved; it converts the last gap from an opaque
+plethysm question into a concrete tension between a nonempty finite constant part and deep free
+structure, and it explains why no known monad inhabits the corner --- each candidate either drops its
+constant part to $\emptyset$ (Theorem~\ref{thm:P}) or blows it up to $\infty$ (non-finitary, outside the
+hypothesis). Assembling sufficiency with the trichotomy:
 
 \begin{theorem}[Composition $=$ polynomiality; final form]\label{thm:3final}
 \emph{Sufficiency:} if $M$ is polynomial then the essential image of $\extM{-}$ is closed under
 composition, with $p\triangleleft_M q=p\triangleleft\ceil M\triangleleft q$
-\textup{(}Proposition~\ref{prop:suff}\textup{)}. \emph{Necessity:} every non-polynomial monad outside
-the Plethysm residual of Lemma~\ref{lem:plethysm} --- hence every monad that presently arises --- has
-image \emph{not} closed under composition \textup{(}Theorem~\ref{thm:dichotomy}\textup{)}. Thus
-``$\extM{-}$ has composition-closed image $\iff$ $M$ is polynomial'' holds for every monad that arises;
-the only obstruction to an unconditional converse is the species-theoretic Plethysm
-Lemma~\ref{lem:plethysm}, not a categorical defect of the container calculus.
+\textup{(}Proposition~\ref{prop:suff}\textup{)}. \emph{Necessity:} every non-polynomial monad in
+classes \textup{(a)--(c)} of Theorem~\ref{thm:dichotomy} --- hence every monad that arises --- has image
+\emph{not} closed under composition. Modulo the vacuity of the residual corner
+\textup{(}Conjecture~\ref{conj:vacuous}\textup{)}, ``$\extM{-}$ has composition-closed image $\iff$ $M$
+is polynomial'' is an unconditional biconditional. The earlier reliance on an unproved
+species-theoretic \emph{Plethysm Lemma} is removed: for $M\emptyset=\emptyset$ the required inequality
+$A\bullet A\ncong B\bullet A$ follows directly from right-cancellation in the cycle-index ring,
+bypassing any identification of a ``bad'' constituent.
 \end{theorem}
 
 \subsection{Independence}
@@ -836,14 +949,17 @@ explicit.
 
 Three questions remain, each precisely located.
 \begin{enumerate}[label=(\arabic*)]
-\item \textbf{The composition converse (the Plethysm Lemma~\ref{lem:plethysm}).} Does closure of the
-  essential image under $\circ$ force $M$ to be polynomial? Yes for every monad that arises
-  (Theorem~\ref{thm:dichotomy}): the cardinality law excludes the super-polynomial monads and the
-  stabilizer invariant excludes the analytic ones, the trailing-$M$ obstruction having been sharpened
-  into the exact ``no information'' statement of Proposition~\ref{prop:inert} and bypassed via the
-  retract reduction Lemma~\ref{lem:R0}. The sole residual is the species self-substitution statement of
-  Lemma~\ref{lem:plethysm}, proved for symmetric powers and open in general; closing it would make
-  Theorem~\ref{thm:3final} an unconditional biconditional.
+\item \textbf{The composition converse (the vacuous corner, Conjecture~\ref{conj:vacuous}).} Does
+  closure of the essential image under $\circ$ force $M$ to be polynomial? Yes for every monad that
+  arises (Theorem~\ref{thm:dichotomy}): the cardinality law excludes the super-polynomial monads,
+  plethysm right-cancellation (Lemma~\ref{lem:cancel}) excludes every analytic monad with
+  $M\emptyset=\emptyset$ at any nesting depth, and the support-splitting invariant excludes every
+  bounded-degree analytic monad. The trailing-$M$ obstruction was sharpened into the exact ``no
+  information'' statement of Proposition~\ref{prop:inert} at the level of limit preservation, then
+  circumvented by cancelling on the finer cycle-index invariant. The one class left uncovered ---
+  analytic, $M\emptyset$ nonempty-finite, unbounded degree and nesting depth --- is argued vacuous in
+  Conjecture~\ref{conj:vacuous}; proving that vacuity would make Theorem~\ref{thm:3final} an
+  unconditional biconditional with no side hypothesis.
 \item \textbf{Rigidity of $\D$ (Lemma~\ref{lem:Drigid}).} Full faithfulness of $\extM[\D]{-}$ is
   conditional on $\Nat(\D,\D)=\{\id\}$; the reduction of Example~\ref{ex:D} is unconditional. A clean
   proof of this rigidity fact would remove the one assumption in Theorem~\ref{thm:2}'s probabilistic
