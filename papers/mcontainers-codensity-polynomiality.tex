@@ -19,6 +19,7 @@
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{question}[theorem]{Question}
 \newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Problem}
 
 % ---- notation ----
 \newcommand{\Set}{\mathbf{Set}}
@@ -71,8 +72,9 @@ arises, via a trichotomy: super-polynomial growth is killed by a cardinality law
 with $M\emptyset=\emptyset$ is killed by \emph{right-cancellation of plethysm} in the ring of
 cycle-index series (with no bound on degree or nesting depth, so free magmas and free operad monads are
 covered); and every bounded-degree analytic monad is killed by a support-splitting stabilizer invariant.
-The only monads left uncovered are analytic with $M\emptyset$ nonempty-finite \emph{and} unbounded degree
-\emph{and} unbounded nesting depth --- a corner we argue is vacuous. The affine-plus-commutative folklore criterion is false ($\D$ is affine and
+The only monads left uncovered are analytic with $M\emptyset$ nonempty-finite \emph{and} unbounded
+nesting depth --- a corner that is \emph{inhabited} (the free commutative unital magma), where the
+converse remains open. The affine-plus-commutative folklore criterion is false ($\D$ is affine and
 commutative but does not compose; $\mathsf{Maybe}$ is neither yet does). Fullness and composition are thus governed by two independent
 Kan-theoretic invariants of $M$ that trade oppositely: probability is faithful but not composable,
 error is composable but not faithful.
@@ -203,9 +205,10 @@ with $M\emptyset=\emptyset$, and \emph{right-cancellation of plethysm} in the cy
 $M$ polynomial with no bound on degree or nesting depth (Theorem~\ref{thm:P}, covering free magmas and
 free operad monads); or $M$ is analytic of bounded degree, and a support-splitting stabilizer invariant
 separates $M\circ M$ from $\ext{r}\circ M$ (Theorem~\ref{thm:S}, subsuming the multiset and
-symmetric-power monads). The only monads uncovered are analytic with $M\emptyset$ nonempty-finite,
-unbounded degree and unbounded nesting depth, a corner argued vacuous (Conjecture~\ref{conj:vacuous});
-modulo that the theorem is an unconditional biconditional \textup(Theorem~\ref{thm:3final}\textup).
+symmetric-power monads). The only monads uncovered are analytic with $M\emptyset$ nonempty-finite
+and unbounded nesting depth, a corner that is \emph{inhabited} (Proposition~\ref{prop:corner}: the free
+commutative unital magma); there the converse is open (Problem~\ref{prob:corner}), so outside this one
+corner the theorem is a biconditional \textup(Theorem~\ref{thm:3final}\textup).
 \end{theorem}
 
 Combining the two theorems gives the punchline.
@@ -260,9 +263,10 @@ computationally verified; Theorems~\ref{thm:P} and \ref{thm:S} additionally invo
 combinatorial-species theory --- Joyal's full faithfulness of the species-to-analytic-functor embedding,
 and the identity of species substitution with plethysm of cycle-index series (Joyal;
 Bergeron--Labelle--Leroux) --- which we name as background rather than re-derive. The single class of
-monads not covered (analytic, $M\emptyset$ nonempty-finite, unbounded degree and nesting depth) is
-argued \emph{vacuous} in Conjecture~\ref{conj:vacuous}; that vacuity is the one statement we leave as a
-conjecture, marked where it occurs. Full faithfulness for $\D$ rests on a standard rigidity fact,
+monads not covered (analytic, $M\emptyset$ nonempty-finite, unbounded nesting depth) is \emph{inhabited}
+--- by the free commutative unital magma (Proposition~\ref{prop:corner}) --- and the converse there is
+genuinely open (Problem~\ref{prob:corner}); this is the one gap in the necessity direction, marked where
+it occurs. Full faithfulness for $\D$ rests on a standard rigidity fact,
 $\Nat(\D,\D)=\{\id\}$, which we isolate as Lemma~\ref{lem:Drigid} and assume rather than reprove.
 These boundaries are marked at each occurrence.
 
@@ -273,7 +277,8 @@ codensity monads. Section~\ref{sec:identify} proves Theorem~\ref{thm:1} and the 
 Section~\ref{sec:full} proves the codensity criterion (Theorem~\ref{thm:2}), works the examples, and
 explains why coproduct preservation is the wrong criterion. Section~\ref{sec:comp} proves
 Theorem~\ref{thm:3}: sufficiency, the cardinality law, the stabilizer invariant, and the plethysm
-right-cancellation that closes the analytic converse, leaving only a corner argued vacuous.
+right-cancellation that closes the analytic converse for $M\emptyset=\emptyset$, leaving one inhabited
+corner open.
 Section~\ref{sec:conc} draws the trade-off and lists open problems.
 
 \section{Preliminaries}\label{sec:prelim}
@@ -686,7 +691,7 @@ the form $\ext{r}\circ M$ for every polynomial $N$ --- then $M$ is polynomial.
 \end{lemma}
 
 We prove Lemma~\ref{lem:N} for every monad that arises in practice, reducing the sole residual to a
-single corner we argue is vacuous (Conjecture~\ref{conj:vacuous}). The frame is classical: over $\Set$,
+single corner that is inhabited (Proposition~\ref{prop:corner}) and open there (Problem~\ref{prob:corner}). The frame is classical: over $\Set$,
 \emph{$M$ is polynomial $\iff$ $M$ preserves connected limits} (wide pullbacks together with
 cofiltered limits) $\iff$ $M$ is familially representable (Carboni--Johnstone; \cite[\S1]{GambinoKock},
 \cite{NiuSpivak}). Two features cut the problem down.
@@ -886,33 +891,60 @@ composition whenever $M$ is
   invariant (Theorem~\ref{thm:S}): the multiset and symmetric-power monads, every bounded-arity
   finite-signature monad.
 \end{enumerate}
-The only monads not covered are analytic with $M\emptyset$ nonempty-finite, unbounded degree \emph{and}
-unbounded nesting depth.
+The only monads not covered are analytic with $M\emptyset$ nonempty-finite and unbounded nesting depth
+(which forces unbounded degree). This corner is \emph{inhabited} (Proposition~\ref{prop:corner}), so the
+residual is precisely $\{\,a_0>0\ \text{and unbounded nesting depth}\,\}$.
 \end{theorem}
 
-\begin{conjecture}[The uncovered corner is vacuous]\label{conj:vacuous}
-For a finitary analytic monad ($A[n]$ finite for all $n$), $a_0=|M\emptyset|$ finite and unbounded
-nesting depth are incompatible: unbounded nesting forces arbitrarily deep balanced iterated structures,
-and a monad multiplication that builds these from a nonempty constant part substitutes closed terms
-into the leaves, generating infinitely many closed structures ($a_0=\infty$) --- outside the finitary
-hypothesis. Hence a finitary analytic monad with $a_0>0$ has bounded nesting depth and is covered by
-case \textup{(c)}; the corner of Theorem~\ref{thm:dichotomy} is empty.
-\end{conjecture}
+\begin{proposition}[The uncovered corner is inhabited]\label{prop:corner}
+The residual corner of Theorem~\ref{thm:dichotomy} is \emph{nonempty}. The free commutative unital
+\textup{(}non-associative\textup{)} magma monad $U$ --- the free-algebra monad of the theory with one
+nullary operation $c$ \textup{(}a unit\textup{)} and one commutative binary operation $\mu$ subject to
+$\mu(x,c)=x$ --- is a finitary analytic monad lying in it. Its species is
+\[
+  U[0]=\{c\}\ (a_0=1),\qquad U[n]=\{\text{commutative binary trees on $n$ leaves}\},\quad
+  |U[n]|=(2n-3)!!\ (n\ge1),
+\]
+so every component is finite; the balanced $2^k$-leaf tree has stabilizer $S_2\wr\cdots\wr S_2$ \textup{(}$k$
+factors\textup{)}, giving unbounded nesting depth --- hence unbounded degree, since a depth-$k$ tower needs
+arity $\ge2^k$ --- together with $a_0=1$ nonempty-finite.
+\end{proposition}
 
-We do not claim Conjecture~\ref{conj:vacuous} as proved; it converts the last gap from an opaque
-plethysm question into a concrete tension between a nonempty finite constant part and deep free
-structure, and it explains why no known monad inhabits the corner --- each candidate either drops its
-constant part to $\emptyset$ (Theorem~\ref{thm:P}) or blows it up to $\infty$ (non-finitary, outside the
-hypothesis). Assembling sufficiency with the trichotomy:
+This refutes the earlier hope that the corner is vacuous. That vacuity sketch assumed a nonempty
+constant part, substituted into deep structure, \emph{builds} new closed deep terms and so forces
+$a_0=\infty$; but a \emph{unit} \emph{absorbs} rather than builds ($\mu(x,c)=x$). Adjoining a unit to the
+free commutative magma --- which has $a_0=0$ and is already covered by Theorem~\ref{thm:P} --- raises
+$a_0$ from $0$ to $1$ while leaving every positive-arity constituent, and hence the entire
+$S_2\wr\cdots\wr S_2$ nesting tower, untouched. So $a_0$ stays finite $(=1)$ with nesting depth still
+unbounded. The lesson is that the true axis of this corner is \emph{nesting \textup{(}wreath\textup{)}
+depth}, not degree: bounded degree implies bounded nesting depth, so a depth-based refinement of
+Theorem~\ref{thm:S} --- a conjectural bounded-nesting-depth invariant $\mathrm S'$ subsuming
+Theorem~\ref{thm:S} --- would collapse the residual to exactly $a_0>0$ with unbounded nesting depth, of
+which $U$ is the canonical inhabitant. What remains genuinely open is the fate of $U$ itself.
+
+\begin{problem}[The sharp residual corner]\label{prob:corner}
+Decide whether $U\circ U\cong\ext r\circ U$ for some polynomial container $\ext r$. A \emph{negative}
+answer closes the analytic necessity of Theorem~\ref{thm:3} as a biconditional over every finitary
+analytic monad, with $U$ the extremal case. A \emph{positive} answer would exhibit a non-polynomial
+\textup{(}non-flat, hence not preserving connected limits\textup{)} monad whose essential image is
+nonetheless closed under composition --- refuting the necessity direction inside this corner. The
+question is open: neither plethysm right-cancellation \textup{(}which needs $a_0=0$\textup{)} nor the
+support-splitting degree gap \textup{(}which needs bounded degree, hence bounded nesting depth\textup{)}
+reaches it.
+\end{problem}
+
+Assembling sufficiency with the trichotomy:
 
 \begin{theorem}[Composition $=$ polynomiality; final form]\label{thm:3final}
 \emph{Sufficiency:} if $M$ is polynomial then the essential image of $\extM{-}$ is closed under
 composition, with $p\triangleleft_M q=p\triangleleft\ceil M\triangleleft q$
 \textup{(}Proposition~\ref{prop:suff}\textup{)}. \emph{Necessity:} every non-polynomial monad in
-classes \textup{(a)--(c)} of Theorem~\ref{thm:dichotomy} --- hence every monad that arises --- has image
-\emph{not} closed under composition. Modulo the vacuity of the residual corner
-\textup{(}Conjecture~\ref{conj:vacuous}\textup{)}, ``$\extM{-}$ has composition-closed image $\iff$ $M$
-is polynomial'' is an unconditional biconditional. The earlier reliance on an unproved
+classes \textup{(a)--(c)} of Theorem~\ref{thm:dichotomy} --- hence every monad that arises in practice
+--- has image \emph{not} closed under composition. The sole exception is the corner $\{a_0>0$, unbounded
+nesting depth$\}$, which is \emph{inhabited} \textup{(}Proposition~\ref{prop:corner}, the free
+commutative unital magma $U$\textup{)}; there necessity is open \textup{(}Problem~\ref{prob:corner}\textup{)}.
+Thus ``$\extM{-}$ has composition-closed image $\iff$ $M$ is polynomial'' is a proved sufficiency
+together with a biconditional for every monad outside that one corner. The earlier reliance on an unproved
 species-theoretic \emph{Plethysm Lemma} is removed: for $M\emptyset=\emptyset$ the required inequality
 $A\bullet A\ncong B\bullet A$ follows directly from right-cancellation in the cycle-index ring,
 bypassing any identification of a ``bad'' constituent.
@@ -949,7 +981,7 @@ explicit.
 
 Three questions remain, each precisely located.
 \begin{enumerate}[label=(\arabic*)]
-\item \textbf{The composition converse (the vacuous corner, Conjecture~\ref{conj:vacuous}).} Does
+\item \textbf{The composition converse (the inhabited corner, Problem~\ref{prob:corner}).} Does
   closure of the essential image under $\circ$ force $M$ to be polynomial? Yes for every monad that
   arises (Theorem~\ref{thm:dichotomy}): the cardinality law excludes the super-polynomial monads,
   plethysm right-cancellation (Lemma~\ref{lem:cancel}) excludes every analytic monad with
@@ -957,9 +989,10 @@ Three questions remain, each precisely located.
   bounded-degree analytic monad. The trailing-$M$ obstruction was sharpened into the exact ``no
   information'' statement of Proposition~\ref{prop:inert} at the level of limit preservation, then
   circumvented by cancelling on the finer cycle-index invariant. The one class left uncovered ---
-  analytic, $M\emptyset$ nonempty-finite, unbounded degree and nesting depth --- is argued vacuous in
-  Conjecture~\ref{conj:vacuous}; proving that vacuity would make Theorem~\ref{thm:3final} an
-  unconditional biconditional with no side hypothesis.
+  analytic, $M\emptyset$ nonempty-finite, unbounded nesting depth --- is \emph{inhabited} by the free
+  commutative unital magma $U$ (Proposition~\ref{prop:corner}); the true axis there is nesting depth, not
+  degree. Deciding whether $U\circ U\cong\ext r\circ U$ (Problem~\ref{prob:corner}) would either complete
+  the biconditional or exhibit a non-polynomial counterexample with composition-closed image.
 \item \textbf{Rigidity of $\D$ (Lemma~\ref{lem:Drigid}).} Full faithfulness of $\extM[\D]{-}$ is
   conditional on $\Nat(\D,\D)=\{\id\}$; the reduction of Example~\ref{ex:D} is unconditional. A clean
   proof of this rigidity fact would remove the one assumption in Theorem~\ref{thm:2}'s probabilistic
