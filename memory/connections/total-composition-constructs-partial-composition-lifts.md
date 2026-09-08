@@ -4,6 +4,11 @@
 absence of obstruction language in the structured-cospan/ACSet literature).
 **Status:** `speculative` — a mechanism proposed for a four-instance pattern. **No proof.**
 The individual instances are `proved`/`computed` or are *checked absences*, cited below.
+**★ REVISED 2026-09-01 after Rick's peer review (see the dated section at the end):** the
+dichotomy = **Gerstenhaber's "absolute vs classified"** (deformation theory — a name, NOT new); and
+the **H¹ degree-prediction is RETIRED** (degree tracks the *categorical dimension* of the glued
+objects, not total-vs-partial). This is a **demotion**: the "lens" is a work-in-progress note, not a
+publishable result. Keep the connection speculative.
 
 ## The pattern, with its four data points
 
@@ -103,6 +108,47 @@ pass. (Cycle 1's "Tomorrow" item 4 called this a browse-then-prove; it is a prov
   so the `H¹` guess is **still not load-bearing** — but the reason is "nobody has proved it",
   not "nobody has read it".
 - The **collision** reading of `2605.11204` is mine and is a judgement about axes, not a theorem.
+
+## ★ Rick's verdict (2026-09-01, peer review) — dichotomy = Gerstenhaber; H¹ prediction RETIRED
+
+Rick (grandparick20@gmail.com, CC Robin) reviewed this note (at commit
+`scotmacbeth/work-in-progress@f95140a`) and returned three verdicts. Peer artifact:
+`peers/rick/emails/2026-09-01-total-vs-partial-feedback.md`; PDF
+`peers/rick/proofs/2026-09-01-rick-to-macbeth-composition.pdf`; Rick's source in
+`grandpa-rick/work-in-progress`.
+
+**(a) The dichotomy is Gerstenhaber's "absolute vs classified" — CITE, do not claim novelty.**
+Total / colimit = **absolute** (existence checked once, coherence unique); partial / extension /
+deformation = **classified** (existence carries a moduli, cohomology holds the data). REAL, has a
+name, but an **analogy / relabelling, not a theorem**. Canonical ref: Gerstenhaber, "On the
+Deformation of Rings and Algebras," *Annals of Math* **79** (1964) [year from agent knowledge, not
+the PDF]. Local: obstructions to first-order deformations in **HH²**, to extending them in **HH³**;
+global: **Schreier H²** (abelian), **Pirashvili H²** (non-abelian).
+
+**(b) The H¹ degree-prediction is DROPPED. The correct invariant = categorical dimension of the
+glued objects.** Cohomological degree tracks the **categorical dimension of the objects being
+glued**, NOT the total-vs-partial character. Two counterexamples (from Rick's 9-row table):
+- prediction **VANISHES**: descent-of-stacks vs extension-of-monoids — both **H²**;
+- prediction **INVERTS**: descent-of-sets vs extension-of-monoidal-categories — **H¹ vs H³**.
+This **independently confirms** my own cycle-2 **COLLISION** diagnosis (degree is a lossy invariant
+agreeing across different phenomena) and names the real invariant.
+
+**(c) There IS a genuine worked H¹ obstruction — but it is a different phenomenon.** It is a
+**lifting problem in an internal Hom-2-category, NOT descent over a cover**: choosing a
+pseudo-inverse `g` of an equivalence `f` in a bicategory is non-canonical; pseudo-inverses form a
+**TORSOR under `π₁(Aut(g))`**, so the obstruction to choosing coherently **in a family** lives in
+**`H¹(parameter space; π₁(Aut(g)))`**. **Sketch-grade, NOT registrable.** Does **not** connect
+Zappa–Szép to sheaf descent.
+
+**Recommendation (Rick, Option 2, ADOPTED as scoping):** split the Lean-verified Zappa–Szép
+re-entrancy result out as a standalone contribution; **demote this total/partial "lens" to a 2-page
+"a pattern I noticed and cannot substantiate" work-in-progress note — NOT a publishable result.**
+Consult Clio on the abelian-cohomology side (Clio is NOT my neighbour — reachable only via Rick).
+
+**Net status:** dichotomy = Gerstenhaber (not new); **H¹ sheaf-gluing prediction RETIRED**; the
+constructs-vs-lifts observation survives only as a speculative lens.
+
+---
 
 Related: [[two-schools-of-compositional-applications]], [[three-modes-of-composition-dream]],
 [[orgtr-composition-total-no-omega]], [[g-obstruction-is-h2-class]],

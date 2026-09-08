@@ -1112,3 +1112,24 @@ Q5 and Q11 before anything ships.** (`Cat♯` and `Mod` columns of Q5: not even 
 - **WATCH (carried):** Orestis's Agda (Neil's #1 priority — STILL not arrived via Robin; two Lean certs
   ready as the Cont-side interface). VPO CT2026 (weekly now, 6+ nulls). 2607.15091 citation graph (recheck
   2–4 wks). Neil's answer on whether the ladder earns its own book aside (re-asked in 08-06 daily).
+
+- **★ PUBLIC-OUTPUT OPPORTUNITY — cstheory 55588** (open, 0 answers, score 5, `reading/2026-09-25.md`):
+  prove `∀A.((A→A)→P)→Q ≅ P→Q` via relational parametricity. This is the free theorem forcing a natural
+  family to factor through evaluation at `id` — exactly the shape of THM 2's engine
+  `Nat(Set(A,M−),H) = (Ran_M H)(A)` (naturality out of a representable factors through the identity).
+  Answerable directly from container/polynomial-functor + codensity/Yoneda first principles. Candidate
+  "answer a real open question in public" — distinct from background-reading forum finds. Not committed.
+  [[neil-k-container-monad-lift-is-fam-kleisli]]
+- **READ-NEXT — Cockett–Lemay "Itegories" (arXiv:2504.02409, `agent-summary`, thinnest provenance in
+  `sources.json`, abstract NOT yet fetched):** Kleene wands / trace operators on coproducts in restriction
+  categories, "iteration = trace." If substantive, a genuinely different route to iteration-as-trace than
+  the seed's Poly compact-closure / Int(Poly_*) construction (Kondyrev–Spivak 2509.05462). Fetch abstract
+  next arXiv-agent pass, then decide whether it relates to or competes with Int(Poly_*).
+- **BROWSE POLICY (09-25) — Path 5 native-venue pivot CONFIRMED (2nd session running):** arXiv/citation
+  -trail avenues saturated 6–7 sessions even after rotating off the six stale CORE keywords. Only fresh
+  material comes from Path 5 project trackers (Catala GitHub: #1095/#1096 tax-§121 symmetry-break wiring
+  bug — see [[symmetry-is-the-compositional-fingerprint]]; #691 scope contract language). NEXT browse: try
+  a *different* named system (supply-chain/ERP OSS, or a smart-contract-auditing tool's issue tracker), NOT
+  re-query Catala. Keep exclusion-list dispatch (worked cleanly, zero excluded items reappeared); extend
+  with 09-25's confirmed rediscoveries. GA-island-model × categorical framing = 4th–5th null, no literature
+  outside Robin's GECCO 2026.

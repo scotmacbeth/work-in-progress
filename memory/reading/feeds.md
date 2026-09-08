@@ -1,6 +1,432 @@
 # Browse Feeds
 
-Sources worth tracking each session. Updated 2026-09-08.
+Sources worth tracking each session. Updated 2026-09-23.
+
+## Session 2026-09-23 — total-dedup session, zero new finds survive cross-check: every item all
+four agents returned (codensity+effect-handler-composability, internal-category+comonad,
+Lean/Mathlib polynomial functors, AI-agent-orchestration frontier) was already in `sources.json`,
+several for the 4th-6th time (Garner-Renata-Wu "Stone Duality for Monads" 2603.25710 now a
+confirmed 6th recurrence of the identical citation-trail dedup miss). Notably, the arXiv agent's
+first pass independently reran what is essentially the *same* browse session as 2026-09-21 (same
+core/near/frontier keyword shape) and got the same four papers back believing them new — dedup
+misses are now recurring across **agent type**, not just across session. **Recommend retiring
+"codensity monad," "comonad," "internal category," "directed container," "plethysm," and
+"polynomial comonoid" as CORE-slot keywords for the next 3-4 sessions** — six consecutive sessions
+(09-16 through 09-23) confirm Path 3/2 saturated against every angle tried, including the
+Lean/Mathlib and agent-orchestration pivots recommended by three straight prior sessions, which
+also returned nothing new this time. One unresolved candidate genuine find (not yet dedup-checked):
+Topos Institute blog "Poly-morphic effect handlers" (2024-01-03) — check first next cycle. Full
+detail `reading/2026-09-23.md`.
+
+### Action item carried forward
+Give the next browse's agent dispatch prompts a literal ID exclusion list (built from this
+session's dedup table) instead of relying on each agent's own self-assessment of novelty — that
+self-assessment failed on 100% of this session's "new" claims.
+
+
+## Session 2026-09-20 — keywords keyed directly to the live Lemma N PROVE crux rather than a fresh SEED sweep; headline is a NEGATIVE result across three independent modalities (arXiv full-text, general web, and a first-ever reverse-citation audit of Carboni-Johnstone 1995 itself): nobody in the literature attacks "M∘M polynomial ⟹ M polynomial" — Lemma N needs an original proof, stop re-searching it. Also: codensity vocabulary is newly active in the PL/effects literature (Kura 2602.03275, dicodensity 2510.06777, STACS26 duality paper) but none of it touches effect-handler composability specifically — fresh unclaimed territory adjacent to MacBeth's own THM 2. Weber TAC 2007 citation trail hits its 4th consecutive negative audit — recommend retiring from rotation. One concrete actionable lead surfaced for the dormant Workers front (cstheory:56966, Plotkin-Power state-monad algebras). Full detail `reading/2026-09-20.md`.
+
+### New sources worth tracking
+- **arXiv:2602.03275** (Kura, "On Complete Categorical Semantics for Effect Handlers") — free monads
+  on polynomial functors are λeff-models (Prop 5.3); no codensity, handler composition left open.
+- **arXiv:2510.06777** ("Strong Dinatural Transformations and Generalised Codensity Monads") —
+  dicodensity monads via CPS/System-F; codensity vocabulary genuinely new to MacBeth's memory.
+- **STACS 2026 LIPIcs "Demystifying Codensity Monads via Duality"** (Lenke-Wittrock-Milius-Urbat) —
+  codensity = density + duality theorem, recovers ultrafilter/filter/Vietoris/probability monads.
+- **MO 511702** ("Who first constructed the free monoid in a topos?", unanswered) — historical
+  attribution chase on Σ_n X^n, directly on the familial-representability citation vocabulary.
+- **cstheory 56966** ("Algebras for the state monad and lenses") — Plotkin-Power characterization on
+  exactly the G=PE/T=EP machinery behind `workers-graded-category-proved.md`.
+- **arXiv:2503.04317** ("Grothendieck topoi with a left adjoint³ to global sections", Proc. AMS 2025)
+  — flagged, not yet abstract-checked (S2 rate limit) — thematically closest live Carboni-Johnstone
+  citer, follow up next citation-trail session.
+
+### Retired / deprioritized
+- **Weber TAC 18 (2007)** citation trail — 4th consecutive negative audit, recommend dropping from
+  rotation entirely.
+- **Lemma N literature search** ("M∘M polynomial ⟹ M polynomial") — exhausted across arXiv/web/
+  citation-trail-of-source-theorem; don't re-run this exact search cluster again.
+
+## Session 2026-09-19 — deliberate pivot off mined-out Path 3 (Poly/comonad) toward Path 1/2/4/5/6; two real arXiv finds (an industrial reentrancy-verification paper with ZERO categorical machinery — a provocative contrast to MacBeth's own [ω]=ε account — and a π-clan polynomial-functor paper one admissibility-level up from Gap 1); four community threads (two open MO questions with direct on-theme lemma gaps); confirms Catala/GA-topology/smart-contract-as-coalgebra are genuine literature gaps, not just unsearched; citation trails show NO organic migration into the grant's application domains across three anchor papers — worth flagging before any grant text claims existing momentum. Also: found a working Stack-Exchange-API-via-curl fallback for the previously "unusable" MathOverflow/cstheory slot.
+
+**New sources**, full detail `reading/2026-09-19.md`:
+- **arXiv:2606.01794** (Iskander, 2026) — Lean 4 proof of OpenZeppelin reentrancy guard vs
+  production Solidity (DAO/Compound/Aave), pure proof-conjunction, no distributive law/coalgebra
+  anywhere. Contrast case for `lean-reentrancy-omega-equals-epsilon.md` — flag to Neil.
+- **arXiv:2602.05689** (Hua-Xu) — already tracked at abstract-level since 07-20, now upgraded to
+  full-text read; π-clans as a weaker-than-LCC ambient category for polynomial functors.
+- **MO 513311** (variety ≅ dual of covariety? open converse to Linton-Paré) and **MO 512584**
+  (parametrized initial algebras, pointwise vs global, open direction matches the O'Neill
+  free-monad lemma shape) — both open, both on-theme, both unanswered as of this session.
+- **cstheory 57240** (Seely→CCC naturality fix, cites 2026 "duploids" paper) — lemma source for
+  `poly-three-closed-structures.md`.
+- **Żychowski-Yao-Mańdziuk GECCO 2025** (diversity-driven island-model portfolio) — fresh concrete
+  migration-topology instance for the ga-containers ZS-weld account.
+- nLab "bicrossed product" diff-checked: substantive edit was 2025-01-05 (Corfield, group-level
+  bicrossed = distributive law dictionary entry), not the 2025-10-10 edit (minor query-box removal;
+  algebra-level case still an open gap on the page).
+
+### Confirmed literature gaps (checked, not just unsearched)
+Smart-contract composability as coalgebra/distributive-law: zero hits anywhere (arXiv, MO,
+cstheory, ethereum.SE, blogs) across this session's four independent agents — a real, persistent
+gap. Catala/compositional legal-tax semantics: zero forum discussion, no 2025-2026 arXiv successor
+with genuine compositional content. GA island-model/categorical evolutionary computation: zero
+forum discussion; arXiv/web work stays purely engineering (migration topology as a design choice,
+not a categorical structure).
+
+### Infrastructure
+- `mcp__research__arxiv_*` HTTP 301 bug reconfirmed a **fourth** time (07-14, 07-16 x2, now
+  09-19) — real bug not transient; WebSearch+WebFetch fallback remains the default.
+- Semantic Scholar `/paper/search` still 429s fleet-wide; `/paper/{id}/citations`+`/references` by
+  known ID continue to work — use ID lookups, avoid search.
+- **MathOverflow/cstheory/nForum via WebFetch/WebSearch blocked again (403s)** — but the
+  **public Stack Exchange API answers directly to `curl`** (Bash has unrestricted internet
+  access). This should replace the prior "community forum slot unusable" verdict — future
+  community agents should try SE-API-via-curl first for MO/cstheory/cs.SE targets.
+- Playwright: browser profile locked by a concurrent session this cycle (new failure mode,
+  probably transient — not re-flagging unless it recurs).
+
+## Session 2026-09-18 — near-total dedup session: every substantial paper all four agents returned (Spivak's reshaping-interfaces paper, Comonads as Spaces, Kun Chen's infinity-groupoid paper, Purdy-Damato monadic distributive laws, Categories by Kan extension, Stone Duality for Monads, Directed Containers as Categories, Trlifaj flat-ML survey) was already deep-read in sources.json since June-September; three genuinely new MathOverflow threads found (Brandenburg row-finite-matrix epimorphism splitting — technical parallel to THM F; two tangential Whitehead-problem-adjacent threads); citation-trail agent added a fourth independent negative signal that the Trlifaj flat-Mittag-Leffler literature lead has zero real uptake, closing the literature-search avenue for the (Q) crux for now
+
+Four agents (arXiv/community/web/citations). Keyed to: core {flat Mittag-Leffler modules /
+Eklof-Mekler / Whitehead problem — live (Q) crux support}, core {polynomial comonoid / directed
+container / Zappa-Szép product / distributive law}, near {coinductive polynomial trees /
+reshaping interfaces, Spivak 2026}, frontier {density comonads vs polynomial comonads; fresh
+independent check of categorical multi-agent orchestration}. **Headline — this was almost
+entirely a dedup session, and that is itself the finding.** Cross-checking every "new find"
+against `sources.json` before trusting it caught 100% of the false positives — all four agents
+independently rediscovered material already `deep-read` from reading logs going back to
+2026-06-09. Lesson: **before generating browse keywords, grep `sources.json` for the candidate
+keyword first** — Path 3 (Poly/comonad/density-comonad) is heavily mined; next session should
+shift toward Path 4/5 application domains or Path 6 Lean-technique searches instead. Genuinely
+new: three MathOverflow threads (Brandenburg's row-finite-matrix epimorphism-splitting proof,
+MO 139493, a real technical parallel to THM F's finite-row-support criterion, though still in
+Z-Mod not the field case), and citation-trail confirmation that Trlifaj's flat-ML survey has
+essentially zero citation uptake — a fourth negative signal that the (Q) crux's next move must
+be a direct PROVE attempt, not further literature search. Full details `reading/2026-09-18.md`.
+
+### New sources worth tracking
+- **Brandenburg, MO 139493, "Epimorphisms Z^N -> Z^N are split"** (2013) — row-finite matrix
+  triangularization technique, compare against THM F / the Ext^1 approach next PROVE session.
+- MO 392327 ("Uncountable counterexamples in algebra") and MO 103781 ("Does Mittag-Lefflerness
+  descend?") — both tangential, filed at agent-summary level, low priority.
+
+## Session 2026-09-17 — the flagged "new" general-base directed-containers paper (2305.00167) turned out to be a dedup near-miss, already deep-read since July; the strongest actual find is classical (Nunke 1961 slender-groups Ext¹ computation) corroborating the Conj 6.2 independence conjecture; Trlifaj/Eklof-Mekler flat-Mittag-Leffler modules is a genuinely new technique reframing for the (Q) crux; Cat-case/Cont(Cont) frontier confirmed empty at arXiv+MO+blog level, not just unpublished
+
+Four agents (arXiv/community/web/citations). Keyed to: core {projective objects in Add(Vec,Vec) /
+Baer-Specker for fields (live PROVE crux), extensive categories/connected components (Xarez
+follow-up, 2207.05702)}, near {directed containers over a general base, Path 2}, frontier
+{Cat-case sketch + Cont(Cont) self-application, per Neil's UID 144 steer}. **Headline — a dedup
+catch, not a discovery**: the arXiv agent flagged arXiv:2305.00167 ("Structures on Categories of
+Polynomials," Shapiro-Spivak) as a possible new hit for the general-base directed-containers
+thread; cross-checked against `cat-hash-is-dcont-cof.md` and found it's already deep-read
+(extraction: verified-quote) as [SS23], the *foundational* Cat# paper, since 2026-07-14. No action
+taken — logged so this near-miss doesn't recur. **Headline 2 — real classical corroboration for
+the independence conjecture**: MathOverflow (Nunke 1961, "Slender groups," Bull. AMS) proves
+Ext¹(prod_N Z, Z) is enormous and non-canonical (2^continuum-sized, Q and Q/Z summands) — the
+classical abelian-group shadow of exactly the Ext¹(Q,F_fin) obstruction MacBeth's own THM C (Cor
+B, 2026-09-03 PROVE) landed on. Strengthens rather than merely supports the "Conj 6.2 likely
+independent of ZFC" read; cite Nunke + Fuchs Vol II Section 99 directly in the eventual writeup.
+**Headline 3 — a genuinely new technique direction**: Trlifaj's survey (arXiv:2303.12549) points
+to Eklof-Mekler "flat Mittag-Leffler" / "1-projective" modules as the correct infinite-dimensional
+replacement for "projective" — recommend reframing the (Q) crux in these terms next PROVE session,
+rather than continuing to hunt for a literal field-level Baer-Specker paper (confirmed this session
+not to exist anywhere on arXiv or in accessible expository literature — genuinely novel territory).
+**Headline 4 — Cat-case/Cont(Cont) frontier confirmed empty at every level**: arXiv, MathOverflow,
+and nLab/blog searches independently found zero treatment of "categories as positions" self-
+application or literal "Cont(Cont)." Best raw material for the eventual Cat-case sketch remains
+Spivak's "Functorial Aggregation" (2111.10968, already known, reread today through that lens).
+Full details `reading/2026-09-17.md`.
+
+### New sources worth tracking
+- **Nunke, "Slender groups"** (Bull. AMS, 1961) + **Fuchs, *Infinite Abelian Groups* Vol. II
+  Section 99** — classical Ext¹(prod Z, Z) computation, cite directly for the Conj 6.2 independence
+  writeup.
+- **Trlifaj, "Flat Mittag-Leffler modules..."** (arXiv:2303.12549, 2023) — Eklof-Mekler
+  flat-ML/1-projective framework, recommended next reframing for the (Q) crux.
+- **Xarez, "Very-Well-Behaved Epireflections for Categories of Models of Sketches"**
+  (arXiv:2509.07241, 2025) — his newest paper continuing the stable-units line; low priority unless
+  sketches/presheaf reflections become relevant.
+- **Ma, Yang, "Model structures on the category of Q-shaped modules"** (arXiv:2608.29267, 2026) —
+  sole reverse-citer of 2407.04012; general (not confirmed Hom-finite) preadditive index category
+  Q; body-level check owed if this thread stays live.
+- **2207.05702 now deep-read** (was title-only) — confirmed non-overlapping with
+  π₀-multiplicativity; complementary "unique connected decomposition" result only.
+
+## Session 2026-09-16 — the two 09-14 technique leads both upgraded to deep-read via full text + citation trails: Xarez 1112.4277's stable-units theorem is now CONFIRMED verbatim MacBeth's π₀-multiplicativity criterion (still terminology-collision, not prior art, per the 09-03 verdict) but is essentially uncited in 15 years; 2407.04012's own reference list stays entirely Hom-finite, a real negative signal it may not reach the live Conj 6.2 infinite-index wall; nLab "connected object" page supplies a citable abstract hypothesis-list shortcut for π₀-multiplicativity; two new categorical-ML surveys found; frontier sweep reconfirms multi-agent-orchestration-as-CT is genuinely unclaimed territory
+
+Four agents (arXiv/community/web/citations). Keyed to: core {π₀-multiplicativity/admissibility/
+extensive categories (Front A, direct Xarez follow-up), polynomial comonoid/directed containers/
+Zappa-Szép/agent orchestration}, near {projective/injective objects in Add(Vec,Vec), stalk
+functors, Baer-Specker over fields — live PROVE crux support}, frontier {categorical deep
+learning/polynomial-functor architectures, multi-agent orchestration as CT}. **Headline — both
+09-14 technique leads got real theorem-level/reference-level treatment, with genuinely different
+verdicts.** Xarez `1112.4277`: full text now pulled (Thm 4.1 semi-left-exactness, Thm 5.1 stable
+units), **confirming** Thm 5.1's "finite products of connected components stay connected" is
+verbatim MacBeth's own π₀-multiplicativity criterion — firms up, does not change, the 09-03
+cite-as-related verdict. Citation trail: exactly ONE reverse citation in 15 years (Xarez's own
+2012 follow-up, no arXiv ID), zero 2025/26 citers — an obscure, essentially uncited corner,
+useful context for how the grant should frame novelty. Three new hub papers surfaced from its
+reference list (Carboni-Janelidze-Kelly-Paré 1997, Cassidy-Hébert-Kelly 1985, Janelidze-Laan-
+Márki 2008), all added reference-only. **`2407.04012`**: Thm 6.5 (stalk-functor orthogonality)
+and Thm 3.1 pulled in full; confirmed no direct `Add(Vec,Vec)` treatment. Its own reference list
+(Buehler, Hovey, Gillespie, Holm-Jørgensen) stays entirely Hom-finite/locally-bounded — a genuine
+negative signal that the technique may not transfer to the non-Hom-finite infinite-index Conj 6.2
+setting, echoing the 09-03 WAKE's rejection of the triangularity hypotheses. Sole reverse citer:
+Ma & Yang 2026 "Model structures on Q-shaped modules" (too new to have an abstract yet).
+**Headline 2 — a genuinely actionable new tool**: nLab "connected object" (rev. 2026-03-09)
+states an abstract sufficient-condition theorem for π₀-multiplicativity (cocomplete ∞-extensive +
+finite products + terminal-separating morphisms + epi-preserving products ⟹ finite products of
+connected objects connected) — directly checkable against the standing trichotomy bases instead
+of re-deriving case by case; paired with nLab "semi-left-exact reflection" for the Galois-
+admissibility hierarchy skeleton. **Headline 3 — two new categorical-ML surveys** (Jia-Peng-Yang-
+Chen `2408.14014`, Crescenzi `2410.05353`), both abstract-level, map the Frontier "categorical
+deep learning" landscape but show no polynomial-functor/container vocabulary in the fetched
+excerpts. **Headline 4 — frontier sweep reconfirms green field**: community agent's search of
+current multi-agent/LLM orchestration industry discourse found zero category-theoretic framing
+anywhere — `orchestration-is-zappa-szep-weld` remains genuinely unclaimed, not merely unsearched.
+**Standing items**: all four dormant MO/Zulip threads (461865, 296319, 365271, power-grid)
+unchanged; MathOverflow still only reachable via the Stack Exchange API fallback, direct
+WebFetch/WebSearch of mathoverflow.net confirmed still blocked. Full details `reading/2026-09-16.md`.
+
+### New sources worth tracking
+- **nLab "connected object"** (rev. 2026-03-09) — abstract sufficient-condition theorem for
+  π₀-multiplicativity; run the standing trichotomy bases through its hypothesis list.
+- **nLab "semi-left-exact reflection"** — categorical-Galois-theory hierarchy skeleton for the
+  Xarez vocabulary-bridge note.
+- **Carboni-Janelidze-Kelly-Paré 1997, Cassidy-Hébert-Kelly 1985, Janelidze-Laan-Márki 2008** —
+  hub papers for the stable-units/admissible-reflection lineage, reference-only, unread.
+- **Jia, Peng, Yang, Chen, "Category-Theoretical and Topos-Theoretical Frameworks in ML: A
+  Survey"** (arXiv:2408.14014) — abstract-level; Frontier landscape map.
+- **Crescenzi, "Towards a Categorical Foundation of Deep Learning: A Survey"**
+  (arXiv:2410.05353) — abstract-level; lower priority.
+- **arXiv:2207.05702 "Locally-finite extensive categories, their semi-rings, and decomposition to
+  connected objects"** — title-only, Core-A-adjacent, unread, next arXiv-facing session.
+- **Wild Topology blog, "The Baer-Specker Group"** (2014) — elementary non-freeness proof,
+  simpler companion to the Schröer AMM note for the Conj 6.2 no-exotic-Specker front.
+
+## Session 2026-09-14 — best find is Xarez 2011 "stable units ⟺ π₀ preserves finite products", a possible 15-year-old prior-art echo of the just-completed admissibility characterization, flagged not resolved; a genuinely useful homological-algebra lead (stalk-functor intrinsic projectivity criterion in Add(A,R-Mod)) landed directly on the live Conj 6.2 crux; Lamiaux et al. QPF-adjacent paper upgraded from citer-metadata to real abstract by three independent agents; two more dedup misses caught clean (Coco, Garner-Renata-Wu 5th recurrence)
+
+Four agents (arXiv/community/web/citations). Keyed to: core {Lamiaux-Forster-Sozeau-Tabareau "Nested
+Inductive Types" (Path 6, queued since 09-12), π₀-multiplicativity/extensive categories (Front A,
+post-characterization)}, near {graded monad/composition-product via polynomial functors, queued Hedges
+compare-pass territory}, frontier {projective objects in additive/functor categories, feeding the live
+PROVE crux — is F=∏_ℕ∘⊕_ℕ projective in Add(Vec,Vec)?}. **Headline — a possible independent-discovery
+collision on the just-proved π₀ characterization**: J.J. Xarez, "Admissibility, stable units and
+connected components" (arXiv:1112.4277, 2011, categorical Galois theory) proves a reflection has
+**stable units iff any finite product of connected components is connected** — read verbatim, this is
+MacBeth's own π₀-multiplicativity criterion for ◁-admissibility, under Janelidze's different sense of
+"admissible." NOT YET RESOLVED whether this is real prior art or only a structural echo — flagged for a
+full read before the admissibility paper cites (or fails to cite) it. **Headline 2 — a genuine technique
+lead for the live PROVE crux**: "Transfer of homological objects in exact categories via adjoint triples.
+Applications to functor categories" (arXiv:2407.04012, 2024) builds an intrinsic (non-Yoneda) projectivity
+criterion via "stalk functors" directly in `Add(A,R-Mod)`-shaped categories — `A=Vec`, `R=k` is exactly
+Conjecture 6.2's setting. Paired with a web-agent find (Schröer's expository Baer-Specker-group note,
+citing Kaplansky 1958 "Projective modules" for the classical splitting-off technique) — two independent,
+unread technique leads now in hand for "is F=∏_ℕ∘⊕_ℕ projective?" **Headline 3 — Lamiaux et al. upgraded
+in depth, not breadth**: three agents (arXiv, web, citation-trail) independently converged on the same
+POPL26/HAL/Semantic-Scholar abstract text for "Nested Inductive Types..." (DOI 10.1145/3808322),
+upgrading the sources.json entry from citer-metadata-only (09-12) to a real abstract — still no arXiv ID,
+HAL PDF bot-blocked. **Headline 4 — dedup discipline held**: Kim-Nam-Hur "Coco" (2511.21093, already
+deep-read) and Garner-Renata-Wu "Stone Duality for Monads" (2603.25710, **5th recurrence** of the same
+citation-trail-agent dedup miss) were both caught at synthesis before any duplicate write. MathOverflow
+remained fully unreachable via WebFetch this session (all four standing MO questions unverified, not
+confirmed dormant). Full details `reading/2026-09-14.md`.
+
+### New sources worth tracking
+- **Xarez, "Admissibility, stable units and connected components"** (arXiv:1112.4277, 2011) — possible
+  15-year prior-art echo of the π₀-multiplicativity admissibility criterion; unresolved, top read-next.
+- **"Transfer of homological objects in exact categories via adjoint triples. Applications to functor
+  categories"** (arXiv:2407.04012, 2024) — intrinsic projectivity criterion in `Add(A,R-Mod)` via stalk
+  functors; best single technique lead for Conj 6.2; top read-next for the next PROVE session.
+- **"Gorenstein projective objects in functor categories"** (arXiv:1801.05493, 2018) — same genre,
+  secondary/technique-adjacent (Gorenstein-projective, Hom-finite hypothesis Vec may not satisfy).
+- **Schröer, "Baer's Result: The Infinite Product of the Integers Has No Basis"** (expository PDF,
+  non-arXiv) — classical splitting-off/divisor-counting technique, cites Kaplansky 1958; pull Kaplansky
+  itself next.
+
+## Session 2026-09-12 — the 09-11 DOI "correction" was itself wrong (fixed back to article 6); Ahman-Kammar-Møgelberg LICS 2026 upgraded to a genuine deep-read; four new QPF reverse-citers found via the correct DOI, one high-relevance (Lean/Rocq nested inductive types); otherwise a quiet session confirming most standing fronts unchanged
+
+Four agents (arXiv/community/web/citations). Keyed to: core {QPF/Lean formalisation (Path 6),
+extensive category + distributive law + π₀-multiplicativity (Front A, post-characterization)},
+near {family fibration + dependently-typed probability (Front D, Ahman-Kammar-Møgelberg LICS 2026)},
+frontier {Girard dilator × QPF, the unclaimed bridge}. **Headline — a correction needed correcting**:
+the 09-11 session's DOI fix for the Avigad-Carneiro-Hudon QPF paper (article 6 → article 17) was
+itself wrong — article 17 of ITP 2019 is an unrelated Forster & Kunze paper. Caught by the
+citation-trail agent via OpenAlex and independently re-verified by MacBeth via direct WebFetch of
+both DROPS entity pages before editing `sources.json`. Fixed back to article 6
+(`10.4230/LIPIcs.ITP.2019.6`); the deep-read technical content from 09-11 was genuine and stands,
+only the key was wrong for one session. Consequence: 09-11's "reverse citations of the QPF paper"
+were pulled against the wrong DOI and are discarded (they were citers of the Forster-Kunze paper).
+**Headline 2 — Ahman-Kammar-Møgelberg (LICS 2026, quasi-Borel families on the family fibration)
+upgraded from abstract-only to deep-read**: two agents independently fetched and read the full DROPS
+PDF (still no arXiv preprint). Confirms zero container/polynomial-functor vocabulary; this is now
+the standing comparison point if Front D reopens. **Headline 3 — four new QPF reverse-citers found
+against the correct DOI**: Lamiaux-Forster-Sozeau-Tabareau "Nested Inductive Types..." (2026,
+PACMPL/OOPSLA) is high-relevance top-read-next for Path 6; the other three (Isabelle BNF-quotients
+sibling, matching-logic, non-well-founded-deduction) are lower-priority completeness citations.
+**Headline 4 — mostly quiet elsewhere**: one new MathOverflow thread (514525, coequalizers in
+extensive categories — background texture for Front A, not directly on π₀); both QPF Zulip threads
+unchanged; the dilator↔QPF literature gap confirmed empty a third session running, looks genuinely
+open rather than a search-coverage miss; QpfTypes repo dormant beyond toolchain bumps; Hedges has
+posted nothing new; all four standing dormant MO questions unchanged. **Process note**: this is the
+first session where a prior *correction* itself needed correcting, not just a fresh "find" being
+mistakenly flagged as new — worth independently re-verifying any DOI/ID correction before trusting
+it a second session. Full details `reading/2026-09-12.md`.
+
+### New sources worth tracking
+- **Lamiaux, Forster, Sozeau, Tabareau, "Nested Inductive Types..."** (2026, PACMPL/OOPSLA) — new QPF
+  reverse-citer, high relevance to Path 6, top read-next.
+- **MO 514525 "Coequalizers in extensive categories"** (2026-08-31) — extensive + kernel-pair
+  coequalizers does not imply full cocompleteness; Front A background texture.
+- Three lower-priority QPF reverse-citers: Fürer et al. "Quotients of Bounded Natural Functors"
+  (Isabelle BNF sibling), Lucanu "Matching-Logic-Based Understanding of Polynomial Functors",
+  Cohen "Non-well-founded Deduction for Induction and Coinduction".
+
+## Session 2026-09-11 — QPF paper actually read this time (full PDF, pp.1-10/19): the DOI logged 09-10 was wrong (article 6 → correct is article 17), now corrected + upgraded agent-summary→deep-read [CORRECTION 2026-09-12: this DOI fix was itself WRONG — article 17 is a different paper entirely; fixed back to article 6, see 09-12 session above]; live Lean 4 QPF successor found (alexkeizer/QpfTypes, WIP); two genuinely new leanprover Zulip threads (Indexed QPF request, and a QPF↔Girard-dilator/ptyx speculation with real formalisation relevance); otherwise a heavy dedup-miss session — Stone Duality citer, Coco's Korkut citer, both sheaf-multi-agent papers, and Spivak's "Comonads as spaces" were ALL re-surfaced as apparent finds despite already being deep-read, correctly caught at synthesis with zero false additions
+
+Four agents (arXiv/community/web/citations). Keyed to: core {indexed containers/monoid structure
+(Front C), polynomial functors in Lean 4/Mathlib quotients (Path 6 — the QPF lead)}, near
+{family fibration/dependently-typed probability/comprehension categories (Front D — LICS 2026
+Ahman-Kammar-Møgelberg, still abstract-only)}, frontier {categorical multi-agent orchestration,
+sheaf-theoretic composition obstruction}. **Headline — the QPF citation was wrong and is now
+fixed**: `10.4230/LIPIcs.ITP.2019.6` (logged 09-10, DROPS metadata guess) is not the paper; the
+real DOI is `10.4230/LIPIcs.ITP.2019.17` (LIPIcs vol. 141, pp. 17:1-17:19). The arXiv agent fetched
+the actual PDF via the CMU mirror and read pages 1-10/19: QPF = polynomial functor `P=A▷B` with a
+split surjective `abs:P⟹F`; `fix F`/`cofix F` built as `W`/`M`-type quotients by `Wequiv`/
+`Mcongr` relations (the latter engineered to dodge the weak-pullback-preservation side condition
+Isabelle's BNFs need); multivariate generalisation (`typevec`, `mvfunctor`) is the direct ancestor
+of Mathlib's `Data.QPF.Multivariate`. Concrete Path-6 payoff: the `abs`/`repr` retraction pattern
+is a ready-made template for quotienting any of MacBeth's ◁-monoid/comonoid containers that arise
+as collapse-locus (non-injective `⟦−⟧`) constructions rather than literal polynomial functors.
+`sources.json` corrected (key renamed, extraction bumped, `corrections` entry added — no
+proof/registry file referenced the old key, safe to rename). **Companion find**: the live Lean 4
+QPF successor is `github.com/alexkeizer/QpfTypes` (Avigad/Carneiro/Hudon's own package is Lean 3
+only) — explicitly WIP, not Mathlib-integrated, backed by Alex Keizer's MSc thesis. **Headline 2 —
+two genuinely new leanprover Zulip finds**: "Indexed QPF" (2025-11-08, unanswered) proposes
+exactly the index-first `IndexedQPF` typeclass the Ahman/Uustalu/Ghani indexed-container line would
+want in Lean; "Ordinal notations and QPF" (2026-01-19) speculates a QPF might essentially be a
+**dilator (or Girard "ptyx")** — an unclaimed bridge to proof-theoretic ordinal analysis, worth
+flagging to Neil given formalisation is a named grant deliverable. **Headline 3 — dedup misses
+recur at a five-session-plus rate**: Stone Duality for Monads (`2603.25710`, deep-read since
+06-11), Coco's reverse-citer Korkut (already tracked since 09-09), both sheaf-multi-agent papers
+`2606.01663`/`2605.01879` (deep-read since 07-15, with an existing "NOT a scoop" verdict this
+session's independent re-read reconfirmed rather than contradicted), and Spivak's "Comonads as
+spaces" (deep-read since 07-17) were ALL re-surfaced by browse sub-agents as if new. Caught cleanly
+at synthesis via direct `sources.json` grep before writing — zero false additions, but the
+underlying cause (sub-agents cannot see the citation index) remains unaddressed session over
+session. **Headline 4 — standing items unchanged**: MO 461865/296319/365271 still dormant; De
+Pascalis-Uustalu-Veltrì and Dorta-Jarvis-Niu both still zero reverse citations; nLab family
+fibration page's 2026-03-31 diff still unretrievable; Weber TAC 18 quick-checked (73 citers,
+nothing new) and correctly kept out of the standing rotation. Full details `reading/2026-09-11.md`.
+
+### New sources worth tracking
+- **Avigad, Carneiro, Hudon, "Data Types as Quotients of Polynomial Functors"** (ITP 2019, DOI
+  `10.4230/LIPIcs.ITP.2019.17` — CORRECTED from the wrong `.6` logged 09-10) — now `deep-read`
+  pp.1-10/19; `abs`/`repr` retraction is a candidate template for MacBeth's collapse-locus
+  containers.
+- **`github.com/alexkeizer/QpfTypes`** — live Lean 4 QPF successor package, WIP, not yet
+  Mathlib-integrated.
+- **leanprover Zulip, "Indexed QPF"** (2025-11-08, unanswered) — index-first QPF typeclass request,
+  directly on-topic for indexed containers.
+- **leanprover Zulip, "Ordinal notations and QPF"** (2026-01-19) — QPF↔Girard dilator/ptyx
+  speculation, unclaimed bridge to ordinal/proof theory.
+
+## Session 2026-09-10 — QPF paper's DOI/provenance resolved (no arXiv ID, proceedings-only; full text still unread, PDF extraction failed); mostly a dedup-audit session — four of the session's "finds" were already tracked at deep-read, confirming sub-agents never see sources.json and synthesis-time checking remains load-bearing; MO 205902 got external corroboration of the Walker LSCC verdict; Hedges parallel count reaches 5 with a close cousin of (⋉,⋊)
+
+Four agents (arXiv/community/web/citations). Keyed to: core {directed containers/polynomial
+comonoid equivalence, Lean 4 formalisation (chasing the Avigad-Carneiro-Hudon ITP 2019 lead)},
+near {indexed containers/familial representability, light touch}, frontier {multi-agent LLM
+orchestration as operad/sheaf}. **Headline — the QPF paper (Avigad, Carneiro, Hudon, "Data Types
+as Quotients of Polynomial Functors," ITP 2019) has no arXiv ID** (confirmed via multiple
+searches) — it is proceedings-only, DOI `10.4230/LIPIcs.ITP.2019.6`, Lean repo
+`github.com/avigad/qpf`. WebFetch could not cleanly extract the PDF text, so the sources.json
+entry is floor-level agent-summary reconstructed from search snippets/slides, explicitly flagged
+as unverified — `download_pdf` + local extraction is now the top Path-6 priority. **Headline 2 —
+dedup-miss pattern recurred at scale**: "Comonads as Spaces" (2607.15091), "Distributive Laws of
+Monadic Containers" (2503.17191), and "Operads for Compositional Reasoning in LLMs" (2606.13634)
+were all re-surfaced by browse agents as apparently new; all three were already tracked in
+sources.json, two at deep-read. Confirms sub-agents have no access to the citation index and
+synthesis-time checking (this step) remains the only defense — no new memory needed, the
+discipline held. Net new addition: the 2606.13634 companion paper (2606.13649) had no standalone
+sources.json entry despite being summarized inside its sibling's note; added. **Headline 3 — MO
+205902 got a 5th answer (2026-07-28)** naming Charles Walker's LSCC preprint (already deep-read
+by us) as the community-converged answer to "monoidal analogue of LCCC" — external corroboration
+of our own Front-D verdict (Vec is not LSCC), not new information. **Headline 4 — Hedges parallel
+count reaches 5**: his "Sequents for sequence" (2026-03-13) sequence product `⊳`, where the
+extension functor turns `⊳` into ordinary composition, plus a duoidal structure and (when units
+coincide) a linearly distributive category — structurally close to our own proved `(⋉,⋊)`
+duoidal/LDC result. This is now the cheapest queued Hedges compare-pass (definitions are already
+public, just needs a side-by-side read). **Standing items**: DJN `2305.05655` and De Pascalis-
+Uustalu-Veltrì `2509.25879` both still zero reverse citations (Front C confirmed still
+unblocked); Ahman-Uustalu 2016 citation count unchanged at 20 (two new-ish 2025/26 citers not yet
+checked for depth: Garner-Renata-Wu "Stone Duality for Monads", Spivak "Categories by Kan
+extension"); Coco still one citer; nLab family fibration page edited 2026-03-31 (first edit since
+creation, diff not retrievable); LICS 2026 Ahman-Kammar-Møgelberg still abstract-only, no
+preprint; agent-orchestration-as-CT still unclaimed territory. Full details `reading/2026-09-10.md`.
+
+### New sources worth tracking
+- **Avigad, Carneiro, Hudon, "Data Types as Quotients of Polynomial Functors"** (ITP 2019, DOI
+  `10.4230/LIPIcs.ITP.2019.6`, no arXiv ID) — floor-level agent-summary only (PDF extraction
+  failed); top-priority unread Path-6 lead, needs `download_pdf` next session.
+- **Bottman, Liu, Richardson, "Operadic consistency..."** (arXiv:2606.13649) — companion to the
+  already-deep-read 2606.13634; standalone sources.json entry added, no new content.
+
+## Session 2026-09-09 — first genuine session off the dropped Weber-p.r.a. rotation; two independent Fam(V)/Sweedler-generalization papers confirm the "same base construction, orthogonal question" pattern rather than delivering prior art; Ahman himself now building semantics directly on the family fibration (LICS 2026); best actionable find is a 20-session-old miss surfaced one hop from Coco's own reference list (Avigad-Carneiro-Hudon, Lean + polynomial functors, ITP 2019)
+
+Four agents (arXiv/community/web/citations), first session following the 09-08 recommendation to
+drop the Weber-p.r.a. citation trail after three consecutive negative full audits. Keyed to: core
+{polynomial comonoid=small category equivalence, internal directed container/internal replacement
+theorem}, near {indexed-container branching stratification (Front C), familial descent/enriched
+V-functors (2305.04042 follow-up)}, frontier {operads for multi-agent/LLM reasoning, sheaf gluing
+obstruction cohomology (light touch, dedup-guarded against the four already-deep-read sources)}.
+**Headline — two new papers both use MacBeth's own base machinery for a disjoint question, the
+same pattern the 09-06 dream named in advance**: Prezado `2305.04042` (JPAA 2024, full PDF read)
+builds effective-descent theory on the SAME `Fam(V)` 2-functor as the `Fam(C^op)` monoidal-
+generality program, via Weber's TAC-18-2007 familial-2-functors machinery (already deep-read for
+T2), for a completely orthogonal descent-theoretic question — zero container/polynomial/comonoid
+vocabulary, grep-confirmed. Aravantinos-Sotiropoulos–Vasilakopoulou `2408.03180` (full PDF read,
+Abstract/Intro/ToC) generalises one-object Sweedler theory to double categories — the same *kind*
+of construction as MacBeth's own monad↔comonad-transfer result, again zero container vocabulary.
+Neither is prior art; both are good positioning citations for "this base construction is
+independently active elsewhere." **Headline 2 — Danel Ahman himself is now building serious
+semantics directly on the family fibration**: Ahman, Kammar, Møgelberg, "A Convenient Fibration for
+Dependently-Typed Probability Theory" (LICS 2026, abstract only) builds dependently-typed
+probability theory on "quasi-Borel families" = the family fibration with dependent Σ/Π and a
+universe of propositions — a live 2026 instance in exactly the fibrational territory Front D's
+approach (1) sits in, by half of the Ahman–Uustalu pair MacBeth treats as foundational; flagged
+read-next. **Headline 3 — the session's best actionable find came from Coco's own bibliography, not
+a fresh search**: Avigad, Carneiro, Hudon, "Data Types as Quotients of Polynomial Functors" (ITP
+2019) — Lean + polynomial functors, directly on-topic for Path 6 — has apparently sat unfound
+through 20+ prior browse sessions purely because nobody had pulled Coco's own reference list before
+this session's citation-trail agent did; top priority for the next citation-trail or `/lean`
+session. **Headline 4 — standing items confirmed unchanged**: all five standing MO/CT-Zulip threads
+dormant (461865, 296319, 205902, 365271, power-grid); Dorta-Jarvis-Niu and De Pascalis-Uustalu-
+Veltrì both still at zero reverse citations; Ahman-Uustalu 2016's full 20-citer set unchanged, back
+to normal recheck cadence; Coco has its first reverse citer (Korkut, "A Rose Tree Is Blooming,"
+abstract-level, low urgency); nLab "directed container" and "family fibration" pages both
+unchanged. One non-mathematical but grant-relevant find: a live CT Zulip thread on LLM research
+workflows (citation-verification skills, multi-agent red-teaming, hierarchical agent supervision) —
+external corroboration that MacBeth's own operating pattern is being discussed in the wild, worth a
+light mention to Neil/Robin, not a research result. Full details `reading/2026-09-09.md`.
+
+### New sources worth tracking
+- **Prezado, "On effective descent V-functors and familial descent morphisms"** (arXiv:2305.04042,
+  JPAA 228(5), 2024) — full-read; same `Fam(V)` base construction as MacBeth's own generality
+  program, orthogonal descent-theoretic question, no container content. Positioning citation only.
+- **Aravantinos-Sotiropoulos, Vasilakopoulou, "Sweedler theory for double categories"**
+  (arXiv:2408.03180, 2025) — full-read (Abstract/Intro/ToC); many-object generalisation of
+  monad↔comonad-duality-style Sweedler theory, no container vocabulary. Distinct from the
+  still-untracked "McDermott-Rivas-Uustalu, Sweedler Theory of Monads, 2022" — do not conflate.
+- **Ahman, Kammar, Møgelberg, "A Convenient Fibration for Dependently-Typed Probability Theory"**
+  (LICS 2026, `doi:10.4230/LIPIcs.LICS.2026.4`) — abstract only; family-fibration-based dependent
+  probability semantics, co-authored by Danel Ahman; top read-next for Front D.
+- **Avigad, Carneiro, Hudon, "Data Types as Quotients of Polynomial Functors"** (ITP 2019, found via
+  Coco's reference list, not yet fetched by arXiv ID) — top-priority Path-6 lead, unread.
+- **Korkut, "A Rose Tree Is Blooming (Proof Pearl)"** (2026, `doi:10.1145/3779031.3779091`) — first
+  reverse citer of Coco; abstract-level, low urgency.
+- **CT Zulip, "Workflows for using LLMs in research"** (practice:software, started 2026-08-28) — not
+  math content; external corroboration of MacBeth's own agent-orchestration workflow pattern.
 
 ## Session 2026-09-08 — Weber p.r.a. cluster closes out negative a THIRD time (Shapiro 2111.14796 read in full, does not sharpen Def 5.2 either); two genuine new finds (Coco POPL 2026 — containers replace syntactic guardedness in Rocq; MO 365271 — Cauchy-completeness obstruction, a real stress-test candidate for the crown method); Hedges' independent-rediscovery count grows to four; recommend dropping Weber-p.r.a. citation trail from the standing rotation, replace with sheaf-multi-agent/operad frontier
 
@@ -2420,3 +2846,84 @@ Virgós/Mosquera-Lois, "Baues-Wirsching Cohomology and Švarc Genus in Small Cat
 uses MacBeth's exact citation stack (BW cohomology, small categories, bifibrations) but
 proves an orthogonal theorem (topological complexity, not factorization existence). Cite as
 "toolkit is contemporaneously active," not as competition.
+
+## Session 2026-09-21 — heavy dedup (5 recurrences caught), two genuine new clusters
+
+Full details `reading/2026-09-21.md`. **Process note, flag to Robin:** citation-trail agents keep
+re-surfacing **Garner–Renata–Wu "Stone Duality for Monads" (arXiv:2603.25710)** as "new" — this is
+the **6th recurrence** (previously 2026-06/07, 07-19, 08-19, 08-21, 09-14), always because
+Semantic Scholar's reverse-citation API returns papers by relationship, not by ID-lookup against
+`sources.json`. Standing verdict unchanged: NOT A SCOOP. Recommend citation-trail agents grep
+`sources.json` for each returned arXiv ID *before* reporting it as new. Also re-caught this
+session as false-new: math.SE 4510090 (ZS product, tracked since 08-19), the ACT2026 "Snoc Trees"
+list (Neil's paper already deep-read since 08-10), CALCO2025 "Distributive Laws of Monadic
+Containers" (= already-tracked arXiv:2503.17191 Purdy-Damato, just a proceedings-venue URL for the
+same paper), and STACS26 "Demystifying Codensity Monads via Duality" (added to sources.json only
+two days prior, from the 09-20 dream-cycle browse).
+
+**Genuine new cluster 1 — species/plethysm duoidal structure**, independently discovered analogue
+of MacBeth's own (⋉,⋊) result: the **arithmetic product** `⊡` on combinatorial species (Maia–
+Méndez) forms a normal duoidal structure with substitution (Garner–López Franco "Commutativity"
+arXiv:1507.08710 §6; modern derivation via Gambino–Garner–Vasilakopoulou arXiv:2206.06858; origin
+in Dwyer–Hess arXiv:1302.3711) — surfaced via MO 461268. Worth a direct proof-technique comparison.
+Also MO 210266: non-crossing substitution of species, genuinely open since 2015, zero answers.
+
+**Genuine new cluster 2 — plethysm/2-rig literature, third confirmation of the Lemma N dead-end**:
+Baez–Moeller–Trimble "Schur Functors and Categorified Plethysm" (2106.00190) and Anel–Fiore–
+Gambino "Operadic 2-Rigs" (2607.12705, by a Gambino-Kock co-author) both checked directly against
+the Plethysm Lemma — neither contains a decomposition/recognition theorem, only closure/
+construction results. Companion paper **2607.12683** ("Symmetric 2-rigs: coexponentiability and
+cartesian closure") flagged as top follow-up — closest live technical overlap with MacBeth's own
+closed-structures work.
+
+**Also new, not scoop-risk:** Wesley Phoa's portfolio double-category paper (2603.12301) — a
+citable Impact-section sibling application (financial pipelines, double categories, zero Poly/ZS
+content, author explicitly disclaims novel category theory).
+
+## Session 2026-09-25 — CLOSED: Topos "Poly-morphic effect handlers" blog post; arXiv/citation-trail
+## avenues ~90% rediscovery even on rotated keywords; Path 5 native venues (GitHub) are the only
+## live frontier two sessions running
+
+Full details `reading/2026-09-25.md`. **The Topos blog post is CLOSED — do not re-flag.** 09-23
+left it open (blog posts aren't indexed in `sources.json`, so a grep-only dedup check false-
+negatived). It was already found and logged twice, 07-29 (two files); re-read in full this session,
+content reconfirmed (`𝔪_p≅y+p◁𝔪_p`, handlers as Kleisli morphisms, monad-only/zero-coeffect content).
+
+**Keyword rotation per 09-23/09-24's instruction (retire codensity/comonad/internal-category/
+directed-container/plethysm/polynomial-comonoid) executed** — W-types, traced-categories-on-Poly,
+GA island models, and Catala-native-venue queries used instead. Result: an explicit ~15-item
+exclusion list given to all four dispatch prompts caught 100% of its targets (zero reappeared), but
+the *un-excluded* remainder was still ~90% rediscovery on cross-check — Aberlé 2604.01303,
+Kondyrev-Spivak 2509.05462, Functorial Aggregation 2111.10968, Purdy-Damato 2503.17191, Ghani
+2509.20932, Pradic-Price 2601.15420, De Pascalis et al. 2509.25879, and Libkind-Spivak dynamic-
+task-delegation all resurfaced as "new" and were all already on file. **Lesson: the saturation is
+not a keyword-choice problem** — rotating to genuinely different angles within containers/Poly
+still mostly returns known material; the field's arXiv footprint has been swept enough times that
+almost any angle inside it now dead-ends. Add all eight of the above IDs to the next session's
+exclusion list.
+
+**The only unambiguously fresh material, two sessions running, came from a Path 5 native venue
+(Catala's own GitHub repo), not from papers or forums:** issues #1095/#1096 (a real, fresh,
+2026-09-02 compositional-semantics bug — joint-return scope reads the wrong spouse's data at two
+independent sites in the executable US tax code §121 encoding) and issue #691 (a live, unresolved
+Hoare-contract-syntax design thread for Catala scopes). Recommend: next session's frontier slot
+should try a *different* named Path 5 system's native venue (a specific supply-chain/ERP repo, or a
+specific smart-contract-auditing tool's issue tracker) rather than re-querying Catala exhaustively
+again, or re-trying generic "AI agent orchestration category theory" web search (confirmed dead
+since 08-13).
+
+**Reconfirmed null, 4th-5th time:** GA island models + categorical/compositional framing — zero
+presence on arXiv, Stack Exchange network, or general web; confirmed directly against the GECCO
+2026 homepage this session (no dedicated track). This remains uncolonized territory outside Robin's
+own GECCO 2026 work, not a search-terms problem.
+
+**New but unread, thin provenance:** Cockett-Lemay "Itegories" (arXiv:2504.02409) — Kleene wands /
+trace operators on coproducts in restriction categories, a possibly-different route to
+iteration-as-trace than Kondyrev-Spivak's Int(Poly_*). Added to `sources.json` at `agent-summary`
+with an explicit thin-provenance note (title + guessed topic only, abstract not yet fetched) —
+needs a real read before relying on it.
+
+**Also new:** cstheory 55588 (open, 0 answers, relational-parametricity proof that
+`∀A.((A→A)→P)→Q ≅ P→Q` — a Church-encoding/initial-algebra collapse question MacBeth's own
+vocabulary could plausibly answer) — flagged as a candidate "answer a real open question publicly"
+opportunity, not committed to.

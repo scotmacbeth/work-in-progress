@@ -1,0 +1,154 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Kl}{\mathrm{Kl}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\theoremstyle{definition}
+\newtheorem*{remark}{Remark}
+
+\title{M-containers: the typing of $\ext{S,P}_M$,\\ and why it is your change-of-base, not a new theory}
+\author{MacBeth \\ \small for Neil Ghani}
+\date{2026-09-07 \quad\small (work-in-progress commit: \texttt{[WIP\_HASH]})}
+
+\begin{document}
+\maketitle
+
+\noindent This note answers your three messages (the THM 1 typing; ``is that wise / what is its
+type''; ``expand $M\text{-}\Cont \simeq \Fam(\Kl(M)^{\mathrm{op}})$''; functor vs.\ enriched functor;
+change-of-base vs.\ a separate $\ext{-}_M$ theory; the presheaf variant; and the headline). The short
+version: \textbf{you have caught a real fork, and you are right about which side of it is ``just Set
+containers'' --- but the side I took is the other one, and it is exactly your change-of-base
+$\Fam(C^{\mathrm{op}})$ with $C=\Kl(M)$, not a new theory.}
+
+\section{The extension, exactly}
+For an $M$-container $(S,P)$, $P:S\to\Set$, my extension is
+\[
+  \ext{S,P}_M : \Set \to \Set,
+  \qquad
+  \ext{S,P}_M(X) \;=\; \sum_{s:S}\ \Kl(M)(P_s, X)
+  \;=\; \sum_{s:S}\ \Set(P_s, MX)
+  \;=\; \sum_{s:S} (MX)^{P_s}.
+\]
+Equivalently, and this is THM 1(b), \emph{as ordinary $\Set$-endofunctors and naturally in $(S,P)$},
+\[
+  \boxed{\ \ext{S,P}_M \;=\; \ext{S,P}\circ M\ }.
+\]
+Its type is an ordinary endofunctor $\Set\to\Set$. The monad sits on the \textbf{values} $X$: a position
+$p\in P_s$, instead of holding a plain value, holds a Kleisli value $P_s \to MX$ (a $P_s$-indexed family
+of $M$-computations).
+
+\section{The fork you spotted}
+You wrote that you ``expect the extension to be $\sum_{s:S} M(P_s)\to X$, which doesn't seem to be what
+you have.'' Correct --- and the discrepancy is not a typo, it is a genuine design fork. There are two
+places to insert $M$:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & \textbf{(i) $M$ on values (mine)} & \textbf{(ii) $M$ on positions (yours)} \\
+\midrule
+Formula & $\sum_{s}(P_s \to MX)$ & $\sum_{s}(M P_s \to X)$ \\
+$=$ & $\ext{S,P}\circ M$ & $\ext{(S,\,M\circ P)}$ \\
+Lives in & $\Fam(\Kl(M)^{\mathrm{op}})$ & ordinary $\Cont=\Fam(\Set^{\mathrm{op}})$ \\
+Effect on & the response / transition & the position \emph{set} \\
+New phenomena & codensity (THM 2), polynomiality (THM 3) & none --- it is a Set container \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Your instinct ``these are all just Set containers'' is exactly right \emph{for (ii)}: $\sum_s(MP_s\to X)
+= \ext{(S,\,M\circ P)}$ is the ordinary extension of the container with fattened positions $M\circ P$.
+It is still a Set container; $\ext{-}$ on it is already full and faithful, and composition is ordinary
+$\Cont$ composition. There is nothing new to develop there --- which is also why there is nothing new
+to \emph{learn} there. All the content (probability keeps faithfulness; error keeps composability) lives
+on side (i), where the positions map into $\Kl(M)$ rather than $\Set$.
+
+So: I have (i), not (ii); and (i) is chosen precisely because (ii) collapses back into plain containers.
+
+\section{Expanding $M\text{-}\Cont = \Fam(\Kl(M)^{\mathrm{op}})$}
+You asked me to expand this; it is an equality on the nose, not merely an equivalence.
+\begin{itemize}
+  \item \textbf{Objects.} An object of $\Fam(\Kl(M)^{\mathrm{op}})$ is a set $S$ together with, for each
+  $s\in S$, an object of $\Kl(M)^{\mathrm{op}}$. But objects of $\Kl(M)$ (hence of $\Kl(M)^{\mathrm{op}}$)
+  \emph{are just sets}. So the data is $S$ and a family $(P_s)_{s\in S}$ of sets --- exactly a container.
+  \item \textbf{Morphisms.} A morphism $(S,P)\to(S',P')$ in $\Fam(D)$ is a function $f:S\to S'$ and, for
+  each $s$, a $D$-morphism. For $D=\Kl(M)^{\mathrm{op}}$ a morphism $P_s \to P'_{fs}$ in
+  $\Kl(M)^{\mathrm{op}}$ is a morphism $P'_{fs}\to P_s$ in $\Kl(M)$, i.e.\ a function
+  $\rho_s: P'_{fs}\to M P_s$. So a morphism is a shape map $f$ plus, for each $s$, an \emph{effectful
+  response-translation} $\rho_s:P'_{fs}\to M P_s$ --- exactly an $M$-container morphism.
+\end{itemize}
+The $\mathrm{op}$ is the usual container variance: positions travel backwards, now backwards
+\emph{in $\Kl(M)$}. The extension reads out through the covariant Kleisli representable
+$\Kl(M)(P_s,-)=\Set(P_s,M-)$, giving the boxed formula above.
+
+\section{Functor, or enriched functor? --- both, and the gap between them is the theorem}
+This is your sharpest question and it has real content. $\ext{S,P}_M$ is simultaneously:
+\begin{itemize}
+  \item an \textbf{ordinary} functor $\Set\to\Set$ (target $[\Set,\Set]$), and
+  \item the underlying functor of a \textbf{$\Kl(M)$-enriched} functor $\ext{-}^{\Kl}$
+  (target $[\Kl(M),\Kl(M)]$), via $\ext{-}_M = R\circ \ext{-}^{\Kl}$, where $R$ restricts along the free
+  functor $\Set\to\Kl(M)$.
+\end{itemize}
+In the enriched reading $\ext{-}^{\Kl}$ is \emph{always} fully faithful --- Kleisli-naturality is cheap.
+In the ordinary reading the honest target is $[\Set,\Set]$, and fullness can fail. The two targets differ
+by exactly the restriction $R$ = passing from Kleisli-naturality to pure-naturality, and \textbf{that gap
+is the codensity monad} $\Phi=\Ran_M M$: by the Kan formula $\Nat(\Set(A,M-),H)=(\Ran_M H)(A)$, so
+$\ext{-}_M$ is full (on the honest target) iff $M$ is codense and each $\Set(A,M-)$ is connected (THM 2).
+This is why probability ($D$ codense) keeps faithfulness while $\mathrm{Maybe}$/writer/reader lose it.
+(A note on your $\Lan_M$ instinct: the Kan structure is real but it is the \emph{right} Kan extension
+$\Ran_M$ / codensity, not $\Lan$; that is the direction the adjunction $(-)\circ M \dashv \Ran_M$ runs.)
+
+\section{This is your change-of-base, not a new theory}
+You said you are reluctant to treat $\ext{-}_M$ ``as a whole different theory,'' and that you like the
+K-container change-of-base framing ($C\to\Set$ semantics). \textbf{We agree, and $\ext{-}_M$ \emph{is}
+that framing.} It is not a parallel theory: it is $\Fam(C^{\mathrm{op}})$ --- the generality you have
+already made priority \#1 --- specialised to $C=\Kl(M)$:
+\[
+  M\text{-}\Cont \;=\; \Fam(\Kl(M)^{\mathrm{op}}),
+  \qquad
+  \Cont \;=\; \Fam(\Set^{\mathrm{op}}) \text{ is the case } M=\mathrm{Id}.
+\]
+The base change is on the \emph{position category}, $\Set \xrightarrow{\text{free}} \Kl(M)$; the ordinary
+$\Set$-endofunctor $\ext{-}_M$ is the $\Fam(C^{\mathrm{op}})$ semantics read back along that base change,
+and codensity is precisely the obstruction to the readback being full. So the flagship $\Fam(C^{\mathrm{op}})$
+theorem (T1: $\ext{-}$ fully faithful $\iff$ the monoidal unit is connected) governs the native
+($\Kl(M)$-valued) semantics, and THM 2/THM 3 are what the instance $C=\Kl(M)$ contributes on top: two
+independent Kan invariants of $M$ --- \emph{codensity governs fullness, polynomiality governs composition}.
+
+\section{The presheaf / \texorpdfstring{$\Cat$}{Cat} variant}
+Your ``shapes = small categories, positions = functors into $\Set$'' is, I think, the \emph{same} frame
+one base further out: $\Fam(C^{\mathrm{op}})$ with $C$ a category of small categories (or $C=\Cat$),
+positions being presheaves/functors $P_s\to\Set$. This is exactly the Cat-case I sketched as future work
+for your UID-144 steer (\texttt{for-collaborator/2026-09-04-cont-future-work-cat-and-cont-cont.md}). It
+is a genuine instance, not a new theory, and it reinforces the point of \S5: the unifying object is
+$\Fam(C^{\mathrm{op}})$, and each of \{Set, $\Kl(M)$, $\Cat$, $\mathbf{Vec}$\} is one choice of base. I am
+happy to develop the $\Cat$ instance next if you want it foregrounded rather than sketched.
+
+\section{Headline --- my recommendation}
+You left the headline to me. Given the above I recommend: \textbf{frame the paper as change-of-base}
+($\Fam(C^{\mathrm{op}})$, the case $C=\Kl(M)$), and present codensity and polynomiality as the two
+theorems that this one instance yields. That keeps your preferred framing as the spine and makes the
+crown line --- \emph{two Kan invariants of the effect monad diverge oppositely} --- a result inside it,
+not a rival theory. Title in that spirit: ``Containers over a Kleisli base: codensity and polynomiality.''
+
+\section*{What I would like from you}
+\begin{enumerate}
+  \item Confirm you are content with side (i) (effect on values, $\ext{S,P}\circ M$) as the object of
+  study, with side (ii) noted as the ``fattened Set container'' degenerate case. If you would rather the
+  effect sit on positions/response-selection, that is a modelling call I will follow --- but it changes
+  what is provable (side (ii) has no new fullness/composition phenomena).
+  \item Confirm the change-of-base spine + codensity/polynomiality-as-results framing for the write-up.
+  \item Say whether you want the $\Cat$/presheaf instance developed now or left as a sketch.
+\end{enumerate}
+With (1) settled you can ``pick up'' THM 2/3 as written --- they are stated against side (i) exactly.
+\end{document}

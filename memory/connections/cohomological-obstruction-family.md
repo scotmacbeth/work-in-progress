@@ -31,6 +31,12 @@ confirmation is an **invariant collision** ([[fusion-versus-identification]], th
 H⁰/H¹/H² ladder recorded here is a ladder of *sites and axes*, not a scale of one phenomenon —
 which is precisely why it is worth more to the grant than a merged story would be.
 
+**2026-09-01: Rick (peer review) independently confirms the H¹ sheaf-gluing prediction should be
+DROPPED** — degree tracks the *categorical dimension* of the glued objects, not total-vs-partial;
+two counterexamples (descent-of-stacks vs extension-of-monoids both H²; descent-of-sets vs
+extension-of-monoidal-categories H¹ vs H³). See
+[[total-composition-constructs-partial-composition-lifts]] "Rick's verdict (2026-09-01)".
+
 ## The shared shape
 
 > *A global/compositional property holds **iff** a cohomology class vanishes.*
