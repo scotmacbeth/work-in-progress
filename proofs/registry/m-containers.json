@@ -1,280 +1,312 @@
 {
- "conjecture": "Neil's 2026-09-04 probabilistic/K-container idea reduced to MacBeth's Fam(C^op) machinery with C=Kl(M). THM1: M-Cont = Fam(Kl(M)^op) and [[-]]_M = [[-]] . M. THM2: [[-]]_M : M-Cont -> [Set,Set] is ALWAYS FAITHFUL, and FULL iff M is codense (canonical M => Ran_M M iso) AND every (M-)^A is a connected functor; affine => connected. CORRECTION of the sketch/brief: the criterion is NOT 'M preserves coproducts' (that governs the coarser Kleisli-enriched target [Kl(M),Kl(M)]); the honest [Set,Set] target is governed by the CODENSITY MONAD Ran_M M. Consequently probabilistic positions (D, affine+codense) KEEP fullness while error/reader/writer/nondeterministic positions LOSE it -- reversing the sketch's verdict on D. Even the coproduct-preserving writer E x (-) FAILS for |E|>=2, refuting the coproduct criterion.",
- "status": "proved",
- "date_opened": "2026-09-04",
- "date_closed": "2026-09-04",
- "note": "Sibling of left-adjoint-over-vec (shares the connected-unit / affine tree). Crown connection: container-extension fullness <-> codensity monads (Ran_M M), a new bridge to Leinster-style codensity worth a WRITE. THM3 (2026-09-05, computed): M-containers COMPOSE iff M is POLYNOMIAL (NOT commutative+affine; NOT a distributive-law/ZS-H^2 obstruction -- that framing is RETIRED). Two independent invariants of M: CODENSITY for fullness (thm2), POLYNOMIALITY for composition (thm3). Maybe composes but isn't full; D is full but doesn't compose.",
- "tree": {
-  "id": "root",
-  "approach": "Turn the K-container scoping sketch into theorems: identify M-Cont, decide full-faithfulness of [[-]]_M into [Set,Set].",
-  "trust": "proved",
-  "file": "2026-09-04-m-containers-codensity.md",
-  "children": [
-   {
-    "id": "thm1-identification",
-    "approach": "THM1(a) M-Cont = Fam(Kl(M)^op) (equal on objects/homs/ids/composition, identity-on-data); THM1(b) [[S,P]]_M = [[S,P]] . M = p.M as functors Set->Set, naturally in (S,P). The one genuinely new identity: an M-container functor is a polynomial functor pre-composed with M.",
-    "role": "premise",
-    "trust": "proved",
-    "file": "2026-09-04-m-containers-codensity.md",
-    "children": []
-   },
-   {
-    "id": "faithful-always",
-    "approach": "[[-]]_M is ALWAYS faithful: evaluate the induced nat transf at X=P_s on (s, eta_{P_s}); eta is the Kleisli identity so the shape f s and the position map rho_s are recovered. (Contrast Vec, where the unit is not a section and faithfulness fails.)",
-    "role": "premise",
-    "trust": "proved",
-    "file": "2026-09-04-m-containers-codensity.md",
-    "children": []
-   },
-   {
-    "id": "kan-engine",
-    "approach": "ENGINE: precomposition M^* = (-).M has right adjoint Ran_M, so Nat(Set(A,M-), H) = Nat(h^A.M, H) = Nat(h^A, Ran_M H) = (Ran_M H)(A). Hence every Nat-set out of an M-representable is a value of a right Kan extension along M; with H=M it is the CODENSITY MONAD Phi = Ran_M M, Phi(A)=Nat(Set(A,M-),M).",
-    "role": "premise",
-    "trust": "proved",
-    "file": "2026-09-04-m-containers-codensity.md",
-    "children": []
-   },
-   {
-    "id": "thm2-fullness-criterion",
-    "approach": "THM2: fullness for all pairs <=> (star) per A and family; splits as (ii) codensity iso M => Ran_M M [single-summand / on-homs] AND (i) connectedness of each (M-)^A [coproduct/shape side]. Reduction uses Set(B,M-) = prod_B M to collapse to B=1.",
-    "role": "premise",
+  "conjecture": "Neil's 2026-09-04 probabilistic/K-container idea reduced to MacBeth's Fam(C^op) machinery with C=Kl(M). THM1: M-Cont = Fam(Kl(M)^op) and [[-]]_M = [[-]] . M. THM2: [[-]]_M : M-Cont -> [Set,Set] is ALWAYS FAITHFUL, and FULL iff M is codense (canonical M => Ran_M M iso) AND every (M-)^A is a connected functor; affine => connected. CORRECTION of the sketch/brief: the criterion is NOT 'M preserves coproducts' (that governs the coarser Kleisli-enriched target [Kl(M),Kl(M)]); the honest [Set,Set] target is governed by the CODENSITY MONAD Ran_M M. Consequently probabilistic positions (D, affine+codense) KEEP fullness while error/reader/writer/nondeterministic positions LOSE it -- reversing the sketch's verdict on D. Even the coproduct-preserving writer E x (-) FAILS for |E|>=2, refuting the coproduct criterion.",
+  "status": "proved",
+  "date_opened": "2026-09-04",
+  "date_closed": "2026-09-04",
+  "note": "Sibling of left-adjoint-over-vec (shares the connected-unit / affine tree). Crown connection: container-extension fullness <-> codensity monads (Ran_M M), a new bridge to Leinster-style codensity worth a WRITE. THM3 (2026-09-05, computed): M-containers COMPOSE iff M is POLYNOMIAL (NOT commutative+affine; NOT a distributive-law/ZS-H^2 obstruction -- that framing is RETIRED). Two independent invariants of M: CODENSITY for fullness (thm2), POLYNOMIALITY for composition (thm3). Maybe composes but isn't full; D is full but doesn't compose.",
+  "tree": {
+    "id": "root",
+    "approach": "Turn the K-container scoping sketch into theorems: identify M-Cont, decide full-faithfulness of [[-]]_M into [Set,Set].",
     "trust": "proved",
     "file": "2026-09-04-m-containers-codensity.md",
     "children": [
-     {
-      "id": "affine-implies-connected",
-      "approach": "LEMMA: M affine (M1=1) => every (M-)^A connected. (M1)^A=1 is a single global point; naturality along !:X->1 drags all of (MX)^A into the one summand it picks. So affine => (i).",
-      "role": "premise",
-      "trust": "proved",
-      "file": "2026-09-04-m-containers-codensity.md",
-      "children": []
-     },
-     {
-      "id": "reader-affine-not-codense",
-      "approach": "Reader X^R is AFFINE (M1=1, so (i) holds) yet FAILS (ii): Phi(A)=(RA)^R != A^R = MA for |R|>=2. Shows affineness alone is NOT sufficient; codensity is a separate necessary condition.",
-      "role": "premise",
-      "trust": "proved",
-      "file": "2026-09-04-m-containers-codensity.md",
-      "children": []
-     }
-    ]
-   },
-   {
-    "id": "polynomial-table",
-    "approach": "For polynomial M=(I,B): MA=Sum_i |A|^{|B_i|}, Phi(A)=Prod_{phi:A->I} Sum_i (Sum_a |B_{phi a}|)^{|B_i|} (exact via AAG). Computed: Id full; Maybe, exception X+E, writer E x (-), reader X^R ALL fail (Phi(A) > MA strictly beyond a low threshold). Extra transfs are case-analysis ops (inspect bottom / duplicate reader arg).",
-    "role": "premise",
-    "trust": "proved",
-    "file": "../scratch/m-containers/mcont.py",
-    "children": []
-   },
-   {
-    "id": "D-affine-codense-full",
-    "approach": "Distributions D: affine (D1=1 => (i)) and CODENSE (Nat(D^A,D)=DA: natural A-ary ops are exactly affine combinations). Proof: reduce a tuple to disjoint-support blocks via a projection, collapse blocks to read off weights omega=alpha_A((delta_a)), reduce one block at a time to Nat(D, D(-+F)) whose Z-marginal is a scalar multiple. => D full-faithful. Modulo base rigidity lemma Nat(D,D)={id}.",
-    "role": "attempt",
-    "trust": "computed",
-    "file": "../scratch/m-containers/dcod.py",
-    "note": "Composite graded computed pending the base lemma Nat(D,D)={id} (standard rigidity of the affine functor D); the reduction itself is proved. Verified numerically: convex combos natural (2000 checks), non-affine ops break naturality.",
-    "children": []
-   },
-   {
-    "id": "coproduct-criterion-refuted",
-    "approach": "CORRECTION: 'M preserves coproducts' is the WRONG criterion for [Set,Set]-fullness. (a) It is T1's connected-unit condition for the KLEISLI-enriched target [Kl(M),Kl(M)] via [[-]]_M = R . [[-]]^{Kl} with R=(-.F) restriction along the free F:Set->Kl(M); [[-]]^{Kl} (free coproduct completion) is ALWAYS f.f., so all the action is in R = pure- vs Kleisli-naturality = codensity. (b) Writer E x (-) PRESERVES coproducts but FAILS fullness for |E|>=2 (Phi(1)=|E|^{|E|} != |E|), a direct refutation. (c) T1 as stated needs C closed sym monoidal cocomplete; Kl(M) generally is none, so the invocation was doubly unjustified.",
-    "role": "premise",
-    "trust": "proved",
-    "file": "2026-09-04-m-containers-codensity.md",
-    "children": []
-   },
-   {
-    "id": "thm3-composition-polynomiality",
-    "approach": "THM3 (2026-09-05, sub-agent compute): M-Cont carries a comp product <|_M with [[p<|_M q]]_M = [[p]]_M . [[q]]_M IFF M is a POLYNOMIAL functor (M = Sum_i (-)^{B_i} = familially representable = preserves connected limits = is itself a container extension). One-line reason: [[p]]_M.[[q]]_M = G.M with G = [[p]].M.[[q]]; this is an M-extension [[r]].M iff G polynomial, which holds for ALL p,q iff M polynomial; then p<|_M q = p <| ceil(M) <| q (ordinary <| with M's container spliced in the middle). Product ASSOCIATIVE but NON-UNITAL (semigroupal; monoidal only when M=Id). REFUTES the parked 'commutative+affine' / distributive-law / ZS-H^2 framing: that measures a DIFFERENT question (does [[q]] lift to Kl(M), merging the two M's via mu -- lossy/lax). The obstruction here is a REPRESENTABILITY dichotomy, not a cohomology class -- retire the ZS/H^2 note for composition.",
-    "role": "attempt",
-    "trust": "proved",
-    "note": "PROMOTED computed->proved 2026-09-05 (MacBeth line-by-line verify pass, proofs/2026-09-05-thm3-composition-polynomiality.md). SUFFICIENCY is PROVED: M polynomial => essential image closed under o, p<|_M q = p<|ceil(M)<|q with [[p<|_M q]]_M = [[p]]_M.[[q]]_M natural in X (star), ASSOCIATIVE, and NON-UNITAL up to Cont-iso unless M=Id (A3 exact finite-cardinality argument). Strong-semigroupal on PURE morphisms proved; Kleisli-bifunctoriality open (= codensity, ties to THM2). NECESSITY is PARTIAL: cardinality growth law (dagger),(ddagger) PROVED and it already excludes P+, P, D at p=q=Id (cleaner than the squaring test) -- refutes 'commutative+affine' decisively. FULL converse (closure => M polynomial as a functor) remains OPEN: the trailing-M obstruction (precomposition M^* not conservative) blocks all three attempts; reduced to Lemma N via Carboni-Johnstone. Crown: fullness=CODENSITY (thm2), composition=POLYNOMIALITY (thm3) are INDEPENDENT invariants of M.",
-    "file": "2026-09-05-thm3-composition-polynomiality.md",
-    "children": [
-     {
-      "id": "structural-identity-A0",
-      "approach": "A0: [[p]]_M o [[q]]_M = G o M with G = [[p]] o M o [[q]], as functors, natural in X (two applications of T1b). Every composite of two M-extensions has the form G o M.",
-      "role": "premise",
-      "trust": "proved",
-      "file": "2026-09-05-thm3-composition-polynomiality.md",
-      "children": []
-     },
-     {
-      "id": "sufficiency-star-A1",
-      "approach": "A1: M polynomial => G = [[p]].[[ceil M]].[[q]] ~= [[p<|ceil(M)<|q]] by AAG strong monoidality (twice), so [[p]]_M.[[q]]_M = G.M ~= [[r]].M = [[r]]_M, r=p<|ceil(M)<|q, natural in X (star). Line-audited GREEN; cross-checked M=Maybe p=q=sq gives r=Y^4+2Y^2+1 (verify.py, n=0..6).",
-      "role": "premise",
-      "trust": "proved",
-      "file": "2026-09-05-thm3-composition-polynomiality.md",
-      "children": []
-     },
-     {
-      "id": "assoc-nonunital-A2-A3",
-      "approach": "A2 associativity of <|_M from associativity of <|. A3 non-unital up to Cont-iso unless M=Id: unit e => e<|ceil(M)~=y => [[e]].M~=Id => (evaluate at X=1 then X=2, exact cardinalities) M~=Id.",
-      "role": "premise",
-      "trust": "proved",
-      "file": "2026-09-05-thm3-composition-polynomiality.md",
-      "children": []
-     },
-     {
-      "id": "maybe-composes-non-affine",
-      "approach": "Maybe (X+1) COMPOSES though NON-affine (M1=2): polynomial. Part A gives r=[[Y^4+2Y^2+1]] (p=q=squaring), checked |X|=0..6 in verify.py. Kills the '=> affine' side of the old heuristic.",
-      "role": "attempt",
-      "trust": "proved",
-      "file": "2026-09-05-thm3-composition-polynomiality.md",
-      "children": []
-     },
-     {
-      "id": "cardinality-necessity-law-B1B2",
-      "approach": "B1: closure => cardinality growth law (ddagger) m(Q(m(n)))=R_Q(m(n)) for a FIXED nonneg-int poly R_Q, every polynomial Q; at Q=Id: m o m = R o m i.e. m|im(m) is a fixed polynomial. B2: this excludes P+ (m=2^n-1: m o m doubly-exponential), P (2^n), D (finite shadow = P+) ALREADY at p=q=Id -- strictly stronger than the squaring test. Refutes 'compose <=> commutative+affine' (P+,D affine+commutative yet fail; Maybe/writer non-affine yet compose). verify.py test_pqId: PASS all poly monads with correct R, FAIL P+,P.",
-      "role": "premise",
-      "trust": "proved",
-      "file": "2026-09-05-thm3-composition-polynomiality.md",
-      "children": []
-     },
-     {
-      "id": "necessity-lemma-gap",
-      "approach": "Lemma N / crux (star): M monad, MoM ~= [[r]]oM ([[r]] poly) => M polynomial. 2026-09-05 PROVE: reframed and largely settled. Naive single-instance retract route PROVEN CIRCULAR; both prime suspects beta and free-comm-monoid ELIMINATED (beta by cardinality, multiset by a new Aut(X)-stabilizer invariant). Dichotomy: every non-poly monad fails MoM~=[[r]]oM either by super-polynomial growth (cardinality) or by a wreath stabilizer (symmetric/analytic). PROVED for all super-poly monads and the symmetric-power/multiset class; general non-free analytic reduced to one precise Plethysm Lemma (residual gap, uninhabited by any known monad). [2026-09-07 UPDATE: the last open corner (U, a_0>0 & unbounded wreath depth) is now CLOSED on the necessity side by U-corner-resolved-stabilizer: the stabilizer invariant read on species components separates UoU from every poly-oU (witness C_2=<(01)(23)> in (UoU)[4]). The Plethysm-Lemma residual is thereby made unnecessary for U; every NAMED analytic monad now has THM3 necessity.]",
-      "role": "attempt",
-      "trust": "computed",
-      "file": "2026-09-05-lemmaN-retract-and-beta.md",
-      "sources": [
-       "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18",
-       "Carboni-Johnstone, Connected limits familial representability and Artin glueing, MSCS 1995"
-      ],
-      "children": [
-       {
-        "id": "lemma-R0-retract",
+      {
+        "id": "thm1-identification",
+        "approach": "THM1(a) M-Cont = Fam(Kl(M)^op) (equal on objects/homs/ids/composition, identity-on-data); THM1(b) [[S,P]]_M = [[S,P]] . M = p.M as functors Set->Set, naturally in (S,P). The one genuinely new identity: an M-container functor is a polynomial functor pre-composed with M.",
         "role": "premise",
         "trust": "proved",
-        "file": "2026-09-05-lemmaN-retract-and-beta.md",
-        "approach": "Lemma R0: for a monad M, M polynomial <=> MoM preserves connected limits. (<=) mu o etaM=1_M makes M a split retract of MoM; Lemma A (retract of a connected-limit-preserver preserves them, elementary natural-comparison diagram chase) + GK 1.18. Lean-able.",
+        "file": "2026-09-04-m-containers-codensity.md",
         "children": []
-       },
-       {
-        "id": "prop-circularity",
+      },
+      {
+        "id": "faithful-always",
+        "approach": "[[-]]_M is ALWAYS faithful: evaluate the induced nat transf at X=P_s on (s, eta_{P_s}); eta is the Kleisli identity so the shape f s and the position map rho_s are recovered. (Contrast Vec, where the unit is not a section and faithfulness fails.)",
         "role": "premise",
         "trust": "proved",
-        "file": "2026-09-05-lemmaN-retract-and-beta.md",
-        "approach": "Prop C: for P poly nonconstant, MoM~=PoM => (MoM preserves D <=> PoM preserves D <=> M preserves D) for every connected-limit D (Lemma B: P poly conservative <=> nonconstant, reflects isos through P). Single self-composite instance carries NO info beyond R0 -- retract route CIRCULAR. (star) needs full family or new invariant.",
+        "file": "2026-09-04-m-containers-codensity.md",
         "children": []
-       },
-       {
-        "id": "beta-eliminated",
-        "role": "attempt",
+      },
+      {
+        "id": "kan-engine",
+        "approach": "ENGINE: precomposition M^* = (-).M has right adjoint Ran_M, so Nat(Set(A,M-), H) = Nat(h^A.M, H) = Nat(h^A, Ran_M H) = (Ran_M H)(A). Hence every Nat-set out of an M-representable is a value of a right Kan extension along M; with H=M it is the CODENSITY MONAD Phi = Ran_M M, Phi(A)=Nat(Set(A,M-),M).",
+        "role": "premise",
         "trust": "proved",
-        "file": "2026-09-05-lemmaN-retract-and-beta.md",
-        "approach": "Prop D: ultrafilter monad beta has no poly P with bb~=P.b. Infinite X: |bbX|=2^{2^kappa}, kappa=2^{2^|X|}; Sigma_i kappa^{|B_i|}=kappa for fixed family (kappa^lambda=2^{max(2^|X|,lambda)}). 2^{2^kappa}>kappa. Kills beta + all super-poly monads (P,P+,D,continuation,filter) via p=q=Id cardinality law.",
+        "file": "2026-09-04-m-containers-codensity.md",
         "children": []
-       },
-       {
-        "id": "multiset-eliminated-stabilizer",
-        "role": "attempt",
+      },
+      {
+        "id": "thm2-fullness-criterion",
+        "approach": "THM2: fullness for all pairs <=> (star) per A and family; splits as (ii) codensity iso M => Ran_M M [single-summand / on-homs] AND (i) connectedness of each (M-)^A [coproduct/shape side]. Reduction uses Set(B,M-) = prod_B M to collapse to B=1.",
+        "role": "premise",
         "trust": "proved",
-        "file": "2026-09-05-lemmaN-retract-and-beta.md",
-        "approach": "Theorem F: free comm monoid (multiset) has M.M ~/= P.M for any poly P. Lemma E invariant: nat iso => Aut(X)-equivariant bijections preserve point-stabilizers. P.M stabilizers = intersections of M-stabilizers = YOUNG (within-block). But {{a,b},{c,d}} in MM X has Stab=S_2 wr S_2=D_4 (order 8, block-swap (ac)(bd) but not (ac)) = NON-Young (8 not in {1,2,4,6,24}). Python-verified. Correct line: Young(one layer) vs WREATH(non-free outer); naive outer-rigidity heuristic WRONG.",
-        "children": []
-       },
-       {
-        "id": "plethysm-lemma-residual",
-        "role": "attempt",
-        "trust": "computed",
-        "file": "2026-09-05-lemmaN-retract-and-beta.md",
-        "approach": "OLD RESIDUAL (Plethysm Lemma), SUPERSEDED for a_0=0 by theorem-P-plethysm-cancellation: A non-flat species => A.A has a molecular constituent not a product of A-constituents. Proved for symmetric-power E_r; general case was open. DISSOLVED for M(empty)=empty by cycle-index cancellation (sibling node).",
-        "children": []
-       },
-       {
-        "id": "theorem-P-plethysm-cancellation",
-        "role": "attempt",
-        "trust": "computed",
-        "file": "2026-09-06-lemmaN-plethysm-cancellation.md",
-        "approach": "THEOREM P (2026-09-06): analytic monad M=A~ with A[0]=empty and closure => M polynomial. Engine THEOREM P0: plethysm right-cancellation -- H in Q[[p_1,...]] with a_0=0, a_1!=0 => (-)oH injective (bottom-degree argument; p_k o H = a_1 p_k + deg>=2k). Chain: closure => M.M ~= [[r]].M; finitariness forces [[r]]=B~ flat; A[0]=empty => B[0]=empty, A.A,B.A finitary, Joyal ff => Z_A o Z_A = Z_B o Z_A; cancel Z_A (a_1>=1 monad unit) => Z_A=Z_B; B flat => Z_B in Q[[p_1]] => A flat, contra. NO bound on degree OR wreath depth: covers free commutative magma/operad-without-constants (unbounded wreath depth) which stabilizer methods cannot reach. Verified scratch/2026-09-06-plethysm-cancellation.py, magma-a0.py.",
-        "sources": [
-         "Joyal, Foncteurs analytiques et especes de structures, LNM 1234 (1986)",
-         "Bergeron-Labelle-Leroux, Combinatorial Species, Ch.1-2 (Z_{A.B}=Z_A o Z_B plethysm)"
-        ],
-        "children": [],
-        "lean_partial": {
-         "file": "lean/Containers/Containers/PlethysmCancellation.lean",
-         "sha256_16": "5e41577dc724d00f",
-         "declarations": [
-          "injective_of_order_preserving (abstract engine, AXIOM-FREE)",
-          "rescale_injective (concrete linear a1*p1 shadow of P0, via engine)",
-          "rescale_zero_not_injective (sharpness: a1=0 non-injective)"
-         ],
-         "scope": "2026-09-06 LEAN: formalised the ABSTRACT ORDER-PRESERVATION ENGINE of P0 (order-preserving additive endomorphism of a zero-detecting ordered group is injective; choice-free) PLUS a concrete non-vacuous witness over Q -- substitution H=a*X (pure linear a1*p1 shadow) is order-preserving+injective for a!=0, and non-injective for a=0 (sharpness). NOT formalised: the plethysm operation itself, the general-H (deg>=2 mixing) order-preservation, or Theorem P species reduction. Hence trust stays computed, not lean-verified."
-        }
-       },
-       {
-        "id": "theorem-S-bounded-degree",
-        "role": "attempt",
-        "trust": "computed",
-        "file": "2026-09-06-lemmaN-plethysm-cancellation.md",
-        "approach": "THEOREM S (2026-09-06): bounded-degree analytic monad (any M(empty)) closure => polynomial. Cycle-index-free: Lemma S1 (unique finest support-splitting; degree-multiset of support-indecomposable factors is a conjugacy invariant) + Lemma S2 (block-linking: non-flat H gives A.A a support-indecomposable factor of degree >=2e_max). B.A constituents are Young products, factors <=e_max. So A.A ~/= B.A. Subsumes 2026-09-05 Theorem F. Verified scratch/2026-09-06-support-splitting.py.",
-        "children": []
-       },
-       {
-        "id": "conjecture-V-refuted-unital-magma",
-        "approach": "Conjecture V (the §4 vacuity hope: no finitary analytic monad has M(empty) nonempty-finite AND unbounded degree AND unbounded wreath depth) is FALSE. Witness: the free commutative UNITAL (non-associative) magma monad U. Species: U[0]={c} (a_0=1), U[n]=(2n-3)!! for n>=1 (all finite); balanced 2^k-leaf trees give stabilizer S_2 wr..wr S_2 (depth k) => unbounded wreath depth; unbounded degree. It is the free commutative magma (Theorem-P territory, a_0=0) with a UNIT adjoined -- the unit absorbs on substitution (mu(x,c)=x) instead of building, so a_0 goes 0->1 while the whole positive-arity structure (hence unbounded degree + unbounded wreath depth) is preserved. Diagnoses the §4 error: it assumed a substituted constant BUILDS new closed terms; a unit does not. Corner is INHABITED; vacuity route to unconditional THM3 converse is dead.",
-        "role": "attempt",
-        "trust": "computed",
-        "file": "2026-09-06-conjecture-V-refuted.md",
-        "sources": [
-         "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18"
-        ],
-        "note": "Trust 'computed' (like siblings theorem-P/S): the single external dep 'linear-regular theory => analytic monad = symmetric operad' (Joyal/Gambino-Kock) is cited from familiarity, not deep-read this session. CONSTRUCTION and (a),(b),(c)+finiteness are elementary + computationally verified, independent of the paper: |U[n]|=(2n-3)!! (n<=7); |Aut(balanced 2^k tree)|=2^(2^k-1), k=1,2,3; rewrite mu(t,c)->t,mu(c,c)->c terminating+confluent (1179 terms, unique NF). As mathematics the refutation of Conjecture V is proved; the grade reflects the un-deep-read operad-correspondence dep.",
-        "children": []
-       },
-       {
-        "id": "theorem-S-prime-wreath-depth",
-        "approach": "Theorem S' (PROVED 2026-09-07): analytic monad M=A~ of BOUNDED WREATH DEPTH W=h(A)<inf, A non-flat => A.A !~= [[r]].A for every polynomial [[r]]; closure => M polynomial. INVARIANT supplied: imprimitivity depth h. h_t(T) for transitive T = max length of a strictly-refining chain of T-invariant block systems (= max subgroup chain T_alpha..T); conjugacy-invariant. h(K)=max over orbits O of h_t(K^O). h(A)=sup_l h(H_l) over molecular constituents. TWO LAWS PROVED: (Lemma2/BOUND) block-fixing product on disjoint supports has h=max of factors => every ([[r]].A~)[m] stabilizer (block-fixing product of single-A-constituent aut groups, by the Meta-theorem) has h<=W; (Lemma1+WITNESS) uniform substitution (outer non-flat c, all slots filled with one depth-W constituent b) gives Stab = H_b wr H_c, whose sub-orbit O_c x O_b induces the transitive sub-wreath H_b^{O_b} wr H_c^{O_c} with h_t >= h_t(H_c^{O_c})+h_t(H_b^{O_b}) >= 1+W (wreath depth superadditive, explicit concatenated chain). W+1>W => separates. SUBSUMES Theorem S (bounded degree => h<=d-1<inf); RE-PROVES 1M (S_n primitive, h=1; witness S_2 wr S_2=D_4 depth 2) and all symmetric-power/primitive-constituent monads; ANY a_0 (no cardinality/cycle-index/finitariness used). CONFINES THM3 residual to EXACTLY a_0>0 AND unbounded wreath depth (h(A)=inf), whose named inhabitant U is already closed (sibling U-corner-resolved). Verified scratch/2026-09-07-wreath-depth-ht.py.",
-        "role": "attempt",
-        "trust": "computed",
-        "file": "2026-09-07-theorem-S-prime-wreath-depth.md",
-        "note": "PROMOTED speculative->computed 2026-09-07 (proofs/2026-09-07-theorem-S-prime-wreath-depth.md). The 'general wreath-depth invariant with conjugacy-invariance and max/additive laws' the old note demanded is now BUILT and the laws PROVED: h_t/h well-defined (max over finite lattices), Lemma1 wreath superadditivity (explicit chain, = verified), Lemma2 product=max, Bound, Witness. Math PROOF-COMPLETE + computationally verified (scratch/2026-09-07-wreath-depth-ht.py: h_t(S_n)=1, h_t(S_2 wr S_2)=2, triple=3, S_a wr S_b=2, product bounds, witness D_4 wr S_2 = 3 = W+1). Registry grade 'computed' matches siblings theorem-P/S/U-corner: sole load-bearing external dep = Joyal 1986 full-faithfulness (Lemma E, natural iso preserves per-component stabilizer profile) + species substitution/molecular structure, cited from familiarity not deep-read; deep-reading lifts to proved without changing the argument. RESIDUAL after S'+P+U-corner = exactly a_0>0 AND unbounded wreath depth beyond U (framework sec5: escape must be a support-indecomposable factor outside F(A); h handles the depth-increasing (wreath) case, U handles a same-degree diagonal via the peg; wreath-closed a_0>0 general case OPEN = theorem-general-stabilizer-necessity).",
-        "children": [],
-        "sources": [
-         "Joyal, Foncteurs analytiques et especes de structures, LNM 1234 (1986)",
-         "Bergeron-Labelle-Leroux, Combinatorial Species, Ch.1-2 (Z_{A.B}=Z_A o Z_B plethysm)"
+        "file": "2026-09-04-m-containers-codensity.md",
+        "children": [
+          {
+            "id": "affine-implies-connected",
+            "approach": "LEMMA: M affine (M1=1) => every (M-)^A connected. (M1)^A=1 is a single global point; naturality along !:X->1 drags all of (MX)^A into the one summand it picks. So affine => (i).",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-09-04-m-containers-codensity.md",
+            "children": []
+          },
+          {
+            "id": "reader-affine-not-codense",
+            "approach": "Reader X^R is AFFINE (M1=1, so (i) holds) yet FAILS (ii): Phi(A)=(RA)^R != A^R = MA for |R|>=2. Shows affineness alone is NOT sufficient; codensity is a separate necessary condition.",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-09-04-m-containers-codensity.md",
+            "children": []
+          }
         ]
-       },
-       {
-        "id": "U-corner-resolved-stabilizer",
-        "approach": "(star) RESOLVED for U = free commutative UNITAL magma monad, the canonical inhabitant of the residual corner (a_0>0 AND unbounded wreath depth). Answer: NO -- UoU is NOT iso to [[r]]oU for ANY polynomial [[r]]. So THM3 NECESSITY HOLDS at U; U-containers do NOT compose; THM3 is an unconditional biconditional for U. Method: the Aut(X)-stabilizer invariant (Lemma E of 2026-09-05 sec4), read on SPECIES COMPONENTS -- a_0-agnostic and convergence-free (bypasses the plethysm divergence at a_0=1 AND the W=infinity wreath-depth block). META-THEOREM: on the each-label-once component [m], every stabilizer of ([[r]]oM)[m] is a BLOCK-FIXING PRODUCT of single-M-element stabilizers (polynomial outer layer = rigid positions = no swap of parts; 'a function is fixed iff fixed pointwise'). WITNESS (n=4, minimal): w=mu(mu(V0,mu(V2,E')),mu(V1,mu(V3,E'))) in (UoU)[4], content each-once, Stab(w)=<(01)(23)>=C_2, a lone fixed-point-free (correlated) swap. The UNIT E' (inner unit, appearing as an OUTER leaf where it is NOT absorbed) builds a RIGID 2-label block mu(i,mu(j,E')) with no internal symmetry; two equal copies swap with the swap as their ONLY symmetry. <(01)(23)> is NOT a block-fixing product (any product containing it contains (01),(23) separately => order>=4; single 4-leaf tree groups are D_4/S_2). So it is an orbit-type of (UoU)[4] absent from every ([[r]]oU)[4]. THE UNIT IS THE WEAPON: a_0>0 does not save the corner, it SUPPLIES the counterexample -- the exact opposite of the vacuity intuition. BONUS: unit-free n=8 witness (S_2xS_2)wrS_2 (order 32, support-indecomposable, not a product of tree-groups since indecomposable 8-leaf tree-group orders are {8,128}) lives in AoA for A=free comm magma (a_0=0), REPROVING Theorem P's conclusion by the stabilizer method alone (no plethysm). CAVEAT handled: <(01)(23)> IS an all-content intersection of overlapping-support U-trees (Hstar.py) but those reuse labels => higher species component, NOT [4]; the per-component reading is what makes it work.",
+      },
+      {
+        "id": "polynomial-table",
+        "approach": "For polynomial M=(I,B): MA=Sum_i |A|^{|B_i|}, Phi(A)=Prod_{phi:A->I} Sum_i (Sum_a |B_{phi a}|)^{|B_i|} (exact via AAG). Computed: Id full; Maybe, exception X+E, writer E x (-), reader X^R ALL fail (Phi(A) > MA strictly beyond a low threshold). Extra transfs are case-analysis ops (inspect bottom / duplicate reader arg).",
+        "role": "premise",
+        "trust": "proved",
+        "file": "../scratch/m-containers/mcont.py",
+        "children": []
+      },
+      {
+        "id": "D-affine-codense-full",
+        "approach": "Distributions D: affine (D1=1 => (i)) and CODENSE (Nat(D^A,D)=DA: natural A-ary ops are exactly affine combinations). Proof: reduce a tuple to disjoint-support blocks via a projection, collapse blocks to read off weights omega=alpha_A((delta_a)), reduce one block at a time to Nat(D, D(-+F)) whose Z-marginal is a scalar multiple. => D full-faithful. Modulo base rigidity lemma Nat(D,D)={id}.",
         "role": "attempt",
         "trust": "computed",
-        "file": "2026-09-07-U-corner-resolved-stabilizer.md",
-        "sources": [
-         "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18"
-        ],
-        "note": "Grade 'proved': Meta-theorem is elementary (function fixed iff pointwise fixed); Stab(w)=C_2 and C_2 not-in-P(4) brute-verified over S_4 and all of P(4) (scratch/2026-09-07-C2-witness.py); n=8 witness order 32 + support-indecomposable + indecomposable-tree-orders={8,128} verified (scratch/2026-09-07-sep-fast.py); per-component caveat verified (Hstar.py, percomponent-confirm.py). External deps (Joyal FF, poly<=>flat) cited from familiarity as in siblings but NOT used quantitatively -- the witness and non-membership are self-contained group theory. RESOLVES the open (star) that conjecture-V-refuted left; supersedes the 'residual vacuous' hope with a direct necessity proof at U. Also re-derives theorem-P conclusion (a_0=0) via stabilizers. [Joyal 1986 full-faithfulness (Lemma E) cited from familiarity, same extraction level as siblings; not in sources index -- the stabilizer argument itself is self-contained group theory.] GRADE 'computed' (matches siblings theorem-P/conjecture-V): as mathematics the (star)=NO resolution is PROOF-COMPLETE (Meta-theorem elementary; Stab(w)=C_2 and C_2 not-in-P(4) brute-verified; per-component caveat verified). The single load-bearing external dep is Joyal 1986 full-faithfulness (natural iso of analytic functors preserves the multilinear/species-component stabilizer profile) -- a bedrock result cited from familiarity, not deep-read this session; deep-reading it lifts the grade to proved. An elementary route (multilinear part = elements not hit by F(f) for f non-injective on support; naturality preserves it) also exists but is not fully spelled out here.",
+        "file": "../scratch/m-containers/dcod.py",
+        "note": "Composite graded computed pending the base lemma Nat(D,D)={id} (standard rigidity of the affine functor D); the reduction itself is proved. Verified numerically: convex combos natural (2000 checks), non-affine ops break naturality.",
         "children": []
-       },
-       {
-        "id": "general-stabilizer-diagonal-evidence",
+      },
+      {
+        "id": "coproduct-criterion-refuted",
+        "approach": "CORRECTION: 'M preserves coproducts' is the WRONG criterion for [Set,Set]-fullness. (a) It is T1's connected-unit condition for the KLEISLI-enriched target [Kl(M),Kl(M)] via [[-]]_M = R . [[-]]^{Kl} with R=(-.F) restriction along the free F:Set->Kl(M); [[-]]^{Kl} (free coproduct completion) is ALWAYS f.f., so all the action is in R = pure- vs Kleisli-naturality = codensity. (b) Writer E x (-) PRESERVES coproducts but FAILS fullness for |E|>=2 (Phi(1)=|E|^{|E|} != |E|), a direct refutation. (c) T1 as stated needs C closed sym monoidal cocomplete; Kl(M) generally is none, so the invocation was doubly unjustified.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-09-04-m-containers-codensity.md",
+        "children": []
+      },
+      {
+        "id": "thm3-composition-polynomiality",
+        "approach": "THM3 (2026-09-05, sub-agent compute): M-Cont carries a comp product <|_M with [[p<|_M q]]_M = [[p]]_M . [[q]]_M IFF M is a POLYNOMIAL functor (M = Sum_i (-)^{B_i} = familially representable = preserves connected limits = is itself a container extension). One-line reason: [[p]]_M.[[q]]_M = G.M with G = [[p]].M.[[q]]; this is an M-extension [[r]].M iff G polynomial, which holds for ALL p,q iff M polynomial; then p<|_M q = p <| ceil(M) <| q (ordinary <| with M's container spliced in the middle). Product ASSOCIATIVE but NON-UNITAL (semigroupal; monoidal only when M=Id). REFUTES the parked 'commutative+affine' / distributive-law / ZS-H^2 framing: that measures a DIFFERENT question (does [[q]] lift to Kl(M), merging the two M's via mu -- lossy/lax). The obstruction here is a REPRESENTABILITY dichotomy, not a cohomology class -- retire the ZS/H^2 note for composition.",
         "role": "attempt",
-        "trust": "computed",
-        "approach": "PARAMETRIC-H peg-diagonal mechanism (2026-09-08 compute): the U-corner stabilizer escape generalizes from S_2 to an arbitrary outer-operation symmetry group H. For an operad operation omega of arity k>=2 with slot-symmetry H!=1, plus a RIGID LABEL-FREE PEG, the witness w=omega(b_1,..,b_k) of k isomorphic rigid inner blocks has Stab(w)=the correlated DIAGONAL copy of H, which is never a block-fixing product when H moves the blocks => not in F(M) => M.M !~= [[r]].M. Four brute-force checks pass: (1) CONTROL reproduces the published C_2=<(01)(23)> witness (model validated); (2) cyclic-ternary H=C_3 gives Stab(w)=<(0 2 4)(1 3 5)>=C_3 exactly; (3) that C_3 diagonal is support-indecomposable, not a block-fixing product => escape fires; (4) NEGATIVE CONTROL: flat non-commutative op gives Aut=trivial, no escape => escape pinned on non-flatness (H!=1), not the peg alone. SHARPENING: the correct hypothesis is not \"M has a unit\" but \"M admits a rigid label-free PEG\" (the ternary c cannot carry binary absorption; modeled as rigid non-absorbing nullary peg). This broadens the class and is the refinement to carry into the proof. Evidence toward general theorem, NOT the theorem: still needs (i) rigidification, (ii) constructive Stab=Delta_H, (iii) escape Delta_H not-in F_ind(M) (the F-self-control gap) proved uniformly.",
-        "file": "2026-09-08-general-stabilizer-diagonal-evidence.md",
-        "sources": [
-         "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18"
-        ],
-        "note": "computed via scratch/2026-09-08-C3-diagonal-witness.py (stdlib brute force over S_4/S_6). Control reproduces 09-07 C_2 witness before trusting the C_3 extension; negative control isolates non-flatness. Direct successor to U-corner-resolved-stabilizer; feeds PROVE target theorem-general-stabilizer-necessity.",
+        "trust": "proved",
+        "note": "PROMOTED computed->proved 2026-09-05 (MacBeth line-by-line verify pass, proofs/2026-09-05-thm3-composition-polynomiality.md). SUFFICIENCY is PROVED: M polynomial => essential image closed under o, p<|_M q = p<|ceil(M)<|q with [[p<|_M q]]_M = [[p]]_M.[[q]]_M natural in X (star), ASSOCIATIVE, and NON-UNITAL up to Cont-iso unless M=Id (A3 exact finite-cardinality argument). Strong-semigroupal on PURE morphisms proved; Kleisli-bifunctoriality open (= codensity, ties to THM2). NECESSITY is PARTIAL: cardinality growth law (dagger),(ddagger) PROVED and it already excludes P+, P, D at p=q=Id (cleaner than the squaring test) -- refutes 'commutative+affine' decisively. FULL converse (closure => M polynomial as a functor) remains OPEN: the trailing-M obstruction (precomposition M^* not conservative) blocks all three attempts; reduced to Lemma N via Carboni-Johnstone. Crown: fullness=CODENSITY (thm2), composition=POLYNOMIALITY (thm3) are INDEPENDENT invariants of M.",
+        "file": "2026-09-05-thm3-composition-polynomiality.md",
+        "children": [
+          {
+            "id": "structural-identity-A0",
+            "approach": "A0: [[p]]_M o [[q]]_M = G o M with G = [[p]] o M o [[q]], as functors, natural in X (two applications of T1b). Every composite of two M-extensions has the form G o M.",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-09-05-thm3-composition-polynomiality.md",
+            "children": []
+          },
+          {
+            "id": "sufficiency-star-A1",
+            "approach": "A1: M polynomial => G = [[p]].[[ceil M]].[[q]] ~= [[p<|ceil(M)<|q]] by AAG strong monoidality (twice), so [[p]]_M.[[q]]_M = G.M ~= [[r]].M = [[r]]_M, r=p<|ceil(M)<|q, natural in X (star). Line-audited GREEN; cross-checked M=Maybe p=q=sq gives r=Y^4+2Y^2+1 (verify.py, n=0..6).",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-09-05-thm3-composition-polynomiality.md",
+            "children": []
+          },
+          {
+            "id": "assoc-nonunital-A2-A3",
+            "approach": "A2 associativity of <|_M from associativity of <|. A3 non-unital up to Cont-iso unless M=Id: unit e => e<|ceil(M)~=y => [[e]].M~=Id => (evaluate at X=1 then X=2, exact cardinalities) M~=Id.",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-09-05-thm3-composition-polynomiality.md",
+            "children": []
+          },
+          {
+            "id": "maybe-composes-non-affine",
+            "approach": "Maybe (X+1) COMPOSES though NON-affine (M1=2): polynomial. Part A gives r=[[Y^4+2Y^2+1]] (p=q=squaring), checked |X|=0..6 in verify.py. Kills the '=> affine' side of the old heuristic.",
+            "role": "attempt",
+            "trust": "proved",
+            "file": "2026-09-05-thm3-composition-polynomiality.md",
+            "children": []
+          },
+          {
+            "id": "cardinality-necessity-law-B1B2",
+            "approach": "B1: closure => cardinality growth law (ddagger) m(Q(m(n)))=R_Q(m(n)) for a FIXED nonneg-int poly R_Q, every polynomial Q; at Q=Id: m o m = R o m i.e. m|im(m) is a fixed polynomial. B2: this excludes P+ (m=2^n-1: m o m doubly-exponential), P (2^n), D (finite shadow = P+) ALREADY at p=q=Id -- strictly stronger than the squaring test. Refutes 'compose <=> commutative+affine' (P+,D affine+commutative yet fail; Maybe/writer non-affine yet compose). verify.py test_pqId: PASS all poly monads with correct R, FAIL P+,P.",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-09-05-thm3-composition-polynomiality.md",
+            "children": []
+          },
+          {
+            "id": "necessity-lemma-gap",
+            "approach": "Lemma N / crux (star): M monad, MoM ~= [[r]]oM ([[r]] poly) => M polynomial. 2026-09-05 PROVE: reframed and largely settled. Naive single-instance retract route PROVEN CIRCULAR; both prime suspects beta and free-comm-monoid ELIMINATED (beta by cardinality, multiset by a new Aut(X)-stabilizer invariant). Dichotomy: every non-poly monad fails MoM~=[[r]]oM either by super-polynomial growth (cardinality) or by a wreath stabilizer (symmetric/analytic). PROVED for all super-poly monads and the symmetric-power/multiset class; general non-free analytic reduced to one precise Plethysm Lemma (residual gap, uninhabited by any known monad). [2026-09-07 UPDATE: the last open corner (U, a_0>0 & unbounded wreath depth) is now CLOSED on the necessity side by U-corner-resolved-stabilizer: the stabilizer invariant read on species components separates UoU from every poly-oU (witness C_2=<(01)(23)> in (UoU)[4]). The Plethysm-Lemma residual is thereby made unnecessary for U; every NAMED analytic monad now has THM3 necessity.]",
+            "role": "attempt",
+            "trust": "computed",
+            "file": "2026-09-05-lemmaN-retract-and-beta.md",
+            "sources": [
+              "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18",
+              "Carboni-Johnstone, Connected limits familial representability and Artin glueing, MSCS 1995"
+            ],
+            "children": [
+              {
+                "id": "lemma-R0-retract",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-09-05-lemmaN-retract-and-beta.md",
+                "approach": "Lemma R0: for a monad M, M polynomial <=> MoM preserves connected limits. (<=) mu o etaM=1_M makes M a split retract of MoM; Lemma A (retract of a connected-limit-preserver preserves them, elementary natural-comparison diagram chase) + GK 1.18. Lean-able.",
+                "children": []
+              },
+              {
+                "id": "prop-circularity",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-09-05-lemmaN-retract-and-beta.md",
+                "approach": "Prop C: for P poly nonconstant, MoM~=PoM => (MoM preserves D <=> PoM preserves D <=> M preserves D) for every connected-limit D (Lemma B: P poly conservative <=> nonconstant, reflects isos through P). Single self-composite instance carries NO info beyond R0 -- retract route CIRCULAR. (star) needs full family or new invariant.",
+                "children": []
+              },
+              {
+                "id": "beta-eliminated",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-05-lemmaN-retract-and-beta.md",
+                "approach": "Prop D: ultrafilter monad beta has no poly P with bb~=P.b. Infinite X: |bbX|=2^{2^kappa}, kappa=2^{2^|X|}; Sigma_i kappa^{|B_i|}=kappa for fixed family (kappa^lambda=2^{max(2^|X|,lambda)}). 2^{2^kappa}>kappa. Kills beta + all super-poly monads (P,P+,D,continuation,filter) via p=q=Id cardinality law.",
+                "children": []
+              },
+              {
+                "id": "multiset-eliminated-stabilizer",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-05-lemmaN-retract-and-beta.md",
+                "approach": "Theorem F: free comm monoid (multiset) has M.M ~/= P.M for any poly P. Lemma E invariant: nat iso => Aut(X)-equivariant bijections preserve point-stabilizers. P.M stabilizers = intersections of M-stabilizers = YOUNG (within-block). But {{a,b},{c,d}} in MM X has Stab=S_2 wr S_2=D_4 (order 8, block-swap (ac)(bd) but not (ac)) = NON-Young (8 not in {1,2,4,6,24}). Python-verified. Correct line: Young(one layer) vs WREATH(non-free outer); naive outer-rigidity heuristic WRONG.",
+                "children": []
+              },
+              {
+                "id": "plethysm-lemma-residual",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-09-05-lemmaN-retract-and-beta.md",
+                "approach": "OLD RESIDUAL (Plethysm Lemma), SUPERSEDED for a_0=0 by theorem-P-plethysm-cancellation: A non-flat species => A.A has a molecular constituent not a product of A-constituents. Proved for symmetric-power E_r; general case was open. DISSOLVED for M(empty)=empty by cycle-index cancellation (sibling node).",
+                "children": []
+              },
+              {
+                "id": "theorem-P-plethysm-cancellation",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-06-lemmaN-plethysm-cancellation.md",
+                "approach": "THEOREM P (2026-09-06): analytic monad M=A~ with A[0]=empty and closure => M polynomial. Engine THEOREM P0: plethysm right-cancellation -- H in Q[[p_1,...]] with a_0=0, a_1!=0 => (-)oH injective (bottom-degree argument; p_k o H = a_1 p_k + deg>=2k). Chain: closure => M.M ~= [[r]].M; finitariness forces [[r]]=B~ flat; A[0]=empty => B[0]=empty, A.A,B.A finitary, Joyal ff => Z_A o Z_A = Z_B o Z_A; cancel Z_A (a_1>=1 monad unit) => Z_A=Z_B; B flat => Z_B in Q[[p_1]] => A flat, contra. NO bound on degree OR wreath depth: covers free commutative magma/operad-without-constants (unbounded wreath depth) which stabilizer methods cannot reach. Verified scratch/2026-09-06-plethysm-cancellation.py, magma-a0.py.",
+                "sources": [
+                  "Joyal, Foncteurs analytiques et especes de structures, LNM 1234 (1986)",
+                  "Bergeron-Labelle-Leroux, Combinatorial Species, Ch.1-2 (Z_{A.B}=Z_A o Z_B plethysm)"
+                ],
+                "children": [],
+                "lean_partial": {
+                  "file": "lean/Containers/Containers/PlethysmCancellation.lean",
+                  "sha256_16": "5e41577dc724d00f",
+                  "declarations": [
+                    "injective_of_order_preserving (abstract engine, AXIOM-FREE)",
+                    "rescale_injective (concrete linear a1*p1 shadow of P0, via engine)",
+                    "rescale_zero_not_injective (sharpness: a1=0 non-injective)"
+                  ],
+                  "scope": "2026-09-06 LEAN: formalised the ABSTRACT ORDER-PRESERVATION ENGINE of P0 (order-preserving additive endomorphism of a zero-detecting ordered group is injective; choice-free) PLUS a concrete non-vacuous witness over Q -- substitution H=a*X (pure linear a1*p1 shadow) is order-preserving+injective for a!=0, and non-injective for a=0 (sharpness). NOT formalised: the plethysm operation itself, the general-H (deg>=2 mixing) order-preservation, or Theorem P species reduction. Hence trust stays computed, not lean-verified."
+                },
+                "note": "PROVENANCE LIFTED computed->proved 2026-09-28: the external-import cap is discharged by deep-read from primary/authoritative sources (extracted text in scratch/provenance/). Gambino-Kock 2009 §1.18/§1.20 + Prop 1.12/1.16 (analytic functor=species; FLAT species <=> finitary polynomial functor on Set; polynomial <=> familially representable <=> preserves connected limits) read WITH PROOF in-seed. Joyal 1986 Theoreme 1 (natural iso of analytic functors <=> iso of underlying species; Taylor series unique up to canonical iso) statement + logical structure (Thm1 from Prop1, isos are regular) read from primary source. BLL Thm 2.15 (Z_{FoG}=Z_F o Z_G, hypothesis G[empty]=empty) exact statement read from the authors' own free text (bergeron.math.uqam.ca); its PROOF is in the paywalled CUP Ch.4, cited-not-read, but it is a foundational textbook result and instances are code-verified. Internal argument was already proof-complete + code-verified; this only removes the provenance cap."
+              },
+              {
+                "id": "theorem-S-bounded-degree",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-06-lemmaN-plethysm-cancellation.md",
+                "approach": "THEOREM S (2026-09-06): bounded-degree analytic monad (any M(empty)) closure => polynomial. Cycle-index-free: Lemma S1 (unique finest support-splitting; degree-multiset of support-indecomposable factors is a conjugacy invariant) + Lemma S2 (block-linking: non-flat H gives A.A a support-indecomposable factor of degree >=2e_max). B.A constituents are Young products, factors <=e_max. So A.A ~/= B.A. Subsumes 2026-09-05 Theorem F. Verified scratch/2026-09-06-support-splitting.py.",
+                "children": [],
+                "note": "PROVENANCE LIFTED computed->proved 2026-09-28: the external-import cap is discharged by deep-read from primary/authoritative sources (extracted text in scratch/provenance/). Gambino-Kock 2009 §1.18/§1.20 + Prop 1.12/1.16 (analytic functor=species; FLAT species <=> finitary polynomial functor on Set; polynomial <=> familially representable <=> preserves connected limits) read WITH PROOF in-seed. Joyal 1986 Theoreme 1 (natural iso of analytic functors <=> iso of underlying species; Taylor series unique up to canonical iso) statement + logical structure (Thm1 from Prop1, isos are regular) read from primary source. BLL Thm 2.15 (Z_{FoG}=Z_F o Z_G, hypothesis G[empty]=empty) exact statement read from the authors' own free text (bergeron.math.uqam.ca); its PROOF is in the paywalled CUP Ch.4, cited-not-read, but it is a foundational textbook result and instances are code-verified. Internal argument was already proof-complete + code-verified; this only removes the provenance cap."
+              },
+              {
+                "id": "conjecture-V-refuted-unital-magma",
+                "approach": "Conjecture V (the §4 vacuity hope: no finitary analytic monad has M(empty) nonempty-finite AND unbounded degree AND unbounded wreath depth) is FALSE. Witness: the free commutative UNITAL (non-associative) magma monad U. Species: U[0]={c} (a_0=1), U[n]=(2n-3)!! for n>=1 (all finite); balanced 2^k-leaf trees give stabilizer S_2 wr..wr S_2 (depth k) => unbounded wreath depth; unbounded degree. It is the free commutative magma (Theorem-P territory, a_0=0) with a UNIT adjoined -- the unit absorbs on substitution (mu(x,c)=x) instead of building, so a_0 goes 0->1 while the whole positive-arity structure (hence unbounded degree + unbounded wreath depth) is preserved. Diagnoses the §4 error: it assumed a substituted constant BUILDS new closed terms; a unit does not. Corner is INHABITED; vacuity route to unconditional THM3 converse is dead.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-06-conjecture-V-refuted.md",
+                "sources": [
+                  "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18"
+                ],
+                "note": "Trust 'computed' (like siblings theorem-P/S): the single external dep 'linear-regular theory => analytic monad = symmetric operad' (Joyal/Gambino-Kock) is cited from familiarity, not deep-read this session. CONSTRUCTION and (a),(b),(c)+finiteness are elementary + computationally verified, independent of the paper: |U[n]|=(2n-3)!! (n<=7); |Aut(balanced 2^k tree)|=2^(2^k-1), k=1,2,3; rewrite mu(t,c)->t,mu(c,c)->c terminating+confluent (1179 terms, unique NF). As mathematics the refutation of Conjecture V is proved; the grade reflects the un-deep-read operad-correspondence dep. PROVENANCE LIFTED computed->proved 2026-09-28: the external-import cap is discharged by deep-read from primary/authoritative sources (extracted text in scratch/provenance/). Gambino-Kock 2009 §1.18/§1.20 + Prop 1.12/1.16 (analytic functor=species; FLAT species <=> finitary polynomial functor on Set; polynomial <=> familially representable <=> preserves connected limits) read WITH PROOF in-seed. Joyal 1986 Theoreme 1 (natural iso of analytic functors <=> iso of underlying species; Taylor series unique up to canonical iso) statement + logical structure (Thm1 from Prop1, isos are regular) read from primary source. BLL Thm 2.15 (Z_{FoG}=Z_F o Z_G, hypothesis G[empty]=empty) exact statement read from the authors' own free text (bergeron.math.uqam.ca); its PROOF is in the paywalled CUP Ch.4, cited-not-read, but it is a foundational textbook result and instances are code-verified. Internal argument was already proof-complete + code-verified; this only removes the provenance cap.",
+                "children": []
+              },
+              {
+                "id": "theorem-S-prime-wreath-depth",
+                "approach": "Theorem S' (PROVED 2026-09-07): analytic monad M=A~ of BOUNDED WREATH DEPTH W=h(A)<inf, A non-flat => A.A !~= [[r]].A for every polynomial [[r]]; closure => M polynomial. INVARIANT supplied: imprimitivity depth h. h_t(T) for transitive T = max length of a strictly-refining chain of T-invariant block systems (= max subgroup chain T_alpha..T); conjugacy-invariant. h(K)=max over orbits O of h_t(K^O). h(A)=sup_l h(H_l) over molecular constituents. TWO LAWS PROVED: (Lemma2/BOUND) block-fixing product on disjoint supports has h=max of factors => every ([[r]].A~)[m] stabilizer (block-fixing product of single-A-constituent aut groups, by the Meta-theorem) has h<=W; (Lemma1+WITNESS) uniform substitution (outer non-flat c, all slots filled with one depth-W constituent b) gives Stab = H_b wr H_c, whose sub-orbit O_c x O_b induces the transitive sub-wreath H_b^{O_b} wr H_c^{O_c} with h_t >= h_t(H_c^{O_c})+h_t(H_b^{O_b}) >= 1+W (wreath depth superadditive, explicit concatenated chain). W+1>W => separates. SUBSUMES Theorem S (bounded degree => h<=d-1<inf); RE-PROVES 1M (S_n primitive, h=1; witness S_2 wr S_2=D_4 depth 2) and all symmetric-power/primitive-constituent monads; ANY a_0 (no cardinality/cycle-index/finitariness used). CONFINES THM3 residual to EXACTLY a_0>0 AND unbounded wreath depth (h(A)=inf), whose named inhabitant U is already closed (sibling U-corner-resolved). Verified scratch/2026-09-07-wreath-depth-ht.py.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-07-theorem-S-prime-wreath-depth.md",
+                "note": "PROMOTED speculative->computed 2026-09-07 (proofs/2026-09-07-theorem-S-prime-wreath-depth.md). The 'general wreath-depth invariant with conjugacy-invariance and max/additive laws' the old note demanded is now BUILT and the laws PROVED: h_t/h well-defined (max over finite lattices), Lemma1 wreath superadditivity (explicit chain, = verified), Lemma2 product=max, Bound, Witness. Math PROOF-COMPLETE + computationally verified (scratch/2026-09-07-wreath-depth-ht.py: h_t(S_n)=1, h_t(S_2 wr S_2)=2, triple=3, S_a wr S_b=2, product bounds, witness D_4 wr S_2 = 3 = W+1). Registry grade 'computed' matches siblings theorem-P/S/U-corner: sole load-bearing external dep = Joyal 1986 full-faithfulness (Lemma E, natural iso preserves per-component stabilizer profile) + species substitution/molecular structure, cited from familiarity not deep-read; deep-reading lifts to proved without changing the argument. RESIDUAL after S'+P+U-corner = exactly a_0>0 AND unbounded wreath depth beyond U (framework sec5: escape must be a support-indecomposable factor outside F(A); h handles the depth-increasing (wreath) case, U handles a same-degree diagonal via the peg; wreath-closed a_0>0 general case OPEN = theorem-general-stabilizer-necessity). PROVENANCE LIFTED computed->proved 2026-09-28: the external-import cap is discharged by deep-read from primary/authoritative sources (extracted text in scratch/provenance/). Gambino-Kock 2009 §1.18/§1.20 + Prop 1.12/1.16 (analytic functor=species; FLAT species <=> finitary polynomial functor on Set; polynomial <=> familially representable <=> preserves connected limits) read WITH PROOF in-seed. Joyal 1986 Theoreme 1 (natural iso of analytic functors <=> iso of underlying species; Taylor series unique up to canonical iso) statement + logical structure (Thm1 from Prop1, isos are regular) read from primary source. BLL Thm 2.15 (Z_{FoG}=Z_F o Z_G, hypothesis G[empty]=empty) exact statement read from the authors' own free text (bergeron.math.uqam.ca); its PROOF is in the paywalled CUP Ch.4, cited-not-read, but it is a foundational textbook result and instances are code-verified. Internal argument was already proof-complete + code-verified; this only removes the provenance cap.",
+                "children": [],
+                "sources": [
+                  "Joyal, Foncteurs analytiques et especes de structures, LNM 1234 (1986)",
+                  "Bergeron-Labelle-Leroux, Combinatorial Species, Ch.1-2 (Z_{A.B}=Z_A o Z_B plethysm)"
+                ]
+              },
+              {
+                "id": "U-corner-resolved-stabilizer",
+                "approach": "(star) RESOLVED for U = free commutative UNITAL magma monad, the canonical inhabitant of the residual corner (a_0>0 AND unbounded wreath depth). Answer: NO -- UoU is NOT iso to [[r]]oU for ANY polynomial [[r]]. So THM3 NECESSITY HOLDS at U; U-containers do NOT compose; THM3 is an unconditional biconditional for U. Method: the Aut(X)-stabilizer invariant (Lemma E of 2026-09-05 sec4), read on SPECIES COMPONENTS -- a_0-agnostic and convergence-free (bypasses the plethysm divergence at a_0=1 AND the W=infinity wreath-depth block). META-THEOREM: on the each-label-once component [m], every stabilizer of ([[r]]oM)[m] is a BLOCK-FIXING PRODUCT of single-M-element stabilizers (polynomial outer layer = rigid positions = no swap of parts; 'a function is fixed iff fixed pointwise'). WITNESS (n=4, minimal): w=mu(mu(V0,mu(V2,E')),mu(V1,mu(V3,E'))) in (UoU)[4], content each-once, Stab(w)=<(01)(23)>=C_2, a lone fixed-point-free (correlated) swap. The UNIT E' (inner unit, appearing as an OUTER leaf where it is NOT absorbed) builds a RIGID 2-label block mu(i,mu(j,E')) with no internal symmetry; two equal copies swap with the swap as their ONLY symmetry. <(01)(23)> is NOT a block-fixing product (any product containing it contains (01),(23) separately => order>=4; single 4-leaf tree groups are D_4/S_2). So it is an orbit-type of (UoU)[4] absent from every ([[r]]oU)[4]. THE UNIT IS THE WEAPON: a_0>0 does not save the corner, it SUPPLIES the counterexample -- the exact opposite of the vacuity intuition. BONUS: unit-free n=8 witness (S_2xS_2)wrS_2 (order 32, support-indecomposable, not a product of tree-groups since indecomposable 8-leaf tree-group orders are {8,128}) lives in AoA for A=free comm magma (a_0=0), REPROVING Theorem P's conclusion by the stabilizer method alone (no plethysm). CAVEAT handled: <(01)(23)> IS an all-content intersection of overlapping-support U-trees (Hstar.py) but those reuse labels => higher species component, NOT [4]; the per-component reading is what makes it work.",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-07-U-corner-resolved-stabilizer.md",
+                "sources": [
+                  "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18"
+                ],
+                "note": "Grade 'proved': Meta-theorem is elementary (function fixed iff pointwise fixed); Stab(w)=C_2 and C_2 not-in-P(4) brute-verified over S_4 and all of P(4) (scratch/2026-09-07-C2-witness.py); n=8 witness order 32 + support-indecomposable + indecomposable-tree-orders={8,128} verified (scratch/2026-09-07-sep-fast.py); per-component caveat verified (Hstar.py, percomponent-confirm.py). External deps (Joyal FF, poly<=>flat) cited from familiarity as in siblings but NOT used quantitatively -- the witness and non-membership are self-contained group theory. RESOLVES the open (star) that conjecture-V-refuted left; supersedes the 'residual vacuous' hope with a direct necessity proof at U. Also re-derives theorem-P conclusion (a_0=0) via stabilizers. [Joyal 1986 full-faithfulness (Lemma E) cited from familiarity, same extraction level as siblings; not in sources index -- the stabilizer argument itself is self-contained group theory.] GRADE 'computed' (matches siblings theorem-P/conjecture-V): as mathematics the (star)=NO resolution is PROOF-COMPLETE (Meta-theorem elementary; Stab(w)=C_2 and C_2 not-in-P(4) brute-verified; per-component caveat verified). The single load-bearing external dep is Joyal 1986 full-faithfulness (natural iso of analytic functors preserves the multilinear/species-component stabilizer profile) -- a bedrock result cited from familiarity, not deep-read this session; deep-reading it lifts the grade to proved. An elementary route (multilinear part = elements not hit by F(f) for f non-injective on support; naturality preserves it) also exists but is not fully spelled out here. PROVENANCE LIFTED computed->proved 2026-09-28: the external-import cap is discharged by deep-read from primary/authoritative sources (extracted text in scratch/provenance/). Gambino-Kock 2009 §1.18/§1.20 + Prop 1.12/1.16 (analytic functor=species; FLAT species <=> finitary polynomial functor on Set; polynomial <=> familially representable <=> preserves connected limits) read WITH PROOF in-seed. Joyal 1986 Theoreme 1 (natural iso of analytic functors <=> iso of underlying species; Taylor series unique up to canonical iso) statement + logical structure (Thm1 from Prop1, isos are regular) read from primary source. BLL Thm 2.15 (Z_{FoG}=Z_F o Z_G, hypothesis G[empty]=empty) exact statement read from the authors' own free text (bergeron.math.uqam.ca); its PROOF is in the paywalled CUP Ch.4, cited-not-read, but it is a foundational textbook result and instances are code-verified. Internal argument was already proof-complete + code-verified; this only removes the provenance cap.",
+                "children": []
+              },
+              {
+                "id": "general-stabilizer-diagonal-evidence",
+                "role": "attempt",
+                "trust": "speculative",
+                "approach": "PARAMETRIC-H peg-diagonal mechanism (2026-09-08 compute): the U-corner stabilizer escape generalizes from S_2 to an arbitrary outer-operation symmetry group H. For an operad operation omega of arity k>=2 with slot-symmetry H!=1, plus a RIGID LABEL-FREE PEG, the witness w=omega(b_1,..,b_k) of k isomorphic rigid inner blocks has Stab(w)=the correlated DIAGONAL copy of H, which is never a block-fixing product when H moves the blocks => not in F(M) => M.M !~= [[r]].M. Four brute-force checks pass: (1) CONTROL reproduces the published C_2=<(01)(23)> witness (model validated); (2) cyclic-ternary H=C_3 gives Stab(w)=<(0 2 4)(1 3 5)>=C_3 exactly; (3) that C_3 diagonal is support-indecomposable, not a block-fixing product => escape fires; (4) NEGATIVE CONTROL: flat non-commutative op gives Aut=trivial, no escape => escape pinned on non-flatness (H!=1), not the peg alone. SHARPENING: the correct hypothesis is not \"M has a unit\" but \"M admits a rigid label-free PEG\" (the ternary c cannot carry binary absorption; modeled as rigid non-absorbing nullary peg). This broadens the class and is the refinement to carry into the proof. Evidence toward general theorem, NOT the theorem: still needs (i) rigidification, (ii) constructive Stab=Delta_H, (iii) escape Delta_H not-in F_ind(M) (the F-self-control gap) proved uniformly.",
+                "file": "2026-09-08-general-stabilizer-diagonal-evidence.md",
+                "sources": [
+                  "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18"
+                ],
+                "note": "computed via scratch/2026-09-08-C3-diagonal-witness.py (stdlib brute force over S_4/S_6). Control reproduces 09-07 C_2 witness before trusting the C_3 extension; negative control isolates non-flatness. Direct successor to U-corner-resolved-stabilizer; feeds PROVE target theorem-general-stabilizer-necessity. || 2026-09-08 DEMOTED speculative->refuted-in-part: the peg-WITHOUT-unit generalization and the C_3 'extend' check are REFUTED (see theorem-general-stabilizer-necessity sec6). Task 3 only tested support-INDECOMPOSABILITY (>=2-part partitions; skips 1-part) so it MISSED that Delta_C3 = Aut(single O-tree) exactly for the free ternary operad with a non-absorbing peg => Delta_C3 in F => escape FAILS. Also (R2) alone is insufficient: a correlated-swap symmetry <(01)(23)> realizes Delta_C2 on single leaves. Only the S_2 CONTROL survives (it is the genuine unital U-corner). Correct hypothesis = FULLY-SYMMETRIC operations + ABSORBED unit, not 'rigid label-free peg'.",
+                "children": []
+              },
+              {
+                "id": "theorem-general-stabilizer-necessity",
+                "role": "attempt",
+                "trust": "proved",
+                "file": "2026-09-08-general-stabilizer-necessity.md",
+                "approach": "THM3 necessity PROVED for the whole family U = free commutative unital magma monads = free-algebra monads of a FULLY-SYMMETRIC UNITAL operad O (every arity->=2 op fully symmetric H_g=S_arity; universal absorbed unit e, a_0>=1; only unary op = identity; some op arity>=2). Result: M.M !~= [[r]].M for all polynomial [[r]]; essential image not composition-closed; M non-flat=>non-poly => THM3 biconditional holds for all of U. Includes free comm unital n-ary magmas U_n for every n>=2 (a_0=1, h=inf), a NAMED slice of the residual, generalizing U=U_2. METHOD: same C_2 witness as U-corner (w=mu(mu(V0,mu(V2,E')),mu(V1,mu(V3,E'))), Aut=<(01)(23)>) works verbatim (mu=primitive or composite omega(x,y,e,..,e)). ESCAPE (crux): Delta_C2 not in F(A). (R2) no rigid >=2-label single tree (deepest-node + full symmetry). Lemma3: full symmetry => Aut(single tree)=iterated wreath of S_m, support-indec factors Aut(s) wr S_m; such a factor ~= fpf-involution-on-4 forces m=2,|Aut(s)|=1,l=2 = rigid 2-block, contra (R2). CORRECTION of general-stabilizer-diagonal-evidence: peg-without-unit and non-full (cyclic) symmetry FAIL the escape (Delta_C3=Aut(single tree) for free ternary op; correlated-swap op realizes Delta_C2 on single leaves). Full symmetry + absorbed unit is the exact hypothesis. Verified: verify-general-stabilizer.py, verify-boundary2.py (exhaustive n=4, no Delta_C2 factor), verify-boundary3.py.",
+                "sources": [
+                  "Gambino-Kock, Polynomial functors and polynomial monads, MPCPS 154 (2013), section 1.18",
+                  "Joyal, Foncteurs analytiques et especes de structures, LNM 1234 (1986)"
+                ],
+                "note": "PROVED-quality internal argument (Meta-thm+Witness+Escape all proved; escape via order argument on iterated-symmetric-wreath factors), COMPUTED-capped by the standard analytic-monad~operad import (shared cap with theorem-P/S-prime/U-corner). Closes the NAMED inhabitants of the residual a_0>0 & h=inf (free comm unital magmas/algebras). Residual now sharpens to: a_0>0 & h=inf & NOT a free comm unital magma (non-fully-symmetric / non-absorbing-peg part), which sec6 shows genuinely needs a different tool. Children: builds on U-corner-resolved-stabilizer (premise: Meta-theorem + witness template) and corrects general-stabilizer-diagonal-evidence. PROVENANCE LIFTED computed->proved 2026-09-28: the external-import cap is discharged by deep-read from primary/authoritative sources (extracted text in scratch/provenance/). Gambino-Kock 2009 §1.18/§1.20 + Prop 1.12/1.16 (analytic functor=species; FLAT species <=> finitary polynomial functor on Set; polynomial <=> familially representable <=> preserves connected limits) read WITH PROOF in-seed. Joyal 1986 Theoreme 1 (natural iso of analytic functors <=> iso of underlying species; Taylor series unique up to canonical iso) statement + logical structure (Thm1 from Prop1, isos are regular) read from primary source. BLL Thm 2.15 (Z_{FoG}=Z_F o Z_G, hypothesis G[empty]=empty) exact statement read from the authors' own free text (bergeron.math.uqam.ca); its PROOF is in the paywalled CUP Ch.4, cited-not-read, but it is a foundational textbook result and instances are code-verified. Internal argument was already proof-complete + code-verified; this only removes the provenance cap.",
+                "children": [
+                  {
+                    "id": "escape-lemma-full-symmetry",
+                    "role": "premise",
+                    "trust": "proved",
+                    "approach": "Delta_C2 not in F(A) for fully-symmetric unital O. (R2): no rigid >=2-label single O-tree (deepest internal node has >=2 label-children, full symmetry swaps two; units absorbed so no peg-leaves). Lemma3: Aut(single tree)=direct product over child iso-classes of Aut(s) wr S_m (full symmetry => Young subgroup is a genuine product, classes uncorrelated). A support-indec factor Aut(s) wr S_m (m>=2) is perm-iso to a fpf-involution-on-4 only if m=2,|Aut(s)|=1,l=2 (rigid 2-block) contradicting (R2). Exhaustively verified at n=4 for U_3 (25 trees, 0 with a Delta_C2 factor).",
+                    "file": "2026-09-08-general-stabilizer-necessity.md",
+                    "children": []
+                  },
+                  {
+                    "id": "C2-witness-family",
+                    "role": "premise",
+                    "trust": "proved",
+                    "approach": "w=mu(mu(V0,mu(V2,E')),mu(V1,mu(V3,E'))) in (M.M)[4], Aut(w)=<(01)(23)> for every O in U; mu is the commutative binary op or composite omega(x,y,e,..,e); E'=inner unit as non-absorbed outer leaf (rigid peg). Same construction as U-corner, uses only mu+e. Brute-forced for U_3 (composite mu).",
+                    "file": "2026-09-08-general-stabilizer-necessity.md",
+                    "children": []
+                  }
+                ]
+              }
+            ],
+            "note": "UPDATED 2026-09-06 (PROVE): Conjecture V (corner vacuity) REFUTED -- see child conjecture-V-refuted-unital-magma. The residual corner is INHABITED by the free commutative unital magma U (a_0=1, unbounded degree, unbounded wreath depth, all components finite). The hope of an UNCONDITIONAL THM3 converse via corner-vacuity is dead. Compensating gain: the corner is now SHARP -- Theorem S' (child theorem-S-prime-wreath-depth, conjecture) shows WREATH DEPTH not degree is the true axis and would subsume Theorem S, collapsing the residual to exactly 'a_0>0 AND unbounded wreath depth', canonical test case U. Converse for U itself: OPEN. Earlier (proved): P (a_0=0, any depth), S (bounded degree). Prior: R0/circularity/beta/multiset proved."
+          }
+        ]
+      },
+      {
+        "id": "t1-input",
+        "approach": "Flagship T1: [[-]]:Fam(C^op)->[C,C] full-faithful iff monoidal unit connected iff C(I,-) preserves coproducts. Used to DIAGNOSE the sketch's error (it is the [Kl,Kl] criterion), not as a premise for the [Set,Set] theorem, which is proved directly via the Kan engine.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-08-25-fullness-unit-connectedness.md",
         "children": []
-       }
-      ],
-      "note": "UPDATED 2026-09-06 (PROVE): Conjecture V (corner vacuity) REFUTED -- see child conjecture-V-refuted-unital-magma. The residual corner is INHABITED by the free commutative unital magma U (a_0=1, unbounded degree, unbounded wreath depth, all components finite). The hope of an UNCONDITIONAL THM3 converse via corner-vacuity is dead. Compensating gain: the corner is now SHARP -- Theorem S' (child theorem-S-prime-wreath-depth, conjecture) shows WREATH DEPTH not degree is the true axis and would subsume Theorem S, collapsing the residual to exactly 'a_0>0 AND unbounded wreath depth', canonical test case U. Converse for U itself: OPEN. Earlier (proved): P (a_0=0, any depth), S (bounded degree). Prior: R0/circularity/beta/multiset proved."
-     }
+      }
     ]
-   },
-   {
-    "id": "t1-input",
-    "approach": "Flagship T1: [[-]]:Fam(C^op)->[C,C] full-faithful iff monoidal unit connected iff C(I,-) preserves coproducts. Used to DIAGNOSE the sketch's error (it is the [Kl,Kl] criterion), not as a premise for the [Set,Set] theorem, which is proved directly via the Kan engine.",
-    "role": "premise",
-    "trust": "proved",
-    "file": "2026-08-25-fullness-unit-connectedness.md",
-    "children": []
-   }
-  ]
- }
+  }
 }
