@@ -66,32 +66,42 @@ post-composed with the effect monad. Second, $\extM{-}$ is \emph{always faithful
 into its own codensity monad is an isomorphism --- and each functor $\Set(A,M{-})$ is connected;
 consequently probability distributions keep fullness while error, partiality, read-only context
 and nondeterminism destroy it. Third, the essential image of $\extM{-}$ is closed under
-composition if and only if $M$ is a \emph{polynomial} functor --- sufficiency for all $M$, with
-$p\triangleleft_M q=p\triangleleft\lceil M\rceil\triangleleft q$, and necessity for every monad that
-arises, via a trichotomy: super-polynomial growth is killed by a cardinality law; every analytic monad
-with $M\emptyset=\emptyset$ is killed by \emph{right-cancellation of plethysm} in the ring of
-cycle-index series (with no bound on degree or nesting depth, so free magmas and free operad monads are
-covered); and every bounded-degree analytic monad is killed by a support-splitting stabilizer invariant.
-The only monads left uncovered are analytic with $M\emptyset$ nonempty-finite \emph{and} unbounded
-nesting depth --- a corner that is \emph{inhabited} (the free commutative unital magma), where the
-converse remains open. The affine-plus-commutative folklore criterion is false ($\D$ is affine and
-commutative but does not compose; $\mathsf{Maybe}$ is neither yet does). Fullness and composition are thus governed by two independent
-Kan-theoretic invariants of $M$ that trade oppositely: probability is faithful but not composable,
-error is composable but not faithful.
+composition \emph{if} $M$ is a \emph{polynomial} functor --- sufficiency for all $M$, with
+$p\triangleleft_M q=p\triangleleft\lceil M\rceil\triangleleft q$ --- and the converse holds precisely
+within the \emph{fully symmetric} world. Composition-closure forces $M$ polynomial for every analytic
+monad with $M\emptyset=\emptyset$ (by \emph{right-cancellation of plethysm} in the cycle-index ring, at
+any degree or nesting depth, covering free magmas and free operad monads), for every analytic monad of
+bounded \emph{wreath depth} (by an imprimitivity-depth invariant subsuming the multiset and
+symmetric-power monads), and for every free commutative unital magma monad (by a correlated block-swap
+no polynomial layer can produce); but it \emph{fails} for partially symmetric unital operads --- the free
+algebra monad of a ternary operation with cyclic ($C_3$) slot-symmetry and an absorbed unit is
+non-polynomial yet has composition-closed image ($\extM{p}\circ\extM{q}\cong\extM{p\triangleleft L}$
+with $L$ the list monad). The dividing line is the commutativity of the binary unit-composite
+$\mu(x,y)=\omega(x,y,e,\dots)$: commutative (fully symmetric) forces the block-swap and hence the
+converse; non-commutative permits closure without polynomiality. Thus \emph{within the symmetric world
+of the applied effect monads --- multiset, distribution, powerset --- composition $\iff$ flatness of the
+species $\iff$ polynomiality}, with the $C_3$ operad marking the exact boundary. The affine-plus-commutative
+folklore criterion is false ($\D$ is affine and commutative but does not compose; $\mathsf{Maybe}$ is
+neither yet does). Fullness and composition are thus governed by two independent Kan-theoretic invariants
+of $M$ that trade oppositely: probability is faithful but not composable, error is composable but not faithful.
 \end{abstract}
 
 \maketitle
 
 \begin{center}\small
 \fbox{\begin{minipage}{0.92\textwidth}\centering
-\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 7 September 2026.\qquad
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 6 September 2026.\qquad
 \emph{For review by:} Rick.\\[2pt]
 \emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{commit}
-\texttt{842db92}.\\[2pt]
-\textbf{Draft --- work in progress; not yet neighbour-reviewed. This revision supersedes the version
-sent to Rick on 5 September (commit \texttt{b94bc32}): Theorem~\ref{thm:3}'s necessity direction now
-closes the analytic converse via plethysm right-cancellation (\S\ref{sec:cancel}), retiring the
-previously open Plethysm Lemma.}
+\texttt{PENDING}.\\[2pt]
+\textbf{Draft --- work in progress; not yet neighbour-reviewed. This revision supersedes commit
+\texttt{842db92}: Theorem~\ref{thm:3}'s necessity direction is now settled to be \emph{conditional}.
+The last corner (formerly an open Problem, ``$U\circ U\cong\ext r\circ U$?'') is closed --- necessity
+\emph{holds} at the free commutative unital magma $U$ (\S\ref{sec:unital}) --- but a partially symmetric
+sibling, the $C_3$-ternary unital operad, \emph{refutes} necessity outright: its non-polynomial monad has
+composition-closed image (Theorem~\ref{thm:C3}). The corrected theorem states sufficiency
+unconditionally and necessity within the fully symmetric world, with commutativity of the binary
+unit-composite as the exact dividing line (\S\ref{sec:unital}, Theorem~\ref{thm:3final}).}
 \end{minipage}}
 \end{center}
 
@@ -189,26 +199,33 @@ $|E|\ge 2$, a clean refutation (\S\ref{sec:correction}).
 The third theorem answers \ref{q:comp}. Call $M$ \emph{polynomial} if $M\cong\sum_{i\in I}(-)^{B_i}$
 for some family $(B_i)_{i\in I}$; equivalently $M=\ext{\ceil M}$ for a container $\ceil M$.
 
-\begin{theorem}[Composition $=$ polynomiality; \S\ref{sec:comp}]\label{thm:3}
-\emph{(Sufficiency.)} If $M$ is polynomial, then for all $M$-containers $p,q$ the ordinary container
+\begin{theorem}[Sufficiency of polynomiality; conditional converse; \S\ref{sec:comp}]\label{thm:3}
+\emph{(Sufficiency, unconditional.)} If $M$ is polynomial, then for all $M$-containers $p,q$ the
+ordinary container
 \[
   p\triangleleft_M q\;:=\;p\triangleleft\ceil M\triangleleft q
 \]
 satisfies $\extM{p\triangleleft_M q}\cong\extM{p}\circ\extM{q}$, naturally in $X$. The operation
 $\triangleleft_M$ is associative and has a unit up to ordinary container isomorphism only when
 $M=\Id$; so the essential image of $\extM{-}$ is closed under composition.
-\emph{(Necessity.)} Conversely, if the essential image is closed under composition then $M$ is
-polynomial --- proved for every monad that arises, by a trichotomy. Either $M$ grows
-super-polynomially, and $|M(MX)|$ cannot agree on the values of $|MX|$ with a fixed polynomial
-(excluding powerset, nonempty powerset, distributions, ultrafilter, continuation); or $M$ is analytic
-with $M\emptyset=\emptyset$, and \emph{right-cancellation of plethysm} in the cycle-index ring forces
-$M$ polynomial with no bound on degree or nesting depth (Theorem~\ref{thm:P}, covering free magmas and
-free operad monads); or $M$ is analytic of bounded degree, and a support-splitting stabilizer invariant
-separates $M\circ M$ from $\ext{r}\circ M$ (Theorem~\ref{thm:S}, subsuming the multiset and
-symmetric-power monads). The only monads uncovered are analytic with $M\emptyset$ nonempty-finite
-and unbounded nesting depth, a corner that is \emph{inhabited} (Proposition~\ref{prop:corner}: the free
-commutative unital magma); there the converse is open (Problem~\ref{prob:corner}), so outside this one
-corner the theorem is a biconditional \textup(Theorem~\ref{thm:3final}\textup).
+\emph{(Necessity, conditional.)} The converse --- composition-closure $\Rightarrow$ $M$ polynomial ---
+holds for the following classes, but not in general. It holds if $M$ grows super-polynomially (a
+cardinality law excludes powerset, nonempty powerset, distributions, ultrafilter, continuation); if $M$
+is analytic with $M\emptyset=\emptyset$ (right-cancellation of plethysm in the cycle-index ring,
+Theorem~\ref{thm:P}, at any degree or nesting depth, covering free magmas and free operad monads); if
+$M$ is analytic of bounded \emph{wreath depth} (an imprimitivity-depth invariant, Theorem~\ref{thm:Sprime},
+subsuming the multiset and symmetric-power monads); and if $M$ is a free commutative unital magma monad
+(Theorem~\ref{thm:family}, including the corner case $U$ formerly left open). \emph{But the converse
+fails} for partially symmetric unital operads: the free algebra monad of a single ternary operation with
+cyclic ($C_3$) slot-symmetry and an absorbed unit is analytic and non-polynomial, yet its essential image
+\emph{is} closed under composition (Theorem~\ref{thm:C3}). The exact dividing line is the commutativity of
+the binary unit-composite $\mu(x,y)=\omega(x,y,e,\dots)$: when $\mu$ is commutative (full slot-symmetry),
+$M\circ M$ realises a correlated block-swap that no polynomial layer $\ext r\circ M$ can manufacture, so
+necessity holds; when $\mu$ is non-commutative, an ``only three identical'' rigidity lets the image close
+without polynomiality. Consequently \textup{(}Theorem~\ref{thm:3final}\textup{)} \emph{within the fully
+symmetric world --- which contains all the applied effect monads: multiset, distribution, powerset ---
+composition-closure $\iff$ flatness of the species $\iff$ polynomiality}, and the $C_3$ operad marks the
+precise boundary at which the symmetry hypothesis becomes load-bearing.
 \end{theorem}
 
 Combining the two theorems gives the punchline.
@@ -229,17 +246,26 @@ $\Ran_M$, and every hom-set $\Nat(\Set(A,M{-}),H)$ is a value of a right Kan ext
 the fullness obstruction is exactly the failure of the unit $M\Rightarrow\Ran_M M$ to be invertible.
 For composition, two applications of the factorisation put every composite $\extM{p}\circ\extM{q}$
 in the form $G\circ M$ with $G=\ext{p}\circ M\circ\ext{q}$; this is again an $M$-extension precisely
-when $G$ is polynomial, which for all $p,q$ forces $M$ itself to be polynomial (for every monad that
-arises; \S\ref{sec:stab}--\ref{sec:cancel}), and then AAG strong monoidality delivers the splice
-$p\triangleleft\ceil M\triangleleft q$. The trailing $M$ cannot be cancelled at the level of
-connected-limit preservation --- Proposition~\ref{prop:inert} shows the single self-composite
-$M\circ M\cong\ext r\circ M$ carries no such information beyond the retract reduction
-Lemma~\ref{lem:R0}. The converse therefore uses a \emph{finer, faithful} invariant: an
-$\mathrm{Aut}(X)$-stabilizer statistic (Lemma~\ref{lem:stab}) for bounded degree, and, for analytic
-$M$ with $M\emptyset=\emptyset$, right-cancellation of plethysm on the cycle-index series
-(Lemma~\ref{lem:cancel}) --- a genuine cancellation of the trailing $M$, now on the level of species
-isomorphism rather than limit preservation, reaching the unbounded-nesting monads no stabilizer count
-can touch.
+when $G$ is polynomial, and then AAG strong monoidality delivers the splice $p\triangleleft\ceil
+M\triangleleft q$. Sufficiency is immediate. The converse is where the structure lives, and it is
+genuinely partial. The trailing $M$ cannot be cancelled at the level of connected-limit preservation
+--- Proposition~\ref{prop:inert} shows the single self-composite $M\circ M\cong\ext r\circ M$ carries
+no information about $M$ beyond the retract reduction Lemma~\ref{lem:R0} --- so the converse needs a
+\emph{finer, faithful} invariant. The master lemma is that a \emph{polynomial} outer layer is
+rigid on positions: every point-stabilizer of $(\ext r\circ M)[m]$ is a \emph{block-fixing product}
+of single-$M$-element stabilizers (Proposition~\ref{prop:meta}, ``a function is fixed iff fixed
+pointwise''). Three invariants then measure how far $M\circ M$ escapes this constraint: a cardinality
+count for super-polynomial growth; an imprimitivity-\emph{wreath-depth} statistic $h$
+(Definition~\ref{def:depth}) for bounded-depth analytic monads; and right-cancellation of plethysm on
+the cycle-index series (Lemma~\ref{lem:cancel}) for analytic $M$ with $M\emptyset=\emptyset$, reaching
+the unbounded-depth monads no stabilizer count can touch. The residual after these --- analytic,
+$M\emptyset$ nonempty-finite, unbounded wreath depth --- is where symmetry becomes decisive. If the
+monad's operations are \emph{fully} symmetric with an absorbed unit, then $M\circ M$ builds a
+\emph{rigid} composite block from the unit and \emph{swaps} two equal copies, a correlated symmetry
+$\Delta_{C_2}\notin\mathcal F$ that no block-fixing product contains, and necessity holds
+(Theorem~\ref{thm:family}). If instead a binary composite is non-commutative --- as for the $C_3$
+operad --- an ``only three identical'' rigidity (Lemma~\ref{lem:c3}) shows every stabilizer is already
+a single-tree automorphism group, the image closes, and necessity fails (Theorem~\ref{thm:C3}).
 
 \subsection*{Why it matters}
 Beyond the pleasing tension of Corollary~\ref{cor:tradeoff}, the result sharpens the compositional
@@ -253,22 +279,26 @@ explicit and computable: codensity for the first question, polynomiality for the
 
 \subsection*{Provenance and honesty}
 Theorems~\ref{thm:1} and \ref{thm:2} (faithfulness, the codensity criterion, the affine lemma, the
-examples) are proved. Theorem~\ref{thm:3} is proved in its sufficiency direction, and in its necessity
-direction for every monad that arises: the cardinality law disposes of the super-polynomial monads;
-plethysm right-cancellation (Lemma~\ref{lem:cancel}, Theorem~\ref{thm:P}) disposes of every analytic
-monad with $M\emptyset=\emptyset$, degree and nesting depth unbounded; and the support-splitting
-stabilizer invariant (Lemma~\ref{lem:stab}, Theorems~\ref{thm:multiset} and \ref{thm:S}) disposes of
-every bounded-degree analytic monad. The cancellation engine (Lemma~\ref{lem:cancel}) is elementary and
-computationally verified; Theorems~\ref{thm:P} and \ref{thm:S} additionally invoke two standard facts of
-combinatorial-species theory --- Joyal's full faithfulness of the species-to-analytic-functor embedding,
-and the identity of species substitution with plethysm of cycle-index series (Joyal;
-Bergeron--Labelle--Leroux) --- which we name as background rather than re-derive. The single class of
-monads not covered (analytic, $M\emptyset$ nonempty-finite, unbounded nesting depth) is \emph{inhabited}
---- by the free commutative unital magma (Proposition~\ref{prop:corner}) --- and the converse there is
-genuinely open (Problem~\ref{prob:corner}); this is the one gap in the necessity direction, marked where
-it occurs. Full faithfulness for $\D$ rests on a standard rigidity fact,
-$\Nat(\D,\D)=\{\id\}$, which we isolate as Lemma~\ref{lem:Drigid} and assume rather than reprove.
-These boundaries are marked at each occurrence.
+examples) are proved. Theorem~\ref{thm:3} is proved in its sufficiency direction unconditionally, and in
+its necessity direction for each of the four classes named: the cardinality law disposes of the
+super-polynomial monads; plethysm right-cancellation (Lemma~\ref{lem:cancel}, Theorem~\ref{thm:P})
+disposes of every analytic monad with $M\emptyset=\emptyset$, at unbounded degree and depth; the
+wreath-depth invariant (Definition~\ref{def:depth}, Theorem~\ref{thm:Sprime}) disposes of every
+bounded-wreath-depth analytic monad, subsuming the multiset and symmetric-power monads; and the
+correlated-swap witness (Theorem~\ref{thm:family}) disposes of every free commutative unital magma monad,
+including the corner case $U$. The failure of necessity for the $C_3$ operad (Theorem~\ref{thm:C3}) is
+likewise proved: the isomorphism $M\circ M\cong L\circ M$ is established by matching molecule multisets
+(the ``only three identical'' rigidity, Lemma~\ref{lem:c3}); the small cases $m\le4$ are confirmatory
+computation, not the proof. The cancellation and block-fixing engines are elementary and computationally
+verified. Theorems~\ref{thm:P}, \ref{thm:Sprime}, \ref{thm:family} and \ref{thm:C3} invoke two standard
+facts of combinatorial-species theory --- Joyal's full faithfulness of the species-to-analytic-functor
+embedding, and the identity of species substitution with plethysm of cycle-index series (Joyal;
+Bergeron--Labelle--Leroux; Gambino--Kock for the polynomial-$\iff$-flat criterion) --- which we cite as
+background rather than re-derive. What remains genuinely open is the necessity direction in the residual
+outside the free commutative unital magmas: analytic $M$ with $M\emptyset$ nonempty-finite, unbounded
+wreath depth, and \emph{not} fully symmetric (Problem~\ref{prob:residual}). Full faithfulness for $\D$
+rests on a standard rigidity fact, $\Nat(\D,\D)=\{\id\}$, which we isolate as Lemma~\ref{lem:Drigid} and
+assume rather than reprove. These boundaries are marked at each occurrence.
 
 \subsection*{Outline}
 Section~\ref{sec:prelim} fixes notation: monads and Kleisli categories, the container extension and
@@ -276,9 +306,12 @@ its composition monoidal structure, families over an opposite category, and righ
 codensity monads. Section~\ref{sec:identify} proves Theorem~\ref{thm:1} and the always-faithfulness.
 Section~\ref{sec:full} proves the codensity criterion (Theorem~\ref{thm:2}), works the examples, and
 explains why coproduct preservation is the wrong criterion. Section~\ref{sec:comp} proves
-Theorem~\ref{thm:3}: sufficiency, the cardinality law, the stabilizer invariant, and the plethysm
-right-cancellation that closes the analytic converse for $M\emptyset=\emptyset$, leaving one inhabited
-corner open.
+Theorem~\ref{thm:3}: sufficiency and non-unitality (\S\ref{sec:suff}); the cardinality law
+(\S\ref{sec:card}); the block-fixing meta-theorem and stabilizer invariant (\S\ref{sec:stab}); the
+wreath-depth invariant and Theorem~S$'$ (\S\ref{sec:depth}); the plethysm right-cancellation closing the
+analytic converse for $M\emptyset=\emptyset$ (\S\ref{sec:cancel}); and the unital corner
+(\S\ref{sec:unital}), where full symmetry gives necessity via a correlated block-swap while the $C_3$
+operad refutes it, pinning commutativity of the binary unit-composite as the exact dividing line.
 Section~\ref{sec:conc} draws the trade-off and lists open problems.
 
 \section{Preliminaries}\label{sec:prelim}
@@ -576,7 +609,7 @@ Two applications of Theorem~\ref{thm:1}(b) and associativity of $\circ$:
 So every composite of two $M$-extensions has a trailing $M$; it is again an $M$-extension exactly
 when the inner $G$ is polynomial.
 
-\subsection{Sufficiency}
+\subsection{Sufficiency}\label{sec:suff}
 \begin{proposition}[Sufficiency]\label{prop:suff}
 If $M$ is polynomial with container $\ceil M$, then $p\triangleleft_M q:=p\triangleleft\ceil
 M\triangleleft q$ satisfies $\extM{p\triangleleft_M q}\cong\extM{p}\circ\extM{q}$ naturally in $X$.
@@ -639,7 +672,7 @@ additionally codense. This Kleisli-bifunctoriality is the exact meeting point of
 Theorems~\ref{thm:2} and \ref{thm:3}; we leave it open.
 \end{remark}
 
-\subsection{Necessity: the cardinality growth law}
+\subsection{Necessity: the cardinality growth law}\label{sec:card}
 Sufficiency looks like half of a biconditional, but the converse is subtler. We prove a
 cardinality obstruction that already decides all the affine and commutative candidates, then isolate
 the one remaining categorical gap.
@@ -685,13 +718,15 @@ Proposition~\ref{prop:cardlaw} is necessary but does not by itself pin $M$ as a 
 cannot separate $M$ from a polynomial functor with the same finite counts. The clean categorical
 converse we want is
 
-\begin{lemma}[converse]\label{lem:N}
-If the essential image of $\extM{-}$ is closed under $\circ$ --- equivalently, $M\circ N\circ M$ is of
-the form $\ext{r}\circ M$ for every polynomial $N$ --- then $M$ is polynomial.
+\begin{lemma}[the converse statement]\label{lem:N}
+Consider the implication: if the essential image of $\extM{-}$ is closed under $\circ$ ---
+equivalently, $M\circ N\circ M$ is of the form $\ext{r}\circ M$ for every polynomial $N$ --- then $M$
+is polynomial.
 \end{lemma}
 
-We prove Lemma~\ref{lem:N} for every monad that arises in practice, reducing the sole residual to a
-single corner that is inhabited (Proposition~\ref{prop:corner}) and open there (Problem~\ref{prob:corner}). The frame is classical: over $\Set$,
+We establish Lemma~\ref{lem:N} for four classes of $M$ (super-polynomial growth; analytic with
+$M\emptyset=\emptyset$; bounded wreath depth; free commutative unital magmas), and we exhibit a monad
+for which it \emph{fails} (the $C_3$ operad, \S\ref{sec:unital}). The frame is classical: over $\Set$,
 \emph{$M$ is polynomial $\iff$ $M$ preserves connected limits} (wide pullbacks together with
 cofiltered limits) $\iff$ $M$ is familially representable (Carboni--Johnstone; \cite[\S1]{GambinoKock},
 \cite{NiuSpivak}). Two features cut the problem down.
@@ -734,23 +769,49 @@ $D$ $\iff$ $M$ does.
 This is the precise form of the trailing-$M$ obstruction: precomposition $(-)\circ M$ is not
 conservative, and the self-composite relates $M$ only to itself, so any proof of Lemma~\ref{lem:N}
 must use either the \emph{full} family $\{M\circ N\circ M\cong\ext{r_N}\circ M:N\text{ polynomial}\}$
-or a genuinely different invariant. We supply the latter, and it settles every monad that occurs.
+or a genuinely different invariant. We supply the latter --- a permutation-group invariant read off
+the automorphisms of each structure --- and trace exactly how far it reaches, and where it stops.
 
-\subsection{The stabilizer invariant, and the dichotomy}\label{sec:stab}
+\subsection{The stabilizer invariant and block-fixing rigidity}\label{sec:stab}
 A natural isomorphism of $\Set$-endofunctors is $\mathrm{Aut}(X)$-equivariant at each $X$
 (naturality at automorphisms $\sigma\colon X\to X$), so it preserves point-stabilizers.
 
 \begin{lemma}[Stabilizer invariant]\label{lem:stab}
 If $\Theta\colon F\cong G$ then $\mathrm{Stab}_{FX}(x)=\mathrm{Stab}_{GX}(\Theta_X x)\subseteq
 \mathrm{Aut}(X)$ for all $X,x$. Hence the family of subgroups $\mathcal S(F):=\{\mathrm{Stab}_{FX}(x)\}$,
-up to conjugacy, is an isomorphism invariant of $F$.
+up to conjugacy, is an isomorphism invariant of $F$. Read on the \emph{each-label-once} components
+below, it records one subgroup per structure and so is defined even when a component is infinite.
 \end{lemma}
 
-For a polynomial $P=\sum_i(-)^{B_i}$ and \emph{any} $M$, an element of $PMX$ is a pair
-$(i,f\colon B_i\to MX)$, whose stabilizer is $\bigcap_{b\in B_i}\mathrm{Stab}_{MX}(f(b))$ --- an
-\emph{intersection of $MX$-element stabilizers}. This is the lever that separates $M\circ M$ from
-$\ext{r}\circ M$ for the analytic monads that evade the cardinality law. The universal such monad is
-the free commutative monoid.
+The master fact is that a \emph{polynomial} outer layer is rigid on positions. Call a structure
+of an analytic functor \emph{each-label-once} on $[m]$ if its content is $[m]$ with every label used
+exactly once (the multilinear part of the species component).
+
+\begin{proposition}[Block-fixing rigidity of polynomial precomposition]\label{prop:meta}
+Let $\ext r=\sum_{s}\Set(B_s,-)$ be polynomial and $M$ any endofunctor. On each each-label-once
+component, every point-stabilizer of $(\ext r\circ M)[m]$ is a \emph{block-fixing product}
+$\prod_{\beta\in\pi}\mathrm{Stab}_{M}(u_\beta)$ of single-$M$-element stabilizers, over the partition
+$\pi$ of $[m]$ into the disjoint supports of the parts. In particular no two $M$-parts are ever
+permuted.
+\end{proposition}
+
+\begin{proof}
+An element of $(\ext r\circ M)[m]$ is $(s,\varphi\colon B_s\to M[\,\cdot\,])$ with total content
+$[m]$. For $\sigma\in S_m$, $(\ext r\circ M)(\sigma)(s,\varphi)=(s,M\sigma\circ\varphi)$, which equals
+$(s,\varphi)$ iff $M\sigma(\varphi(b))=\varphi(b)$ for \emph{every} $b\in B_s$: a function is fixed iff
+fixed pointwise, there being no quotient on the positions $B_s$. So
+$\mathrm{Stab}(s,\varphi)=\bigcap_{b}\mathrm{Stab}(\varphi(b))$. Each-label-once forces the parts
+$\varphi(b)$ of nonempty content to have \emph{disjoint} supports $\beta$ partitioning $[m]$ (a shared
+label would be used twice), and for disjoint blocks $\bigcap_\beta[\,\mathrm{Aut\ on\ }\beta\times
+\mathrm{Sym}(\text{rest})\,]=\prod_\beta\mathrm{Aut\ on\ }\beta$.
+\end{proof}
+
+The each-label-once reading is essential and non-circular: on the \emph{raw} set $(\ext r\circ M)(X)$,
+where labels may repeat, the stabilizer is an intersection over parts with possibly overlapping
+supports --- a strictly larger class of subgroups. It is exactly the disjointness on the multilinear
+component that collapses the intersection to a block-fixing product, and it is on that component that
+Lemma~\ref{lem:stab} is compared. The first application recovers the universal analytic monad that
+evades the cardinality law.
 
 \begin{theorem}[The multiset monad does not compose]\label{thm:multiset}
 Let $\mathbb M$ be the finite-multiset (free commutative monoid) monad, $\mathbb MX=\{$finite
@@ -762,8 +823,9 @@ in particular $\mathbb M$ does not have composition-closed image.
 A multiset $\nu\in\mathbb MX$ is a finitely-supported $\nu\colon X\to\mathbb N$, with
 $\mathrm{Stab}_{\mathbb MX}(\nu)=\prod_k\mathrm{Sym}(\nu^{-1}(k))$ a \emph{Young subgroup} --- it
 permutes points only \emph{within} the level-blocks of $\nu$. Intersections of Young subgroups are
-Young, so by the display above every stabilizer in $P\mathbb MX$ is a Young subgroup. But for $X$
-containing four distinct points $a,b,c,d$, the element $m=\{\{a,b\},\{c,d\}\}\in\mathbb M\mathbb MX$ has
+Young, so by Proposition~\ref{prop:meta} every stabilizer of $(P\circ\mathbb M)[m]$ is a Young
+subgroup. But for $X$ containing four distinct points $a,b,c,d$, the element
+$m=\{\{a,b\},\{c,d\}\}\in\mathbb M\mathbb MX$ (content each-once) has
 \[
   \mathrm{Stab}_{\mathbb M\mathbb MX}(m)=\bigl(\mathrm{Sym}\{a,b\}\times\mathrm{Sym}\{c,d\}\bigr)\rtimes
   \langle(a\,c)(b\,d)\rangle=S_2\wr S_2=D_4,\quad|D_4|=8,
@@ -783,27 +845,95 @@ non-free \emph{outer} layer supplies between-equal-block (wreath) symmetry. In t
 this is exactly the distinction between the labelled products in $B\bullet A$ (direct-product
 stabilizers) and the wreath constituents of the self-substitution $A\bullet A$.
 
-The multiset argument reaches only \emph{bounded} nesting: it pits one wreath $H\wr S_r$ against Young
-subgroups. For monads whose structures nest to unbounded depth --- the free (commutative) magma, free
-operad-algebra monads, with automorphism towers $S_2\wr\cdots\wr S_2$ --- no fixed stabilizer count
-suffices, and we replace the combinatorics with one algebraic identity.
+The multiset witness is a single wreath $S_2\wr S_2$ against Young subgroups; it reaches only
+\emph{bounded} nesting. For monads whose structures nest to unbounded depth --- free magmas, free
+operad-algebra monads, with automorphism towers $S_2\wr\cdots\wr S_2$ --- no fixed stabilizer suffices,
+and the right invariant is the \emph{depth} of the wreath tower.
 
-\subsection{Cycle-index cancellation, and the necessity trichotomy}\label{sec:cancel}
-Recall the analytic/species dictionary (Joyal; Bergeron--Labelle--Leroux). An \emph{analytic} functor
-is one of the form $\tilde A(X)=\sum_{n\ge0}A[n]\times_{S_n}X^{n}$ for a \emph{species} $A$ (each $A[n]$
-a finite $S_n$-set); its \emph{cycle-index series} is
+\subsection{The wreath-depth invariant}\label{sec:depth}
+Recall the analytic/species dictionary (Joyal \cite{Joyal}; Bergeron--Labelle--Leroux \cite{BLL};
+Gambino--Kock \cite{GambinoKock}). An \emph{analytic} functor is $\tilde A(X)=\sum_{n\ge0}A[n]\times_{S_n}
+X^{n}$ for a \emph{species} $A$ (each $A[n]$ a finite $S_n$-set); the embedding $A\mapsto\tilde A$ is
+fully faithful, so $\tilde A\cong\tilde B$ iff $A[n]\cong B[n]$ as $S_n$-sets for all $n$ (Joyal). Its
+molecular decomposition is $A=\bigsqcup_l X^{d_l}/H_l$ with $H_l\le S_{d_l}$ the automorphism group of a
+representative $A$-structure of arity $d_l$; $\tilde A$ is \emph{polynomial} iff $A$ is \emph{flat}
+(every $H_l=1$, equivalently every $S_n$-action free), by familial representability
+\cite[\S1]{GambinoKock}. Self-composition is species substitution, $\tilde A\circ\tilde A=\widetilde{A
+\bullet A}$. By Proposition~\ref{prop:meta} every stabilizer of $(\ext r\circ\tilde A)[m]$ is a
+block-fixing product of single-tree stabilizers, each a $\mathrm{Sym}(\beta)$-conjugate of some $H_l$;
+we separate $\tilde A\circ\tilde A$ from $\ext r\circ\tilde A$ by a conjugacy invariant of subgroups
+that block-fixing products cannot inflate.
+
+\begin{definition}[Imprimitivity depth]\label{def:depth}
+For a transitive $T\le\mathrm{Sym}(\Omega)$, a \emph{block system} is a $T$-invariant partition; let
+$h_t(T)$ be the maximal length of a strictly refining chain of block systems from $\{\Omega\}$ to the
+singletons (equivalently, of subgroups from a point-stabilizer up to $T$). For general
+$K\le\mathrm{Sym}(\Omega)$, set $h(K)=\max\{h_t(K^O):O\text{ an orbit},\ |O|\ge2\}$, and $0$ if $K$ is
+trivial, where $K^O$ is the transitive group $K$ induces on $O$. The \emph{wreath depth} of a species
+is $\mathfrak h(A):=\sup_l h(H_l)$; $A$ has \emph{bounded wreath depth} iff $\mathfrak h(A)<\infty$.
+\end{definition}
+
+Both $h_t$ and $h$ are conjugacy invariants (conjugation carries block systems to block systems).
+Sample values: $h_t(S_n)=1$ (primitive groups have no proper nontrivial block system),
+$h_t(S_a\wr S_b)=2$, $h_t(S_2\wr S_2\wr S_2)=3$.
+
+\begin{lemma}[Wreath superadditivity; product depth]\label{lem:wreath}
+For transitive $T_1,T_2$ in the product action, $h_t(T_1\wr T_2)\ge h_t(T_1)+h_t(T_2)$. For a
+block-fixing product $\prod_\beta G_\beta$ on pairwise disjoint supports,
+$h(\prod_\beta G_\beta)=\max_\beta h(G_\beta)$.
+\end{lemma}
+
+\begin{proof}
+For the wreath: the partition $\{\{j\}\times\Omega_1:j\in\Omega_2\}$ is invariant with quotient action
+$T_2$; a longest chain of $T_2$ lifts to $h_t(T_2)$ strict steps above it, and a longest chain of
+$T_1$ applied uniformly in every block gives $h_t(T_1)$ strict steps below it, concatenating to a chain
+of length $\ge h_t(T_1)+h_t(T_2)$. For the product: the orbits of $\prod_\beta G_\beta$ are exactly the
+orbits of the individual $G_\beta$ (each factor fixes the other supports), so
+$h(\prod_\beta G_\beta)=\max_\beta h(G_\beta)$.
+\end{proof}
+
+\begin{theorem}[Wreath-depth converse]\label{thm:Sprime}
+Let $M=\tilde A$ be an analytic monad of bounded wreath depth $W=\mathfrak h(A)<\infty$. If $A$ is
+non-flat then $\tilde A\circ\tilde A\ncong\ext r\circ\tilde A$ for every polynomial $\ext r$; hence
+closure of the essential image forces $M$ polynomial. This subsumes the bounded-degree case (degree
+$\le d$ implies $\mathfrak h\le d-1<\infty$) and, at $W=1$, reproves Theorem~\ref{thm:multiset} and the
+entire symmetric-power class ($\mathfrak h(\mathbb M)=1$ since each $H_n=S_n$ is primitive).
+\end{theorem}
+
+\begin{proof}
+\emph{(Bound.)} By Proposition~\ref{prop:meta} and Lemma~\ref{lem:wreath}, every stabilizer of
+$(\ext r\circ\tilde A)[m]$ is a block-fixing product of $\mathrm{Sym}(\beta)$-conjugates of constituent
+groups $H_l$, so has depth $\le\max_\beta h(H_{l_\beta})\le\mathfrak h(A)=W$.
+\emph{(Witness.)} Since $A$ is non-flat, some constituent $c$ acts nontrivially on an orbit
+($h_t(H_c^{O_c})\ge1$); since $W<\infty$, the sup is attained by a constituent $b$ with an orbit
+$h_t(H_b^{O_b})=W$. Fill every slot of $c$ with the same each-label-once $b$-structure on disjoint
+labels: the resulting $w\in\widetilde{A\bullet A}$ has $\mathrm{Stab}(w)=H_b\wr H_c$, and restricting to
+the invariant sub-orbit $O_c\times O_b$ gives the transitive sub-wreath $H_b^{O_b}\wr H_c^{O_c}$, of
+depth $\ge h_t(H_c^{O_c})+h_t(H_b^{O_b})\ge1+W$ by Lemma~\ref{lem:wreath}. So $\tilde A\circ\tilde A$
+realises depth $\ge W+1>W$, and Lemma~\ref{lem:stab} gives $\tilde A\circ\tilde A\ncong\ext r\circ\tilde A$.
+\end{proof}
+
+The invariant $h$ is blind precisely when $\mathfrak h(A)=\infty$: then $A$ already contains
+arbitrarily deep wreath towers, $\tilde A\circ\tilde A$ produces no \emph{new} depth, and both sides
+have infinite depth. That residual splits by $a_0=|M\emptyset|$: for $a_0=0$ an algebraic cancellation
+reaches every depth (\S\ref{sec:cancel}); for $a_0>0$ the answer turns on symmetry
+(\S\ref{sec:unital}).
+
+\subsection{Cycle-index cancellation: the case $M\emptyset=\emptyset$}\label{sec:cancel}
+For unbounded wreath depth the invariant $h$ cannot separate, but when $M\emptyset=\emptyset$ an
+algebraic cancellation on cycle indices does, at any depth. The \emph{cycle-index series} of a species
+$A$ is
 \[
   Z_A=\sum_{n\ge0}\frac1{n!}\sum_{\sigma\in S_n}\mathrm{fix}(A[\sigma])\,p_\sigma\in
   R:=\mathbb Q[[p_1,p_2,\dots]],\qquad p_\sigma=\textstyle\prod_k p_k^{c_k(\sigma)}.
 \]
-Three standard facts. \textbf{(J1)} $A\mapsto\tilde A$ is fully faithful: $\tilde A\cong\tilde B$ iff
-$A[n]\cong B[n]$ as $S_n$-sets for all $n$. \textbf{(F)} $\tilde A$ is polynomial iff its species is
-\emph{flat} (every $S_n$-action on $A[n]$ free), iff $Z_A\in\mathbb Q[[p_1]]$ (only $p_1$-powers: a
-non-identity permutation fixing a structure contributes a $p_\lambda$ with $\lambda\ne(1^n)$).
-\textbf{(C)} if $B[0]=\emptyset$ then species substitution is plethysm on cycle indices,
-$Z_{A\bullet B}=Z_A\circ Z_B$, where $\circ$ is the unique $\mathbb Q$-algebra endomorphism of $R$ with
-$p_k\circ H=H[p_i\mapsto p_{ki}]$. Writing $a_0=|A[0]|=|M\emptyset|$ and $a_1=|A[1]|$, a monad has
-$a_1\ge1$ (the unit $\Id\Rightarrow\tilde A$ requires an $S_1$-fixed point of $A[1]$).
+The facts we need, beyond Joyal full faithfulness \textbf{(J1)} above. \textbf{(F$'$)} $\tilde A$ is
+polynomial iff $Z_A\in\mathbb Q[[p_1]]$ (flatness in cycle-index form: a non-identity permutation fixing
+a structure contributes a $p_\lambda$ with $\lambda\ne(1^n)$). \textbf{(C)} if $B[0]=\emptyset$ then
+species substitution is plethysm on cycle indices, $Z_{A\bullet B}=Z_A\circ Z_B$, where $\circ$ is the
+unique $\mathbb Q$-algebra endomorphism of $R$ with $p_k\circ H=H[p_i\mapsto p_{ki}]$. Writing
+$a_0=|A[0]|=|M\emptyset|$ and $a_1=|A[1]|$, a monad has $a_1\ge1$ (the unit $\Id\Rightarrow\tilde A$
+requires an $S_1$-fixed point of $A[1]$).
 
 The engine is elementary.
 
@@ -834,7 +964,7 @@ Closure at $p=q=\y$ gives $M\circ M\cong\ext r\circ M$ for a polynomial $\ext r$
 analytic it is finitary, so $\ext r\circ\tilde A$ is finitary; and $\tilde AX\supseteq A[1]\times X$
 (using $a_1\ge1$) is unbounded in $|X|$, so an infinite exponent $B_s$ in $\ext r=\sum_s(-)^{B_s}$
 would make $(-)^{B_s}\circ\tilde A$ fail to preserve a filtered colimit --- forcing all $B_s$ finite.
-Thus $\ext r=\tilde B$ for a \emph{flat} species $B$ (fact (F)). Evaluating the isomorphism at $\emptyset$ and using $\tilde A\emptyset=A[0]=\emptyset$ gives
+Thus $\ext r=\tilde B$ for a \emph{flat} species $B$ (fact (F$'$)). Evaluating the isomorphism at $\emptyset$ and using $\tilde A\emptyset=A[0]=\emptyset$ gives
 $B[0]=\tilde B\emptyset=\emptyset$. So $A\bullet A$ and $B\bullet A$ are finitary species with
 $\widetilde{A\bullet A}=\tilde A\circ\tilde A$ and $\widetilde{B\bullet A}=\tilde B\circ\tilde A$; the
 functor isomorphism and (J1) give $A\bullet A\cong B\bullet A$, hence equal cycle indices, and by (C)
@@ -843,7 +973,7 @@ functor isomorphism and (J1) give $A\bullet A\cong B\bullet A$, hence equal cycl
 \]
 Here $H:=Z_A$ has zero constant term ($a_0=0$) and $a_1\ge1$, so Lemma~\ref{lem:cancel} cancels $Z_A$
 on the right: $Z_A=Z_B$. But $B$ is flat, so $Z_B\in\mathbb Q[[p_1]]$; hence $Z_A\in\mathbb Q[[p_1]]$,
-i.e.\ $A$ is flat and $M$ is polynomial (F).
+i.e.\ $A$ is flat and $M$ is polynomial (F$'$).
 \end{proof}
 
 This is precisely the cancellation of the trailing $M$ that Proposition~\ref{prop:inert} forbade at the
@@ -853,101 +983,184 @@ can: the free commutative magma (structure counts $1,1,3,15,105,\dots=(2n-3)!!$,
 $2^k$-leaf tree with automorphism group $S_2\wr\cdots\wr S_2$, $k$ factors) has unbounded nesting depth
 yet falls to Theorem~\ref{thm:P} in one stroke.
 
-For $M\emptyset\ne\emptyset$ the self-composite is non-finitary and its cycle index diverges; the
-bounded-degree case is recovered by a sharpening of the stabilizer invariant.
+\subsection{The unital corner: symmetry decides}\label{sec:unital}
+After Theorems~\ref{thm:P} and \ref{thm:Sprime} the residual is: $M=\tilde A$ analytic, $a_0=|M\emptyset|$
+nonempty-finite, and unbounded wreath depth $\mathfrak h(A)=\infty$. Cancellation needs $a_0=0$; the depth
+invariant needs $\mathfrak h<\infty$; neither applies. This corner is inhabited, and --- the surprise of
+this section --- it contains monads on \emph{both} sides of the converse.
 
-\begin{theorem}[Support-splitting converse; bounded degree]\label{thm:S}
-Let $M=\tilde A$ be a bounded-degree analytic monad ($e_{\max}:=\sup_l\deg<\infty$; equivalently
-$\tilde A$ finitary), with any $M\emptyset$. If $A$ is non-flat then $\tilde A\circ\tilde A\ncong\ext
-r\circ\tilde A$ for every polynomial $\ext r$; hence closure forces $M$ polynomial.
-\end{theorem}
+Its canonical inhabitant is the \emph{free commutative unital magma} $U$: the free-algebra monad of one
+commutative binary operation $\mu$ and a nullary unit $e$ absorbed by $\mu$ ($\mu(x,e)=x$). Its species
+has $U[0]=\{e\}$ ($a_0=1$) and $U[n]=\{$commutative binary trees on $n$ leaves$\}$, $|U[n]|=(2n-3)!!$; the
+balanced $2^k$-leaf tree has stabilizer $S_2\wr\cdots\wr S_2$ ($k$ factors), so $\mathfrak h(U)=\infty$
+while every component is finite and $a_0=1$. It was the sharpest open case of the earlier form of this
+theorem. We show necessity \emph{holds} at $U$ --- indeed for its whole symmetric family --- and then that
+it \emph{fails} one operad over.
 
-\begin{proof}[Proof sketch]
-For $K\le\mathrm{Sym}(\Omega)$ the support-splittings ($\mathrm{supp}(K)=\bigsqcup_t C_t$ with
-$K=\prod_t K_t$, $K_t=\{k\in K:\mathrm{supp}(k)\subseteq C_t\}$) are closed under common refinement, so
-there is a unique finest one; the multiset of \emph{factor degrees} $\{|C_t|\}$ is a conjugacy
-invariant (this refines Lemma~\ref{lem:stab}). With $\ext r=\tilde B$, $B$ flat and bounded, every
-constituent of $B\bullet A$ is a Young product of $A$-stabilizers, whose support-indecomposable factors
-have degree $\le e_{\max}$. But a non-flat constituent $X^d/H$ ($H\ne1$), fed the constant colouring by
-a maximal-degree constituent $X^{e_{\max}}/H_c$, yields in $A\bullet A$ a wreath $K=(H_c)^d\rtimes H$ in
-which some $h\in H$ links two size-$e_{\max}$ blocks, producing a support-indecomposable factor of
-degree $\ge2e_{\max}$. The invariant separates: $A\bullet A\ncong B\bullet A$. This subsumes
-Theorem~\ref{thm:multiset} (for $\mathbb M$, $e_{\max}$ was there avoided by hand).
+\subsubsection*{Full symmetry: necessity holds}
+Call an operad $O$ \emph{fully symmetric unital} if every operation of arity $\ge2$ has full slot-symmetry
+$H_g=S_{\mathrm{arity}}$, there is a nullary unit $e$ absorbed by every operation, the only unary operation
+is the identity, and some operation has arity $\ge2$. Its free-algebra monad $M=\tilde A$ (with $A=O$) is
+analytic, non-flat (some $H_g=S_{\ge2}\ne1$) hence non-polynomial, with $a_0\ge1$ and $\mathfrak h=\infty$.
+Each such $O$ has a commutative binary unit-composite $\mu(x,y)=\omega(x,y,e,\dots,e)$ (delete $n-2$ slots
+of an arity-$n$ operation by the unit; commutative by full symmetry). Write $\mathcal F(A)$ for the set of
+support-indecomposable factors of automorphism groups of single $O$-trees (each-label-once). By
+Proposition~\ref{prop:meta} and Lemma~\ref{lem:wreath}, every support-indecomposable factor of a
+$(\ext r\circ M)[m]$ stabilizer lies in $\mathcal F(A)$; so it suffices to realise, in $(M\circ M)[m]$, a
+factor \emph{outside} $\mathcal F(A)$.
+
+\begin{lemma}[No rigid small tree; the escape factor]\label{lem:escape}
+For a fully symmetric unital $O$: \textup{(R2)} every single $O$-tree on $\ge2$ labels has nontrivial
+automorphism group; and consequently $\Delta_{C_2}:=\langle(0\,1)(2\,3)\rangle\notin\mathcal F(A)$.
+\end{lemma}
+
+\begin{proof}
+(R2): in normal form no leaf is a unit (all absorbed), so a deepest internal node has only label-leaf
+children and, by full symmetry, arity $\ge2$; a transposition of two of its leaves fixes the tree. For the
+escape: under full symmetry $\mathrm{Aut}(t)=\prod_j(\mathrm{Aut}(s_j)\wr S_{m_j})$ over isomorphism
+classes of children (the class-partition Young subgroup is a genuine direct product because $H_\rho=S_n$
+contains every class-transposition independently), so every support-indecomposable factor is a wreath
+$\Gamma=\mathrm{Aut}(s)\wr S_m$ ($m\ge2$) on $m\ell$ points, $\ell$ the label-count of $s$. If
+$\Gamma\cong\Delta_{C_2}$ then $|\mathrm{Aut}(s)|^m\,m!=2$ and $m\ell=4$, forcing $m=2$,
+$|\mathrm{Aut}(s)|=1$, $\ell=2$: a rigid $2$-label single tree, contradicting (R2).
 \end{proof}
 
-Assembling the three obstructions:
-
-\begin{theorem}[Necessity, trichotomy]\label{thm:dichotomy}
-Let $M$ be a non-polynomial monad on $\Set$. The essential image of $\extM{-}$ is not closed under
-composition whenever $M$ is
-\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
-\item \emph{super-polynomially growing} --- excluded by the cardinality law
-  (Proposition~\ref{prop:cardlaw}: powerset, nonempty powerset, distributions, ultrafilter,
-  continuation, filter); or
-\item \emph{analytic with $M\emptyset=\emptyset$} --- excluded by plethysm right-cancellation
-  (Theorem~\ref{thm:P}), at any degree and any nesting depth: free magmas, free operad-algebra monads;
-  or
-\item \emph{analytic of bounded degree}, any $M\emptyset$ --- excluded by the support-splitting
-  invariant (Theorem~\ref{thm:S}): the multiset and symmetric-power monads, every bounded-arity
-  finite-signature monad.
-\end{enumerate}
-The only monads not covered are analytic with $M\emptyset$ nonempty-finite and unbounded nesting depth
-(which forces unbounded degree). This corner is \emph{inhabited} (Proposition~\ref{prop:corner}), so the
-residual is precisely $\{\,a_0>0\ \text{and unbounded nesting depth}\,\}$.
+\begin{theorem}[Full symmetry gives necessity]\label{thm:family}
+Let $M$ be the free-algebra monad of a fully symmetric unital operad. Then $M\circ M\ncong\ext r\circ M$
+for every polynomial $\ext r$, so the essential image of $\extM{-}$ is not closed under composition; hence
+$M$-containers compose $\iff$ $M$ is polynomial for every such $M$. This includes the free commutative
+unital magma $U=U_2$ (the corner inhabitant) and its $n$-ary analogues $U_n$ for all $n\ge2$.
 \end{theorem}
 
-\begin{proposition}[The uncovered corner is inhabited]\label{prop:corner}
-The residual corner of Theorem~\ref{thm:dichotomy} is \emph{nonempty}. The free commutative unital
-\textup{(}non-associative\textup{)} magma monad $U$ --- the free-algebra monad of the theory with one
-nullary operation $c$ \textup{(}a unit\textup{)} and one commutative binary operation $\mu$ subject to
-$\mu(x,c)=x$ --- is a finitary analytic monad lying in it. Its species is
+\begin{proof}
+Let $V_i$ be the inner leaf on label $i$ and $E'$ the inner unit $e\in MX$ used as an \emph{outer} leaf
+--- a rigid, non-absorbed peg (only the outer unit is absorbed at the outer level). Form
 \[
-  U[0]=\{c\}\ (a_0=1),\qquad U[n]=\{\text{commutative binary trees on $n$ leaves}\},\quad
-  |U[n]|=(2n-3)!!\ (n\ge1),
+  W_L=\mu(V_0,\mu(V_2,E')),\quad W_R=\mu(V_1,\mu(V_3,E')),\quad w=\mu(W_L,W_R)\in(M\circ M)[4].
 \]
-so every component is finite; the balanced $2^k$-leaf tree has stabilizer $S_2\wr\cdots\wr S_2$ \textup{(}$k$
-factors\textup{)}, giving unbounded nesting depth --- hence unbounded degree, since a depth-$k$ tower needs
-arity $\ge2^k$ --- together with $a_0=1$ nonempty-finite.
-\end{proposition}
+$W_L$ is rigid (its children $V_0$ and $\mu(V_2,E')$ are non-isomorphic, and inside the cherry $V_2\ne
+E'$), likewise $W_R$, and $W_L\cong W_R$ via $0\mapsto1,\,2\mapsto3$; so
+$\mathrm{Aut}(w)=\langle(0\,1)(2\,3)\rangle=\Delta_{C_2}$, whose only support-indecomposable factor is
+itself. By Lemma~\ref{lem:escape} $\Delta_{C_2}\notin\mathcal F(A)$, so by Proposition~\ref{prop:meta} it
+cannot be a stabilizer of $(\ext r\circ M)[4]$; Lemma~\ref{lem:stab} gives $M\circ M\ncong\ext r\circ M$.
+\end{proof}
 
-This refutes the earlier hope that the corner is vacuous. That vacuity sketch assumed a nonempty
-constant part, substituted into deep structure, \emph{builds} new closed deep terms and so forces
-$a_0=\infty$; but a \emph{unit} \emph{absorbs} rather than builds ($\mu(x,c)=x$). Adjoining a unit to the
-free commutative magma --- which has $a_0=0$ and is already covered by Theorem~\ref{thm:P} --- raises
-$a_0$ from $0$ to $1$ while leaving every positive-arity constituent, and hence the entire
-$S_2\wr\cdots\wr S_2$ nesting tower, untouched. So $a_0$ stays finite $(=1)$ with nesting depth still
-unbounded. The lesson is that the true axis of this corner is \emph{nesting \textup{(}wreath\textup{)}
-depth}, not degree: bounded degree implies bounded nesting depth, so a depth-based refinement of
-Theorem~\ref{thm:S} --- a conjectural bounded-nesting-depth invariant $\mathrm S'$ subsuming
-Theorem~\ref{thm:S} --- would collapse the residual to exactly $a_0>0$ with unbounded nesting depth, of
-which $U$ is the canonical inhabitant. What remains genuinely open is the fate of $U$ itself.
+The mechanism is a \emph{correlated block-swap}: the unit builds a rigid block $W_L$ with no internal
+symmetry, and the commutative outer $\mu$ swaps two equal copies, giving $(0\,1)(2\,3)$ --- a symmetry that
+moves $0\leftrightarrow1$ \emph{only together with} $2\leftrightarrow3$. A block-fixing product cannot
+correlate two blocks: it offers them independently ($S_2\times S_2$, order $4$) or fuses them into one
+symmetric tree ($D_4$, order $8$); order $2$ is unreachable. The unit that inhabits the corner is exactly
+what breaks composition there. (Verified for $U_3$: $\mathrm{Aut}(w)=\langle(0\,1)(2\,3)\rangle$, and an
+exhaustive search over single $O$-trees on $4$ labels finds no $\Delta_{C_2}$ factor.)
 
-\begin{problem}[The sharp residual corner]\label{prob:corner}
-Decide whether $U\circ U\cong\ext r\circ U$ for some polynomial container $\ext r$. A \emph{negative}
-answer closes the analytic necessity of Theorem~\ref{thm:3} as a biconditional over every finitary
-analytic monad, with $U$ the extremal case. A \emph{positive} answer would exhibit a non-polynomial
-\textup{(}non-flat, hence not preserving connected limits\textup{)} monad whose essential image is
-nonetheless closed under composition --- refuting the necessity direction inside this corner. The
-question is open: neither plethysm right-cancellation \textup{(}which needs $a_0=0$\textup{)} nor the
-support-splitting degree gap \textup{(}which needs bounded degree, hence bounded nesting depth\textup{)}
-reaches it.
+\subsubsection*{Partial symmetry: necessity fails}
+Full symmetry was load-bearing. Weaken it to \emph{cyclic} slot-symmetry and the converse collapses.
+
+\begin{theorem}[The $C_3$ operad refutes necessity]\label{thm:C3}
+Let $O$ be the operad freely generated by one ternary operation $\omega$ with cyclic slot-symmetry
+$H_\omega=C_3=\langle(0\,1\,2)\rangle$ \textup{(}not $S_3$\textup{)} and an absorbed nullary unit $e$, and
+let $M=\tilde A$ \textup{(}$A=O$\textup{)} be its free-algebra monad. Then $M$ is analytic and
+non-polynomial \textup{(}non-flat, $H_\omega=C_3\ne1$\textup{)}, with $a_0=1$ and $\mathfrak h=\infty$ ---
+it inhabits the same residual as $U$. Nevertheless the essential image of $\extM{-}$ \emph{is} closed under
+composition: for all polynomial $p,q$,
+\[
+  \extM{p}\circ\extM{q}\;\cong\;\extM{p\triangleleft L},\qquad
+  L=(\mathbb N,\ n\mapsto[n])\ \text{the list \textup{(}free-monoid\textup{)} container.}
+\]
+Hence composition-closure does \emph{not} imply polynomiality; the necessity direction of
+Theorem~\ref{thm:3} is false without a symmetry hypothesis.
+\end{theorem}
+
+\begin{lemma}[Only three identical]\label{lem:c3}
+For the $C_3$ operad, the only source of a nontrivial label-automorphism in a structure of $\ext p\circ
+M\circ\ext q\circ M$ \textup{(}$p,q$ polynomial\textup{)} is a ternary $\omega$-node all three of whose
+children are isomorphic \textup{(}contributing a $C_3$\textup{)}. The binary composite $\mu=\omega(x,y,e)$
+is \emph{non-commutative} \textup{(}$C_3$ has no transposition\textup{)}, so two identical arguments are
+never swapped, and the flat $p,q$ layers contribute only direct products. Consequently every
+point-stabilizer is an iterated $C_3$-wreath assembled by direct products, and each of its
+support-indecomposable factors is the automorphism group of a single $O$-tree.
+\end{lemma}
+
+\begin{proof}[Proof idea]
+An automorphism of a rooted tree permutes each node's children within isomorphism classes using only that
+node's slot-symmetry. Under $C_3$ a $3$-cycle fixes a configuration only when all three children coincide
+(every $3$-cycle moves each slot to a non-identical one), and $\mu=\omega(-,-,e)$ has trivial residual
+symmetry since $C_3$ has no transposition fixing the unit slot; flat layers have distinguishable positions.
+So the only generator of label-symmetry is the three-identical $C_3$, the stabilizer is an iterated
+$C_3$-wreath built by direct products, and each support-indecomposable factor is realised by a single
+balanced $O$-tree.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:C3}]
+Two analytic-type functors are isomorphic iff they carry the same multiset of \emph{molecule types}
+$(n,[G])$ (arity and stabilizer conjugacy class), with multiplicity, on every component --- the
+coefficientwise Joyal reconstruction, valid for infinite components. By Lemma~\ref{lem:c3} the molecule
+types of $M\circ\ext q\circ M$ (any $q$ with a positive-arity shape) are exactly the Young products of
+single-tree automorphism groups; the list composite $L\circ M$ realises the same set (a list of single
+trees and units has a block-fixing-product stabilizer), and every such type recurs with multiplicity
+$\aleph_0$ (pad by outer pegs, resp.\ appended units, without changing the stabilizer). Matching multisets
+gives $M\circ\ext q\circ M\cong L\circ M$; whiskering by $\ext p$,
+\[
+  \ext p\circ M\circ\ext q\circ M\;\cong\;\ext p\circ L\circ M=(\ext p\circ\ext L)\circ M\cong
+  \ext{p\triangleleft L}\circ M=\extM{p\triangleleft L}.
+\]
+The case $p=q=\y$ is $M\circ M\cong L\circ M$. As $M$ is non-flat it is non-polynomial, so the closed
+image does not force polynomiality.
+\end{proof}
+
+The contrast with Theorem~\ref{thm:family} is exact --- the same construction seen from two operads. The
+correlated-swap witness $w$ requires the outer $\mu$ to \emph{swap} its two equal children, which needs
+$\mu$ commutative; under $C_3$, $\mu=\omega(-,-,e)$ is non-commutative, so $w$ has trivial automorphism
+group and no escape occurs. (Verified: the molecule type-sets of $M\circ M$ and $L\circ M$ coincide for
+$m\le4$; the same escape search that finds $\Delta_{C_2}$ for the \emph{fully symmetric} $S_3$-operad at
+$m=4$ finds \emph{nothing} for $C_3$.)
+
+\subsubsection*{The dividing line}
+Both theorems turn on one bit --- the commutativity of the binary unit-composite
+$\mu(x,y)=\omega(x,y,e,\dots)$.
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{lccc}
+\hline
+unital operad $O$ ($a_0>0$) & $\mu=\omega(x,y,e,\dots)$ & escape in $M\circ M$ & necessity\\
+\hline
+fully symmetric ($H_g=S$) & commutative & $\Delta_{C_2}\notin\mathcal F$ & \textbf{holds} (Thm~\ref{thm:family})\\
+partially symmetric ($C_3$) & non-commutative & none & \textbf{fails} (Thm~\ref{thm:C3})\\
+\hline
+\end{tabular}
+\end{center}
+
+Commutative $\mu$ rigidifies a block with a unit peg and swaps two such blocks, manufacturing a correlated
+symmetry no polynomial layer has; non-commutative $\mu$ manufactures nothing new, and every stabilizer is
+already a single-tree automorphism group, so the image closes. This is the precise sense in which
+\emph{polynomiality governs composition within the fully symmetric world}. What lies between the two rows
+is open.
+
+\begin{problem}[The non-symmetric residual]\label{prob:residual}
+Characterise, among analytic monads with $M\emptyset$ nonempty-finite and unbounded wreath depth that are
+\emph{not} fully symmetric, exactly which have composition-closed image. The $C_3$ operad populates the
+``closed'' side and the fully symmetric unital magmas (Theorem~\ref{thm:family}) the ``not closed'' side;
+a clean invariant separating them --- presumably graded by the symmetry of the binary unit-composites
+available in $O$ --- would complete the necessity picture outside the symmetric world.
 \end{problem}
 
-Assembling sufficiency with the trichotomy:
+Assembling sufficiency with the conditional converse:
 
-\begin{theorem}[Composition $=$ polynomiality; final form]\label{thm:3final}
-\emph{Sufficiency:} if $M$ is polynomial then the essential image of $\extM{-}$ is closed under
-composition, with $p\triangleleft_M q=p\triangleleft\ceil M\triangleleft q$
-\textup{(}Proposition~\ref{prop:suff}\textup{)}. \emph{Necessity:} every non-polynomial monad in
-classes \textup{(a)--(c)} of Theorem~\ref{thm:dichotomy} --- hence every monad that arises in practice
---- has image \emph{not} closed under composition. The sole exception is the corner $\{a_0>0$, unbounded
-nesting depth$\}$, which is \emph{inhabited} \textup{(}Proposition~\ref{prop:corner}, the free
-commutative unital magma $U$\textup{)}; there necessity is open \textup{(}Problem~\ref{prob:corner}\textup{)}.
-Thus ``$\extM{-}$ has composition-closed image $\iff$ $M$ is polynomial'' is a proved sufficiency
-together with a biconditional for every monad outside that one corner. The earlier reliance on an unproved
-species-theoretic \emph{Plethysm Lemma} is removed: for $M\emptyset=\emptyset$ the required inequality
-$A\bullet A\ncong B\bullet A$ follows directly from right-cancellation in the cycle-index ring,
-bypassing any identification of a ``bad'' constituent.
+\begin{theorem}[Composition and polynomiality; final form]\label{thm:3final}
+\emph{Sufficiency \textup{(}unconditional\textup{)}:} if $M$ is polynomial then the essential image of
+$\extM{-}$ is closed under composition, with $p\triangleleft_M q=p\triangleleft\ceil M\triangleleft q$
+\textup{(}Proposition~\ref{prop:suff}\textup{)}. \emph{Necessity \textup{(}conditional\textup{)}:}
+composition-closure forces $M$ polynomial for $M$ super-polynomial (Proposition~\ref{prop:cardlaw}), for
+analytic $M$ with $M\emptyset=\emptyset$ (Theorem~\ref{thm:P}), for analytic $M$ of bounded wreath depth
+(Theorem~\ref{thm:Sprime}), and for every fully symmetric unital magma monad (Theorem~\ref{thm:family},
+including the corner case $U$); it \emph{fails} for the $C_3$ operad (Theorem~\ref{thm:C3}). The dividing
+line is the commutativity of the binary unit-composite $\mu$. Consequently \emph{within the fully symmetric
+world --- which contains every applied effect monad: multiset, distribution, powerset, symmetric powers ---
+composition-closure $\iff$ flatness of the species $\iff$ $M$ polynomial}. The earlier reliance on an
+unproved species-theoretic \emph{Plethysm Lemma} is removed (Theorem~\ref{thm:P}), and the formerly open
+corner $U$ is resolved (necessity holds); the $C_3$ operad shows the biconditional cannot be extended past
+the symmetry hypothesis.
 \end{theorem}
 
 \subsection{Independence}
@@ -965,12 +1178,15 @@ properties of $M$.
 
 For a monad $M$ on $\Set$, the effectful container extension $\extM{-}=\ext{-}\circ M$ names
 endofunctors faithfully always, names them \emph{fully} exactly when $M$ is codense, and has an image
-closed under composition when $M$ is polynomial. These are two different Kan-theoretic invariants of
-the effect monad, and across the standard effects they pull in opposite directions: probability is
-faithful but not composable, error is composable but not faithful. The folklore ``composes iff
-commutative and affine'' is simply wrong --- $\D$ is affine and commutative but does not compose,
-$\Maybe$ is neither yet does --- and the true obstruction to composition is a representability
-dichotomy, not a cohomology class or a distributive-law existence question.
+closed under composition when $M$ is polynomial --- and, within the fully symmetric world that holds the
+applied effect monads, \emph{only} when $M$ is polynomial. These are two different Kan-theoretic
+invariants of the effect monad, and across the standard effects they pull in opposite directions:
+probability is faithful but not composable, error is composable but not faithful. The folklore ``composes
+iff commutative and affine'' is simply wrong --- $\D$ is affine and commutative but does not compose,
+$\Maybe$ is neither yet does --- and the true obstruction to composition is a representability question
+(flatness of a species), not a cohomology class or a distributive-law existence question. That
+representability governs composition turns out to require a symmetry hypothesis: the $C_3$ operad, whose
+non-polynomial monad nonetheless composes, marks the exact boundary.
 
 For the compositional modelling of effectful agents this draws a sharp line. An agent that ``may
 decline'' ($\Maybe$-positions) chains cleanly into other agents but cannot always be recovered from
@@ -981,18 +1197,20 @@ explicit.
 
 Three questions remain, each precisely located.
 \begin{enumerate}[label=(\arabic*)]
-\item \textbf{The composition converse (the inhabited corner, Problem~\ref{prob:corner}).} Does
-  closure of the essential image under $\circ$ force $M$ to be polynomial? Yes for every monad that
-  arises (Theorem~\ref{thm:dichotomy}): the cardinality law excludes the super-polynomial monads,
-  plethysm right-cancellation (Lemma~\ref{lem:cancel}) excludes every analytic monad with
-  $M\emptyset=\emptyset$ at any nesting depth, and the support-splitting invariant excludes every
-  bounded-degree analytic monad. The trailing-$M$ obstruction was sharpened into the exact ``no
-  information'' statement of Proposition~\ref{prop:inert} at the level of limit preservation, then
-  circumvented by cancelling on the finer cycle-index invariant. The one class left uncovered ---
-  analytic, $M\emptyset$ nonempty-finite, unbounded nesting depth --- is \emph{inhabited} by the free
-  commutative unital magma $U$ (Proposition~\ref{prop:corner}); the true axis there is nesting depth, not
-  degree. Deciding whether $U\circ U\cong\ext r\circ U$ (Problem~\ref{prob:corner}) would either complete
-  the biconditional or exhibit a non-polynomial counterexample with composition-closed image.
+\item \textbf{The composition converse, and its boundary (Problem~\ref{prob:residual}).} Does closure of
+  the essential image under $\circ$ force $M$ to be polynomial? \emph{Conditionally yes, and in general
+  no.} The converse holds for super-polynomial monads (the cardinality law), for analytic monads with
+  $M\emptyset=\emptyset$ (plethysm right-cancellation, Lemma~\ref{lem:cancel}, at any wreath depth), for
+  analytic monads of bounded wreath depth (the imprimitivity-depth invariant $h$,
+  Definition~\ref{def:depth}), and for every fully symmetric unital magma monad (a correlated block-swap,
+  Theorem~\ref{thm:family}) --- resolving the formerly open corner $U$ in favour of necessity. But the
+  converse \emph{fails} for the $C_3$ operad (Theorem~\ref{thm:C3}): a non-polynomial monad whose image is
+  nonetheless composition-closed, with $M\circ M\cong L\circ M$ for the list monad $L$. The trailing-$M$
+  obstruction, sharpened to the ``no information'' statement of Proposition~\ref{prop:inert} at the level
+  of limit preservation, is circumvented on the finer stabilizer and cycle-index invariants; and the exact
+  dividing line is the commutativity of the binary unit-composite $\mu$. What remains open is the precise
+  frontier between the two: which \emph{partially} symmetric unital analytic monads of unbounded wreath
+  depth have composition-closed image (Problem~\ref{prob:residual})?
 \item \textbf{Rigidity of $\D$ (Lemma~\ref{lem:Drigid}).} Full faithfulness of $\extM[\D]{-}$ is
   conditional on $\Nat(\D,\D)=\{\id\}$; the reduction of Example~\ref{ex:D} is unconditional. A clean
   proof of this rigidity fact would remove the one assumption in Theorem~\ref{thm:2}'s probabilistic
@@ -1012,6 +1230,12 @@ D.~Ahman and T.~Uustalu,
 Electron.\ Proc.\ Theor.\ Comput.\ Sci.\ \textbf{207} (2016), 89--98.
 arXiv:1604.01187.
 
+\bibitem{BLL}
+F.~Bergeron, G.~Labelle, and P.~Leroux,
+\emph{Combinatorial Species and Tree-like Structures},
+Encyclopedia of Mathematics and its Applications \textbf{67},
+Cambridge University Press, 1998.
+
 \bibitem{DJN}
 A.~Dorta, C.~B.~Jarvis, and N.~Niu,
 \emph{Monoidal structures on generalized polynomial categories},
@@ -1022,6 +1246,12 @@ N.~Gambino and J.~Kock,
 \emph{Polynomial functors and polynomial monads},
 Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), no.~1, 153--192.
 arXiv:0906.4931.
+
+\bibitem{Joyal}
+A.~Joyal,
+\emph{Foncteurs analytiques et esp\`eces de structures},
+in \emph{Combinatoire \'enum\'erative} (Montr\'eal, 1985),
+Lecture Notes in Math.\ \textbf{1234}, Springer, 1986, 126--159.
 
 \bibitem{NiuSpivak}
 N.~Niu and D.~I.~Spivak,
