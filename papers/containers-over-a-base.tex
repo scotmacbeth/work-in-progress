@@ -64,7 +64,7 @@ extensivity, cartesian closure, and the linear collapse}
 \address{Kodamai}
 \email{neil@kodamai.com}
 
-\date{27 August 2026}
+\date{9 September 2026}
 
 \begin{abstract}
 The phrase ``a container in a category'' names at least four inequivalent constructions:
@@ -209,6 +209,14 @@ Theorem~\ref{thm:introT4} --- extensivity as villain for T1/T2 and hero-of-the-o
 --- is the survey's most surprising structural fact and the reason the classification is genuinely
 two-dimensional rather than a single ``goodness'' scale.
 
+% TODO (write session 2026-09-09, BLOCKED on provenance): fold in the additive-lens CCC prior-art
+% split here once sources are deep-read. Positive result (base Fam(CMon^op) is cartesian closed) is
+% CHAD (Nunes-Vakar; arXiv id in scratch/write-2026-09-09.md) + Hedges' "Autodiff through function
+% types"; DO NOT claim it. MY complement = the negative extension result (linear collapse Id^N) + the
+% fullness gap = non-extensivity diagnosis. Deferred because CHAD is untracked in sources.json and the
+% Hedges autodiff post is only at agent-summary; write sessions may not cite below deep-read and may
+% not browse. This subsection currently makes NO additive-lens claim, so there is no overclaim to
+% correct until that material is added. See scratch/write-2026-09-09.md and the for-robin note.
 \subsection{What is and is not new}
 The tensor $\otimes$ over a general base, a composition product $\lhd_{\mathrm{DJN}}$, and the theorem
 that $\lhd_{\mathrm{DJN}}$-comonoids are enriched categories (their Theorem~4.3; their Definition~4.2 is
@@ -335,6 +343,18 @@ automatic. Each clause powers one obstruction below.
 
 %==========================================================================
 \section{The landscape of bases}\label{sec:landscape}
+
+The map is worth drawing because the construction it maps keeps being redrawn. The
+container/polynomial-functor account of a compositional construction is, with some regularity,
+rediscovered from the implementation side by authors who do not cite --- and often do not know of
+--- one another. Hedges' experimental language \emph{Poly} \cite{HedgesPoly}, whose types \emph{are}
+containers and whose functions \emph{are} lenses, is a sharp recent instance: a working language
+built directly on the Abbott--Altenkirch--Ghani \cite{AAG} and Gambino--Kock \cite{GambinoKock}
+theory, its compiler targeting a graded monad modelling a stack --- over the classical base, but
+arrived at from programming practice rather than from the categorical literature. When a construction
+is independently reimplemented this often, a census of \emph{where} it has been run, and which of its
+forms survives which base, stops being pedantry: it is what lets the reimplementers locate one
+another, and it is what the rest of this section supplies.
 
 Table~\ref{tab:main} named the two endpoints of the story: the good base $\Set$, where all four
 approaches coincide, and the doubly-bad base $\Vect$, where only the external one survives. Between
@@ -1142,6 +1162,11 @@ Journal of the London Mathematical Society \textbf{77} (2008), 203--220.
 \emph{Polynomial functors and polynomial monads.}
 Mathematical Proceedings of the Cambridge Philosophical Society \textbf{154} (2013), 153--192.
 arXiv:0906.4931.
+
+\bibitem{HedgesPoly} J.~Hedges.
+\emph{A first look at programming in Poly.}
+Blog post, \texttt{julesh.com}, 29 June 2026. (An experimental language whose types are containers
+and whose functions are lenses.)
 
 \bibitem{Hermida} C.~Hermida.
 \emph{Fibrations, logical predicates and indeterminates.}
