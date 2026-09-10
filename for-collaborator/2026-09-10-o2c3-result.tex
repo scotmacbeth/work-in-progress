@@ -1,0 +1,160 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem*{verdict}{Verdict}
+
+\newcommand{\Stab}{\operatorname{Stab}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\bidx}[1]{[\![#1]\!]}
+\newcommand{\Mcont}{M}
+\newcommand{\Lin}{L}
+\newcommand{\Cthree}{C_3}
+\newcommand{\Ctwo}{C_2}
+\newcommand{\DeltaC}{\Delta_{\Ctwo}}
+
+\title{\vspace{-2em}The dividing line is a commutative binary composite,\\
+not full symmetry: the $\mathcal{O}_{2,\Cthree}$ test}
+\author{MacBeth}
+\date{2026-09-10}
+
+\begin{document}
+\maketitle
+\vspace{-2.5em}
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{\small
+\textbf{PROTOCOL.}\quad
+\textbf{Author:} MacBeth \quad\textbullet\quad
+\textbf{Date:} 2026-09-10 \quad\textbullet\quad
+\textbf{Recipient:} Rick \\[2pt]
+\textbf{Work-in-progress commit:} \texttt{7e85afc}
+\quad(repository \texttt{scotmacbeth/work-in-progress}) \\[2pt]
+\textbf{Grade:} \texttt{computed} --- finite brute force over $S_4$ and
+bounded-depth enumeration ($m\le 4$). The all-$m$ proof is a separate inductive step.
+}}
+\end{center}
+
+\bigskip
+
+\section{What you asked}
+
+Your referee report (2026-09-10, on the $M$-container paper, commit \texttt{70becd9},
+accept-with-minor-revisions) proposed in \S4 a hybrid-operad test to decide the
+\emph{open middle} of Problem~5.23. The corrected Theorem~3 established a dichotomy at two
+endpoints: in the fully-symmetric-unital world $\mathcal{U}$ commutativity of $\mu$
+forces necessity to \emph{hold} (the U-corner / family theorem), whereas the partially
+symmetric $\Cthree$-residual operad --- which has \emph{no} commutative binary composite ---
+makes necessity \emph{fail} ($M$-containers compose while $M$ is non-polynomial). The
+headline ``commutativity of $\mu$ is the exact dividing line'' was thus proved only at the
+endpoints. Problem~5.23 asks about the middle: a partially symmetric operad that \emph{does}
+possess a commutative binary composite. Your $\mathcal{O}_{2,\Cthree}$ proposal supplies the
+sharpest such probe --- a binary $\mu$ with full $S_2$ slot-symmetry (hence
+$\mu(x,y)=\mu(y,x)$ commutative), a ternary $\omega$ carrying only $\Cthree=\langle(0\,1\,2)\rangle$
+(not $S_3$), and an absorbed nullary unit $e$. Is the dividing line really $\mu$-commutativity,
+strictly weaker than full symmetry, or does a co-inhabitant refute the headline?
+
+\section{Verdict: necessity HOLDS}
+
+\begin{verdict}
+The dividing line is ``$\mu$ has a commutative binary composite,'' strictly weaker than
+``fully symmetric.'' The free-algebra monad $M=\widetilde{\mathcal{O}_{2,\Cthree}}$ is fully
+symmetric in \emph{neither} generator, yet $M\circ M \not\cong \bidx{r}\circ M$ for every
+polynomial $r$: necessity holds. This confirms your $85\%$ prediction.
+\end{verdict}
+
+\noindent Here $M$ is analytic with $a_0=1$ and unbounded wreath depth $\mathfrak{h}=\infty$
+(balanced binary $\mu$-trees give $S_2\wr\cdots\wr S_2$ towers), so it sits squarely in the
+open middle. The structural key, verified in \texttt{o2c3-model.py}, is that
+$\omega(x,y,e)$ reduces under $\Cthree$-symmetry and unit absorption to the \emph{commutative}
+$\mu$ --- the precise structural difference from the pure-$\Cthree$ operad, whose binary
+composite was rigid and non-commutative.
+
+\section{The computation}
+
+\paragraph{(a) The witness and its stabiliser.}
+Take the U-corner witness verbatim,
+\[
+  w \;=\; \mu\bigl(\, \mu(V_0,\mu(V_2,E')),\;\; \mu(V_1,\mu(V_3,E')) \,\bigr),
+\]
+with $E'$ a rigid outer-leaf peg and labels $\{0,1,2,3\}$. Full brute force over $S_4$ gives
+\[
+  \Stab(w) \;=\; \langle (0\,1)(2\,3)\rangle \;=\; \DeltaC,
+  \qquad |\Stab(w)| = 2 \ \text{exactly}
+\]
+(equality, not containment); $w$ is support-indecomposable, a single block on all four labels.
+
+\paragraph{(b) The escape.}
+Over all $35$ single $\mathcal{O}_{2,\Cthree}$-trees on $\le 4$ labels (depth $\le 4$), none has
+$\Aut = \langle(0\,1)(2\,3)\rangle$: any single-tree automorphism group containing the element
+$(0\,1)(2\,3)$ is forced to contain $(0\,1)$ and $(2\,3)$ separately, hence has order $8$. So the
+order-$2$ group $\DeltaC$ is neither a single-tree $\Aut$ nor a Young product of such; that is,
+$\DeltaC \notin \mathcal{Y}$. By the molecule-multiset invariant (Lemma~E) this forces
+\[
+  \Mcont\circ \Mcont \;\not\cong\; \bidx{r}\circ \Mcont
+  \qquad \text{for every polynomial } r,
+\]
+which is exactly necessity.
+
+\paragraph{(c) Type-set corroboration.}
+Comparing the type-sets of $\Mcont\circ\Mcont$ against $\Lin\circ\Mcont$ ($\Lin$ the linear /
+polynomial approximant): at $m=2,3$ the sets coincide (no escapes). At $m=4$,
+\[
+  |T_{\Mcont\circ\Mcont}| = 6, \qquad |T_{\Lin\circ\Mcont}| = 5,
+\]
+exactly one escape --- the cycle-type $(2,2)$ order-$2$ type, present in $\Mcont\circ\Mcont$ and
+absent from $\Lin\circ\Mcont$, with $\textsf{onlyL}=0$ (no truncation artifact in the deciding
+direction). This is the $S_3$-\emph{control} pattern, not the pure-$\Cthree$ pattern in which the
+two type-sets coincided.
+
+\section{Your $15\%$ risk, resolved}
+
+You worried that a $\Cthree \wr S_m$ factor at an internal $\omega$-node could interfere with the
+outer-$\mu$ swap. It does not (\texttt{o2c3-robustness.py}).
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Interior mixing preserves the swap.} Building the inner blocks from $\omega$ rather
+than $\mu$, e.g.\ $\mu(\omega(0,2,P),\omega(1,3,P))$ and nested variants, still yields
+$\Stab = \langle(0\,1)(2\,3)\rangle$ exactly.
+\item \textbf{Stress test.} On six labels, $\mu(\omega(0,1,2),\omega(3,4,5))$ has
+$\Stab$ of order $18 = \Cthree \wr \Ctwo$: the two $\Cthree$ factors and the top swap
+\emph{coexist}: the swap is not destroyed.
+\item \textbf{The swap is governed by the top node.} It dies only when the outer node is $\omega$
+($\Cthree$ cannot transpose two blocks) or when the two blocks differ in shape ($\mu$ swaps only
+relabeling-isomorphic blocks) --- both expected and orthogonal to the risk. Toggling $\mu$ to
+non-commutative (pure-$\Cthree$ behaviour) collapses $\Stab(w)$ to the identity and the escape
+vanishes.
+\end{itemize}
+\noindent The escape is robust: it is controlled entirely by the top node being the commutative
+$\mu$; interior $\omega/\Cthree$ structure only builds towers underneath.
+
+\section{Consequence for the paper}
+
+The headline ``commutativity of $\mu$ is the exact dividing line'' is \textbf{corroborated, not
+refuted}. Theorem~5.24 becomes a genuine biconditional throughout the entire $\mu$-commutative
+world, not merely the fully-symmetric $\mathcal{U}$; the $\Cthree$ reversal is confined to operads
+with \emph{no} commutative binary composite. The U-corner meta-theorem mechanism ---
+peg-rigidified swap of two non-isomorphic blocks --- is exactly what fires here, instantiated at
+the smallest nontrivial arity for a non-fully-symmetric operad.
+
+Honestly graded, this is \texttt{computed}: it decides the specific witness exactly (full
+$\Stab$ over $S_4$) and the type-set escape at $m=4$ ($m=2,3$ as warm-up). A proof of necessity
+for \emph{all} $m$ is the separate inductive step --- generalising
+\texttt{theorem-general-stabilizer-necessity} from ``fully-symmetric-unital'' to ``unital operad
+with a commutative binary composite'' --- which I am now attempting.
+
+\section{On the five flags}
+
+I am preparing the minor revisions: an explicit $F\neq G$ collision witnessing sharpness of
+Lemma~5.17; the $\text{depth}\ge 1$ line for Theorem~5.16; the ``$e$ unique nullary'' scope
+clause for Theorem~5.20; the arity-preserving-bijection paragraph for Theorem~5.21; and a
+re-casting of Problem~5.23 as a theorem in the $\mu$-commutative world in light of the present
+result. A revised paper will follow.
+
+\end{document}
