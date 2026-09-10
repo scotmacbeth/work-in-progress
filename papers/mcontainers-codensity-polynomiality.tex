@@ -67,20 +67,27 @@ into its own codensity monad is an isomorphism --- and each functor $\Set(A,M{-}
 consequently probability distributions keep fullness while error, partiality, read-only context
 and nondeterminism destroy it. Third, the essential image of $\extM{-}$ is closed under
 composition \emph{if} $M$ is a \emph{polynomial} functor --- sufficiency for all $M$, with
-$p\triangleleft_M q=p\triangleleft\lceil M\rceil\triangleleft q$ --- and the converse holds precisely
-within the \emph{fully symmetric} world. Composition-closure forces $M$ polynomial for every analytic
+$p\triangleleft_M q=p\triangleleft\lceil M\rceil\triangleleft q$ --- and the converse holds on a class
+delimited by an exact combinatorial condition, strictly larger than the \emph{fully symmetric} world.
+Composition-closure forces $M$ polynomial for every analytic
 monad with $M\emptyset=\emptyset$ (by \emph{right-cancellation of plethysm} in the cycle-index ring, at
 any degree or nesting depth, covering free magmas and free operad monads), for every analytic monad of
 bounded \emph{wreath depth} (by an imprimitivity-depth invariant subsuming the multiset and
-symmetric-power monads), and for every free commutative unital magma monad (by a correlated block-swap
-no polynomial layer can produce); but it \emph{fails} for partially symmetric unital operads --- the free
+symmetric-power monads), and for the free-algebra monad of every unital non-flat operad with a
+\emph{commutative binary composite} and $\Delta_{C_2}\notin\mathcal S$ (by a correlated block-swap no
+polynomial layer can produce; the condition is strictly weaker than full symmetry, covering the free
+commutative unital magma $U$ and the $A_4$- and $V_4$-operads); but it \emph{fails} for partially
+symmetric unital operads --- the free
 algebra monad of a ternary operation with cyclic ($C_3$) slot-symmetry and an absorbed unit is
 non-polynomial yet has composition-closed image ($\extM{p}\circ\extM{q}\cong\extM{p\triangleleft L}$
-with $L$ the list monad). The dividing line is the commutativity of the binary unit-composite
-$\mu(x,y)=\omega(x,y,e,\dots)$: commutative (fully symmetric) forces the block-swap and hence the
-converse; non-commutative permits closure without polynomiality. Thus \emph{within the symmetric world
-of the applied effect monads --- multiset, distribution, powerset --- composition $\iff$ flatness of the
-species $\iff$ polynomiality}, with the $C_3$ operad marking the exact boundary. The affine-plus-commutative
+with $L$ the list monad). Commutativity of a binary composite is a \emph{precondition} for the escape
+(it drives the swap), not by itself the line; given it, the dividing line is the finer condition
+$\Delta_{C_2}\in\mathcal S$ --- whether the locked double-swap $\langle(0\,1)(2\,3)\rangle$ is the
+automorphism group of a single $O$-tree, characterised by (M1) a coexisting rigid and commutative binary
+composite, or (M2) a locked-swap derived operation. Thus
+\emph{within the symmetric world of the applied effect monads --- multiset, distribution, powerset ---
+composition $\iff$ flatness of the species $\iff$ polynomiality}, with the $C_3$ operad marking the exact
+boundary. The affine-plus-commutative
 folklore criterion is false ($\D$ is affine and commutative but does not compose; $\mathsf{Maybe}$ is
 neither yet does). Fullness and composition are thus governed by two independent Kan-theoretic invariants
 of $M$ that trade oppositely: probability is faithful but not composable, error is composable but not faithful.
@@ -90,18 +97,22 @@ of $M$ that trade oppositely: probability is faithful but not composable, error 
 
 \begin{center}\small
 \fbox{\begin{minipage}{0.92\textwidth}\centering
-\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 6 September 2026.\qquad
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 10 September 2026.\qquad
 \emph{For review by:} Rick.\\[2pt]
 \emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{commit}
-\texttt{70becd9}.\\[2pt]
-\textbf{Draft --- work in progress; not yet neighbour-reviewed. This revision supersedes commit
-\texttt{842db92}: Theorem~\ref{thm:3}'s necessity direction is now settled to be \emph{conditional}.
-The last corner (formerly an open Problem, ``$U\circ U\cong\ext r\circ U$?'') is closed --- necessity
-\emph{holds} at the free commutative unital magma $U$ (\S\ref{sec:unital}) --- but a partially symmetric
-sibling, the $C_3$-ternary unital operad, \emph{refutes} necessity outright: its non-polynomial monad has
-composition-closed image (Theorem~\ref{thm:C3}). The corrected theorem states sufficiency
-unconditionally and necessity within the fully symmetric world, with commutativity of the binary
-unit-composite as the exact dividing line (\S\ref{sec:unital}, Theorem~\ref{thm:3final}).}
+\texttt{REVISION-PENDING}.\\[2pt]
+\textbf{Draft --- work in progress; not yet neighbour-reviewed. This is the referee revision of commit
+\texttt{70becd9} (Rick, accept with minor revisions): it addresses the five flags and \emph{sharpens} the
+necessity criterion. Necessity now holds not merely within the fully symmetric world but for the
+free-algebra monad of every unital non-flat operad with a commutative binary composite and
+$\Delta_{C_2}\notin\mathcal S$ (Theorem~\ref{thm:main}, \S\ref{sec:unital}), a class strictly containing
+full symmetry (e.g.\ the $A_4$- and $V_4$-operads) and hence resolving the corner $U$. The earlier
+``commutativity of the binary unit-composite is the dividing line'' framing is corrected: commutativity is
+a precondition, and among operads that have a commutative binary composite the true dividing line is
+$\Delta_{C_2}\in\mathcal S$, characterised by (M1)$\vee$(M2) (Proposition~\ref{prop:charac}). The $C_3$-ternary unital operad still \emph{refutes} necessity outright
+(Theorem~\ref{thm:C3}), and a false sharpness aside on plethysm cancellation has been withdrawn
+(\S\ref{sec:cancel}). The one open question is the converse, $\Delta_{C_2}\in\mathcal S\Rightarrow$ closed
+(Problem~\ref{prob:residual}).}
 \end{minipage}}
 \end{center}
 
@@ -214,15 +225,24 @@ cardinality law excludes powerset, nonempty powerset, distributions, ultrafilter
 is analytic with $M\emptyset=\emptyset$ (right-cancellation of plethysm in the cycle-index ring,
 Theorem~\ref{thm:P}, at any degree or nesting depth, covering free magmas and free operad monads); if
 $M$ is analytic of bounded \emph{wreath depth} (an imprimitivity-depth invariant, Theorem~\ref{thm:Sprime},
-subsuming the multiset and symmetric-power monads); and if $M$ is a free commutative unital magma monad
-(Theorem~\ref{thm:family}, including the corner case $U$ formerly left open). \emph{But the converse
-fails} for partially symmetric unital operads: the free algebra monad of a single ternary operation with
-cyclic ($C_3$) slot-symmetry and an absorbed unit is analytic and non-polynomial, yet its essential image
-\emph{is} closed under composition (Theorem~\ref{thm:C3}). The exact dividing line is the commutativity of
-the binary unit-composite $\mu(x,y)=\omega(x,y,e,\dots)$: when $\mu$ is commutative (full slot-symmetry),
+subsuming the multiset and symmetric-power monads); and if $M$ is the free-algebra monad of a unital
+non-flat operad with a \emph{commutative binary composite} and $\Delta_{C_2}\notin\mathcal S$
+(conditions (i)+(ii) of Theorem~\ref{thm:main}) --- a class containing every fully symmetric unital operad
+(hence the corner case $U$, formerly left open) and strictly more (e.g.\ the $A_4$- and $V_4$-operads).
+\emph{But the converse fails} for partially symmetric unital operads: the free algebra monad of a single
+ternary operation with cyclic ($C_3$) slot-symmetry and an absorbed unit is analytic and non-polynomial,
+yet its essential image \emph{is} closed under composition (Theorem~\ref{thm:C3}). The exact dividing line
+is \emph{not} the commutativity of the binary unit-composite $\mu(x,y)=\omega(x,y,e,\dots)$, as the two
+endpoints alone might suggest: commutativity is a \emph{precondition} for the escape (a commutative
+composite is what supplies the swap), and given it the outcome is decided by the finer condition
+$\Delta_{C_2}\in\mathcal S$ --- whether the locked double-swap $\langle(0\,1)(2\,3)\rangle$ is the
+automorphism group of some single $O$-tree, read off the operad by (M1) a coexisting rigid \emph{and}
+commutative binary composite, or (M2) a derived operation carrying that symmetry (\S\ref{sec:unital}).
+Given a commutative binary composite and $\Delta_{C_2}\notin\mathcal S$ --- as under full symmetry ---
 $M\circ M$ realises a correlated block-swap that no polynomial layer $\ext r\circ M$ can manufacture, so
-necessity holds; when $\mu$ is non-commutative, an ``only three identical'' rigidity lets the image close
-without polynomiality. Consequently \textup{(}Theorem~\ref{thm:3final}\textup{)} \emph{within the fully
+necessity holds; the $C_3$ operad, whose only binary composite is rigid so that no swap can be built at
+all, sits outside this class and its image closes without polynomiality. Consequently
+\textup{(}Theorem~\ref{thm:3final}\textup{)} \emph{within the fully
 symmetric world --- which contains all the applied effect monads: multiset, distribution, powerset ---
 composition-closure $\iff$ flatness of the species $\iff$ polynomiality}, and the $C_3$ operad marks the
 precise boundary at which the symmetry hypothesis becomes load-bearing.
@@ -256,16 +276,21 @@ rigid on positions: every point-stabilizer of $(\ext r\circ M)[m]$ is a \emph{bl
 of single-$M$-element stabilizers (Proposition~\ref{prop:meta}, ``a function is fixed iff fixed
 pointwise''). Three invariants then measure how far $M\circ M$ escapes this constraint: a cardinality
 count for super-polynomial growth; an imprimitivity-\emph{wreath-depth} statistic $h$
-(Definition~\ref{def:depth}) for bounded-depth analytic monads; and right-cancellation of plethysm on
+(Definition~\ref{def:depth}, see \S\ref{sec:depth}) for bounded-depth analytic monads; and right-cancellation of plethysm on
 the cycle-index series (Lemma~\ref{lem:cancel}) for analytic $M$ with $M\emptyset=\emptyset$, reaching
 the unbounded-depth monads no stabilizer count can touch. The residual after these --- analytic,
-$M\emptyset$ nonempty-finite, unbounded wreath depth --- is where symmetry becomes decisive. If the
-monad's operations are \emph{fully} symmetric with an absorbed unit, then $M\circ M$ builds a
-\emph{rigid} composite block from the unit and \emph{swaps} two equal copies, a correlated symmetry
-$\Delta_{C_2}\notin\mathcal F$ that no block-fixing product contains, and necessity holds
-(Theorem~\ref{thm:family}). If instead a binary composite is non-commutative --- as for the $C_3$
-operad --- an ``only three identical'' rigidity (Lemma~\ref{lem:c3}) shows every stabilizer is already
-a single-tree automorphism group, the image closes, and necessity fails (Theorem~\ref{thm:C3}).
+$M\emptyset$ nonempty-finite, unbounded wreath depth --- is where the fine structure of the operad becomes
+decisive, through an exact combinatorial condition on single-tree automorphism groups. Whenever the operad
+is unital and non-flat with a commutative binary composite and $\Delta_{C_2}\notin\mathcal S$ --- no
+single $O$-tree has the locked double-swap $\langle(0\,1)(2\,3)\rangle$ as automorphism group --- $M\circ
+M$ builds a \emph{rigid} composite block from the unit and \emph{swaps} two equal copies via that
+commutative composite, a
+correlated symmetry $\Delta_{C_2}$ that no block-fixing product contains, and necessity holds
+(Theorem~\ref{thm:main}); full symmetry is the special case in which this always applies. If instead the
+operad has a rigid binary composite --- as for the $C_3$ operad, where $\omega(x,y,e)$ is rigid and
+non-commutative --- the escape is unavailable, and an ``only three identical'' rigidity
+(Lemma~\ref{lem:c3}) shows every stabilizer of its self-composite is already a single-tree automorphism
+group, so the image closes and necessity can fail (Theorem~\ref{thm:C3}).
 
 \subsection*{Why it matters}
 Beyond the pleasing tension of Corollary~\ref{cor:tradeoff}, the result sharpens the compositional
@@ -285,18 +310,27 @@ super-polynomial monads; plethysm right-cancellation (Lemma~\ref{lem:cancel}, Th
 disposes of every analytic monad with $M\emptyset=\emptyset$, at unbounded degree and depth; the
 wreath-depth invariant (Definition~\ref{def:depth}, Theorem~\ref{thm:Sprime}) disposes of every
 bounded-wreath-depth analytic monad, subsuming the multiset and symmetric-power monads; and the
-correlated-swap witness (Theorem~\ref{thm:family}) disposes of every free commutative unital magma monad,
-including the corner case $U$. The failure of necessity for the $C_3$ operad (Theorem~\ref{thm:C3}) is
-likewise proved: the isomorphism $M\circ M\cong L\circ M$ is established by matching molecule multisets
-(the ``only three identical'' rigidity, Lemma~\ref{lem:c3}); the small cases $m\le4$ are confirmatory
-computation, not the proof. The cancellation and block-fixing engines are elementary and computationally
-verified. Theorems~\ref{thm:P}, \ref{thm:Sprime}, \ref{thm:family} and \ref{thm:C3} invoke two standard
+correlated-swap witness (Theorem~\ref{thm:main}) disposes of every unital non-flat operad with a
+commutative binary composite and $\Delta_{C_2}\notin\mathcal S$ (conditions (i)+(ii)), a class that
+strictly contains the fully symmetric operads and hence resolves the
+corner case $U$. This sharpens the earlier ``full symmetry'' criterion: the load-bearing conditions are a
+commutative binary composite and $\Delta_{C_2}\notin\mathcal S$, proved for all arities via the
+characterisation Proposition~\ref{prop:charac}, with the
+supporting witnesses ($O_{\mu\nu}$, the pentagon $D_5$, the $A_4$- and $V_4$-operads) checked at $m=4$.
+The failure of necessity for the $C_3$ operad (Theorem~\ref{thm:C3}) is likewise proved: the isomorphism
+$M\circ M\cong L\circ M$ is established by matching molecule multisets arity-by-arity (the ``only three
+identical'' rigidity, Lemma~\ref{lem:c3}); the small cases $m\le4$ are confirmatory computation, not the
+proof. The cancellation and block-fixing engines are elementary and computationally verified. (We have
+also removed a false aside from an earlier draft --- that a vanishing linear coefficient breaks plethysm
+right-cancellation; it does not, and Lemma~\ref{lem:cancel}'s hypothesis is sufficient but not necessary,
+\S\ref{sec:cancel}.) Theorems~\ref{thm:P}, \ref{thm:Sprime}, \ref{thm:main} and \ref{thm:C3} invoke two standard
 facts of combinatorial-species theory --- Joyal's full faithfulness of the species-to-analytic-functor
 embedding, and the identity of species substitution with plethysm of cycle-index series (Joyal;
 Bergeron--Labelle--Leroux; Gambino--Kock for the polynomial-$\iff$-flat criterion) --- which we cite as
-background rather than re-derive. What remains genuinely open is the necessity direction in the residual
-outside the free commutative unital magmas: analytic $M$ with $M\emptyset$ nonempty-finite, unbounded
-wreath depth, and \emph{not} fully symmetric (Problem~\ref{prob:residual}). Full faithfulness for $\D$
+background rather than re-derive. What remains genuinely open is the \emph{converse} of
+Theorem~\ref{thm:main} --- whether $\Delta_{C_2}\in\mathcal S$ forces the essential image closed, which
+would upgrade the necessity criterion to a biconditional (Problem~\ref{prob:residual}); it is verified for
+the all-binary inhabitant $O_{\mu\nu}$ at $m\le4$ and open in general. Full faithfulness for $\D$
 rests on a standard rigidity fact, $\Nat(\D,\D)=\{\id\}$, which we isolate as Lemma~\ref{lem:Drigid} and
 assume rather than reprove. These boundaries are marked at each occurrence.
 
@@ -310,8 +344,10 @@ Theorem~\ref{thm:3}: sufficiency and non-unitality (\S\ref{sec:suff}); the cardi
 (\S\ref{sec:card}); the block-fixing meta-theorem and stabilizer invariant (\S\ref{sec:stab}); the
 wreath-depth invariant and Theorem~S$'$ (\S\ref{sec:depth}); the plethysm right-cancellation closing the
 analytic converse for $M\emptyset=\emptyset$ (\S\ref{sec:cancel}); and the unital corner
-(\S\ref{sec:unital}), where full symmetry gives necessity via a correlated block-swap while the $C_3$
-operad refutes it, pinning commutativity of the binary unit-composite as the exact dividing line.
+(\S\ref{sec:unital}), where a correlated-swap witness and an exact criterion $\Delta_{C_2}\notin\mathcal
+S$ give necessity for a class strictly larger than the fully symmetric operads, while the $C_3$ operad
+refutes it, pinning $\Delta_{C_2}\in\mathcal S$ --- not the mere commutativity of a binary composite ---
+as the exact dividing line.
 Section~\ref{sec:conc} draws the trade-off and lists open problems.
 
 \section{Preliminaries}\label{sec:prelim}
@@ -761,7 +797,7 @@ Lemma~\ref{lem:R0}.
 Naturally isomorphic functors preserve the same limits, so it suffices to treat $P\circ M$. The
 comparison map for the composite factors as $\varphi_{PM}=\bigl(P(\lim MD)\cong\lim(P\circ MD)\bigr)
 \circ P(\varphi_M)$, the left isomorphism holding because $P$, being polynomial, preserves the
-connected limit $\lim(MD)$. A nonconstant polynomial $P=\sum_i(-)^{B_i}$ (some $B_i\ne\emptyset$)
+connected limit $\lim(MD)$ \cite[\S1]{GambinoKock}. A nonconstant polynomial $P=\sum_i(-)^{B_i}$ (some $B_i\ne\emptyset$)
 reflects isomorphisms, so $\varphi_{PM}$ is invertible $\iff$ $\varphi_M$ is. Thus $M\circ M$ preserves
 $D$ $\iff$ $M$ does.
 \end{proof}
@@ -951,8 +987,16 @@ $\{p_\lambda\}_{|\lambda|=m}$ together with $a_1\ne0$ forces every $c_\lambda=0$
 minimality.
 \end{proof}
 
-The hypothesis $a_1\ne0$ is sharp: with $a_1=0$ (e.g.\ $H=p_2+\tfrac12p_1^2$) plethysm collapses in low
-degree. Both the injectivity and its failure at $a_1=0$ are computationally verified.
+The linear-coefficient hypothesis is what the bottom-degree bookkeeping above uses, and it holds in our
+application: $H=Z_A$ has $a_1\ge1$, forced by the monad unit. It is worth flagging that the hypothesis is
+\emph{sufficient but not necessary}. An elementary algebraic-independence argument (the images
+$p_k\circ H$ are algebraically independent because each carries a top-index variable the others lack)
+shows $(-)\circ H$ is injective for \emph{every} non-constant polynomial $H$; right-cancellation of
+$\circ$ collapses only when $H$ is a constant, where $F\circ H=F(H,H,\dots)$ flattens everything. In
+particular the example $H=p_2+\tfrac12p_1^2$, with vanishing linear coefficient, still yields an
+\emph{injective} $(-)\circ H$ (its kernel is zero in every degree, checked exactly) --- so a zero linear
+coefficient does not by itself break cancellation. Only the sufficient direction, at $a_1\ge1$, is used
+below.
 
 \begin{theorem}[Cancellation converse; $M\emptyset=\emptyset$]\label{thm:P}
 Let $M=\tilde A$ be an analytic monad with $A[0]=\emptyset$. If the essential image of $\extM{-}$ is
@@ -994,64 +1038,159 @@ commutative binary operation $\mu$ and a nullary unit $e$ absorbed by $\mu$ ($\m
 has $U[0]=\{e\}$ ($a_0=1$) and $U[n]=\{$commutative binary trees on $n$ leaves$\}$, $|U[n]|=(2n-3)!!$; the
 balanced $2^k$-leaf tree has stabilizer $S_2\wr\cdots\wr S_2$ ($k$ factors), so $\mathfrak h(U)=\infty$
 while every component is finite and $a_0=1$. It was the sharpest open case of the earlier form of this
-theorem. We show necessity \emph{holds} at $U$ --- indeed for its whole symmetric family --- and then that
-it \emph{fails} one operad over.
+theorem. We show necessity \emph{holds} not only at $U$ and its fully symmetric family, but for every
+unital operad with a commutative binary composite and $\Delta_{C_2}\notin\mathcal S$ --- an exact,
+operad-theoretic condition strictly weaker than full symmetry --- and then that it \emph{fails} one operad
+over, for a single ternary operation with cyclic symmetry.
 
-\subsubsection*{Full symmetry: necessity holds}
-Call an operad $O$ \emph{fully symmetric unital} if every operation of arity $\ge2$ has full slot-symmetry
-$H_g=S_{\mathrm{arity}}$, there is a nullary unit $e$ absorbed by every operation, the only unary operation
-is the identity, and some operation has arity $\ge2$. Its free-algebra monad $M=\tilde A$ (with $A=O$) is
-analytic, non-flat (some $H_g=S_{\ge2}\ne1$) hence non-polynomial, with $a_0\ge1$ and $\mathfrak h=\infty$.
-Each such $O$ has a commutative binary unit-composite $\mu(x,y)=\omega(x,y,e,\dots,e)$ (delete $n-2$ slots
-of an arity-$n$ operation by the unit; commutative by full symmetry). Write $\mathcal F(A)$ for the set of
-support-indecomposable factors of automorphism groups of single $O$-trees (each-label-once). By
-Proposition~\ref{prop:meta} and Lemma~\ref{lem:wreath}, every support-indecomposable factor of a
-$(\ext r\circ M)[m]$ stabilizer lies in $\mathcal F(A)$; so it suffices to realise, in $(M\circ M)[m]$, a
-factor \emph{outside} $\mathcal F(A)$.
+\subsubsection*{What makes necessity hold: an escape witness and an exact criterion}
+The escape from the polynomial constraint of Proposition~\ref{prop:meta} is realised by a single, robust
+witness, built from any commutative binary composite and the unit; whether it escapes is then decided by an
+exact operad-theoretic condition, strictly finer than the commutativity of that composite.
 
-\begin{lemma}[No rigid small tree; the escape factor]\label{lem:escape}
-For a fully symmetric unital $O$: \textup{(R2)} every single $O$-tree on $\ge2$ labels has nontrivial
-automorphism group; and consequently $\Delta_{C_2}:=\langle(0\,1)(2\,3)\rangle\notin\mathcal F(A)$.
+Recall $\mathcal S:=\{[\mathrm{Aut}(t)]:t\text{ a single }O\text{-tree, each label once}\}$ (conjugacy
+classes of automorphism groups of single trees) and, from Proposition~\ref{prop:meta}, that every
+point-stabilizer of $(\ext r\circ M)[m]$ is a \emph{block-fixing product} of members of $\mathcal S$ on
+pairwise disjoint supports; write $\mathcal Y$ for the set of such products. Put
+$\Delta_{C_2}:=\langle(0\,1)(2\,3)\rangle$ (order $2$, cycle type $(2,2)$). It is
+\emph{support-indecomposable}: its two orbits $\{0,1\},\{2,3\}$ cannot be split off as a direct product
+(the restrictions generate $S_2\times S_2$ of order $4\ne2$). Hence:
+
+\begin{lemma}[Escape test]\label{lem:escapetest}
+If $(M\circ M)[4]$ realises a point-stabilizer conjugate to $\Delta_{C_2}$ and $\Delta_{C_2}\notin\mathcal
+S$, then $M\circ M\ncong\ext r\circ M$ for every polynomial $\ext r$.
 \end{lemma}
 
 \begin{proof}
-(R2): in normal form no leaf is a unit (all absorbed), so a deepest internal node has only label-leaf
-children and, by full symmetry, arity $\ge2$; a transposition of two of its leaves fixes the tree. For the
-escape: under full symmetry $\mathrm{Aut}(t)=\prod_j(\mathrm{Aut}(s_j)\wr S_{m_j})$ over isomorphism
-classes of children (the class-partition Young subgroup is a genuine direct product because $H_\rho=S_n$
-contains every class-transposition independently), so every support-indecomposable factor is a wreath
-$\Gamma=\mathrm{Aut}(s)\wr S_m$ ($m\ge2$) on $m\ell$ points, $\ell$ the label-count of $s$. If
-$\Gamma\cong\Delta_{C_2}$ then $|\mathrm{Aut}(s)|^m\,m!=2$ and $m\ell=4$, forcing $m=2$,
-$|\mathrm{Aut}(s)|=1$, $\ell=2$: a rigid $2$-label single tree, contradicting (R2).
+Were $\Delta_{C_2}$ a stabilizer of some $(\ext r\circ M)[4]$, it would lie in $\mathcal Y$; by
+support-indecomposability it could not factor across the two orbits, forcing a single tree $t$ with
+$\mathrm{Aut}(t)=\Delta_{C_2}$, i.e.\ $\Delta_{C_2}\in\mathcal S$. So under $\Delta_{C_2}\notin\mathcal S$
+the class $[\Delta_{C_2}]$ occurs in the stabilizer multiset of $(M\circ M)[4]$ but in that of no
+$(\ext r\circ M)[4]$; Lemma~\ref{lem:stab} gives the non-isomorphism.
 \end{proof}
 
-\begin{theorem}[Full symmetry gives necessity]\label{thm:family}
-Let $M$ be the free-algebra monad of a fully symmetric unital operad. Then $M\circ M\ncong\ext r\circ M$
-for every polynomial $\ext r$, so the essential image of $\extM{-}$ is not closed under composition; hence
-$M$-containers compose $\iff$ $M$ is polynomial for every such $M$. This includes the free commutative
-unital magma $U=U_2$ (the corner inhabitant) and its $n$-ary analogues $U_n$ for all $n\ge2$.
-\end{theorem}
-
-\begin{proof}
-Let $V_i$ be the inner leaf on label $i$ and $E'$ the inner unit $e\in MX$ used as an \emph{outer} leaf
---- a rigid, non-absorbed peg (only the outer unit is absorbed at the outer level). Form
+\begin{lemma}[The correlated-swap witness]\label{lem:witness}
+Let $\mu$ be any \emph{commutative} binary composite of $O$ \textup{(}$\mu(x,y)=\mu(y,x)$\textup{)} and
+suppose $a_0\ge1$. With $V_i$ the inner leaf on label $i$ and $E'$ the inner unit $e$ placed as an
+\emph{outer} leaf --- a rigid, label-free peg --- set
 \[
   W_L=\mu(V_0,\mu(V_2,E')),\quad W_R=\mu(V_1,\mu(V_3,E')),\quad w=\mu(W_L,W_R)\in(M\circ M)[4].
 \]
-$W_L$ is rigid (its children $V_0$ and $\mu(V_2,E')$ are non-isomorphic, and inside the cherry $V_2\ne
-E'$), likewise $W_R$, and $W_L\cong W_R$ via $0\mapsto1,\,2\mapsto3$; so
-$\mathrm{Aut}(w)=\langle(0\,1)(2\,3)\rangle=\Delta_{C_2}$, whose only support-indecomposable factor is
-itself. By Lemma~\ref{lem:escape} $\Delta_{C_2}\notin\mathcal F(A)$, so by Proposition~\ref{prop:meta} it
-cannot be a stabilizer of $(\ext r\circ M)[4]$; Lemma~\ref{lem:stab} gives $M\circ M\ncong\ext r\circ M$.
+Then $\mathrm{Aut}(w)=\langle(0\,1)(2\,3)\rangle=\Delta_{C_2}$.
+\end{lemma}
+
+\begin{proof}
+$W_L$ is rigid: the children of its outer $\mu$ are $V_0$ (a labelled leaf) and $\mu(V_2,E')$ (a two-node
+tree), which are non-isomorphic, so $\mu$'s slot-symmetry cannot exchange them (commutativity is
+irrelevant for non-isomorphic children); and inside $\mu(V_2,E')$ the children $V_2$ and $E'$ are
+non-isomorphic. So $\mathrm{Aut}(W_L)=1$, likewise $\mathrm{Aut}(W_R)=1$, and $W_L\cong W_R$ via
+$0\mapsto1,\,2\mapsto3$. In $w=\mu(W_L,W_R)$ the two children are isomorphic, so commutativity of $\mu$
+supplies the swap $W_L\leftrightarrow W_R$, realised on labels as $(0\,1)(2\,3)$; fixing the children
+gives $\mathrm{Aut}(W_L)\times\mathrm{Aut}(W_R)=1$, and no single transposition preserves $w$. Adjoining
+further operations to $O$ creates no isomorphism among these specific $\mu/E'$-trees.
 \end{proof}
 
+The lemma uses \emph{only} a commutative binary composite and $a_0\ge1$; no full symmetry. Whether the
+witness \emph{escapes} --- $\Delta_{C_2}\notin\mathcal S$ --- is decided by a dichotomy in $O$.
+
+\begin{proposition}[Characterisation of $\Delta_{C_2}\in\mathcal S$]\label{prop:charac}
+For a unital operad $O$, $\Delta_{C_2}$ is the automorphism group of a single $O$-tree \textup{(}all four
+labels moved\textup{)} if and only if one of:
+\begin{itemize}
+\item[\textup{(M1)}] $O$ has \emph{both} a rigid binary composite $\nu$ \textup{(}a $2$-label single tree
+  with trivial automorphism group\textup{)} \emph{and} a commutative binary composite $\mu$; or
+\item[\textup{(M2)}] $O$ has a derived operation whose slot-symmetry, on some $4$ leaf-slots \textup{(}all
+  remaining slots filled by the unit\textup{)}, is exactly the locked double-swap
+  $\langle(0\,1)(2\,3)\rangle$.
+\end{itemize}
+\end{proposition}
+
+\begin{proof}
+$(\Leftarrow)$ (M1): $t=\mu(\nu(V_0,V_2),\nu(V_1,V_3))$ has isomorphic rigid children
+$\nu(0,2)\cong\nu(1,3)$ swapped by $\mu$, so $\mathrm{Aut}(t)=\langle(0\,1)(2\,3)\rangle$. (M2): the
+four-leaf tree $g(V_0,V_1,V_2,V_3)$ (remaining slots units) has $\mathrm{Aut}(t)$ equal to the derived
+symmetry $\langle(0\,1)(2\,3)\rangle$.
+
+$(\Rightarrow)$ Let $\mathrm{Aut}(t)=\langle\tau\rangle$, $\tau=(0\,1)(2\,3)$, and put
+$a=\mathrm{lca}(0,1)$, $b=\mathrm{lca}(2,3)$; $\tau$ fixes $a$ and $b$. \emph{Key move:} if a node $w$ is
+fixed by $\tau$ with $\tau(t_w)=t_w$ \textup{(}$t_w$ the subtree at $w$\textup{)}, then acting by
+$\tau|_{t_w}$ on $t_w$ and by the identity on its siblings is an automorphism of $t$ --- applying an
+automorphism to one child-subtree while fixing its siblings is always legitimate and requires no
+transposition inside any slot-symmetry group. If $a,b$ are incomparable, restricting $\tau$ to $t_a$ gives
+an automorphism acting as $(0\,1)$ alone, contradicting $\mathrm{Aut}(t)=\langle\tau\rangle$; if $b<a$
+strictly, $2,3$ lie under one child $D$ of $a$ and restricting to $t_D$ gives $(2\,3)$ alone --- again a
+contradiction. Hence $a=b=:v$, at which $\tau$ swaps children isomorphically; the four labels distribute
+over $v$'s children with a $\tau$-symmetric count, and, $\tau$ being fixed-point-free, only $(1,1,1,1)$ or
+$(2,2)$ occur. In case $(1,1,1,1)$ the four label-leaves are distinct children of $v$ and every other
+child is a unit, so $\mathrm{Aut}(t)$ is the derived $4$-slot symmetry $\langle(0\,1)(2\,3)\rangle$ ---
+(M2). In case $(2,2)$ two $2$-label children $A,B$ are swapped by $\tau$; internal automorphisms of $A,B$
+extend to automorphisms of $t$, so $\mathrm{Aut}(t)=\langle\tau\rangle$ forces $A,B$ rigid --- a rigid
+binary composite --- while the swap of $A,B$ at $v$ is a commutative binary composite --- (M1).
+\end{proof}
+
+\begin{theorem}[The escape criterion]\label{thm:main}
+Let $M=\tilde A$ be the free-algebra monad of a unital, non-flat operad $O$ satisfying
+\begin{itemize}
+\item[\textup{(i)}] every binary composite is commutative \textup{(}equivalently, $O$ has no rigid
+  $2$-label single tree\textup{)}, and
+\item[\textup{(ii)}] no derived operation has locked-double-swap symmetry on any $4$ leaf-slots
+  \textup{(}$\neg$\textup{(M2)}\textup{)}.
+\end{itemize}
+Then $M\circ M\ncong\ext r\circ M$ for every polynomial $\ext r$; the essential image of $\extM{-}$ is not
+closed under composition, and --- $M$ being non-polynomial --- $M$-containers compose $\iff$ $M$ is
+polynomial for every such $M$.
+\end{theorem}
+
+\begin{proof}
+By (i) and non-flatness some operation of arity $\ge2$ yields, on filling $n-2$ slots with the unit, a
+binary composite, commutative by (i); this is the $\mu$ of Lemma~\ref{lem:witness}, and $a_0\ge1$ by
+unitality, so $\mathrm{Aut}(w)=\Delta_{C_2}$ occurs in $(M\circ M)[4]$. By (i) there is no rigid binary
+composite, so $\neg$(M1); by (ii), $\neg$(M2); Proposition~\ref{prop:charac} gives
+$\Delta_{C_2}\notin\mathcal S$. The Escape test (Lemma~\ref{lem:escapetest}) concludes.
+\end{proof}
+
+Full symmetry is the special case in which the two hypotheses are automatic.
+
+\begin{corollary}[Full symmetry gives necessity]\label{thm:family}
+Let $O$ be \emph{fully symmetric unital}: every operation of arity $\ge2$ has full slot-symmetry
+$H_g=S_{\mathrm{arity}}$, there is a nullary unit $e$ --- the \emph{unique} nullary --- absorbed by every
+operation, the only unary operation is the identity, and some operation has arity $\ge2$. Then its
+free-algebra monad $M=\tilde A$ satisfies the hypotheses of Theorem~\ref{thm:main}, so necessity holds.
+This includes the free commutative unital magma $U=U_2$ \textup{(}the corner inhabitant\textup{)} and its
+$n$-ary analogues $U_n$ for all $n\ge2$.
+\end{corollary}
+
+\begin{proof}
+$M$ is analytic, non-flat (some $H_g=S_{\ge2}\ne1$), with $a_0=1$ (the unique nullary) and
+$\mathfrak h=\infty$. Every $S_k$ ($k\ge2$) contains a transposition, so no binary composite is rigid:
+(i) holds. A derived symmetry on $4$ leaf-slots is a symmetric group acting on the slot-orbit (full
+symmetry propagates through the tree), never the order-$2$ locked swap: (ii) holds. Apply
+Theorem~\ref{thm:main}.
+\end{proof}
+
+The hypothesis that $e$ is the \emph{unique} nullary keeps the normal form clean: with every nullary
+absorbed, no leaf of a reduced tree is a unit, and the witness $w$ is built solely from labelled leaves
+and the outer peg $E'$. (A second, non-absorbed nullary would sit as a rigid single-element peg,
+contributing only a trivial direct factor to every stabilizer; the argument survives, but we do not need
+that generality for the corollary.) Theorem~\ref{thm:main} itself places no bound on $a_0=|M\emptyset|$:
+the residual case $a_0\ge2$, $\mathfrak h=\infty$ is not empty and is covered whenever
+$\Delta_{C_2}\notin\mathcal S$, falling under the open converse (Problem~\ref{prob:residual}) only when
+$\Delta_{C_2}\in\mathcal S$.
+
+Theorem~\ref{thm:main} is \emph{strictly} stronger than its full-symmetry corollary. The operad of a
+single $4$-ary operation with slot-symmetry the alternating group $A_4$, and the one with slot-symmetry
+the Klein four-group $V_4$, both satisfy (i)+(ii) --- so necessity holds --- yet neither is fully
+symmetric; the $V_4$-operad even has a rigid $3$-label composite $g(x,y,z,e)$ (so it fails the ``no rigid
+tree of any arity'' property that the full-symmetry proof used) while still escaping, because a rigid
+\emph{ternary} composite does not put $\Delta_{C_2}$ into $\mathcal S$. The correct axis is (i)+(ii) ---
+a commutative binary composite together with $\Delta_{C_2}\notin\mathcal S$ --- not full symmetry.
+
 The mechanism is a \emph{correlated block-swap}: the unit builds a rigid block $W_L$ with no internal
-symmetry, and the commutative outer $\mu$ swaps two equal copies, giving $(0\,1)(2\,3)$ --- a symmetry that
-moves $0\leftrightarrow1$ \emph{only together with} $2\leftrightarrow3$. A block-fixing product cannot
+symmetry, and a commutative binary composite swaps two equal copies, giving $(0\,1)(2\,3)$ --- a symmetry
+moving $0\leftrightarrow1$ \emph{only together with} $2\leftrightarrow3$. A block-fixing product cannot
 correlate two blocks: it offers them independently ($S_2\times S_2$, order $4$) or fuses them into one
-symmetric tree ($D_4$, order $8$); order $2$ is unreachable. The unit that inhabits the corner is exactly
-what breaks composition there. (Verified for $U_3$: $\mathrm{Aut}(w)=\langle(0\,1)(2\,3)\rangle$, and an
-exhaustive search over single $O$-trees on $4$ labels finds no $\Delta_{C_2}$ factor.)
+symmetric tree ($D_4$, order $8$); order $2$ is unreachable unless a single tree already realises it,
+which (i)+(ii) forbid.
 
 \subsubsection*{Partial symmetry: necessity fails}
 Full symmetry was load-bearing. Weaken it to \emph{cyclic} slot-symmetry and the converse collapses.
@@ -1062,11 +1201,13 @@ $H_\omega=C_3=\langle(0\,1\,2)\rangle$ \textup{(}not $S_3$\textup{)} and an abso
 let $M=\tilde A$ \textup{(}$A=O$\textup{)} be its free-algebra monad. Then $M$ is analytic and
 non-polynomial \textup{(}non-flat, $H_\omega=C_3\ne1$\textup{)}, with $a_0=1$ and $\mathfrak h=\infty$ ---
 it inhabits the same residual as $U$. Nevertheless the essential image of $\extM{-}$ \emph{is} closed under
-composition: for all polynomial $p,q$,
+composition: for every polynomial $p$ and every polynomial $q$ with at least one positive-arity shape,
 \[
   \extM{p}\circ\extM{q}\;\cong\;\extM{p\triangleleft L},\qquad
-  L=(\mathbb N,\ n\mapsto[n])\ \text{the list \textup{(}free-monoid\textup{)} container.}
+  L=(\mathbb N,\ n\mapsto[n])\ \text{the list \textup{(}free-monoid\textup{)} container}
 \]
+\textup{(}and a constant $q$, with only nullary shapes, gives a constant functor
+$\extM{p}\circ\extM{q}$, itself an $M$-container functor, so closure holds in that degenerate case too\textup{)}.
 Hence composition-closure does \emph{not} imply polynomiality; the necessity direction of
 Theorem~\ref{thm:3} is false without a symmetry hypothesis.
 \end{theorem}
@@ -1108,7 +1249,21 @@ The case $p=q=\y$ is $M\circ M\cong L\circ M$. As $M$ is non-flat it is non-poly
 image does not force polynomiality.
 \end{proof}
 
-The contrast with Theorem~\ref{thm:family} is exact --- the same construction seen from two operads. The
+The multiset match is \emph{arity-preserving}, as an analytic-functor isomorphism demands. At each fixed
+arity $n$ the components $(M\circ M)[n]$ and $(L\circ M)[n]$ are finite, and it is their molecule
+multisets \emph{at $n$}, not merely aggregated over all $n$, that must agree. The bijection is explicit.
+A molecule of $M\circ M$ at arity $n$ is a normal-form two-level $O$-tree on $[n]$: an outer $O$-tree
+whose leaves are inner $O$-trees, the inner label-sets partitioning $[n]$ --- equivalently a
+unit-completed $C_3$-tree on $n$ labels. A molecule of $L\circ M$ at arity $n$ is a \emph{list} of inner
+$O$-trees whose label-sets partition $[n]$. Sending a two-level tree to the list of its inner subtrees,
+read in the canonical order of the outer skeleton, is an arity-preserving bijection between
+unit-completed $C_3$-trees on $[n]$ and lists of $C_3$-trees on set-partitions of $\{1,\dots,n\}$; by
+Lemma~\ref{lem:c3} it carries each stabilizer isomorphically (both are the same iterated-$C_3$
+block-fixing product). So the multiplicities agree at every $n$ --- each type recurring $\aleph_0$ times
+across arities as outer pegs, resp.\ appended units, are adjoined --- which is what the isomorphism of
+Theorem~\ref{thm:C3} requires.
+
+The contrast with Corollary~\ref{thm:family} is exact --- the same construction seen from two operads. The
 correlated-swap witness $w$ requires the outer $\mu$ to \emph{swap} its two equal children, which needs
 $\mu$ commutative; under $C_3$, $\mu=\omega(-,-,e)$ is non-commutative, so $w$ has trivial automorphism
 group and no escape occurs. (Verified: the molecule type-sets of $M\circ M$ and $L\circ M$ coincide for
@@ -1116,33 +1271,63 @@ $m\le4$; the same escape search that finds $\Delta_{C_2}$ for the \emph{fully sy
 $m=4$ finds \emph{nothing} for $C_3$.)
 
 \subsubsection*{The dividing line}
-Both theorems turn on one bit --- the commutativity of the binary unit-composite
-$\mu(x,y)=\omega(x,y,e,\dots)$.
+Theorem~\ref{thm:main} and Theorem~\ref{thm:C3} sit on opposite sides of a single, exact condition on the
+operad --- and it is \emph{not} the commutativity of the binary unit-composite, which a first reading of
+the two endpoints might suggest. The escape witness $w$ of Lemma~\ref{lem:witness} exists whenever $O$ has
+a commutative binary composite; whether it \emph{escapes} is governed by
+\[
+  \Delta_{C_2}\notin\mathcal S\qquad\bigl(\text{equivalently } \neg\textup{(M1)}\wedge\neg\textup{(M2)},\
+  \text{Proposition~\ref{prop:charac}}\bigr),
+\]
+which is strictly finer than any of the obvious candidates. A commutative binary composite is not enough:
+if $O$ \emph{also} has a rigid binary composite $\nu$ (call this operad $O_{\mu\nu}$) then
+$\mu(\nu(0,2),\nu(1,3))$ realises $\Delta_{C_2}$ as a single-tree automorphism group (M1), and the witness
+fails to escape. ``No rigid binary composite'' is not enough either: the pentagon operad $D_5$ has every
+binary composite commutative yet a derived operation $g(0,1,2,3,e)$ with automorphism group $\Delta_{C_2}$
+(M2). And full symmetry is more than necessary, as the $A_4$- and $V_4$-operads show.
 
 \begin{center}\small
-\renewcommand{\arraystretch}{1.25}
-\begin{tabular}{lccc}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcl}
 \hline
-unital operad $O$ ($a_0>0$) & $\mu=\omega(x,y,e,\dots)$ & escape in $M\circ M$ & necessity\\
+candidate dividing line & refuted by & mechanism\\
 \hline
-fully symmetric ($H_g=S$) & commutative & $\Delta_{C_2}\notin\mathcal F$ & \textbf{holds} (Thm~\ref{thm:family})\\
-partially symmetric ($C_3$) & non-commutative & none & \textbf{fails} (Thm~\ref{thm:C3})\\
+``has a commutative binary composite'' & $O_{\mu\nu}$ & rigid $\nu$ too $\Rightarrow\Delta_{C_2}\in\mathcal S$ (M1) $\Rightarrow$ composes\\
+``no rigid binary composite'' & pentagon $D_5$ & $g(0,1,2,3,e)$ has $\mathrm{Aut}\cong\Delta_{C_2}$ (M2) $\Rightarrow$ composes\\
+``no rigid tree of any arity'' & $V_4$-operad & rigid \emph{ternary} composite, yet $\Delta_{C_2}\notin\mathcal S$ $\Rightarrow$ necessity\\
+``fully symmetric'' & $A_4,\,V_4$ & not fully symmetric, yet $\Delta_{C_2}\notin\mathcal S$ $\Rightarrow$ necessity\\
 \hline
 \end{tabular}
 \end{center}
 
-Commutative $\mu$ rigidifies a block with a unit peg and swaps two such blocks, manufacturing a correlated
-symmetry no polynomial layer has; non-commutative $\mu$ manufactures nothing new, and every stabilizer is
-already a single-tree automorphism group, so the image closes. This is the precise sense in which
-\emph{polynomiality governs composition within the fully symmetric world}. What lies between the two rows
-is open.
+The invariant that survives all four candidates, \emph{among operads that possess a commutative binary
+composite}, is $\Delta_{C_2}\in\mathcal S$, read off the operad by (M1)$\vee$(M2). The scope qualifier is
+essential, and the $C_3$ operad shows why. Its only binary composite $\omega(x,y,e)$ is rigid and
+non-commutative, so it has \emph{no} commutative binary composite at all: the swap witness $w$ of
+Lemma~\ref{lem:witness} cannot even be built, and the image closes (Theorem~\ref{thm:C3}) for a reason
+orthogonal to $\Delta_{C_2}$. Commutativity of a binary composite is thus a genuine \emph{precondition}
+for the escape --- it is what drives the block-swap --- and only \emph{given} such a composite does the
+finer condition $\Delta_{C_2}\notin\mathcal S$ decide the outcome. A fully symmetric unital operad is the
+clean extreme: it has a commutative binary composite and $\Delta_{C_2}\notin\mathcal S$
+(Corollary~\ref{thm:family}).
 
-\begin{problem}[The non-symmetric residual]\label{prob:residual}
-Characterise, among analytic monads with $M\emptyset$ nonempty-finite and unbounded wreath depth that are
-\emph{not} fully symmetric, exactly which have composition-closed image. The $C_3$ operad populates the
-``closed'' side and the fully symmetric unital magmas (Theorem~\ref{thm:family}) the ``not closed'' side;
-a clean invariant separating them --- presumably graded by the symmetry of the binary unit-composites
-available in $O$ --- would complete the necessity picture outside the symmetric world.
+Precisely, Theorem~\ref{thm:main} establishes the forward direction: an operad with a commutative binary
+composite and $\Delta_{C_2}\notin\mathcal S$ --- equivalently, satisfying (i)+(ii) --- has $M\circ
+M\ncong\ext r\circ M$. Necessity can fail in two disjoint ways: because $\Delta_{C_2}\in\mathcal S$ (a
+rigid or locked-swap companion, cases M1/M2), or because no commutative binary composite exists at all
+(as for $C_3$). The converse of Theorem~\ref{thm:main}, within the class that \emph{does} have a
+commutative binary composite, is the natural completion.
+
+\begin{problem}[The composition biconditional, among operads with a commutative binary composite]\label{prob:residual}
+Restrict to unital, non-flat operads $O$ possessing a commutative binary composite. Is the essential image
+of $\extM{-}$ closed under composition \emph{if and only if} $\Delta_{C_2}\in\mathcal S$ (equivalently
+(M1)$\vee$(M2))? Theorem~\ref{thm:main} proves the ``only if'' (contrapositive:
+$\Delta_{C_2}\notin\mathcal S\Rightarrow$ not closed). For the ``if'' direction the mechanism of
+Theorem~\ref{thm:C3} --- matching molecule multisets to obtain $M\circ M\cong\ext r\circ M$ --- becomes
+available once $\Delta_{C_2}\in\mathcal S$ supplies the missing single tree, and the all-binary inhabitant
+$O_{\mu\nu}$ of case (M1) agrees with it in computation for $m\le4$; a proof for all $m$ and all such $O$
+remains open. Operads with \emph{no} commutative binary composite (such as the $C_3$ operad) lie outside
+this dichotomy and may close their image for the separate reason that no swap witness exists.
 \end{problem}
 
 Assembling sufficiency with the conditional converse:
@@ -1153,14 +1338,18 @@ $\extM{-}$ is closed under composition, with $p\triangleleft_M q=p\triangleleft\
 \textup{(}Proposition~\ref{prop:suff}\textup{)}. \emph{Necessity \textup{(}conditional\textup{)}:}
 composition-closure forces $M$ polynomial for $M$ super-polynomial (Proposition~\ref{prop:cardlaw}), for
 analytic $M$ with $M\emptyset=\emptyset$ (Theorem~\ref{thm:P}), for analytic $M$ of bounded wreath depth
-(Theorem~\ref{thm:Sprime}), and for every fully symmetric unital magma monad (Theorem~\ref{thm:family},
-including the corner case $U$); it \emph{fails} for the $C_3$ operad (Theorem~\ref{thm:C3}). The dividing
-line is the commutativity of the binary unit-composite $\mu$. Consequently \emph{within the fully symmetric
-world --- which contains every applied effect monad: multiset, distribution, powerset, symmetric powers ---
-composition-closure $\iff$ flatness of the species $\iff$ $M$ polynomial}. The earlier reliance on an
-unproved species-theoretic \emph{Plethysm Lemma} is removed (Theorem~\ref{thm:P}), and the formerly open
-corner $U$ is resolved (necessity holds); the $C_3$ operad shows the biconditional cannot be extended past
-the symmetry hypothesis.
+(Theorem~\ref{thm:Sprime}), and for the free-algebra monad of every unital non-flat operad with a
+commutative binary composite and $\Delta_{C_2}\notin\mathcal S$ (Theorem~\ref{thm:main}) --- a class
+containing every fully symmetric unital operad (Corollary~\ref{thm:family}, hence the corner case $U$ and
+the $U_n$) and strictly more (the $A_4$- and $V_4$-operads); it \emph{fails} for the $C_3$ operad
+(Theorem~\ref{thm:C3}). The dividing line, among operads that possess a commutative binary composite, is
+$\Delta_{C_2}\in\mathcal S$, read off the operad by (M1)$\vee$(M2) (Proposition~\ref{prop:charac}).
+Consequently \emph{within the fully symmetric world --- which contains every applied effect monad:
+multiset, distribution, powerset, symmetric powers --- composition-closure $\iff$ flatness of the species
+$\iff$ $M$ polynomial}. The earlier reliance on an unproved species-theoretic \emph{Plethysm Lemma} is
+removed (Theorem~\ref{thm:P}), the formerly open corner $U$ is resolved (necessity holds), and the
+necessity criterion is sharpened from full symmetry to the exact condition $\Delta_{C_2}\notin\mathcal S$;
+the $C_3$ operad shows the biconditional cannot be extended to all unital analytic monads.
 \end{theorem}
 
 \subsection{Independence}
@@ -1202,15 +1391,20 @@ Three questions remain, each precisely located.
   no.} The converse holds for super-polynomial monads (the cardinality law), for analytic monads with
   $M\emptyset=\emptyset$ (plethysm right-cancellation, Lemma~\ref{lem:cancel}, at any wreath depth), for
   analytic monads of bounded wreath depth (the imprimitivity-depth invariant $h$,
-  Definition~\ref{def:depth}), and for every fully symmetric unital magma monad (a correlated block-swap,
-  Theorem~\ref{thm:family}) --- resolving the formerly open corner $U$ in favour of necessity. But the
-  converse \emph{fails} for the $C_3$ operad (Theorem~\ref{thm:C3}): a non-polynomial monad whose image is
-  nonetheless composition-closed, with $M\circ M\cong L\circ M$ for the list monad $L$. The trailing-$M$
-  obstruction, sharpened to the ``no information'' statement of Proposition~\ref{prop:inert} at the level
-  of limit preservation, is circumvented on the finer stabilizer and cycle-index invariants; and the exact
-  dividing line is the commutativity of the binary unit-composite $\mu$. What remains open is the precise
-  frontier between the two: which \emph{partially} symmetric unital analytic monads of unbounded wreath
-  depth have composition-closed image (Problem~\ref{prob:residual})?
+  Definition~\ref{def:depth}), and for the free-algebra monad of every unital non-flat operad with a
+  commutative binary composite and $\Delta_{C_2}\notin\mathcal S$ (a correlated block-swap,
+  Theorem~\ref{thm:main}) --- a class strictly larger than the fully symmetric operads, resolving the
+  formerly open corner $U$ in favour of necessity. But the converse \emph{fails} for the $C_3$ operad
+  (Theorem~\ref{thm:C3}): a non-polynomial monad whose image is nonetheless composition-closed, with
+  $M\circ M\cong L\circ M$ for the list monad $L$. The trailing-$M$ obstruction, sharpened to the ``no
+  information'' statement of Proposition~\ref{prop:inert} at the level of limit preservation, is
+  circumvented on the finer stabilizer and cycle-index invariants; and, \emph{given} a commutative binary
+  composite, the exact dividing line is the combinatorial condition $\Delta_{C_2}\in\mathcal S$ --- whether
+  the locked double-swap is a single-tree automorphism group, read off by (M1)$\vee$(M2)
+  (Proposition~\ref{prop:charac}) --- \emph{not} the mere commutativity itself, which is only a
+  precondition. What remains open is the converse of Theorem~\ref{thm:main}, within the class possessing a
+  commutative binary composite: does $\Delta_{C_2}\in\mathcal S$ force the image closed, completing the
+  biconditional (Problem~\ref{prob:residual})?
 \item \textbf{Rigidity of $\D$ (Lemma~\ref{lem:Drigid}).} Full faithfulness of $\extM[\D]{-}$ is
   conditional on $\Nat(\D,\D)=\{\id\}$; the reduction of Example~\ref{ex:D} is unconditional. A clean
   proof of this rigidity fact would remove the one assumption in Theorem~\ref{thm:2}'s probabilistic
