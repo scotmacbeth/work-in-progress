@@ -150,7 +150,7 @@ $N=\sum_s n_s=3$ remains. That disappearance is the subject of \S\ref{sec:collap
 \end{example}
 
 %==========================================================================
-\section{The collapse: $\ext{-}$ is faithful but not full, and not injective on objects}
+\section{The collapse: $\ext{-}$ is neither full nor faithful over $\Vect$, and not injective on objects}
 \label{sec:collapse}
 
 Over $\Set$ the extension functor $\ext{-}\colon\Fam(\Set^\op)\to[\Set,\Set]$ is \textbf{full and
@@ -217,20 +217,36 @@ where $\coprod$ is the coproduct in $\Set$ (disjoint union): a container morphis
 $s$ a single choice $t=f(s)$ together with a linear map in $\Vect(Q_{f(s)},P_s)$.
 \end{proposition}
 
-\begin{theorem}[faithful, not full; \textbf{proved}]
+\begin{theorem}[neither full nor faithful; \textbf{proved}]
 \label{thm:notfull}
 The functor $\ext{-}$ induces on each hom the canonical comparison
 \[
    \prod_{s}\ \coprod_{t}\Vect(Q_t,P_s)\;\longrightarrow\;\prod_{s}\ \bigoplus_{t}\Vect(Q_t,P_s),
 \]
-componentwise the inclusion of the disjoint union $\coprod_t$ into the biproduct $\bigoplus_t$
-sending a choice $(t,\varphi)$ to the element supported at $t$. This map is \emph{injective away from
-the zero maps} --- so $\ext{-}$ is \textbf{faithful} --- but it \textbf{fails to be surjective}
-(hence $\ext{-}$ is \emph{not full}) as soon as some shape $s$ admits two shapes $t\neq t'$ with
+componentwise the map from the disjoint union $\coprod_t$ into the biproduct $\bigoplus_t$ sending a
+choice $(t,\varphi)$ to the element supported at $t$. Over $\Vect$ this map is \emph{neither
+surjective nor injective}, so $\ext{-}$ is \textbf{neither full nor faithful}.
+\begin{enumerate}
+\item \emph{Not full} as soon as some shape $s$ admits two shapes $t\neq t'$ with
 $\Vect(Q_t,P_s)\neq0\neq\Vect(Q_{t'},P_s)$: any natural transformation whose $s$-component is a
 genuine linear combination $\varphi_t+\varphi_{t'}$ supported on two shapes is not in the image of a
 shape-function.
+\item \emph{Not faithful} as soon as $S\neq\varnothing$ and $|T|\geq2$. Over a field the zero linear
+map lies in every $\Vect(Q_t,P_s)$, so the two \emph{distinct} container morphisms $(u,0)$ and
+$(u',0)$ --- with $u\neq u'\colon S\to T$ and all position maps zero --- are collapsed to the
+\emph{same} (zero) natural transformation. The mechanism is exactly the biproduct: $\bigoplus_t$ has a
+single shared zero across all summands, so it merges the $|T|$ distinct disjoint-union-tagged zeros
+$(t,0)$ into that one zero element; the comparison is injective only \emph{away from the zero maps}.
+Hence $\ext{-}$ is \textbf{faithful iff $|T|\leq1$ or $S=\varnothing$}. By contrast $\Set$'s coproduct
+is the disjoint union, which keeps a distinct tag on each zero, so the classical
+Abbott--Altenkirch--Ghani $\ext{-}$ over $\Set$ remains faithful.
+\end{enumerate}
 \end{theorem}
+
+\begin{remark}[provenance of the faithfulness correction]
+The failure of faithfulness was surfaced by R.\ Langer's finite-field analogue (q-container
+Cor.~5.3, Ex.~5.4); over $\mathbb F_q$ it is a finite point-count. (Draft note.)
+\end{remark}
 
 The point is a single symbol. Over $\Set$ the same computation gives
 $\Nat(\ext{S,P},\ext{T,Q})\cong\prod_s\bigoplus_t\Set(Q_t,P_s)$ where now $\bigoplus_t=\coprod_t$ is
@@ -479,7 +495,7 @@ Finite collapse $\ext{S,P}\cong\mathrm{Id}^N$; classified by $N$ alone (Thm~\ref
   & 2026-08-18, Thm~2.1 & \textbf{proved}\\
 Witness $(\{\ast\},k^2)\not\cong(\{1,2\},k)$, same functor $X\mapsto X\oplus X$ (Thm~\ref{thm:witness})
   & 2026-08-18 / VecCollapse.lean & \textbf{proved}, \textbf{lean-verified}\\
-$\ext{-}$ faithful but not full; gap $=\coprod\subsetneq\bigoplus$ (Thm~\ref{thm:notfull})
+$\ext{-}$ neither full nor faithful; faithful iff $|T|\leq1$ or $S=\varnothing$ (Thm~\ref{thm:notfull})
   & 2026-08-18, Thm~3.3 & \textbf{proved}\\
 Composition $(S,P)\lhd(T,Q)=(S\times T,(P_s\otimes Q_t))$ (Prop~\ref{prop:comp})
   & 2026-08-18, Prop~4.1 & \textbf{proved}\\
@@ -501,8 +517,9 @@ No cardinal invariant separates $F$ from free (Thm~H)
 
 \medskip
 \noindent\textbf{Outlook.} The theory of vector-space containers is complete and clean on the
-finite-dimensional locus: the extension functor is faithful but neither full nor injective on
-objects, the failure is exactly the non-extensivity of $\Vect$, comonoids are families of algebras,
+finite-dimensional locus: the extension functor is neither full nor faithful (faithful only when the
+target has $\leq1$ shape or the source is empty) and is not injective on objects, the failure is
+exactly the non-extensivity of $\Vect$, comonoids are families of algebras,
 and $\Set\times\Vecfd$ realises admissibility off the connected-unit pole. The single deep frontier
 is Question~(Q) --- whether \emph{infinite-dimensional} linear resources can still absorb external
 shape --- now sharpened to a precise, ZFC-reduced homological question ($\Ext^1(F,-)\equiv0$?) with
