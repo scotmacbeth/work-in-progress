@@ -53,13 +53,13 @@
 
 \begin{center}
 {\Large\bfseries Vector-space containers ($\mathbf{VCont}$)}\\[4pt]
-{\large A self-contained treatment: the biproduct collapse, algebraic structure,\\
- and the admissibility frontier}\\[10pt]
+{\large A self-contained treatment: the biproduct collapse, its exact finite-field\\
+ defect, algebraic structure, and the admissibility frontier}\\[10pt]
 \begin{tabular}{rl}
 \textbf{Author:} & MacBeth (Kodamai)\\
-\textbf{Date:} & 2026-09-05\\
+\textbf{Date:} & 2026-09-05, rev.\ 2026-09-11\\
 \textbf{For review by:} & Rick\\
-\textbf{Corresponds to:} & \texttt{scotmacbeth/work-in-progress} commit \texttt{b94bc32}\\
+\textbf{Corresponds to:} & \texttt{scotmacbeth/work-in-progress} commit \texttt{bfcfd55}\\
 \end{tabular}\\[8pt]
 {\itshape\bfseries Draft --- work in progress; not yet neighbour-reviewed.
 Subject matter prepared for Neil Ghani / an external requester.}
@@ -89,7 +89,9 @@ embedding. This note asks what survives when the positions are \emph{vector spac
 $\C=\Vecfd$ of finite-dimensional $k$-vector spaces --- and reports the answers the programme has
 established. The one-line summary: \emph{the coproduct/product distinction that makes $\Set$
 containers rigid becomes a biproduct over $\Vect$, and much of what the $\Set$ theory reads off
-``for free'' collapses.}
+``for free'' collapses.} Over a finite field $\mathbb F_q$ that collapse is not merely qualitative:
+\S\ref{sec:defect} computes its exact size $\delta=\prod_s a_s-\prod_s(a_s-(|T|-1))$ as a closed
+integer point-count.
 
 %==========================================================================
 \section{Definition of $\mathbf{VCont}$ and its extension functor}
@@ -245,7 +247,8 @@ Abbott--Altenkirch--Ghani $\ext{-}$ over $\Set$ remains faithful.
 
 \begin{remark}[provenance of the faithfulness correction]
 The failure of faithfulness was surfaced by R.\ Langer's finite-field analogue (q-container
-Cor.~5.3, Ex.~5.4); over $\mathbb F_q$ it is a finite point-count. (Draft note.)
+Cor.~5.3, Ex.~5.4); over $\mathbb F_q$ it is a finite point-count, made exact in
+\S\ref{sec:defect}. (Draft note.)
 \end{remark}
 
 The point is a single symbol. Over $\Set$ the same computation gives
@@ -270,6 +273,137 @@ $h_P=\Vect(P,-)$ is an infinite-product functor, not built from $\mathrm{Id}$ un
 sharp: $\ext{-}$ determines the total space $\bigoplus_s P_s$ up to isomorphism, and nothing about
 its partition into shapes (Corollary~3.4, \textbf{proved}).
 \end{remark}
+
+%==========================================================================
+\section{The finite-field instance: $q$-containers and the exact collapse defect}
+\label{sec:defect}
+
+Everything in \S\ref{sec:collapse} is stated over an arbitrary field $k$ and is \emph{qualitative}:
+$\ext{-}$ either is or is not full, is or is not faithful. Over a \emph{finite} field
+$k=\mathbb F_q$ these failures become finite point-counts, and the size of the collapse can be
+written in closed form. This is the setting of R.\ Langer's \emph{$q$-container} note (personal
+communication, 2026-09-11): Definition~\ref{def:vcont} verbatim, with positions
+finite-dimensional $\mathbb F_q$-spaces. His \S4 morphism count and \S5 faithfulness corollary are
+the first two displays below; the exact \emph{defect} (Theorem~\ref{thm:defect}) is a joint
+refinement. This subsection is thus the arithmetic shadow of the whole of \S\ref{sec:collapse}:
+the one structural symbol $\coprod_t\rightsquigarrow\bigoplus_t$ becomes the one integer
+$-(|T|-1)$.
+
+Fix $\mathbb F_q$ and $q$-containers $C=(S,(P_s))$, $D=(T,(Q_t))$ with $S,T$ finite; write
+$d_s=\dm P_s$, $e_t=\dm Q_t$, and $\Cont_q(C,D):=\Fam(\Vecfd^\op)\bigl((S,P),(T,Q)\bigr)$ for the
+(now finite) morphism set. The extension map on this hom,
+$\ext{-}\colon\Cont_q(C,D)\to\Nat(\ext C,\ext D)$, has finite source and target, and
+Proposition~\ref{prop:hom} specialises to two counts:
+\begin{equation}
+\label{eq:counts}
+   |\Cont_q(C,D)|=\prod_{s\in S}\Bigl(\sum_{t\in T}q^{\,e_t d_s}\Bigr),
+   \qquad
+   |\Nat(\ext C,\ext D)|=q^{\,(\sum_s d_s)(\sum_t e_t)}.
+\end{equation}
+The first is a product of independent per-shape choices: at each $s$ pick a target $u(s)=t$ and a
+map in $\Vect(Q_t,P_s)$, of which there are $q^{e_t d_s}$. The second is co-Yoneda: with
+$P:=\bigoplus_s P_s$ and $Q:=\bigoplus_t Q_t$ the extension is corepresentable,
+$\ext C=\Vect(P,-)$, so $\Nat(\ext C,\ext D)\cong\Vect(Q,P)$, of cardinality
+$q^{\dm Q\cdot\dm P}$.
+
+Under that co-Yoneda bijection a morphism $(u,(f_s))$ becomes the block matrix $M\in\Vect(Q,P)$,
+rows indexed by $s$ and columns by $t$, whose $s$-th row carries the single block $f_s$ in column
+$u(s)$ and zero elsewhere. So as $(u,f)$ ranges over $\Cont_q(C,D)$ the induced matrix is built
+\emph{row by row, independently across rows}, and each row $g_s$ ranges over the set of tuples
+supported in a single column:
+\[
+   A_s\;=\;\bigcup_{t\in T}W_t^{(s)},\qquad
+   W_t^{(s)}:=\{\,g\in\textstyle\bigoplus_{t'}\Vect(Q_{t'},P_s):g_{t'}=0\ (t'\neq t)\,\}
+   \;\cong\;\Vect(Q_t,P_s).
+\]
+The image of $\ext{-}$ is therefore the product $\prod_s A_s$, and the only nontrivial count is
+$|A_s|$: a union of $|T|$ coordinate subspaces of a direct sum, which pairwise meet only in $0$.
+
+\begin{lemma}[union of pairwise-trivially-meeting subspaces; \textbf{proved}]
+\label{lem:union}
+If $W_1,\dots,W_n$ ($n\geq1$) are finite subspaces of an $\mathbb F_q$-space with
+$W_i\cap W_j=\{0\}$ for $i\neq j$, then
+$\bigl|\bigcup_i W_i\bigr|=\bigl(\sum_i|W_i|\bigr)-(n-1)$.
+\end{lemma}
+
+\noindent Each $W_i$ contains $0$; for $i\neq j$ the only shared vector is $0$, so the punctured
+sets $W_i\setminus\{0\}$ are pairwise disjoint and
+$\bigl|\bigcup_i W_i\bigr|=1+\sum_i(|W_i|-1)=(\sum_i|W_i|)-(n-1)$. Applied to the $|T|$ coordinate
+subspaces $W_t^{(s)}$, with $|W_t^{(s)}|=q^{e_t d_s}$, this gives (for $|T|\geq1$)
+$|A_s|=\bigl(\sum_t q^{e_t d_s}\bigr)-(|T|-1)$.
+
+\begin{theorem}[collapse-defect formula; \textbf{proved}]
+\label{thm:defect}
+Write $a_s:=\sum_{t\in T}q^{\,e_t d_s}$. For $q$-containers $C=(S,(P_s))$, $D=(T,(Q_t))$ with
+$|T|\geq1$,
+\[
+   \bigl|\,\mathrm{image}\,\ext{-}\,\bigr|=\prod_{s\in S}\bigl(a_s-(|T|-1)\bigr),
+   \qquad
+   \delta(C,D):=|\Cont_q(C,D)|-\bigl|\,\mathrm{image}\,\ext{-}\,\bigr|
+      =\prod_s a_s-\prod_s\bigl(a_s-(|T|-1)\bigr).
+\]
+\end{theorem}
+
+\noindent Combine $|\mathrm{image}\,\ext{-}|=\prod_s|A_s|$ with Lemma~\ref{lem:union} and
+subtract \eqref{eq:counts}. Proved in
+\texttt{proofs/2026-09-11-collapse-defect-formula.md} (Theorem~5; registry
+\texttt{linear-containers-vec.json}, node \texttt{collapse-defect-formula}, grade \textbf{proved}),
+brute-force verified on 15 cases over $\mathbb F_2,\mathbb F_3,\mathbb F_4$ (dims $\leq2$,
+$|S|,|T|\leq3$; \texttt{scratch/collapse\_defect\_verify.py}), all exact.
+
+The formula makes the two qualitative statements of \S\ref{sec:collapse} into arithmetic:
+
+\begin{corollary}[faithful/full, quantified; \textbf{proved}]
+\label{cor:defect}
+For $|T|\geq1$: $\ext{-}$ is faithful $\iff\delta(C,D)=0\iff|T|=1$ or $S=\varnothing$ (the threshold
+of Theorem~\ref{thm:notfull}, now read off as ``every factor $a_s-(|T|-1)$ equals $a_s$''); and
+$\ext{-}$ is full $\iff$ every factor $A_s$ fills its space $\iff$ for each shape $s$ with $P_s\neq0$
+at most one target $t$ has $Q_t\neq0$.
+\end{corollary}
+
+The single term $-(|T|-1)$ is the whole story. It counts exactly the $|T|$ distinct
+disjoint-union tags $(t,0)$ that the biproduct $\bigoplus_t$ merges into its one shared zero: the
+$|T|$ morphisms $(u,f{=}0)$ with different shape-functions $u\colon S\to T$ all induce the same
+zero row. Over $\Set$ the corresponding union is a genuine disjoint union $\coprod_t$, which keeps
+a distinct tag on every zero; the correction term vanishes, $\delta=0$, and the
+Abbott--Altenkirch--Ghani representation is full and faithful. Thus the finite-field defect is the
+failure of extensivity (\S\ref{sec:collapse}) rendered as an integer.
+
+\begin{remark}[the $q\to1$ limit does \emph{not} recover $\Set$-faithfulness; \textbf{proved}]
+It is tempting to read $\delta$ through a ``field with one element''. Formally $a_s\to|T|$ and
+$a_s-(|T|-1)\to1$, so $|\mathrm{image}|\to1$ while $|\Cont|\to|T|^{|S|}$: the $q\to1$ degeneration
+is \emph{maximal} collapse, $\delta\to|T|^{|S|}-1\neq0$, not the faithful $\Set$ case. The reason is
+structural: the $\Set$ extension $V\mapsto\coprod_s\Set(P_s,V)$ is a \emph{different functor}
+(a coproduct of representables), full and faithful by AAG; the linear extension replaces that
+$\Set$-coproduct by the biproduct. The $q\to1$ limit reflects only that every hom-space collapses
+over $\mathbb F_1$, not any set-level faithfulness. The two functors must not be conflated.
+\end{remark}
+
+The witness that surfaced the whole faithfulness correction is the smallest nontrivial instance:
+$C=(\{\ast\},k)$, $D=(\{1,2\},(k,k))$ over $\mathbb F_2$ gives $|\Cont|=4$, $|\mathrm{image}|=3$,
+$\delta=1$ --- two of the four morphisms (the two zero maps with $u=1$ vs.\ $u=2$) collapse to one
+natural transformation (Langer, Ex.~5.4). A sample of the verified table:
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}c c c c c c c@{}}
+\toprule
+$q$ & $C$ & $D$ & $|\Cont|$ & $|\mathrm{image}|$ & $|\Nat|$ & $\delta$\\
+\midrule
+$2$ & $(1)$   & $(1,1)$   & $4$  & $3$  & $4$  & $1$\\
+$2$ & $(1,1)$ & $(1,1)$   & $16$ & $9$  & $16$ & $7$\\
+$2$ & $(1)$   & $(1,1,1)$ & $6$  & $4$  & $8$  & $2$\\
+$2$ & $(2)$   & $(1,1)$   & $8$  & $7$  & $16$ & $1$\\
+$3$ & $(1,1)$ & $(1,1)$   & $36$ & $25$ & $81$ & $11$\\
+$2$ & $(1,1)$ & $(2)$     & $16$ & $16$ & $16$ & $0$ \ ($|T|{=}1$)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Here $C,D$ are written as the tuples of position dimensions $(d_s)$, $(e_t)$. The
+$|T|=1$ row realises Corollary~\ref{cor:defect}'s faithful case ($\delta=0$); the $(2)\to(1,1)$
+row is the Theorem~\ref{thm:witness} witness direction. The finite-dimensional theory over a
+finite field is thus not merely qualitatively but \emph{numerically} pinned down.
 
 %==========================================================================
 \section{Algebraic structure}
@@ -396,7 +530,7 @@ failures). The base $\Set\times\Vecfd$ is non-collapse, non-cartesian, and has a
 so it exhibits admissibility \emph{without} unit-connectedness: it factors a rigid (extensive)
 $\Set$ part against a flexible (copower-tiny) $\Vect$ part. One honesty caveat, itself proved: the
 product $\lhd$ carries \emph{no canonical} monoidal structure --- the construction must choose a
-concentration slot --- and the obstruction to canonicity is exactly the non-faithfulness of
+concentration slot --- and the obstruction to canonicity is exactly the non-injectivity of
 $\ext{-}$ on objects (Theorem~\ref{thm:witness}). A non-canonical monoidal structure does exist.
 
 \subsection{The open frontier: is full $\Vect$ admissible? (Question (Q), \textbf{OPEN})}
@@ -497,6 +631,8 @@ Witness $(\{\ast\},k^2)\not\cong(\{1,2\},k)$, same functor $X\mapsto X\oplus X$ 
   & 2026-08-18 / VecCollapse.lean & \textbf{proved}, \textbf{lean-verified}\\
 $\ext{-}$ neither full nor faithful; faithful iff $|T|\leq1$ or $S=\varnothing$ (Thm~\ref{thm:notfull})
   & 2026-08-18, Thm~3.3 & \textbf{proved}\\
+$\mathbb F_q$ defect $\delta=\prod_s a_s-\prod_s(a_s-(|T|-1))$, $a_s=\sum_t q^{e_t d_s}$ (Thm~\ref{thm:defect})
+  & 2026-09-11, Thm~5 & \textbf{proved}\\
 Composition $(S,P)\lhd(T,Q)=(S\times T,(P_s\otimes Q_t))$ (Prop~\ref{prop:comp})
   & 2026-08-18, Prop~4.1 & \textbf{proved}\\
 $\lhd$-comonoids $\cong$ families of $k$-algebras (Thm~\ref{thm:comonoid})
@@ -533,6 +669,7 @@ complete the absorptive-dichotomy classification.
 {\small\emph{Draft --- work in progress. Prepared for Neil Ghani / external requester, 2026-09-05.
 Internal sources: \texttt{proofs/2026-08-18-linear-containers-vec.md},
 \texttt{proofs/2026-08-19-vec-comonoids-algebras.md},
+\texttt{proofs/2026-09-11-collapse-defect-formula.md},
 \texttt{proofs/2026-09-01-gap1-setxvec-proved.md},
 \texttt{proofs/2026-09-02-vec-admissibility-rigidity.md},
 \texttt{proofs/2026-09-04-Q-homological-reduction-and-target-dimension-dichotomy.md},
