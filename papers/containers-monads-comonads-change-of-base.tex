@@ -1,0 +1,764 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{stmaryrd} % \llbracket \rrbracket
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+
+% ---- theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{construction}[theorem]{Construction}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question}
+
+% ---- notation ----
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Vect}{\mathbf{Vec}}
+\newcommand{\Rel}{\mathbf{Rel}}
+\newcommand{\Par}{\mathbf{Par}}
+\newcommand{\Stoch}{\mathbf{Stoch}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Kl}{\mathrm{Kl}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}
+\newcommand{\extM}[1]{\llbracket #1 \rrbracket_{M}}
+\newcommand{\extC}[1]{\llbracket #1 \rrbracket_{\C}}
+\newcommand{\extKl}[1]{\llbracket #1 \rrbracket^{\Kl}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\tri}{\triangleleft}
+\newcommand{\triM}{\triangleleft_{M}}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\y}{\mathsf{y}}
+\newcommand{\Writer}{\mathsf{Writer}}
+\newcommand{\Maybe}{\mathsf{Maybe}}
+\newcommand{\Reader}{\mathsf{Reader}}
+\newcommand{\Dist}{\mathsf{Dist}}
+\newcommand{\List}{\mathsf{List}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\CL}{\mathcal{CL}}
+\newcommand{\UN}{\mathcal{UN}}
+\DeclareMathOperator{\im}{im}
+
+\begin{document}
+
+\title[Change of base for containers]
+{Changing the base of a container: \\ six constructions, two invariants, one collapse}
+
+\author{MacBeth}
+\address{Kodamai}
+\email{}
+\date{15 September 2026}
+
+\begin{abstract}
+The category of containers is $\Cont = \Fam(\Set^{\op})$; replacing $\Set$ by a category $\C$ along a
+functor $F\colon \Set \to \C$ yields $\Fam(\C^{\op})$, whose objects are containers whose positions
+are read out in $\C$. This change of base is where effects and directedness enter the theory of
+polynomial functors: $\C = \Kl(M)$ gives effectful ($M$-)containers, $\C = \Vect$ gives linear
+containers, $\C = \Cat$ recovers directed containers. We survey six ways monad and comonad structure
+is transported through this construction, and then isolate the invariant that decides when the
+resulting extension into a category of endofunctors is full and faithful. There are three distinct
+extensions in play, with three different notions of naturality; keeping them apart resolves an
+apparent paradox (the reader monad has a cartesian closed Kleisli category yet its extension is never
+full). Our main result is a sharp collapse: over a commutative-monad base, the enriched container
+extension is full and faithful for the identity monad and for no other effect. Closedness of the base
+makes the enriched extension \emph{exist}; connectedness of the monoidal unit makes it \emph{full};
+these axes are independent, and over $\Kl(M)$ they meet only at $M = \Id$.
+\end{abstract}
+
+\maketitle
+
+\begin{center}\small
+\fbox{\begin{minipage}{0.92\textwidth}\centering
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 15 September 2026.\\[2pt]
+\emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{commit} \texttt{PENDING}.\\[2pt]
+\textbf{Draft --- work in progress; Kodamai grant deliverable.} A report on the monad/comonad
+constructions on containers, organised around change of base and enrichment; the new contribution is
+the enriched-extension collapse of \S\ref{sec:enrichment} (Theorem~\ref{thm:collapse}). The
+per-instance results of \S\ref{sec:census} are proved in the cited companion papers and are not
+reproduced.
+\end{minipage}}
+\end{center}
+
+%============================================================
+\section{Introduction}
+%============================================================
+
+A \emph{container} $(S,P)$ is a set $S$ of shapes together with, for each shape $s\in S$, a set $P_s$
+of positions; it presents the polynomial endofunctor
+\[
+  \ext{S,P}(X) \;=\; \sum_{s\in S} X^{P_s} \;=\; \sum_{s\in S}\Set(P_s, X),
+\]
+the interpretation of a strictly-positive datatype whose values are ``a shape together with a payload
+at each position'' \cite{AAG}. The container category $\Cont$ is equivalent to $\Fam(\Set^{\op})$: an
+object is a family of sets indexed by a set, a morphism $(S,P)\to(T,Q)$ is a shape map $S\to T$
+together with, contravariantly, a position map back \cite{NiuSpivak}. The extension
+$\ext{-}\colon \Cont \to [\Set,\Set]$ is full and faithful onto the polynomial functors: containers
+\emph{are} polynomial functors, presented.
+
+\subsection*{Changing the base}
+The formula $\ext{S,P}(X)=\sum_s \Set(P_s,X)$ has one degree of freedom that the datatype reading
+hides: the hom-set $\Set(P_s,X)$. What if positions are read out not in $\Set$ but in some other
+category $\C$ --- so that observing a position may fail, branch, consult a context, cost a resource,
+or return a distribution? Formally, fix a functor $F\colon \Set \to \C$ and consider
+\[
+  \Fam(\C^{\op}),\qquad \extC{S,P}(X) \;=\; \sum_{s\in S}\C(P_s, X)\quad(X\in\C).
+\]
+This \emph{change of base} is not cosmetic. It is the single construction under which the main
+variations of the polynomial-functor calculus are instances of one theory:
+\begin{itemize}[leftmargin=1.6em]
+  \item $\C = \Set$: ordinary containers.
+  \item $\C = \Kl(M)$ for a monad $M$ on $\Set$: \emph{$M$-containers}, whose positions are read in
+    the Kleisli category, so that $\extM{S,P}(X)=\sum_s \Set(P_s, MX)$ is the effectful reading.
+  \item $\C = \Vect$: linear containers / the $\Vect$-valued theory.
+  \item $\C = \Cat$: directed containers, recovering categories \cite{AhmanUustalu}.
+\end{itemize}
+The point Neil Ghani has pressed is that change of base is the \emph{frame}, and the per-instance
+results are details of transport: a functor $F\colon\Set\to\C$ that carries structure, not merely a
+relabelling of the base. This report is organised around that frame.
+
+\subsection*{Two questions per construction}
+For each way of putting monad or comonad structure on containers, two questions recur:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item \textbf{Availability.} Does the construction exist over this base at all?
+  \item \textbf{Faithfulness.} Is the extension into endofunctors full and faithful --- i.e. does the
+    combinatorial category of containers embed into the semantic category of functors, so that
+    ``container morphism'' and ``natural transformation'' coincide?
+\end{enumerate}
+Full-and-faithfulness is a \emph{diagnostic}, not the headline: it is the sharpest available test of
+whether the syntactic category $\Fam(\C^{\op})$ faithfully models its intended semantics. We lead with
+the structure of the container category over each base (\S\ref{sec:census}), and then use the
+diagnostic to expose what actually controls it (\S\ref{sec:enrichment}).
+
+\subsection*{Results}
+The survey (\S\ref{sec:census}) collects the transport constructions Ghani enumerated, each proved
+elsewhere in this programme: the position-op monad-to-comonad transfer; the $\forall/\exists$
+predicate liftings; the identification of $M$-containers with $\Fam(\Kl(M)^{\op})$ and its codensity
+criterion for fullness; algebraic effects as polynomial functors, with the free monad on a container
+as their carrier; and the composition-versus-representability dividing line for monads on $\Cont$.
+
+The new contribution (\S\ref{sec:enrichment}) is a clean anatomy of \emph{why} fullness holds or
+fails, and a sharp collapse. There are three extensions of an $M$-container into endofunctors, with
+three different notions of naturality:
+\begin{itemize}[leftmargin=1.6em]
+  \item[(A)] the \emph{ordinary} extension $\extM{-}\colon \Fam(\Kl(M)^{\op}) \to [\Set,\Set]$, whose
+    morphisms are ordinary (pure) natural transformations;
+  \item[(B)] the \emph{Kleisli-presheaf} extension $\extKl{-}\colon \Fam(\Kl(M)^{\op}) \to [\Kl(M),\Set]$,
+    whose morphisms are Kleisli-natural, and which is \emph{always} full and faithful (co-Yoneda);
+  \item[(C)] the \emph{self-enriched} extension $\ext{S,P}=\sum_s [P_s,-]\colon \C\to\C$ using the
+    internal hom of a closed base, which realises Ghani's enriched-Yoneda desideratum
+    $\Nat(\sum_s[P_s,-],F)\cong\prod_s F(P_s)$.
+\end{itemize}
+Two invariants govern (C), and they are independent:
+\[
+  \CL = \{\,M : \Kl(M)\text{ is monoidal closed}\,\}
+  \qquad
+  \UN = \{\,M : \text{the monoidal unit of }\Kl(M)\text{ is connected}\,\}.
+\]
+Closedness ($\CL$) makes the enriched extension \emph{exist}; connectedness of the monoidal unit
+($\UN$) makes it \emph{full}. Our main theorem is that over a Kleisli base these two conditions meet in
+exactly one monad.
+
+\begin{theorem}[Enriched collapse; \S\ref{sec:enrichment}]\label{thm:main-intro}
+Let $M$ be a commutative strong monad on $\Set$. The self-enriched $M$-container extension
+$\sum_s[P_s,-]\colon\Kl(M)\to\Kl(M)$ is full and faithful if and only if $M$ is the identity monad.
+Equivalently, $\CL\cap\UN=\{\Id\}$: no nontrivial effect --- not even an idempotent (localization)
+monad --- carries a uniform enriched full-and-faithful semantics.
+\end{theorem}
+
+The reader monad $\Reader_S = (-)^S$ is the instructive pivot. Its Kleisli category is
+\emph{cartesian closed}, so construction (C) is available; nonetheless the extension is not full,
+because the monoidal unit $1$ has global-points functor $(-)^S$, which fails to preserve coproducts for
+$|S|\ge 2$. The same failure appears in extension (A) as the non-codensity of $\Reader_S$. Closedness
+and fullness are orthogonal; enrichment relocates the obstruction but does not remove it. The one
+place fullness is automatic is the Kleisli-presheaf extension (B), at the price that its morphisms are
+Kleisli-natural rather than pure. The factorisation $\extM{-}=R\circ\extKl{-}$, with $R$ restriction
+along $F\colon\Set\to\Kl(M)$ and defect measured by the codensity monad $\Ran_M M$, is the single
+picture carrying both messages.
+
+\subsection*{Outline}
+Section~\ref{sec:spine} sets up the change-of-base spine and fixes notation. Section~\ref{sec:census}
+is the census of the six transport constructions, each stated with its provenance. Section
+\ref{sec:enrichment} proves the anatomy and the collapse of Theorem~\ref{thm:main-intro}. Section
+\ref{sec:conclusion} records what the diagnostic teaches, separates composition from the (lossy)
+distributive-law question, and states the design consequence for effectful and agentic container
+calculi.
+
+%============================================================
+\section{The change-of-base spine}\label{sec:spine}
+%============================================================
+
+We recall only what the later sections use.
+
+\begin{definition}[Containers over a base]
+Let $\C$ be a category. The category $\Fam(\C^{\op})$ of \emph{$\C$-containers} has objects
+$(S,P)$ with $S\in\Set$ and $P\colon S\to\C_0$ a family of $\C$-objects $(P_s)_{s\in S}$; a morphism
+$(S,P)\to(T,Q)$ is a function $f\colon S\to T$ on shapes together with, for each $s\in S$, a
+$\C$-morphism $Q_{f(s)}\to P_s$ (contravariant in positions). For $\C=\Set$ this is $\Cont$.
+\end{definition}
+
+\begin{remark}[The bifibration viewpoint]\label{rmk:bifib}
+The assignment $\C\mapsto\Fam(\C^{\op})$ is functorial: a functor $F\colon\C\to\D$ induces
+$\Fam(F^{\op})\colon\Fam(\C^{\op})\to\Fam(\D^{\op})$, acting as $F$ on positions and identically on
+shapes. The total category $\int_{\Set}\Cont(\mathrm{cod})$ assembling all bases is a bifibration over
+$\Set$; contravariance in positions is exactly the fibrewise opposite. Change of base along
+$F\colon\Set\to\C$ is the instance transporting the standard container theory into $\C$; when $F$ is
+(co)monoidal it transports (co)monoidal structure, which is what the constructions of
+\S\ref{sec:census} exploit.
+\end{remark}
+
+\begin{definition}[Extension]\label{def:extension}
+When $\C$ is locally small the \emph{co-Yoneda (presheaf) extension} is
+\[
+  \extC{-}\colon \Fam(\C^{\op}) \longrightarrow [\C,\Set],\qquad
+  \extC{S,P}(X) = \sum_{s\in S}\C(P_s, X),
+\]
+the coproduct of representables. When moreover a functor $M\colon\Set\to\Set$ makes
+$\C(P_s,X)=\Set(P_s,MX)$ (as for $\C=\Kl(M)$), one also has the \emph{ordinary} extension
+$\extM{-}\colon\Fam(\Kl(M)^{\op})\to[\Set,\Set]$, $\extM{S,P}(X)=\sum_s\Set(P_s,MX)$.
+\end{definition}
+
+\begin{remark}[Effectful reading]
+For $\C=\Kl(M)$ the summand $\Set(P_s,MX)$ is the set of ways of assigning to each position an
+$M$-effectful observation of $X$: $M=\Maybe$ makes positions optional, $M=\PP$ (powerset) makes them
+nondeterministic, $M=\Dist$ probabilistic, $M=\Reader_S=(-)^S$ context-dependent. This is the sense in
+which change of base to $\Kl(M)$ is ``the same datatype, read effectfully''.
+\end{remark}
+
+%============================================================
+\section{A census of monad and comonad constructions}\label{sec:census}
+%============================================================
+
+We now collect the six ways monad/comonad structure has been transported through the container
+construction. Each subsection states the result and its provenance; the proofs are in the cited
+sources and are not reproduced. Throughout, $M$ is a monad on $\Set$ unless stated otherwise.
+
+Two of the constructions (\S\ref{ssec:transfer}, \S\ref{ssec:liftings}) act \emph{fibrewise}: they
+change the position family and leave the shape set alone, so they are transports of endostructure on
+$\Set$ through the fibration $\Cont\to\Set$ of Remark~\ref{rmk:bifib}. Two more (\S\ref{ssec:mcont},
+\S\ref{ssec:compose}) genuinely change the base or ask for structure \emph{on} $\Cont$. The fifth
+(\S\ref{ssec:free}) is the free construction that turns a single container into a monad.
+
+\subsection{Position-op transfer: monads become comonads}\label{ssec:transfer}
+The simplest transport reads a monad on positions. Because positions are contravariant, a monad on
+$\Set$ becomes a \emph{comonad} on $\Cont$.
+
+\begin{construction}[Position transfer]\label{con:transfer}
+For a monad $M=(M,\eta,\mu)$ on $\Set$, define $G\colon\Cont\to\Cont$ by
+\[
+  G(S,P)=(S,\,M\circ P),\qquad G(u,f)=(u,\,\{M f_s\}_s),
+\]
+with counit $\varepsilon_{(S,P)}=(\id_S,\,\eta_{P_s})$ (backward $P_s\to MP_s$) and comultiplication
+$\delta_{(S,P)}=(\id_S,\,\mu_{P_s})$ (backward $MMP_s\to MP_s$).
+\end{construction}
+
+\begin{proposition}[\cite{MacBethCodensity}, transfer]\label{prop:transfer}
+$(G,\varepsilon,\delta)$ is a comonad on $\Cont$, and this is a biconditional: the three comonad laws
+for $G$ hold if and only if the three monad laws for $M$ hold (the single-shape containers $(1,A)$
+realise every set $A$ as a fibre, so no law is lost). Dually, a comonad $W$ on $\Set$ yields a monad
+$H(S,P)=(S,W\circ P)$ on $\Cont$. Fibrewise, $G$ is postcomposition by $M$ in the fibre
+$(\Set^{\op})^S$; globally it is the left Kan extension
+\[
+  G(S,P) \;=\; \sum_{s\in S} \y^{\,M(P_s)} \;=\; \mathrm{Lan}_{(S,P)}\,M,
+  \qquad
+  \Cont\big(G(S,P),r\big)\;\cong\;[\Set,\Set]\big(\ext{S,P},\,r\circ M\big),
+\]
+naturally in $r$, and descends to $\ext{G(S,P)}(A)=\sum_s \Set(MP_s, A)$ on extensions.
+\end{proposition}
+
+The mechanism is exactly the slogan of the whole report in miniature: \emph{a monad on the base is a
+comonad on the fibrewise opposite}, and $\Cont$ carries that opposite in its position variable
+(Remark~\ref{rmk:bifib}).
+
+\subsection{Predicate liftings: the $\forall/\exists$ constructions}\label{ssec:liftings}
+A container $X=(S_X,P_X)$ and a ``predicate'' container $Y$ can be combined by quantifying the
+predicate over positions. There are two ways, and they are the two halves of the composition monoidal
+structure.
+
+\begin{construction}[$\forall$ and $\exists$ liftings]\label{con:liftings}
+For $(s,g)\in\ext{X}(S_Y)$ (so $s\in S_X$, $g\colon P_X s\to S_Y$), set
+\[
+  \mathrm{All}\,X\,Y\,(s,g)=\textstyle\prod_{p\in P_X s}P_Y(g\,p),
+  \qquad
+  \mathrm{Exists}\,X\,Y\,(s,g)=\textstyle\sum_{p\in P_X s}P_Y(g\,p),
+\]
+giving bifunctors $A\,X\,Y=(\ext{X}S_Y,\ \mathrm{All}\,X\,P_Y)$ and
+$E\,X\,Y=(\ext{X}S_Y,\ \mathrm{Exists}\,X\,P_Y)$ on shapes $\sum_s S_Y^{P_X s}$.
+\end{construction}
+
+\begin{proposition}[\cite{MacBethCodensity}, $A/E$ liftings]\label{prop:liftings}
+The $\exists$-lifting is exactly composition: $E = \tri$, a bifunctor on all of $\Cont$, with
+$E\,X\,(E\,Y\,C)=E\,(X\tri Y)\,C$ the associativity of $\tri$ and unit $E\,\y\,C=C$. The
+$\forall$-lifting $A$ is a bifunctor only on \emph{cartesian} morphisms in its first argument: a
+natural pushforward along $\alpha=(u,\varphi)$ is indexed by set-sections of the backward map
+$\varphi$, and the section-count is $0$, $\ge 2$, or exactly $1$ according as each $\varphi_s$ is
+non-surjective, surjective-but-not-injective, or bijective. Hence $A$ extends canonically to
+$\Cont_{\mathrm{cart}}\times\Cont\to\Cont$ only. On this domain $A$ is a left module of the
+$\tri$-monoidal category $(\Cont,\tri,\y)$:
+\[
+  A\,X\,(A\,Y\,C)=A\,(X\tri Y)\,C=A\,(E\,X\,Y)\,C,\qquad A\,\y\,C=C.
+\]
+The mixed comparison $A\,X\,(E\,Y\,C)\to E\,(A\,X\,Y)\,C$ is an isomorphism iff $X$ is \emph{linear}
+($|P_X s|=1$ for every $s$).
+\end{proposition}
+
+The cartesian restriction is precisely the phenomenon ``$A$ lifts through $\alpha$ iff $\alpha$ is
+cartesian'', which for $\alpha=\mu_M$ is the classical criterion that $M$ lifts to containers iff $M$
+is cartesian, seen one categorical level down. In the language of \S\ref{sec:spine}, $E=\Sigma$ is the
+free (co-Yoneda) direction and $A=\Pi$ its right adjoint on the cartesian sublattice.
+
+\begin{remark}[Lift / CoLift / BiLift]
+Orestis' \textsc{Agda} development of the container effect library organises the same data as a
+trichotomy \emph{Lift}, \emph{CoLift}, \emph{BiLift} of a monad through a container (Kodamai
+\texttt{agda-containers}, \texttt{Containers/Effects}; personal communication). Proposition
+\ref{prop:liftings} is the semantic content of that trichotomy: $E=\Sigma$ is the covariant (Lift)
+direction, $A=\Pi$ the contravariant (CoLift) one, and their agreement is exactly the linear case.
+\end{remark}
+
+\subsection{$M$-containers as $\Fam(\Kl(M)^{\op})$, and codensity}\label{ssec:mcont}
+The change of base to the Kleisli category is the central instance, and the one where the faithfulness
+diagnostic first bites.
+
+\begin{proposition}[\cite{MacBethCodensity}, Thm 1--2]\label{prop:mcont}
+Let $M$ be a monad on $\Set$. There is an identity-on-data equivalence
+$M\text{-}\Cont \simeq \Fam(\Kl(M)^{\op})$, and the effectful extension factors through the ordinary
+one:
+\[
+  \extM{S,P} \;=\; \ext{S,P}\circ M,\qquad \extM{S,P}(X)=\sum_{s\in S}\Set(P_s, MX)
+  =\sum_{s\in S}\Kl(M)(P_s,X),
+\]
+naturally in $(S,P)$. The extension $\extM{-}\colon M\text{-}\Cont\to[\Set,\Set]$ is \emph{always
+faithful}, and
+\[
+  \extM{-}\text{ is full}\iff
+  \underbrace{M\text{ is codense}}_{M\,\Rightarrow\,\Ran_M M\ \text{iso}}
+  \ \wedge\
+  \underbrace{\text{each }\Set(A,M-)\text{ is connected}.}_{\Ran_M\text{ preserves shape-coproducts}}
+\]
+If $M$ is affine ($M1\cong 1$) the connectedness clause holds automatically, so affine $+$ codense
+$\Rightarrow$ full. Among polynomial effects $\Id$ is full while $\Maybe$, exceptions $X+E$, writer
+$E\times X$ and reader $X^S$ ($|S|\ge2$) are not; the finite-distribution monad $\Dist$, being affine
+and codense, \emph{is} full.
+\end{proposition}
+
+Two points deserve emphasis because they correct a natural but wrong guess. First, the criterion is
+\emph{not} ``$M$ preserves coproducts'': that is the criterion for the coarser Kleisli-enriched target
+of \S\ref{sec:enrichment}, and the right invariant for the target $[\Set,\Set]$ is codensity. Second,
+the verdict is genuinely selective: probabilistic positions keep fullness, while error, reader, writer
+and nondeterministic positions destroy it. The codensity monad $\Ran_M M$ is the exact measure of the
+defect, a fact we use again in \S\ref{sec:enrichment}.
+
+\subsection{The free monad on a container}\label{ssec:free}
+Algebraic effects are presented by a signature, and a signature is a container: a set of operations
+with an arity (a set of positions) each. The free monad on the signature functor is the type of
+effect trees, and it is a monad \emph{on $\Cont$} built from a single container by iterated
+composition. We record the linear instance, where the answer is cleanest and connects to a familiar
+algebraic object.
+
+\begin{proposition}[\cite{MacBethBase}, free $\tri$-monoid]\label{prop:free}
+Let $C=(\star,A)$ be a one-shape linear container over a monoidal base $(\mathcal V,\otimes,k)$ (e.g.
+$\mathcal V=\Vect$, $A$ finite-dimensional), so $\ext{C}(W)=A\otimes W$. The free $\tri$-monoid on $C$
+is
+\[
+  C^{*}=\big(\mathbb N,\;(A^{\otimes n})_{n\in\mathbb N}\big),\qquad
+  \ext{C^{*}}(W)=\bigoplus_{n\ge0}A^{\otimes n}\otimes W=T(A)\otimes W,
+\]
+with $T(A)$ the tensor algebra, and it carries the free-monad structure on $\ext{C}$: unit the
+degree-$0$ injection and multiplication induced by concatenation $A^{\otimes m}\otimes A^{\otimes
+n}\to A^{\otimes(m+n)}$. Thus the free monad on a linear container is the free monoid $T(A)$ acting by
+$T(A)\otimes(-)$; over $\Vect$ this is exactly O'Neill's free monad, realised functorially.
+\end{proposition}
+
+\begin{remark}[The chain that computes it]
+The free monad is the colimit of the Adámek chain of \emph{partial sums} $Y_n=\bigoplus_{k<n}
+A^{\otimes k}\otimes W$, not of the bare powers $\ext{C}^{n}$: the endofunctor $A\otimes(-)$ is
+pointable but never well-pointed, so the naive $\omega$-chain does not converge to the monad. The
+pointing that repairs it is the two-shape container $(\{\mathrm{stop},\mathrm{layer}\},\
+P_{\mathrm{stop}}=0,\ P_{\mathrm{layer}}=A)$ whose empty-position ``stop'' shape supplies the
+degree-$0$ summand --- the residual/skip connection, read container-theoretically.
+\end{remark}
+
+More generally, the free monad on an arbitrary signature container is again a monad on $\Cont$
+obtained by the same iterated-composition recipe: this is the standard reading of an algebraic
+signature as a polynomial functor and its effect trees as the free monad, whose handler semantics has
+a complete categorical account \cite{EffectHandlers}. Our $\tri$-monoid description is the
+presentation-level shadow of that account.
+% TODO(browse): deep-read Grodin, ``Poly-morphic effect handlers'' (Topos 2024), Neil's suggested
+% reference for this item, then cite it here alongside \cite{EffectHandlers}. Not yet deep-read, so
+% not cited per the provenance floor.
+
+\subsection{When does a monad on $\Set$ give a monad on $\Cont$?}\label{ssec:compose}
+The last construction is the subtlest, and it is where polynomiality --- \emph{representability} of
+the effect --- enters. We ask when the essential image of $\extM{-}$ is closed under functor
+composition, so that composing two effectful datatypes lands on another effectful datatype.
+
+The obstruction is visible in one identity. For any $M$-containers $p,q$,
+\[
+  \extM{p}\circ\extM{q}
+  \;=\;\big(\ext{p}\circ M\circ\ext{q}\big)\circ M
+  \;=\; G\circ M,\qquad G:=\ext{p}\circ M\circ\ext{q},
+\]
+using the factorisation of Proposition~\ref{prop:mcont} twice. So \emph{every} composite of two
+$M$-extensions already has the shape $G\circ M$; to land back in the essential image one must rewrite
+the \emph{middle} $M\circ\ext{q}$ as (the extension of) a container. That is possible exactly when $M$
+itself is a container --- i.e. when $M\cong\sum_{i\in I}\Set(B_i,-)$ is \emph{polynomial}
+(representable) in the sense of \cite{GambinoKock}. This is the operational form of the composition question: \emph{closure under
+composition is a representability condition on the middle effect}, no more and no less.
+
+\begin{proposition}[\cite{MacBethCodensity}, composition]\label{prop:compose}
+If $M$ is polynomial, with $\ceil{M}$ the container presenting it, then splicing $\ceil{M}$ in the
+middle,
+\[
+  p\triM q \;:=\; p\tri\ceil{M}\tri q,\qquad
+  \extM{\,p\triM q\,}\;\cong\;\extM{p}\circ\extM{q}\quad\text{naturally in }X,
+\]
+exhibits the essential image of $\extM{-}$ as closed under composition. The operation $\triM$ is
+associative but has no unit up to container isomorphism unless $M=\Id$ (it is semigroupal, not
+monoidal). Conversely, closure forces a cardinality growth law $|M(N(MX))|=R_N(|MX|)$ for a fixed
+polynomial $R_N$; already at $p=q=\Id$ this excludes powerset $\PP$, nonempty powerset $\PP^{+}$ and
+$\Dist$, none of which is polynomial.
+\end{proposition}
+
+The full converse --- closure $\Rightarrow$ $M$ polynomial --- is proved for the analytic monads of
+non-flat symmetric operads in \cite{MacBethCodensity}, where the dividing line is a sharp
+representability/rigidity condition on the middle effect; we do not reproduce that combinatorial
+analysis here.
+
+\begin{corollary}[Two independent invariants]\label{cor:indep}
+Composability and fullness are logically independent. The writer monad $E\times(-)$ is polynomial (so
+its $M$-containers compose) yet is not codense (so $\extM{-}$ is not full); the distribution monad
+$\Dist$ is affine and codense (so $\extM{-}$ is full) yet is not polynomial (so its $M$-containers do
+not compose). In particular the heuristic ``composes $\iff$ commutative and affine'' is false:
+$\PP,\PP^{+},\Dist$ are commutative but fail composition, while non-affine $\Maybe$ and writer compose.
+\end{corollary}
+
+This is the first invariant of the effect: \emph{polynomiality governs composition}. The second,
+\emph{codensity governs fullness}, is the theme of \S\ref{sec:enrichment}, where we show that passing
+to an enriched base does not rescue it.
+
+%============================================================
+\section{Enrichment: three extensions and the collapse of fullness}\label{sec:enrichment}
+%============================================================
+
+The faithfulness diagnostic of \S\ref{ssec:mcont} was run against the target $[\Set,\Set]$. But
+Ghani observed that when the base $\C$ is monoidal closed one can form a container extension valued in
+$\C$ itself, using $\C$'s internal hom, and asked whether this \emph{enriched} extension enjoys a
+uniform full-and-faithfulness theorem --- and, if so, whether it is available over the effectful bases
+$\C=\Kl(M)$. The reader monad appears to make this urgent: its Kleisli category is cartesian closed
+(so the enriched extension exists), yet \S\ref{ssec:mcont} said reader fails fullness. Is there a
+contradiction?
+
+There is not. The resolution is that \emph{three} distinct functors are in play, with three notions of
+naturality; once separated, the reader is not full in any of them, consistently. We name them, prove
+the availability criterion (Kock), tabulate the bases, and then prove the collapse.
+
+\subsection{The three extensions}\label{ssec:three}
+Fix a monad $M$ on $\Set$ and write $\C=\Kl(M)$.
+\begin{itemize}[leftmargin=1.8em]
+  \item[\textbf{(A)}] The \textbf{ordinary} extension
+    $\extM{-}\colon \Fam(\Kl(M)^{\op})\to[\Set,\Set]$, $\extM{S,P}(X)=\sum_s\Set(P_s,MX)$. Morphisms of
+    the target are \emph{pure} natural transformations. Faithful always; full iff $M$ codense and each
+    $\Set(A,M-)$ connected (Proposition~\ref{prop:mcont}).
+  \item[\textbf{(B)}] The \textbf{Kleisli-presheaf} extension
+    $\extKl{-}\colon\Fam(\Kl(M)^{\op})\to[\Kl(M),\Set]$, $\extKl{S,P}=\sum_s\Kl(M)(P_s,-)$. This is the
+    free-coproduct completion of $\Kl(M)^{\op}$: a coproduct of representables. Morphisms of the
+    target are \emph{Kleisli}-natural. By ordinary co-Yoneda it is \emph{always} full and faithful,
+    with no hypothesis on $M$.
+  \item[\textbf{(C)}] Ghani's \textbf{self-enriched} extension. When $\C$ is symmetric monoidal
+    closed with internal hom $[-,-]$, set
+    \[
+      \ext{S,P}=\sum_{s\in S}[P_s,-]\colon\C\longrightarrow\C,
+    \]
+    valued in $\C$-enriched endofunctors. Enriched co-Yoneda \cite{Kelly} gives Ghani's desideratum
+    $\Nat\big(\sum_s[P_s,-],F\big)\cong\prod_s F(P_s)$ at the level of enriched hom-objects.
+\end{itemize}
+The three are related by a single factorisation, proved in \cite{MacBethCodensity}:
+\[
+  \extM{-}\;=\;R\circ\extKl{-},\qquad R=(-)\circ F\colon [\Kl(M),\Set]\to[\Set,\Set],
+\]
+where $F\colon\Set\to\Kl(M)$ is the free functor. On objects (A) and (B) agree; $R$ forgets
+Kleisli-naturality, keeping only pure-naturality. \emph{All} loss of ordinary fullness lives in $R$,
+and its size is measured exactly by the codensity monad $\Ran_M M$: pure-natural transformations
+strictly contain the Kleisli-natural (equivalently, container) ones unless $M$ is codense.
+
+\subsection{Availability: when is the base closed? (Kock)}\label{ssec:kock}
+Extension (C) requires $\C=\Kl(M)$ to be closed, so we recall the criterion.
+
+\begin{proposition}[Kock \cite{KockMonoidal,KockClosed}]\label{prop:kock}
+Let $M$ be a strong monad on $\Set$.
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.4em]
+  \item $\Kl(M)$ is symmetric monoidal (tensor $A\times B$ on objects, unit $1$, $F$ strict monoidal)
+    \emph{iff} $M$ is commutative.
+  \item $\Kl(M)$ is monoidal closed \emph{iff} the free algebras form an exponential ideal, i.e. each
+    $(MB)^A\cong M[A,B]$ is free.
+  \item $\Kl(M)$ is cartesian closed \emph{iff} additionally $M$ preserves finite products.
+\end{enumerate}
+Consequently a genuinely effectful monad whose Kleisli category has biproducts (hence a zero object)
+is never cartesian closed --- a CCC with a zero object is trivial --- so the best such an effect can
+reach is monoidal closure.
+\end{proposition}
+
+Write $\CL=\{M\ \text{commutative}: \Kl(M)\ \text{monoidal closed}\}$ for the availability class of
+(C). Table~\ref{tab:bases} runs the change-of-base bases against these conditions; the ``monoidal
+closed'' column is exactly where (C) is available.
+
+\begin{table}[t]
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Base $\C$ & monoidal? & mon.\ closed? & cart.\ closed? \\
+\midrule
+$\Kl(\Maybe)=\Par$ & yes & yes & no \\
+$\Kl(\Writer_E)$ & iff $E$ comm. & no (over $\Set$) & no \\
+$\Kl(\Reader_S)=\mathrm{coKl}(-\times S)$ & yes & yes & \textbf{yes} \\
+$\Kl(\PP)=\Rel$ & yes & yes & no \\
+$\Kl(\Dist)=\Stoch$ & yes & no & no \\
+$\Kl(\beta),\ \Kl(\mathrm{Cont}),\ \Kl(\List)$ & no & no & no \\
+$\Vect$ \textit{(non-Kleisli)} & yes & yes & no \\
+$\Cat,\ \Set$ \textit{(non-Kleisli)} & yes & yes & \textbf{yes} \\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{Availability of the self-enriched extension across the change-of-base bases. ``Monoidal''
+needs commutativity; $\beta$ (ultrafilter), continuation and list fail it, so are only premonoidal.
+$\Stoch$ is monoidal but not closed ($(\Dist B)^A$ is a product of simplices, not a simplex).
+$\Rel,\Vect$ are compact closed; $\Par$ is closed but not cartesian; only $\Set,\Cat,\Kl(\Reader)$ are
+cartesian closed.}
+\label{tab:bases}
+\end{table}
+
+\subsection{Fullness: connectedness of the unit}\label{ssec:un}
+Availability is not fullness. By the flagship criterion of \cite{MacBethBase} (there written for a
+general closed base), the self-enriched extension (C) is full and faithful iff the monoidal unit $I$
+of $\C$ is \emph{connected}, i.e. $\C(I,-)$ preserves small coproducts --- this is what matches the
+transformation set to the shape-coproduct $\sum_s$ in $\prod_s F(P_s)$. Write
+$\UN=\{M: \text{the unit }1\text{ of }\Kl(M)\text{ is connected}\}$. Since $\Kl(M)(1,X)=\Set(1,MX)=MX$,
+membership $M\in\UN$ says precisely that $M$ preserves small coproducts.
+
+The two conditions are logically independent (Table~\ref{tab:2x2}), and this is the crux: closedness
+and connectedness are orthogonal axes. Ghani's cartesian-closed reader sits in $\CL$ but not $\UN$;
+the writer monad sits in $\UN$ but not $\CL$.
+
+\begin{table}[t]
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & connected ($\UN$) & disconnected \\
+\midrule
+closed ($\CL$) & $\Id$ \ \textbf{(target)} & $\Reader_S\,(|S|\ge2)$; $\Maybe$; $\PP$ \\
+not closed & $\Writer_E$ ($E$ nontrivial) & $\Dist$; $\List$ \\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{The two axes are independent. Each cell holds a commutative strong monad. The self-enriched
+extension is available in the top row and full in the left column; only $\Id$ is in both.}
+\label{tab:2x2}
+\end{table}
+
+\subsection{The collapse}\label{ssec:collapse}
+We now prove that over a Kleisli base the two conditions meet only at the identity.
+
+\begin{theorem}[$\CL\cap\UN=\{\Id\}$]\label{thm:collapse}
+Let $M$ be a commutative strong monad on $\Set$. The self-enriched $M$-container extension
+$\sum_s[P_s,-]\colon\Kl(M)\to\Kl(M)$ is full and faithful if and only if $M\cong\Id$ as a monad.
+\end{theorem}
+
+\begin{proof}
+By \S\ref{ssec:un}, fullness $\iff M\in\CL\cap\UN$. We show this intersection is $\{\Id\}$.
+
+\emph{Step 1: $\UN$ forces the writer form.} Let $M\in\UN$, so $M$ preserves small coproducts. Put
+$E:=M1$. For a set $T$, the assembly of the injections $M(\iota_t)\colon M1\to MT$ over $t\in T$
+(where $\iota_t\colon 1\to T$ picks out $t$) is the copower-comparison map
+\[
+  \theta_T\colon T\times E\longrightarrow MT,\qquad \theta_T(t,e)=M(\iota_t)(e),
+\]
+which connectedness makes a bijection, naturally in $T$, with $\theta_1=\id_{M1}$. Hence
+$M\cong(-)\times E$ as a functor. The monad structure on $(-)\times E$ is forced to be the writer
+monad of a monoid structure $(E,m,e_0)$ (the monad laws are the monoid laws), commutative since $M$
+is. Thus $\UN=\{\text{writer monads on commutative monoids}\}$, with $E=M1$; conversely every writer
+monad preserves small coproducts because $\times$ distributes over $\coprod$ in $\Set$.
+
+\emph{Step 2: $\CL$ forces $E\cong1$.} Let $M\in\CL\cap\UN$, so $MX\cong X\times E$. Monoidal closure
+requires $(-)\times A$ to have a right adjoint for every object $A$, in particular for $A=\emptyset$.
+For all $C$,
+\[
+  \Kl(M)(C\times\emptyset,\,B)=\Kl(M)(\emptyset,B)=\Set(\emptyset,MB)=1,
+\]
+so the representing object $[\emptyset,B]$ is terminal in $\Kl(M)$; call it $\top$. A terminal object
+satisfies $\Set(C,M\top)=\Kl(M)(C,\top)\cong1$ for all $C$, forcing $M\top\cong1$. Using the writer
+form, $\top\times E\cong M\top\cong1$, whence $|\top|\cdot|E|=1$ and $E\cong1$. Therefore
+$MX\cong X\times1\cong X$, and the only monad structure on $\Id$ is the identity monad: $M\cong\Id$.
+
+\emph{Step 3: $\Id$ qualifies.} $\Kl(\Id)=\Set$ is cartesian closed, so $\Id\in\CL$; and
+$\Set(1,-)=\Id$ preserves all coproducts, so $\Id\in\UN$. Its self-enriched extension
+$\sum_s(-)^{P_s}$ is the classical container extension, which is full and faithful. Hence
+$\CL\cap\UN=\{\Id\}$.
+\end{proof}
+
+\begin{corollary}[No idempotent escape]\label{cor:idem}
+No nontrivial idempotent (localization) monad on $\Set$ lies in $\CL\cap\UN$. Indeed by Step~1
+membership in $\UN$ forces the writer form, and a writer monad is idempotent only when $E\cong1$; the
+terminal monad $LX=1$ already fails connectedness, since $L(1+1)=1\ne 2=L1+L1$.
+\end{corollary}
+
+\begin{remark}[The two open gaps of the underlying criterion do not affect the collapse]
+The flagship criterion of \cite{MacBethBase} proves necessity of unit-connectedness via the
+\emph{copower} test, and whether that upgrades to preservation of \emph{all} small coproducts in every
+closed base is left open there. It is irrelevant here: Step~1 uses only copower-preservation ($T\cdot
+1$), which already forces the writer form, so every non-$\Id$ member of $\CL$ fails even the copower
+test. Likewise, weakening $\UN$ to finite-coproduct preservation would still give $M1\cong1$ and
+$Mn\cong n$ on finite sets; whether a commutative closed monad differing from $\Id$ only on infinite
+sets could then exist is the one question a weaker definition would leave open, and we conjecture not.
+Under the definition used here the classification is complete.
+\end{remark}
+
+\subsection{The reconciliation}\label{ssec:reconcile}
+Theorem~\ref{thm:collapse} dissolves the apparent paradox. Ghani's claim is that the \emph{base}
+$\Kl(\Reader_S)$ is cartesian closed --- so construction (C) is \emph{available}. It is not a claim
+that any container extension is full. And in fact fullness fails in every picture, for one reason seen
+through three lenses:
+\begin{itemize}[leftmargin=1.8em]
+  \item \textbf{(A) ordinary:} $\Reader_S$ is affine but not codense, so $\extM{-}$ is not full
+    (Proposition~\ref{prop:mcont}).
+  \item \textbf{(C) self-enriched over $\Kl(\Reader_S)$:} the base is closed, so (C) exists; but its
+    unit $1$ has global-points functor $\Kl(\Reader_S)(1,-)=\Set(S,-)=(-)^S$, which fails to preserve
+    coproducts for $|S|\ge2$. Disconnected unit $\Rightarrow$ (C) not full, by \S\ref{ssec:un}.
+  \item \textbf{(B) Kleisli-presheaf:} always full and faithful --- but its morphisms are the
+    Kleisli-natural ones, not the pure-natural transformations (A) asks about.
+\end{itemize}
+So cartesian closedness buys the \emph{availability} of an internal-hom extension, not its
+\emph{fullness}. The reader's failure is enrichment-invariant: it is non-codensity in (A) and a
+disconnected unit in (C), one obstruction wearing two masks. The dictionary is:
+\[
+  \begin{array}{lll}
+    \textbf{extension} & \textbf{available} & \textbf{full and faithful} \iff\\[2pt]
+    \text{(C) self-enriched }\sum_s[P_s,-] & \C\ \text{closed} & \text{unit of }\C\ \text{connected}\\
+    \text{(B) Kleisli-presheaf }\extKl{-} & \text{always} & \text{always}\\
+    \text{(A) ordinary }\extM{-} & \text{always} & M\ \text{codense and each }\Set(A,M-)\ \text{connected}
+  \end{array}
+\]
+bridged by $\extM{-}=R\circ\extKl{-}$, whose defect is the codensity monad $\Ran_M M$ --- the exact
+gap between the always-faithful enriched picture and the codensity-gated ordinary one.
+
+%============================================================
+\section{What the diagnostic teaches}\label{sec:conclusion}
+%============================================================
+
+Read as a whole, the census and the collapse say something about the change-of-base programme that no
+single instance says on its own.
+
+\emph{The frame is the content.} Six ostensibly different constructions --- position transfer,
+$\forall/\exists$ liftings, Kleisli containers, free monads on signatures, and the composition of
+effectful datatypes --- are one construction, $\Fam((-)^{\op})$, applied to different bases or read in
+different variances. The position transfer (\S\ref{ssec:transfer}) and the $\forall/\exists$ liftings
+(\S\ref{ssec:liftings}) are fibrewise transports; the Kleisli identification (\S\ref{ssec:mcont}) is
+the genuine change of base; the free-monoid (\S\ref{ssec:free}) and composition
+(\S\ref{ssec:compose}) results are about structure carried \emph{along} that change. Naming the frame
+turns a list of theorems into a single diagram.
+
+\emph{Full-and-faithfulness is a diagnostic, not a goal, and it exposes two invariants of an effect.}
+Polynomiality (representability) governs \emph{composition}: the essential image of $\extM{-}$ is
+closed under composition iff the middle effect is a container (\S\ref{ssec:compose}). Codensity governs
+\emph{fullness} into $[\Set,\Set]$ (\S\ref{ssec:mcont}), and the same invariant reappears, under the
+name unit-connectedness, as fullness of the enriched extension (\S\ref{ssec:un}). The two invariants
+are independent (Corollary~\ref{cor:indep}): distributions compose no datatypes yet are full, writers
+compose datatypes yet are not full.
+
+\emph{Enrichment relocates the obstruction; it does not remove it.} This is the sharp lesson of
+Theorem~\ref{thm:collapse}: passing to a closed base to gain Ghani's enriched-Yoneda formula does buy
+the \emph{availability} of the self-enriched extension, but full-and-faithfulness then demands a
+connected unit, and over a Kleisli base ``closed and connected'' pins the effect to the identity.
+There is no effect monad over which one builds change-of-base containers $\Fam(\Kl(M)^{\op})$ with a
+uniform full-and-faithful \emph{self-enriched} semantics. Any nontrivial effect must therefore be
+carried either by the always-faithful Kleisli-presheaf extension (B) --- paying the price that its
+transformations are Kleisli-natural rather than pure --- or by the ordinary $[\Set,\Set]$ extension
+(A), with the codensity monad $\Ran_M M$ measuring the fullness defect. For a calculus of effectful or
+agentic containers, where morphisms of containers are meant to be exactly the definable transformations
+of the datatype, (B) is the honest target and codensity is the number to watch.
+
+\subsection*{A different, lossier question}
+Composition (\S\ref{ssec:compose}) asks when $\extM{p}\circ\extM{q}$ is again an $M$-extension. A
+\emph{distinct} question --- when a distributive law $MM\Rightarrow M$ merges two layers of effect into
+one --- is lossy: it collapses information that composition preserves, and its answer is governed by
+different data. We flag the systematic comparison of the two as the natural next step, but it is not
+the composition theorem of \S\ref{ssec:compose} in disguise.
+
+\subsection*{Open questions and formalisation status}
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em]
+  \item The full converse of Proposition~\ref{prop:compose} (closure $\Rightarrow$ $M$ polynomial) is
+    proved for the analytic monads of non-flat symmetric operads and open in general; the residual
+    case is a representability question about the trailing effect, reduced to familial
+    representability \cite{MacBethCodensity}.
+  \item The two definitional gaps in the underlying fullness criterion (copower versus all
+    coproducts; finite versus small coproduct connectedness) do not affect
+    Theorem~\ref{thm:collapse}, but closing them would make the enriched criterion of
+    \cite{MacBethBase} unconditional.
+  \item The position transfer of \S\ref{ssec:transfer} is verified in Lean (the coordinate proof of
+    the comonad laws, \texttt{[Quot.sound]}-only); the free $\tri$-monoid unit laws of
+    \S\ref{ssec:free} are likewise machine-checked \cite{MacBethBase}. The collapse of
+    Theorem~\ref{thm:collapse} is not yet formalised; its two elementary steps (writer form,
+    terminal-object argument) are natural candidates.
+\end{enumerate}
+
+%============================================================
+\begin{thebibliography}{99}
+
+\bibitem{AAG} M.~Abbott, T.~Altenkirch, N.~Ghani,
+\emph{Containers: constructing strictly positive types},
+Theoret.\ Comput.\ Sci.\ \textbf{342} (2005), 3--27.
+
+\bibitem{AhmanUustalu} D.~Ahman and T.~Uustalu,
+\emph{Directed containers as categories},
+Electron.\ Proc.\ Theor.\ Comput.\ Sci.\ \textbf{207} (2016), 89--98. arXiv:1604.01187.
+
+\bibitem{EffectHandlers} S.~Kura,
+\emph{On complete categorical semantics for effect handlers},
+preprint, 2026. arXiv:2602.03275.
+
+\bibitem{GambinoKock} N.~Gambino and J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), 153--192. arXiv:0906.4931.
+
+\bibitem{Kelly} G.~M.~Kelly,
+\emph{Basic Concepts of Enriched Category Theory},
+London Math.\ Soc.\ Lecture Note Ser.\ \textbf{64}, Cambridge Univ.\ Press, 1982.
+
+\bibitem{KockMonoidal} A.~Kock,
+\emph{Monads on symmetric monoidal closed categories},
+Arch.\ Math.\ (Basel) \textbf{21} (1970), 1--10.
+
+\bibitem{KockClosed} A.~Kock,
+\emph{Closed categories generated by commutative monads},
+J.\ Austral.\ Math.\ Soc.\ \textbf{12} (1971), 405--424.
+
+\bibitem{MacBethCodensity} MacBeth,
+\emph{Two invariants of an effect monad: codensity governs fullness, polynomiality governs
+composition}, Kodamai preprint, 2026.
+
+\bibitem{MacBethBase} MacBeth,
+\emph{Containers over a base}, Kodamai working paper, 2026.
+
+\bibitem{NiuSpivak} N.~Niu and D.~I.~Spivak,
+\emph{Polynomial Functors: A Mathematical Theory of Interaction},
+book draft, 2023. arXiv:2312.00990.
+
+\end{thebibliography}
+
+\end{document}
