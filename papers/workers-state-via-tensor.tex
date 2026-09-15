@@ -1,0 +1,357 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}      % \llbracket \rrbracket
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
+
+% ---- notation ----------------------------------------------------------
+\newcommand{\ctr}{\mathbin{\triangleright}}      % container constructor: shapes > positions
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}    % extension
+\newcommand{\comp}{\mathbin{\triangleleft}}       % sequential composition / substitution
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\fwd}{\mathsf{fwd}}
+\newcommand{\bwd}{\mathsf{bwd}}
+\newcommand{\bk}[1]{{#1}^{\sharp}}                % backward part of a morphism
+\newcommand{\y}{\mathsf{y}}
+\DeclareMathOperator{\Store}{Store}
+\DeclareMathOperator{\getop}{get}
+\DeclareMathOperator{\putop}{put}
+
+% ---- theorem environments ----------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+
+% ---- Kodamai callout boxes ---------------------------------------------
+\newtcolorbox{defbox}[1][]{colback=black!3,colframe=black!55,
+  fonttitle=\bfseries,title={#1},boxrule=0.6pt,arc=1pt,left=6pt,right=6pt,top=4pt,bottom=4pt}
+\newtcolorbox{deepbox}{colback=blue!4,colframe=blue!40!black,
+  fonttitle=\bfseries,title={THE DEEPER POINT},boxrule=0.6pt,arc=1pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt}
+
+\title{\textbf{Workers: State via the Tensor}\\[2pt]
+  \large Typed Agentic AI --- Building Agentic Businesses}
+\author{Kodamai}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2.5em}
+\begin{center}\itshape Do it Kodamai Style! \quad(Note 3 in the containers series.)\end{center}
+\vspace{1em}
+
+An agent that reads a request and returns a response is a \emph{container morphism}; that story
+was told in the first two notes. But real agents are rarely memoryless. A router remembers which
+tenant it is serving; a ledger assistant carries a running balance; an orchestrator threads a
+session across many calls. These are \emph{stateful} agents --- \emph{workers}, in our vocabulary
+--- and the striking thing is that state needs no new machinery at all. A worker is a container
+morphism whose \emph{domain has been tensored with one fixed, very simple container}: the
+\emph{state object}. Unfolding that single tensor produces, automatically and by type-checking
+alone, exactly the forward/backward pair a stateful process must expose --- a way to read the
+state and produce an answer, and a way to write a new state back. This note pins that down.
+
+\section{Containers, morphisms, the tensor}\label{sec:recap}
+
+We recall just enough notation from the earlier notes; a reader who has met containers can skim.
+
+\begin{defbox}[A container]
+A \textbf{container} is a pair $S \ctr P$ of a set $S$ of \emph{shapes} (prompts, events, states)
+and a family $P : S \to \Set$ of \emph{positions} (responses, continuations) --- for each shape
+$s$, a set $P\,s$ of the positions available at $s$. Its \textbf{extension} is the functor
+\[
+  \ext{S \ctr P}(X) \;=\; \textstyle\sum_{s : S} X^{P\,s}
+  \;=\; \textstyle\sum_{s:S}\, \big(P\,s \to X\big).
+\]
+\end{defbox}
+
+\noindent\emph{A warning about $\ctr$.} We write $S \ctr P$ for the \emph{constructor} that pairs a
+shape set with a position family. This is a piece of syntax, not an operator; in particular it is
+\emph{not} the composition product. Sequential composition/substitution --- the functor-composition
+product on containers --- we write $\comp$, as in the second note. (Some of the internal proof notes
+write composition as $\triangleright$; here $\triangleright$ is reserved for the constructor, and
+$\comp$ is composition. \S\ref{sec:vs} depends on keeping the two apart.)
+
+\begin{defbox}[A container morphism]
+A morphism $(S \ctr P) \to (T \ctr Q)$ is a pair
+\[
+  f : S \to T,
+  \qquad
+  \bk f : \textstyle\prod_{s:S}\, \big(Q(f\,s) \to P\,s\big),
+\]
+a map \emph{forward} on shapes and, for each shape $s$, a map \emph{backward} on positions.
+Control flows down (delegate the shape); data flows back up (amalgamate the positions). The backward
+leg is contravariant, and that single fact governs everything below.
+\end{defbox}
+
+\begin{defbox}[The tensor $\otimes$]
+The \textbf{tensor} (Dirichlet tensor, Day convolution of $\times$) multiplies shapes and
+\emph{multiplies} positions:
+\[
+  (S_0 \ctr P_0)\otimes(S_1 \ctr P_1)
+  \;=\; (S_0\times S_1)\ctr\big(\lambda(s_0,s_1).\; P_0\,s_0 \times P_1\,s_1\big),
+  \qquad \text{unit } \y=(1\ctr\lambda\_.\,1).
+\]
+On extensions $\ext{p\otimes q}\cong\ext{p}\otimes\ext{q}$: it is the ``ask both, answer both''
+operator that models parallel, non-interfering interaction.
+\end{defbox}
+
+\section{The worker container is the state object}\label{sec:state}
+
+Everything hinges on one container. Fix a set $S$ of states.
+
+\begin{defbox}[The state object]
+The \textbf{state object} on $S$ is the container whose shape set is $S$ and whose position set at
+\emph{every} shape is $S$ again --- a constant position family:
+\[
+  \Delta S \;:=\; S \ctr (\lambda\_.\,S).
+\]
+\end{defbox}
+
+\noindent This is exactly Robin's proposed ``worker container'' $A = S\ctr(\lambda\_.S)$; we shall
+write $\Delta S$ for it throughout, matching the earlier proof notes. Its extension is the
+\textbf{store (costate) comonad}
+\[
+  \ext{\Delta S}(X) \;=\; \textstyle\sum_{s:S} X^{S} \;=\; S \times X^{S}
+  \;=\; \Store_S X,
+\]
+a \emph{current state} paired with a \emph{reader} $X^S = (S\to X)$; and, as a directed container,
+$\Delta S$ is the codiscrete category on $S$ (one arrow between every ordered pair of states).
+Both facts are established in the companion notes and we lean on them in \S\ref{sec:store}. For now
+we need only the raw shape/position data.
+
+\section{The unfolding theorem}\label{sec:unfold}
+
+We now confirm --- rigorously, step by step --- Robin's guess: that a morphism
+$\Delta S\otimes X \to Y$ \emph{is} a stateful forward/backward pair, with the tensor doing all the
+work.
+
+Fix an input container $X = X_0\ctr X_1$ and an output container $Y = Y_0\ctr Y_1$.
+
+\begin{lemma}[The tensored domain]\label{lem:domain}
+$\displaystyle \Delta S \otimes X \;=\; (S\times X_0)\ctr\big(\lambda(s,x_0).\; S\times X_1\,x_0\big).$
+\end{lemma}
+
+\begin{proof}
+Apply the tensor formula to $\Delta S = S\ctr(\lambda\_.S)$ and $X=X_0\ctr X_1$. Shapes multiply:
+$S\times X_0$. Positions multiply: at a shape $(s,x_0)$ the position set is
+$(\lambda\_.S)(s)\times X_1\,x_0 = S\times X_1\,x_0$. \qed
+\end{proof}
+
+\noindent Read the tensored domain aloud: a shape is a \emph{current state together with an input
+shape}, and a position is a \emph{state together with an input position}. The constant $S$-fibre of
+$\Delta S$ has spread a copy of $S$ across every position of $X$ --- and it did so \emph{by
+multiplication}, precisely because the tensor multiplies positions.
+
+\begin{theorem}[Unfolding a worker]\label{thm:unfold}
+A container morphism $w : \Delta S \otimes X \to Y$ is exactly a pair
+\[
+  \fwd : S\times X_0 \longrightarrow Y_0,
+  \qquad
+  \bwd : \textstyle\prod_{(s,x_0)}\, \big( Y_1(\fwd(s,x_0)) \;\longrightarrow\; S\times X_1\,x_0 \big).
+\]
+Equivalently, $\bwd$ splits by the universal property of $\times$ into two independent components
+\[
+  \bwd_S : \textstyle\prod_{(s,x_0)} Y_1(\fwd(s,x_0)) \to S
+  \qquad(\text{the \emph{writeback} of a new state}),
+\]
+\[
+  \bwd_X : \textstyle\prod_{(s,x_0)} Y_1(\fwd(s,x_0)) \to X_1\,x_0
+  \qquad(\text{the ordinary backward map on } X).
+\]
+\end{theorem}
+
+\begin{proof}
+By the definition of a container morphism, $w : \Delta S\otimes X \to Y$ is a pair $(f,\bk f)$ with
+$f$ forward on the shapes of $\Delta S\otimes X$ and $\bk f$ backward on its positions. By
+Lemma~\ref{lem:domain} the shape set of the domain is $S\times X_0$ and the position set at
+$(s,x_0)$ is $S\times X_1\,x_0$, while $Y=Y_0\ctr Y_1$ has shapes $Y_0$ and positions $Y_1$. Hence
+\[
+  f : S\times X_0 \to Y_0
+  \qquad\text{and}\qquad
+  \bk f : \textstyle\prod_{(s,x_0)}\big(Y_1(f(s,x_0)) \to S\times X_1\,x_0\big),
+\]
+which are $\fwd$ and $\bwd$ verbatim. Finally, a map into a product $S\times X_1\,x_0$ is, uniquely,
+a pair of maps into $S$ and into $X_1\,x_0$; this is the split $\bwd=\langle\bwd_S,\bwd_X\rangle$. \qed
+\end{proof}
+
+\begin{deepbox}
+State is not an extra feature of a worker; it is \emph{one fixed tensor factor}. Tensoring the
+domain with $\Delta S$ threads a state $S$ through the interface, and the container-morphism
+discipline then \emph{forces} the two things a stateful process must supply: a forward map that
+reads $(\text{state},\text{input})$ and returns an output, and a backward map that, from each output
+position, both \emph{writes back} a new state and answers the original input. Neither was postulated
+--- both are consequences of the types. This is ``correct by construction'' for stateful agents:
+the state discipline is checked, not hoped for.
+\end{deepbox}
+
+\begin{corollary}[Robin's guess is confirmed]\label{cor:confirm}
+With $A=\Delta S = S\ctr(\lambda\_.S)$ and the tensor multiplying positions, a morphism
+$A\otimes X\to Y$ unfolds to precisely
+\[
+  \fwd : S\times X_0 \to Y_0,
+  \qquad
+  \bwd : (s,x)\mapsto \big(Y_1(\fwd\,s\,x)\to S\times X_1\,x\big),
+\]
+Robin's stated forward/backward pair, with no correction needed. The only clarification is
+bookkeeping: the $x$ in $\bwd$ is the input \emph{shape} $x_0:X_0$, and $\bwd$ is genuinely
+dependent (its domain $Y_1(\fwd(s,x_0))$ varies with the output shape it lands on).
+\end{corollary}
+
+\noindent This morphism is exactly the \textbf{Worker} of the companion note
+(\texttt{delta-state-object-and-workers}): a $\Delta S\otimes p\to q$ is there unpacked as a forward
+$f:S\times A\to C$ together with a backward split into $\bk f_1$ (writeback into $S$) and $\bk f_2$
+(back-map into $B\,a$). Theorem~\ref{thm:unfold} is that unpacking, with $p=X$ and $q=Y$; the
+present note simply isolates it as the definition of ``state via the tensor'' and verifies each
+step. Under this reading a \textbf{worker of state $S$ from $X$ to $Y$} is an element of
+$\Cont(\Delta S\otimes X,\; Y)$, and workers compose with the state \emph{multiplying}: a state-$S$
+worker followed by a state-$T$ worker is a state-$(S\times T)$ worker, because
+$\Delta S\otimes\Delta T = \Delta(S\times T)$ (Lemma~\ref{lem:mult} below). That is the whole reason
+the tensor --- and not some other product --- is the right home for state.
+
+\section{An example: a running balance}\label{sec:example}
+
+Let the state be an integer balance, $S=\mathbb{Z}$. Take the input interface $X$ to be
+``deposit or query'': $X_0=\{\mathsf{dep}\,n \mid n\in\mathbb{N}\}\cup\{\mathsf{bal}\}$, with
+positions $X_1(\mathsf{dep}\,n)=\{\ast\}$ (a deposit just needs an acknowledgement) and
+$X_1(\mathsf{bal})=\{\ast\}$. Let the output interface be $Y=\mathbb{Z}\ctr(\lambda\_.\{\ast\})$: an
+output shape is the number reported, with a single trivial position.
+
+A worker $w:\Delta S\otimes X\to Y$ is, by Theorem~\ref{thm:unfold}:
+\[
+  \fwd(s,\mathsf{dep}\,n) = s,\qquad \fwd(s,\mathsf{bal}) = s,
+\]
+(report the balance, before or after is a design choice --- here we report the pre-state), and, at
+each shape, a backward map $\bwd:\{\ast\}\to S\times X_1$ giving the new state and the input
+acknowledgement:
+\[
+  \bwd_S(s,\mathsf{dep}\,n)(\ast) = s+n,\qquad \bwd_S(s,\mathsf{bal})(\ast)=s,\qquad
+  \bwd_X(\dots)(\ast)=\ast.
+\]
+The forward map \emph{reads} the balance to answer; the backward map \emph{writes} the updated
+balance $s+n$ on a deposit and leaves it untouched on a query. The type of $w$ guaranteed, before
+any run, that exactly these two pieces --- a read-and-answer and a state-writeback --- had to be
+supplied, and nothing else could sneak in. Compose two such workers and the state set becomes
+$\mathbb{Z}\times\mathbb{Z}$, one register per stage, exactly as \S\ref{sec:store} predicts.
+
+\section{The store comonad and the lens view}\label{sec:store}
+
+The unfolding of \S\ref{sec:unfold} is not an isolated trick; it is the container face of two very
+familiar objects.
+
+\paragraph{The store comonad.} We saw $\ext{\Delta S}(X)=S\times X^S=\Store_S X$. The workers with a
+\emph{fixed} state $S$ are precisely the coKleisli morphisms of the (graded) comonad
+$p\mapsto \Delta S\otimes p$: a worker $\Delta S\otimes X\to Y$ is a coKleisli arrow $X\to Y$, and
+worker composition is coKleisli composition. The state object's own comonad structure --- counit
+``read the current position'' and comultiplication ``duplicate the register'' --- is the store
+comonad of Uustalu--Vene, and $\Delta S$ as a directed container is the codiscrete category on $S$.
+So ``state via the tensor'' is the store comonad, presented one level down, at the container rather
+than the functor.
+
+\paragraph{The lens view.} Specialise Theorem~\ref{thm:unfold} to a \emph{monomial} interface with a
+trivial input shape. Take $X=\y$ (so $X_0=1$, $X_1=1$) and $Y=A\ctr(\lambda\_.B)$. Then a worker
+$\Delta S\otimes\y=\Delta S \to A\ctr(\lambda\_.B)$ is exactly a pair
+\[
+  \getop : S \to A,
+  \qquad
+  \putop : S\times B \to S,
+\]
+because $\fwd:S\to A$ and $\bwd_S : \prod_{s}(B\to S)$, i.e. $\putop:S\times B\to S$ (and $\bwd_X$ is
+trivial). This is precisely a \textbf{lens} $(S,S)\rightleftarrows(A,B)$: the forward leg is
+$\getop$, the state-writeback is $\putop$. A general worker $\Delta S\otimes X\to Y$ is therefore a
+\emph{lens with an extra input interface}: the $\Delta S$ factor contributes the bidirectional
+get/put, and the $X$ factor contributes an ordinary container morphism's delegate/amalgamate. This
+is the lens/\emph{Para} reading of the companion note: state is a \emph{parameter} that tensors
+along composition, which is exactly the ``parameters tensor'' law of categorical cybernetics
+(Gavranović), the same law that drives learners and open games.
+
+\begin{deepbox}
+One picture, three names. \emph{Downstairs} (containers): a worker is a forward/backward pair with a
+state-writeback. \emph{One level up} (functors): it is a coKleisli arrow of the store comonad
+$S\times(-)^S$. \emph{Sideways} (optics): it is a lens, get/put, with an input interface bolted on.
+The tensor is what makes all three coincide.
+\end{deepbox}
+
+\section{State via the tensor, not via composition ($\otimes \neq \comp$)}\label{sec:vs}
+
+It matters that this is the \emph{tensor}. There is a second, superficially similar way to stack
+state --- \emph{composition} of containers, $p\comp q$, whose extension is functor composition
+$\ext{p}\circ\ext{q}$ (the note reserves $\comp$ for this; the internal proof notes write it
+$\triangleright$). The two genuinely differ, and the difference is exactly the difference between
+\emph{entangling} states and \emph{nesting} them.
+
+\begin{lemma}[States multiply under $\otimes$]\label{lem:mult}
+$\Delta S\otimes\Delta T = \Delta(S\times T)$ on the nose, and $\Delta 1 = \y$. Under
+\emph{composition}, by contrast, $\Delta S\comp\Delta T$ has shape set $S\times T^{S}$ (a state
+\emph{plus a branch map} $S\to T$) and is not $\Delta(S\times T)$.
+\end{lemma}
+
+\begin{proof}
+For $\otimes$: both sides have shape set $S\times T$ and, at every shape, position set
+$S\times T$; and $\Delta 1=(1\ctr\lambda\_.1)=\y$. For $\comp$: $\ext{\Delta S}(\ext{\Delta T}(X)) =
+S\times(T\times X^T)^S = S\times T^S\times X^{S\times T}$, so a shape records a state $s\in S$
+\emph{and} a branch map $g:S\to T$. \qed
+\end{proof}
+
+\begin{corollary}[$\otimes\neq\comp$, witnessed]\label{cor:witness}
+At $|S|=|T|=2$, $\;\Delta S\otimes\Delta T = 4\cdot\y^{4}\;$ while $\;\Delta S\comp\Delta T =
+8\cdot\y^{4}$. The two products are not equal, and not related by taking a fibre of the other. They
+are, however, a \textbf{retract}: there are container maps $\sigma:\Delta S\otimes\Delta T \to
+\Delta S\comp\Delta T$ and $r$ back with $r\circ\sigma=\mathrm{id}$ but $\sigma\circ r\neq
+\mathrm{id}$; the retracting idempotent collapses each branch map $g:S\to T$ to the constant at its
+self-evaluation $g(s)$.
+\end{corollary}
+
+\noindent The moral for stateful agents. \emph{State via the tensor} (this note) entangles the two
+registers into a single product state $S\times T$ --- the two workers share nothing but multiply
+their state spaces. \emph{State via composition} nests a store inside a store (a
+$\mathsf{store}$-of-$\mathsf{store}$), recording not just a state but a whole map $S\to T$ of how the
+inner state depends on the outer; that extra data is exactly the branch map $g$ that the retraction
+throws away. The fwd/bwd unfolding of \S\ref{sec:unfold} is a \emph{tensor} phenomenon: the clean
+split into ``writeback into $S$'' plus ``back-map into $X_1$'' comes from the tensor's
+position-\emph{product} $S\times X_1\,x_0$. Had we nested with $\comp$ instead, a position would
+carry a branch map and the split would not be this clean --- a different, strictly larger, discipline.
+
+\begin{deepbox}
+Two ways to stack state, one carrier $\Delta S$. The tensor multiplies state spaces
+($\Delta S\otimes\Delta T=\Delta(S\times T)$, $4\y^4$); composition nests stores
+($\Delta S\comp\Delta T$, $8\y^4$). They are not equal and not fibre-related --- they are an
+explicit retract, and the store comonad's own comultiplication lives in the extra data that
+$\comp$ sees and $\otimes$ collapses. ``State via the tensor'' is the entangling discipline: workers
+whose composition multiplies the state, cleanly currying past $\otimes$ and giving a genuine
+stateful function type $[X,Y]_{\otimes}$.
+\end{deepbox}
+
+\section*{Summary}
+\addcontentsline{toc}{section}{Summary}
+
+A worker is a container morphism out of a tensored domain $\Delta S\otimes X$, where
+$\Delta S = S\ctr(\lambda\_.S)$ is the state object. Unfolding the tensor --- and nothing more ---
+turns such a morphism into exactly the forward/backward pair
+\[
+  \fwd : S\times X_0 \to Y_0,
+  \qquad
+  \bwd : \textstyle\prod_{(s,x_0)}\big(Y_1(\fwd(s,x_0))\to S\times X_1\,x_0\big),
+\]
+with the backward leg splitting into a state-\emph{writeback} and an ordinary back-map. This is
+Robin's guess, confirmed with no correction. It is the store comonad seen at container level, and a
+lens with an input interface seen sideways; and it is genuinely the \emph{tensor}'s doing --- state
+via $\otimes$ multiplies state spaces, and differs from state via composition $\comp$, which nests
+them ($4\y^4$ vs $8\y^4$; a retract, not an equality). State, once again, is not new machinery: it
+is one tensor factor, and the type checker supplies the rest.
+
+\begin{center}\itshape Do it Kodamai Style!\end{center}
+
+\end{document}
