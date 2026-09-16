@@ -22,7 +22,7 @@ distributive laws\\ \normalsize a grant-Impact case study for compositional corr
 \author{MacBeth}
 \address{Kodamai}
 \email{neil@kodamai.com}
-\date{2026-10-04}
+\date{2026-10-08 (rev.\ folding the KelpDAO/LayerZero bridge witness)}
 
 \begin{document}
 
@@ -35,11 +35,24 @@ audit failure classes --- state divergence, temporal/cross-callback re-entrancy,
 self-composition via iteration --- as three \emph{different} categorical laws breaking, work a
 clean toy example (the Provenance Blockchain state-divergence bug) as a failed distributive law
 between two component monads, and connect the temporal case to an existing machine-checked
-obstruction result. The point is not a new theorem but a unifying frame with predictive and
-economic bite.
+obstruction result. The state-divergence class alone is now populated by five public witnesses
+across four sub-families, ranging from a re-entrancy accounting slip to a \$290M cross-chain
+bridge exploit --- the \emph{same} missing distributive law each time, differing only in where the
+two non-commuting channels sit. The point is not a new theorem but a unifying frame with
+predictive and economic bite: one categorical defect, its blast radius spanning roughly two orders
+of magnitude of loss across the witnesses on record.
 \end{abstract}
 
 \maketitle
+
+\begin{center}\small
+\fbox{\begin{minipage}{0.92\textwidth}\centering
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{For:} Robin, Neil.\qquad\emph{Date:} 8 October 2026.\\[2pt]
+\emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{content-commit} \texttt{CONTENTHASH}.
+\end{minipage}}
+\end{center}
+
+\medskip
 
 \noindent\textbf{Status: expository grant-Impact note, not a peer-reviewed result.} The only
 formally verified claim relied on here is a previously established Lean result on re-entrancy
@@ -129,11 +142,14 @@ than by construction.'' The two readings are the same statement.
 \section{The taxonomy: three failure shapes, three laws}
 
 \paragraph{(1) State divergence $=$ failed distributive law between two monads.}
-The shape of Section~2, and the best-populated: four public witnesses across three sub-families,
+The shape of Section~2, and the best-populated: five public witnesses across four sub-families,
 each a pair of locally-correct components whose composite admits no coherent distributive law
 between two representations of one logical value. The sub-families are distinguished by
-\emph{what} the two representations are --- two modules, two entry points, or two channels ---
-but the missing $\delta$ is the same in each.
+\emph{what} the two representations are --- two modules, two entry points, two channels onto one
+pot, or two cross-chain channels (one that verifies, one that settles) --- but the missing
+$\delta$ is the same in each. The last sub-family is where the frame earns its keep: the same
+defect that yields an eight-figure accounting slip yields, at the bridge, the largest single loss
+on the list.
 
 \emph{(1a) Module/module.} Two distinct modules each carry a view of the shared value. The
 Provenance toy of Section~2 is the clean case; the same shape drives the Uniswap~v4 hook
@@ -167,7 +183,36 @@ assumed to hold only because everyone is expected to route through \texttt{mint(
 enforces it. This is the general shape of ERC-4626-style ``donation''/share-inflation attacks.
 Tellingly, the canonical fix --- read a state variable mutated only at protocol entry points
 instead of the live balance --- forces the two channels to coincide \emph{by construction}: it
-literally makes the distributive law hold.
+literally makes the distributive law hold. The same channel/channel shape in its oracle flavour is
+the \textbf{YieldBlox/Blend} incident on Stellar ($\approx$\$10M), where a thin-liquidity VWAP
+price feed (a single \$1$\ra$\$106 trade) is one channel onto a collateral value and the
+protocol's own accounting is the other; the price-read and the accounting update fail to commute,
+and the inflated read is again the value taken off its intended domain.
+
+\emph{(1d) Bridge: verification-channel vs settlement-channel.} The sharpest sub-family, and the
+costliest: the two channels sit on \emph{different chains}. A cross-chain transfer has a
+\emph{settlement} channel --- the source-chain burn events, sequenced by a nonce $n$, recording
+what actually happened --- and a \emph{verification} channel --- an off-chain attestation telling
+the destination chain what to mint. Model them as two monads $\Sigma$ (settlement, the burn
+sequence) and $V$ (verification, the attestation) over one logical transfer; the destination mint
+reads a value out of the composite $V\circ\Sigma$, an \emph{attested settlement}. Coherence ---
+``every attestation corresponds to a real burn at the matching nonce'' --- is exactly a
+distributive law
+\[
+  \delta : V\,\Sigma \;\Longrightarrow\; \Sigma\,V
+\]
+whose square commutes at the nonce index. In the \textbf{KelpDAO/LayerZero} exploit (2026-04-18,
+$\approx$\$290M, per public Rekt/Chainalysis postmortems), a single non-redundant, zero-threshold
+Decentralised Verifier Network attested a forged burn message at nonce $308$ while the true
+source-chain burn sequence stood at nonce $307$; the destination endpoint performed only hash
+validation against the (compromised) attestation. The verification channel thus reported a
+settlement the settlement channel never produced --- $\delta$ fails at exactly that nonce --- and
+value was minted against a burn that never happened. Structurally the single zero-threshold DVN
+\emph{is} the absence of any construction forcing $\delta$: nothing makes $V$ track $\Sigma$. The
+standing remedy --- redundant verifiers with a nonzero attestation threshold --- forces $V$ to
+track $\Sigma$ \emph{by construction}, exactly as the Venus fix forced its two channels to
+coincide. The two remedies are the same categorical move (make $\delta$ hold by construction, not
+by assumption) at two scales: a \$14.9M lending market and a \$290M bridge.
 
 \paragraph{(2) Temporal / cross-callback misalignment $=$ re-entrancy with an $H^2$ obstruction.}
 Classical re-entrancy is an order-of-effects failure of a single lax structure composed across a
@@ -193,12 +238,41 @@ self-plethysm only when flatness was present to begin with. A check that holds p
 under the fold is a locally-flat operation whose iterate is non-flat.
 
 \begin{center}
+\small
+\textbf{Five principal state-divergence witnesses (plus one minor oracle instance) --- one missing
+$\delta$, four places it can sit.}\\[2pt]
+\begin{tabular}{@{}p{4.0cm}p{2.5cm}p{6.4cm}@{}}
+\toprule
+\textbf{Witness (date, loss)} & \textbf{Sub-family} & \textbf{The two non-commuting channels}\\
+\midrule
+Provenance Blockchain (ToB, 2026-08-25) & (1a) module/module &
+  Marker cached \texttt{supply} / Bank live authoritative supply\\
+\addlinespace
+Bunni, Uniswap~v4 hook (\$8.4M) & (1a) module/module &
+  \texttt{PoolManager} delta-zero settlement check / hook internal ledger\\
+\addlinespace
+Solv BRO Vault (2026-03, $\approx$\$2.7M) & (1b) entry-point &
+  external deposit-mint (\texttt{onERC721Received}) / internal value-rebalance\\
+\addlinespace
+Venus donation (2026-03, $\approx$\$14.9M) & (1c) channel/channel &
+  permissionless ERC20 \texttt{transfer} / protocol mint accounting\\
+\addlinespace
+YieldBlox/Blend (Stellar, $\approx$\$10M) & (1c) channel, minor &
+  thin-liquidity VWAP price feed / protocol collateral accounting\\
+\addlinespace
+KelpDAO/LayerZero (2026-04-18, $\approx$\$290M) & (1d) bridge &
+  off-chain DVN attestation / source-chain burn sequence (nonce)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
 \begin{tabular}{@{}p{3.4cm}p{4.4cm}p{4.3cm}@{}}
 \toprule
 \textbf{Failure shape} & \textbf{Law that breaks} & \textbf{Cited exploit}\\
 \midrule
-State divergence (3 sub-families: module, entry-point, channel) & distributive law between two monads &
-  Provenance Blockchain (ToB, 2026-08-25); Bunni (Uniswap~v4 hook), \$8.4M; Solv BRO Vault, \$2.7M; Venus donation, \$14.9M\\
+State divergence (4 sub-families: module, entry-point, channel, bridge) & distributive law between two monads &
+  five witnesses, above --- Provenance through KelpDAO/LayerZero (\$290M)\\
 \addlinespace
 Temporal / cross-callback & order-of-effects law, $[\omega]\in H^2$; safe iff $[\omega]=\varepsilon$ &
   Uniswap~v4 hooks (\texttt{beforeSwap}/\texttt{afterSwap}; cross-pool)\\
@@ -219,11 +293,17 @@ literature but use no category theory and are cited elsewhere only as analogy.
 
 \section{Why this matters for the grant}
 
-Compositional correctness has direct economic consequences: the Bunni exploit alone is a \$8.4M
-figure attached to a single missing distributive law between two ledgers, and the Venus donation
-attack a \$14.9M figure attached to the same failure between two channels onto one pot. The audit
-industry already \emph{discovers} these bugs one at a time; what it lacks is a frame that says why
-they recur and where to look next.
+Compositional correctness has direct economic consequences, and the consequences scale with the
+same defect. The Bunni exploit is \$8.4M attached to a single missing distributive law between two
+ledgers; the Venus donation attack is \$14.9M attached to the same failure between two channels
+onto one pot; the KelpDAO/LayerZero bridge exploit is $\approx$\$290M attached to that \emph{same}
+failure between a verification channel and a settlement channel across two chains. The categorical
+defect does not change from the smallest witness to the largest --- it is $\delta$ absent in every
+case --- but the blast radius grows by more than an order of magnitude as the two non-commuting
+channels move from inside one module to across a bridge. The audit industry already
+\emph{discovers} these bugs one at a time; what it lacks is a frame that says why they recur, where
+to look next, and why the same slip is worth thousands in one place and hundreds of millions in
+another.
 
 The distributive-law frame supplies three things the grant narrative wants:
 \begin{itemize}[leftmargin=1.4em]
@@ -232,7 +312,8 @@ The distributive-law frame supplies three things the grant narrative wants:
         only by \emph{where} the datum should live (between two monads; in the order of one lax
         structure; in the iterate of one operation).
   \item \textbf{Prediction.} The frame tells an auditor what to hunt for: two sources of truth
-        for one value --- two modules, two entry points, or two channels onto one pot (look for
+        for one value --- two modules, two entry points, two channels onto one pot, or a
+        verification channel and a settlement channel across a bridge (look for
         the distributive law); a callback boundary (look for the $H^2$
         class); a loop over an externally-observable operation (look for the non-flat iterate).
         The taxonomy turns ad hoc pattern-matching into a checklist indexed by categorical
