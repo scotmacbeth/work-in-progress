@@ -1,0 +1,89 @@
+{
+ "conjecture": "Classify the commutative strong monads M on Set for which Neil's self-enriched M-container extension <<S,P>> = coprod_s [P_s,-] : Kl(M) -> Kl(M) is FULLY FAITHFUL, i.e. describe TARGET = CL cap UN where CL = {M : Kl(M) is symmetric monoidal closed} (Kock: each (MB)^A free) and UN = {M : the monoidal unit 1 of Kl(M) is connected, i.e. M preserves small coproducts}. By flagship T1, M in TARGET iff Neil's extension is fully faithful. THEOREM: CL cap UN = {Id} (up to monad iso). Sharpens the PROVE.md conjecture ('no genuinely effectful monad; only Id and idempotent/localization monads') to LITERALLY ONLY the identity: no nontrivial idempotent monad lies in UN (Cor 3). A sharp NEGATIVE answer to Neil UID 168's hope that enrichment gives a uniform f&f theorem for effects: it holds for no nontrivial effect.",
+ "status": "proved",
+ "date_opened": "2026-09-15",
+ "date_closed": "2026-09-15",
+ "note": "PROVE session 2026-09-15, answering Neil UID 168, follows the scratch reconciliation note (2026-09-15-kleisli-closedness-ff-reconciliation.md, three-functor picture). Proof: 2026-09-15-enriched-ff-classification.md. Step 1 (UN => writer form MX = X x M1) uses only preservation of copowers T.1, a special case of the small-coproduct definition of connected (containers-over-a-base.tex line 336), so the classification is robust to the T1 copowers-vs-all-coproducts open gap. Step 1 corroborated by the independently-proved copowers-gap-writer-monad root (copower-of-unit preservation <=> induced Set-monad is a writer monad), here derived directly for M itself. Step 2 (CL => E = M1 iso 1) uses closedness at the object A = empty: (-) x empty needs a right adjoint, which is a terminal object T with MT iso 1; writer form gives T x E iso 1, so E iso 1, M iso Id. Independence 2x2 table and Cor 3 (idempotents fail UN) computationally cross-checked in scratch/check_un_cl.py. DEPRIORITIZED sibling arc: the all-m THM3 converse (m-containers.json, node necessity-lemma-gap) remains the one open node of the peer-reviewed THM3 program; parked, not abandoned.",
+ "tree": {
+  "id": "root",
+  "approach": "CL cap UN = {Id}: unit-connectedness forces the writer functor form, closedness forces the writer monoid trivial; only the identity monad makes Neil's enriched M-container extension fully faithful",
+  "trust": "proved",
+  "file": "2026-09-15-enriched-ff-classification.md",
+  "children": [
+   {
+    "id": "t1-fullness-criterion",
+    "approach": "PREMISE (T1): for closed symmetric monoidal C with small coproducts, the container extension is fully faithful iff the monoidal unit I is connected (C(I,-) preserves small coproducts); necessity via the copower test. Applied to C = Kl(M): symmetric monoidal (Kock, commutative M), small coproducts (P3, disjoint unions), closed iff M in CL. So 'M makes Neil's extension f&f' = CL cap UN exactly.",
+    "trust": "proved",
+    "shared": null,
+    "file": "2026-08-25-fullness-unit-connectedness.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "kock-kleisli-monoidal-closed",
+    "approach": "PREMISE (Kock, standard): commutative strong M => Kl(M) symmetric monoidal, tensor A x B on objects, unit 1, F strict monoidal (P1); Kl(M) monoidal closed iff each (MB)^A is a free M-algebra (MB)^A iso M[A,B] (P4). Cited, not reproved; recorded in scratch note section 1 as proved(standard).",
+    "trust": "proved",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "step1-writer-form",
+    "approach": "Step 1 + Lemma A: M in UN => the copower comparison theta_T : T x M1 -> MT, theta_T(t,e)=M(iota_t)(e), is a natural iso, so the underlying functor of M is the writer functor (-) x E, E = M1. Monad structures on (-) x E = monoid structures on E; commutative M iff commutative monoid. Hence UN = {writer monads on commutative monoids}. Uses only copower (T.1) preservation, so independent of the T1 copowers-vs-coproducts gap.",
+    "trust": "proved",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "premise",
+    "children": [
+     {
+      "id": "corroboration-copowers-gap",
+      "approach": "CORROBORATION (own registry, proved): copowers-gap-writer-monad root established, for any closed symmetric monoidal C, that copower-of-unit preservation <=> the induced Set-monad of the copower adjunction is a writer monad (-) x End(I). Step 1 is the same phenomenon derived directly for M; not a logical dependency (Step 1 is self-contained) but a cross-check.",
+      "trust": "proved",
+      "file": "2026-08-26-copowers-gap-writer-monad.md",
+      "role": "attempt",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "step2-closed-kills-E",
+    "approach": "Step 2: M in CL => (-) tensor empty has a right adjoint [empty,-], and Kl(M)(C tensor empty, B) = Kl(M)(empty,B) = Set(empty,MB) = 1 for all C, so [empty,B] is a TERMINAL object T of Kl(M), forcing MT iso 1. With the writer form (star): T x E iso MT iso 1 => |T||E| = 1 => E iso 1. So M underlying functor iso Id, hence M iso Id as a monad (unique monad structure on Id).",
+    "trust": "proved",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "step3-Id-in-target",
+    "approach": "Step 3: Id in CL cap UN. Kl(Id)=Set is cartesian closed (CL); unit 1 connected, Set(1,-)=Id preserves coproducts (UN); by T1 the extension = classical AAG container extension, fully faithful.",
+    "trust": "proved",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "cor1-2x2-independence",
+    "approach": "Cor 1: 2x2 (closed? x connected?) each cell inhabited by a commutative strong monad -> axes independent, intersection minimal. Witnesses: Id (both); Reader (-)^S closed but disconnected; Writer_E connected (distributes over coproducts) but not closed (no terminal object when E not iso 1); Maybe/Powerset closed (Par/Rel) but disconnected (M empty = 1); Dist neither. Computationally verified (scratch/check_un_cl.py): coproduct-comparison and copower/writer-form and terminal-object tests all match.",
+    "trust": "proved",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "cor3-idempotents-fail-UN",
+    "approach": "Cor 3 (refines the conjecture): no NONTRIVIAL idempotent/localization monad lies in UN. By Lemma A, UN = writer monads; a writer monad is idempotent iff E iso 1 iff Id. Reflectors L = i o R have i (right adjoint) not preserving coproducts. Direct check: terminal monad LX=1 and subsingleton reflection both fail L(1+1) = L1 + L1. So the conjecture's suggested idempotent inhabitants are excluded; TARGET = {Id} exactly.",
+    "trust": "proved",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "gap-finite-coproduct-reading",
+    "approach": "GAP (not needed under the actual definition, flagged for completeness): if UN is weakened from small-coproduct to FINITE-coproduct preservation, Step 1's writer form (star) holds only for finite T; Step 2 still gives M1 iso 1 and Mn iso n, but M's behaviour on infinite sets is not pinned by finite coproducts alone. Conjecture: still forces Id (closedness should propagate), NOT proved. Under the paper's small-coproduct definition (P5) there is no gap and the theorem is complete.",
+    "trust": "speculative",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "attempt",
+    "children": []
+   }
+  ]
+ }
+}
