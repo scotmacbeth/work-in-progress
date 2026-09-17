@@ -575,6 +575,32 @@ extension is available in the top row and full in the left column; only $\Id$ is
 \subsection{The collapse}\label{ssec:collapse}
 We now prove that over a Kleisli base the two conditions meet only at the identity.
 
+The engine of Step~2 below is the following elementary but base-independent fact, isolated here so that
+no feature of $\Set$ is smuggled in.
+
+\begin{lemma}[Closed $+$ initial $\Rightarrow$ terminal]\label{lem:closed-initial-terminal}
+Let $(\mathcal{K},\otimes,I)$ be a symmetric monoidal closed category, with internal hom $[-,-]$
+adjoint to the tensor via $\mathcal{K}(C\otimes A,B)\cong\mathcal{K}(C,[A,B])$ naturally, and suppose
+$\mathcal{K}$ has an initial object $\emptyset$. Then $\mathcal{K}$ has a terminal object, namely
+$[\emptyset,X]$ for \emph{any} object $X$ (canonically $\top:=[\emptyset,\emptyset]$).
+\end{lemma}
+
+\begin{proof}
+For each object $A$ the functor $(-)\otimes A$ is a left adjoint (its right adjoint is $[A,-]$), hence
+preserves all colimits, in particular the initial object; thus $C\otimes\emptyset\cong\emptyset$ for
+every $C$. Fix any $X$. Naturally in $C$,
+\[
+  \mathcal{K}(C,[\emptyset,X])\;\cong\;\mathcal{K}(C\otimes\emptyset,X)\;\cong\;\mathcal{K}(\emptyset,X)\;\cong\;1,
+\]
+the last isomorphism because $\emptyset$ is initial. So $[\emptyset,X]$ is terminal. (In the symmetric
+case the handedness of the closure is immaterial: $\emptyset\otimes C\cong\emptyset$ equally, so the
+same computation goes through for a hom adjoint to left-tensoring.)
+\end{proof}
+
+Note that the lemma uses \emph{only} monoidal closedness together with an initial object: it invokes
+neither cartesian closedness nor connectedness of the unit, which are the two independent axes of
+\S\ref{ssec:un} (existence of the internal hom versus fullness of the extension).
+
 \begin{theorem}[$\CL\cap\UN=\{\Id\}$]\label{thm:collapse}
 Let $M$ be a commutative strong monad on $\Set$. The self-enriched $M$-container extension
 $\sum_s[P_s,-]\colon\Kl(M)\to\Kl(M)$ is full and faithful if and only if $M\cong\Id$ as a monad.
@@ -595,13 +621,14 @@ monad of a monoid structure $(E,m,e_0)$ (the monad laws are the monoid laws), co
 is. Thus $\UN=\{\text{writer monads on commutative monoids}\}$, with $E=M1$; conversely every writer
 monad preserves small coproducts because $\times$ distributes over $\coprod$ in $\Set$.
 
-\emph{Step 2: $\CL$ forces $E\cong1$.} Let $M\in\CL\cap\UN$, so $MX\cong X\times E$. Monoidal closure
-requires $(-)\times A$ to have a right adjoint for every object $A$, in particular for $A=\emptyset$.
-For all $C$,
-\[
-  \Kl(M)(C\times\emptyset,\,B)=\Kl(M)(\emptyset,B)=\Set(\emptyset,MB)=1,
-\]
-so the representing object $[\emptyset,B]$ is terminal in $\Kl(M)$; call it $\top$. A terminal object
+\emph{Step 2: $\CL$ forces $E\cong1$.} Let $M\in\CL\cap\UN$, so $MX\cong X\times E$. The base
+$\Kl(M)$ is symmetric monoidal closed (Kock's tensor is the base product $\times$ with unit $1$, and it
+is symmetric since $M$ is commutative) and has an initial object, namely the base initial object
+$\emptyset$, because $\Kl(M)(\emptyset,B)=\Set(\emptyset,MB)=1$. Lemma~\ref{lem:closed-initial-terminal}
+therefore supplies a terminal object $\top:=[\emptyset,\emptyset]$ in $\Kl(M)$. We stress that this step
+uses \emph{only} monoidal closedness and the existence of an initial object; it uses neither cartesian
+closedness nor connectedness of the unit --- closedness (existence) and connectedness (fullness) are the
+two independent axes of \S\ref{ssec:un}. A terminal object
 satisfies $\Set(C,M\top)=\Kl(M)(C,\top)\cong1$ for all $C$, forcing $M\top\cong1$. Using the writer
 form, $\top\times E\cong M\top\cong1$, whence $|\top|\cdot|E|=1$ and $E\cong1$. Therefore
 $MX\cong X\times1\cong X$, and the only monad structure on $\Id$ is the identity monad: $M\cong\Id$.
