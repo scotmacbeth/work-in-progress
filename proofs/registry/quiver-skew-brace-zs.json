@@ -1,0 +1,175 @@
+{
+    "conjecture": "Ferri's 'completely prunable' quiver skew brace (loop bundle G-loop is an ideal, arXiv:2605.11903) equals the vanishing of MacBeth's Zappa-Szep global-closure obstruction [omega] in H^2(Sk_C;D); and K_{2,3} realizes [omega]!=0. RESULT: the identification is FALSE -- a SEPARATION. For the multiplicative groupoid (G,.) factored over the FULL loop bundle D=E=G-loop, the ZS composition holonomy [omega] ALWAYS vanishes (connected groupoid has a coherent transversal; Sk_C is coarse ~ point => H^{>=1}=0), while complete prunability can still fail. So prunability is a DIFFERENT obstruction, orthogonal to the composition holonomy, living in the interaction of the QSKB's three operations (.,+,rightharpoonup). Positive isolation: (9) rightharpoonup-invariance of the loop bundle IMPLIES the loop set is an additive subgroup of each star (Lemma B, proved); on an exhaustive two-object family complete-prunability <=> (9) <=> loop-set-is-additive-subgroup, with the other ideal conditions automatic. Dividing line = additive extension type of the star (nonsplit Z/4 vs split Klein-four) -- the ADDITIVE twin of the multiplicative Schreier line (Z/4 over Z/2) from groupoid-zs-obstruction.json. Self-contained witness (Z/2 x Coarse({0,1}), stars Z/4) realizes it fully explicitly; K_{2,3} realizes the separation via Ferri Ex 4.1 (9-failure) + Prop A.",
+    "status": "computed",
+    "date_opened": "2026-09-16",
+    "date_closed": "2026-09-16",
+    "note": "Deep-work PROVE, answering PROVE.md re-aimed Ferri target. Outcome is the 'valuable negative' PROVE.md explicitly anticipated ('if [omega]=0 yet it doesn't split, the dictionary is wrong'). CORE PROVED: (Prop A) full-loop-bundle composition holonomy = 0 for connected groupoid QSKB [rests on pairwise-zs proved + g-obstruction-cohomology proved + standard spanning-tree]; (Lemma B) (9)=>loop-set additive subgroup [own clean finite-group proof]; (Separation Thm) prunability != [omega]=0. COMPUTED: two-object Z/2 family, all 48 valid QSKBs, (9)<=>SUB, (8)+normality automatic, witness data (qskb_task1/task2/sharpen.py). SPECULATIVE: exact cohomological home of the +/rightharpoonup obstruction (skew-brace cohomology Lebed-Vendramin / Kac matched-pair H^2) -- needs deep-read before proved. Bridge to Ferri Rmk 3.20 (group-theoretic reformulation) delivered in cohomological SHAPE. Contrast with groupoid-zs-obstruction.json: there D=PROPER subgroup => Sk_C=B(K/D) nontrivial => [omega] can be !=0 (Schreier); here D=FULL loop bundle => Sk_C coarse => 0. Do not conflate. Proof file 2026-09-16-ferri-prunability-vs-zs-holonomy.tex (compiles, 6pp). | SCOOP-CHECK 2026-10-09 (WAKE, research-agent, abstract+thm-statement level): the 'single protomodular H^2 unifier' hypothesis is REFUTED (valuable negative) -- [omega] (coarse base, NON-pointed) and prunability (vertex group, pointed) sit on opposite sides of the pointed/non-pointed divide; no one protomodular H^2 sees both. Honest umbrella = KUNNETH / product-nerve spectral sequence of H^2_cat(I(obG) x Bpi). NOVELTY CLEAR / NOT SCOOPED: no direction-functor/protomodular/semi-abelian paper mentions directed containers or does obstruction theory for the DCont-generated ZS product (Ahman-Uustalu only CONJECTURE its existence, no H^2). Partial monoid-level prior art (Patchkoria 1703.09262 + AMR 2602.20755) = the 'one H^2, two faces' scheme but NOT MacBeth's specific classes. New target node h2cat-product-decomposition (speculative). Metere-Montoli title corrected: 'Semidirect products of INTERNAL GROUPOIDS' JPAA 214(10) 2010 (no 'Zappa-Szep').",
+    "tree": {
+        "id": "root",
+        "approach": "Dictionary: Ferri prunability decomposition G = G/Gloop |><| Gloop is a strict factorization of (G,.) over D=E=full loop bundle. Test conjecture prunable <=> my (G)/[omega]=0. Find [omega]=0 always here (Prop A, PROVED) but prunable can fail (self-contained computed witness) => SEPARATION. Isolate true obstruction = additive/rightharpoonup loop-subgroup condition (Lemma B PROVED + family). Root graded COMPUTED because the separation-conclusion rests on the machine-checked witness (existence of a non-prunable QSKB); the theoretical spine Prop A + Lemma B is independently PROVED.",
+        "trust": "computed",
+        "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+        "children": [
+            {
+                "id": "pairwise-zs-criterion",
+                "approach": "K=C|><|D over wide D iff (L) free hom-presheaf AND (G) closing basis closes into wide C",
+                "role": "premise",
+                "trust": "proved",
+                "shared": "pairwise-zs#root",
+                "file": "2026-06-10-pairwise-zs-criterion.tex",
+                "children": []
+            },
+            {
+                "id": "g-is-h2",
+                "approach": "under (L)+(H): (G) iff [omega]=0 in H^2(Sk_C;D); (G)-closure <=> defect cochain trivial; existence of ONE closing transversal <=> [omega]=0",
+                "role": "premise",
+                "trust": "proved",
+                "shared": "pairwise-zs#g-obstruction-cohomology",
+                "file": "2026-06-11-G-obstruction-cohomology.tex",
+                "children": []
+            },
+            {
+                "id": "prop-A-holonomy-vanishes",
+                "approach": "connected groupoid (G,.), D=E=FULL loop bundle: (L) each Hom(a,b) is a free G_a-torsor; (G) coarse subgroupoid C={[a,b]=[zeta,a]^-1[zeta,b]} closes (spanning tree) => [omega]=0. Sk_C=coarse groupoid ~ terminal cat => H^{>=1}(Sk_C;D)=0 for local system D. PROVED.",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+                "children": []
+            },
+            {
+                "id": "lemma-B-nine-implies-subgroup",
+                "approach": "In any FINITE QSKB, Ferri (9) for I=Gloop => each loop set L_lambda is an additive subgroup of (St(lambda),+_lambda). Proof: m loop => m->L = -m + m.L = -m + L (m.L=L in vertex group); (9): -m+L subset L => (finite) = L => m+L=L for all m in L => +-closed, 0=1_lambda in L => subgroup. PROVED (own).",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+                "children": []
+            },
+            {
+                "id": "separation-theorem",
+                "approach": "prunability != ([omega]=0). Self-contained witness: connected QSKB not completely prunable yet [omega]=0 (Prop A). The naive dictionary is FALSE; obstructions are orthogonal (composition . vs addition+/cross-action rightharpoonup). Rests on the computed witness for existence.",
+                "role": "premise",
+                "trust": "computed",
+                "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+                "children": []
+            },
+            {
+                "id": "ferri-prunability-source",
+                "approach": "Ferri Def 2.1 (ideal = normal subgpd + St_I additive subgroup + (8) + (9)), Def 4.2 (completely prunable = Gloop ideal), Cor 4.8 (=> G=G/Gloop|><|Gloop), Example 4.1 (K_{2,3}: [S2||2]->[S2||3]=[S2||1], (9) fails, K_{2,3} simple/smallest non-prunable), Rmk 3.20 (invites group-theoretic reformulation). External corroborating instance of the separation (K_{2,3}); NOT the load-bearing witness (that is witness-Z2-coarse-Z4).",
+                "role": "attempt",
+                "trust": "unclassified",
+                "sources": [
+                    "2605.11903"
+                ],
+                "file": null,
+                "children": []
+            },
+            {
+                "id": "witness-Z2-coarse-Z4",
+                "approach": "self-contained: G=Z/2 x Coarse({0,1}), stars +_i = Z/4 with loop generator (i,i,q) at additive order 4. Valid QSKB; loop set {0,1} not additive subgroup; (9) fails ((0,0,q)->(0,0,q)=(0,1,q) non-loop); (G,.) splits with [omega]=0. Machine-checked.",
+                "role": "premise",
+                "trust": "computed",
+                "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+                "children": []
+            },
+            {
+                "id": "family-converse-and-automatics",
+                "approach": "two-object untwisted Z/2 family, all 48 valid QSKBs: (9)<=>SUB(loops additive subgroup)<=>completely prunable; (8) additive-normality and multiplicative normality AUTOMATIC (48/48); left-action law (ab)->c=a->(b->c) holds 48/48. Machine-checked qskb_sharpen.py.",
+                "role": "premise",
+                "trust": "computed",
+                "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+                "children": []
+            },
+            {
+                "id": "additive-schreier-twin",
+                "approach": "prunability dividing line (nonsplit Z/4 vs split Klein-four in the additive star) is the ADDITIVE twin of the MULTIPLICATIVE Schreier line (Z/4 over Z/2) in groupoid-zs-obstruction.json. Suggests the +/rightharpoonup obstruction is a Schreier/Kac extension class of the skew-brace additive structure.",
+                "role": "attempt",
+                "trust": "computed",
+                "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+                "children": [
+                    {
+                        "id": "groupoid-zs-multiplicative",
+                        "approach": "multiplicative ZS merge over a groupoid base with D a PROPER subgroup = Schreier extension class; Z/4 over Z/2 nonsplit => [omega]!=0",
+                        "role": "premise",
+                        "trust": "computed",
+                        "shared": null,
+                        "file": "2026-07-24-groupoid-zs-obstruction.tex",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "h2-catb-reduces-to-vertex-group",
+                "approach": "PROVED (T1), 5-link route in 2026-09-16-h2catb-vertex-group-reduction.tex: H^2_{Cat_B}(connected groupoid G; A) =~ H^2(vertex group pi; M). Links: (1) [adm 2608.07380 sec 4.2, DEEP-READ] H^n_{CatB}(Y,A)=Opext^1=H^n_Hoff; (2) H^n_Hoff=~H^n_BW(Y,D_A)=~lim^n_Y A=~Ext^n_{[Y,Ab]}(Z_const,A) for codomain natural system D(f)=A(cod f) [BW1985; and n=2 self-contained via reconstructed Schreier cocycle correspondence, Appendix]; (3) equivalence-invariance: F:Y~Y' => exact equivalence F*:[Y',Ab]->[Y,Ab], Z_const|->Z_const, iso on Ext; (4) G~Bpi (iota full-subcat on x0, connected=>ess.surj.), iota*A=M; (5) [Bpi,Ab]=ZP-Mod, Ext^n_{ZP}(Z,M)=H^n(pi,M). COMPOSE. Machine-checked: decomposition Phi functor-iso (pi=S3), codomain-BW cochain cx d^2=0 and =group cohomology (Z/2,Z/3,sign action) -- verify_h2catb.py. Target degree n=2 fully solid (Appendix Schreier + elementary homological algebra); general n>=1 additionally uses [adm sec 5] (citation-level). Consistent with [adm 2608.07380] Thm 2.3.3 H^{n+1}=pi_0 d_n^{-1}(A). PLACES the third invariant: H^2_{Cat_B} is cohomology of the VERTEX GROUP (loop/automorphism axis), whereas MacBeth's ZS holonomy [omega] lives over the COARSE base Sk_C (~point when connected => [omega]=0, Prop A). Different categories => H^2_{Cat_B} tracks the additive/prunability side, NOT the multiplicative (.)-holonomy. Consistent with + refines the proved Ferri-prunability/[omega] separation. NOTE: specific value H^2_{Cat_B}(K_{2,3}) is CONJECTURAL only -- blocked on Ferri [13] 'On dynamical skew braces and skew bracoids' JPAA 229 (2025) Ex 4.29/Table 3 (multiplicative groupoid table of K_{2,3}, not in hand); (n,g) inferred plausibly (2,2), pi=Z/2. Do NOT record the K_{2,3} value as computed.",
+                "role": "attempt",
+                "trust": "proved",
+                "sources": [
+                    "2608.07380"
+                ],
+                "file": "2026-09-16-h2catb-vertex-group-reduction.tex",
+                "children": [
+                    {
+                        "id": "h2-cluster-structural-placement-T2",
+                        "approach": "T2 (structural placement). A connected groupoid splits canonically as G =~ I(obG) x Bpi (coarse base x vertex group) via any transversal (functor iso Phi, machine-checked incl. nonabelian pi=S3). The two degree-2 obstruction theories on G are the cohomologies of the two COMPLEMENTARY factors: [omega] in H^2(Sk_C;D) is the cohomology of the LEFT factor Sk_C=I(obG)~=* (contractible => [omega]=0 structurally, Prop A); H^2_{CatB}(G;A)=~H^2(pi;M) (T1) is the cohomology of the RIGHT factor Bpi and is blind to the left. Different, complementary categories => independent. This RE-DERIVES the proved separation [omega] PERP prunability from the decomposition structure (not from the computed witness): prunability lives on the vertex-group/additive (loop) axis measured by H^2_{CatB}, orthogonal to the (trivial) base axis of [omega]. Places H^2_{CatB} as the natural cohomological home of the additive/prunability obstruction -- the additive twin of the multiplicative Schreier line. Answers Ferri Rmk 3.20 in cohomological shape; feeds Rick's skew-brace/H^2 front. CHECK (PROVE.md item 3): Sk_C = coarse base = I(obG), NOT the vertex group pi (pi lives in the loop bundle D); the two categories differ, so Prop A is safe (no STOP).",
+                        "role": "attempt",
+                        "trust": "proved",
+                        "file": "2026-09-16-h2catb-vertex-group-reduction.tex",
+                        "children": [
+                            {
+                                "id": "prop-A-premise-for-T2",
+                                "approach": "Prop A: [omega]=0 on the coarse connected base (Sk_C=I(obG)~=*). Load-bearing for T2(b).",
+                                "role": "premise",
+                                "trust": "proved",
+                                "file": "2026-09-16-ferri-prunability-vs-zs-holonomy.tex",
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "cohomological-home-of-plus-action-obstruction",
+                "approach": "PLACED (scoop-check 2026-10-09): the +/rightharpoonup prunability obstruction sits on the POINTED vertex-group side of the split G ~ I(obG) x Bpi, hence is an instance of the protomodular DIRECTION-FUNCTOR H^2(pi;M) -- the additive/semimodule face realized by Ambra-Montoli-Rodelo arXiv:2602.20755 as pi_0 of monoidal fibres, = Patchkoria H^2 monoid arXiv:1703.09262. This is a LITERATURE PLACEMENT (why prunability is protomodular-reachable while [omega] is not), NOT a proof that Ferri prunability EQUALS this specific class -- the exact identification (prunability class = which element of H^2(pi;M) / the +/rightharpoonup Schreier cocycle) is still to prove. Earlier Lebed-Vendramin/Kac skew-brace-cohomology guess subsumed: the direction-functor H^2 is the cleaner home.",
+                "role": "attempt",
+                "trust": "speculative",
+                "reason": "OPEN. Analogy + Z/4-vs-Klein computation only; no classification theorem proved and the skew-brace cohomology papers not deep-read. Do not claim >= proved until deep-read. Continuation target.",
+                "file": null,
+                "children": [],
+                "sources": [
+                    "2602.20755",
+                    "1703.09262"
+                ]
+            },
+            {
+                "id": "converse-lemma-B-general",
+                "approach": "COMPUTED (2026-10-09): the converse SUB => (9) -- indeed the full equivalence (9) <=> SUB (loop set is an additive subgroup of each star) -- holds with ZERO counterexamples across every tested finite QSKB family: 2-obj Z/2 (EXHAUSTIVE, 48 valid), 2-obj Z/3 (EXHAUSTIVE, 12 valid), 2-obj Z/4 (RANDOM-SAMPLED 120k/228.6M combos, 83 valid), 3-obj Z/2 (RANDOM-SAMPLED 120k/1.73M, 12 valid). In all families SUB&~(9)=0 AND (9)&~SUB=0. Generalizes the original 2-obj-Z/2-only family result (family-converse-and-automatics) to a second exhaustive cyclic order + sampled larger orders and a 3-object base. HONEST COVERAGE LIMIT: exhaustive only for vertex-group orders 2,3 (two objects); Z/4 and 3-object are SAMPLED (brute-force group-structure enumeration is 15120^2/120^3 = infeasible exhaustively); TWISTED / NON-ABELIAN vertex groups UNTESTED. So (9)<=>SUB is strong computed evidence, NOT yet proved in general -- the general converse (esp. non-abelian/twisted) remains open for a proof. Script scratch/qskb_converse_test.py; log scratch/qskb_converse_result.txt.",
+                "role": "attempt",
+                "trust": "computed",
+                "reason": "Verified only for untwisted 2-object Z/2 family. Lemma B gives only (9)=>subgroup unconditionally. General converse open; may fail for twisted groupoids or non-abelian vertex groups.",
+                "file": null,
+                "children": []
+            },
+            {
+                "id": "k23-loop-subgroup-direct",
+                "approach": "claim K_{2,3}'s non-prunability IS specifically the loop-subgroup failure (loops at S2 not additive subgroup of Z/4)",
+                "role": "attempt",
+                "trust": "speculative",
+                "reason": "Lemma B is one-directional (necessary not sufficient), so (9)-failure alone does not force non-subgroup. Would need full K_{2,3} data from Ferri [13, Ex 4.29] (source not in hand). Separation (Cor k23) is unconditional; this finer claim is not.",
+                "file": null,
+                "children": []
+            },
+            {
+                "id": "h2cat-product-decomposition",
+                "approach": "NEXT PROVE TARGET (scoop-check-recommended, provable from prop-A + h2-catb-reduces-to-vertex-group + separation-theorem). For a small category G with base Sk_C (coarse => contractible when connected) and vertex group pi, the categorical (Hoff-Golasinski = direction-functor 2608.07380) cohomology decomposes: H^2_cat(G;M) =~ H^2(pi;M) (+) H^2_base(Sk_C;M), left summand = protomodular direction-functor class carrying the additive/prunability obstruction (realizes the left projection of the 2608.07380 direction functor), right summand = the coarse-base ZS holonomy [omega] (=0 when connected, Prop A). Upgrades the PROVED '[omega] PERP prunability' separation to a NATURAL direct-sum/filtration split -- turns three separate H^2-cluster results into ONE structural theorem. CAVEAT (prove honestly): over Z the naive (+) is a KUNNETH FILTRATION with possible cross term H^1(Sk_C)(x)H^1(pi) + Tor; COLLAPSES to clean iso when Sk_C contractible (connected case: H^2=H^2(pi), matches Prop A) or with field coeffs. Content lives in the DISCONNECTED / PROPER-TRANSVERSAL case (groupoid-zs-obstruction.json) where both summands can be nonzero. State as Kunneth SS in general; prove clean split in collapsing cases. Pointed/non-pointed divide (scoop-check): protomodularity applies ONLY to vertex-group slice, NOT the non-pointed coarse base -- do NOT claim protomodularity for the whole DCont~Cat object.",
+                "role": "attempt",
+                "trust": "speculative",
+                "sources": [
+                    "2608.07380",
+                    "2602.20755"
+                ],
+                "file": null,
+                "children": []
+            }
+        ],
+        "note": ""
+    }
+}

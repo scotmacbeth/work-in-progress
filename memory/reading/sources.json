@@ -248,7 +248,9 @@
     "memory/reading/2026-06-12-browse2.md",
     "memory/reading/2026-08-11-browse2.md",
     "memory/reading/2026-08-13-browse2.md",
-    "memory/reading/2026-08-21-browse2.md"
+    "memory/reading/2026-08-21-browse2.md",
+    "memory/reading/2026-10-01.md",
+    "memory/reading/2026-10-02.md"
    ],
    "locators": [
     "Def 3.8 (monadic container = (S<|P,iota,sigma,pr) satisfying eight monad equations)",
@@ -263,6 +265,23 @@
     {
      "date": "2026-08-28",
      "note": "DEDUP RECURRENCE (at least 8th time): browse session (arXiv agent AND citation-trail agent, independently) re-surfaced this paper via 'directed containers'/Weber-citation searches and presented it as a noteworthy/must-read find (Example 22 'functional monoid actions != matching pairs' asymmetry, Section 6 mixed distributive laws). This content is NOT new -- already deep-read and logged in the note above since 2026-06-11, with the exact 'functional monoid actions' detail already recorded from the 2026-08-13 pass. No new content added. Process gap: neither browse agent was told this paper's arXiv ID was already tracked; orchestrator did not grep sources.json before dispatch this session -- recurrence of the check-scratch-before-dispatch discipline gap, this time for browse agents rather than compute agents."
+    },
+    {
+     "date": "2026-10-01",
+     "note": "DEDUP RECURRENCE (at least 9th time, 2026-10-01 browse): arXiv agent re-surfaced via 'directed container'/Zappa-Szep keywords, flagged Example 22/Prop 24/Thm 35 as a noteworthy find requiring comparison to MacBeth's own ZS-criterion proofs. All of this content already deep-read and logged since 2026-06-11 (Example 4.9 / renumbered Ex 22 in a later revision). No new content. Recommend retiring 'distributive law' + 'Zappa-Szep' as a core-territory browse keyword pair for this paper's cluster -- it has now converged independently 9+ times with zero new yield since 2026-08-13."
+    },
+    {
+     "date": "2026-10-02",
+     "new_content": "One genuinely new locator this pass: Proposition 24 (composite-monadic-container-from-distributive-law) is only PARTIALLY Cubical-Agda formalised -- associativity checked by hand, full mechanisation 'underway' per the paper text. Not previously recorded. No change to extraction level (already deep-read) or existing verdict.",
+     "note": "DEDUP RECURRENCE (at least 8th time): both the arXiv and community browse agents independently re-surfaced this paper as a fresh find this session (pivot keywords: 'monadic containers', 'distributive laws', 'Lean/Mathlib containers'). Checked against sources.json before writing -- confirmed NOT new, already deep-read since 2026-06-11."
+    },
+    {
+     "date": "2026-10-04",
+     "note": "Web-research agent (2026-10-04 browse) reported the CALCO 2025 LIPIcs page for this paper as today's 'core find', unaware it has been deep-read and tracked since 2026-06-09 and re-read as recently as 2026-10-01/10-02. Verified via direct grep of this file at synthesis time -- no new locators beyond what is already recorded (Def 3.8/4.2, Ex 4.9 ZS-matched-pairs, Zwart-Marsden no-go in Sec 7). Same process lesson as the 2601.22968 correction above."
+    },
+    {
+     "date": "2026-10-08",
+     "note": "DEDUP RECURRENCE (11th+ time): citation-trail agent independently re-surfaced this paper via AAG-2005 reverse citations and flagged it as 'new-to-MacBeth, high-relevance, should be read directly'. Already deep-read since 2026-06-11, re-confirmed many times (see corrections above). No new content. Confirms [[feedback_browse_blocklist_beats_generic_dedup]] yet again -- even citation-trail-following (not just keyword search) rediscovers serial offenders when the trail passes back through a well-connected hub paper like AAG 2005."
     }
    ]
   },
@@ -273,13 +292,28 @@
    "extraction": "deep-read",
    "read": [
     "memory/reading/2026-06-11.md",
-    "memory/reading/2026-07-16.md"
+    "memory/reading/2026-07-16.md",
+    "memory/reading/2026-10-01.md",
+    "memory/reading/2026-10-02.md"
    ],
    "locators": [
+    "Categories Int (interfaces/implementations) and Spec (specs/verified implementations), monoidal via coproduct (+); Mealy is a lax monoidal presheaf on Int^op, DepMealy on Spec^op",
+    "Theorem 0.2: any wiring diagram of implementations satisfying their interfaces composes to a single implementation p=>Free(Sigma external inputs)",
     "Thm 0.6",
-    "free monad AST (Fig, return/bind)"
+    "free monad AST (Fig, return/bind)",
+    "parallel-sum p|q (affine, not contractive) gives race-free concurrency + relational (e.g. noninterference) specs"
    ],
-   "note": "Uses free monad on Poly as an ingredient for wiring-diagram program verification (Agda); does NOT formalise Gambino-Kock's positions=trees/directions=leaves/grafting-monoid-law construction itself -- ordinary return/bind AST, extensionally same tree but not proved as the container isomorphism. Not a scoop of the Lean target. Cites Niu-Spivak 2024, Libkind-Spivak 2025, not Gambino-Kock by name."
+   "note": "Uses free monad on Poly as an ingredient for wiring-diagram program verification (Agda); does NOT formalise Gambino-Kock's positions=trees/directions=leaves/grafting-monoid-law construction itself -- ordinary return/bind AST, extensionally same tree but not proved as the container isomorphism. Not a scoop of the Lean target. Cites Niu-Spivak 2024, Libkind-Spivak 2025, not Gambino-Kock by name. | DEDUP RECURRENCE (2026-10-01 browse): arXiv+web agents both re-surfaced this paper as a 'new' find via 'agent orchestration'/'polynomial functor verification' keywords; it was already deep-read since 2026-06-11. Genuinely new detail this pass (added to locators): the precise Theorem 0.2 wiring-diagram composition statement, the Int/Spec category pair with Mealy/DepMealy lax monoidal presheaf semantics, and the affine parallel-sum p|q concurrency extension -- the original entry only recorded 'Thm 0.6'/'free monad AST' tersely. No change to extraction level (deep-read) or to the existing verdict (not a scoop of the Lean container-grafting target).",
+   "corrections": [
+    {
+     "date": "2026-10-01",
+     "note": "Re-surfaced by two independent browse agents as new; confirmed already tracked since 2026-06-11. New locators added (Thm 0.2, Int/Spec/Mealy/DepMealy, parallel-sum) but no change to grade or verdict."
+    },
+    {
+     "date": "2026-10-02",
+     "note": "DEDUP RECURRENCE: arXiv agent re-surfaced via Path-1/6 pivot keywords ('containers', 'W-types', 'dependent type theory'). Already deep-read since 2026-06-11 (also re-found 2026-10-01). No new content beyond what's already in locators/note."
+    }
+   ]
   },
   "2601.22968": {
    "title": "Polynomial Functors over Infinity-Groupoids",
@@ -295,7 +329,8 @@
     "memory/reading/2026-07-19-browse2.md",
     "memory/reading/2026-07-29-browse3.md",
     "memory/reading/2026-08-06.md",
-    "memory/reading/2026-09-23.md"
+    "memory/reading/2026-09-23.md",
+    "memory/reading/2026-10-01.md"
    ],
    "locators": [
     "Conj 7.2"
@@ -305,6 +340,14 @@
     {
      "date": "2026-08-28",
      "note": "DEDUP RECURRENCE (this paper has been re-flagged as 'new' repeatedly, see note history above -- 2026-07-29 was explicitly logged as a prior recurrence, this is at least the second since). Browse session (arXiv agent) re-surfaced as 'new (Jan 2026), not previously tracked' and re-described Conj 7.2 as an exciting fresh find -- both false, extensively tracked since 2026-06-11 with Conj 7.2 monitored on a recheck cadence. Genuinely new datum (citation-trail agent, same session): this paper is one of Weber 1106.1983's 2025-2026 reverse citations, i.e. Kun Chen explicitly builds on Weber's pullback-category generalization while generalizing the base to infinity-groupoids rather than toward additivity/Vec -- a structural analogue worth comparing techniques against for Front D, even though the base is homotopical not additive. Conj 7.2 reconfirmed still open, zero reverse citations reconfirmed independently."
+    },
+    {
+     "date": "2026-10-01",
+     "note": "DEDUP RECURRENCE (2026-10-01 browse): arXiv AND community agents both independently re-surfaced this (via different keyword routes) as a 'new' find generalizing Ahman-Uustalu; already deep-read and monitored on a recheck cadence since 2026-06-11, Conj 7.2 status unchanged (still open, still the live frontier). No new content beyond what's already recorded (Thm 5.17 completeness/cocompleteness of Poly_S was already implicit in the existing 'colimits of representable copresheaves' locator). Two-agent independent convergence is itself a mild corroboration signal that this is the field's live open question in this direction, not new data about the paper."
+    },
+    {
+     "date": "2026-10-04",
+     "note": "Community-agent (2026-10-04 browse) reported this paper as a fresh find ('New this session, directly in core territory'), unaware it has been deep-read and tracked since 2026-07-14, with a prior documented dedup-miss on 2026-07-29. This is at least the 2nd-3rd rediscovery of this exact paper. Verified via direct grep of this file at synthesis time -- no new content, Conjecture 7.2 still open, still zero citations, consistent with the standing entry. Process lesson recorded in reading/2026-10-04.md Follow Up #1: per-agent sources.json grepping is not reliably preventing rediscovery of this specific ID; consider an explicit blocklist for commonly-rediscovered IDs going forward."
     }
    ]
   },
@@ -378,7 +421,9 @@
     "memory/reading/2026-07-16.md",
     "memory/reading/2026-07-18.md",
     "memory/reading/2026-08-13-browse2.md",
-    "memory/reading/2026-08-26-browse2.md"
+    "memory/reading/2026-08-26-browse2.md",
+    "memory/reading/2026-10-02.md",
+    "memory/reading/2026-10-07.md"
    ],
    "locators": [
     "combinatorial characterisation of monoids in the I-indexed-container tensor category",
@@ -386,7 +431,21 @@
     "worked examples: product of two monads, indexed state/writer monads, free-monad instance",
     "Thm 3.5: full subcategory of Set^I-monads whose underlying endofunctors are container extents '='Indexed Container Monoid Structures' (combinatorial: unit shape, binary op on shapes, index-tracking data ^/^\\/^/, coherence condition with no non-indexed analogue) [independent full HTML re-read 2026-08-26 in direct response to Neil's steer toward indexed containers as the right generality for 'states that let prompts vary']"
    ],
-   "note": "EPTCS 430 / Proc. LSFA 2025, Cubical Agda formalised. Authored in part by Uustalu (Ahman-Uustalu's collaborator, core citation) and Veltri (also active in the container-derivatives/chain-rule line). Directly parallel to MacBeth's own T^Sigma_M = M<|- classification (Sigma-monad iff <|-monoid) but one level up, in the indexed/dependent setting -- open question (still unresolved as of 2026-08-13) whether their combinatorial monoid characterisation specialises to or generalises MacBeth's non-indexed result. | CORRECTION 2026-08-13: this entry was accidentally OVERWRITTEN (read-history truncated to a single file) during the 2026-08-13-browse2 session -- same incident as 2503.17191/2602.17917 above. This paper was ALSO previously caught as a dedup false-positive on 2026-07-30 ('web-research subagent flagged this as a promising new lead. Checked against sources.json before filing -- it has been tracked at deep-read since 2026-06-13... Not new'), meaning proper dedup discipline WAS exercised correctly at least once on this exact paper before today's miss. Repaired from 2026-06-12-browse2/06-13/07-14/07-16/07-18 reading logs (extraction restored to deep-read, matching the 07-30 correction note's finding)."
+   "note": "EPTCS 430 / Proc. LSFA 2025, Cubical Agda formalised. Authored in part by Uustalu (Ahman-Uustalu's collaborator, core citation) and Veltri (also active in the container-derivatives/chain-rule line). Directly parallel to MacBeth's own T^Sigma_M = M<|- classification (Sigma-monad iff <|-monoid) but one level up, in the indexed/dependent setting -- open question (still unresolved as of 2026-08-13) whether their combinatorial monoid characterisation specialises to or generalises MacBeth's non-indexed result. | CORRECTION 2026-08-13: this entry was accidentally OVERWRITTEN (read-history truncated to a single file) during the 2026-08-13-browse2 session -- same incident as 2503.17191/2602.17917 above. This paper was ALSO previously caught as a dedup false-positive on 2026-07-30 ('web-research subagent flagged this as a promising new lead. Checked against sources.json before filing -- it has been tracked at deep-read since 2026-06-13... Not new'), meaning proper dedup discipline WAS exercised correctly at least once on this exact paper before today's miss. Repaired from 2026-06-12-browse2/06-13/07-14/07-16/07-18 reading logs (extraction restored to deep-read, matching the 07-30 correction note's finding).",
+   "corrections": [
+    {
+     "date": "2026-10-02",
+     "note": "Re-found via Path 6 (Lean/Mathlib indexed-container) keywords this session. No new content; deep-read level stands."
+    },
+    {
+     "date": "2026-10-07",
+     "note": "Re-found AGAIN (arXiv agent + community agent both, independently) via Path 1/6 pivot keywords. No new content; deep-read level stands. This is now the 10th+ recorded re-discovery of this paper across browse sessions -- added to BLOCKLIST.md serial-offenders list."
+    },
+    {
+     "date": "2026-10-08",
+     "note": "DEDUP RECURRENCE (11th+ time): citation-trail agent independently re-surfaced via AAG-2005 reverse citations (same route as the 2503.17191 recurrence this session). No new content; deep-read level stands."
+    }
+   ]
   },
   "2409.17664": {
    "title": "Comodule Representations of Second-Order Functionals",
@@ -437,9 +496,16 @@
    "extraction": "agent-summary",
    "read": [
     "memory/reading/2026-06-13.md",
-    "memory/reading/2026-07-16.md"
+    "memory/reading/2026-07-16.md",
+    "memory/reading/2026-10-02.md"
    ],
-   "note": "ITP 2025. UIP-free W/M-types for containers in Cubical Agda."
+   "note": "ITP 2025. UIP-free W/M-types for containers in Cubical Agda.",
+   "corrections": [
+    {
+     "date": "2026-10-02",
+     "note": "Re-found via Path 6 (Lean/Mathlib indexed-container) keywords this session. No new content; agent-summary level stands."
+    }
+   ]
   },
   "2601.15420": {
    "title": "Problems with Fixpoints of Polynomials of Polynomials",
@@ -450,7 +516,8 @@
     "memory/reading/2026-06-13.md",
     "memory/reading/2026-07-15.md",
     "memory/reading/2026-07-24.md",
-    "memory/reading/2026-07-29-browse3.md"
+    "memory/reading/2026-07-29-browse3.md",
+    "memory/reading/2026-10-01.md"
    ],
    "note": "LICS 2026 (v2, accepted version). Studies fixpoints (initial algebra/terminal coalgebra/zeta operator) of fibred endofunctors over the fibrewise-opposite-of-codomain-fibration framing (= Cont(C) in MacBeth's own vocabulary, matches contravariance-is-fibrewise-op almost verbatim). Applies to Weihrauch degrees (closed choice, parity-game determinacy) via an 'answerable part' operator. Session-2 07-15 deep-read: full PDF downloaded, grepped for 'derivative'/'chain rule'/'d' -- ZERO matches. DOES NOT overlap MacBeth's d(G<|F)=(dG<|F)x dF chain-rule theorem (different question about <|: fixpoints vs. derivative). | 2026-07-24 citation-trail flag: re-surfaced as a Gambino-Kock reverse-citer; studies terminal coalgebras of polynomial-functor composites (not just fixpoints/Weihrauch) -- risk of overlap with the cofree-comonad universal-property target is real even though the 2026-07-15 chain-rule check cleared a DIFFERENT question. A dedicated re-read through the cofree-comonad-UP lens (not just derivative/chain-rule) is owed before that proof ships. | 2026-08-30 TARGETED FULL READ (fibredness question): PDF fetched to /home/agent/papers/pradic-price_2601.15420_fixpoints-poly-of-poly.pdf (+ .txt via pdftotext -layout), 45pp incl. appendices, v2 [cs.LO] 11 May 2026, LICS 2026. Extraction notes with verbatim quotes in projects/scratch/2026-08-30-pradic-price-fibred-def.md. THE DEFINITION IS NOW EXTRACTED -- both sub-questions in the 'locators' entry below are ANSWERED (see the 2026-08-30 locator). extraction level deliberately LEFT at 'deep-read': the read was again targeted (SS2.1-2.2, SS3.1-3.2, S4.2 and Appendix B.1), not a whole-paper read, so the grade is not upgraded.",
    "corrections": [
@@ -465,6 +532,10 @@
     {
      "date": "2026-08-30",
      "note": "PRIOR-ART CORRECTION propagated into proofs/2026-08-30-fibredness-vs-left-closure.md. That note's SS2 'Bonus' (the composition product is fibred in its RIGHT variable, with base functor literally the extension [[q]]) is NOT MacBeth's: it is Pradic-Price Lemma 15 (p. 14, proof p. 31), with the SAME base functor ('The base of the fibred polynomial functor J |-> Sum_{i:I} J^{A_i} is clearly polynomial'). Re-attributed. Furthermore the refinement MacBeth had reserved as his own -- that cartesian morphisms are preserved in BOTH variables unconditionally -- is ALSO prior art: PP's Lemma 15 proof (p. 31) states 'if phi:P->P', psi:Q->Q' are cartesian, then so is psi*phi [50, Proposition 6.88]', where [50] is Niu-Spivak arXiv:2312.00990 and Prop 6.88 (p. 213) is exactly 'if phi and psi are cartesian, so is phi <| psi'. So over Set, Lemma 2.1 of the proof note is Niu-Spivak Prop 6.88, not MacBeth's. What survives as MacBeth's over Set is only the ISOLATION of the two halves (cartesianness free, base-functoriality the sole obstruction) plus the Vec_fd half of Lemma 2.1. Corrects the verdict in SS5.2 of the scratch note, which asserted 'they never isolate this'."
+    },
+    {
+     "date": "2026-10-01",
+     "note": "DEDUP RECURRENCE (2026-10-01 browse): community agent re-surfaced via a title-guess search ('Problems with fixpoints of polynomials of polynomials'), correctly identified as this paper (Pradic-Price, LICS 2026), flagged as sitting 'right on top of' MacBeth's open Cat(Cont)/Cont(Cont) question. Already deep-read at the fibration-definition level since 2026-08-30 (see locators below) -- that targeted read already answers the fibration-identity sub-question this session's flag was chasing. No new content; the zeta-operator/mu-bicomplete framing this session's summary used is consistent with, not additional to, the existing note."
     }
    ],
    "locators": [
@@ -481,9 +552,16 @@
    "read": [
     "memory/reading/2026-06-12-browse2.md",
     "memory/reading/2026-07-29-browse3.md",
-    "memory/reading/2026-07-30-web.md"
+    "memory/reading/2026-07-30-web.md",
+    "memory/reading/2026-10-02.md"
    ],
-   "note": "UPGRADED 2026-07-30 (was thin agent-summary 'No DCont structure'): read via TYPES 2025 conference abstract, a self-contained 4pp technical digest. Containers over pMod(K2rec,K2) (partitioned represented spaces + type-2-computable maps); Weihrauch reductions unpack into the same container-morphism pullback-square shape. Main theorem: Weihrauch degrees = posetal reflection of 'answerable containers' (pullback-stable epimorphisms). Extended Weihrauch degrees = containers over partitioned assemblies pAsm(K2rec,K2); strong Weihrauch = 'dependent adaptors' over pMod (adopted from an unpublished Hedges seminar talk -- possible link to DCont=Cof cofunctors, unchecked). Table 1 operator dictionary uses MacBeth's OWN notation for composition, identifies it with Weihrauch's star composition, but flags it as only a QUASI-bifunctor because their base category is merely weakly locally cartesian closed -- a concrete illustration of where MacBeth's own LCC hypothesis (load-bearing in the associativity/pentagon proofs over Set/Cont) actually matters. Their 'Derivative boundary-p <-> ?' row is EXPLICITLY LEFT OPEN -- nobody has connected container derivatives to any Weihrauch-degree notion; lands squarely on MacBeth's own chain-rule turf, genuinely open, not scooped. Distinguishes itself from Ahman-Bauer 2409.17664 (coarser instance-reducibility over truth-value families) and Trotta-Valenti-de Paiva/Uftring (Dialectica routes)."
+   "note": "UPGRADED 2026-07-30 (was thin agent-summary 'No DCont structure'): read via TYPES 2025 conference abstract, a self-contained 4pp technical digest. Containers over pMod(K2rec,K2) (partitioned represented spaces + type-2-computable maps); Weihrauch reductions unpack into the same container-morphism pullback-square shape. Main theorem: Weihrauch degrees = posetal reflection of 'answerable containers' (pullback-stable epimorphisms). Extended Weihrauch degrees = containers over partitioned assemblies pAsm(K2rec,K2); strong Weihrauch = 'dependent adaptors' over pMod (adopted from an unpublished Hedges seminar talk -- possible link to DCont=Cof cofunctors, unchecked). Table 1 operator dictionary uses MacBeth's OWN notation for composition, identifies it with Weihrauch's star composition, but flags it as only a QUASI-bifunctor because their base category is merely weakly locally cartesian closed -- a concrete illustration of where MacBeth's own LCC hypothesis (load-bearing in the associativity/pentagon proofs over Set/Cont) actually matters. Their 'Derivative boundary-p <-> ?' row is EXPLICITLY LEFT OPEN -- nobody has connected container derivatives to any Weihrauch-degree notion; lands squarely on MacBeth's own chain-rule turf, genuinely open, not scooped. Distinguishes itself from Ahman-Bauer 2409.17664 (coarser instance-reducibility over truth-value families) and Trotta-Valenti-de Paiva/Uftring (Dialectica routes).",
+   "corrections": [
+    {
+     "date": "2026-10-02",
+     "note": "Re-found via Path 6 keywords this session (Weihrauch/containers tangent). No new content; deep-read level stands."
+    }
+   ]
   },
   "2509.05462": {
    "title": "Compact Double Categories for Control Flow",
@@ -536,9 +614,16 @@
    "read": [
     "memory/reading/2026-06-10.md",
     "memory/reading/2026-07-14-browse2.md",
-    "memory/reading/2026-07-17-browse2.md"
+    "memory/reading/2026-07-17-browse2.md",
+    "memory/reading/2026-10-07.md"
    ],
-   "note": "Cites BOTH Ahman-Uustalu \"Directed Containers as Categories\" (2016) AND the Niu-Spivak Poly book directly (found via 2026-07-14 browse citation trail) -- sits on the open SS10 fibrational-comonoid territory via a density-comonad/Kan-extension route, distinct from Shapiro-Spivak 2305.00167. Originally read for SEED Q5 only; worth a re-read through the fibration lens. SECOND independent flag 2026-07-17 (citation-trail agent via Ahman-Uustalu reverse citations, called it the single most important new hit): reproves directed-container/small-category correspondence via density comonads (categories = polynomial comonads on Set up to iso, as Kan extension of a functor along itself), citing Ahman-Uustalu directly. Close enough to M2b/M3b (machine-checked both round trips) that a full read-and-compare is owed before the book comonad chapter is finalised. 2026-07-17 browse2: abstract fetched directly from arXiv (not just search snippet) and quoted verbatim -- bumped agent-summary to abstract. Text: 'categories can be identified with polynomial comonads on Set... left Kan extension of functors along themselves... density comonad... when carriers are polynomial.' Confirms the characterization exactly. Still owed: full read-and-compare against M2b/M3b before the comonad chapter closes."
+   "note": "Cites BOTH Ahman-Uustalu \"Directed Containers as Categories\" (2016) AND the Niu-Spivak Poly book directly (found via 2026-07-14 browse citation trail) -- sits on the open SS10 fibrational-comonoid territory via a density-comonad/Kan-extension route, distinct from Shapiro-Spivak 2305.00167. Originally read for SEED Q5 only; worth a re-read through the fibration lens. SECOND independent flag 2026-07-17 (citation-trail agent via Ahman-Uustalu reverse citations, called it the single most important new hit): reproves directed-container/small-category correspondence via density comonads (categories = polynomial comonads on Set up to iso, as Kan extension of a functor along itself), citing Ahman-Uustalu directly. Close enough to M2b/M3b (machine-checked both round trips) that a full read-and-compare is owed before the book comonad chapter is finalised. 2026-07-17 browse2: abstract fetched directly from arXiv (not just search snippet) and quoted verbatim -- bumped agent-summary to abstract. Text: 'categories can be identified with polynomial comonads on Set... left Kan extension of functors along themselves... density comonad... when carriers are polynomial.' Confirms the characterization exactly. Still owed: full read-and-compare against M2b/M3b before the comonad chapter closes.",
+   "corrections": [
+    {
+     "date": "2026-10-07",
+     "note": "Re-found via citation-trail agent (Ahman-Uustalu 1604.01187 reverse citations) -- agent flagged it as 'THIS IS NEW, not on your tracked list' and recommended an /expository comparison against M2b/M3b. This is INCORRECT -- it has been tracked at 'abstract' extraction since 2026-06-10, with the exact same recommendation ('full read-and-compare owed before comonad chapter closes') already on file from 2026-07-17. Extraction level unchanged (abstract); added to BLOCKLIST.md serial-offenders list. The underlying to-do (full read-and-compare against directed-container round-trips) is still genuinely outstanding, just not new information."
+    }
+   ]
   },
   "2512.17484": {
    "title": "Derivatives for Containers in Univalent Foundations",
@@ -1048,17 +1133,18 @@
    "note": "v1 2025-06-02, v2 2026-01-29. Extends the classical Fox theorem to LDCs via a new 'medial LDC' (MLDC) structure, connecting to deep-inference medial rules and duoidal categories. No Poly mention, but the medial/duoidal vocabulary is a candidate future citation for the held dialectica-tensors-deferred.tex note (⋊ left-closed, duoidal interaction) -- untried angle, not yet checked. 2026-07-21 browse2: reconfirmed via web agent's fourth pass, surfaces repeatedly alongside 2407.01849 under LDC+polynomial-functor searches; still not deep-read."
   },
   "2602.05689": {
-   "title": "Polynomial functors in pi-clans for the semantics of type theory",
+   "title": "Polynomial Functors in π-Clans for the Semantics of Type Theory",
    "authors": "Hua, Xu",
    "year": 2026,
+   "venue": "arXiv preprint (5 Feb 2026)",
    "extraction": "agent-summary",
    "read": [
-    "memory/reading/2026-07-20.md",
-    "memory/reading/2026-09-19.md",
-    "memory/reading/2026-09-23.md"
+    "memory/reading/2026-10-05.md"
    ],
-   "locators": [],
-   "note": "Wake-sweep 2026-07-20. MLTT context cats need not be LCC but are pi-clans; pi-clan = right weakening for the Cont-is-CCC-not-LCC thread. Cite Ch2. Abstract-level only; deep-read before load-bearing use. UPDATE 2026-09-19 browse (arXiv agent): full HTML text now read (previously abstract-level only) -- confirms Thm 5.6/Cor 5.7 (elementary CwF vs algebraic natural-model presentations of MLTT equivalent) and the pi-clan definition (pullback-stable, composition-closed, partial pushforward, weaker than LCC). Relevant as an admissibility-style question one level up from Gap 1 (Set x Vec_fd): minimal structure on ambient category rather than the pole. Still filed as background, not an active proof lead."
+   "locators": [
+    "arXiv agent, WebFetch PDF"
+   ],
+   "note": "Polynomial functor theory inside pi-clans (weaker than LCC categories); two equivalent strict MLTT semantics (categories-with-families vs natural models). No containers/comonads/distributive-law content -- tangential data point that polynomial-functor foundations are being generalized away from local-cartesian-closedness, relevant to the standing admissibility/generality question but not a strong hit."
   },
   "2605.03102": {
    "title": "Monads in 2-categories",
@@ -1079,14 +1165,30 @@
    "read": [
     "memory/reading/2026-07-20-browse2.md",
     "memory/reading/2026-07-21.md",
-    "memory/reading/2026-08-13-browse2.md"
+    "memory/reading/2026-08-13-browse2.md",
+    "memory/reading/2026-10-01.md",
+    "memory/reading/2026-10-02.md"
    ],
    "locators": [
-    "Sec 3.1 'The Category Poly', Sec 3.3 'Promoters as Lenses', Sec 4 'Agentic Operad' (parallel (x), serial o, trace)",
     "(2026-08-13 pass) Sec 3.4 (prisms/traversals), Sec 3.5 (epigenetic state as coalgebra with bisimulation)",
-    "(2026-08-13 pass) error-suppression bounds, e.g. AND-gated dual verification 1-(1-eps1)(1-eps2)"
+    "(2026-08-13 pass) error-suppression bounds, e.g. AND-gated dual verification 1-(1-eps1)(1-eps2)",
+    "Four multi-agent scaling theorems (named): error amplification, sequential penalty, parallel acceleration, tool-density scaling",
+    "GRN-motif <-> agentic-pattern correspondence table: feed-forward loops<->noise suppression, adaptive immunity<->layered security, mitochondrial signaling<->resource governance, endosymbiosis<->neuro-symbolic integration, morphogen diffusion<->spatial coordination",
+    "Kripke-style epistemic operators derived from the wiring diagram's observation structure",
+    "Reference implementation: 1813 tests, 116 examples (matches the already-logged low-rigor verdict -- validation leans on the test harness, not the theorem proofs)",
+    "Sec 3.1 'The Category Poly', Sec 3.3 'Promoters as Lenses', Sec 4 'Agentic Operad' (parallel (x), serial o, trace)"
    ],
-   "note": "Second paper by the ArchAgents author (Banu, after arXiv:2605.12239), read in full 2026-07-20. Explicitly checked for Zappa-Szep products / distributive laws / semidirect products: NONE appear -- confirms operad/wiring-diagram algebra is this subfield's default vocabulary, orthogonal to (not a scoop of) orchestration-is-zappa-szep-weld. 'Provable error suppression bounds' assessed as qualitative, not formally proved (original 07-20 read); confirmed again 2026-08-13 ('theorems stated with assumptions/operational takeaway but proofs not visible/complete', 'validation leans on a synthetic test harness (1813 tests) rather than proof') -- two independent passes reach the same low-rigor verdict, now well-corroborated. Banu is a two-paper recurring author in the categorical-agent-orchestration space (2605.12239 + this one), good enough evidence (2 papers, 3 months apart, same toolkit) to write the related-work/differentiator paragraph without further per-cycle monitoring, per 2026-07-20 dream note. | CORRECTION 2026-08-13: entry accidentally OVERWRITTEN (read-history truncated) during the 2026-08-13-browse2 session -- same incident as the three entries above. Repaired from 2026-07-20-browse2/07-21 reading logs."
+   "note": "Second paper by the ArchAgents author (Banu, after arXiv:2605.12239), read in full 2026-07-20. Explicitly checked for Zappa-Szep products / distributive laws / semidirect products: NONE appear -- confirms operad/wiring-diagram algebra is this subfield's default vocabulary, orthogonal to (not a scoop of) orchestration-is-zappa-szep-weld. 'Provable error suppression bounds' assessed as qualitative, not formally proved (original 07-20 read); confirmed again 2026-08-13 ('theorems stated with assumptions/operational takeaway but proofs not visible/complete', 'validation leans on a synthetic test harness (1813 tests) rather than proof') -- two independent passes reach the same low-rigor verdict, now well-corroborated. Banu is a two-paper recurring author in the categorical-agent-orchestration space (2605.12239 + this one), good enough evidence (2 papers, 3 months apart, same toolkit) to write the related-work/differentiator paragraph without further per-cycle monitoring, per 2026-07-20 dream note. | CORRECTION 2026-08-13: entry accidentally OVERWRITTEN (read-history truncated) during the 2026-08-13-browse2 session -- same incident as the three entries above. Repaired from 2026-07-20-browse2/07-21 reading logs. | DEDUP RECURRENCE (2026-10-01 browse): web-research agent re-surfaced this as the session's 'best new lead' on the agent-orchestration frontier; already deep-read and tracked since 2026-07-20, with the low-rigor verdict already established (2026-08-13 pass). Genuinely new detail added to locators: the explicit GRN-motif<->agentic-pattern table and the four NAMED scaling theorems (error amplification / sequential penalty / parallel acceleration / tool-density scaling) and Kripke-operator-from-wiring-diagram claim, none of which were itemised in the prior note (which only cited section numbers). Verdict unchanged: orthogonal to orchestration-is-zappa-szep-weld, qualitative rather than formally proved.",
+   "corrections": [
+    {
+     "date": "2026-10-01",
+     "note": "Re-surfaced by web-research agent as 'best new lead'; confirmed already deep-read since 2026-07-20. New locators added (GRN-motif table, 4 named scaling theorems, Kripke operators) -- itemises detail the terse original note lacked. No change to grade or the established low-rigor verdict."
+    },
+    {
+     "date": "2026-10-02",
+     "note": "Re-found via web agent's agent-orchestration sweep, framed (incorrectly) as 'best new lead' -- it is stale, already deep-read since 2026-07-20/21. No new content."
+    }
+   ]
   },
   "2603.07595": {
    "title": "Proceedings Eighth Applied Category Theory Conference 2026 (ACT 2026, Tallinn)",
@@ -1961,10 +2063,17 @@
    "year": 2026,
    "extraction": "agent-summary",
    "read": [
-    "memory/reading/2026-08-07-browse2.md"
+    "memory/reading/2026-08-07-browse2.md",
+    "memory/reading/2026-10-02.md"
    ],
    "locators": [],
-   "note": "Title-only hit from a Street-wreath/monad-DL sweep. Wreath product for OPERADIC categories -> Boardman-Vogt tensor product of colored operads via wreath of operadic Grothendieck constructions; connects to Berger's wreath-of-categories for n-fold loop spaces. Operad/loop-space flavour, off-target from the monad-distributive-law/Zappa-Szep wreath question. Not read beyond title."
+   "note": "Title-only hit from a Street-wreath/monad-DL sweep. Wreath product for OPERADIC categories -> Boardman-Vogt tensor product of colored operads via wreath of operadic Grothendieck constructions; connects to Berger's wreath-of-categories for n-fold loop spaces. Operad/loop-space flavour, off-target from the monad-distributive-law/Zappa-Szep wreath question. Not read beyond title.",
+   "corrections": [
+    {
+     "date": "2026-10-02",
+     "note": "Re-found via wreath-product near-neighbourhood keywords. Reconfirmed as operadic-category wreath product (Boardman-Vogt tensor), NOT the permutation-group/block-system sense used by h(A). Still agent-summary, not deep-read; no new content."
+    }
+   ]
   },
   "2507.18418": {
    "title": "Distributing Retractions, Weak Distributive Laws and Applications to Monads of Hyperspaces, Continuous Valuations and Measures",
@@ -2412,17 +2521,18 @@
    "title": "Skew brace extensions, second cohomology and complements",
    "authors": "Rathee, Yadav",
    "year": 2026,
-   "extraction": "agent-summary",
+   "extraction": "deep-read",
    "read": [
     "memory/reading/2026-08-12.md",
-    "memory/reading/2026-08-25.md"
+    "memory/reading/2026-08-25.md",
+    "memory/reading/2026-10-08.md"
    ],
    "locators": [
     "Thm 1.1 (Psi: H^2_Sb -> H^2_Gp homomorphism)",
     "Thm 3.5 (splitting criterion)",
     "Cor 4.4 (trivial H^2 => complement exists)"
    ],
-   "note": "arXiv agent, HTML full text (arxiv.org/html/2601.12371). Skew braces (A,+),(A,o) with lambda-action giving semidirect product Lambda_A=(A,+)><|_lambda(A,o); H^2_Sb(H,I) classifies non-split skew-brace extensions, homomorphism into ordinary group H^2, Schur-Zassenhaus-type complement theorems for coprime order. Structural cousin of MacBeth's planned [omega]in H^2 splitting obstruction for composing two update monads via a Zappa-Szep product P(x)P' -- same 'H^2 obstructs splitting/complementation' shape, different setting (skew braces/group extensions, not monoid actions on Cat). Explicitly does NOT discuss Zappa-Szep products or matched pairs (checked). Candidate citation for the ZS-composition PROVE write-up; compare Psi-homomorphism construction against MacBeth's own. 2026-08-25 browse: arXiv agent did a targeted citation check specifically for Bourn 2310.05568 / Gran-Sciandra 2411.19238 / Hopf-brace / semi-abelian-category terms in the accessible PDF text -- NONE found. Confirms this paper stays in the classical group-cohomology register and does not itself bridge to the semi-abelian side; strengthens (does not weaken) the disjointness reading underlying the HELD linear-ZS/Bourn front."
+   "note": "arXiv agent, HTML full text (arxiv.org/html/2601.12371). Skew braces (A,+),(A,o) with lambda-action giving semidirect product Lambda_A=(A,+)><|_lambda(A,o); H^2_Sb(H,I) classifies non-split skew-brace extensions, homomorphism into ordinary group H^2, Schur-Zassenhaus-type complement theorems for coprime order. Structural cousin of MacBeth's planned [omega]in H^2 splitting obstruction for composing two update monads via a Zappa-Szep product P(x)P' -- same 'H^2 obstructs splitting/complementation' shape, different setting (skew braces/group extensions, not monoid actions on Cat). Explicitly does NOT discuss Zappa-Szep products or matched pairs (checked). Candidate citation for the ZS-composition PROVE write-up; compare Psi-homomorphism construction against MacBeth's own. 2026-08-25 browse: arXiv agent did a targeted citation check specifically for Bourn 2310.05568 / Gran-Sciandra 2411.19238 / Hopf-brace / semi-abelian-category terms in the accessible PDF text -- NONE found. Confirms this paper stays in the classical group-cohomology register and does not itself bridge to the semi-abelian side; strengthens (does not weaken) the disjointness reading underlying the HELD linear-ZS/Bourn front. | RE-READ 2026-10-08 (arXiv agent, independently re-found via skew-brace-cohomology keyword search, full HTML read again): confirms prior extraction, adds framing via the 'good triplet of actions' (nu,mu,sigma) capturing additive/multiplicative interaction under extension -- structurally analogous to (but not named as) Zappa-Szep/matched-pair data. Extraction bumped agent-summary->deep-read given today's independent full-text confirmation. Another dedup near-miss (agent called it 'genuinely new (Jan 2026)') but flagged honestly at synthesis time before being treated as such."
   },
   "2102.01477": {
    "title": "Classification of fiber sequences with a prescribed holonomy action",
@@ -3460,12 +3570,13 @@
    "year": 2026,
    "extraction": "agent-summary",
    "read": [
-    "memory/reading/2026-08-22.md"
+    "memory/reading/2026-08-22.md",
+    "memory/reading/2026-10-01.md"
    ],
    "locators": [
     "search snippets only -- direct cybercat.institute post URL 404'd, content corroborated via two independent WebSearch snippets, not directly fetched"
    ],
-   "note": "Web agent, Cybercat Institute blog, 2026-02-20 (per snippets). Extends reverse-mode AD to first-class function types via the observation that the category of additive lenses is cartesian closed. Another instance of MacBeth's recurring closed-structure-on-lenses theme (cf. cont-ccc-not-lcc); not urgent, flagged for a possible transfer check against the directed-container cofunctor category's coclosure. CAUTION: not directly fetched, corroborate before citing formally."
+   "note": "Web agent, Cybercat Institute blog, 2026-02-20 (per snippets). Extends reverse-mode AD to first-class function types via the observation that the category of additive lenses is cartesian closed. Another instance of MacBeth's recurring closed-structure-on-lenses theme (cf. cont-ccc-not-lcc); not urgent, flagged for a possible transfer check against the directed-container cofunctor category's coclosure. CAUTION: not directly fetched, corroborate before citing formally. | 2026-10-01 browse (community agent): directly fetched cybercat.institute (blog listing) this session, corroborating the post's existence and core claim (CCC of additive lenses) beyond the prior search-snippet-only caution. Still recommend a direct single-post fetch (not just the blog index) before citing formally, but the CAUTION flag is now partially resolved."
   },
   "2603.22932": {
    "title": "Modules over a Hopf brace",
@@ -3650,12 +3761,13 @@
    "year": 2025,
    "extraction": "agent-summary",
    "read": [
-    "memory/reading/2026-08-21-browse3.md"
+    "memory/reading/2026-08-21-browse3.md",
+    "memory/reading/2026-10-08.md"
    ],
    "locators": [
     "abstract page"
    ],
-   "note": "2026-08-21 browse (arXiv agent). Neil's own recent paper (PI on the Kodamai grant), previously untracked. Builds a compositional algebra of approximate equilibria via selection functions, extends the approximation framework to Open Games, studies how approximation interacts with compositional structure. Directly in categorical-cybernetics/open-games territory adjacent to MacBeth's agent-orchestration/ZS-weld grant strand. Not yet full-text read. Worth a closer read and possibly a direct question to Neil about how it relates to the ZS-product orchestration model."
+   "note": "2026-08-21 browse (arXiv agent). Neil's own recent paper (PI on the Kodamai grant), previously untracked. Builds a compositional algebra of approximate equilibria via selection functions, extends the approximation framework to Open Games, studies how approximation interacts with compositional structure. Directly in categorical-cybernetics/open-games territory adjacent to MacBeth's agent-orchestration/ZS-weld grant strand. Not yet full-text read. Worth a closer read and possibly a direct question to Neil about how it relates to the ZS-product orchestration model. | RE-CONFIRMED 2026-10-08 via TWO independent routes in the same session (arXiv agent direct search, citation-trail agent reverse-citation of AAG 2005) -- real hub, not a search artifact. Still only abstract-level, still not full-text read. Given it keeps resurfacing from multiple angles and is authored by Neil directly, worth escalating to an actual read or a direct question to Neil rather than continuing to note-and-defer."
   },
   "2508.08293": {
    "title": "Topos Theory for Generative AI and LLMs",
@@ -3730,7 +3842,13 @@
     "'types denote containers (aka polynomial functors) and functions denote lenses' (explicit statement of lineage)",
     "worked example: Fin container via recursive presentation {} | {(), Fin}, binary min implemented without dependent types"
    ],
-   "note": "julesh.com blog post, 2026-06-29, full text read via WebFetch (HTML). Describes an actual programming language called Poly built on a computational lambda-calculus for a noncommutative graded monad with an algebraic theory based on stacks (linear variables, tensor/sequence/cartesian products, coproducts). Explicit, direct lineage from Abbott-Altenkirch-Ghani/Gambino-Hyland container theory -- a genuine live 'USE' of container/Poly theory in an implemented language, worth flagging under Neil's USE-first steer (feedback_neil_vcont_uses_first_notes.md). Does NOT mention directed containers, Zappa-Szép products, biproducts, or additive lenses/cartesian closure."
+   "note": "julesh.com blog post, 2026-06-29, full text read via WebFetch (HTML). Describes an actual programming language called Poly built on a computational lambda-calculus for a noncommutative graded monad with an algebraic theory based on stacks (linear variables, tensor/sequence/cartesian products, coproducts). Explicit, direct lineage from Abbott-Altenkirch-Ghani/Gambino-Hyland container theory -- a genuine live 'USE' of container/Poly theory in an implemented language, worth flagging under Neil's USE-first steer (feedback_neil_vcont_uses_first_notes.md). Does NOT mention directed containers, Zappa-Szép products, biproducts, or additive lenses/cartesian closure.",
+   "corrections": [
+    {
+     "date": "2026-10-08",
+     "note": "DEDUP RECURRENCE: web agent independently re-found this post (julesh.com, 2026-06-29) via a fresh 'open games frontier' search and flagged it as 'genuinely fresh material beyond the blocklisted dependent-optics posts' -- it is NOT new, already deep-read since 2026-08-26. No new content. Added to BLOCKLIST.md. The web agent DID correctly verify the specific promised follow-up post (DAdt(C)[K]=DLens(C)) still does not exist -- that check was useful even though the anchor post itself was a re-discovery."
+    }
+   ]
   },
   "vertechi-nn-layers-parametric-spans-slides": {
    "title": "Neural network layers as parametric spans (lecture slides)",
@@ -4035,9 +4153,10 @@
    "venue": "julesh.com blog, 2026-03-13",
    "extraction": "agent-summary",
    "read": [
-    "memory/reading/2026-08-28-browse2.md"
+    "memory/reading/2026-08-28-browse2.md",
+    "memory/reading/2026-10-01.md"
    ],
-   "note": "NEW, not previously tracked. Develops a sequent calculus (System L, a mu-mu-tilde-calculus variant) for a language with BOTH tensor (Dirichlet) and sequence/composition (odot/lhd) products on Poly -- natural-deduction rules for their interaction 'didn't work'; cointroduction/comatch rules for the sequence product are 'genuinely new'. Invokes Spivak-Srinivasan's duoidal/LDC result (units coincide => linearly distributive) to license a⊗(b⊳c)->(a⊗b)⊳c. This is the (⊗,◁) duoidal pair (Spivak-Srinivasan), distinct from MacBeth's own PROVED (⋉,⋊) duoidal/LDC result (ltimes-rtimes-duoidal-ldc-proved.md) -- no scoop, but a second independent real-world corroboration of an LDC structure on Poly's tensor zoo."
+   "note": "NEW, not previously tracked. Develops a sequent calculus (System L, a mu-mu-tilde-calculus variant) for a language with BOTH tensor (Dirichlet) and sequence/composition (odot/lhd) products on Poly -- natural-deduction rules for their interaction 'didn't work'; cointroduction/comatch rules for the sequence product are 'genuinely new'. Invokes Spivak-Srinivasan's duoidal/LDC result (units coincide => linearly distributive) to license a⊗(b⊳c)->(a⊗b)⊳c. This is the (⊗,◁) duoidal pair (Spivak-Srinivasan), distinct from MacBeth's own PROVED (⋉,⋊) duoidal/LDC result (ltimes-rtimes-duoidal-ldc-proved.md) -- no scoop, but a second independent real-world corroboration of an LDC structure on Poly's tensor zoo. | 2026-10-01 browse (community agent, direct fetch of julesh.com): confirms this post is the origin of Hedges' current full-time work at Glaive building 'structured tactics for Lean' on this exact (tensor, sequence-product) duoidal machinery -- a live, moving target rather than a one-off blog post. Re-surfaced as 'new, previously unseen' by this session's agent; it is not new (tracked since 2026-08-28), but the Glaive-employment detail is a genuinely new datum not in the prior note."
   },
   "hedges-2026-sequents-for-sequence-2": {
    "title": "Part II: Balancing the strangeness budget",
@@ -4968,14 +5087,16 @@
    "authors": "unrecorded (browse agent did not capture full author list)",
    "year": 2026,
    "venue": "arXiv, Oct 2025 / Feb 2026 update",
-   "extraction": "abstract",
+   "extraction": "deep-read",
    "read": [
-    "memory/reading/2026-09-20.md"
+    "memory/reading/2026-09-20.md",
+    "memory/reading/2026-10-04.md"
    ],
    "locators": [
-    "arXiv agent, WebFetch abstract-level read"
+    "arXiv agent, WebFetch abstract-level read",
+    "Sec 7: authors' own prior work (ref [18]) treated bifunctors R(X)Y = PX->Y for a polynomial functor P; Sec 7 of this paper generalises that polynomial case to bifunctor-valued hom-objects between algebras (arXiv agent, full HTML read 2026-10-04)"
    ],
-   "note": "Introduces 'dicodensity monads' generalizing codensity from functors to mixed-variant bifunctors, motivated by CPS/System-F continuation monads (Church encodings). Genuinely uses codensity machinery in a PL-semantics-adjacent way but connects to polymorphic lambda calculi/continuations, NOT to algebraic effects/effect-handler composability. 'Codensity' had zero prior footprint anywhere in MacBeth's memory before this session -- flagged as fresh vocabulary worth a dedicated narrower follow-up (codensity x effect-handler-composition specifically) next cycle. Found via 2026-09-20 browse (arXiv agent)."
+   "note": "Introduces 'dicodensity monads' generalizing codensity from functors to mixed-variant bifunctors, motivated by CPS/System-F continuation monads (Church encodings). Genuinely uses codensity machinery in a PL-semantics-adjacent way but connects to polymorphic lambda calculi/continuations, NOT to algebraic effects/effect-handler composability. 'Codensity' had zero prior footprint anywhere in MacBeth's memory before this session -- flagged as fresh vocabulary worth a dedicated narrower follow-up (codensity x effect-handler-composition specifically) next cycle. Found via 2026-09-20 browse (arXiv agent). | UPGRADED to deep-read 2026-10-04 (full HTML fetch, was abstract-only since 2026-09-20): confirmed a genuine, if narrow, polynomial-functor pedigree via the authors' ref [18]. Composability of effects gets only glancing treatment (Sec 7, distributive law combining list+maybe for error handling) -- this is NOT the effect-handler-composability paper MacBeth was hoping for, but the closest found so far on that specific cross-cut."
   },
   "web:lipics-stacs2026-codensity-duality": {
    "title": "Demystifying Codensity Monads via Duality",
@@ -5129,17 +5250,18 @@
    "note": "Section 6 proves substitution tensor and arithmetic product (Maia-Mendez) form a normal duoidal structure on Species. Second independent instance of MacBeth's own (ltimes,rtimes) duoidal pattern (ltimes-rtimes-duoidal-ldc-proved.md) -- worth a direct read to compare proof technique. Not yet deep-read; surfaced via community browse, not fetched directly. Found via 2026-09-21 browse (community agent, MO 461268 thread)."
   },
   "2206.06858": {
-   "title": "Monoidal Kleisli Bicategories and the Arithmetic Product of Coloured Symmetric Sequences",
+   "title": "Monoidal Kleisli bicategories and the arithmetic product of coloured symmetric sequences",
    "authors": "Gambino, Garner, Vasilakopoulou",
    "year": 2022,
+   "venue": "MSCS / Documenta Mathematica",
    "extraction": "agent-summary",
    "read": [
-    "memory/reading/2026-09-21.md"
+    "memory/reading/2026-10-05.md"
    ],
    "locators": [
-    "community agent via MathOverflow 461268 answer trail"
+    "citation-trail agent, Semantic Scholar references() call on ARXIV:2401.04242 -- title-only"
    ],
-   "note": "Modern abstract derivation of the arithmetic product via Kleisli bicategories, recovering Maia-Mendez as a special case (Sec 10). Same duoidal-pattern cluster as 1507.08710 -- see that entry. Found via 2026-09-21 browse (community agent, MO 461268 thread)."
+   "note": "THIN PROVENANCE, title-only. Coloured symmetric sequences = species with typed positions; 'arithmetic product' is a SECOND monoidal structure on species distinct from plethysm/composition. Potential contrast case for Lemma N/Theorem P0 (plethysm right-cancellation): does arithmetic product have its own cancellation theory that could sharpen or generalize the a_1!=0 criterion? Needs a real read before load-bearing."
   },
   "1302.3711": {
    "title": "The Boardman-Vogt tensor product of operadic bimodules",
@@ -5211,16 +5333,22 @@
    "authors": "Anagnostopoulou-Merkouri, Bailey, Cameron",
    "year": 2024,
    "venue": "Forum of Mathematics, Sigma (updated through 2025)",
-   "extraction": "abstract",
+   "extraction": "agent-summary",
    "read": [
-    "memory/reading/2026-09-27.md"
+    "memory/reading/2026-09-27.md",
+    "memory/reading/2026-09-28.md"
    ],
    "locators": [
-    "OB property: G-invariant equivalence relations commute => invariant-partition lattice is modular (orthogonal block structure)",
-    "PB property: lattice is distributive => poset block structure, Aut group = generalised wreath product indexed by a poset",
-    "embeds PB groups into generalised wreath products, extending the classical imprimitive-group-embeds-in-S_m wr S_k theorem"
+    "Prop 2.2: pairwise-commuting G-invariant equivalence relations => invariant-partition lattice is modular (OBS)",
+    "Thm 4.7: G wr H (imprimitive wreath product) has OB property iff both G and H do",
+    "Thm 4.13: direct product of primitive groups in product action is pre-primitive, hence OB",
+    "Thm 4.17: one-level 'unwreathing' induction — group on parts of the poset-minimal partition is the generalised wreath product over M\\{p}, G = N ⋊ H",
+    "Thm 4.19 (sharp criterion): for generalised wreath product over poset M with every G(m_i) primitive, PB property (distributive invariant-partition lattice) holds iff no two INCOMPARABLE m_i,m_j in M have G(m_i),G(m_j) both cyclic of the SAME PRIME order",
+    "Thm 4.21: embedding theorem generalising Krasner-Kaloujnine — canonical (non-obvious) recipe G(m) = {Phi in Lambda : Phi wedge Pi = Pi^-} at maximal such Phi; counterexample where naive stabiliser-of-a-part recipe fails (S_6 via outer automorphism, M={r,c} antichain, G(r)=G(c)=PGL(2,5), S_6 does not embed in PGL(2,5)^2)",
+    "Thm 4.24: poset-of-index-sets -> generalised-wreath-product map preserves intersections and inclusions",
+    "Prop 4.16 + example: regular G has distributive invariant-partition lattice iff G cyclic (Ore's theorem); but distributivity does NOT imply OB property in general (GL(n,q) on maximal subspace chains: Boolean/distributive lattice, non-commuting partitions -- explicit counterexample)"
    ],
-   "note": "Found independently and CORROBORATED by all three sibling browse agents (arXiv, community/MathOverflow-context, web-research) in the 2026-09-27 session -- strongest cross-agent convergence signal of that session. Closest published match to the invariant-block-system-lattice machinery underlying MacBeth's Theorem S' wreath-depth invariant (h_t, 𝔥(A), registry node theorem-S-prime-wreath-depth). PDF body text NOT machine-extractable this session (binary/FlateDecode stream defeated WebFetch across all three agents) -- extraction capped at 'abstract' (search-snippet + section-heading metadata only). UNCONFIRMED whether it names an explicit chain-height/depth invariant or a wreath-superadditivity law matching h_t; needs a real full-text read (try mcp__research__download_pdf + local pdftotext) before citing as prior art or as a generalization axis."
+   "note": "2026-09-27 entry capped at 'abstract' after 3 sessions of failed PDF extraction (WebFetch's in-tool PDF renderer choked on the stream). 2026-09-28 (in-world reading-log date; real session date 2026-09-09) arXiv browse agent broke through: mcp__research__download_pdf fetched the raw PDF cleanly, and /usr/bin/pdftotext (IS installed, contrary to the prior assumption) extracted all 2251 lines with no issues -- the failure was never in the PDF itself. Local files /home/agent/papers/2409.10461.pdf (+out.txt). Thm 4.19's dichotomy (incomparable + same-prime-cyclic breaks distributivity) is structurally analogous in flavour to MacBeth's own C_3-cyclic-residual necessity-failure result (registry thm3-necessity-fails-C3-residual / U-corner-closed-stabilizer-per-component) -- worth a direct technical comparison pass, not yet done. Thm 4.21's embedding construction is a candidate formalisation target for the 'wreath depth' invariant h(A) (registry theorem-S-prime-wreath-depth). Still extraction level 'agent-summary' per convention (an agent read it, not MacBeth directly) despite the depth -- promote to 'deep-read' only after MacBeth personally reads the extracted text."
   },
   "2606.03649": {
    "title": "Composition of Bispans of G-Sets and Plethysm",
@@ -5297,6 +5425,754 @@
     "memory/reading/2026-09-27.md"
    ],
    "note": "Found via citation-trail browse 2026-09-27 (cites Joyal directly, bridges polynomial/Gambino-Kock and analytic/Joyal sides via a 2-categorical framework: polynomial functors/monads as Kleisli objects, analytic functors/monads as Eilenberg-Moore objects for one substitution monad on Set-signatures). Flagged as a secondary reference for MacBeth's 'codensity=fullness ⊥ polynomiality=composition' crown result. Abstract-level only, not read in full."
+  },
+  "2604.16141": {
+   "title": "Generation of Generalised Wreath Products of Symmetric Groups",
+   "authors": "Jiaping Lu",
+   "year": 2026,
+   "venue": "arXiv (math.GR), submitted 2026-04-17",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-09-28.md",
+    "memory/reading/2026-10-02.md"
+   ],
+   "locators": [
+    "Thm 1.1: for finite poset (I,<=), |I|>=2, generalised wreath product F built from full symmetric groups (Sym(Delta_i)) (each Delta_i non-singleton) in natural actions, minimum number of generators d(F) = |I|",
+    "recovers known growth rate for iterated (chain-poset) wreath products of symmetric groups as a special case"
+   ],
+   "note": "Found as the SOLE reverse-citation of arXiv:2409.10461 (Semantic Scholar, citation-trail agent) and independently full-text-extracted by the arXiv agent same session (download_pdf+pdftotext, local /home/agent/papers/2604.16141.pdf). Direct sequel to 2409.10461's poset-indexed generalised-wreath-product machinery. d(F)=|I| is a candidate companion metric to MacBeth's wreath-depth invariant h(A) (registry theorem-S-prime-wreath-depth) -- d(F) counts poset size (levels+antichain width), h(A) counts chain length; not yet checked whether/how they interact on the S_2 wr ... wr S_2 towers already computed in the registry. Brand new, 0 citations as of this session.",
+   "corrections": [
+    {
+     "date": "2026-10-02",
+     "note": "Citation-trail agent independently re-derived this as the sole reverse-citation of Cameron 2409.10461 (already known route). No new content beyond existing agent-summary entry."
+    }
+   ]
+  },
+  "2502.01833": {
+   "title": "Dirichlet Species and Arithmetic Zeta Functions",
+   "authors": "John C. Baez, James Dolan",
+   "year": 2025,
+   "venue": "arXiv, v3 Dec 2025",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-09-28.md"
+   ],
+   "locators": [
+    "any species F yields a Dirichlet series F-hat via Day-convolution-adjacent machinery",
+    "arithmetic zeta functions of schemes over Z arise as Z_X-hat for a 'zeta species' Z_X (a Z_X-structure on a finite set = a semisimple commutative ring k plus a k-point of X)"
+   ],
+   "note": "arXiv browse agent read at abstract+intro level only (full PDF pulled to /home/agent/papers/2502.01833.pdf but not deeply read). Adjacent to the arithmetic-product duoidal thread (Garner-Lopez Franco 1507.08710, Gambino-Garner-Vasilakopoulou 2206.06858) via Day convolution, but comes at it from arithmetic-geometry motivation -- no explicit wreath-product/permutation-group or duoidal-category content found in the parts read. Worth a deeper read only if pursuing the number-theory angle on the arithmetic-product thread specifically; not urgent for the wreath-depth crux."
+  },
+  "2404.12326": {
+   "title": "Operad structures on the species composition of two operads",
+   "authors": "Imen Rjaiba",
+   "year": 2024,
+   "venue": "arXiv",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-09-28.md"
+   ],
+   "locators": [
+    "constructs three new operad structures on p o q where q is any positive operad and p is the NAP operad or a shuffle version of the magmatic operad (both non-symmetric/partially-structured), without assuming a distributive law between p and q"
+   ],
+   "note": "arXiv browse agent, full text pulled (/home/agent/papers/2404.12326.pdf). Background/scoop-check data point for MacBeth's C_3-partial-symmetry residual: confirms species-composition-with-partial-symmetry is an active research line in algebraic combinatorics (NAP/Pre-Lie/magmatic operads), but addresses construction of NEW operad structures on a composite, not the polynomiality/composition-closure necessity question MacBeth is asking. NOT a scoop -- different question, cite as related-work context only."
+  },
+  "2604.10336": {
+   "title": "Species, Symmetric Functions, and Kronecker Product",
+   "authors": "unrecorded (see arXiv page before citing)",
+   "year": 2026,
+   "venue": "arXiv, Apr 2026",
+   "extraction": "agent-summary",
+   "read": [],
+   "locators": [],
+   "note": "THIN PROVENANCE -- title/topic only, not fetched beyond a search snippet by the arXiv browse agent 2026-09-28 (reading-log date; real session 2026-09-09). New symmetric-function bases from species indexed by cycle-structure partitions, closed under Kronecker product. Species-flavoured but about Kronecker/Hadamard product, NOT arithmetic product or duoidal substitution -- noted only to prevent re-investigation, not a lead."
+  },
+  "2605.01182": {
+   "title": "Spectral Operadic Calculus: Norm-Analytic Functor Calculus",
+   "authors": "unrecorded (see arXiv page before citing)",
+   "year": 2026,
+   "venue": "arXiv",
+   "extraction": "agent-summary",
+   "read": [],
+   "locators": [],
+   "note": "THIN PROVENANCE, abstract-level only. Goodwillie-calculus-flavoured: derivatives of an analytic functor compose via 'operadic plethysm', convergence/error bounds for Taylor towers. Vocabulary overlap ('operadic plethysm', 'analytic functor') with MacBeth's Thm P/P0 but addresses quantitative convergence, NOT the full-vs-partial-symmetry composition-closure question. Dead end for the C_3-residual scoop-check, recorded to prevent re-investigation."
+  },
+  "2510.15348": {
+   "title": "Orbit categories (Noetherianity of discrete representations)",
+   "authors": "unrecorded (see arXiv page before citing)",
+   "year": 2025,
+   "venue": "arXiv",
+   "extraction": "agent-summary",
+   "read": [],
+   "locators": [],
+   "note": "THIN PROVENANCE, abstract-level only. Surface keyword overlap with 'permutation groups' but no connection to polynomiality/composition-closure found by the arXiv browse agent 2026-09-28 (reading-log date). Dead end, recorded to prevent re-investigation."
+  },
+  "hedges-2025-dependent-optics-ii": {
+   "title": "Dependent optics II: Optics via forcing costates",
+   "authors": "Jules Hedges",
+   "year": 2025,
+   "venue": "cybercat.institute blog, 2025-10-16",
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-01.md",
+    "memory/reading/2026-10-06.md"
+   ],
+   "locators": [
+    "billed as resolving a multi-year effort to unify dependent lenses with general monoidal optics via a 'forcing costates' framework",
+    "K: C^op -> Set lax symmetric monoidal presheaf; category of elements ∫K; Copara_{∫K}(C) parametrised-morphism bicategory; quotient 1-cells by pi_0 (connected components) -> C[K]",
+    "Adt(C)[hom] ≅ Optic(C) for Adt(C)=CxC^op, K=hom (recovers ordinary optics via forcing costates rather than the coend formula)",
+    "mixed span C<-L M->R D: analogous K gives (CxD^op)[K] ≅ Optic_M(C,D); cartesian case collapses to known Lens(C) ≅ Adt(C)[hom]",
+    "explicitly frames dependent case (DAdt(C)[K] ≅ DLens(C)) as OPEN, target of a future post -- not delivered in this paper"
+   ],
+   "note": "Found by community browse agent, listing-summary level only (not the full post body). Flagged as likely-relevant background for MacBeth's (lhd,rhd) Dialectica-tensor / Fam(C^op) dependent-lens machinery, since it is explicitly about reconciling DEPENDENT lenses (where MacBeth's Vec-indexed constructions live) with the general optics framework. Not yet read in full; a read-next candidate before any future Fam(C^op)-as-optics writeup, not urgent. | UPGRADED to deep-read 2026-10-06 (web agent full read, prior 2026-10-01 pass was agent-summary/abstract-level). Dependent optics construction itself (DAdt/DLens) confirmed still open as of this post -- nothing to fold into the Cont(Cont) question yet, but the forcing-costate mechanism (∫K, pi_0 of Copara) is a candidate general tool worth comparing against the Cont(cod) fibration story."
+  },
+  "hedges-2025-bidirectional-typechecking-dependent-lenses": {
+   "title": "Bidirectional Typechecking with Dependent Lenses",
+   "authors": "Jules Hedges",
+   "year": 2025,
+   "venue": "cybercat.institute blog, 2025-02-24",
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-01.md",
+    "memory/reading/2026-10-06.md"
+   ],
+   "locators": [
+    "rebuilds a bidirectional typechecker as a 'Kleene star on containers' using dependent lenses only, companion to a Jan 2025 post doing the same construction as a plain optic",
+    "Kleene-star-on-containers = a free-monoid-of-a-container gadget, used operationally for recursive type-context traversal",
+    "Star : Container -> Container defined explicitly as 'the free monoid on o' (o = container composition); Done (terminal) | More (pose question, get answer, continue via a DEPENDENT continuation container chosen by the answer)",
+    "correspondence table: vanLaarhoven-Traversal <-> List-monad container-lens, Affine-Traversal <-> Maybe-monad, Monadic-Traversal <-> Kleene-star",
+    "typechecker as lens: TCF =%> Star TCF; loop: a =%> Star a -> Star a =%> CUnit"
+   ],
+   "note": "Found by community browse agent, listing-summary level. The 'Kleene star on containers' construction (free monoid of a container) is a genuinely new-to-MacBeth container-theoretic gadget -- potentially reusable wherever an iterated/self-similar container is needed (e.g. wreath-depth or nested-molecule bookkeeping in the M-container line, or the Cont(Cont) iteration question). Worth a real read if that connection is pursued; not yet load-bearing for anything. | UPGRADED to deep-read 2026-10-06 (web agent full read, prior 2026-10-01 pass was agent-summary). Star's continuation is answer-driven/branching (non-linear), unlike MacBeth's own O'Neill free-monoid-on-linear-container = tensor-algebra result (oneill-free-monad-tensor-algebra-linear-container.md) -- a concrete worked example for what the INDEXED/dependent generalization of that theorem should look like. Confirms and sharpens reference_readnext_debt_discharged_cameron_lu_videla.md ('Videla Kleene=free <|-monoid')."
+  },
+  "2105.03080": {
+   "title": "Systems of Imprimitivity for Wreath Products",
+   "authors": "unknown (J. Algebra 2021)",
+   "year": 2021,
+   "venue": "Journal of Algebra",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-02.md"
+   ],
+   "locators": [
+    "Studies irreducible imprimitive subgroups of GL(n) and their systems of imprimitivity (invariant vector-space partitions)",
+    "Main result: every system of imprimitivity refines to a nonrefinable one; for wreath products this finest system is generically UNIQUE, except one exceptional family (dimension 1, even size, specific group-theoretic alignment)"
+   ],
+   "note": "Found via community agent (WebSearch snippet level, arXiv abstract page confirmed) during the 2026-10-02 pivot-browse (Path 1/6 + wreath-depth near-neighbourhood, per 2026-10-01 dream's saturation call). Genuinely new to sources.json -- not a dedup. Relevance: gives a uniqueness result for the FINEST refinement of an imprimitivity chain in the linear/module setting, one level over MacBeth's own h(A)=sup-over-block-system-chains wreath-depth invariant (registry theorem-S-prime-wreath-depth, existence/sup only, no uniqueness claim). Not yet deep-read; flag for full read if a future proof needs 'the' maximal chain rather than just its length."
+  },
+  "2604.09354": {
+   "title": "Enriched coalgebras are sometimes comonadic",
+   "authors": "Flynn-Connolly, O.",
+   "year": 2026,
+   "venue": "arXiv",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-03.md"
+   ],
+   "locators": [
+    "For semicartesian V-category C and unital operad P, gives conditions for the enriched P-coalgebra endofunctor to be a V-comonad with co-Eilenberg-Moore category equiv. to enriched P-coalgebras",
+    "Recovers comonadic description of C_n-coalgebras (little n-discs operad) in pointed spaces; recovers one direction of Foxs theorem"
+   ],
+   "note": "Found 2026-10-03 browse (arXiv agent). Structural cousin to Ahman-Chapman-Uustalu When is a Container a Comonad? but at the general enriched-operad level, no container/polynomial-functor/Poly vocabulary anywhere. Context only, not currently citable as related work."
+  },
+  "2108.00390": {
+   "title": "Delta lenses as coalgebras for a comonad",
+   "authors": "Clarke, B.",
+   "year": 2021,
+   "venue": "arXiv",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-03.md"
+   ],
+   "locators": [
+    "Claims to resolve a previously-open delta-lens <-> comonad-coalgebra correspondence question"
+   ],
+   "note": "Surfaced 2026-10-03 browse (community agent, search-snippet level ONLY -- not fetched/read in depth). Close in spirit to directed-container-as-comonad (Ahman-Uustalu); worth checking whether it cites/relates to Ahman-Uustalu directly. THIN PROVENANCE -- deep-read before any load-bearing use."
+  },
+  "trailofbits-2026-state-divergence-provenance-blockchain": {
+   "title": "State divergence enables unauthorized access",
+   "authors": "Trail of Bits",
+   "year": 2026,
+   "venue": "blog.trailofbits.com, 2026-08-25",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-03.md"
+   ],
+   "locators": [
+    "Provenance Blockchain: Marker modules stale supply field vs Bank modules live supply; auth check degenerates to 0==0->true, granting free admin/mint/withdraw",
+    "ToB framing verbatim: two independently-correct components...created a security failure through incorrect interaction...divergent representations of the same logical value enabled a trivial bypass when composed"
+   ],
+   "note": "Found 2026-10-03 browse (web agent), Path 5 native-venue pivot (smart-contract security blog, not Catala). Near-perfect small worked example for the failed distributive law thesis (two functors individually lawful, no natural transformation forcing agreement, composite auth predicate silently factors through the wrong one) -- no category theory in the source, MacBeths reframing entirely. Best candidate for a Path 5 toy-example case study, ranked #1 by the web agent over the Uniswap hooks material for cleanliness/size."
+  },
+  "trailofbits-2026-uniswap-v4-hooks": {
+   "title": "Building secure Uniswap v4 hooks",
+   "authors": "Trail of Bits",
+   "year": 2026,
+   "venue": "blog.trailofbits.com, 2026-07-30",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-03.md",
+    "memory/reading/2026-10-07.md"
+   ],
+   "locators": [
+    "Pattern #3 accounting bugs bypassing settlement checks: Bunni exploit (.4M) -- PoolManager delta-zero check and hooks internal ledger each locally sound, composite unsound",
+    "Pattern #4 state temporal misalignment between beforeSwap/afterSwap callbacks",
+    "Pattern #7 cross-callback shared-state mutation across pools (reentrant/concurrent calls)"
+   ],
+   "note": "Found 2026-10-03 browse (web agent), Path 5 native-venue pivot. Richer than the state-divergence post (multiple failure modes, real dollar losses, citable postmortem-style writeup) -- candidate #2 for a Path 5 case study. Patterns #3/#4/#7 are directly reframable as composability/distributive-law failures between independently-verified components; #2 (accepting arbitrary pool identities) is structurally close to MacBeths admissibility/generality gate questions.",
+   "corrections": [
+    {
+     "date": "2026-10-07",
+     "note": "Re-found via web agent Path 5 search, reported as one of 'two solid new finds' -- already tracked since 2026-10-03. No new content beyond what's already recorded (Cork ~$12M Pattern 1 mentioned by name this time, folded into existing note). Third strong candidate for BLOCKLIST addition."
+    }
+   ]
+  },
+  "ncategorycafe-2017-distributive-laws-myers-comment": {
+   "title": "Distributive Laws (guest post by Ze Wong) -- David Myers comment on Zappa-Szep products",
+   "authors": "Wong, Z. (post); Myers, D. (comment)",
+   "year": 2017,
+   "venue": "golem.ph.utexas.edu (n-Category Cafe)",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-03.md"
+   ],
+   "locators": [
+    "Myers comment: Zappa-Szep products of groups correspond to distributive laws between action monads -- direct product = twist map (h,k)->(k,h), semidirect product = automorphism action phi:K->Aut(H); group-ring R[G] also arises as a distributive law between group and ring structure",
+    "Wong (post): flags an unexplored connection between distributive laws and factorization systems, admitting limited understanding"
+   ],
+   "note": "Found 2026-10-03 browse (community agent). Independent corroborating source for ZS-product = distributive-law outside the Ahman-Uustalu/CS literature (second citable source alongside the already-logged Ahman-Uustalu attribution). Wongs open factorization-systems question is adjacent to MacBeths already-proved pairwise ZS criterion <=> wide D factorization result -- could be cited as a related open problem in a future writeup."
+  },
+  "2509.26197": {
+   "title": "Codensity Monads via Density and Duality",
+   "authors": "Lenke, Wittrock, Milius, Urbat",
+   "year": 2025,
+   "venue": "arXiv, STACS 2026 mirror titled 'Demystifying Codensity Monads via Duality'",
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-04.md",
+    "memory/reading/2026-10-05.md"
+   ],
+   "locators": [
+    "arXiv agent, WebFetch abstract-level read",
+    "Theorem 4 ('Core Result'): codensity setting F=R.G^op.E^-1 (E equivalence, G dense, L-|R dual adjunction) => Cod(F) exists, pointwise, isomorphic to RL",
+    "Ultrafilter monad = codensity of Set_f->Set; filter monad = codensity of forgetful U:MSL_f->Set (Thm 10); canonical extension monad via Boolean algebras (Thm 8); finite powerset EM(P_f)=JSL; Vietoris (Sec 6), Giry (Sec 8)"
+   ],
+   "note": "Unifying method for codensity presentations: relates the presenting functor to a dense functor via a categorical duality between source/target categories, reads off a presentation 'for free'. Derives new codensity presentations for the filter monad, lower Vietoris monad, Stone-Cech compactification, canonical extension monad, expectation monad (Set); simplifies known ultrafilter/Giry presentations. Candidate anchor for the codensity thread opened 2026-09-20 (Path 4, THM2 fullness<->codensity). No container/effect-handler-composability content visible at abstract depth -- full HTML read is the natural next step if this becomes load-bearing. | DEEP-READ 2026-10-05 (arXiv agent, full HTML v3 4-Aug-2026 -- paper revised twice since the 10-04 abstract read, 266KB->78KB): confirmed ABSENT (not just unmentioned) -- no Ran_M M fullness-criterion theorem, no container/effect-handler-composability content, no writer/reader/distribution examples, zero mention of polynomial functors/containers. VERDICT: not useful for the THM2 fullness<->codensity front (neil-k-container-monad-lift-is-fam-kleisli); orthogonal machinery (presents known monads as codensity monads of known dense functors, doesn't test an arbitrary functor for fullness/codensity). Keep only as a technique reference (Theorem 4, construct-don't-test) if ever building a codensity presentation from scratch."
+  },
+  "2511.05739": {
+   "title": "Handling Higher-Order Effectful Operations with Judgemental Monadic Laws",
+   "authors": "Zhixuan Yang, Nicolas Wu",
+   "year": 2025,
+   "extraction": "abstract",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "arXiv agent, WebFetch abstract page (abstract + summarized full-text description, not raw HTML)"
+   ],
+   "note": "Core calculus for handlers of higher-order effectful operations; handlers carried by lawless raw monads while computation judgements satisfy monadic laws judgementally. Proves canonicity/parametricity for the recursion-free fragment via realizability semantics, synthetic Tait computability, ⊤⊤-lifting. Fresh PL-semantics reference for higher-order effect composition (Path 4); no mention of codensity, containers, or polynomial functors."
+  },
+  "2608.25512": {
+   "title": "A Programming Paradigm for Spatiotemporal Composability",
+   "authors": "Yifan Shi, Wei Zhang, Tianyi Cui",
+   "year": 2026,
+   "extraction": "abstract",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "arXiv agent, WebFetch on /abs/ only"
+   ],
+   "note": "92pp systems/PL-engineering paper (Cordis framework), lifts 'effect'/'coeffect' into runtime mechanisms (revertible effects, reactive coeffects) via a single 'context type'. Vocabulary-parallel to MacBeth's effect-coeffect/reverse-entwining thread (effect-coeffect-arrows-reverse-entwining.md) but no visible distributive-law/entwining-style categorical semantics at abstract depth -- flagged only so it isn't re-investigated as if it were theoretical. A full-text pass would be needed to rule out a hidden formal-semantics section."
+  },
+  "2401.04242": {
+   "title": "Automata and coalgebras in categories of species",
+   "authors": "Ivan Di Liberti / Loregian (citation-trail agent recorded surname 'Loregián')",
+   "year": 2025,
+   "venue": "Math. Structures Comput. Sci. 2025 (arXiv 2024)",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "citation-trail agent, reference-list pull only (not full text): confirmed direct citations of Gambino-Kock 0906.4931, BLL 1997 book, Joyal 1986 'Foncteurs analytiques et especes de structures', Joyal 1987 'Une combinatoire du plethysme'"
+   ],
+   "note": "Found as a reverse-citation of Gambino-Kock -- a genuine hub linking that anchor to BLL/Joyal plethysm literature. Builds 'differential 2-rigs' generalizing species' derivative/homogeneity adjunction L-|d-|R to a Mealy-automata/coalgebra setting. Strongest new lead of the 2026-10-04 session for the THM3 (composition-polynomiality) front -- flagged for a dedicated full read if that PROVE thread resumes; may bear on Theorem P0's a_1<>0 sharpness condition. NOT YET READ beyond its reference list -- do not treat any claim about its internal results as load-bearing until deep-read."
+  },
+  "2403.06911": {
+   "title": "Homotopical commutative rings and bispans",
+   "authors": "Cnossen et al.",
+   "year": 2024,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "citation-trail agent, title/context from Gambino-Kock reverse-citation list only"
+   ],
+   "note": "Cousin of the already-tracked Cornelius bispan/plethysm paper (2606.03649, cleared as a contrast-cite not a scoop); part of the same bispan-formalism cluster applying to plethysm/composition questions. Title-only -- unread beyond that."
+  },
+  "2409.19176": {
+   "title": "Polynomial Universes in Homotopy Type Theory",
+   "authors": "Aberlé, Spivak",
+   "year": 2024,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "citation-trail agent, title/context from Gambino-Kock reverse-citation list only"
+   ],
+   "note": "Title-only -- unread. Surfaced as a 2024 reverse-citer of Gambino-Kock; not yet checked for overlap with MacBeth's polynomial-comonad or Vec-collapse work."
+  },
+  "2411.09950": {
+   "title": "Polynomials in homotopy type theory as a Kleisli category",
+   "authors": "Harington, Mimram",
+   "year": 2024,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "citation-trail agent, title/context from Gambino-Kock reverse-citation list only"
+   ],
+   "note": "Title-only -- unread. Surfaced as a 2024 reverse-citer of Gambino-Kock; the 'Kleisli category' framing is worth a spot-check against MacBeth's M-Cont=Fam(Kl(M)^op) result (neil-k-container-monad-lift-is-fam-kleisli.md) for accidental overlap, though this is HoTT-side and likely orthogonal."
+  },
+  "2605.25207": {
+   "title": "Decoupling Reentrancy Protection from Smart Contract Implementation Logic",
+   "authors": "Joshi, Golab",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "web-research agent, abstract-level read"
+   ],
+   "note": "'Sentinel': proxy-layer reentrancy guard explicitly framed as separating a cross-cutting protection concern from business logic (dual-mode internal guard / external lock registry); reports ~$80M/yr lost to reentrancy. Readable as an engineering analogue of wrapping a functor in a guard comonad at the composition boundary -- candidate Path-5 Impact illustration ('fix that respects compositional structure' vs ad hoc patching)."
+  },
+  "2601.06914": {
+   "title": "Towards Compositional Generalization in LLMs for Smart Contract Security: Reentrancy Case Study",
+   "authors": "Zhou, Wei, Qi, Wu, Zhang",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-04.md"
+   ],
+   "locators": [
+    "web-research agent, abstract-level read"
+   ],
+   "note": "Not category theory -- decomposes reentrancy detection into atomic sub-tasks (external call, state update, execution order, data dependency, guard absence) and argues LLMs fail because they don't compose these factors correctly. Independent ML-side confirmation that reentrancy is analyzed as a composition-of-factors problem, echoing MacBeth's callback-ordering-as-interchange-failure framing (security-audit-bugs-are-failed-distributive-laws.md)."
+  },
+  "2607.12683": {
+   "title": "Symmetric 2-Rigs: Coexponentiability and Cartesian Closure",
+   "authors": "Anel, Fiore, Gambino",
+   "year": 2026,
+   "venue": "arXiv preprint (14 Jul 2026)",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-05.md"
+   ],
+   "locators": [
+    "arXiv agent, WebFetch full HTML read"
+   ],
+   "note": "Characterizes coexponentiable objects in RIG (cocartesian 2-category of symmetric 2-rigs) as deformation retracts of presheaf categories; applies to subcategories of combinatorial species and symmetric operads. Direct continuation of the plethysm/species/differential-2-rigs line Loregian 2401.04242 sits in (Fiore co-architects differential 2-rigs, cf. 2103.00938). Relevant to THM3 Lemma N plethysm-cancellation (Theorem P0) -- 2-rigs are the natural home for 'differentiate a species functor' arguments. Worth a proper read if the plethysm/species front reopens; check whether cartesian closure of species subcategories bears on the wreath-depth/stabilizer machinery."
+  },
+  "2103.00938": {
+   "title": "Differential 2-Rigs",
+   "authors": "Loregian, Trimble",
+   "year": 2021,
+   "venue": "arXiv preprint",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-05.md"
+   ],
+   "locators": [
+    "citation-trail agent, Semantic Scholar references() call on ARXIV:2401.04242 -- title/reference-context only, NOT fetched itself"
+   ],
+   "note": "THIN PROVENANCE: found via Semantic Scholar reference-list traversal of Loregian 2401.04242, never fetched or read directly -- title and reference-context only. THE primary/foundational paper defining the L-|d-|R differential-2-rigs adjunction that 2401.04242 builds its species/coalgebra machinery on top of. If an adjoint-theoretic explanation for THM3/Lemma N plethysm right-cancellation (Theorem P0, a_1!=0 sharpness) exists, it more plausibly lives HERE than in the 2024 follow-up. Read before re-reading 2401.04242 if the plethysm front reopens -- needs a real read before load-bearing."
+  },
+  "1612.03678": {
+   "title": "Relative pseudomonads, Kleisli bicategories, and substitution monoidal structures",
+   "authors": "Fiore, Gambino, Hyland, Winskel",
+   "year": 2016,
+   "venue": "arXiv preprint",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-05.md"
+   ],
+   "locators": [
+    "citation-trail agent, Semantic Scholar references() call on ARXIV:2401.04242 -- title-only"
+   ],
+   "note": "THIN PROVENANCE, title-only. Describes species substitution (=plethysm) via relative pseudomonads/Kleisli bicategories -- a structural/bicategorical account of the exact operation THM3/Lemma N is about (plethysm right-cancellation, Theorem P0). Needs a real read before load-bearing."
+  },
+  "2605.04516": {
+   "title": "Enhanced 2-categories of models of sketches as enhanced 2-categories of algebras over monads",
+   "authors": "Joanna Ko",
+   "year": 2026,
+   "venue": "arXiv preprint",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-05.md"
+   ],
+   "locators": [
+    "citation-trail agent, Semantic Scholar citations() call on ARXIV:2401.04242 -- title-only, the sole reverse citation found"
+   ],
+   "note": "THIN PROVENANCE, title-only. Sole reverse citation of Loregian 2401.04242 found so far. Title indicates pure 2-category/sketch-theory machinery (models of sketches as algebras over monads) with no species/plethysm indication -- likely a tangential citation in a general categorical-algebra context, not a build-on of the differential-2-rigs construction. Low priority; skim only if other plethysm leads dry up."
+  },
+  "2605.11903": {
+   "title": "On quiver skew braces, their ideals and products",
+   "authors": "Davide Ferri",
+   "year": 2026,
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-06.md",
+    "/home/agent/papers/2605.11903.pdf",
+    "/home/agent/papers/2605.11903.txt",
+    "memory/questions/quiver-skew-braces-groupoid-zs-base.md"
+   ],
+   "locators": [
+    "quiver skew braces ('skew bracoids') equivalent to braided groupoids (groupoid generalization of skew braces)",
+    "unlike connected groupoids, quiver skew braces do NOT decompose as loop-group x vertex-set -- strictly richer theory",
+    "two semidirect product constructions given (Brown-style, Bourn-Janelidze categorical style)",
+    "Def 1.8 quiver skew brace = groupoid + per-star group +_lambda, compat (5) a(b+c)=ab-a+ac",
+    "Prop 1.9 braided groupoid=QSKB, a->b := -a+ab (left action)",
+    "Def 2.1 ideal: normal subgpd + St_I additive subgroup + (8) additive normality + (9) a->St_I(t(a)) subset St_I(s(a)) (rightharpoonup-invariance)",
+    "Def 4.2 completely prunable = G-loop-bundle is an ideal; Cor 4.8 => G = G/Gloop |><| Gloop",
+    "Example 4.1 K_{2,3}: [S2||2]->[S2||3]=[S2||1] moves a loop off loops; (9) fails; K_{2,3} simple (no nontrivial ideals), smallest non-prunable",
+    "Lemma 4.6 completely prunable + connected => groupoid section extends to QSKB section",
+    "Remark 3.20 invites purely group-theoretic reformulation of the obstruction"
+   ],
+   "note": "Found 2026-10-06 browse (community agent), near-neighbourhood keyword (Zappa-Szep/matched-pair generalization to groupoid base). Abstract-level only -- no explicit Zappa-Szep/matched-pair statement confirmed in the parts read; would need full-text check before load-bearing. Directly answers SEED.md's own open-question framing (does ZS/matched-pair machinery generalize to a groupoid/inverse-semigroup base -- directed containers over such a base?) but from the group-theory side, not yet connected to directed containers. | 2026-09-16 DEEP-READ (full PDF): used in proof 2026-09-16-ferri-prunability-vs-zs-holonomy.tex. Prunability obstruction = additive/rightharpoonup loop-subgroup condition, SEPARATE from my ZS composition holonomy (always 0 for full loop bundle)."
+  },
+  "fiore-gambino-hyland-2024-monoidal-bicategories-differential-linear-logic": {
+   "title": "Monoidal bicategories, differential linear logic, and analytic functors",
+   "authors": "Fiore, M., Gambino, N., Hyland, M.",
+   "year": 2024,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-06.md"
+   ],
+   "locators": [
+    "S2 id 8c4024628efe9340da268ca42994c3dd0c27cbea (no arXiv ID located)"
+   ],
+   "note": "Found 2026-10-06 browse (citation-trail agent), via reference list of Anel-Fiore-Gambino 'Symmetric 2-rigs' (2607.12683, already deep-read). Title-only signal: links analytic functors (species-with-symmetry, the polynomial/species boundary central to THM3/Lemma N) directly to differential linear logic. THIN PROVENANCE -- no arXiv ID found via Semantic Scholar metadata (get_paper 429'd), only the S2 internal id. Locate the arXiv ID (if one exists) before treating as citable; do not load-bear on this entry yet."
+  },
+  "gambino-garner-vasilakopoulou-2025-commuting-tensor-products": {
+   "title": "A unified treatment of commuting tensor products of categories, operads, symmetric multicategories and their bimodules",
+   "authors": "Gambino, N., Garner, R., Vasilakopoulou, C.",
+   "year": 2025,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-06.md"
+   ],
+   "locators": [
+    "S2 id b9789135bf41e069328bc503c8f1a0a25dfb6c45 (no arXiv ID located)"
+   ],
+   "note": "Found 2026-10-06 browse (citation-trail agent), via reference list of Anel-Fiore-Gambino 'Symmetric 2-rigs' (2607.12683). Title-only: operad/bimodule tensor products, adjacent to the already-tracked arithmetic-product line (2206.06858, mo:461268, 2502.01833). THIN PROVENANCE -- no arXiv ID found; get_paper 429'd. Possible bridge between the arithmetic-product duoidal thread and the plethysm-cancellation (Theorem P0) front -- worth checking once an arXiv ID is located."
+  },
+  "aristote-tarantino-2026-profunctorial-algebras": {
+   "title": "Profunctorial algebras",
+   "authors": "Aristote, Q., Tarantino, U.",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-06.md"
+   ],
+   "locators": [
+    "S2 id a58d094a45273e7cb7d35eb8aa67c3fc485f880a (no arXiv ID located)"
+   ],
+   "note": "Found 2026-10-06 browse (citation-trail agent), reverse citation of Fiore-Gambino-Hyland-Winskel 1612.03678. Title only -- plausible tangential relevance to species-as-profunctors but no abstract read (get_paper 429'd). Low priority, not yet load-bearing."
+  },
+  "venus-protocol-2026-donation-attack": {
+   "title": "The Venus Protocol donation attack: how a Compound fork's getCashPrior() let an attacker bypass supply caps",
+   "authors": "postmortem (multiple outlets)",
+   "year": 2026,
+   "venue": "dev.to (ohmygod), cross-checked halborn.com, darknavy.org, quillaudits.com; incident 2026-03-15",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-06.md"
+   ],
+   "locators": [
+    "getCashPrior() reads raw ERC20 balanceOf instead of internally-tracked mint ledger",
+    "attacker transfer()s tokens directly into vToken contract, bypassing mint(); exchange rate inflates 3.81x, bypasses supply cap",
+    "~$14.9M extracted via looped borrow->swap->donate->borrow, $2.18M bad debt left"
+   ],
+   "note": "Found 2026-10-06 browse (web agent), Path 5 native-venue frontier. Fourth state-divergence witness alongside Provenance/GMX/Solv, see connections/security-audit-bugs-are-failed-distributive-laws.md (shape 1) -- but a distinct sub-family: 'public ERC20 channel' vs 'protocol accounting channel' on the same pot, not two modules or two entry points into one component. ERC-4626-style donation/share-inflation attack family, currently active; maps better onto OWASP-2026's access-control-drift ranking than classic reentrancy."
+  },
+  "glaive-research-2026-bootstrapping-data-structures": {
+   "title": "Bootstrapping Data Structures From Fixpoints of Containers",
+   "authors": "unknown (glaive-research.org)",
+   "year": 2026,
+   "venue": "glaive-research.org, 2026-03-18",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-06.md"
+   ],
+   "locators": [
+    "Nat = Fix(1+-), List = Fix(lambda x. 1+a.x)",
+    "Fin n derived by projecting POSITIONS out of Fix(ListF I) (lists over the trivial container), relates to indexed predicates like Any"
+   ],
+   "note": "Found 2026-10-06 browse (web agent), while chasing the CyberCat 'Kleene star on containers' lead. Small clean worked example of 'positions of a fixpoint container = an indexed type for free', same flavour as indexed-containers folklore (Altenkirch-Ghani-Hancock-McBride). Not load-bearing, a toy-example reference only."
+  },
+  "2608.07380": {
+   "title": "A direction functor approach to the cohomology of small categories",
+   "authors": "Ambra, Duvieusart, Montoli",
+   "year": 2026,
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-07.md",
+    "/home/agent/papers/2608.07380.pdf"
+   ],
+   "locators": [
+    "Def/Thm 2.2.5: Cat_B (small categories on fixed object set B) is S-Mal'tsev relative to Schreier points (split epis with chosen section)",
+    "Thm 2.3.3 + Cor 2.3.5: cohomology H^{n+1}_C(A)=pi_0 d_n^{-1}(A) built as pi_0 of fibres of the n-th direction functor coincides with Hoff-Golasinski cohomology of small categories",
+    "Section 4 cochain complex COINCIDES with the Baues-Wirsching / Hoff-Golasinski complex of a small category with natural system of coefficients D(f)=A(cod f)",
+    "REDUCTION (computed, MacBeth): for a connected groupoid G with vertex group pi, H^2_{Cat_B}(G;A) =~ H^2(pi;M) -- BW/Hoff cohomology is equivalence-invariant, connected groupoid ~ B(pi); computation = finite group cohomology (bar complex / norm map for cyclic pi)"
+   ],
+   "note": "Found 2026-10-07 browse (arXiv agent, full HTML read via arxiv.org/html/2608.07380). Independently-motivated general cohomology theory for Cat_B, the exact ambient category where directed containers live (dcont-cat-convergence-hub). No explicit link to directed containers/polynomial comonads/Zappa-Szep drawn by the authors (checked directly, none present) -- NOT a scoop of g-obstruction-is-h2-class. | 2026-09-16 DEEP-READ (full PDF /home/agent/papers/2608.07380.pdf): section-4 complex = Baues-Wirsching/Hoff-Golasinski (coeffs D(f)=A(cod f)). KEY REDUCTION (computed): H^2_{Cat_B}(connected groupoid G) =~ H^2(vertex group) via equivalence-invariance. PLACES the third invariant in the ZS-obstruction separation diagram (connections/h2-homes-for-zs-obstruction.md; registry node h2-catb-reduces-to-vertex-group in quiver-skew-brace-zs.json): H^2_{Cat_B} is on the vertex-group/loop axis (tracks additive/prunability side), NOT MacBeth's coarse-base (.)-holonomy [omega]. Specific H^2_{Cat_B}(K_{2,3}) value CONJECTURAL only -- blocked on Ferri [13] 'On dynamical skew braces and skew bracoids' JPAA 229 (2025) Ex 4.29/Table 3 (K_{2,3} multiplicative groupoid table, not in hand)."
+  },
+  "metere-montoli-2010-semidirect-internal-groupoids": {
+   "title": "Semidirect products of internal groupoids",
+   "authors": "Metere, Montoli",
+   "year": 2010,
+   "extraction": "abstract",
+   "read": [
+    "memory/reading/2026-10-07.md",
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [
+    "J. Pure Appl. Algebra 214(10):1854-1861 (Oct 2010)",
+    "DOI 10.1016/j.jpaa.2009.12.029"
+   ],
+   "note": "Found 2026-10-07 browse (citation-trail agent, via Ferri 2605.11903's reference list -- titles/years only from Semantic Scholar, not read directly). Defines semidirect products internal to a category of groupoids; a categorical-algebra (protomodular) precedent for MacBeth's pairwise-ZS-criterion / (G)-obstruction-is-H2-class work, independent of the skew-brace literature. No arXiv ID located -- likely a journal-only paper (Theory Appl. Categ. era); resolve venue before citing. Not yet read beyond title/year. | UPDATE 2026-10-08 (citation-trail + web agents, cross-confirmed independently via Ferri's reference list and direct nLab/journal search): full bibliographic data now in hand -- JPAA 214(10):1854-1861, DOI 10.1016/j.jpaa.2009.12.029, ScienceDirect https://www.sciencedirect.com/science/article/pii/S0022404909003120 (403s on direct WebFetch, same pattern as MDPI -- try r.jina.ai proxy for full text). No arXiv preprint exists -- confirmed journal-only, TAC/JPAA era. Still NOT full-text read (extraction bumped agent-summary->abstract, not deep-read) -- the scoop-check this paper was flagged for is still open, just no longer blocked on finding the citation itself."
+  },
+  "bourn-janelidze-johnstone-1998-protomodularity": {
+   "title": "Protomodularity, Descent, and semidirect products",
+   "authors": "Bourn, Janelidze",
+   "year": 1998,
+   "extraction": "abstract",
+   "read": [
+    "memory/reading/2026-10-07.md",
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [
+    "Theory Appl. Categ. 4(2):37-46 (1998)",
+    "stable PDF: http://www.tac.mta.ca/tac/volumes/1998/n2/n2.pdf (https:// has cert mismatch, use http:// or bare host)",
+    "mirror: https://eudml.org/doc/119445",
+    "gives categorical definition of semidirect product via descent theory; protomodular categories = those admitting equivalence between split extensions and internal actions"
+   ],
+   "note": "Found 2026-10-07 browse (citation-trail agent, via Ferri 2605.11903's reference list -- titles/years only, not read directly). General categorical semidirect-product theory in protomodular categories; likely the deepest prior-art root for 'semidirect/matched-pair product' as a categorical (not just group-theoretic) notion -- candidate general framework that Ferri's groupoid result and MacBeth's (G)-obstruction work both specialize. No arXiv ID (pre-arXiv-era journal paper, Appl. Categ. Structures). Not yet read beyond title/year. | UPDATE 2026-10-08: full bibliographic data now in hand (see locators) -- open-access PDF at tac.mta.ca, no paywall. Still not a full deep-read pass (extraction bumped agent-summary->abstract) -- the scoop-check (does this paper state something isomorphic to the pairwise-ZS criterion or the (G)-obstruction?) is still OPEN, now unblocked since the source is freely available.",
+   "corrections": [
+    {
+     "date": "2026-10-08",
+     "note": "MISATTRIBUTION CORRECTED (citation-trail + web agents, independently, both flagged this): Peter Johnstone is NOT a co-author of this paper -- he is the TAC *transmitting editor*, a line that got folded into the author field somewhere upstream (likely how Ferri's bibliography or an earlier MacBeth note formatted the transmitting-editor line). Correct citation is Bourn-Janelidze (1998) only. MEMORY.md's 'BJJ 1998' shorthand and the connections/h2-homes-for-zs-obstruction.md + questions/quiver-skew-braces-groupoid-zs-base.md notes using 'Bourn-Janelidze-Johnstone' should be corrected to drop Johnstone. Authors field and dict key both updated (key left unchanged to avoid breaking existing [[links]], but is now a known-stale slug — treat 'authors' field as authoritative)."
+    }
+   ]
+  },
+  "wazzan-oluyori-2026-zappa-szep-skew-braces-mdpi": {
+   "title": "Zappa-Szep Skew Braces: A Unified Framework for Mutual Interactions in Noncommutative Algebra",
+   "authors": "Wazzan, Oluyori",
+   "year": 2026,
+   "venue": "Mathematics (MDPI) 14(2):215, Jan 2026",
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-07.md"
+   ],
+   "locators": [
+    "ZS1-ZS4 compatibility axioms + BC1-BC2 brace-compatibility, over a digroup base (one set, two group operations * and o sharing an identity)",
+    "semidirect-embedding theorem: every semidirect skew brace embeds into a ZS skew brace by trivializing the back-action",
+    "derives a YBE solution formula from the ZS skew brace structure"
+   ],
+   "note": "Found 2026-10-07 browse (arXiv agent, full text via r.jina.ai proxy -- no arXiv preprint exists, journal-only). This is the general 'explicit ZS/matched-pair theorem for skew braces' MacBeth was watching for IN SPIRIT, but it is over a DIGROUP (single-object, two operations) base, not a groupoid/quiver base -- does not answer SEED Q2 (Zappa-Szep over a groupoid base). Confirms the groupoid-base case remains open as of this browse: the 'flat' single-object case has now been done by a different author group (Wazzan/Oluyori), narrowing but not closing the gap Ferri 2605.11903 set up."
+  },
+  "wazzan-2025-zappa-szep-groupoids-inverse-semigroups": {
+   "title": "Zappa-Szep Groupoids of Inverse Semigroups and an Alternative Proof of Billhardt's lambda-Semidirect Products",
+   "authors": "Wazzan",
+   "year": 2025,
+   "venue": "Mathematics (MDPI) 13(7):1122, March 2025",
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-07.md"
+   ],
+   "locators": [
+    "constructs groupoid B(bowtie)(P) FROM the Zappa-Szep product P = S(bowtie)T of two inverse semigroups (via Ehresmann-Schein-Nambooripad)",
+    "reproves Billhardt's lambda-semidirect product result via this groupoid construction"
+   ],
+   "note": "Found 2026-10-07 browse (arXiv agent, full text via r.jina.ai proxy). Confirmed directly: does NOT state a matched-pair/ZS theorem with a groupoid as the BASE structure -- the groupoid is an OUTPUT of the construction here, not an input generalization. Same author (Wazzan) working the ZS-product space from the inverse-semigroup side; a possible future bridge but not a match for SEED Q2 as posed."
+  },
+  "2503.10327": {
+   "title": "Structure groupoids of quiver-theoretic Yang-Baxter maps",
+   "authors": "Ferri, Shibukawa",
+   "year": 2026,
+   "venue": "arXiv, also J. Algebra 690 (2026)",
+   "extraction": "abstract",
+   "read": [
+    "memory/reading/2026-10-07.md"
+   ],
+   "locators": [],
+   "note": "Found 2026-10-07 browse (arXiv agent, abstract via WebSearch snippet, not fetched directly). Ferri's own immediate precursor to 2605.11903 (quiver skew braces): studies solutions of the quiver-theoretic quantum Yang-Baxter equation, proves structure groupoids are Garside groupoids when involutive/non-degenerate (generalizing Chouraqui). Same author's program heading toward quiver/groupoid ZS territory, but no explicit ZS/matched-pair-over-groupoid theorem here either -- confirms the gap is live, not recently scooped."
+  },
+  "kelpdao-2026-layerzero-dvn-bridge-exploit": {
+   "title": "KelpDAO bridge exploit -- LayerZero DVN forged cross-chain message",
+   "authors": "postmortem (Rekt.news, Chainalysis)",
+   "year": 2026,
+   "venue": "rekt.news/kelpdao-rekt, chainalysis.com blog; incident 2026-04-18",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-07.md"
+   ],
+   "locators": [
+    "attackers compromised LayerZero RPC infra, fed forged cross-chain burn message to a single non-redundant, zero-threshold DVN",
+    "forged packet claimed nonce 308 (116,500 rsETH burned on Unichain) when true source-chain nonce was only 307",
+    "destination endpoint did only hash validation against the compromised verifier's attestation, released ~$290M rsETH, used as Aave collateral for ~82,650 WETH borrow, $123-230M bad debt"
+   ],
+   "note": "Found 2026-10-07 browse (web agent). Fifth witness for security-audit-bugs-are-failed-distributive-laws, and the cleanest cross-chain bridge instance yet: the two non-commuting channels are {on-chain nonce/burn-event sequence on the source chain} vs {off-chain DVN attestation trusted by the destination chain}. Structurally distinct from the accounting-rounding witnesses (Bunni/Venus/Solv) -- a verification/attestation single-point-of-failure, not an arithmetic edge case, but same family: two independently-plausible components, no forced commutation, composite exploited."
+  },
+  "yieldblox-2026-stellar-oracle-manipulation": {
+   "title": "YieldBlox / Blend Protocol (Stellar) thin-liquidity oracle manipulation",
+   "authors": "postmortem (Rekt.news, BlockSec)",
+   "year": 2026,
+   "venue": "rekt.news/yieldblox-rekt, blocksec.com blog; incident 2026-02-22",
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-07.md"
+   ],
+   "locators": [
+    "single abnormal trade in illiquid USTRY/USDC pair pushed VWAP price from ~$1 to ~$106",
+    "inflated collateral value enabled ~$10-10.8M drain via borrowing against the inflated price, no circuit breaker"
+   ],
+   "note": "Found 2026-10-07 browse (web agent). Minor/standard instance -- price-feed channel vs internal-accounting channel diverging under low liquidity, same family as Venus/Solv, less structurally novel. Reported briefly, not a headline witness."
+  },
+  "2606.09796": {
+   "title": "Actions, semidirect products and crossed semimodules in the category of small categories with a fixed set of objects",
+   "authors": "Ambra",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [
+    "adjunction between Schreier points and actions in each fibre O^-1(B), equivalence only when B=1",
+    "adjunction between Schreier internal categories in the fibres and crossed semimodules (generalizes Patchkoria 1998)",
+    "crossed modules <-> Schreier internal groupoids in this fibred setting"
+   ],
+   "note": "arXiv agent, full HTML read (arxiv.org/html/2606.09796). Generalizes semidirect products/crossed modules to fibres of the fibration O: Cat -> Set (small categories on a fixed object set B). Own introduction motivates via direction functors and cohomology of small categories (Hoff, Golasinski). This is the semidirect-product/crossed-module INFRASTRUCTURE feeding Ambra-Duvieusart-Montoli 2608.07380's direction-functor cohomology -- same author (Stefano Ambra, Milano), working with Montoli/Rodelo. Candidate unifier-program paper for MacBeth's H2-CLUSTER dream node (protomodular semidirect products as common home for ZS holonomy / Ferri prunability / H2_Cat_B). Does NOT mention skew braces or Zappa-Szep products by name."
+  },
+  "2608.09428": {
+   "title": "R-full Schreier internal categories and their directions",
+   "authors": "Ambra, Montoli, Rodelo",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [
+    "Thm 2.2: crossed semimodules <-> Schreier internal categories in Mon",
+    "1-dimensional direction functor d_1: AAGpd(C) -> Ab(C), extending the 0-dim functor of 2608.07380",
+    "connected components of direction-functor fibres isomorphic to second-cohomology monoids (Patchkoria-style H^3(G,A,phi) crossed-extension interpretation)"
+   ],
+   "note": "arXiv agent, full HTML read (arxiv.org/html/2608.09428). STRONGEST hit of the 2026-09-16/10-08 browse session: explicitly continues 2608.07380 ('continues [2]...extending 0-dimensional direction functors to dimension 1'), builds directly on semidirect products B |x|_alpha C. This is literally protomodular/Schreier semidirect products + direction-functor cohomology, extended to higher dimension -- the exact intersection flagged in [[h2-homes-for-zs-obstruction]] as needing a scoop-check. The Ambra-Montoli-Rodelo program is ACTIVELY BUILDING the candidate unifier in real time (June-Aug 2026), not a static 1998/2010 precedent. Worth comparing directly against the planned H2_Cat_B(K_{2,3}) computation before claiming novelty there. Does not mention skew braces or Zappa-Szep by name."
+  },
+  "bourn-2026-hypersubtraction-semidirect-product": {
+   "title": "Hypersubtraction and semi-direct product",
+   "authors": "Bourn",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [],
+   "note": "Found via citation-trail agent (reverse citations of Bourn-Janelidze 1998, Bourn citing his own 1998 paper). Title/year only, not read -- live 2026 continuation of the protomodular semidirect-product program by the original author. Worth reading if the H2-cluster unifier hypothesis (see [[h2-homes-for-zs-obstruction]]) is pursued further; no arXiv ID located this session."
+  },
+  "topos-2026-composition-of-attractor-lattices": {
+   "title": "Composition of attractor lattices",
+   "authors": "Wehbe (Topos Institute)",
+   "year": 2026,
+   "extraction": "deep-read",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [
+    "attractors of a dynamical system form a bounded distributive lattice under set inclusion",
+    "for a decoupled product of two systems, the realization map rho: product-of-component-lattices -> lattice of combined system is a meet-semilattice hom, generally NOT surjective",
+    "worked example: 'corner' attractor in a coupled logistic system, not expressible as a product of component attractors ('emergent attractor')"
+   ],
+   "note": "Community agent, full read (topos.institute/blog/2026-01-30-composition-of-attractor-lattices/). Dynamical-systems shadow of MacBeth's emergent-holonomy work: composing two objects totally can still fail to be surjective onto what the combined system 'sees', and the failure locus is where new (emergent) structure appears -- structural cousin of [[emergent-holonomy-is-ext-degree0]] / [[emergent-holonomy-meeting-points-proved]] / [[total-composition-constructs-partial-lifts]]. Candidate second application domain (dynamical systems/control) for the grant's Applications section, alongside supply chains/blockchain. No formal category theory in the post itself, informal lattice-theoretic argument only."
+  },
+  "rekt-2026-drift-protocol": {
+   "title": "Drift Protocol exploit postmortem",
+   "authors": "rekt.news",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [],
+   "note": "Web agent, rekt.news/drift-protocol-rekt, April 1 2026, $285.26M -- largest DeFi exploit of 2026 so far. Root cause: governance/multisig social engineering (six-month infiltration, pre-signed durable-nonce transactions, withdrawal-limit guardrails removed, worthless collateral fed through attacker-controlled oracle) -- a SINGLE point of failure (one signer key with unilateral control), not two components/channels diverging. CAVEAT explicitly flagged by the web agent: this does NOT cleanly fit MacBeth's 'two components that should commute but don't' distributive-law pattern ([[security-audit-bugs-are-failed-distributive-laws]]) -- it's a supply-chain-on-human-trust failure, a genuinely different failure category, not a clean 6th ZS-analogous witness. Logged for completeness / as a boundary case, not folded into the witness count without further thought."
+  },
+  "joram-veltri-2025-derivatives-containers-univalent": {
+   "title": "Derivatives for Containers in Univalent Foundations",
+   "authors": "Joram, Veltri",
+   "year": 2025,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [],
+   "note": "Found via citation-trail agent (reverse citations of Abbott-Altenkirch-Ghani 2005 containers paper). Title/S2-metadata only -- extends the container-derivative construction to a broader class of containers in HoTT/Cubical Agda, proves chain-rule-type universal properties (non-invertible in general). Genuine revival of the AAG representation-theorem programme, matching container-derivatives territory MacBeth has direct prior results in (chain rule d(G<|F)=(dG<|F)x dF). arXiv ID not resolved this session -- resolve before deeper use."
+  },
+  "capucci-cruttwell-ghani-zanasi-2024-fibrational-differential": {
+   "title": "A Fibrational Theory of First Order Differential Structures",
+   "authors": "Capucci, Cruttwell, Ghani, Zanasi",
+   "year": 2024,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [],
+   "note": "Found via citation-trail agent (reverse citations of AAG 2005 containers paper). Title/S2-metadata only, not read. Co-authored by Neil Ghani (MacBeth's PI) -- worth a direct check-in with Neil, may already be known through other channels but not previously logged in this sources.json. Topically adjacent to MacBeth's own container-derivative work."
+  },
+  "aberle-2026-compositional-verification-polynomial-functors": {
+   "title": "Compositional Program Verification with Polynomial Functors in Dependent Type Theory",
+   "authors": "Aberlé",
+   "year": 2026,
+   "extraction": "agent-summary",
+   "read": [
+    "memory/reading/2026-10-08.md"
+   ],
+   "locators": [],
+   "note": "Found via citation-trail agent (reverse citations of AAG 2005 containers paper). Title/S2-metadata only, not read -- directly on-program for MacBeth's polynomial-functor work (Path 3), 2026, dependent type theory setting. arXiv ID not resolved this session."
+  },
+  "1703.09262": {
+   "title": "Cohomology monoids of monoids with coefficients in semimodules I, II",
+   "authors": "Patchkoria",
+   "year": 2014,
+   "venue": "J. Homotopy Relat. Struct.; arXiv:1703.09262 (2017)",
+   "extraction": "agent-summary",
+   "locators": [
+    "H^2 cohomology MONOID simultaneously classifies Schreier extensions of semimodules by monoids (additive) and relates to monoid/group extensions (multiplicative)",
+    "the closest existing 'one H^2 object, two flavours (additive+multiplicative)' precedent -- but at MONOID level, additive face = semimodule coefficients (NOT Ferri loop prunability), multiplicative face = monoid Schreier class (NOT MacBeth ZS holonomy [omega])"
+   ],
+   "note": "Added 2026-10-09 WAKE via protomodular-unifier scoop-check (research agent, abstract+theorem-statement level). PARTIAL prior art for the 'single direction-functor H^2 with additive+multiplicative faces' SCHEME; does NOT scoop MacBeth's specific [omega]/prunability identification on DCont~Cat. Referenced by node cohomological-home-of-plus-action-obstruction in quiver-skew-brace-zs.json. NOT primary-read by MacBeth.",
+   "read": [
+    "scratch/provenance/scoopcheck-protomodular-2026-10-09.txt"
+   ]
+  },
+  "2602.20755": {
+   "title": "The direction functor for Schreier extensions of monoids",
+   "authors": "Ambra, Montoli, Rodelo",
+   "year": 2026,
+   "venue": "arXiv:2602.20755 [math.CT]",
+   "extraction": "agent-summary",
+   "locators": [
+    "direction functor assigning an action to a Schreier extension of monoids with commutative cancellative kernel is functorial, conservative, product-preserving => symmetric-monoidal fibres",
+    "pi_0 of its fibres = Patchkoria second cohomology MONOIDS with coefficients in semimodules; the LIVE protomodular/semi-abelian direction-functor program (same author group as 2608.07380/2608.09428)"
+   ],
+   "note": "Added 2026-10-09 WAKE via scoop-check. Realizes Patchkoria H^2 categorically as pi_0 of monoidal fibres. Additive/semimodule face of the direction-functor H^2; NOT MacBeth's coarse-base [omega]. No mention of directed containers / polynomial functors / Zappa-Szep => DCont link NOT scooped.",
+   "read": [
+    "scratch/provenance/scoopcheck-protomodular-2026-10-09.txt"
+   ]
   }
  }
 }
