@@ -1,0 +1,606 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs,hyperref}
+\emergencystretch=3em
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\Ab}{\mathbf{Ab}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\CatB}{\mathbf{Cat}_B}
+\newcommand{\Igp}{\mathbf{I}}
+\newcommand{\Bpi}{B\pi}
+\newcommand{\infl}{\mathrm{inf}}
+\newcommand{\res}{\mathrm{res}}
+\newcommand{\tg}{\mathrm{tg}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\loops}{\mathrm{loops}}
+
+\title{Holonomy and prunability as the two edges of one spectral sequence\\
+\large the Zappa--Sz\'ep composition holonomy is the transgression, on Ferri's $K_{2,3}$}
+\author{MacBeth\\\small Kodamai}
+\date{17 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}\small
+\fbox{\begin{minipage}{0.92\textwidth}\centering
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 17 September 2026.\\[2pt]
+\emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{content-commit} \texttt{WIPHASH}.\\[2pt]
+\textbf{Draft --- work in progress; Kodamai grant deliverable (Theory strand).}
+For Rick (skew-brace / $H^2$ referee), then Neil. The structural results
+(\S\ref{sec:reduce}--\S\ref{sec:unify}) are proved; the $K_{2,3}$ material of
+\S\ref{sec:k23} is computed and machine-checked on the fibre edge, and the general
+fibre-edge identification of prunability is flagged \textbf{open} throughout
+(\S\ref{sec:status}).
+\end{minipage}}
+\end{center}
+
+\begin{abstract}
+A connected groupoid arising from a Zappa--Sz\'ep (matched-pair) factorisation carries
+two proved degree-two obstruction theories: the multiplicative \emph{composition
+holonomy} $[\omega]$, whose vanishing is exactly the existence of the global factorisation,
+and Ferri's \emph{prunability} obstruction, whose vanishing lets the groupoid be pruned to
+its loop bundle. Ferri asked (Remark~3.20 of his \emph{dynamical skew braces} paper) for a
+group-theoretic or cohomological recast of prunability. We give one on his own example, and
+locate both obstructions inside a single object. When the factorisation is normal, the categorical
+cohomology of the groupoid is the abutment of the Lyndon--Hochschild--Serre spectral
+sequence of the extension $1\to\D\to\pi\to\Gamma\to1$; its two degree-two edges are exactly
+the two obstruction theories --- the base edge $H^2(\Gamma;M^\D)$ carries $[\omega]$, the
+fibre edge $H^2(\D;M)^\Gamma$ carries prunability --- and the transgression $d_2(\varphi)
+=\varphi_*[\omega]$ \emph{is} the holonomy. Consequently the two faces are never independent
+summands: a nonzero base class is a differential, not a summand, so the naive direct sum
+fails precisely when it would be interesting. On the fibre side we compute the fibre-edge
+class on Ferri's own $K_{2,3}$: it is connected (so $[\omega]=0$) yet non-prunable, and the
+fibre edge carries a nonzero class $[\pi]$, while a prunable Klein control kills both edges.
+All finite claims are machine-checked; the general identification of prunability with the
+fibre edge for arbitrary stars is stated as an open problem.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{The problem.} A directed container, a matched pair of groups, and a Zappa--Sz\'ep
+product are three names for the same move: build a large composite from two interacting
+factors that act on one another. Whether the composite exists globally, and whether it can
+be simplified, are the two questions a compositional-correctness theory must answer. For the
+groupoid $G$ presented by a (quiver) skew brace factored over a vertex bundle, both questions
+have been given cohomological answers, but by \emph{different} theories:
+\begin{itemize}
+\item[\textbf{(H)}] the \emph{composition holonomy} $[\omega]\in H^2(\Sk_\C;\D)$ over the
+orbit base $\Sk_\C$, whose vanishing is equivalent to the existence of the global
+Zappa--Sz\'ep factorisation $K=\C\bowtie\D$ \cite{gobstr,gzs}; and
+\item[\textbf{(P)}] Ferri's \emph{prunability} obstruction \cite{ferri}, an additive
+condition on the loop bundle (the loops over each object must form an additive subgroup),
+whose vanishing lets $G$ be pruned to its loop subgroupoid, and which lives in the
+direction-functor cohomology $H^2_{\CatB}(G)\cong H^2(\pi)$ of the vertex group
+\cite{adm,sep2}.
+\end{itemize}
+These were proved \emph{separate}: $[\omega]$ vanishes identically for a full loop bundle,
+so it cannot be prunability \cite{sep}. Ferri, working from the skew-brace side, asked for
+the missing structural picture explicitly.
+
+\begin{quote}\small
+\textbf{Ferri, Remark 3.20 (paraphrased) \cite{ferri}.} \emph{Is there a group-theoretic or
+cohomological description of the prunability obstruction, of the kind available for the
+associated extension classes?}
+\end{quote}
+
+\paragraph{The gap.} ``Separate'' is not a structure. Knowing that $[\omega]$ and
+prunability are two different classes leaves open the natural synthesis: are they two
+independent summands of one categorical cohomology,
+\begin{equation}\label{eq:conj}
+   H^2_{\mathrm{cat}}(G;M)\;\overset{?}{\cong}\;
+   \underbrace{H^2(\pi;M)}_{\text{prunability}}\;\oplus\;
+   \underbrace{H^2_{\mathrm{base}}(\Sk_\C;M)}_{[\omega]},
+   \qquad\text{both summands possibly nonzero?}
+\end{equation}
+This ``product decomposition'' is what one would write down first. It is false, and its
+failure is the point.
+
+\paragraph{The results.} We settle \eqref{eq:conj} in general and answer Ferri's question on
+his own example, by putting both obstructions on one page. The structural statement below is
+proved; the answer to Remark~3.20 is computed on $K_{2,3}$, and the general identification of
+prunability with the fibre edge is left open (\S\ref{sec:status}).
+
+\begin{theorem}[Structural, \S\ref{sec:reduce}--\S\ref{sec:unify}]\label{thm:main-struct}
+Let $G$ be a connected groupoid whose vertex group $\pi$ has a normal abelian subgroup
+$\D$ (the vertex bundle of a Zappa--Sz\'ep factorisation), with quotient $\Gamma=\pi/\D$
+the vertex group of the orbit base. Then $H^2_{\mathrm{cat}}(G;A)\cong H^2(\pi;M)$ is the
+abutment of the Lyndon--Hochschild--Serre spectral sequence
+$E_2^{p,q}=H^p(\Gamma;H^q(\D;M))$, in which
+\begin{enumerate}
+\item[\textup{(i)}] the \emph{base edge} $E_2^{2,0}=H^2(\Gamma;M^\D)$ is the home of the
+holonomy $[\omega]$;
+\item[\textup{(ii)}] the \emph{fibre edge} $E_2^{0,2}=H^2(\D;M)^\Gamma$ is the home of
+prunability;
+\item[\textup{(iii)}] the transgression $d_2\colon E_2^{0,1}\to E_2^{2,0}$ \emph{is} the
+holonomy: $d_2(\varphi)=\varphi_*[\omega]$.
+\end{enumerate}
+Consequently the direct sum \eqref{eq:conj} holds if and only if $[\omega]=0$; whenever
+$[\omega]\neq0$ and some $\varphi$ has $\varphi_*[\omega]\neq0$, the base edge does not
+survive and no such sum exists. The two obstructions are never simultaneously present as
+independent summands.
+\end{theorem}
+
+The one-line reading of Theorem~\ref{thm:main-struct}: \emph{a nonzero holonomy is not a
+summand next to prunability --- it is the differential that transgresses itself away.} This
+is the group-theoretic recast Ferri asked for: prunability is the fibre edge, the holonomy
+is the transgression, and both are edges of one extension's spectral sequence.
+
+The theorem describes what happens on each edge in the abstract. To see that the fibre edge
+is \emph{genuinely occupied} --- that prunability is a real, nonzero, computable class and
+not a formal placeholder --- we compute it on Ferri's own example.
+
+\begin{theorem}[Witness, computed, \S\ref{sec:k23}]\label{thm:main-witness}
+On Ferri's $K_{2,3}$ \cite[Ex.~4.29]{ferri} --- a connected degree-two groupoid on
+$\Z/4$ that is \emph{non-prunable} (Ferri's Counterexample~5.2) --- the two edges decouple:
+the base edge vanishes, $[\omega]=0$ \textup{(}$G$ is connected, so the orbit base is
+contractible\textup{)}, while the fibre edge carries a nonzero class
+$[\pi]\in H^2(\Z/2;\Z/2)=\Z/2$. A prunable Klein-four control kills both edges. Thus the
+fibre edge is the genuine detector of prunability, decoupled from the holonomy, on Ferri's
+actual numbers.
+\end{theorem}
+
+\paragraph{Method.} Normality turns the whole question into ordinary group cohomology along
+the extension $1\to\D\to\pi\to\Gamma\to1$ (\S\ref{sec:reduce}); the two obstruction theories
+are then read off as the two axes of the LHS $E_2$-page (\S\ref{sec:lhs}); a one-page cocycle
+computation identifies the transgression with the extension class (\S\ref{sec:tg}); and a
+survival count gives the collapse locus and the no-go (\S\ref{sec:nogo}). The $K_{2,3}$
+computation (\S\ref{sec:k23}) is the additive twin of the multiplicative Schreier line for
+$[\omega]$: the fibre-edge class is the nonsplitting of the additive extension
+$0\to\{0,2\}\to\Z/4\to\Z/2\to0$ read at each star, and it is machine-checked in Lean.
+
+\paragraph{Consequences.} Three previously separate results --- the holonomy face (H), the
+prunability face (P), and their proved separation (S) \cite{sep,sep2} --- become one object.
+The separation theorem is recovered as the contractible-base slice $\Gamma\simeq\ast$, where
+the base edge is forced to zero and only the fibre edge survives; $K_{2,3}$ is exactly this
+slice, realised on a real example. For the grant Theory strand this is the honest
+``internal replacement / Zappa--Sz\'ep, fully cohomological'' statement: compositional
+correctness of the directed-container composite is $[\omega]=0$, which is the collapse of one
+spectral sequence whose two edges are the base handoff geometry and the additive prunability.
+
+\paragraph{Outline.} \S\ref{sec:prelim} fixes the setup and defines $[\omega]$ and
+prunability. \S\ref{sec:reduce} reduces to a group extension. \S\ref{sec:lhs} identifies the
+two edges. \S\ref{sec:tg} proves the transgression is the holonomy. \S\ref{sec:nogo} gives
+the collapse locus, the no-go, and the finite witnesses. \S\ref{sec:k23} computes the fibre
+edge on $K_{2,3}$ and answers Remark~3.20. \S\ref{sec:unify} assembles the unification.
+\S\ref{sec:status} states the honest scope, including the open general identification.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We keep only what the proofs use. Throughout, $G$ is a connected groupoid with a chosen base
+object $x_0$ and vertex group $\pi=G(x_0,x_0)$; $A$ is a $G$-module and $M:=A(x_0)$ its
+value at $x_0$. All cohomology is group cohomology unless decorated. The
+Lyndon--Hochschild--Serre (LHS) spectral sequence of a group extension and its five-term
+exact sequence are used as in Weibel \cite[\S6.8]{weibel}; the transgression formula in the
+general twisted case is Neukirch--Schmidt--Wingberg \cite{nsw}.
+
+\paragraph{Zappa--Sz\'ep factorisation and the holonomy $[\omega]$.} A Zappa--Sz\'ep (matched
+pair) factorisation presents the composite groupoid $K$ as an interaction $\C\bowtie\D$ of a
+base groupoid $\C$ and a vertex bundle $\D$ that act on each other. The obstruction to the
+global factorisation existing is a degree-two class, the \emph{composition holonomy}
+$[\omega]\in H^2(\Sk_\C;\D)$ over the orbit base $\Sk_\C$ (the skeleton of $\C$), and
+$K=\C\bowtie\D$ exists iff $[\omega]=0$ \cite{gobstr,gzs}. When $\D$ is normal in $\pi$ this
+is the Schreier class of the extension $1\to\D\to\pi\to\Gamma\to1$ with $\Gamma=\Sk_\C$, and
+it is genuinely nonzero --- e.g.\ $[\omega]\neq0$ for $\Z/4$ over $\Z/2$ \cite{gzs}. When the
+loop bundle is \emph{full}, the orbit base is connected, hence contractible, and
+$[\omega]=0$ identically \cite{sep}.
+
+\paragraph{Prunability.} For a skew-brace groupoid, the loops over an object $x$ form a set
+$\loops(x)$ inside the additive group at $x$. Ferri calls $G$ \emph{prunable} when the loop
+subgroupoid is a $\rightharpoonup$-ideal --- concretely, when $\loops(x)$ is an additive
+subgroup for every $x$ --- so that $G$ may be pruned to its loop bundle \cite{ferri}. The
+obstruction is additive and lives on the vertex group: the direction-functor cohomology of
+Ambra--Duvieusart--Montoli \cite{adm} reduces, for a connected groupoid, to
+$H^2_{\CatB}(G;A)\cong H^2(\pi;M)$ \cite[T1]{sep2}, the additive face that carries
+prunability \cite{sep}. Ferri's Remark~3.20 asks for the cohomological picture behind this
+condition; \S\ref{sec:k23} supplies it on his own example.
+
+\paragraph{The separation, and the synthesis it invites.} The two faces were proved
+orthogonal: $[\omega]\perp$ prunability, from a computed witness \cite{sep} and structurally
+from the decomposition $G\cong\Igp(\ob G)\times\Bpi$ in the full-bundle case \cite[T2]{sep2}.
+Orthogonality is what makes the direct sum \eqref{eq:conj} tempting. But \eqref{eq:conj}
+silently uses one symbol $\Sk_\C$ for two different bases:
+\begin{itemize}
+\item In the \emph{connected/full-loop-bundle} regime, $\Sk_\C=\Igp(\ob G)$ is the coarse
+groupoid on the objects, a disjoint union of contractible components, so
+$H^{\ge1}(\Sk_\C;-)=0$ always and the base summand of \eqref{eq:conj} is identically zero.
+Here $G\cong\Igp(\ob G)\times\Bpi$ is a genuine product and \eqref{eq:conj} says nothing but
+$H^2_{\mathrm{cat}}=H^2(\pi)$.
+\item In the \emph{proper-normal-bundle} regime, $\Sk_\C=B\Gamma$ is the classifying groupoid
+of a quotient group and is generally not contractible; this is where $[\omega]\neq0$. But now
+$G$ is \emph{not} a product: $(\D,\Gamma,\pi)$ form a non-split \emph{extension}.
+\end{itemize}
+So the two regimes never coexist inside one product. The honest object that sees a
+non-contractible base is a group extension, and its cohomology is governed by LHS, not by
+K\"unneth. We now show $[\omega]$ appears there as the transgression.
+
+\section{Reduction to a group extension}\label{sec:reduce}
+
+We work in the normal Zappa--Sz\'ep regime of \cite{gzs}, the only regime in which the base
+carries a nonzero class.
+
+\begin{proposition}[Reduction, {\cite[Prop.~2.1--2.2]{gzs}}, {\cite[T1]{sep2}}]
+\label{prop:reduce}
+Let $G$ be a connected groupoid whose vertex group $\pi$ admits a normal abelian subgroup
+$\D\trianglelefteq\pi$ (the vertex bundle of a Zappa--Sz\'ep factorisation), with quotient
+$\Gamma=\pi/\D$ the vertex group of the orbit base $\Sk_\C=B\Gamma$. Then:
+\begin{enumerate}
+\item[\textup{(a)}] $\D$ is a $\Gamma$-module via conjugation, and the Zappa--Sz\'ep holonomy
+$[\omega]\in H^2(\Sk_\C;\D)=H^2(\Gamma;\D)$ is the Schreier class of the extension
+\begin{equation}\label{eq:ext}
+   1\longrightarrow\D\longrightarrow\pi\xrightarrow{\ q\ }\Gamma\longrightarrow1;
+\end{equation}
+\item[\textup{(b)}] for a $G$-module $A$ with $M:=A(x_0)$, the categorical
+(direction-functor) cohomology reduces to the vertex group,
+$H^2_{\mathrm{cat}}(G;A)=H^2_{\CatB}(G;A)\cong H^2(\pi;M)$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(a) is \cite[Prop.~2.1--2.2]{gzs}: normality gives $\Sk_\C=\pi/\D=\Gamma$ and the defect
+$2$-cochain is the Schreier factor set of \eqref{eq:ext}. (b) is \cite[T1]{sep2},
+$H^n_{\CatB}(G,A)\cong H^n(\pi,M)$, whose $n=2$ instance rests on the reconstructed Schreier
+correspondence there and elementary homological algebra.
+\end{proof}
+
+Proposition~\ref{prop:reduce} moves the whole question into ordinary group cohomology: how
+does $H^2(\pi;M)$ decompose along \eqref{eq:ext}, and where do the two faces sit? The answer
+is the LHS spectral sequence.
+
+\section{The spectral sequence and its two edges}\label{sec:lhs}
+
+\begin{theorem}[LHS decomposition of the categorical cohomology]\label{thm:lhs}
+With the data of Proposition~\ref{prop:reduce}, $H^\bullet_{\mathrm{cat}}(G;A)\cong
+H^\bullet(\pi;M)$ is the abutment of the first-quadrant cohomological spectral sequence
+\begin{equation}\label{eq:E2}
+   E_2^{p,q}\;=\;H^p\bigl(\Gamma;\,H^q(\D;M)\bigr)\;\Longrightarrow\;H^{p+q}(\pi;M),
+\end{equation}
+of the extension \eqref{eq:ext} \cite[\S6.8]{weibel}. Its two degree-two edge terms are
+exactly the two obstruction faces:
+\[
+   \begin{aligned}
+   E_2^{2,0}&=H^2\bigl(\Gamma;M^\D\bigr)
+   &&\text{(\emph{base edge}: the home of $[\omega]$)},\\
+   E_2^{0,2}&=H^2(\D;M)^\Gamma
+   &&\text{(\emph{fibre edge}: the prunability face)} .
+   \end{aligned}
+\]
+The abutment is filtered with associated graded
+$\mathrm{gr}\,H^2(\pi;M)=E_\infty^{2,0}\oplus E_\infty^{1,1}\oplus E_\infty^{0,2}$,
+where $E_\infty^{p,q}$ is the subquotient of $E_2^{p,q}$ surviving the differentials.
+\end{theorem}
+\begin{proof}
+The LHS spectral sequence of a group extension with abelian coefficient module $M$ is
+standard \cite[Thm.~6.8.2]{weibel}; \eqref{eq:E2} is its $E_2$-page. The edge
+identifications $E_2^{p,0}=H^p(\Gamma;M^\D)$ and $E_2^{0,q}=H^q(\D;M)^\Gamma$ are the
+definition of the two axes. That the base edge is where $[\omega]$ lives is
+Proposition~\ref{prop:reduce}(a) ($[\omega]\in H^2(\Gamma;\D)$, mapped to $H^2(\Gamma;M^\D)$
+by any $\Gamma$-map $\D\to M^\D$); that the fibre edge is the vertex/prunability face is
+\cite{sep,sep2}. The three-step filtration in total degree $2$ is the standard convergence
+of a first-quadrant sequence.
+\end{proof}
+
+The two faces are not \emph{a priori} summands: they are two edges of one page, and whether
+they survive to the abutment is decided by the differentials. The relevant one is the
+transgression, and it is the holonomy itself.
+
+\section{The transgression is the holonomy}\label{sec:tg}
+
+\begin{lemma}[The transgression is cup with the holonomy]\label{lem:tg}
+In the five-term exact sequence of \eqref{eq:E2},
+\[
+   0\to H^1(\Gamma;M^\D)\xrightarrow{\infl}H^1(\pi;M)\xrightarrow{\res}
+   H^1(\D;M)^\Gamma\xrightarrow{\ \tg\ }H^2(\Gamma;M^\D)\xrightarrow{\infl}H^2(\pi;M),
+\]
+the transgression $\tg=d_2^{0,1}$ is given by pushforward of the extension class: for a
+$\Gamma$-equivariant homomorphism $\varphi\in\Hom_\Gamma(\D,M)=H^1(\D;M)^\Gamma$,
+\[
+   \tg(\varphi)\;=\;\varphi_*[\omega]\;\in\;H^2(\Gamma;M^\D),
+\]
+where $\varphi_*\colon H^2(\Gamma;\D)\to H^2(\Gamma;M^\D)$ is induced by $\varphi$ and
+$[\omega]$ is the Schreier class of \eqref{eq:ext}.
+\end{lemma}
+\begin{proof}
+We give the cocycle computation for the case $M$ a trivial $\pi$-module (which covers all
+witnesses below and the $\Z/4$-Schreier line); the general $\Gamma$-module case is
+\cite[transgression formula]{nsw}, identical after keeping the covariant end. Choose a
+normalised set section $s\colon\Gamma\to\pi$ of $q$, $s(1)=1$, with Schreier factor set
+\[
+   s(a)\,s(b)=\omega(a,b)\,s(ab),\qquad \omega(a,b)\in\D,\quad [\omega]\in H^2(\Gamma;\D).
+\]
+An element of $E_2^{0,1}=H^1(\D;M)^\Gamma$ is a $\Gamma$-invariant homomorphism
+$\varphi\colon\D\to M$. Running the construction of the transgression in the double complex
+of the extension \cite[\S6.8]{weibel}: $\varphi$ lifts to the $1$-cochain
+$\tilde\varphi\in C^1(\pi;M)$, $\tilde\varphi(g)=\varphi(\text{$\D$-part of }g)$ along the
+section, and its image under the vertical differential, pushed to the base, is the
+$2$-cochain
+\[
+   (a,b)\longmapsto \varphi\bigl(\omega(a,b)\bigr)=(\varphi_*\omega)(a,b).
+\]
+Thus $\tg(\varphi)=[\varphi_*\omega]=\varphi_*[\omega]$. (Concretely: $\tg(\varphi)$ is the
+obstruction to extending $\varphi$ from $\D$ to a homomorphism $\pi\to M$; it is $0$ iff the
+pushed-out extension $1\to M\to\varphi_*\pi\to\Gamma\to1$ splits, i.e.\ iff
+$\varphi_*[\omega]=0$.)
+\end{proof}
+
+\section{Collapse and the no-go}\label{sec:nogo}
+
+\begin{corollary}[When the clean sum holds]\label{cor:collapse}
+The naive direct sum \eqref{eq:conj} of the two edges equals $H^2(\pi;M)$ whenever
+\eqref{eq:E2} collapses at $E_2$ in total degree $2$ with vanishing cross term $E_2^{1,1}$.
+Each of the following is sufficient:
+\begin{enumerate}
+\item[\textup{(i)}] \textbf{Coarse/connected base} $\Gamma=1$: then $E_2^{p,q}=0$ for $p>0$,
+the base edge and cross term vanish, and $H^2(\pi;M)=E_2^{0,2}=H^2(\D;M)$. Since here
+$\D=\pi$ this is the identity $H^2_{\mathrm{cat}}(G)=H^2(\pi)$ --- the clean sum degenerates
+to its fibre summand, and $[\omega]=0$.
+\item[\textup{(ii)}] \textbf{Direct product} $\pi=\D\times\Gamma$: then $[\omega]=0$ and the
+sequence collapses (K\"unneth), giving the \emph{full} associated graded $H^2(\pi;M)\cong
+E_2^{2,0}\oplus E_2^{1,1}\oplus E_2^{0,2}$ --- the honest K\"unneth form, including the cross
+term $H^1(\Gamma)\otimes H^1(\D)$ that \eqref{eq:conj} omits.
+\item[\textup{(iii)}] \textbf{Coprime orders} $\gcd(|\D|,|\Gamma|)=1$ (Schur--Zassenhaus):
+$E_2^{p,q}=0$ for $p,q>0$, so $H^2(\pi;M)=E_2^{2,0}\oplus E_2^{0,2}$ and $[\omega]=0$.
+\end{enumerate}
+In every collapsing case the base class is forced to zero: $[\omega]=0$.
+\end{corollary}
+\begin{proof}
+(i) A coarse groupoid is equivalent to the terminal category, so $H^{\ge1}(\Gamma;-)=0$; the
+surviving column is $p=0$. (ii) A direct product splits \eqref{eq:ext}, so $[\omega]=0$;
+collapse is the Eilenberg--Zilber/K\"unneth theorem for $B\D\times B\Gamma$. (iii) For coprime
+orders the higher cohomology of each factor is annihilated by both $|\D|$ and $|\Gamma|$,
+hence $0$ off the edges; a split extension (Schur--Zassenhaus) has $[\omega]=0$.
+\end{proof}
+
+Corollary~\ref{cor:collapse} is the precise content of \eqref{eq:conj}: it is \emph{true
+exactly on the locus $[\omega]=0$}, and there it is either the trivial statement
+$H^2_{\mathrm{cat}}=H^2(\pi)$ (connected case, the prunability-only corner realised by
+$K_{2,3}$ in \S\ref{sec:k23}) or the genuine K\"unneth sum (direct product) --- but in
+neither case is the base summand nonzero. The interesting ``both nonzero'' regime is empty.
+
+\begin{theorem}[{No clean sum when $[\omega]\neq0$}]\label{thm:nogo}
+Suppose $[\omega]\neq0$ and there is a $\Gamma$-equivariant $\varphi\colon\D\to M$ with
+$\varphi_*[\omega]\neq0$ in $H^2(\Gamma;M^\D)$ \textup{(}e.g.\ $M=\D$, $\varphi=\id$,
+whenever $[\omega]\neq0$\textup{)}. Then:
+\begin{enumerate}
+\item[\textup{(a)}] the transgression $d_2^{0,1}=\tg$ is nonzero
+(Lemma~\ref{lem:tg}), so the base edge does not survive: $E_\infty^{2,0}\subsetneq
+E_2^{2,0}$, and the image $\varphi_*[\omega]$ of the holonomy is \emph{killed} in the
+abutment;
+\item[\textup{(b)}] consequently $H^2(\pi;M)$ is \emph{not} the direct sum \eqref{eq:conj} of
+the two edges: $\dim H^2(\pi;M)<\dim E_2^{2,0}+\dim E_2^{1,1}+\dim E_2^{0,2}$ whenever
+$\tg\neq0$.
+\end{enumerate}
+In particular the two faces are \emph{never} simultaneously present as independent summands
+of $H^2_{\mathrm{cat}}(G)$: a nonzero base class is not a summand but a differential.
+\end{theorem}
+\begin{proof}
+(a) By Lemma~\ref{lem:tg}, $\tg(\varphi)=\varphi_*[\omega]\neq0$, so $d_2^{0,1}\neq0$. The
+differential $d_2^{0,1}\colon E_2^{0,1}\to E_2^{2,0}$ has nonzero image, hence
+$E_3^{2,0}=E_2^{2,0}/\im d_2^{0,1}$ is a proper quotient; as the base edge receives no
+further differentials ($d_r^{p,0}$ into $(2,0)$ come from $(2-r,r-1)$, a negative column for
+$r\ge3$), $E_\infty^{2,0}=E_3^{2,0}\subsetneq E_2^{2,0}$, and the class $\varphi_*[\omega]$
+(a generator of $\im d_2$) is annihilated. (b) The abutment has
+$\dim H^2=\sum_{p+q=2}\dim E_\infty^{p,q}\le\sum_{p+q=2}\dim E_2^{p,q}$ with strict
+inequality once any $E_\infty^{p,q}\subsetneq E_2^{p,q}$; part (a) gives this at $(2,0)$.
+\end{proof}
+
+\begin{corollary}[Finite witnesses, machine-checked]\label{cor:witness}
+For trivial $\Z/2$-coefficients $M=\mathbb F_2$
+(\texttt{2026-09-17-lhs-}\allowbreak\texttt{decomposition-check.py}):
+\begin{center}\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccccl}
+\toprule
+$\pi=\D.\Gamma$ & split? & $[\omega]$ & $\dim H^2(\pi)$ &
+$\dim(E_2^{2,0}\!\oplus\!E_2^{1,1}\!\oplus\!E_2^{0,2})$ & $\mathrm{rk}\,\tg$ & verdict\\
+\midrule
+$\Z/4=\Z/2.\Z/2$          & no  & $\neq0$ & $1$ & $1{+}1{+}1=3$ & $1$ & \textbf{no sum} (base edge dies)\\
+$Q_8=(\Z/2)^2.\Z/2$       & no  & $\neq0$ & $2$ & $3{+}2{+}1=6$ & $1$ & \textbf{no sum}\\
+$\Z/2\times\Z/2=\Z/2.\Z/2$& yes & $0$     & $3$ & $1{+}1{+}1=3$ & $0$ & clean (full K\"unneth)\\
+$\Z/6=\Z/2.\Z/3$          & yes & $0$     & $1$ & $0{+}0{+}1=1$ & $0$ & clean (fibre only)\\
+\bottomrule
+\end{tabular}
+\end{center}
+For $\Z/4$ the transgression is an isomorphism $E_2^{0,1}\xrightarrow{\sim}E_2^{2,0}$, so the
+entire base edge $H^2(\Z/2;\mathbb F_2)$ --- the home of the nonzero Schreier $[\omega]$ of
+$\Z/4$ over $\Z/2$ \cite{gzs} --- \emph{vanishes} from the abutment. The naive sum overcounts
+by $2$; the true $H^2(\Z/4;\mathbb F_2)$ is $1$-dimensional.
+\end{corollary}
+
+\section{The fibre edge is occupied: Ferri's \texorpdfstring{$K_{2,3}$}{K23}}\label{sec:k23}
+
+Theorem~\ref{thm:nogo} shows the base edge cannot be an independent summand. It says nothing
+about whether the fibre edge is ever nonzero on a real skew brace --- whether prunability is
+an actual class or a formal slot. We settle this on Ferri's own example, which is
+\emph{connected} (so we are in the collapse corner \ref{cor:collapse}(i), $[\omega]=0$) yet
+\emph{non-prunable}. This is the honest place to test prunability: it is the corner where the
+holonomy is forced to zero, so any obstruction that remains lives on the fibre edge alone.
+
+\paragraph{The example.} Ferri's $K_{2,3}$ \cite[Ex.~4.29, Table~3]{ferri} has underlying set
+$A=\Z/4$ and two objects $S_2,S_3$; the direction data give a connected degree-two groupoid.
+Its loop bundle is
+\[
+   \loops(S_2)=\{0,3\},\qquad \loops(S_3)=\{0,1\}.
+\]
+Neither is an additive subgroup of $(\Z/4,+)$ ($3+3=2\notin\{0,3\}$, $1+1=2\notin\{0,1\}$),
+so $G$ is \emph{not} prunable --- this is Ferri's Counterexample~5.2.
+
+\begin{remark}[The quasigroup subtlety, stated plainly]\label{rmk:quasigroup}
+The star operations $\bullet_{S_2},\bullet_{S_3}$ of Table~3 are left \emph{quasigroups}, not
+groups: their rows are permutations but their columns are not, and both are non-commutative
+and non-associative (machine-checked: e.g.\ $\bullet_{S_2}$ has $(1\bullet1)\bullet1=1\neq
+3=1\bullet(1\bullet1)$). Since every group of order $4$ is abelian, $\bullet_\lambda$ cannot
+itself be the additive group. The skew brace's genuine additive group on $A$ is the ordinary
+$(\Z/4,+)$ (Ferri's convention $a\cdot b=a+b$), and it is with respect to $(\Z/4,+)$ that
+``additive subgroup'', hence prunability, is meaningful. The loop sets \emph{are} closed
+under the quasigroup $\bullet_\lambda$ (they are sub-left-quasigroups), but that is not the
+condition Ferri's prunability tests; the defect is precisely that they are not subgroups of
+$(\Z/4,+)$. We flag this because the identification of the fibre-edge class below with
+prunability rests on this $(\Z/4,+)$ reading (see \S\ref{sec:status}).
+\end{remark}
+
+\paragraph{Base edge $E_2^{2,0}=H^2(\Gamma;M^\D)$.} $K_{2,3}$ is connected, so the orbit
+base is the coarse groupoid on $\{S_2,S_3\}$, which is contractible: $H^{\ge1}(\Gamma;-)=0$
+for any coefficients. Hence $[\omega]=0$. This is rigorous and coefficient-independent
+(Corollary~\ref{cor:collapse}(i) on this example).
+
+\paragraph{Fibre edge $E_2^{0,2}=H^2(\D;M)^\Gamma$.} With $\Gamma\simeq\ast$ the $\Gamma$-in\-vari\-ants
+are everything, and the fibre edge is $H^2(\D;M)$ computed at each star. Read as the additive
+Schreier class of the extension
+\[
+   0\longrightarrow A_2\longrightarrow(\Z/4,+)\longrightarrow \Z/2\longrightarrow0,
+   \qquad A_2=\{0,2\}\cong\Z/2,
+\]
+we have $H^2(\Z/2;\Z/2)=\Z/2$, and the extension is \emph{nonsplit} at both $S_2$ and $S_3$:
+its Schreier cocycle is the carry $f(1,1)=2\in A_2$, which is not a coboundary. Hence the
+fibre-edge class
+\[
+   [\pi]_{S_2}=[\pi]_{S_3}=\text{the nonzero generator of }H^2(\Z/2;\Z/2)=\Z/2 .
+\]
+This computation is machine-checked in Lean, sorry-free
+(\texttt{2026-09-17-}\allowbreak\texttt{fibre-h2-z2.lean}): $H^2(\Z/2;\Z/2)=\Z/2$ as the cokernel of the norm;
+the $\Z/4$ carry cocycle $f(a,b)=a\wedge b$ is a genuine cocycle and \emph{not} a coboundary
+(matching at $(0,0)$ forces $g(0)=0$, whence $\delta^1 g(1,1)=0\neq1$); and the Klein control
+cocycle is $0$.
+
+\paragraph{The control.} Replacing the $\Z/4$ star by the Klein four-group $V_4$ keeps the
+groupoid connected but makes the loops an additive subgroup, so $G$ becomes prunable. Now the
+additive extension $0\to\Z/2\to V_4\to\Z/2\to0$ \emph{splits}, so the fibre-edge class is
+zero. Both edges are dead. The control isolates the fibre edge as the genuine detector of
+prunability: it is nonzero exactly when $G$ fails to be prunable.
+
+\begin{center}\small
+\begin{tabular}{lccccc}
+\toprule
+case & prunable? & base $H^2$ & $[\omega]$ & star extension & $[\pi]$ (fibre edge)\\
+\midrule
+Ferri $K_{2,3}$ ($\Z/4$ stars) & \textbf{no}  & $0$ & $0$ & nonsplit (both $S_2,S_3$) & $\neq0$ (both)\\
+Klein control ($V_4$ star)     & yes          & $0$ & $0$ & split                      & $0$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Answer to Remark~3.20.} On Ferri's own $K_{2,3}$, the prunability obstruction
+\emph{is} the fibre-edge class $[\pi]\in H^2(\D;M)^\Gamma$ of the LHS spectral sequence
+\eqref{eq:E2}, equivalently the nonsplitting of the additive star extension
+$0\to A_2\to(\Z/4,+)\to\Z/2\to0$. This is the additive twin of the multiplicative Schreier
+line that carries $[\omega]$: $[\omega]$ is the nonsplitting of the multiplicative extension
+$1\to\D\to\pi\to\Gamma\to1$ on the base edge, and prunability is the nonsplitting of the
+additive extension on the fibre edge. The dividing line, $\Z/4$ (nonsplit) versus Klein
+(split), is exactly the additive twin of the $\Z/4$-versus-$\Z/2\times\Z/2$ line for
+$[\omega]$ in Corollary~\ref{cor:witness}. This is the group-theoretic/cohomological
+description Ferri asked for.
+
+\section{What the cluster is, correctly}\label{sec:unify}
+
+The three cluster results unify into one object --- a spectral sequence, not a direct sum.
+
+\begin{theorem}[Structural unification]\label{thm:unify}
+Under Proposition~\ref{prop:reduce}, the categorical cohomology $H^2_{\mathrm{cat}}(G;A)\cong
+H^2(\pi;M)$ is the total degree-two term of the LHS spectral sequence \eqref{eq:E2}, in which:
+\begin{enumerate}
+\item the \emph{fibre edge} $E_2^{0,2}=H^2(\D;M)^\Gamma$ is the additive/prunability face
+\textup{(P)}, occupied by a nonzero class on Ferri's $K_{2,3}$ (\S\ref{sec:k23});
+\item the \emph{base edge} $E_2^{2,0}=H^2(\Gamma;M^\D)$ is the holonomy face, receiving the
+transgression $d_2$;
+\item the \emph{transgression} $d_2\colon E_2^{0,1}\to E_2^{2,0}$ \emph{is} the Zappa--Sz\'ep
+holonomy, $d_2(\varphi)=\varphi_*[\omega]$ \textup{(H)}.
+\end{enumerate}
+The proved separation $[\omega]\perp$ prunability \textup{(S)} is the special case
+$\Gamma\simeq\ast$ (base contractible, only the fibre edge survives) --- precisely the corner
+$K_{2,3}$ inhabits. In general the two faces are not orthogonal summands but the two axes of
+one page, \emph{coupled} by the transgression, which is $[\omega]$ itself. The clean direct
+sum \eqref{eq:conj} holds iff this coupling vanishes, i.e.\ iff $[\omega]=0$.
+\end{theorem}
+\begin{proof}
+Assemble Theorem~\ref{thm:lhs} (edges), Lemma~\ref{lem:tg} (transgression $=$ holonomy),
+Corollary~\ref{cor:collapse} (collapse $\Leftrightarrow$ the true locus of \eqref{eq:conj}),
+Theorem~\ref{thm:nogo} (no-go off that locus), and \S\ref{sec:k23} (the fibre edge is
+occupied). The separation is Corollary~\ref{cor:collapse}(i): $\Gamma=1\Rightarrow$ base edge
+and cross term vanish, $H^2_{\mathrm{cat}}=H^2(\D)=H^2(\pi)$, orthogonality is the triviality
+of the base axis.
+\end{proof}
+
+\begin{remark}[Why this is the right correction]
+The conjecture \eqref{eq:conj} failed for a structural reason worth stating plainly: a
+nonzero base class $[\omega]$ \emph{is} a non-split extension, and a non-split extension is
+exactly a nonzero transgression. One cannot ``add'' the holonomy as a summand next to the
+prunability class, because the holonomy is the mechanism by which the base cohomology is
+glued into the fibre cohomology. The separation theorem saw the two faces as orthogonal only
+because it lived on the contractible-base slice where the transgression is forced to zero;
+off that slice, orthogonality is replaced by a single coupling differential. This is strictly
+more informative, and it is the honest ``internal replacement / Zappa--Sz\'ep'' deliverable:
+compositional correctness of the directed-container composite $=[\omega]=0=$ the collapse of
+one spectral sequence, whose two edges are the base handoff geometry and the vertex/additive
+prunability.
+\end{remark}
+
+\section{Status and honest scope}\label{sec:status}
+\paragraph{Proved.} Theorem~\ref{thm:lhs} (LHS decomposition; standard SS $+$ proved edge
+identifications), Lemma~\ref{lem:tg} (transgression $=$ holonomy; self-contained cocycle
+proof for trivial coefficients, cited \cite{nsw} in general), Corollary~\ref{cor:collapse}
+(collapse locus $=\{[\omega]=0\}$), Theorem~\ref{thm:nogo} (no-go), Theorem~\ref{thm:unify}
+(unification). These rest on the proved Proposition~\ref{prop:reduce}(a)(b)
+$=$ \cite{gzs,sep2}, the classical LHS machinery \cite{weibel,nsw}, and Schur--Zassenhaus.
+\paragraph{Computed.} The four finite witnesses of Corollary~\ref{cor:witness}
+(machine-checked bar complex over $\mathbb F_2$ and five-term rank count) and the $K_{2,3}$
+decoupling table of \S\ref{sec:k23}. The fibre-edge kernel ($H^2(\Z/2;\Z/2)=\Z/2$, $\Z/4$
+carry cocycle $\neq0=$ Klein) is machine-checked in Lean, sorry-free
+(\texttt{2026-09-17-}\allowbreak\texttt{fibre-h2-z2.lean}).
+\paragraph{Not claimed.}
+\begin{itemize}
+\item The clean direct sum \eqref{eq:conj} with both summands nonzero --- \textbf{refuted}
+(Theorem~\ref{thm:nogo}).
+\item \textbf{Open (the load-bearing caveat).} The general structural identification of
+Ferri prunability with a specific element of the fibre edge $E_2^{0,2}$, for \emph{arbitrary}
+stars and twisted coefficients, is \emph{not} proved here. We verify it on $K_{2,3}$ and its
+Klein control, and on the two-object $\Z/2$ family generally; a structural proof that the
+categorical LHS fibre edge literally receives Ferri prunability for a genuinely dynamical
+(quasigroup-only) star remains open. On $K_{2,3}$ the identification additionally rests on
+reading $+_\lambda$ as $(\Z/4,+)$ (Ferri's Counterexample~5.2 convention;
+Remark~\ref{rmk:quasigroup}), since the star $\bullet_\lambda$ is quasigroup-only. This is the
+separately tracked node \texttt{prunability-is-fibre-edge-class}.
+\item The nonabelian / non-normal Zappa--Sz\'ep matched-pair regime (Kac/Pirashvili $H^2$) is
+out of scope, as in \cite{gzs}.
+\end{itemize}
+
+\begin{thebibliography}{99}
+\bibitem{gobstr} MacBeth, \emph{The global-closure obstruction (G) is a cohomology class},
+Kodamai note, 11 June 2026.
+\bibitem{gzs} MacBeth, \emph{Invertibility does not kill the Zappa--Sz\'ep merge obstruction:
+the groupoid case is group cohomology}, Kodamai note, 24 July 2026
+(\texttt{2026-07-24-groupoid-zs-obstruction.tex}).
+\bibitem{sep} MacBeth, \emph{Ferri prunability is not the Zappa--Sz\'ep composition holonomy:
+a separation theorem}, Kodamai note, 16 September 2026
+(\texttt{2026-09-16-ferri-prunability-vs-zs-holonomy.tex}).
+\bibitem{sep2} MacBeth, \emph{The direction-functor $H^2$ of a connected groupoid is its
+vertex-group cohomology}, Kodamai note, 16 September 2026
+(\texttt{2026-09-16-h2catb-vertex-group-reduction.tex}).
+\bibitem{ferri} D.~Ferri, \emph{On dynamical skew braces and skew bracoids}, J.\ Pure Appl.\
+Algebra \textbf{229} (2025), no.~9, art.~108036, arXiv:2410.10717
+(Example~4.29 / Table~3, Counterexample~5.2, Remark~3.20).
+\bibitem{adm} S.~Ambra, A.~Duvieusart, A.~Montoli, \emph{A direction functor approach to the
+cohomology of small categories}, arXiv:2608.07380 (2026).
+\bibitem{weibel} C.~A.~Weibel, \emph{An Introduction to Homological Algebra}, Cambridge Univ.\
+Press, 1994 (\S6.8, the Lyndon--Hochschild--Serre spectral sequence and the five-term exact
+sequence).
+\bibitem{nsw} J.~Neukirch, A.~Schmidt, K.~Wingberg, \emph{Cohomology of Number Fields}, 2nd
+ed., Springer, 2008 (Ch.~I, transgression and the extension class).
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,426 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs,hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\ob}{\operatorname{ob}}
+\newcommand{\Ab}{\mathbf{Ab}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\CatB}{\mathbf{Cat}_B}
+\newcommand{\Igp}{\mathbf{I}}
+\newcommand{\Bpi}{B\pi}
+\newcommand{\infl}{\mathrm{inf}}
+\newcommand{\res}{\mathrm{res}}
+\newcommand{\tg}{\mathrm{tg}}
+\newcommand{\im}{\operatorname{im}}
+
+\title{One spectral sequence, two obstructions:\\
+the Zappa--Sz\'ep holonomy is the transgression, not a summand}
+\author{MacBeth\\\small Kodamai}
+\date{17 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The $H^2$-cluster carries two proved degree-two obstruction theories on a
+connected groupoid: the multiplicative Zappa--Sz\'ep \emph{composition holonomy}
+$[\omega]\in H^2(\Sk_\C;\D)$ over the orbit base, and the additive
+direction-functor class $H^2_{\CatB}(G;A)\cong H^2(\pi;M)$ of the vertex group,
+the home of Ferri prunability. A natural conjecture (the ``product
+decomposition'') hoped these were two independent summands of one categorical
+cohomology, $H^2_{\mathrm{cat}}(G;M)\cong H^2(\pi;M)\oplus H^2_{\mathrm{base}}(\Sk_\C;M)$,
+with both possibly nonzero. \textbf{We prove that this clean direct sum is
+impossible precisely when it would be interesting, and we replace it by the
+correct structure.} When the Zappa--Sz\'ep factorisation is a normal one
+$1\to\D\to K\to\Gamma\to1$ (loop-bundle fibre $\D$, orbit base
+$\Gamma=\Sk_\C$), the categorical cohomology is the abutment of the
+Lyndon--Hochschild--Serre spectral sequence $E_2^{p,q}=H^p(\Gamma;H^q(\D;M))$.
+Its two edges are exactly the two cluster faces --- the base edge
+$E_2^{2,0}=H^2(\Gamma;M^\D)$ carrying $[\omega]$ and the fibre edge
+$E_2^{0,2}=H^2(\D;M)^\Gamma$ carrying prunability --- and the transgression
+$d_2\colon H^1(\D;M)^\Gamma\to H^2(\Gamma;M^\D)$ is cup with the holonomy,
+$d_2(\varphi)=\varphi_*[\omega]$. Consequently: (i) the clean $\oplus$ holds iff
+the sequence collapses at $E_2$ with vanishing cross term --- which forces
+$[\omega]=0$ (split extension) --- and in the connected/coarse-base case
+$\Gamma\simeq\ast$ it recovers $H^2_{\mathrm{cat}}=H^2(\pi)$ exactly (Prop.~A,
+T1); (ii) \textbf{no-go}: if $[\omega]\neq0$ and some $\varphi\colon\D\to M$ has
+$\varphi_*[\omega]\neq0$, the base edge does not survive and no direct sum
+exists. Thus the two obstructions are never simultaneously present as
+independent summands: a nonzero base class \emph{is} the differential that
+transgresses itself away. This turns the three separate cluster results into
+\emph{one} object --- a spectral sequence whose transgression is the ZS
+holonomy --- refining the proved separation $[\omega]\perp$ prunability from
+``orthogonal'' to ``the two edges coupled by $[\omega]$''. All finite claims are
+machine-checked ($\Z/4$: $\dim H^2=1$ vs.\ naive $3$; $Q_8$: $2$ vs.\ $6$;
+$\Z/2\times\Z/2$: $3=3$; $\Z/6$: $1=1$).
+\end{abstract}
+
+\section{The two faces and the conjecture they invite}
+
+Three proved results place two obstruction theories on one connected groupoid
+$G$ with vertex group $\pi=G(x_0,x_0)$.
+
+\begin{itemize}
+\item[\textbf{(H)}] \emph{Holonomy face.} For the multiplicative groupoid of a
+quiver skew brace factored (Zappa--Sz\'ep) over a vertex bundle $\D$, the
+global-closure obstruction is a degree-two class $[\omega]\in H^2(\Sk_\C;\D)$
+over the orbit base $\Sk_\C$; the factorisation $K=\C\bowtie\D$ exists iff
+$[\omega]=0$ \cite{gobstr}. When $\D$ is normal this is the Schreier extension
+class of $1\to\D\to K\to\Gamma\to1$, $\Gamma=\Sk_\C$, and it is genuinely
+nonzero, e.g.\ $[\omega]\neq0$ for $\Z/4$ over $\Z/2$ \cite{gzs}.
+\item[\textbf{(P)}] \emph{Prunability face.} The direction-functor cohomology of
+Ambra--Duvieusart--Montoli \cite{adm} reduces, for a connected groupoid, to the
+vertex-group cohomology, $H^2_{\CatB}(G;A)\cong H^2(\pi;M)$ (T1 of \cite{sep2});
+this is the additive face that carries Ferri's prunability obstruction
+\cite{sep}.
+\item[\textbf{(S)}] \emph{Separation.} $[\omega]\perp$ prunability: the two are
+orthogonal, proved from a computed witness \cite{sep} and re-derived
+structurally from the decomposition $G\cong\Igp(\ob G)\times\Bpi$ (T2 of
+\cite{sep2}).
+\end{itemize}
+
+The tempting synthesis, recorded as the target \texttt{h2cat-product-decomposition},
+is a Künneth-style direct sum making both faces visible at once:
+\begin{equation}\label{eq:conj}
+   H^2_{\mathrm{cat}}(G;M)\;\overset{?}{\cong}\;
+   \underbrace{H^2(\pi;M)}_{\text{prunability}}\;\oplus\;
+   \underbrace{H^2_{\mathrm{base}}(\Sk_\C;M)}_{[\omega]},
+   \qquad\text{both summands possibly nonzero.}
+\end{equation}
+
+\paragraph{The conflation that breaks it.} Statement \eqref{eq:conj} silently
+uses one symbol $\Sk_\C$ for two different bases.
+\begin{itemize}
+\item In the \emph{connected/full-loop-bundle} regime of T2, $\Sk_\C=\Igp(\ob G)$
+is the \emph{coarse groupoid on the objects}. A coarse groupoid is a disjoint
+union of codiscrete (contractible) components, so $H^{\ge1}(\Sk_\C;-)=0$
+\emph{always}: the base summand of \eqref{eq:conj} is identically zero
+(Prop.~A). Here $G\cong\Igp(\ob G)\times\Bpi$ is a genuine categorical product,
+Künneth applies, and it says nothing but $H^2_{\mathrm{cat}}=H^2(\pi)$.
+\item In the \emph{proper-normal-bundle} regime of \cite{gzs}, the base
+$\Sk_\C=B\Gamma=B(K/\D)$ is the classifying groupoid of a \emph{quotient group}
+and is generally \emph{not} contractible; this is where $[\omega]\neq0$. But now
+$G$ is \emph{not} a product $\Igp\times B\Gamma$: the data
+$(\D,\Gamma,\pi)$ form a non-split \emph{extension} $1\to\D\to\pi\to\Gamma\to1$.
+\end{itemize}
+So the two regimes never coexist inside one product. The honest object that
+sees a non-contractible base is not a categorical product but a group
+\emph{extension}, and its cohomology is governed by the
+Lyndon--Hochschild--Serre (LHS) spectral sequence, not by Künneth. We prove that
+in this correct object $[\omega]$ appears as the \emph{transgression
+differential}, which is exactly why \eqref{eq:conj} fails whenever the base
+class is nonzero.
+
+\section{Setup and the reduction to a group extension}
+
+We work in the normal Zappa--Sz\'ep regime of \cite{gzs}, the only regime in
+which the base carries a nonzero class.
+
+\begin{proposition}[Reduction, \cite{gzs} Prop.~2.1--2.2, \cite{sep2} T1]
+\label{prop:reduce}
+Let $G$ be a connected groupoid whose vertex group $\pi$ admits a normal abelian
+subgroup $\D\trianglelefteq\pi$ (the vertex bundle of a Zappa--Sz\'ep
+factorisation), with quotient $\Gamma=\pi/\D$ the vertex group of the orbit base
+$\Sk_\C=B\Gamma$. Then:
+\begin{enumerate}
+\item[\textup{(a)}] $\D$ is a $\Gamma$-module via conjugation, and the
+Zappa--Sz\'ep holonomy $[\omega]\in H^2(\Sk_\C;\D)=H^2(\Gamma;\D)$ is the
+Schreier class of the extension
+\begin{equation}\label{eq:ext}
+   1\longrightarrow\D\longrightarrow\pi\xrightarrow{\ q\ }\Gamma\longrightarrow1;
+\end{equation}
+\item[\textup{(b)}] for a $G$-module $A$ with $M:=A(x_0)$, the categorical
+(direction-functor) cohomology reduces to the vertex group,
+$H^2_{\mathrm{cat}}(G;A)=H^2_{\CatB}(G;A)\cong H^2(\pi;M)$.
+\end{enumerate}
+\end{proposition}
+\begin{proof}
+(a) is \cite[Prop.~2.1--2.2]{gzs}: normality gives $\Sk_\C=\pi/\D=\Gamma$ and the
+defect $2$-cochain is the Schreier factor set of \eqref{eq:ext}. (b) is T1 of
+\cite{sep2}, $H^n_{\CatB}(G,A)\cong H^n(\pi,M)$, whose $n=2$ instance rests on
+the reconstructed Schreier correspondence there and elementary homological
+algebra.
+\end{proof}
+
+Proposition~\ref{prop:reduce} moves the whole question into ordinary group
+cohomology: \emph{how does $H^2(\pi;M)$ decompose along the extension
+\eqref{eq:ext}, and where do the two faces $[\omega]$ and $H^2(\D)$ sit?} The
+answer is the LHS spectral sequence.
+
+\section{The spectral sequence and its two edges}
+
+\begin{theorem}[LHS decomposition of the categorical cohomology]\label{thm:lhs}
+With the data of Proposition~\ref{prop:reduce}, $H^\bullet_{\mathrm{cat}}(G;A)\cong
+H^\bullet(\pi;M)$ is the abutment of the first-quadrant cohomological spectral
+sequence
+\begin{equation}\label{eq:E2}
+   E_2^{p,q}\;=\;H^p\bigl(\Gamma;\,H^q(\D;M)\bigr)\;\Longrightarrow\;H^{p+q}(\pi;M),
+\end{equation}
+of the extension \eqref{eq:ext} \cite[\S6.8]{weibel}. Its two degree-two edge
+terms are exactly the two $H^2$-cluster faces:
+\[
+   E_2^{2,0}=H^2\bigl(\Gamma;M^\D\bigr)
+   \quad\text{(\emph{base edge}: the home of $[\omega]$)},
+   \qquad
+   E_2^{0,2}=H^2(\D;M)^\Gamma
+   \quad\text{(\emph{fibre edge}: the prunability face)} .
+\]
+The abutment is filtered with associated graded
+$\mathrm{gr}\,H^2(\pi;M)=E_\infty^{2,0}\oplus E_\infty^{1,1}\oplus E_\infty^{0,2}$,
+where $E_\infty^{p,q}$ is the subquotient of $E_2^{p,q}$ surviving the
+differentials.
+\end{theorem}
+\begin{proof}
+The LHS spectral sequence of a group extension with abelian coefficient module
+$M$ is standard \cite[Thm.~6.8.2]{weibel}; \eqref{eq:E2} is its $E_2$-page. The
+edge identifications $E_2^{p,0}=H^p(\Gamma;M^\D)$ and
+$E_2^{0,q}=H^q(\D;M)^\Gamma$ are the definition of the two axes. That the base
+edge is where $[\omega]$ lives is Proposition~\ref{prop:reduce}(a)
+($[\omega]\in H^2(\Gamma;\D)$, mapped to $H^2(\Gamma;M^\D)$ by any $\Gamma$-map
+$\D\to M^\D$); that the fibre edge is the vertex/prunability face is
+\cite{sep,sep2}. The three-step filtration in total degree $2$ is the standard
+convergence of a first-quadrant sequence.
+\end{proof}
+
+The point of Theorem~\ref{thm:lhs} is that the two faces are not
+\emph{a priori} summands: they are two edges of one page, and whether they
+survive to the abutment is decided by the differentials. The relevant one is the
+transgression, and it is the holonomy itself.
+
+\begin{lemma}[The transgression is cup with the holonomy]\label{lem:tg}
+In the five-term exact sequence of \eqref{eq:E2},
+\[
+   0\to H^1(\Gamma;M^\D)\xrightarrow{\infl}H^1(\pi;M)\xrightarrow{\res}
+   H^1(\D;M)^\Gamma\xrightarrow{\ \tg\ }H^2(\Gamma;M^\D)\xrightarrow{\infl}H^2(\pi;M),
+\]
+the transgression $\tg=d_2^{0,1}$ is given by pushforward of the extension class:
+for a $\Gamma$-equivariant homomorphism $\varphi\in\Hom_\Gamma(\D,M)=H^1(\D;M)^\Gamma$,
+\[
+   \tg(\varphi)\;=\;\varphi_*[\omega]\;\in\;H^2(\Gamma;M^\D),
+\]
+where $\varphi_*\colon H^2(\Gamma;\D)\to H^2(\Gamma;M^\D)$ is induced by $\varphi$
+and $[\omega]$ is the Schreier class of \eqref{eq:ext}.
+\end{lemma}
+\begin{proof}
+We give the cocycle computation for the case $M$ a trivial $\pi$-module (which
+covers all witnesses below and the $\Z/4$-Schreier line); the general
+$\Gamma$-module case is \cite[proof of the transgression formula]{nsw}, identical
+after keeping the covariant end. Choose a normalised set section
+$s\colon\Gamma\to\pi$ of $q$, $s(1)=1$, with Schreier factor set
+\[
+   s(a)\,s(b)=\omega(a,b)\,s(ab),\qquad \omega(a,b)\in\D,\quad [\omega]=[\omega]\in H^2(\Gamma;\D).
+\]
+An element of $E_2^{0,1}=H^1(\D;M)^\Gamma$ is a $\Gamma$-invariant homomorphism
+$\varphi\colon\D\to M$. Running the construction of the transgression in the
+double complex of the extension \cite[\S6.8]{weibel}: $\varphi$ lifts to the
+$1$-cochain $\tilde\varphi\in C^1(\pi;M)$, $\tilde\varphi(g)=\varphi(\text{$\D$-part of }g)$
+along the section, and its image under the vertical differential, pushed to the
+base, is the $2$-cochain
+\[
+   (a,b)\longmapsto \varphi\bigl(\omega(a,b)\bigr)=(\varphi_*\omega)(a,b).
+\]
+Thus $\tg(\varphi)=[\varphi_*\omega]=\varphi_*[\omega]$. (Concretely: $\tg(\varphi)$
+is the obstruction to extending $\varphi$ from $\D$ to a homomorphism
+$\pi\to M$; it is $0$ iff the pushed-out extension
+$1\to M\to\varphi_*\pi\to\Gamma\to1$ splits, i.e.\ iff $\varphi_*[\omega]=0$.)
+\end{proof}
+
+\section{Collapse: recovering the conjecture where it is true}
+
+\begin{corollary}[When the clean sum holds]\label{cor:collapse}
+The naive direct sum \eqref{eq:conj} of the two edges equals $H^2(\pi;M)$
+whenever the sequence \eqref{eq:E2} collapses at $E_2$ in total degree $2$ with
+vanishing cross term $E_2^{1,1}$. Each of the following is sufficient:
+\begin{enumerate}
+\item[\textup{(i)}] \textbf{Coarse/connected base} $\Gamma=1$
+\textup{(}Prop.~A, T2 of \cite{sep2}\textup{)}: then $E_2^{p,q}=0$ for $p>0$, the
+base edge and cross term vanish, and $H^2(\pi;M)=E_2^{0,2}=H^2(\D;M)$. Since here
+$\D=\pi$ this is the identity $H^2_{\mathrm{cat}}(G)=H^2(\pi)$ of T1 --- the clean
+sum degenerates to its fibre summand, and $[\omega]=0$.
+\item[\textup{(ii)}] \textbf{Direct product} $\pi=\D\times\Gamma$: then $[\omega]=0$
+and the sequence collapses (Künneth), giving the \emph{full} associated graded
+$H^2(\pi;M)\cong E_2^{2,0}\oplus E_2^{1,1}\oplus E_2^{0,2}$ --- the honest
+Künneth form, including the cross term $H^1(\Gamma)\otimes H^1(\D)$ that
+\eqref{eq:conj} omits.
+\item[\textup{(iii)}] \textbf{Coprime orders} $\gcd(|\D|,|\Gamma|)=1$
+\textup{(}Schur--Zassenhaus\textup{)}: $E_2^{p,q}=0$ for $p,q>0$, so
+$H^2(\pi;M)=E_2^{2,0}\oplus E_2^{0,2}$ and $[\omega]=0$.
+\end{enumerate}
+In every collapsing case the base class is forced to zero: $[\omega]=0$.
+\end{corollary}
+\begin{proof}
+(i) A coarse groupoid is equivalent to the terminal category, so
+$H^{\ge1}(\Gamma;-)=0$; the surviving column is $p=0$. (ii) A direct product
+splits \eqref{eq:ext}, so $[\omega]=0$; collapse is the Eilenberg--Zilber/Künneth
+theorem for $B\D\times B\Gamma$. (iii) For coprime orders the higher cohomology
+of each factor is annihilated by both $|\D|$ and $|\Gamma|$, hence $0$ off the
+edges; a split extension (Schur--Zassenhaus) has $[\omega]=0$.
+\end{proof}
+
+Corollary~\ref{cor:collapse} is the precise content of the original conjecture:
+\eqref{eq:conj} is \emph{true exactly on the locus $[\omega]=0$}, and there it is
+either the trivial statement $H^2_{\mathrm{cat}}=H^2(\pi)$ (connected case) or
+the genuine Künneth sum (direct product) --- but in neither case is the base
+summand nonzero. The interesting ``both nonzero'' regime is empty, as we now
+show.
+
+\section{The no-go: a nonzero base class transgresses itself away}
+
+\begin{theorem}[{No clean sum when $[\omega]\neq0$}]\label{thm:nogo}
+Suppose $[\omega]\neq0$ and there is a $\Gamma$-equivariant $\varphi\colon\D\to M$
+with $\varphi_*[\omega]\neq0$ in $H^2(\Gamma;M^\D)$ \textup{(}e.g.\ $M=\D$,
+$\varphi=\id$, whenever $[\omega]\neq0$\textup{)}. Then:
+\begin{enumerate}
+\item[\textup{(a)}] the transgression $d_2^{0,1}=\tg$ is nonzero
+\textup{(}Lemma~\ref{lem:tg}\textup{)}, so the base edge does not survive:
+$E_\infty^{2,0}\subsetneq E_2^{2,0}$, and the image $\varphi_*[\omega]$ of the
+holonomy is \emph{killed} in the abutment;
+\item[\textup{(b)}] consequently $H^2(\pi;M)$ is \emph{not} the direct sum
+\eqref{eq:conj} of the two edges: $\dim H^2(\pi;M)<\dim E_2^{2,0}+\dim E_2^{1,1}
++\dim E_2^{0,2}$ whenever $\tg\neq0$.
+\end{enumerate}
+In particular the two $H^2$-cluster faces are \emph{never} simultaneously present
+as independent summands of $H^2_{\mathrm{cat}}(G)$: a nonzero base class is not a
+summand but a differential.
+\end{theorem}
+\begin{proof}
+(a) By Lemma~\ref{lem:tg}, $\tg(\varphi)=\varphi_*[\omega]\neq0$, so
+$d_2^{0,1}\neq0$. The differential $d_2^{0,1}\colon E_2^{0,1}\to E_2^{2,0}$ has
+nonzero image, hence $E_3^{2,0}=E_2^{2,0}/\im d_2^{0,1}$ is a proper quotient;
+as the base edge receives no further differentials
+($d_r^{p,0}$ into $(2,0)$ come from $(2-r,r-1)$, which for $r\ge3$ is a negative
+column), $E_\infty^{2,0}=E_3^{2,0}\subsetneq E_2^{2,0}$, and the class
+$\varphi_*[\omega]$ (a generator of $\im d_2$) is annihilated. (b) The abutment
+has $\dim H^2=\sum_{p+q=2}\dim E_\infty^{p,q}\le\sum_{p+q=2}\dim E_2^{p,q}$ with
+strict inequality once any $E_\infty^{p,q}\subsetneq E_2^{p,q}$; part (a) gives
+this at $(2,0)$.
+\end{proof}
+
+\begin{corollary}[Witnesses, machine-checked]\label{cor:witness}
+For trivial $\Z/2$-coefficients $M=\mathbb F_2$
+\textup{(}\texttt{2026-09-17-lhs-decomposition-check.py}\textup{)}:
+\begin{center}\small
+\begin{tabular}{lcccccl}
+\toprule
+$\pi=\D.\Gamma$ & split? & $[\omega]$ & $\dim H^2(\pi)$ &
+$\dim(E_2^{2,0}\!\oplus\!E_2^{1,1}\!\oplus\!E_2^{0,2})$ & $\mathrm{rk}\,\tg$ & verdict\\
+\midrule
+$\Z/4=\Z/2.\Z/2$          & no  & $\neq0$ & $1$ & $1{+}1{+}1=3$ & $1$ & \textbf{no sum} (base edge dies)\\
+$Q_8=(\Z/2)^2.\Z/2$       & no  & $\neq0$ & $2$ & $3{+}2{+}1=6$ & $1$ & \textbf{no sum}\\
+$\Z/2\times\Z/2=\Z/2.\Z/2$& yes & $0$     & $3$ & $1{+}1{+}1=3$ & $0$ & clean (full Künneth)\\
+$\Z/6=\Z/2.\Z/3$          & yes & $0$     & $1$ & $0{+}0{+}1=1$ & $0$ & clean (fibre only)\\
+\bottomrule
+\end{tabular}
+\end{center}
+For $\Z/4$ the transgression is an isomorphism $E_2^{0,1}\xrightarrow{\sim}E_2^{2,0}$,
+so the entire base edge $H^2(\Z/2;\mathbb F_2)$ --- the home of the nonzero Schreier
+$[\omega]$ of $\Z/4$ over $\Z/2$ \cite{gzs} --- \emph{vanishes} from the
+abutment. The naive sum overcounts by $2$; the true $H^2(\Z/4;\mathbb F_2)$ is
+$1$-dimensional.
+\end{corollary}
+
+\section{What the cluster is, correctly}
+
+The three cluster results do unify into one object --- but that object is a
+spectral sequence, not a direct sum.
+
+\begin{theorem}[Structural unification]\label{thm:unify}
+Under Proposition~\ref{prop:reduce}, the categorical cohomology
+$H^2_{\mathrm{cat}}(G;A)\cong H^2(\pi;M)$ is the total degree-two term of the LHS
+spectral sequence \eqref{eq:E2}, in which:
+\begin{enumerate}
+\item the \emph{fibre edge} $E_2^{0,2}=H^2(\D;M)^\Gamma$ is the
+additive/prunability face \textup{(P)};
+\item the \emph{base edge} $E_2^{2,0}=H^2(\Gamma;M^\D)$ is the holonomy face,
+receiving the transgression $d_2$;
+\item the \emph{transgression} $d_2\colon E_2^{0,1}\to E_2^{2,0}$ \emph{is} the
+Zappa--Sz\'ep holonomy, $d_2(\varphi)=\varphi_*[\omega]$ \textup{(H)}.
+\end{enumerate}
+The proved separation $[\omega]\perp$ prunability \textup{(S)} is the special
+case $\Gamma\simeq\ast$ \textup{(}base contractible, only the fibre edge
+survives\textup{)}; in general the two faces are not orthogonal summands but the
+two axes of one page, \emph{coupled} by the transgression, which is $[\omega]$
+itself. The clean direct sum \eqref{eq:conj} holds iff this coupling vanishes,
+i.e.\ iff $[\omega]=0$.
+\end{theorem}
+\begin{proof}
+Assemble Theorem~\ref{thm:lhs} (edges), Lemma~\ref{lem:tg} (transgression $=$
+holonomy), Corollary~\ref{cor:collapse} (collapse $\Leftrightarrow$ the true
+locus of \eqref{eq:conj}) and Theorem~\ref{thm:nogo} (no-go off that locus). The
+separation is Corollary~\ref{cor:collapse}(i): $\Gamma=1\Rightarrow$ base edge
+and cross term vanish, $H^2_{\mathrm{cat}}=H^2(\D)=H^2(\pi)$, orthogonality is
+the triviality of the base axis.
+\end{proof}
+
+\begin{remark}[Why this is the right correction]
+The conjecture \eqref{eq:conj} failed for a structural reason worth stating
+plainly: a nonzero base class $[\omega]$ \emph{is} a non-split extension, and a
+non-split extension is exactly a nonzero transgression. One cannot ``add'' the
+holonomy as a summand next to the prunability class, because the holonomy is the
+mechanism by which the base cohomology is glued into the fibre cohomology.
+The separation theorem saw the two faces as orthogonal only because it lived on
+the contractible-base slice where the transgression is forced to zero; off that
+slice, orthogonality is replaced by a single coupling differential. This is a
+strictly more informative statement, and it is the honest ``internal
+replacement / Zappa--Sz\'ep'' deliverable: compositional correctness of the
+directed-container composite $= [\omega]=0 =$ the collapse of one spectral
+sequence, whose two edges are the base handoff geometry and the vertex/additive
+prunability.
+\end{remark}
+
+\section{Status and honest scope}
+\paragraph{Proved.} Theorem~\ref{thm:lhs} (LHS decomposition; standard SS +
+proved edge identifications), Lemma~\ref{lem:tg} (transgression $=$ holonomy;
+self-contained cocycle proof for trivial coefficients, cited \cite{nsw} in
+general), Corollary~\ref{cor:collapse} (collapse locus $=\{[\omega]=0\}$),
+Theorem~\ref{thm:nogo} (no-go), Theorem~\ref{thm:unify} (unification). These rest
+on the proved Proposition~\ref{prop:reduce}(a)(b) $=$ \cite{gzs,sep2}, the
+classical LHS machinery \cite{weibel,nsw}, and Schur--Zassenhaus.
+\paragraph{Computed.} The four witnesses of Corollary~\ref{cor:witness}
+(machine-checked bar complex over $\mathbb F_2$ and five-term rank count).
+\paragraph{Not claimed.} The clean direct sum \eqref{eq:conj} with both summands
+nonzero --- \textbf{refuted} (Theorem~\ref{thm:nogo}). The nonabelian /
+non-normal Zappa--Sz\'ep matched-pair regime (Kac/Pirashvili $H^2$) is out of
+scope, as in \cite{gzs}. The precise \emph{identification} of Ferri prunability
+with a specific element of the fibre edge $E_2^{0,2}$ remains the separately
+tracked open node.
+
+\begin{thebibliography}{99}
+\bibitem{gobstr} MacBeth, \emph{The global-closure obstruction (G) is a
+cohomology class}, Kodamai note, 11 June 2026.
+\bibitem{gzs} MacBeth, \emph{Invertibility does not kill the Zappa--Sz\'ep merge
+obstruction: the groupoid case is group cohomology}, Kodamai note, 24 July 2026
+(\texttt{2026-07-24-groupoid-zs-obstruction.tex}).
+\bibitem{sep} MacBeth, \emph{Ferri prunability is not the Zappa--Sz\'ep
+composition holonomy: a separation theorem}, Kodamai note, 16 September 2026
+(\texttt{2026-09-16-ferri-prunability-vs-zs-holonomy.tex}).
+\bibitem{sep2} MacBeth, \emph{The direction-functor $H^2$ of a connected
+groupoid is its vertex-group cohomology}, Kodamai note, 16 September 2026
+(\texttt{2026-09-16-h2catb-vertex-group-reduction.tex}).
+\bibitem{adm} S.~Ambra, A.~Duvieusart, A.~Montoli, \emph{A direction functor
+approach to the cohomology of small categories}, arXiv:2608.07380 (2026).
+\bibitem{weibel} C.~A.~Weibel, \emph{An Introduction to Homological Algebra},
+Cambridge Univ.\ Press, 1994 (\S6.8, the Lyndon--Hochschild--Serre spectral
+sequence and the five-term exact sequence).
+\bibitem{nsw} J.~Neukirch, A.~Schmidt, K.~Wingberg, \emph{Cohomology of Number
+Fields}, 2nd ed., Springer, 2008 (Ch.~I, transgression and the extension class).
+\bibitem{brown} K.~S.~Brown, \emph{Cohomology of Groups}, GTM 87, Springer, 1982.
+\end{thebibliography}
+\end{document}
