@@ -31,6 +31,10 @@
 \newcommand{\tg}{\mathrm{tg}}
 \newcommand{\im}{\operatorname{im}}
 \newcommand{\loops}{\mathrm{loops}}
+\newcommand{\St}{\operatorname{St}}
+\newcommand{\s}{\operatorname{s}}
+\newcommand{\Lloc}{\mathcal{L}}
+\newcommand{\A}{\mathcal{A}}
 
 \title{Holonomy and prunability as the two edges of one spectral sequence\\
 \large the Zappa--Sz\'ep composition holonomy is the transgression, on Ferri's $K_{2,3}$}
@@ -43,13 +47,15 @@
 \begin{center}\small
 \fbox{\begin{minipage}{0.92\textwidth}\centering
 \emph{Author:} MacBeth (Kodamai).\qquad\emph{Date:} 17 September 2026.\\[2pt]
-\emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{content-commit} \texttt{ddbe7c0}.\\[2pt]
+\emph{Base:} \texttt{scotmacbeth/work-in-progress} \emph{content-commit} \texttt{ddbe7c0},
+\emph{plus} the Related-work \S\ref{sec:related} (Wazzan--Oluyori $H^2_{ZS}$), added 18 Sep 2026.\\[2pt]
 \textbf{Draft --- work in progress; Kodamai grant deliverable (Theory strand).}
 For Rick (skew-brace / $H^2$ referee), then Neil. The structural results
 (\S\ref{sec:reduce}--\S\ref{sec:unify}) are proved; the $K_{2,3}$ material of
-\S\ref{sec:k23} is computed and machine-checked on the fibre edge, and the general
-fibre-edge identification of prunability is flagged \textbf{open} throughout
-(\S\ref{sec:status}).
+\S\ref{sec:k23} is computed and machine-checked on the fibre edge; \S\ref{sec:fibretruth}
+sharpens (and in one respect corrects) the fibre-edge reading in the untwisted core --- Ferri
+prunability is a \emph{degree-one} descent datum, not the degree-two fibre class --- with the
+$|L_\lambda|\ge3$ linear reduction left \textbf{open} (\S\ref{sec:status}).
 \end{minipage}}
 \end{center}
 
@@ -64,14 +70,18 @@ locate both obstructions inside a single object. When the factorisation is norma
 cohomology of the groupoid is the abutment of the Lyndon--Hochschild--Serre spectral
 sequence of the extension $1\to\D\to\pi\to\Gamma\to1$; its two degree-two edges are exactly
 the two obstruction theories --- the base edge $H^2(\Gamma;M^\D)$ carries $[\omega]$, the
-fibre edge $H^2(\D;M)^\Gamma$ carries prunability --- and the transgression $d_2(\varphi)
+fibre edge $H^2(\D;M)^\Gamma$ carries the additive obstruction --- and the transgression $d_2(\varphi)
 =\varphi_*[\omega]$ \emph{is} the holonomy. Consequently the two faces are never independent
 summands: a nonzero base class is a differential, not a summand, so the naive direct sum
 fails precisely when it would be interesting. On the fibre side we compute the fibre-edge
 class on Ferri's own $K_{2,3}$: it is connected (so $[\omega]=0$) yet non-prunable, and the
 fibre edge carries a nonzero class $[\pi]$, while a prunable Klein control kills both edges.
-All finite claims are machine-checked; the general identification of prunability with the
-fibre edge for arbitrary stars is stated as an open problem.
+All finite claims are machine-checked. A companion analysis of the untwisted (abelian-star,
+subgroup-loop) core sharpens the fibre side: Ferri prunability is there a \emph{degree-one} descent
+(flat-section) datum --- the loop bundle being a kernel --- logically independent of the
+\emph{degree-two} star-reassembly (Schreier) class the fibre edge carries, so the $K_{2,3}$ class
+detects star-nonsplitness rather than prunability directly. An ideal is a kernel; an extension is a
+reassembly. The general linear reduction of the descent datum for larger loop groups remains open.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -128,8 +138,9 @@ $E_2^{p,q}=H^p(\Gamma;H^q(\D;M))$, in which
 \begin{enumerate}
 \item[\textup{(i)}] the \emph{base edge} $E_2^{2,0}=H^2(\Gamma;M^\D)$ is the home of the
 holonomy $[\omega]$;
-\item[\textup{(ii)}] the \emph{fibre edge} $E_2^{0,2}=H^2(\D;M)^\Gamma$ is the home of
-prunability;
+\item[\textup{(ii)}] the \emph{fibre edge} $E_2^{0,2}=H^2(\D;M)^\Gamma$ is the additive face ---
+the star-reassembly (Schreier) class, next to which Ferri prunability refines to a degree-one
+descent datum (\S\ref{sec:fibretruth});
 \item[\textup{(iii)}] the transgression $d_2\colon E_2^{0,1}\to E_2^{2,0}$ \emph{is} the
 holonomy: $d_2(\varphi)=\varphi_*[\omega]$.
 \end{enumerate}
@@ -154,8 +165,11 @@ $\Z/4$ that is \emph{non-prunable} (Ferri's Counterexample~5.2) --- the two edge
 the base edge vanishes, $[\omega]=0$ \textup{(}$G$ is connected, so the orbit base is
 contractible\textup{)}, while the fibre edge carries a nonzero class
 $[\pi]\in H^2(\Z/2;\Z/2)=\Z/2$. A prunable Klein-four control kills both edges. Thus the
-fibre edge is the genuine detector of prunability, decoupled from the holonomy, on Ferri's
-actual numbers.
+fibre edge is genuinely occupied, decoupled from the holonomy, on Ferri's actual numbers. What
+that class \emph{is} --- the degree-two star-reassembly (Schreier) datum --- and where Ferri
+prunability sits relative to it --- one degree below, as a descent condition --- is pinned down in
+\S\ref{sec:fibretruth}, which sharpens (and in one respect corrects) the naive reading ``the fibre
+edge is prunability''.
 \end{theorem}
 
 \paragraph{Method.} Normality turns the whole question into ordinary group cohomology along
@@ -174,13 +188,21 @@ the base edge is forced to zero and only the fibre edge survives; $K_{2,3}$ is e
 slice, realised on a real example. For the grant Theory strand this is the honest
 ``internal replacement / Zappa--Sz\'ep, fully cohomological'' statement: compositional
 correctness of the directed-container composite is $[\omega]=0$, which is the collapse of one
-spectral sequence whose two edges are the base handoff geometry and the additive prunability.
+spectral sequence whose two edges are the base handoff geometry and the additive star-reassembly class (prunability itself the degree-one descent datum below the fibre edge, \S\ref{sec:fibretruth}).
+
+\paragraph{A monolithic precursor.} The whole object we filter --- the categorical
+abutment $H^2_{\mathrm{cat}}(G)$ --- has an independently published skew-brace analogue:
+Wazzan and Oluyori's $H^2_{ZS}$ \cite{oluyori} classifies extensions of the fused
+Zappa--Sz\'ep object as a single group. Our contribution is to \emph{filter} that
+abutment --- to separate its two edge obstructions and identify their coupling as the
+holonomy (\S\ref{sec:related}).
 
 \paragraph{Outline.} \S\ref{sec:prelim} fixes the setup and defines $[\omega]$ and
 prunability. \S\ref{sec:reduce} reduces to a group extension. \S\ref{sec:lhs} identifies the
 two edges. \S\ref{sec:tg} proves the transgression is the holonomy. \S\ref{sec:nogo} gives
 the collapse locus, the no-go, and the finite witnesses. \S\ref{sec:k23} computes the fibre
 edge on $K_{2,3}$ and answers Remark~3.20. \S\ref{sec:unify} assembles the unification.
+\S\ref{sec:related} positions the result against Wazzan--Oluyori's monolithic $H^2_{ZS}$.
 \S\ref{sec:status} states the honest scope, including the open general identification.
 
 \section{Preliminaries}\label{sec:prelim}
@@ -279,7 +301,7 @@ exactly the two obstruction faces:
    E_2^{2,0}&=H^2\bigl(\Gamma;M^\D\bigr)
    &&\text{(\emph{base edge}: the home of $[\omega]$)},\\
    E_2^{0,2}&=H^2(\D;M)^\Gamma
-   &&\text{(\emph{fibre edge}: the prunability face)} .
+   &&\text{(\emph{fibre edge}: the additive face)} .
    \end{aligned}
 \]
 The abutment is filtered with associated graded
@@ -292,7 +314,7 @@ standard \cite[Thm.~6.8.2]{weibel}; \eqref{eq:E2} is its $E_2$-page. The edge
 identifications $E_2^{p,0}=H^p(\Gamma;M^\D)$ and $E_2^{0,q}=H^q(\D;M)^\Gamma$ are the
 definition of the two axes. That the base edge is where $[\omega]$ lives is
 Proposition~\ref{prop:reduce}(a) ($[\omega]\in H^2(\Gamma;\D)$, mapped to $H^2(\Gamma;M^\D)$
-by any $\Gamma$-map $\D\to M^\D$); that the fibre edge is the vertex/prunability face is
+by any $\Gamma$-map $\D\to M^\D$); that the fibre edge is the additive/vertex face is
 \cite{sep,sep2}. The three-step filtration in total degree $2$ is the standard convergence
 of a first-quadrant sequence.
 \end{proof}
@@ -504,8 +526,100 @@ line that carries $[\omega]$: $[\omega]$ is the nonsplitting of the multiplicati
 $1\to\D\to\pi\to\Gamma\to1$ on the base edge, and prunability is the nonsplitting of the
 additive extension on the fibre edge. The dividing line, $\Z/4$ (nonsplit) versus Klein
 (split), is exactly the additive twin of the $\Z/4$-versus-$\Z/2\times\Z/2$ line for
-$[\omega]$ in Corollary~\ref{cor:witness}. This is the group-theoretic/cohomological
-description Ferri asked for.
+$[\omega]$ in Corollary~\ref{cor:witness}. This is the additive twin the fibre
+edge carries; \S\ref{sec:fibretruth} says precisely what that twin \emph{is}, and where Ferri
+prunability sits relative to it.
+
+\section{What the fibre edge really is: prunability is one degree lower}\label{sec:fibretruth}
+
+The witness of \S\ref{sec:k23} shows the fibre edge is occupied by a nonzero $H^2$ class on
+$K_{2,3}$, and it is tempting to read that class \emph{as} prunability. In the untwisted core ---
+the regime where the loop bundle satisfies Ferri's subgroup condition \textbf{SUB}, so that
+``prune to the loops'' is even well posed --- the identification must be refined: prunability there
+is a \emph{degree-one} descent datum, and the degree-two fibre-edge class is a logically independent
+star-\emph{reassembly} datum. We record the three facts that pin this down, proved in
+\cite{descent}; they sharpen, and in one respect correct, the reading of
+Theorem~\ref{thm:main-witness}.
+
+\paragraph{Setup (untwisted core).} Take abelian stars $(\St\lambda,+_\lambda)$ with left action
+$a\rightharpoonup(-)$, loop bundle $G^{\loops}=\bigsqcup_\lambda L_\lambda$, and Ferri's conditions
+\textbf{SUB} (each $L_\lambda$ an additive subgroup of its star) and
+\[
+   \text{(9)}\qquad a\rightharpoonup L_{\tg(a)}\subseteq L_{\s(a)}\quad\text{for every arrow }a .
+\]
+Complete prunability (the loop bundle a $\rightharpoonup$-ideal) is $\textbf{SUB}\wedge(9)$. Write
+$\A\colon\lambda\mapsto(\St\lambda,+_\lambda)$, $\A(a):=a\rightharpoonup(-)$, for the star local
+system (a functor to abelian groups; each $\A(a)$ an isomorphism, \cite{converse}).
+
+\begin{theorem}[Loop invariance is automatic {\cite[Thm.~A]{descent}}]\label{thm:loopauto}
+Under \textbf{SUB}, condition $(9)$ restricted to loop arrows holds automatically: for every loop
+$\ell\in L_\lambda$, $\ell\rightharpoonup L_\lambda=L_\lambda$. Prunability can therefore fail only
+through cross-object transport.
+\end{theorem}
+
+\begin{theorem}[Prunability is descent, not a Schreier class {\cite[Thm.~B]{descent}}]\label{thm:descent}
+Under \textbf{SUB}, the following are equivalent: \textup{(i)}~$(9)$ holds ($G^{\loops}$ is
+prunable); \textup{(ii)}~$\{L_\lambda\}$ is a $\rightharpoonup$-subfunctor (flat section) of $\A$,
+i.e.\ $a\rightharpoonup L_\mu=L_\lambda$ for every $a\colon\lambda\to\mu$; \textup{(iii)}~the action
+descends to the quotients $\A(\lambda)/L_\lambda$, making $G^{\loops}=\ker(\A\twoheadrightarrow
+\A/\Lloc)$ a kernel. For $|L_\lambda|=2$ this linearises to a \emph{degree-one} cochain
+$\delta\colon\ob G\to A_0/L_0$ with $(9)\iff\delta\equiv0$. Thus prunability is a first-order
+descent (parallel-transport) obstruction, one degree \emph{below} a Schreier extension class.
+\end{theorem}
+
+\begin{theorem}[The Schreier class is blind to prunability {\cite[Thm.~C]{descent}}]\label{thm:blind}
+Let $e_\lambda=[\,0\to L_\lambda\to(\St\lambda,+_\lambda)\to\St_\lambda/L_\lambda\to0\,]\in
+H^2(\St_\lambda/L_\lambda;L_\lambda)$ be the Schreier class of the star extension --- the
+degree-two datum the fibre edge carries. Over the star $\Z/4\times\Z/2$, all four combinations of
+$(e$ split/nonsplit$)\times((9)$ holds/fails$)$ occur among \textbf{SUB} skew braces:
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+ & $e$ split & $e$ nonsplit\\
+\midrule
+$(9)$ holds (prunable)     & $96$  & $\mathbf{48}$\\
+$(9)$ fails (non-prunable) & $\mathbf{192}$ & $96$\\
+\bottomrule
+\end{tabular}
+\end{center}
+In particular there are $48$ prunable skew braces with a \emph{nonsplit} star and $192$
+non-prunable ones with a \emph{split} star. Hence $e$ neither implies nor is implied by
+prunability: the degree-two fibre class does not detect $(9)$.
+\end{theorem}
+
+\begin{corollary}[Two independent data on the loop bundle]\label{cor:twodata}
+In the untwisted core the loop bundle carries two logically independent obstructions:
+\begin{enumerate}
+\item[\textup{(1)}] the \emph{descent/ideal} datum (Theorem~\ref{thm:descent}) --- a
+\emph{degree-one} flat-section obstruction, vanishing iff $G^{\loops}$ is a kernel; this is
+prunability; and
+\item[\textup{(2)}] the \emph{reassembly} datum --- the \emph{degree-two} star Schreier class $e$
+on the fibre edge $E_2^{0,2}$, and multiplicatively the holonomy $[\omega]$ on the base edge
+$E_2^{2,0}$ --- governing how a total object is reassembled from kernel and quotient.
+\end{enumerate}
+By Theorem~\ref{thm:blind} these are uncorrelated. The nonzero fibre-edge class of \S\ref{sec:k23}
+is datum \textup{(2)}, not \textup{(1)}.
+\end{corollary}
+
+\paragraph{Reconciliation with $K_{2,3}$.} The $K_{2,3}$ witness is unaffected as a
+\emph{computation} --- the fibre edge does carry the nonzero generator of $H^2(\Z/2;\Z/2)$ --- but
+its \emph{reading} is now precise. On $K_{2,3}$ \textbf{SUB} \emph{fails} (the loops $\{0,3\}\subset
+\Z/4$ are not an additive subgroup), so the descent picture of Theorem~\ref{thm:descent} does not
+apply and the nonzero fibre class measures the ambient star's non-splitness --- datum (2) --- which
+there co-occurs with non-prunability only because \textbf{SUB} fails. In the \textbf{SUB} regime,
+Theorem~\ref{thm:blind} shows the two part company in every cell. So the honest answer to Ferri's
+Remark~3.20 is sharper than ``prunability is the fibre-edge $H^2$'': prunability is the
+\emph{degree-one} descent condition that $G^{\loops}$ be a kernel (Theorem~\ref{thm:descent}), and
+the degree-two fibre-edge class is a distinct, independent reassembly datum.
+
+\begin{center}\itshape An ideal is a kernel (degree-one descent); an extension is a reassembly
+(degree-two $H^2$). The loop bundle carries both, and they are independent.\end{center}
+
+\paragraph{Honest scope.} Theorem~\ref{thm:descent}'s equivalences are general, but the clean
+degree-one cochain $\delta$ uses $|L_\lambda|=2$; for $|L_\lambda|\ge3$ the descent obstruction is a
+section of a bundle of order-$n$ subgroups (a torsor-valued first cohomology) and its reduction to a
+single linear class is \textbf{open}. The reconciliation above is for the untwisted (abelian-star,
+\textbf{SUB}) core; the fully dynamical (quasigroup-only) case is as in \S\ref{sec:status}.
 
 \section{What the cluster is, correctly}\label{sec:unify}
 
@@ -515,8 +629,10 @@ The three cluster results unify into one object --- a spectral sequence, not a d
 Under Proposition~\ref{prop:reduce}, the categorical cohomology $H^2_{\mathrm{cat}}(G;A)\cong
 H^2(\pi;M)$ is the total degree-two term of the LHS spectral sequence \eqref{eq:E2}, in which:
 \begin{enumerate}
-\item the \emph{fibre edge} $E_2^{0,2}=H^2(\D;M)^\Gamma$ is the additive/prunability face
-\textup{(P)}, occupied by a nonzero class on Ferri's $K_{2,3}$ (\S\ref{sec:k23});
+\item the \emph{fibre edge} $E_2^{0,2}=H^2(\D;M)^\Gamma$ is the additive face \textup{(P)} ---
+the star-reassembly (Schreier) class, occupied by a nonzero class on Ferri's $K_{2,3}$
+(\S\ref{sec:k23}); Ferri prunability proper is the degree-one descent datum below it
+(\S\ref{sec:fibretruth}, independent by Theorem~\ref{thm:blind});
 \item the \emph{base edge} $E_2^{2,0}=H^2(\Gamma;M^\D)$ is the holonomy face, receiving the
 transgression $d_2$;
 \item the \emph{transgression} $d_2\colon E_2^{0,1}\to E_2^{2,0}$ \emph{is} the Zappa--Sz\'ep
@@ -551,6 +667,59 @@ one spectral sequence, whose two edges are the base handoff geometry and the ver
 prunability.
 \end{remark}
 
+\section{Related work: the monolithic skew-brace abutment}\label{sec:related}
+
+The whole object we have filtered --- the categorical abutment
+$H^2_{\mathrm{cat}}(G)\cong H^2(\pi;M)$ --- has, on the skew-brace side, an independently
+published analogue. Wazzan and Oluyori \cite{oluyori} define a second cohomology
+$H^2_{ZS}(A;M)$ for a Zappa--Sz\'ep skew brace $A=Y\bowtie K$ (a ``digroup'' base carrying
+two compatible group operations) and prove it classifies extensions
+$1\to M\to E\to A\to1$ of the \emph{whole} fused object $A$; their lifting corollary places
+the obstruction to promoting a semidirect skew brace to a fully mutual (Zappa--Sz\'ep) one
+inside $H^2_{ZS}$. This is the same narrative move as ours --- a degree-two class detecting
+when two interacting factors assemble into one --- carried out for skew braces rather than
+for the groupoid $G$.
+
+\paragraph{$H^2_{ZS}$ is the abutment, not an edge (computed placement).} $H^2_{ZS}$ is the
+skew-brace analogue of our \emph{whole} abutment $H^2_{\mathrm{cat}}(G)$, presented
+monolithically; it is neither the base edge $E_2^{2,0}$ that carries $[\omega]$ nor the
+fibre edge $E_2^{0,2}$ that carries the additive class. Two features fix this reading. First,
+$H^2_{ZS}$ classifies extensions of the \emph{total} fused object $A=Y\bowtie K$, not of a
+single factor --- exactly the abutment's job, whereas each of our two edges sees only one
+factor of the extension \eqref{eq:ext}. Second, as reported (see the provenance note below),
+its cochains split into a \emph{pair}, one component valued in each of the two factors
+$Y,K$, so that the additive (fibre / prunability) and multiplicative (base / $[\omega]$)
+directions are fused at once rather than separated by degree. Simultaneous fusion of both
+directions is the signature of a total-degree abutment, not of either axis of a spectral
+sequence.
+
+\paragraph{What the present filtration adds.} None of the spectral-sequence structure of
+this paper appears in \cite{oluyori}: there is no filtration of $H^2_{ZS}$, no base/fibre
+edge, no transgression, and no direct-sum question. Our results are precisely the refinement
+that a monolithic abutment invites. The Lyndon--Hochschild--Serre spectral sequence
+\eqref{eq:E2} filters the whole cohomology; Theorem~\ref{thm:lhs} identifies its two
+degree-two edges as the two obstruction faces; Lemma~\ref{lem:tg} identifies the
+transgression with the holonomy, $d_2(\varphi)=\varphi_*[\omega]$; and
+Theorem~\ref{thm:nogo} proves the two are never independent summands. Read against
+\cite{oluyori}, the contribution is exactly: \emph{filter the monolithic abutment into its
+two obstruction edges, and identify the coupling between them as the holonomy.} We work over
+$\mathbf{DCont}\simeq\mathbf{Cat}$ rather than over skew braces, so the two theories share a
+narrative and a degree, not a category; whether the LHS filtration transports verbatim to
+$H^2_{ZS}$ --- constructing a spectral sequence of the digroup extension whose two edges are
+literally $[\omega]$ and prunability --- is a natural question we do not settle here.
+
+\paragraph{Provenance and scope of this comparison.} Our reading of \cite{oluyori} is from a
+reader-proxy of the journal page (a direct fetch is refused), so the placement above is
+\emph{computed from that reading} rather than proved, and we deliberately do not reproduce
+the cochain differentials verbatim; the citation, the author list, and the finer
+definitional details should be verified against the published version. The claim we actually
+rely on --- that $H^2_{ZS}$ classifies extensions of the whole $A$ and carries the
+semidirect-to-Zappa--Sz\'ep lifting obstruction --- is the paper's stated main cohomological
+result and is robust to transcription. At the coarse narrative level ``a Zappa--Sz\'ep
+composite carries a degree-two lifting obstruction'' the two works overlap; the spectral
+sequence, the edge placement, the transgression identification, and the
+$[\omega]\perp\text{prunability}$ separation are new here.
+
 \section{Status and honest scope}\label{sec:status}
 \paragraph{Proved.} Theorem~\ref{thm:lhs} (LHS decomposition; standard SS $+$ proved edge
 identifications), Lemma~\ref{lem:tg} (transgression $=$ holonomy; self-contained cocycle
@@ -567,15 +736,20 @@ carry cocycle $\neq0=$ Klein) is machine-checked in Lean, sorry-free
 \begin{itemize}
 \item The clean direct sum \eqref{eq:conj} with both summands nonzero --- \textbf{refuted}
 (Theorem~\ref{thm:nogo}).
-\item \textbf{Open (the load-bearing caveat).} The general structural identification of
-Ferri prunability with a specific element of the fibre edge $E_2^{0,2}$, for \emph{arbitrary}
-stars and twisted coefficients, is \emph{not} proved here. We verify it on $K_{2,3}$ and its
-Klein control, and on the two-object $\Z/2$ family generally; a structural proof that the
-categorical LHS fibre edge literally receives Ferri prunability for a genuinely dynamical
-(quasigroup-only) star remains open. On $K_{2,3}$ the identification additionally rests on
-reading $+_\lambda$ as $(\Z/4,+)$ (Ferri's Counterexample~5.2 convention;
-Remark~\ref{rmk:quasigroup}), since the star $\bullet_\lambda$ is quasigroup-only. This is the
-separately tracked node \texttt{prunability-is-fibre-edge-class}.
+\item \textbf{The fibre-edge identification, resolved and corrected in the SUB core}
+(\S\ref{sec:fibretruth}). The naive reading ``prunability \emph{is} the degree-two fibre-edge
+$H^2$'' is \emph{false} in the untwisted (abelian-star, \textbf{SUB}) core: there prunability is a
+\emph{degree-one} descent datum (Theorem~\ref{thm:descent}), logically independent of the fibre
+edge's degree-two Schreier class (Theorem~\ref{thm:blind}, all four $\Z/4\times\Z/2$ cells). The
+$K_{2,3}$ witness's nonzero fibre class measures star-nonsplitness (datum (2)), co-occurring with
+non-prunability only because \textbf{SUB} fails there. What remains \textbf{open} is the
+\emph{degree-one} reduction: for loop groups $|L_\lambda|\ge3$ the descent obstruction is a
+torsor-valued first cohomology (Theorem~\ref{thm:descent}'s clean cochain $\delta$ uses
+$|L_\lambda|=2$), and a single linear class realising it is not established. The twisted
+(quasigroup-only, non-trivial $\Gamma$-action) case also remains open; on $K_{2,3}$ the reading
+rests on $+_\lambda=(\Z/4,+)$ (Ferri's Counterexample~5.2 convention;
+Remark~\ref{rmk:quasigroup}). This supersedes the earlier tracked node
+\texttt{prunability-is-fibre-edge-class}, now resolved as ``descent, not $H^2$''.
 \item The nonabelian / non-normal Zappa--Sz\'ep matched-pair regime (Kac/Pirashvili $H^2$) is
 out of scope, as in \cite{gzs}.
 \end{itemize}
@@ -592,9 +766,21 @@ a separation theorem}, Kodamai note, 16 September 2026
 \bibitem{sep2} MacBeth, \emph{The direction-functor $H^2$ of a connected groupoid is its
 vertex-group cohomology}, Kodamai note, 16 September 2026
 (\texttt{2026-09-16-h2catb-vertex-group-reduction.tex}).
+\bibitem{converse} MacBeth, \emph{Ferri prunability is not the loop-subgroup condition: the
+converse of Lemma~B is false, and $(9)$ is a coset condition}, Kodamai note, 17 September 2026
+(\texttt{2026-09-17-converse-lemmaB-refuted.tex}).
+\bibitem{descent} MacBeth, \emph{Ferri prunability is a first-order descent condition, not a
+Schreier class: the untwisted core of the fibre-edge problem}, Kodamai note, 18 September 2026
+(\texttt{2026-09-18-prunability-is-descent-not-schreier.tex}); Theorems A (loop invariance), B
+(descent equivalences), C (Schreier blindness).
 \bibitem{ferri} D.~Ferri, \emph{On dynamical skew braces and skew bracoids}, J.\ Pure Appl.\
 Algebra \textbf{229} (2025), no.~9, art.~108036, arXiv:2410.10717
 (Example~4.29 / Table~3, Counterexample~5.2, Remark~3.20).
+\bibitem{oluyori} S.~Wazzan and D.~A.~Oluyori, \emph{Zappa--Sz\'ep skew braces: a unified
+framework for mutual interactions in noncommutative algebra}, Mathematics (MDPI)
+\textbf{14} (2026), no.~2, art.~215, DOI:10.3390/math14020215 (open access; no arXiv
+preprint). \emph{Author list and definitional details to be verified against the published
+version.}
 \bibitem{adm} S.~Ambra, A.~Duvieusart, A.~Montoli, \emph{A direction functor approach to the
 cohomology of small categories}, arXiv:2608.07380 (2026).
 \bibitem{weibel} C.~A.~Weibel, \emph{An Introduction to Homological Algebra}, Cambridge Univ.\
