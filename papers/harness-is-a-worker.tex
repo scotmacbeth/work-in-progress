@@ -6,6 +6,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage[most]{tcolorbox}
+\usepackage{booktabs}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black}
 
@@ -15,15 +16,14 @@
 \newcommand{\comp}{\mathbin{\triangleleft}}       % sequential composition / substitution
 \newcommand{\Set}{\mathsf{Set}}
 \newcommand{\Cont}{\mathsf{Cont}}
-\newcommand{\Poly}{\mathsf{Poly}}
 \newcommand{\fwd}{\mathsf{fwd}}
 \newcommand{\bwd}{\mathsf{bwd}}
 \newcommand{\bk}[1]{{#1}^{\sharp}}                % backward part of a morphism
 \newcommand{\y}{\mathsf{y}}
-\newcommand{\cofree}[1]{\mathfrak{c}_{#1}}        % cofree comonad on a container
+\newcommand{\zs}{\bowtie}                          % Zappa--Szep
 \DeclareMathOperator{\Store}{Store}
-\DeclareMathOperator{\run}{run}
-\DeclareMathOperator{\call}{call}
+\DeclareMathOperator{\getop}{get}
+\DeclareMathOperator{\putop}{put}
 
 % ---- theorem environments ----------------------------------------------
 \theoremstyle{plain}
@@ -42,9 +42,13 @@
 \newtcolorbox{deepbox}{colback=blue!4,colframe=blue!40!black,
   fonttitle=\bfseries,title={THE DEEPER POINT},boxrule=0.6pt,arc=1pt,
   left=6pt,right=6pt,top=4pt,bottom=4pt}
+\newtcolorbox{honestbox}{colback=orange!5,colframe=orange!55!black,
+  fonttitle=\bfseries,title={THE HONEST LEDGER},boxrule=0.6pt,arc=1pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt}
 
-\title{\textbf{The Harness is a Worker}\\[2pt]
-  \large Typed Agentic AI --- Building Agentic Businesses}
+\title{\textbf{The Harness is a Worker}\\[3pt]
+  \large What the worker-state reformulation actually buys\\[2pt]
+  \normalsize Typed Agentic AI --- Building Agentic Businesses}
 \author{Kodamai}
 \date{}
 
@@ -56,315 +60,287 @@
 
 \begin{center}\small
 \fbox{\begin{minipage}{0.92\textwidth}\centering
-\emph{Author:} MacBeth (Kodamai).\qquad\emph{For:} Robin, Neil.\qquad\emph{Date:} 16 September 2026.\\[2pt]
-\emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{content-commit} \texttt{6b7971c}.\\[2pt]
-\textbf{Internal house-doc; Kodamai grant deliverable (agent-orchestration application).} An exposition
-of Neil's remark, relayed by Robin, that ``the harness is a worker'': the object that runs an agent is
-not a privileged meta-thing but another container, so tools, agents, and orchestrators all compose by
-the same two products. The mathematics cited here is proved and, where noted, machine-checked elsewhere;
-this note claims no new theorem.
+\emph{Author:} MacBeth (Kodamai).\qquad\emph{For:} Robin, Neil.\qquad\emph{Date:} 18 September 2026.\\[2pt]
+\emph{Corresponds to} \texttt{scotmacbeth/work-in-progress} \emph{content-commit} \texttt{TBD}.\\[2pt]
+\textbf{Internal house-doc; Kodamai grant deliverable (agent-orchestration application).} This note
+answers one question, honestly, and claims no new theorem: does modelling a stateful agent as a
+\emph{store-comonad worker} buy anything over the explicit state-threading that \texttt{stalin} does
+today, or does it merely rename it? Every mathematical fact invoked is proved, and where noted
+machine-checked, elsewhere; the contribution here is the accounting, not the arithmetic.
 \end{minipage}}
 \end{center}
 \vspace{1em}
 
-An agent reads a request and returns a response: it is a \emph{container morphism}, and the first three
-notes told that story. But there is a thing that sits \emph{above} the agent --- the \emph{harness} that
-offers it tools, dispatches its calls, feeds back the results, and loops. It is tempting to think of the
-harness as a privileged meta-object, a special piece of runtime that stands outside the theory looking
-in. It is not. Neil's remark, which this note makes precise, is that \textbf{the harness is a worker}:
-it is the very same kind of object as the tools it wields and the agents it runs --- a container $S\ctr
-P$ --- and it therefore composes with them by the two products we already have, $\comp$ and $\otimes$,
-with no new machinery. The payoff is immediate and practical: an agent is a \emph{tool} for a
-meta-agent, orchestration is \emph{composition}, and a trust boundary is a \emph{smart constructor} on a
-morphism. This note spells out the signatures.
+Notes~1--3 built up the vocabulary: an agent is a \emph{container morphism}, and a \emph{stateful}
+agent --- a \emph{worker} --- is a morphism out of a domain tensored with one fixed container, the
+\emph{state object} $\Delta S$ (Note~3). Robin then asked the sharp question this note exists to
+answer. Modelling \texttt{stalin}'s state as a store-comonad worker is a \emph{new} thing to do ---
+\texttt{stalin} carries no such object today (\S\ref{sec:setup} explains why) --- so the honest
+question is not ``is this what we already have?'' but ``\emph{is it worth adding?}''. Does the
+comonadic reformulation earn its keep, or is it the same data in fancier dress?
 
-We are careful about one distinction, because it is exactly what Neil's remark disambiguates. The
-``harness'' that is a worker is the \emph{interface} --- the container $(S,P)$ of admissible calls and
-their responses. It is \emph{not} the agent's persistent memory, its skills, or its accumulated context.
-Those, insofar as we model them at all, are the \emph{separate} store-comonad worker of Note~3. ``The
-harness is a worker'' is the interface half; ``state via the tensor'' is the state half; \S\ref{sec:split}
-makes their orthogonality explicit.
+The answer has two halves, and stating both up front is the whole point:
 
-\section{Recap: containers, morphisms, the two products}\label{sec:recap}
+\begin{quote}
+\textbf{For a single worker, it buys nothing} --- $\Store_S X = S\times(S\to X)$ is literally the
+curried form of threading a state $s:S$ through the signatures, the same data spelled differently
+(\S\ref{sec:single}). \textbf{For a \emph{composite} of workers, it buys compositional correctness}
+--- interleaving two stateful workers that share state is a \emph{comonad distributive law}, which
+does \emph{not} exist for free; whether a consistent interleaving exists is a cohomological
+obstruction $[\omega]\in H^2$, and a wrong interleaving is precisely the re-entrancy /
+state-divergence defect. Explicit threading does not remove that decision; it \emph{hides} it at
+every call site. The comonadic view makes the obstruction \emph{visible and checkable}
+(\S\S\ref{sec:compose}--\ref{sec:stalin}).
+\end{quote}
 
-We recall only what we use; a reader who has met the earlier notes can skim to \S\ref{sec:tool}.
+So the reformulation is not single-worker convenience; it is a way to \emph{name}, in one place, a
+correctness condition that hand-threading leaves implicit and scattered. That is the claim, and the
+rest of the note earns it.
 
-\begin{defbox}[A container]
-A \textbf{container} is a pair $S \ctr P$ of a set $S$ of \emph{shapes} and a family $P : S \to \Set$ of
-\emph{positions} --- for each shape $s$, a set $P\,s$. Its \textbf{extension} is the polynomial functor
+\section{Setup: what a worker is, and what \texttt{stalin} has now}\label{sec:setup}
+
+We recall only what the argument uses. A reader of Note~3 can skim to \S\ref{sec:single}; a reader
+who knows \texttt{stalin} should not skip the correction at the end of this section.
+
+\begin{defbox}[Container, morphism, state object (Note~3)]
+A \textbf{container} $S\ctr P$ is a shape set $S$ with a position family $P:S\to\Set$; its extension
+is $\ext{S\ctr P}(X)=\sum_{s:S}(P\,s\to X)$. A \textbf{morphism} $(S\ctr P)\to(T\ctr Q)$ is a forward
+map $f:S\to T$ on shapes and a backward, contravariant family $\bk f:\prod_{s:S}(Q(f\,s)\to P\,s)$ on
+positions. The \textbf{state object} on a set $S$ is the container
 \[
-  \ext{S \ctr P}(X) \;=\; \textstyle\sum_{s : S} X^{P\,s}
-  \;=\; \textstyle\sum_{s:S}\, \big(P\,s \to X\big).
+  \Delta S \;:=\; S\ctr(\lambda\_.\,S),
+  \qquad\text{extension}\quad
+  \ext{\Delta S}(X)=\textstyle\sum_{s:S}X^{S}=S\times X^{S}=\Store_S X,
 \]
-We write $\y = (1\ctr\lambda\_.\,1)$ for the unit container (a single shape with a single position).
+the \textbf{store comonad}: a current state paired with a reader $X^{S}=(S\to X)$. A
+\textbf{worker of state $S$ from $X$ to $Y$} is a morphism $w:\Delta S\otimes X\to Y$, where
+$\otimes$ is the Dirichlet tensor (multiply shapes, multiply positions).
 \end{defbox}
 
-\noindent As in Note~3, $\ctr$ is the \emph{constructor} pairing a shape set with a position family --- a
-piece of syntax, not an operator. It is not either composition product.
-
-\begin{defbox}[A container morphism]
-A morphism $(S \ctr P) \to (T \ctr Q)$ is a pair
-\[
-  f : S \to T,
+\noindent Note~3's unfolding theorem is the fact we lean on: a worker $w:\Delta S\otimes X\to Y$ is
+exactly a pair
+\begin{equation}\label{eq:fwdbwd}
+  \fwd : S\times X_0 \to Y_0,
   \qquad
-  \bk f : \textstyle\prod_{s:S}\, \big(Q(f\,s) \to P\,s\big),
-\]
-a map \emph{forward} on shapes and, for each shape $s$, a map \emph{backward} on positions. Control flows
-down (delegate a shape), data flows back up (amalgamate a position). The backward leg is contravariant.
-\end{defbox}
+  \bwd : \textstyle\prod_{(s,x_0)}\big(Y_1(\fwd(s,x_0)) \to S\times X_1\,x_0\big),
+\end{equation}
+with $\bwd$ splitting, by the universal property of $\times$, into a \emph{state-writeback}
+$\bwd_S:\!\prod Y_1(\dots)\to S$ and an ordinary back-map $\bwd_X:\!\prod Y_1(\dots)\to X_1\,x_0$.
+These are the forward/backward signatures Robin asked to see spelled out; \eqref{eq:fwdbwd} is the
+whole of ``a stateful worker'', typed. The forward leg \emph{reads} $(\text{state},\text{input})$ and
+answers; the backward leg \emph{writes back} a new state and answers the input.
 
-\begin{defbox}[The two products]
-\textbf{Sequential} composition $p\comp q$ (substitution) has extension $\ext{p\comp q}=\ext p\circ\ext
-q$: a shape of $p\comp q$ is a shape of $p$ \emph{together with}, at each of its positions, a shape of
-$q$. It models \emph{dependent} pipelines --- the response to one call determines what may be called next.
-\smallskip
-
-\textbf{Parallel} composition $p\otimes q$ (the Dirichlet tensor) multiplies shapes and \emph{multiplies}
-positions:
+\paragraph{What \texttt{stalin} carries today --- and the correction that matters.} It is tempting
+(I made this mistake, and Robin corrected it) to look at the Church-encoded existential in
+\texttt{morphisms.ts} and read it as a hidden state object $\Delta S$. It is not. That existential is
 \[
-  (S_0 \ctr P_0)\otimes(S_1 \ctr P_1)
-  = (S_0\times S_1)\ctr\big(\lambda(s_0,s_1).\; P_0\,s_0 \times P_1\,s_1\big),
-  \qquad \text{unit } \y .
+  \exists\, j:\mathsf{Shape}\langle D\rangle.\ \big(\mathsf{PosAt}\langle D,j\rangle \to
+  \mathsf{PosAt}\langle C,s\rangle\big)
+  \;=\; \textstyle\sum_{j:Q}\,(Q'\,j \to P\,s),
 \]
-It models \emph{independent}, non-interfering interaction: ask both, answer both.
-\end{defbox}
+Ghani's container-morphism form $\Sigma(j{:}Q).(T\,j\to P\,s)$: the \emph{codomain shape} chosen
+per call by the implementation, bundled with the amalgamate leg for that $j$. It is Church-encoded
+only because TypeScript lacks existentials but has rank-2 polymorphism --- a generic
+\texttt{delegate(s,k)} hands $(j,\mathit{back})$ to a continuation generic in $j$, so the two cannot
+come apart; as the source comments, ``$j$ never becomes a type, it becomes a scope''. This is the
+$\Sigma$ in the \emph{hom}, not the $\Delta S$ in the \emph{domain}. Consequently:
+\begin{quote}
+\texttt{stalin} has \textbf{no worker state} in the $\Delta S$ sense. Its \texttt{state.ts} is plain,
+fully-visible domain data (\texttt{Stocks}, \texttt{Workforce}, grades) --- nothing existential, and
+nothing that survives across a call the way $S$ survives in $\Delta S\otimes X\to Y$.
+\end{quote}
+This is exactly why the question is honest. Introducing a store-comonad worker is a genuine
+\emph{addition} of structure, not a re-description of the existential that is already there. The rest
+of the note asks whether the addition pays.
 
-\section{A tool is a container}\label{sec:tool}
+\section{The single-worker verdict: it buys nothing}\label{sec:single}
 
-Here is the first move, and it is a definition rather than a theorem: a \emph{tool} is a container. The
-identification is forced once you write down what a tool is.
+Start with the case where the sceptic is right, and say so plainly.
 
-\begin{defbox}[A tool, as a container]
-A \textbf{tool} is a container $p = S\ctr P = \sum_{s:S}\y^{P\,s}$, where
-\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
-  \item the \textbf{shapes} $S$ are the \emph{admissible calls} --- the request types the tool accepts,
-        together with their arguments; and
-  \item the \textbf{positions} $P\,s$ are the \emph{possible responses} to the call $s$ --- the results
-        the tool may return when invoked with $s$.
-\end{itemize}
-\end{defbox}
-
-\noindent To \emph{invoke} the tool is to name a shape $s\in S$ (issue a request) and receive a position
-$i\in P\,s$ (a response). Nothing else is part of the tool. A weather API whose calls are ``forecast for
-city $c$'' has shapes $S=\{\mathsf{forecast}\,c\mid c:\mathsf{City}\}$ and positions $P(\mathsf{forecast}\,c)
-= \mathsf{Weather}$. A calculator tool has shapes $\{\mathsf{add}(m,n),\mathsf{mul}(m,n),\dots\}$ and
-positions $\mathbb{N}$. A file reader has shapes $\{\mathsf{read}\,\mathit{path}\}$ and positions
-``file contents or error''.
-
-A \emph{monster} in the \texttt{dungeon} game --- to take the running example the implementation will
-use --- has exactly this shape. Fix a monster. Its calls are the moves a player may make against it, and
-its responses are the outcomes of those moves:
+\begin{proposition}[One worker is threaded state, re-spelled]\label{prop:single}
+Fix a state set $S$ and an output type $X$. The elements of the store $\Store_S X = S\times X^{S}$
+are in natural bijection with the state-threading functions --- a current state together with a
+map from states to outputs. On the lens fragment $X=\y$, $Y=A\ctr(\lambda\_.B)$, a worker
+$\Delta S\to A\ctr(\lambda\_.B)$ is exactly a pair
 \[
-  S \;=\; \{\,\mathsf{attack},\ \mathsf{defend},\ \mathsf{flee},\ \mathsf{cast}\,\sigma\ (\sigma:\mathsf{Spell})\,\},
+  \getop : S\to A,\qquad \putop : S\times B\to S,
 \]
-\[
-  P(\mathsf{attack}) = \{\mathsf{hit},\ \mathsf{miss},\ \mathsf{slain}\},\quad
-  P(\mathsf{flee}) = \{\mathsf{escaped},\ \mathsf{blocked}\},\quad
-  P(\mathsf{cast}\,\sigma)=\{\mathsf{resisted},\ \mathsf{struck}\},\ \dots
-\]
-The monster \emph{is} the container $M=S\ctr P$. It is not ``like'' a container; it has no data beyond the
-calls it admits and the outcomes it may return, which is precisely a container.
-
-\paragraph{Using a tool is a morphism.} An agent that \emph{uses} the monster to answer its own caller is
-a container morphism $\alpha : A \to M$, where $A = S_A\ctr P_A$ is the agent's own interface (its prompts
-and replies). Unfolding the definition:
-\[
-  \fwd = \alpha : S_A \to S,
-  \qquad
-  \bwd = \bk\alpha : \textstyle\prod_{a:S_A}\big(P(\alpha\,a) \to P_A\,a\big).
-\]
-Read this operationally. The agent receives a prompt $a\in S_A$ from its caller; it \emph{delegates} by
-choosing a monster-move $\alpha(a)\in S$ (control flows down); the monster returns an outcome
-$i\in P(\alpha\,a)$; and the agent \emph{amalgamates} that outcome back into a reply $\bk\alpha_a(i)\in
-P_A\,a$ to its caller (data flows back up). Delegation is the forward leg; interpreting the tool's
-response is the backward leg. This is the whole of ``the agent used a tool'', typed.
-
-\begin{deepbox}
-A tool exposes exactly a container's worth of information: which calls it accepts (shapes) and which
-responses each call may produce (positions). ``What can I ask, and what might come back?'' is the
-question a container answers. Consequently \emph{a call to an LLM, a call to an API, a move against a
-monster, and a prompt handed to a sub-agent are the same kind of object}, and using any of them is one
-container morphism: delegate a shape, interpret the position.
-\end{deepbox}
-
-\section{The harness runs the coalgebra}\label{sec:harness}
-
-The agent is not called once; it \emph{loops}. It issues a call, reads the response, decides the next
-call in light of it, and continues until it is done. The object that carries out this loop is the
-harness. The second move is that the harness is \emph{not} a new kind of thing: it is the \emph{matter}
-that unfolds the tool's \emph{pattern}, in Spivak's sense, and the pattern it unfolds is a
-\emph{coalgebra} of the same container.
-
-\begin{defbox}[Running an agent is a coalgebra]
-Let $p=S\ctr P$ be the tool interface. An agent \emph{driver} with internal states $W$ is a
-$\ext p$-coalgebra
-\[
-  \run : W \longrightarrow \ext p(W) \;=\; \textstyle\sum_{s:S}\,\big(P\,s \to W\big).
-\]
-At state $w$, the driver emits a shape $\run(w)=(s,\,k)$: it makes the call $s\in S$, and $k:P\,s\to W$
-says which state to transition to for each possible response $i\in P\,s$. The harness supplies the
-matter: it takes the emitted call $s$ to the world, obtains an actual response $i\in P\,s$, and advances
-the driver to $k(i)$. Then it repeats.
-\end{defbox}
-
-\noindent This is the tool-call loop verbatim: \emph{emit a shape} (make a tool-call), \emph{consume a
-position} (receive the response), \emph{transition} (update and decide the next call). The harness is the
-half that resolves each emitted shape against the real world and feeds the resulting position back; the
-driver is the half that chooses. Neither stands outside the container theory --- both are expressed
-entirely in $\ext p$.
-
-\paragraph{The whole trace is the cofree comonad.} What does an entire \emph{run} look like? Starting
-from a state and unfolding $\run$ as far as it will go produces a tree: at the root the first call
-$s_0$, one child for each possible response $i_0\in P\,s_0$, at that child the next call, and so on. The
-universal such object --- the behaviour that records \emph{all} possible runs of \emph{any} driver on
-$p$ --- is the \textbf{cofree comonad} on $p$:
-\[
-  \ext{\cofree p}(X) \;\cong\; \nu Z.\,\big(X\times \ext p(Z)\big),
-\]
-whose elements are trees of tool-calls-and-responses, each node decorated by a value in $X$. A driver
-$\run:W\to\ext p(W)$ is exactly a coalgebra, and it factors uniquely through $\cofree p$ (the trace it
-generates); this is the couniversal property of $\cofree p$. It is the container-level form of Spivak's
-slogan that a \emph{pattern runs on matter}: $p$ is the pattern (what may be called), and the harness is
-the matter that unfolds it into an actual, branching history of interaction.
-
-\begin{deepbox}
-The harness does not add structure on top of the theory; it \emph{instantiates} structure already in it.
-Running an agent is unfolding a $\ext p$-coalgebra; the accumulated interaction history is a branch of
-the cofree comonad $\cofree p$ on the tool container. ``Harness = comonad'' (Neil's dictionary entry) is
-this: the harness is where the cofree comonad of the tool gets \emph{run}.
-\end{deepbox}
-
-\begin{remark}[Provenance --- what is proved, and where]\label{rem:prov}
-The cofree comonad on a container, its couniversal property, and the tree/$\nu$-description are proved in
-container coordinates in the internal note \texttt{cofree-comonad-universal-property} (2026-07-25),
-building on Niu--Spivak (\emph{Polynomial Functors}, Prop.~8.18/8.33, Thm.~8.45) and Spivak
-(arXiv:2202.00534). The exact dual --- the \emph{free} monad on a container as a $\comp$-monoid --- is
-additionally \textbf{machine-checked in Lean 4}, with all three monoid laws and zero \texttt{sorry}
-(\texttt{Free.lean}). The cofree side is proved on paper but not yet formalised: its shape layer needs
-$M$-types/coinduction, which the current Lean core lacks. \textbf{[LEAN TODO: formalise $\cofree p$ once
-Mathlib's \texttt{PFunctor.M} is available in \texttt{lean/Containers}; the backward/position layer is
-portable now.]} We flag this rather than claim the cofree side is verified.
-\end{remark}
-
-\section{Same object, same composition}\label{sec:compose}
-
-If tools, agents, and the harness are all containers, then they compose by the two products of
-\S\ref{sec:recap}, and \emph{that is the orchestration language}. This is the third move, and it is where
-the identification pays off: nesting agents needs no new machinery.
-
-\begin{defbox}[The two orchestration operators]
-Let tools/agents be containers.
-\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
-  \item \textbf{Sequential / dependent} pipelines are $\comp$. In $p\comp q$ the response to a $p$-call
-        chooses the next $q$-call: a shape is a $p$-shape $s$ together with, for each $i\in P\,s$, a
-        $q$-shape. Use $\comp$ when one tool's output determines which tool (or which call) comes next.
-  \item \textbf{Independent / parallel} tools are $\otimes$. In $p\otimes q$ a shape is a pair of calls
-        $(s,s')$ and a position is a pair of responses; the two run without interference. Use $\otimes$
-        when calls may be issued together and answered together.
-\end{itemize}
-\end{defbox}
-
-\noindent These are not new definitions --- they are the substitution product and the Dirichlet tensor,
-already the sequential and parallel composition of containers. The content of the third move is only that
-they are also the composition of \emph{agents and tools}, because agents and tools are containers.
-
-\begin{proposition}[An agent is a tool for a meta-agent]\label{prop:nest}
-Let a sub-agent be a container morphism $\alpha:A\to p$ (it answers prompts $A$ using tool $p$, as in
-\S\ref{sec:tool}). Then $A$ is itself a container, so a \emph{meta-agent} may use $\alpha$ exactly as it
-uses any tool: a meta-agent that orchestrates sub-agents $A_1,\dots,A_n$ is a morphism whose target is
-built from the $A_i$ by $\comp$ and $\otimes$ --- $\comp$ where one sub-agent's reply selects the next,
-$\otimes$ where they run independently. No construction beyond the two products is required.
+i.e.\ the ordinary ``read the state to answer; write the state back'' of hand-threaded code, verbatim.
 \end{proposition}
 
-\noindent There is no ``meta-level'' in the type theory: the sub-agent's \emph{interface} $A$ is a
-container of the same standing as a weather API or a monster, and the meta-agent delegates to it with the
-same morphism discipline. Nesting is $\comp$/$\otimes$, iterated.
+\begin{proof}
+The bijection $\Store_S X = S\times X^S$ is the definition of $\ext{\Delta S}$. Specialising
+\eqref{eq:fwdbwd} to $X=\y$ ($X_0=X_1=1$) and $Y=A\ctr(\lambda\_.B)$ gives $\fwd:S\to A$ and
+$\bwd_S:\prod_{s}(B\to S)$, i.e.\ $\putop:S\times B\to S$, with $\bwd_X$ trivial (Note~3,
+\S``lens view''). \qed
+\end{proof}
+
+\noindent There is no daylight here. A store is a state and a reader; a lens is a getter and a
+setter; threading a state through a function signature gives a getter and a setter. If Kodamai's
+interest stopped at one worker, the store comonad would be a rename --- more category theory, no more
+safety --- and honesty would require us to drop it. It does not stop at one worker.
 
 \begin{deepbox}
-Orchestration is composition. A supervisor calling workers, a pipeline of tools, a re-entrant
-tool-call --- all are terms built from $\comp$ (dependent) and $\otimes$ (independent) over containers.
-This is why ``the harness is a worker'' is more than a slogan: because the harness is an ordinary
-container, an agent running under it can \emph{itself} be wrapped as a tool and run under a further
-harness, ad infinitum, with the same two operators throughout.
+The comonad's counit is ``read the current state'' ($\getop$) and its comultiplication is
+``duplicate the register''. For a \emph{single} worker these are exactly the operations
+hand-threaded code already performs. The reformulation cannot pay for itself one worker at a time,
+and we do not pretend it can.
 \end{deepbox}
 
-\paragraph{Where the trust boundaries live.} Composition is not always free, and the place it can fail is
-worth naming, because it is where a trust boundary belongs. When two directed interactions are welded ---
-a supervisor over a worker that can call \emph{back} into the supervisor (re-entrancy), or two agents each
-able to act on the other's turn --- the composite is a \emph{Zappa--Sz\'ep} product $C\bowtie D$, not a
-mere functor: a functor composes along one topology, a Zappa--Sz\'ep product interleaves two. Such a weld
-exists exactly when a cohomological obstruction vanishes, $[\omega]=0\in H^2$; in the smallest re-entrant
-supervisor--worker model the class equals the single bit ``does the worker mutate shared supervisor
-state'', $[\omega]=\varepsilon\in H^2\cong\mathbb{Z}/2$ (proved in \texttt{orchestration-reentrancy};
-the $[\omega]=\varepsilon$ computation is separately Lean-checked). Operationally: a \emph{trust boundary
-is a smart constructor} on the orchestration morphism --- it refuses the weld precisely when
-$\varepsilon=1$, i.e.\ when an untrusted sub-agent would write state the supervisor depends on. This note
-does not develop that thread; it flags where in the composition it sits.
+\section{The composition verdict: it buys a visible obstruction}\label{sec:compose}
 
-\section{The clean split: interface, state, and what the harness is not}\label{sec:split}
+Everything the reformulation is worth lives in how two workers combine. Here the store comonad stops
+being a rename, because comonads --- unlike the data they carry --- do \emph{not} compose for free.
 
-The fourth move is a subtraction. Neil's remark identifies the harness with a worker in a specific sense,
-and the value of the remark is as much in what it \emph{excludes} as in what it includes.
+\paragraph{Two workers can be stacked in two ways, and only one is free.} Note~3 established the
+arithmetic. Tensoring two state objects multiplies their states on the nose,
+\begin{equation}\label{eq:tensor}
+  \Delta S\otimes\Delta T \;=\; \Delta(S\times T),
+\end{equation}
+whereas composing them nests a store inside a store,
+\begin{equation}\label{eq:nest}
+  \Delta S\comp\Delta T \;=\; (S\times T^{S})\ctr(\dots)\;\neq\;\Delta(S\times T),
+\end{equation}
+recording not just a pair of states but a whole branch map $g:S\to T$; at $|S|=|T|=2$ the two are
+$4\cdot\y^4$ versus $8\cdot\y^4$, an explicit retract, not an equality (Note~3,
+Corollary~``$\otimes\neq\comp$ witnessed''). The tensor \eqref{eq:tensor} is the composition of two
+workers that do \emph{not} interact: independent registers, no shared reads or writes, and the
+composite is forced --- ``ask both, answer both''. This is the free case, and it is free precisely
+\emph{because} it assumes non-interference.
 
-\begin{defbox}[Three things, kept apart]
-For an agent we distinguish:
-\begin{enumerate}[leftmargin=1.6em,itemsep=2pt]
-  \item the \textbf{interface} --- the container $(S,P)$ of admissible calls and their responses. This
-        is the ``harness is a worker'' object of \S\S\ref{sec:tool}--\ref{sec:compose}.
-  \item the \textbf{carried state} --- a value threaded across calls, if the agent has one. This is
-        \emph{not} part of $(S,P)$; it is the separate state object $\Delta S = S\ctr(\lambda\_.\,S)$ of
-        Note~3, tensored onto the interface.
-  \item \textbf{memory, skills, context} --- persistent stores, tool-libraries, accumulated prompt
-        context. These are \emph{neither} the interface \emph{nor} the state object; they are
-        implementation matter that the container theory does not model as part of $(S,P)$.
-\end{enumerate}
-\end{defbox}
+\paragraph{The interesting composite is neither of these.} The workers Kodamai actually wants to
+compose \emph{do} interact: a supervisor over a worker that can call back into the supervisor
+(re-entrancy), or two workers that read and write a shared ledger, each acting on data the other
+produced. There the composite is not $\Delta S\otimes\Delta T$ --- the registers are not independent
+--- and it is not a bare nesting either; it is a \textbf{Zappa--Sz\'ep weld} $C\zs D$, in which each
+side acts on the other. A Zappa--Sz\'ep weld of two directed containers (and $\Delta S$ is a directed
+container --- the codiscrete category on $S$) is exactly a \emph{distributive law} $\lambda$ saying
+how the two stores interleave: which side reads first, whose write the other sees.
 
-\noindent The first is this note; the second is Note~3; the third is deliberately outside the interface
-theory. Keeping them apart is what disambiguates Neil's remark: ``the harness is a worker'' is a claim
-about \emph{item 1}, the interface, and specifically \emph{not} about item 3.
+\begin{deepbox}
+A distributive law is the interleaving discipline made explicit. Composing the store comonads of two
+interacting workers requires choosing $\lambda:\Delta T\comp\Delta S\Rightarrow\Delta S\comp\Delta T$
+(or its comonad-distributive dual) and checking it satisfies the coherence axioms. \emph{Comonads do
+not compose for free}: without a valid $\lambda$ there is no composite worker at all, only two workers
+and an unanswered question about the order of their effects.
+\end{deepbox}
 
-\paragraph{State is orthogonal, and it is a tensor factor.} When an agent does carry state $S$, Note~3
-showed that state needs no new machinery either: a stateful worker is a morphism $\Delta S\otimes X\to Y$
-out of the interface tensored with the state object, and unfolding the tensor \emph{forces} exactly a
-read-and-answer forward map and a state-writeback backward map. The state object's extension is the
-store comonad $\ext{\Delta S}(X)=S\times X^{S}$, and states \emph{multiply} under the tensor,
-$\Delta S\otimes\Delta T=\Delta(S\times T)$, making workers a $(\Set,\times)$-graded category (proved in
-\texttt{delta-state-object-and-workers}; the retract and the collapse identity $r\circ\delta=\Delta(d)$
-are Lean-checked in \texttt{WorkersRetract.lean}). The two halves compose cleanly because they occupy
-different tensor factors:
+\paragraph{Whether a consistent interleaving exists is a cohomology class.} This is the fact the
+grant is built on, and it is proved elsewhere; we only invoke it. A Zappa--Sz\'ep weld of the two
+interacting workers exists iff two conditions hold --- a freeness condition (L) and a global-closure
+condition (G) --- and the obstruction to (G) is a single cohomology class
 \[
-  \underbrace{\Delta S}_{\text{state (Note 3)}}\ \otimes\ \underbrace{p}_{\text{interface (this note)}}
-  \;\longrightarrow\; q .
+  [\omega]\in H^2,
+  \qquad (G)\ \Longleftrightarrow\ [\omega]=0,
 \]
-``The harness is a worker'' is the $p$ factor; ``state via the tensor'' is the $\Delta S$ factor. They
-are orthogonal by construction --- the tensor is the direct sum of the two disciplines, not their
-entanglement --- which is precisely why Neil's two remarks are about two different factors of one
-morphism and do not compete.
+so, once (L) holds, the weld exists exactly when $[\omega]=0$ (the (G)-obstruction-is-$H^2$ result;
+distributive-law $\Leftrightarrow$ Zappa--Sz\'ep/bicrossed product is standard, Kassel/Brin at the
+group level). In the smallest re-entrant supervisor--worker
+model the class lives in $H^2\cong\mathbb{Z}/2$ and equals a single bit,
+\begin{equation}\label{eq:omega}
+  [\omega]=\varepsilon\in\mathbb{Z}/2,
+  \qquad
+  \varepsilon = \text{``does the worker mutate shared state the supervisor depends on?''}
+\end{equation}
+so the weld exists iff $\varepsilon=0$. A \emph{wrong} interleaving --- a $\lambda$ that violates the
+coherence axioms --- is not an abstract nuisance; it is the state-divergence / re-entrancy defect
+(the Path-5 family), the concrete failure mode where one worker reads state another has already
+invalidated.
 
-\begin{deepbox}
-The harness-as-worker claim is about the \emph{interface} container $(S,P)$ and nothing else. Carried
-state is a separate, orthogonal tensor factor $\Delta S$ (Note~3). Memory, skills, and context are not
-modelled as part of $(S,P)$ at all. This is the disambiguation: the interface half and the state half
-are the two tensor factors of a single worker morphism $\Delta S\otimes p\to q$, and the rest is matter
-the harness runs on, not structure the container exposes.
-\end{deepbox}
+\begin{remark}[Provenance, and where the machine check stops]\label{rem:prov}
+The class computation \eqref{eq:omega} is \textbf{machine-checked in Lean~4}, sorry-free and
+Mathlib-free (\texttt{Reentrancy.lean}): the file certifies $\varphi(\omega\,\varepsilon)=\varepsilon$
+and $\mathsf{InB2}(\omega\,\varepsilon)\Leftrightarrow\varepsilon=\mathsf{false}$, i.e.\ that the
+cocycle $\omega(\varepsilon)$ is a coboundary exactly when $\varepsilon=0$. What Lean certifies is the
+finite $\mathbb{F}_2$ class computation; the \emph{reduction} of the categorical obstruction to that
+cochain complex is proved pen-and-paper (analytic note, Prop.~3.1) and is \emph{not} formalised. The
+arithmetic \eqref{eq:tensor}--\eqref{eq:nest} is proved and Lean-checked (\texttt{WorkersRetract.lean}:
+$r\circ\sigma=\mathrm{id}$). We flag the boundary rather than blur it. The general reduction of
+store-comonad interleaving to a distributive law of directed containers is invoked here at the
+directed-container level ($\Delta S$ is one); a bespoke store-comonad restatement is not needed for
+this note, and if one is later wanted it is a \texttt{[PROVE TODO]}, not a claim made here.
+\end{remark}
 
-\section*{Summary}
-\addcontentsline{toc}{section}{Summary}
+\paragraph{What threading does, and does not, do about this.} Hand-threading two shared states does
+\emph{not} escape the distributive law. Every call site that reads one register and writes another is
+silently committing to an order of effects --- an implicit $\lambda$ --- and nothing checks that the
+per-site choices are \emph{globally} consistent, which is exactly what the coherence axioms demand. A
+program can hand-thread its way into a globally inconsistent interleaving one locally reasonable line
+at a time; that inconsistency is $[\omega]\neq0$, discovered at run time as a re-entrancy bug. The
+store-comonad worker does not make the composite exist automatically --- no formalism can, because
+sometimes it genuinely does not exist. What it does is \emph{concentrate} the decision: the
+interleaving is one named object $\lambda$, its validity is one class $[\omega]$, and both can be
+inspected before the system runs, in one place, instead of being reconstructed from scattered call
+sites after it breaks.
 
-A tool is a container $p=S\ctr P$: shapes are the admissible calls, positions the possible responses.
-Using a tool is a container morphism --- delegate a shape, interpret the position. The harness that runs
-an agent is not a privileged meta-object; it is the matter that unfolds a $\ext p$-coalgebra, and the
-whole interaction trace is the cofree comonad $\cofree p$ on the tool. Because tools, agents, and the
-harness are all the same kind of object, they compose by the same two products: $\comp$ for dependent
-pipelines, $\otimes$ for independent ones --- so an agent is a tool for a meta-agent and orchestration is
-composition, with trust boundaries appearing as smart constructors exactly where the Zappa--Sz\'ep weld's
-obstruction $[\omega]$ could fail to vanish. Finally, the claim is precisely scoped: ``the harness is a
-worker'' is about the \emph{interface} $(S,P)$; carried state is the orthogonal tensor factor $\Delta S$
-of Note~3; and memory, skills, and context are matter the harness runs on, not part of the interface.
-The harness, once again, is not new machinery: it is one more container, and the two products supply the
-rest.
+\section{The instance: where the interleaving lives in \texttt{stalin}}\label{sec:stalin}
+
+To make \S\ref{sec:compose} concrete, here is the shape of the addition in \texttt{stalin}'s own
+vocabulary. This is deliberately schematic: \texttt{stalin} has no state store today (\S\ref{sec:setup}),
+so what follows is the structure a store-comonad reformulation \emph{would} introduce, and where the
+correctness condition would sit --- not a description of present code.
+
+Take two workers over the shared ledger.
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Production} $w_P:\Delta S_P\otimes X_P\to Y_P$, with state $S_P=\texttt{Stocks}$: it
+        \emph{reads} \texttt{Workforce} (as input $X_P$) to decide output, and \emph{writes back}
+        an increased \texttt{Stocks} via $\bwd_{S_P}$.
+  \item \textbf{Hiring} $w_H:\Delta S_H\otimes X_H\to Y_H$, with state $S_H=\texttt{Workforce}$: it
+        \emph{reads} \texttt{Stocks} (as input $X_H$, the budget) to decide output, and
+        \emph{writes back} an adjusted \texttt{Workforce} via $\bwd_{S_H}$.
+\end{itemize}
+Each is, on its own, exactly Proposition~\ref{prop:single}: a getter reading its state and a setter
+writing it back --- threaded state, nothing gained. The content is that they \emph{share the ledger}:
+$w_P$ writes the \texttt{Stocks} that $w_H$ reads, and $w_H$ writes the \texttt{Workforce} that $w_P$
+reads. Their composite is therefore \emph{not} the free tensor $\Delta(S_P\times S_H)$ of
+\eqref{eq:tensor} --- that would model two firms with no shared books --- but a Zappa--Sz\'ep weld,
+and the weld needs an interleaving $\lambda$:
+\begin{quote}
+\emph{Within one tick, does hiring see this tick's production output, or last tick's? Does production
+see this tick's new hires, or the pre-hire workforce?}
+\end{quote}
+That question is the distributive law, and in the fwd/bwd signatures it lives at exactly one place:
+the order in which the two writebacks $\bwd_{S_P}$ and $\bwd_{S_H}$ are applied to the shared ledger
+relative to the two forward reads. A consistent choice --- e.g.\ ``both read the pre-tick ledger,
+both writebacks commit atomically at tick end'' --- is a valid $\lambda$, $[\omega]=0$. An
+inconsistent choice --- ``hiring reads \texttt{Stocks} \emph{after} production's writeback but
+production reads \texttt{Workforce} \emph{before} hiring's'' --- is a $\lambda$ that fails coherence:
+hiring budgets against goods that production's own inputs have not yet accounted for, the ledger
+double-counts, and that is $\varepsilon=1$ in \eqref{eq:omega} --- the worker mutating shared state
+the other depends on.
+
+The point of the reformulation is that this choice is written \emph{once}, as $\lambda$, and its
+soundness is one check, $[\omega]=0$. In the hand-threaded version the same choice is distributed
+across every function that touches \texttt{Stocks} or \texttt{Workforce}, and its soundness is
+whatever those functions happen jointly to do --- verified, if at all, by a re-entrancy bug in
+production.
+
+\section{The honest ledger}\label{sec:ledger}
+
+\begin{honestbox}
+\begin{center}\small
+\begin{tabular}{@{}p{0.28\textwidth}p{0.31\textwidth}p{0.31\textwidth}@{}}
+\toprule
+ & \textbf{single worker} & \textbf{interacting composite} \\
+\midrule
+store-comonad worker & $\Store_S X=S\times X^S$ & Zappa--Sz\'ep weld; needs $\lambda$ \\
+hand-threaded state & getter/setter & implicit $\lambda$ per call site \\
+\textbf{what the comonad adds} & \emph{nothing} (a rename) & the interleaving as \emph{one} named $\lambda$; its validity as \emph{one} class $[\omega]$, checkable before run \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{honestbox}
+
+\noindent The verdict, stated as plainly as the question deserves. \textbf{It does not buy}
+single-worker convenience (\S\ref{sec:single}), and it does \textbf{not} make composition automatic:
+the composite of two interacting workers can genuinely fail to exist, and no reformulation conjures
+it into being. \textbf{It does buy} a change in \emph{where} and \emph{when} the composition's one
+real decision --- the interleaving of shared effects --- is made and checked: once, up front, as a
+named distributive law with a single cohomological soundness class, rather than implicitly, per call
+site, and discovered on failure. For a system of one worker that is not worth the category theory. For
+a system of many interacting workers --- which is what an agentic business is --- it is exactly the
+compositional-correctness guarantee the grant is about, and it is a genuine addition to \texttt{stalin},
+because \texttt{stalin} has no such state store today. That, honestly, is what it buys.
 
 \begin{center}\itshape Do it Kodamai Style!\end{center}
 
