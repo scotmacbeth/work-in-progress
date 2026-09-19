@@ -1,0 +1,589 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[a4paper,margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}      % \llbracket \rrbracket
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+
+% ---- notation ----------------------------------------------------------
+\newcommand{\ctr}{\mathbin{\triangleright}}      % container: shapes > positions
+\newcommand{\ext}[1]{\llbracket #1 \rrbracket}    % extension
+\newcommand{\comp}{\mathbin{\triangleleft}}       % substitution / sequential composition
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\DCont}{\mathsf{DCont}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\fwd}{\mathsf{fwd}}
+\newcommand{\bwd}{\mathsf{bwd}}
+\newcommand{\bk}[1]{{#1}^{\sharp}}                % backward part of a morphism
+\newcommand{\y}{\mathsf{y}}
+\newcommand{\zs}{\bowtie}                          % Zappa--Szep weld
+\DeclareMathOperator{\Store}{Store}
+\DeclareMathOperator{\getop}{get}
+\DeclareMathOperator{\putop}{put}
+\DeclareMathOperator{\cofree}{Cofree}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\title[Tool-calling protocols are directed containers]{Tool-calling protocols are directed containers}
+\author{MacBeth}
+\address{Kodamai}
+\email{}
+\date{19 September 2026}
+
+\begin{document}
+
+\begin{abstract}
+An agent tool-calling protocol -- the discipline by which a language-model agent issues a typed
+request and receives a typed response -- is a container: its shapes are the request schemas and its
+positions are the admissible responses. We observe that the \emph{harness} running such a protocol
+is not a separate meta-object but the same container realized as a comonad, so a protocol is a
+directed container, hence a small category, hence a polynomial comonad; the cofree comonad on the
+tool functor is the interaction trace, and stateful conversational context is a store-comonad
+worker. For a single agent this store structure is exactly curried state-threading and buys nothing.
+Its value appears only under composition: interleaving two interacting stateful protocols is a
+comonad distributive law, equivalently a Zappa--Sz\'ep weld of the underlying directed containers,
+which does not exist for free. Once a freeness condition on the two protocols holds, whether a
+consistent interleaving exists is governed by a single cohomology class $[\omega]\in H^2$, the weld
+existing exactly when $[\omega]=0$; at the smallest re-entrant model the class is one bit
+$[\omega]=\varepsilon\in\mathbb{Z}/2$, machine-checked in Lean~4. The note claims no new theorem; its contribution is the identification, and a positioning
+against the coalgebraic and effect-handler semantics of protocols that stop one refinement short of
+this structure.
+\end{abstract}
+
+\maketitle
+
+\begingroup\small
+\noindent\fbox{\begin{minipage}{0.95\linewidth}
+\emph{Status.} Exploratory work-in-progress note (Kodamai containers series). Every mathematical
+fact invoked is proved, and where stated machine-checked, elsewhere; the contribution here is the
+synthesis and its honest positioning, not a new theorem. The single result specific to this note's
+running model -- the value of the obstruction class at the smallest re-entrant protocol -- is
+verified in Lean~4 (\S\ref{sec:compose}, Remark~\ref{rem:lean}). Not yet reviewed.
+\end{minipage}}
+\endgroup
+
+\bigskip
+
+\section{Introduction}\label{sec:intro}
+
+An agent built on a language model does its work by \emph{calling tools}. It emits a structured
+request -- a function name with typed arguments, a database query, a call to another agent -- and
+the surrounding runtime, the \emph{harness}, executes that request and returns a structured
+response, which the agent folds back into its context before deciding what to do next. The
+governing discipline -- which requests are well-formed, which responses each request may receive,
+how the responses accumulate into a growing context -- is what recent engineering practice, following
+the Model Context Protocol and its relatives, calls a \emph{tool-calling protocol}. Multi-agent
+systems compose these: a supervisor agent calls a worker agent as a tool, two agents read and write
+a shared store, an agent calls back into the very supervisor that invoked it.
+
+The engineering of such systems is well developed; their \emph{semantics} is not. What kind of
+mathematical object is a tool-calling protocol? What object is the harness that runs it? And when
+two agents interact, what decides whether their composite behaves consistently, or instead diverges
+into the re-entrancy and stale-read defects that plague concurrent stateful systems? These questions
+are usually answered operationally, one system at a time, and the correctness of a multi-agent
+interleaving is typically discovered the way concurrency bugs always are: at run time, after it
+breaks.
+
+\paragraph{The gap.}
+There is a natural home for these questions, and it has been standing empty. A container
+\cite{gambinokock} is a set of shapes $S$ together with a family of positions $P:S\to\Set$; its
+extension is the polynomial functor $\ext{S\ctr P}(X)=\sum_{s:S}(P\,s\to X)$. Reading $S$ as the
+request schemas and $P\,s$ as the admissible responses to schema $s$, a single protocol step
+\emph{is} a container. This much is not new: a session coalgebra in the sense of Keizer, Basold and
+P\'erez \cite{sessioncoalg} is a coalgebra $c:X\to F(X)$ for exactly this endofunctor
+$F(X)=\coprod_{a\in A}X^{B_a}$, and they trace the observation to Gambino and Kock. What has not
+been done is to carry the identification past the single step. A session coalgebra is a coalgebra
+for the protocol's \emph{transition} map; it is not a \emph{comonad} on a protocol object, it carries
+no cofree interaction trace, no substitution or tensor algebra of protocols, no notion of stateful
+context threaded across steps, and no account of when two protocols compose. The one published line
+that treats tool-calling algebraically -- Segura's Lawvere-theory handlers for prompt pipelines
+\cite{segura} -- is protocol-agnostic and does not model the protocol object at all. The comonadic,
+directed-container layer -- precisely the layer that the theory of directed containers exists to
+supply -- is unclaimed.
+
+\paragraph{The observation.}
+The missing ingredient is the harness. A tool-calling protocol is not run by a meta-level machine
+that stands outside it; the harness is the discipline of threading context from one step to the
+next, and that discipline is \emph{structure on the same container}. A container whose extension
+carries a comonad structure -- a counit ``answer from the current context'' and a comultiplication
+``the context of the context'' -- is exactly a \emph{directed container} in the sense of Ahman and
+Uustalu \cite{dircont}, and directed containers are, up to equivalence, small categories, and up to
+equivalence polynomial comonads. So the harness upgrades the protocol from a bare container to a
+directed container, and the seed equivalence
+\begin{equation}\label{eq:chain}
+  \DCont\;\simeq\;\Cat\;\simeq\;\Cat^{\sharp}\ \subset\ \Poly
+\end{equation}
+(directed container $\simeq$ small category $\simeq$ polynomial comonad) does the rest of the lifting
+for free. Once the protocol is a comonad, three further structures are immediate rather than
+invented: the \emph{cofree comonad} on the tool functor is the interaction trace, the tree of all
+runs of the protocol; the store comonad $\Delta S$ models conversational \emph{state}; and the
+substitution $\comp$ and Dirichlet tensor $\otimes$ of \cite{spivakref,niuspivak} are the two ways of
+composing protocols in sequence and in parallel.
+
+\paragraph{The main point, stated as a dichotomy.}
+The state structure is worth its cost only under composition, and the sharp statement is a dichotomy
+we import rather than prove. For a single agent, the store worker is exactly hand-threaded state
+(Proposition~\ref{prop:single}): a getter and a setter, no more. For two \emph{interacting} stateful
+agents -- ones that read and write each other's state -- the composite is neither the free parallel
+tensor nor a bare nesting but a \emph{Zappa--Sz\'ep weld}, and a weld is a distributive law saying
+how the two contexts interleave. Comonads, unlike the data they carry, do not compose for free
+\cite{ahmanuustaluDL}. Whether a consistent interleaving exists is a single cohomology class.
+
+\begin{theorem}[imported; \S\ref{sec:compose}]\label{thm:main}
+Let two interacting stateful protocols be presented as directed containers $C,D$. A consistent
+interleaving of their harnesses -- a comonad distributive law, equivalently a Zappa--Sz\'ep weld
+$C\zs D$ -- exists if and only if a freeness condition \textup{(L)} holds and an obstruction class
+\[
+  [\omega]\in H^2 \qquad\text{vanishes,}\qquad \text{(G)}\ \Longleftrightarrow\ [\omega]=0 .
+\]
+At the smallest re-entrant supervisor--worker model the class lives in $H^2\cong\mathbb{Z}/2$ and
+equals a single bit,
+\[
+  [\omega]=\varepsilon\in\mathbb{Z}/2,\qquad
+  \varepsilon=\text{``does the callee mutate state the caller depends on?''},
+\]
+so the weld exists iff $\varepsilon=0$. This value is machine-checked in Lean~4.
+\end{theorem}
+
+\noindent The engineering reading is the payoff. A wrong interleaving -- a distributive law that
+violates the coherence axioms -- is not an abstract nuisance; it is precisely the state-divergence
+and re-entrancy defect, where one agent reads context that another has already invalidated.
+Hand-threading the shared state does not escape this: every call site that reads one register and
+writes another silently commits to an order of effects, an implicit distributive law, and nothing
+checks that the local choices are globally consistent. A program can hand-thread its way into a
+globally inconsistent interleaving one locally reasonable line at a time, and that inconsistency is
+$[\omega]\ne 0$, found at run time as a bug. The comonadic view does not make the composite exist --
+no formalism can, because sometimes it genuinely does not -- but it \emph{concentrates the decision}:
+the interleaving is one named object, its soundness is one class, and both can be inspected before
+the system runs.
+
+\paragraph{Contribution and honest scope.}
+This note proves no new theorem. Its contribution is the identification of the tool-calling protocol
+and its harness with the directed-container / polynomial-comonad structure, the resulting reading of
+the trace, state, and composition operators, and an honest positioning against the two nearest
+precedents \cite{sessioncoalg,segura}. Every mathematical fact it uses is established elsewhere: the
+equivalence chain \eqref{eq:chain} is Ahman--Uustalu \cite{dircont}; the distributive-law
+$\Leftrightarrow$ Zappa--Sz\'ep correspondence and the $[\omega]\in H^2$ obstruction are from the
+directed-container and bicrossed-product literature and our own prior work; the value
+$[\omega]=\varepsilon$ at the smallest model is machine-checked (Remark~\ref{rem:lean}). We draw the
+formalisation boundary explicitly where it falls (Remark~\ref{rem:lean}), and we flag the one
+reduction that is invoked at the directed-container level and not yet restated directly for store
+comonads as an open problem (\S\ref{sec:conclusion}).
+
+\paragraph{Outline.}
+Section~\ref{sec:prelim} recalls containers, the equivalence chain, the cofree and store comonads,
+and the obstruction we import. Section~\ref{sec:protocol} identifies the protocol with a container
+and the harness with its comonad, and reads off the interaction trace. Section~\ref{sec:single}
+gives the single-agent verdict: state is threaded state, and buys nothing.
+Section~\ref{sec:compose} gives the composition verdict: interleaving is a distributive law and its
+soundness is $[\omega]=0$, with the Lean boundary. Section~\ref{sec:related} positions the note
+against session coalgebras, effect handlers, and process-calculus accounts.
+Section~\ref{sec:conclusion} states the open problems.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We recall only what the argument uses; a reader fluent in containers and $\Poly$ can skim to
+\S\ref{sec:protocol}. Throughout, $\Set$ is the base and $\y$ denotes the identity container
+$1\ctr(\lambda\_.\,1)$, whose extension is the identity functor.
+
+\begin{definition}[Container, extension, morphism \cite{gambinokock}]\label{def:cont}
+A \emph{container} $S\ctr P$ consists of a set of \emph{shapes} $S$ and a family of \emph{positions}
+$P:S\to\Set$. Its \emph{extension} is the polynomial functor
+\[
+  \ext{S\ctr P}(X)\;=\;\sum_{s:S}\big(P\,s\to X\big).
+\]
+A \emph{morphism} $(S\ctr P)\to(T\ctr Q)$ is a pair $(f,\bk f)$ of a forward map $f:S\to T$ on shapes
+and a backward, contravariant family $\bk f:\prod_{s:S}\big(Q(f\,s)\to P\,s\big)$ on positions.
+Containers and their morphisms form the category $\Cont$; extension is a full and faithful embedding
+$\Cont\hookrightarrow[\Set,\Set]$ onto the polynomial functors.
+\end{definition}
+
+\begin{definition}[Directed container; the equivalence chain \cite{dircont}]\label{def:dcont}
+A \emph{directed container} is a container $S\ctr P$ together with operations making each position
+set the arrows out of a shape: a unit $o:\prod_{s}P\,s$, a ``sub-shape'' operation
+$s\oplus\_:\prod_s(P\,s\to S)$, and a composition of positions, subject to category-like axioms. The
+resulting data is exactly a small category: shapes are objects, $P\,s=\coprod_{t}\Cat(s,t)$ collects
+the arrows out of $s$. Passing to extensions, a directed container is precisely a \emph{polynomial
+comonad} $(\ext{S\ctr P},\epsilon,\delta)$, with counit $\epsilon:\ext{S\ctr P}\Rightarrow\mathrm{Id}$
+and comultiplication $\delta:\ext{S\ctr P}\Rightarrow\ext{S\ctr P}\comp\ext{S\ctr P}$. This gives the
+equivalence chain~\eqref{eq:chain}, $\DCont\simeq\Cat\simeq\Cat^{\sharp}$.
+\end{definition}
+
+\begin{definition}[Substitution and tensor \cite{spivakref,niuspivak}]\label{def:comp}
+For containers $C=S\ctr P$ and $D=T\ctr Q$, \emph{substitution} $C\comp D$ has extension
+$\ext C\circ\ext D$ (nest a $D$-structure at each position of a $C$-structure); it is the composition
+of the corresponding polynomial functors. The \emph{Dirichlet tensor} $C\otimes D$ multiplies shapes
+and positions, $(S\times T)\ctr\big(\lambda(s,t).\,P\,s\times Q\,t\big)$; on extensions it is the
+Day convolution for the pointwise product. Substitution models sequential composition; the tensor
+models independent parallel composition.
+\end{definition}
+
+\begin{definition}[Cofree comonad]\label{def:cofree}
+For a container $F$ with extension $\ext F$, the \emph{cofree comonad} $\cofree F$ is the terminal
+$F$-coalgebra structure carried by the greatest fixed point $\nu X.\,(A\times\ext F X)$ relative to a
+label object $A$; concretely $\cofree F(A)$ is the set of $A$-labelled trees branching by the
+positions of $F$. It is the universal comonad mapping to $F$: every run of the one-step functor $F$
+extends uniquely to an element of the trace $\cofree F$.
+\end{definition}
+
+\begin{definition}[Store comonad and state object \cite{niuspivak}]\label{def:store}
+For a set $S$, the \emph{state object} is the container $\Delta S:=S\ctr(\lambda\_.\,S)$, with
+extension
+\[
+  \ext{\Delta S}(X)=\textstyle\sum_{s:S}X^{S}=S\times X^{S}=\Store_S X,
+\]
+the \emph{store} (costate) comonad: a current state paired with a reader $X^S=(S\to X)$. It is a
+directed container -- the codiscrete category on $S$, in which every pair of objects has a unique
+arrow. Its counit reads the current state, and its comultiplication duplicates the register. A
+\emph{worker of state $S$ from $X$ to $Y$} is a container morphism $w:\Delta S\otimes X\to Y$.
+\end{definition}
+
+\noindent Unfolding Definition~\ref{def:cont} for a worker $w:\Delta S\otimes X\to Y$ with
+$X=X_0\ctr X_1$ and $Y=Y_0\ctr Y_1$ gives a forward map and a backward family
+\begin{equation}\label{eq:fwdbwd}
+  \fwd:S\times X_0\to Y_0,
+  \qquad
+  \bwd:\textstyle\prod_{(s,x_0)}\big(Y_1(\fwd(s,x_0))\to S\times X_1\,x_0\big),
+\end{equation}
+and, by the universal property of the product, $\bwd$ splits into a \emph{state-writeback}
+$\bwd_S:\prod Y_1(\cdots)\to S$ and an ordinary back-map $\bwd_X:\prod Y_1(\cdots)\to X_1\,x_0$. The
+forward leg reads state and input and answers; the backward leg writes back a new state and answers
+the input. This is the whole of ``a stateful step,'' typed.
+
+\begin{definition}[Zappa--Sz\'ep weld; the obstruction we import \cite{ahmanuustaluDL}]\label{def:zs}
+A \emph{Zappa--Sz\'ep weld} $C\zs D$ of two directed containers is a directed-container structure on
+a shared underlying object in which each of $C$ and $D$ acts on the other, restricting to $C$ and $D$
+on the two factors. Welds correspond to distributive laws
+$\lambda:\ext D\comp\ext C\Rightarrow\ext C\comp\ext D$ (equivalently the comonad-distributive dual)
+satisfying the coherence axioms; at the level of the underlying categories this is the classical
+bicrossed product. A weld exists iff a freeness condition \textup{(L)} holds and a global-closure
+condition \textup{(G)} holds, and the obstruction to \textup{(G)} is a single class $[\omega]\in H^2$
+with $\text{(G)}\Leftrightarrow[\omega]=0$. We invoke these facts; they are proved in the cited work
+and our own.
+\end{definition}
+
+\section{A protocol is a container; the harness is its comonad}\label{sec:protocol}
+
+We fix terminology at the level of generality the note needs: a tool-calling protocol is any
+discipline of typed requests and typed responses, of which the Model Context Protocol is one
+concrete instance. We do not model any particular wire format; we model the shape of the interaction.
+
+\begin{definition}[Tool-calling protocol]\label{def:protocol}
+A \emph{tool-calling protocol} is a container $S\ctr P$ in which $S$ is the set of well-formed
+\emph{request schemas} an agent may emit (a tool name together with typed arguments, a query, a
+delegated sub-task) and, for each $s:S$, $P\,s$ is the set of admissible \emph{responses} the harness
+may return to $s$. One \emph{step} of the protocol is the endofunctor $\ext{S\ctr P}(X)=\sum_{s:S}(P\,s\to
+X)$: choose a request, and continue as a function of whichever response comes back.
+\end{definition}
+
+\begin{remark}[What is conceded]\label{rem:concede}
+Definition~\ref{def:protocol}, up to the reading of $S$ and $P$, is not new. The step endofunctor is
+the session-coalgebra functor $F(X)=\coprod_{a\in A}X^{B_a}$ of Keizer, Basold and P\'erez
+\cite{sessioncoalg}, who study coalgebras $c:X\to F(X)$ for it (they cite Gambino--Kock, and do not
+use the word ``container''). We take ``one protocol step is a container'' from them. Everything from
+here on -- the comonad, the trace, the store worker, the composition operators, and the obstruction
+-- lies outside their development; see \S\ref{sec:related}.
+\end{remark}
+
+The step functor alone is only half the object. An agent does not issue one request in a vacuum; the
+harness \emph{threads context} -- the growing transcript of prior requests and responses -- from each
+step to the next, and it is this threading, not the individual step, that makes a protocol a
+protocol. The claim of this section is that the threading is not an external machine but a comonad
+structure on the very same container.
+
+\begin{proposition}[The harness is the protocol's comonad]\label{prop:harness}
+A tool-calling protocol whose harness threads context coherently -- an initial (empty) context, a
+way to read the current context to answer without a further request, and an associative extension of
+a context by a step -- is a directed container: the counit $\epsilon$ is ``answer from the current
+context,'' the comultiplication $\delta$ is ``expose the context of each continuation,'' and the
+category-theoretic axioms of Definition~\ref{def:dcont} are exactly the coherence of context
+threading. By the equivalence chain~\eqref{eq:chain} it is therefore a small category and a
+polynomial comonad.
+\end{proposition}
+
+\begin{proof}
+This is the content of Definition~\ref{def:dcont} read in the protocol's vocabulary, not a new
+theorem. A coherent threading discipline provides precisely the unit $o$ (the empty context is a
+distinguished position at each shape), the sub-shape map $s\oplus\_$ (a response determines the
+continuation's schema), and the composition of positions (concatenation of transcripts), subject to
+the directed-container axioms, which say that the empty context is a two-sided unit for concatenation
+and that concatenation is associative. These are the comonad laws for $(\ext{S\ctr P},\epsilon,\delta)$
+under \eqref{eq:chain}.
+\end{proof}
+
+\noindent The harness is thus not a meta-object above the protocol; it \emph{is} the protocol, with
+the comonad structure that the word ``harness'' names. Two consequences are immediate.
+
+\begin{corollary}[The interaction trace is the cofree comonad]\label{cor:trace}
+The interaction trace of a protocol $S\ctr P$ -- the tree of all possible runs, each run a sequence
+of request/response pairs -- is the cofree comonad $\cofree{S\ctr P}$ of Definition~\ref{def:cofree}
+on the tool functor, with labels drawn from the agent's observable outputs. A single conversation is
+one root-to-node branch; the comonad's counit reads the current node, and its comultiplication
+re-roots the trace at each node, giving the sub-conversation visible from there.
+\end{corollary}
+
+\begin{remark}[Running the agent is an interaction law]\label{rem:interaction}
+The comonad reading also locates the agent. An agent's tool-issuing behaviour is a monad of effects,
+and executing it against the harness is the pairing of that monad with the protocol comonad by an
+\emph{interaction law} in the sense of Katsumata, Rivas and Uustalu \cite{interactionlaws}: the
+categorical form of ``running'' the agent against the protocol to produce a value. We do not develop
+the agent-monad here -- this note is about the protocol object -- but record that the harness-comonad
+identification makes ``run'' a standard construction rather than an operational primitive.
+\end{remark}
+
+\begin{corollary}[Protocols compose in two ways]\label{cor:compose}
+Two protocols compose by substitution $C\comp D$ -- run $D$ at each response position of $C$, i.e.\ a
+tool whose responses are themselves protocols (a supervisor delegating to a sub-protocol) -- and by
+Dirichlet tensor $C\otimes D$ -- offer both protocols' requests independently (two non-interacting
+tools). These are Definition~\ref{def:comp}. The interesting composite, of two protocols that share
+state, is neither, and is the subject of \S\ref{sec:compose}.
+\end{corollary}
+
+\section{The single-agent verdict: state is threaded state}\label{sec:single}
+
+Conversational context that the agent may also \emph{mutate} -- a scratchpad, a running plan, a
+budget -- is modelled by giving the worker a state object $\Delta S$ (Definition~\ref{def:store}).
+Before claiming anything for this, we grant the sceptic the single-agent case in full.
+
+\begin{proposition}[One worker is threaded state, re-spelled]\label{prop:single}
+Fix a state set $S$. The elements of the store $\Store_S X=S\times X^S$ are in natural bijection with
+state-threading data: a current state together with a map from states to outputs. On the lens
+fragment $X=\y$, $Y=A\ctr(\lambda\_.B)$, a worker $\Delta S\to A\ctr(\lambda\_.B)$ is exactly a pair
+\[
+  \getop:S\to A,\qquad \putop:S\times B\to S,
+\]
+the ordinary ``read the state to answer; write the state back'' of hand-threaded code.
+\end{proposition}
+
+\begin{proof}
+The bijection $\Store_S X=S\times X^S$ is the definition of $\ext{\Delta S}$. Specialising
+\eqref{eq:fwdbwd} to $X=\y$ (so $X_0=X_1=1$) and $Y=A\ctr(\lambda\_.B)$ gives $\fwd:S\to A$, i.e.\
+$\getop$, and $\bwd_S:\prod_s(B\to S)$, i.e.\ $\putop:S\times B\to S$, with $\bwd_X$ trivial.
+\end{proof}
+
+\noindent There is no daylight here. A store is a state and a reader; a lens is a getter and a
+setter; threading a state through a signature gives a getter and a setter. The comonad's counit is
+``read the current state'' ($\getop$) and its comultiplication is ``duplicate the register'' --
+operations hand-threaded code already performs. For a system of one stateful agent the store comonad
+is a rename: more category theory, no more safety. Honesty requires saying so plainly, and it is the
+reason the value must be sought elsewhere. It is not sought in vain, because agentic systems are not
+systems of one agent.
+
+\section{The composition verdict: interleaving is a distributive law}\label{sec:compose}
+
+Everything the state structure is worth lives in how two stateful agents combine, and here the store
+comonad stops being a rename, because comonads -- unlike the data they carry -- do not compose for
+free \cite{ahmanuustaluDL}.
+
+\paragraph{Two ways to stack, only one free.}
+Tensoring two state objects multiplies their states on the nose,
+\begin{equation}\label{eq:tensor}
+  \Delta S\otimes\Delta T=\Delta(S\times T),
+\end{equation}
+whereas substitution nests a store inside a store,
+\begin{equation}\label{eq:nest}
+  \Delta S\comp\Delta T=(S\times T^{S})\ctr(\cdots)\;\ne\;\Delta(S\times T),
+\end{equation}
+recording not a pair of states but a whole branch map $S\to T$; at $|S|=|T|=2$ these are
+$4\cdot\y^4$ against $8\cdot\y^4$, an explicit retract, not an equality. Equation~\eqref{eq:tensor}
+is the composite of two agents that do \emph{not} interact -- independent registers, no shared reads
+or writes -- and it is forced, ``ask both, answer both.'' It is free precisely because it assumes
+non-interference.
+
+\paragraph{The interacting composite is neither.}
+The agents an orchestration actually composes do interact: a supervisor over a worker that can call
+back into the supervisor (re-entrancy), or two agents that read and write a shared ledger, each
+acting on data the other produced. There the registers are not independent, so the composite is not
+$\Delta S\otimes\Delta T$; and it is not a bare nesting either. It is a Zappa--Sz\'ep weld
+$\Delta S\zs\Delta T$ (Definition~\ref{def:zs}), in which each store acts on the other, and a weld is
+a distributive law $\lambda$ recording how the two contexts interleave: which agent reads first,
+whose write the other sees. Comonads do not compose for free -- without a valid $\lambda$ there is no
+composite protocol at all, only two protocols and an unanswered question about the order of their
+effects.
+
+\paragraph{Existence is a cohomology class.}
+By Theorem~\ref{thm:main}, once (L) holds the weld exists exactly when $[\omega]=0\in H^2$. At the
+smallest re-entrant supervisor--worker model the class is one bit
+\begin{equation}\label{eq:omega}
+  [\omega]=\varepsilon\in\mathbb{Z}/2,\qquad
+  \varepsilon=\text{``does the worker mutate shared state the supervisor depends on?''},
+\end{equation}
+so the weld exists iff $\varepsilon=0$. A \emph{wrong} interleaving -- a $\lambda$ violating the
+coherence axioms -- is not an abstract nuisance: it is the state-divergence / re-entrancy defect, the
+concrete failure where one agent reads context another has already invalidated.
+
+\begin{remark}[Where the machine check stops]\label{rem:lean}
+The class computation~\eqref{eq:omega} is machine-checked in Lean~4, \texttt{sorry}-free and
+Mathlib-free (\texttt{Reentrancy.lean}): the file certifies $\varphi(\omega\,\varepsilon)=\varepsilon$
+and $\mathsf{InB2}(\omega\,\varepsilon)\Leftrightarrow\varepsilon=\mathsf{false}$, i.e.\ that the
+cocycle $\omega(\varepsilon)$ is a coboundary exactly when $\varepsilon=0$. What Lean certifies is the
+finite $\mathbb{F}_2$ class computation; the \emph{reduction} of the categorical obstruction to that
+cochain complex is proved on paper and is not formalised. The state arithmetic
+\eqref{eq:tensor}--\eqref{eq:nest} is likewise Lean-checked (\texttt{WorkersRetract.lean}, the retract
+$r\circ\sigma=\mathrm{id}$). We flag the boundary rather than blur it. The general reduction of
+store-comonad interleaving to a distributive law is invoked here at the directed-container level --
+$\Delta S$ is a directed container -- where it is available; a restatement directly for store comonads
+is not needed for this note and is recorded as an open problem in \S\ref{sec:conclusion}.
+\end{remark}
+
+\paragraph{What threading does, and does not, do.}
+Hand-threading two shared states does not escape the distributive law. Every call site that reads one
+register and writes another silently commits to an order of effects -- an implicit $\lambda$ -- and
+nothing checks that the per-site choices are globally consistent, which is exactly what the coherence
+axioms demand. A program can hand-thread its way into a globally inconsistent interleaving one locally
+reasonable line at a time; that inconsistency is $[\omega]\ne0$, discovered at run time as a
+re-entrancy bug. The store-comonad worker does not make the composite exist automatically -- no
+formalism can, because sometimes it genuinely does not -- but it \emph{concentrates} the decision: the
+interleaving is one named object $\lambda$, its validity is one class $[\omega]$, and both can be
+inspected before the system runs, in one place, instead of being reconstructed from scattered call
+sites after it breaks.
+
+\paragraph{The ledger.}
+Table~\ref{tab:ledger} states the verdict as plainly as the question deserves. The reformulation buys
+nothing for a single agent, and it does not make composition automatic; what it buys is a change in
+\emph{where} and \emph{when} the one real decision of a composite -- the interleaving of shared
+effects -- is made and checked.
+
+\begin{table}[t]
+\small
+\begin{tabular}{@{}p{0.24\linewidth}p{0.30\linewidth}p{0.36\linewidth}@{}}
+\toprule
+ & \textbf{single agent} & \textbf{interacting composite} \\
+\midrule
+store-comonad worker & $\Store_S X=S\times X^S$ & Zappa--Sz\'ep weld; needs a law $\lambda$ \\
+hand-threaded state & getter / setter & implicit $\lambda$ per call site \\
+\textbf{what the comonad adds} & \emph{nothing} (a rename) & the interleaving as \emph{one} named
+$\lambda$; its validity as \emph{one} class $[\omega]$, checkable before the system runs \\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{What the store-comonad reformulation buys, by system size.}\label{tab:ledger}
+\end{table}
+
+\section{Positioning}\label{sec:related}
+
+The note sits one refinement past the two nearest semantic accounts of protocols, and beside a
+process-calculus line.
+
+\paragraph{Session coalgebras.}
+Keizer, Basold and P\'erez \cite{sessioncoalg} give a coalgebraic semantics of session types over
+exactly the container endofunctor $F(X)=\coprod_{a\in A}X^{B_a}$, which we adopt for the single step
+(Remark~\ref{rem:concede}). Their object is a coalgebra $c:X\to F(X)$ for protocol \emph{transitions}
+-- a single one-step map, with state folded into the carrier $X$ -- and their composition is the
+$\pi$-calculus parallel product $P\mid Q$. They introduce no comonad, no cofree interaction trace, no
+substitution or tensor algebra of protocols, no store-comonad state, and no obstruction to
+composition. The comonadic / directed-container layer, the cofree trace, the $\comp$/$\otimes$
+algebra, the store worker, and the $[\omega]$ obstruction are outside their development, and are what
+this note contributes.
+
+\paragraph{Effect handlers for prompt pipelines.}
+Segura \cite{segura} models bounded LLM prompt pipelines with Lawvere theories and algebraic-effect
+handlers (retrieval, state, exceptions, typed tool invocation, with live/log/replay interpretations).
+This is the closest ``algebra of tool-calling,'' but it is protocol-agnostic: it axiomatises the
+effects a pipeline may perform, not the protocol object through which requests and responses flow,
+and it uses no polynomial-functor or container structure. We know this work at abstract level only
+(the full text is paywalled and we have not read it in depth); we position against it rather than
+build on it, and cite it as the effect-handler precedent that does not model the protocol object.
+
+\paragraph{Process-calculus and other accounts.}
+Schlapbach's process-calculus treatment of protocol bisimulation is a natural target for a
+directed-container morphism reformulation, which we do not pursue here. A withdrawn attempt at a
+``monadic'' context-engineering semantics (Zhang--Wang, arXiv:2512.22431, withdrawn for issues in its
+categorical foundations) indicates that the naive monadic route does not reach the structure; the
+comonadic route of this note is, we believe, the correct one, supplied for free by the equivalence
+chain.
+
+\section{Conclusion and open problems}\label{sec:conclusion}
+
+A tool-calling protocol is a container, its harness is that container's comonad, its interaction
+trace is the cofree comonad, its stateful context is a store worker, and the correctness of a
+multi-agent interleaving is the vanishing of one cohomology class. None of these is a new theorem;
+together they say that the object applied category theory already studies -- the directed container,
+equivalently the polynomial comonad -- is the semantics of agent tool-calling, and that the
+multi-agent correctness question is not a testing problem but a computable obstruction. For an
+orchestration of many interacting agents, which is what an agentic system is, that obstruction is the
+compositional-correctness guarantee worth naming.
+
+Three problems remain open.
+
+\begin{enumerate}[leftmargin=1.6em]
+\item \emph{A store-comonad restatement of the obstruction.} Theorem~\ref{thm:main} is invoked at the
+directed-container level, where $\Delta S$ lives. Restating the reduction ``store-comonad interleaving
+$\Leftrightarrow$ distributive law $\Leftrightarrow[\omega]$'' directly in the store-comonad
+vocabulary, and formalising the categorical-to-cochain reduction that Remark~\ref{rem:lean} leaves on
+paper, is a concrete next step.
+\item \emph{Beyond the smallest model.} The bit $[\omega]=\varepsilon\in\mathbb{Z}/2$ is the
+supervisor--worker case. The class for a weld with a larger freeness datum (three or more interacting
+agents, or non-abelian shared state) is the natural generalisation; the freeness condition (L) is what
+must first be understood in the many-agent case.
+\item \emph{Protocol morphisms.} Reformulating protocol refinement and bisimulation -- including the
+process-calculus accounts -- as directed-container morphisms would connect this semantics to the
+existing operational theory and is the route to comparing two harnesses for the same protocol.
+\end{enumerate}
+
+\subsection*{Acknowledgements}
+For Robin and Neil. This note answers a question Robin posed about whether the store-comonad worker
+earns its keep, recast for an external audience; the internal house-doc version is companion material.
+
+\begin{thebibliography}{9}
+
+\bibitem{dircont}
+D.~Ahman and T.~Uustalu.
+\emph{Directed containers as categories.}
+Electron.\ Proc.\ Theor.\ Comput.\ Sci.\ (EPTCS) 207 (2016), 89--98. arXiv:1604.01187.
+
+\bibitem{ahmanuustaluDL}
+D.~Ahman and T.~Uustalu.
+\emph{Distributive laws of directed containers.}
+Progress in Informatics 10 (2013), 3--18.
+
+\bibitem{gambinokock}
+N.~Gambino and J.~Kock.
+\emph{Polynomial functors and polynomial monads.}
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ 154 (2013), no.~1, 153--192. arXiv:0906.4931.
+
+\bibitem{sessioncoalg}
+A.~C.~Keizer, H.~Basold, and J.~A.~P\'erez.
+\emph{Session coalgebras: a coalgebraic view on session types and communication protocols.}
+ACM Trans.\ Program.\ Lang.\ Syst.\ (TOPLAS), 2021. arXiv:2011.05712.
+
+\bibitem{niuspivak}
+N.~Niu and D.~I.~Spivak.
+\emph{Polynomial functors: a mathematical theory of interaction.}
+arXiv:2312.00990, 2023.
+
+\bibitem{spivakref}
+D.~I.~Spivak.
+\emph{A reference for categorical structures on \textup{Poly}.}
+arXiv:2202.00534, 2022.
+
+\bibitem{segura}
+J.~J.~Segura.
+\emph{Algebraic effects for bounded prompt pipelines: Lawvere theories, handlers, and outcome
+traces.}
+Computing 108 (2026). DOI 10.1007/s00607-026-01699-w. \textup{(Known to the author at abstract level
+only; full text paywalled.)}
+
+\bibitem{interactionlaws}
+S.~Katsumata, E.~Rivas, and T.~Uustalu.
+\emph{Interaction laws of monads and comonads.}
+LICS 2020. arXiv:1912.13477.
+
+\end{thebibliography}
+
+\end{document}
