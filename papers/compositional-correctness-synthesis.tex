@@ -1,0 +1,527 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{xcolor}
+
+% ---- theorem environments -------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---- notation -------------------------------------------------------------
+\newcommand{\DCont}{\mathbf{DCont}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Cont}{\mathbf{Cont}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cof}{\mathbf{Cof}}
+\newcommand{\Set}{\mathbf{Set}}
+\renewcommand{\Vec}{\mathbf{Vec}}
+\newcommand{\PolyComon}{\mathbf{Comon}(\Poly)}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\op}{^{\mathrm{op}}}
+\newcommand{\bowtiemap}{\bowtie}
+\newcommand{\omegacl}{[\omega]}
+\newcommand{\HH}[1]{H^{#1}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\grade}[1]{{\small\textsf{[#1]}}}
+
+% ---- grade macros (honest provenance, inline) -----------------------------
+\newcommand{\gReviewed}{\grade{peer-reviewed}}   % Rick-refereed, internal
+\newcommand{\gLean}{\grade{Lean-verified}}
+\newcommand{\gProved}{\grade{proved}}
+\newcommand{\gComputed}{\grade{computed}}
+\newcommand{\gOpen}{\grade{open}}
+\newcommand{\gWIP}{\grade{in-progress}}
+
+\newcommand{\wipcommit}{\texttt{<work-in-progress commit: to be stamped on push>}}
+
+\title{\textbf{Compositional Correctness via Directed Containers}\\[0.4em]
+\large A synthesis of the Kodamai research program across theory, applications, and formalisation}
+\author{MacBeth\\ \small Kodamai (PI: Neil Ghani)}
+\date{20 September 2026 \\[0.3em] \small\wipcommit}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Composition fails silently. A smart contract that is correct in isolation drains its
+balance when re-entered; two agents each individually well-behaved deadlock when
+orchestrated; a supply chain reconciles locally but not globally. This document reports
+a single mathematical program that gives these failures one home. We work in the category
+$\DCont$ of directed containers, which is equivalent to the category $\Cat$ of small
+categories; in this setting composing two directed systems is a \emph{Zappa--Sz\'ep
+product}, and it exists and is correct precisely when a lifting condition $(L)$ holds and
+a second cohomology class $\omegacl \in \HH{2}$ vanishes. The slogan
+\[
+  \text{compositional correctness} \;=\; (L)\ \wedge\ \omegacl = 0 \in \HH{2}
+\]
+organises the whole program. We map the program's artifacts onto the grant's three
+pillars --- theory, applications, formalisation --- state each result at its honest
+grade (peer-refereed, Lean-verified, proved, computed, or open), and flag the three
+places where the story is genuinely incomplete: tax computation has no artifact yet, the
+representability wall $\mathcal{E}=0$ (Conjecture~6.2 / Gap-$S$) remains open, and nothing
+here has been published at an external venue. This is a map of what exists, drawn to
+scale.
+\end{abstract}
+
+\tableofcontents
+
+\section*{On the grades used in this document}
+\addcontentsline{toc}{section}{On the grades used in this document}
+
+Every mathematical claim below carries an inline grade, drawn verbatim from the
+project's proof registry (\texttt{proofs/registry/*.json}, trust-checked green as of the
+date on this document). The grades are, from strongest to weakest:
+
+\begin{itemize}[nosep]
+  \item \gReviewed{} --- refereed by Rick (a fellow agent) with an accept verdict. This
+    is the strongest grade in the program; it is \emph{not} external publication.
+  \item \gLean{} --- machine-checked in Lean~4, mostly Mathlib-free core developments.
+  \item \gProved{} --- a written proof exists and has been self-audited (often by
+    independent sub-agent replay), but not refereed.
+  \item \gComputed{} --- established on a family of worked examples, not in general.
+  \item \gOpen{} / \gWIP{} --- conjectural, or reduced but not closed.
+\end{itemize}
+
+\noindent No result in this program is ``published''. Where the registry and this prose
+disagree, the registry wins. The value of this synthesis is that its map is accurate; a
+single inflated grade would defeat its purpose.
+
+\section{Introduction}\label{sec:intro}
+
+\subsection{The problem: composition fails silently}
+
+The recurring and expensive failure mode of engineered systems is not that a component
+is wrong, but that two correct components are wrong \emph{together}. The 2016 DAO
+re-entrancy exploit drained roughly \$60M from a contract whose withdrawal function was
+correct in isolation; the fault lived in the \emph{interleaving} of a call and a state
+update. Multi-agent orchestration exhibits the same shape: two agents, each sound, can
+deadlock or corrupt shared state when their control is welded together. Supply chains
+reconcile locally at every node yet fail to reconcile globally. In each case the defect
+is a property of the \emph{composite}, invisible to any analysis of the parts.
+
+Category theory is the mathematics of composition, so it should have something precise to
+say here. The thesis of this program is that it does: that there is one obstruction, living
+in one cohomology group, that governs whether a directed system composes correctly, and
+that it specialises --- with real content --- to smart contracts, to agent orchestration,
+and to supply chains.
+
+\subsection{The gap}
+
+The pieces have existed separately. Directed containers are known to model stateful,
+navigable structures and to be equivalent to small categories (Ahman--Chapman--Uustalu;
+Shapiro--Spivak in the language of $\Poly$). Zappa--Sz\'ep products are the classical
+algebraic device for gluing two structures that act on each other. Group cohomology
+supplies obstruction classes. What has been missing is the \emph{fusion}: a single frame
+in which ``these two directed systems compose'' is literally a Zappa--Sz\'ep product in
+$\DCont$, in which the obstruction to that product is a specific $\HH{2}$ class, and in
+which the same class, read in an application, is the re-entrancy bug or the orchestration
+deadlock. That fusion, and its consequences, is what this program supplies.
+
+\subsection{The result, in one line}
+
+Throughout, ``correctness'' of a composition means: the composite directed container
+exists (its structure maps are well-defined and satisfy the directed-container laws) and
+computes what the two factors jointly specify. Our organising claim is:
+
+\begin{quote}
+\emph{A directed system composes correctly if and only if a lifting condition $(L)$ holds
+and an obstruction class $\omegacl \in \HH{2}$ vanishes.}
+\end{quote}
+
+The two halves are independent and have different characters. $(L)$ is a first-order,
+degree-one ``the quotient exists'' condition; $\omegacl=0$ is a degree-two ``the pieces
+reassemble'' condition. The program's theory pillar (\S\ref{sec:theory}) makes both
+precise and proves the biconditional in the cases we have closed; the applications pillar
+(\S\ref{sec:applications}) exhibits $\omegacl$ as a concrete, sometimes machine-checked,
+invariant of real systems; the formalisation pillar (\S\ref{sec:formalisation}) verifies
+the arithmetic core of $\omegacl$ in Lean.
+
+\subsection{Method}
+
+The engine is the equivalence $\DCont \simeq \Cat$ (\S\ref{sec:chain}). It lets us move a
+question about composing directed systems into a question about welding two categories,
+where the classical apparatus --- Zappa--Sz\'ep products, the Lyndon--Hochschild--Serre
+spectral sequence, group cohomology --- is available and sharp. The obstruction $\omegacl$
+is the class of a non-split extension; the lifting condition $(L)$ is the existence of a
+suitable transversal. Applications are obtained by \emph{specialising the base}: an agent
+orchestration, a contract's storage, a supply graph each present as a particular directed
+container, and the general obstruction computes to the domain's known failure mode.
+
+\subsection{Consequences and scope}
+
+The payoff is a design principle: to certify a composite directed system, check $(L)$ and
+compute $\omegacl$. Where $\omegacl$ lands in a finite group --- as it does for the
+re-entrancy model, where $\omegacl = \varepsilon \in \mathbb{F}_2$ --- this is a decidable
+check, and we have machine-checked the arithmetic. This is what ``compositional
+correctness has economic consequences'' means concretely (\S\ref{sec:impact}).
+
+\medskip
+\noindent\textbf{Honest scope.} This is a synthesis, not a new theorem. It introduces no
+new result; it maps existing ones. Three gaps are stated plainly rather than buried:
+\begin{enumerate}[nosep,label=(\roman*)]
+  \item \emph{Tax computation}, named in the grant as an application, has no artifact yet
+    (\S\ref{sec:applications}).
+  \item The representability wall $\mathcal{E}=0$ (Conjecture~6.2 / Gap-$S$) is
+    \gOpen{}; the September 2026 module reduction reframed it but did not close it
+    (\S\ref{sec:wall}).
+  \item Nothing is externally published; the strongest grade is Rick-refereed
+    (\S\ref{sec:status}).
+\end{enumerate}
+
+\subsection{Outline}
+\S\ref{sec:theory} is the theory pillar: the equivalence chain, Zappa--Sz\'ep
+composition, the obstruction $\omegacl$, change of base, the full-faithfulness theorem,
+the $\HH{2}$-cluster, and the open wall. \S\ref{sec:applications} is the applications
+pillar. \S\ref{sec:formalisation} is the formalisation pillar. \S\ref{sec:impact} states
+the impact. \S\ref{sec:status} is a consolidated status ledger, and \S\ref{sec:roadmap}
+the roadmap.
+
+\section{Theory}\label{sec:theory}
+
+\subsection{The equivalence chain}\label{sec:chain}
+
+\begin{definition}
+A \emph{container} is a pair $(S, P)$ with $S$ a set of \emph{shapes} and
+$P \colon S \to \Set$ an $S$-indexed family of \emph{positions}; it denotes the functor
+$\llbracket S,P\rrbracket X = \sum_{s\in S} X^{P(s)}$. A \emph{directed container} adds
+to $(S,P)$ operations making each fibre navigable --- a ``root'' position, a way to move
+along a position, and a way to compose moves --- subject to laws.
+\end{definition}
+
+\begin{theorem}[Equivalence chain]\label{thm:chain}
+There is a chain of equivalences
+\[
+  \DCont \;\simeq\; \PolyComon \;\simeq\; \Cat,
+\]
+identifying directed containers with comonoids in $(\Poly,\triangleleft)$ and with small
+categories. Under it a directed container \emph{is} a small category: shapes are objects,
+positions are morphisms out of an object, the root is the identity, and composition of
+positions is composition of morphisms.
+\grade{external identification established; assembled chain in-progress}
+\end{theorem}
+
+The equivalence $\PolyComon \simeq \Cat$ is Shapiro--Spivak's established $\Cat^\# =
+\DCont$ identification in $\Poly$; we take it as given and build on it. The chain is the
+program's convergence hub: four independent lines of work (state liftings, holonomy,
+orchestration, obstruction theory) all land on the single statement $\DCont \simeq \Cat$.
+It is the reason a theorem proved about categories transports to a statement about
+directed systems, and conversely. The convergence fronts are individually \gProved{} (for
+instance, state liftings $\cong$ categorical completeness); the fully assembled and
+formalised chain as our own artifact is recorded \gWIP{} in the registry, and is the
+natural target for the next formalisation push.
+
+\subsection{Zappa--Sz\'ep composition and the condition $(L)\wedge(G)$}\label{sec:zs}
+
+\begin{definition}
+Given two categories (equivalently, two directed containers) $C$ and $D$ that act on each
+other, their \emph{Zappa--Sz\'ep product} $C \bowtiemap D$ is the category whose morphisms
+are pairs composed by a mutual ``straightening'' rule: $D$ acts on $C$ and $C$ acts on
+$D$, and the two actions interleave. It generalises both the direct product (no
+interaction) and the semidirect product (one-sided action).
+\end{definition}
+
+\begin{theorem}[Pairwise Zappa--Sz\'ep criterion]\label{thm:zs}
+A category $K$ decomposes as a Zappa--Sz\'ep product $K \cong C \bowtiemap D$ of two
+subcategories if and only if two conditions hold:
+\[
+  (L)\ \text{a lifting/factorisation condition, and}\quad
+  (G)\ \text{a global cocycle condition.}
+\]
+\gProved{}
+\end{theorem}
+
+This is the composition theorem in categorical form. Because $\DCont \simeq \Cat$, it is
+simultaneously a theorem about welding two directed systems. $(L)$ says every morphism of
+$K$ factors uniquely through the two factors (the ``straightening'' is well-defined);
+$(G)$ says the resulting factorisation is globally coherent. The name of the game in the
+rest of the theory is: $(L)$ is usually easy to arrange, and $(G)$ is where the content
+lives --- so we ask what $(G)$ \emph{is}.
+
+\subsection{The obstruction $\omegacl \in \HH{2}$}\label{sec:omega}
+
+\begin{theorem}[The global condition is a cohomology class]\label{thm:omega}
+The global condition $(G)$ is the vanishing of an obstruction class:
+\[
+  (G) \iff \omegacl = 0 \in \HH{2},
+\]
+where $\omegacl$ is the class of the extension welding the two factors. Holonomy
+composition realises the Zappa--Sz\'ep bridge, and trivial holonomy forces collapse (the
+State $\leftrightarrow$ Belief proposition). \grade{peer-reviewed (holonomy--ZS bridge);
+proved (obstruction is $\HH{2}$)}
+\end{theorem}
+
+This is the technical heart. Combining Theorems~\ref{thm:zs} and \ref{thm:omega} yields
+the program's slogan,
+\[
+  \boxed{\ \text{correct composition}\ \iff\ (L)\ \wedge\ \omegacl = 0 \in \HH{2}\ }
+\]
+The holonomy--Zappa--Sz\'ep bridge --- that the composite's holonomy is exactly the
+obstruction to a splitting --- is \gReviewed{}. Two further structural facts sharpen the
+picture: the emergent-holonomy count is a degree-zero invariant ($\HH{0}$), with the
+higher Mackey/Shapiro data in $\HH{n}$ \gProved{}; and there are genuinely two distinct
+$\omegacl$-sites that are \emph{not} related by isotropy restriction \gProved{}, so the
+obstruction is not an artifact of one presentation.
+
+\subsection{Change of base: when enrichment is free}\label{sec:cob}
+
+\begin{theorem}[Self-enriched change of base]\label{thm:cob}
+For a monad/comonad $M$ used to change the base of the container construction, the induced
+functor is full and faithful if and only if $M = \Id$. \gProved{} \gLean{}
+\end{theorem}
+
+The lesson is a negative one worth stating: enriching the base --- carrying extra effect
+structure $M$ along the container construction --- buys expressive power but, for $M\neq
+\Id$, \emph{costs} full-faithfulness; the extension is no longer a conservative embedding.
+This delimits how far the clean theory travels when one moves from $\Set$ to a richer
+base such as $\Vec$, and it was independently machine-checked.
+
+\subsection{Full-faithfulness is unit-connectedness}\label{sec:t1}
+
+\begin{theorem}[Flagship, T1]\label{thm:t1}
+The container denotation functor $\llbracket-\rrbracket$ is full and faithful if and only
+if the monoidal unit is \emph{connected} --- not, as one might guess, if and only if the
+base is extensive. \gProved{}
+\end{theorem}
+
+T1 is the program's cleanest ``the obvious guess is wrong'' result. It was natural to
+expect that full-faithfulness of the container semantics tracked extensivity of the base;
+it does not. It tracks connectedness of the monoidal unit, a strictly different and
+sharper condition. This is the kind of result that a formalisation makes trustworthy and a
+synthesis exists to highlight.
+
+\subsection{The $\HH{2}$-cluster: holonomy and prunability}\label{sec:cluster}
+
+\begin{theorem}[Two edges of one spectral sequence]\label{thm:cluster}
+On $\DCont \simeq \Cat$ there are two a priori different degree-two obstructions --- the
+Zappa--Sz\'ep holonomy $\omegacl$ and Ferri \emph{prunability} --- and they do \emph{not}
+decompose as a direct sum. Instead they are the two edges of the Lyndon--Hochschild--Serre
+spectral sequence of the welding extension: $\omegacl$ is a base class and prunability the
+transgression $d_2$, coupled by $d_2(\varphi) = \varphi_*\omegacl$. A clean splitting
+$\HH{2} = (\text{base}) \oplus (\text{fibre})$ holds if and only if $\omegacl = 0$.
+\grade{proved; supporting fibre-edge kernel Lean-verified}
+\end{theorem}
+
+An earlier conjecture that the cluster splits as a product was \emph{refuted}; the correct
+statement is the spectral-sequence coupling above. We record this because the refutation is
+itself informative --- it says $\omegacl$ and prunability are not independent knobs, they
+are linked by a differential, and the link degenerates exactly when the base obstruction
+vanishes. A third invariant, the direction-functor $\HH{2}_{\Cat_B}$, was placed in the
+cluster: for a connected groupoid it reduces to $\HH{2}(\pi; M)$ of the vertex group, and
+it is orthogonal to prunability \gProved{}. Prunability separates from $\omegacl$ in
+general (the full loop bundle always has $\omegacl = 0$) \gProved{}.
+
+\subsection{The open wall: representability, Conjecture 6.2 / Gap-$S$}\label{sec:wall}
+
+One question is genuinely open, and the program's honesty depends on saying so clearly.
+
+\begin{conjecture}[6.2 / Gap-$S$]\label{conj:62}
+For the $\Vec$-admissibility question, the natural-transformation functor
+$F = \mathrm{Hom}(E, \bigoplus_{\mathbb{N}} -)$ is projective in the relevant additive
+functor category (equivalently, a certain comparison map $\iota_*$ is injective).
+\gOpen{}
+\end{conjecture}
+
+The September 2026 module reduction is real progress that stops short of a proof. It
+transfers the question to modules over $S = \mathrm{End}_k(E)$, computes the residual
+group $\mathrm{Nat}(Q,Q)$ up to an $\mathrm{Ext}^1$ wall, and --- decisively --- shows the
+\emph{Baer--Specker obstruction is void}: the Specker identity is consistent with freeness,
+so no product-vs-sum argument can manufacture an exotic map. That explains why every
+attempted exotic construction failed and reframes the residual question ($\mathcal{E}=0$)
+as one about a countable product of non-finitely-generated projectives over $S$. It is
+\gProved{} \emph{as a reduction}; the wall itself, $\mathcal{E}=0$, is \gOpen{}. We flag
+it here so no reader mistakes the reduction for a resolution.
+
+\section{Applications}\label{sec:applications}
+
+Each application is obtained by specialising the base of the general theory. The pattern
+is always the same: present the domain object as a directed container, and the general
+obstruction $\omegacl$ computes to the domain's known failure mode.
+
+\subsection{Agent orchestration is a Zappa--Sz\'ep product}\label{sec:orch}
+Composing two agent orchestrations is literally the Zappa--Sz\'ep weld of
+\S\ref{sec:zs}: each agent is a directed container, and orchestrating them interleaves
+their control exactly as the mutual action of $C \bowtiemap D$. Correct orchestration is
+then $(L) \wedge \omegacl=0$; a deadlock or a shared-state corruption is a non-vanishing
+$\omegacl$. \gProved{}
+
+\subsection{Re-entrancy is a failed distributive law, $\omegacl = \varepsilon \in
+\mathbb{F}_2$}\label{sec:reentrancy}
+A smart contract's storage and its call structure are two directed systems that must
+compose via a distributive law. Re-entrancy is precisely the failure of that law, and the
+obstruction lands in a two-element group: $\omegacl = \varepsilon \in \mathbb{F}_2$, with
+$\omegacl = 0$ the safe contract and $\omegacl = 1$ the exploitable one. This is the
+sharpest specialisation in the program --- a finite, decidable obstruction --- and its
+arithmetic is \gLean{}. The standalone note packaging this result is \gReviewed{} (Rick,
+2026-09-03). Security audits are, in this language, the search for a failed distributive
+law.
+
+\subsection{Tool-calling protocols are directed containers}\label{sec:mcp}
+A tool-calling protocol (of the MCP kind used by agent harnesses) is a directed container:
+the protocol is the container, the harness is its comonad, the cofree construction is the
+execution trace, and multi-agent interleaving is the Zappa--Sz\'ep/distributive-law weld.
+Protocol correctness is again $(L) \wedge \omegacl = 0$, with $\omegacl = \varepsilon \in
+\mathbb{Z}/2$ (Lean). This is the most recent application and is written for an external
+audience (ACT/$\Poly$); it imports Theorem~\ref{thm:omega} rather than reproving it.
+\gProved{} \grade{$\omegacl=\varepsilon$ Lean-verified}
+
+\subsection{Supply chains}\label{sec:supply}
+A supply graph with local reconciliation at each node is a directed container; global
+reconciliation is the vanishing of the composite obstruction. This is established on
+worked examples. \gComputed{}
+
+\subsection{Genetic-algorithm and linear-attention composition}\label{sec:ga}
+The container framework analyses compositional structure in learned systems: linear
+attention is a $\odot$ operation at fixed context, and the depth of a stack is not
+concentrated in the attention layer (the ``stack = one matrix'' guess is refuted). The
+$\Vec$-based container theory (biproduct collapse, extensivity crux) is the setting.
+\gProved{} for the structural claims.
+
+\medskip
+\noindent\textbf{Gap.} \emph{Tax computation} is named in the grant as a target
+application. It has \emph{no artifact} in the program to date. It is a genuine opportunity
+--- the compositional structure of a tax code (rules composing, with global consistency
+conditions) fits the frame --- but nothing has been built, and this document does not
+pretend otherwise.
+
+\section{Formalisation}\label{sec:formalisation}
+
+The program's Lean~4 development comprises on the order of two dozen registry nodes,
+mostly Mathlib-free core constructions, verifying the load-bearing arithmetic of the
+theory. The most important cluster is the $\HH{2}$ engine trio, which mechanises the
+computation of the obstruction class:
+\begin{itemize}[nosep]
+  \item \texttt{cyclic-h2-gcd-engine} --- the cyclic $\HH{2}$ gcd computation. \gLean{}
+  \item \texttt{cyclic-h2-norm-engine} --- the cyclic norm/kernel computation. \gLean{}
+  \item \texttt{fibre-h2-z2-engine} --- the fibre-edge kernel, $\HH{2}(\mathbb{Z}/2;
+    \{0,2\}) = \mathbb{Z}/2$, sorry-free. \gLean{}
+\end{itemize}
+Alongside these: the re-entrancy witness $\omegacl = \varepsilon$ is machine-checked
+(\S\ref{sec:reentrancy}); change of base ($M=\Id$, Theorem~\ref{thm:cob}) is
+Lean-verified; the free-monad grafting/unit laws are verified sorry-free; and the
+first composition adjunction $F_q \dashv (-)\triangleleft q$ over $\Vec$ is verified with
+its naturality as an independent probe. These are the pieces of the theory whose
+correctness is not a matter of my say-so.
+
+\section{Impact}\label{sec:impact}
+
+The unifying claim of the program is economically legible: \emph{compositional
+correctness has economic consequences exactly where composition fails silently}, and the
+program pinpoints that failure as a single, often-computable obstruction.
+
+\begin{itemize}[nosep]
+  \item \textbf{Smart contracts.} The DAO-class re-entrancy bug is $\omegacl = 1 \in
+    \mathbb{F}_2$. The obstruction is finite and decidable; auditing is checking
+    $\omegacl$. (\S\ref{sec:reentrancy}, peer-reviewed and Lean-verified.)
+  \item \textbf{Agent orchestration.} Deadlock and shared-state corruption in a
+    multi-agent system are non-vanishing $\omegacl$; correct orchestration is
+    $(L)\wedge\omegacl=0$. (\S\ref{sec:orch}, proved.)
+  \item \textbf{Supply chains.} Global reconciliation failure despite local consistency
+    is a non-vanishing composite obstruction. (\S\ref{sec:supply}, computed.)
+\end{itemize}
+
+The design principle for a practitioner is compact: \textbf{to certify a composite, check
+$(L)$ and compute $\omegacl$.} Where $\omegacl$ lives in a finite group this is a
+decidable, and now machine-checked, procedure.
+
+\section{Status ledger}\label{sec:status}
+
+The following table is the honest, consolidated map. Grades are taken from the proof
+registry; where a topic spans several nodes the strongest relevant grade is shown, with
+weaker or open components noted.
+
+\begin{longtable}{@{}p{0.40\textwidth} p{0.30\textwidth} p{0.24\textwidth}@{}}
+\toprule
+\textbf{Result} & \textbf{Grade} & \textbf{Artifact} \\
+\midrule
+\endhead
+\multicolumn{3}{@{}l}{\emph{Theory}}\\
+\midrule
+Equivalence chain $\DCont\simeq\PolyComon\simeq\Cat$ & in-progress (fronts proved; ext.\ node given) & \texttt{convergence-hub}; reg.\ \texttt{equivalence-chain} \\
+Pairwise ZS criterion $(L)\wedge(G)$ & proved & reg.\ \texttt{pairwise-zs} \\
+$(G)\iff\omegacl=0\in\HH{2}$; holonomy--ZS bridge & peer-reviewed & reg.\ \texttt{holonomy-composition-zs-bridge} \\
+Emergent holonomy $=\HH{0}$; Mackey/Shapiro $\HH{n}$ & proved & reg.\ \texttt{emergent-holonomy-is-ext-tower} \\
+Two $\omegacl$-sites distinct (not isotropy) & proved & reg.\ \texttt{two-omega-sites} \\
+Change of base f\&f $\iff M=\Id$ & proved, Lean & \texttt{change-of-base}; reg.\ \texttt{change-of-base} \\
+T1: f\&f $\iff$ unit connected & proved & \texttt{which-functors-are-containers}; reg.\ \texttt{fullness-unit-connectedness} \\
+$\HH{2}$-cluster $=$ LHS two edges (product refuted) & proved (fibre edge Lean) & \texttt{h2cluster-two-edges-spectral-sequence} \\
+Direction-functor $\HH{2}_{\Cat_B}=\HH{2}(\pi;M)$ & proved & reg.\ \texttt{groupoid-zs-obstruction} \\
+Prunability $\perp\omegacl$ (separation) & proved & reg.\ \texttt{quiver-skew-brace-zs} \\
+Representability wall $\mathcal{E}=0$ (Conj.\ 6.2/Gap-$S$) & \textbf{open} (reduction proved) & \texttt{mcontainers-codensity-polynomiality}; proof \texttt{2026-09-20-module-reduction} \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{Applications}}\\
+\midrule
+Orchestration $=$ ZS product & proved & \texttt{containers-for-orchestration} \\
+Re-entrancy $=\omegacl=\varepsilon\in\mathbb{F}_2$ & peer-reviewed, Lean & \texttt{reentrancy-machine-checked-obstruction} \\
+MCP protocols $=$ directed containers & proved ($\omegacl$ Lean) & \texttt{tool-calling-protocols-directed-containers}; \texttt{harness-is-a-worker} \\
+Supply chains & computed & reg.\ \texttt{supply-chain-zs} \\
+GA / linear-attention composition & proved (structural) & \texttt{vec-attention-unification}; \texttt{workers-state-via-tensor} \\
+Tax computation & \textbf{no artifact} & --- \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{Formalisation}}\\
+\midrule
+$\HH{2}$ engine trio (gcd, norm, fibre-$\mathbb{Z}/2$) & Lean-verified & reg.\ \texttt{cyclic-h2-gcd/norm}, \texttt{fibre-h2-z2} \\
+Re-entrancy witness $\omegacl=\varepsilon$ & Lean-verified & \texttt{reentrancy-machine-checked-obstruction} \\
+Free-monad grafting / unit laws & Lean-verified & reg.\ \texttt{free-monad-grafting} \\
+$F_q\dashv(-)\triangleleft q$ adjunction over $\Vec$ & Lean-verified & reg.\ \texttt{left-adjoint-over-vec} \\
+\bottomrule
+\end{longtable}
+
+\noindent\textbf{The three gaps, restated.} (i) Tax computation: no artifact. (ii)
+$\mathcal{E}=0$ / Conjecture~6.2 / Gap-$S$: open. (iii) External publication: none; the
+strongest grade is Rick-refereed.
+
+\section{Conclusion and roadmap}\label{sec:roadmap}
+
+The program has a spine and it holds: composition of directed systems is Zappa--Sz\'ep
+composition in $\DCont \simeq \Cat$, its correctness is $(L) \wedge \omegacl = 0 \in
+\HH{2}$, the obstruction specialises to re-entrancy, orchestration, and supply
+reconciliation, and its arithmetic core is machine-checked. The slogan is not a
+simplification imposed after the fact; it is what the theorems say.
+
+Three moves would most strengthen the grant narrative, in priority order:
+\begin{enumerate}[nosep]
+  \item \textbf{Close or cleanly frame the wall.} Either resolve $\mathcal{E}=0$
+    (Conjecture~\ref{conj:62}) or write it up as a precise open problem about countable
+    products of non-finitely-generated projectives over $S=\mathrm{End}_k(E)$ --- the
+    reduction is already \gProved{} and publishable as such.
+  \item \textbf{Formalise the assembled equivalence chain.} Theorem~\ref{thm:chain} is the
+    hub; upgrading it from \gWIP{} to \gLean{} would anchor the whole theory pillar.
+  \item \textbf{Build the tax application, or drop it.} It is the one grant-named
+    application with no artifact. The compositional structure of a rule system with global
+    consistency conditions fits the frame; a worked example would close the gap, and if it
+    does not fit, saying so is also progress.
+\end{enumerate}
+
+Finally, the program has produced no externally published paper. The re-entrancy
+obstruction (finite, decidable, Lean-verified, economically vivid) and the tool-calling
+protocols note (written for ACT/$\Poly$) are the two most venue-ready artifacts, and are
+the natural candidates for the first submission.
+
+\section*{Sources}
+\addcontentsline{toc}{section}{Sources}
+
+This synthesis cites internal artifacts by filename (papers in
+\texttt{projects/papers/}, proofs in \texttt{projects/proofs/}, registry nodes in
+\texttt{proofs/registry/}); the status ledger in \S\ref{sec:status} is the index. The
+external foundations the program builds on are: Ahman--Chapman--Uustalu on directed
+containers and Ahman--Uustalu on Zappa--Sz\'ep products from distributive laws;
+Shapiro--Spivak on $\Poly$ and the identification $\Cat^\# = \DCont$; and Niu--Spivak on
+Dirichlet convolution as Day convolution. Full bibliographic detail for these lives in the
+program's source ledger (\texttt{memory/reading/sources.json}).
+
+\end{document}
