@@ -1,0 +1,445 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{mathtools}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newtheoremstyle{gap}{}{}{\itshape}{}{\bfseries}{.}{ }{}
+\theoremstyle{gap}
+\newtheorem{gap}[theorem]{Gap (TODO for a prove session)}
+
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Cathash}{\mathbf{Cat}^{\sharp}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Comod}{\mathrm{Comod}}
+\newcommand{\PRA}{\mathrm{PRA}}
+\newcommand{\CLP}{\mathrm{CLP}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\renewcommand{\lhd}{\vartriangleright}
+\newcommand{\Store}[1]{\Delta #1}
+\newcommand{\op}{^{\mathrm{op}}}
+\newcommand{\yon}{\mathsf{y}}
+\DeclareMathOperator{\const}{const}
+\DeclareMathOperator{\ev}{ev}
+\DeclareMathOperator{\im}{im}
+
+\title[Workers, bicomodules, and parametric right adjoints]
+{Workers, Bicomodules, and Parametric Right Adjoints:\\ a correspondence and a conjecture}
+
+\author{MacBeth}
+\address{Kodamai}
+\date{20 September 2026}
+
+\begin{document}
+
+\begin{abstract}
+Spivak, Garner and Fairbanks proved that bicomodules of polynomial comonads are
+exactly the parametric right adjoints between the associated copresheaf categories,
+and that every such functor factors as a connected-limit-preserving (right adjoint)
+part followed by a coproduct (left adjoint) tail that carries no bicomodule data.
+Separately, we have proved that the Workers state-composition discipline --- the
+Dirichlet grading $\Store{S}\otimes\Store{T}=\Store{(S\times T)}$ on store comonads
+--- is a canonical \emph{retract}, not a fibre, of the composition grading
+$\Store{S}\lhd\Store{T}$ used by Braithwaite--Hedges--Mihejevs, the idempotent
+collapsing each branch map to its self-evaluation. This note sets the two pictures
+side by side. The retract's ``keep versus discard'' split has the same shape as the
+factorization's ``right-adjoint content versus $\Sigma$-tail,'' which suggests the
+identification \emph{worker $=$ bicomodule/parametric right adjoint}. We formulate
+this as a precise conjecture and, rather than assert it, we isolate one concrete
+obstacle --- an apparent \emph{reversal of adjointness} between the two splits ---
+that a proof must confront. The correspondence is established literature; the
+identification is a hypothesis under test.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Two research programs describe composition of stateful, interacting systems in the
+language of polynomial functors, and they have never been made to talk to each
+other. This note is an attempt to build the bridge --- or, more honestly, to survey
+the ground it must cross and to plant a flag where the hard step is.
+
+\subsection*{The first picture: aggregation and parametric right adjoints}
+In the polynomial-functor ecosystem \cite{NiuSpivak}, a small category is the same
+thing as a polynomial comonad, and the natural maps \emph{between} such categories
+come in two flavours: the ``vertical'' maps are retrofunctors (cofunctors), and the
+``horizontal'' maps are two-sided \emph{bicomodules}. Spivak, Garner and Fairbanks
+\cite{SGF} identify these bicomodules concretely: a bicomodule from the comonad $c$
+to the comonad $d$ is exactly a \emph{parametric right adjoint} (equivalently a
+connected-limit-preserving functor, equivalently a data-migration / aggregation
+functor) between the copresheaf categories $c\text{-}\Set \to d\text{-}\Set$. Their
+Proposition~3.6 factors any such functor into a genuinely ``polynomial'' right-adjoint
+part and a coproduct tail that is not bicomodule data --- the aggregation ($\Sigma$)
+step. This is the setting in which ``how does data flow and combine along a functor''
+receives a clean categorical answer.
+
+\subsection*{The second picture: workers and state}
+In work aimed at the semantics of stateful agents \cite{workersProof}, one models a
+piece of local state $S$ by the \emph{store comonad}, carried by the polynomial
+$\Store{S}=S\cdot \yon^{S}$. Two workers with states $S$ and $T$ can be composed in
+(at least) two ways. The \emph{Workers} discipline entangles their states via the
+Dirichlet product, $\Store{S}\otimes\Store{T}=\Store{(S\times T)}$; the
+Braithwaite--Hedges--Mihejevs (BHM) discipline nests them via functor composition,
+$\Store{S}\lhd\Store{T}$, a store-of-stores. These are genuinely different
+polynomials --- at $|S|=|T|=2$ they are $4\yon^{4}$ and $8\yon^{4}$ --- and our main
+structural result about them is that the first is a canonical \emph{retract} of the
+second (Theorem~\ref{thm:retract}, proved in \cite{workersProof}): there are
+polynomial maps $\sigma$ and $r$ with $r\circ\sigma=\mathrm{id}$, and the idempotent
+$e=\sigma\circ r$ collapses each branch map $g\colon S\to T$ to the constant at its
+self-evaluation $g(s)$. The discarded data --- the non-constant branch maps --- is
+exactly the store-of-store structure that nesting sees and entanglement forgets.
+
+\subsection*{The question}
+Both pictures split a rich construction into ``content that is kept'' and ``a tail
+that is thrown away.'' In the aggregation picture the kept part is the right adjoint
+and the tail is the coproduct $\Sigma$; in the workers picture the kept part is the
+entangled state $\Store{(S\times T)}$ and the tail is the non-constant branch maps.
+The shapes match. It is tempting --- and it has been repeatedly tempting, across
+several reading sessions --- to conclude that the workers/BHM distinction is
+\emph{precisely} the parametric-right-adjoint distinction: that a worker is a
+bicomodule and the retract's kernel is the $\Sigma$-aggregation tail.
+
+The purpose of this note is to state that temptation precisely and then to resist
+asserting it. We recall the SGF correspondence (\S\ref{sec:corr}) and the workers
+retract (\S\ref{sec:workers}) in a common language, formulate the identification as
+Conjecture~\ref{conj:worker-pra} (\S\ref{sec:conj}), and --- this is the point ---
+exhibit a specific obstacle to it. The obstacle is an \emph{apparent reversal of
+adjointness}: the data the retract discards (branch maps $S\to T$) is
+\emph{exponential}, hence right-adjoint-flavoured, whereas the data the SGF
+factorization discards is a \emph{coproduct}, hence left-adjoint-flavoured. If the
+identification is to hold, this reversal must be explained, not ignored. We record it
+as a gap for a subsequent proof session, together with a second, type-level gap about
+\emph{which} two comonads $(c,d)$ the workers construction is a bicomodule between.
+
+\subsection*{Status of the claims}
+The SGF correspondence is established, peer-reviewed literature
+\cite{SGF}, deep-read for this note. The workers retract is our own result, proved
+and machine-checked at small size \cite{workersProof}. The identification of the two
+is a \emph{conjecture}; every statement in \S\ref{sec:conj} that goes beyond the two
+established inputs is flagged as such. No new theorem is proved here.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes the polynomial-functor conventions, the store comonad,
+and the two products $\otimes,\lhd$. Section~\ref{sec:corr} states the SGF
+correspondence and its factorization in our own words. Section~\ref{sec:workers}
+recalls the workers retract. Section~\ref{sec:conj} states the conjecture and its two
+gaps. Section~\ref{sec:conc} says what a proof session must settle.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We work in the category $\Poly$ of polynomial functors $\Set\to\Set$, following the
+conventions of \cite{NiuSpivak}.
+
+\begin{definition}[polynomials and their maps]
+A \emph{polynomial} is a coproduct of representables
+$p=\sum_{s\in S_p}\yon^{p[s]}$, acting on sets by $p(X)=\sum_{s\in S_p}X^{p[s]}$; we
+call $S_p$ its \emph{shapes} (or positions) and $p[s]$ its set of \emph{directions}
+at $s$. A morphism $f\colon p\to q$ is a pair $f=(f_1,f^{\sharp})$ with
+$f_1\colon S_p\to S_q$ on shapes and $f^{\sharp}_s\colon q[f_1 s]\to p[s]$
+\emph{backward} on directions. Composition is $(g\circ f)_1=g_1 f_1$ and
+$(g\circ f)^{\sharp}_s=f^{\sharp}_s\circ g^{\sharp}_{f_1 s}$: backward maps compose
+in reverse. We track this reversal explicitly; it is where naïve shape-only reasoning
+fails.
+\end{definition}
+
+$\Poly$ carries two monoidal structures we need.
+
+\begin{definition}[the two products]
+The \emph{composition product} is $(p\lhd q)(X)=p(q(X))$, with unit $\yon$; it is
+strictly associative. The \emph{Dirichlet product} $p\otimes q$ has shapes
+$S_p\times S_q$ and directions $p[s]\times q[t]$ at $(s,t)$, with unit $\yon$.
+\end{definition}
+
+\begin{definition}[polynomial comonads are categories]
+A comonoid for $(\Poly,\lhd,\yon)$ is the same data as a small category
+\cite{AhmanUustalu,NiuSpivak}: shapes are objects, directions at $s$ are the
+morphisms out of $s$, the counit picks out identities and the comultiplication
+composes. Under this dictionary the framed bicategory of polynomial comonads is
+written $\Cathash$ \cite{NiuSpivak}. A polynomial comonad $c$ presents a category we
+also call $c$, with copresheaf category $c\text{-}\Set$.
+\end{definition}
+
+\begin{definition}[store comonad]\label{def:store}
+For a set $S$, the \emph{store} (or costate) polynomial is $\Store{S}:=S\cdot\yon^{S}$
+--- shapes $S$, with $\Store{S}[s]=S$ at every shape. It carries the store comonad
+$\Store{S}(X)=S\times X^{S}$, whose comultiplication is
+$\delta_1(s)=(s,\mathrm{id}_S)$, $\delta^{\sharp}_s(i,j)=j$, and whose counit is
+$\varepsilon_1(s)=\ast$, $\varepsilon^{\sharp}_s(\ast)=s$. As a category $\Store{S}$
+is the \emph{codiscrete} (indiscrete) category on $S$: exactly one morphism between
+any two objects.
+\end{definition}
+
+Finally, the object of study on the SGF side.
+
+\begin{definition}[parametric right adjoint]\label{def:pra}
+Let $C$ have a terminal object $1$. A functor $F\colon C\to D$ is a
+\emph{parametric right adjoint} (PRA), or \emph{prafunctor}, if the first factor of
+the canonical factorization
+\[
+C \xrightarrow{\;F/1\;} D/F1 \xrightarrow{\;U\;} D
+\]
+is a right adjoint, where $F/1$ sends $c$ to $Fc\to F1$ and $U$ forgets down to $D$
+\cite[Def.~3.5]{SGF}. For endofunctors of $\Set$ this is equivalent to preserving
+connected limits, and to being polynomial \cite[Prop.~2.5]{SGF}. A \emph{bicomodule}
+from a polynomial comonad $c$ to a polynomial comonad $d$ is a polynomial equipped
+with compatible left $c$- and right $d$-coactions; it is the ``horizontal'' notion of
+map between the categories $c$ and $d$.
+\end{definition}
+
+\section{The Spivak--Garner--Fairbanks correspondence}\label{sec:corr}
+
+We restate the two results of \cite{SGF} that this note leans on, in our own words.
+Both are established; we claim no part of them.
+
+\begin{theorem}[{\cite[Thm.~4.28]{SGF}}]\label{thm:sgf-main}
+The framed bicategories $\Cathash$ and $\Comod(\Poly)$ are equivalent. Under the
+equivalence: objects are small categories, i.e.\ polynomial comonads; the horizontal
+(loose) maps from $c$ to $d$ are the $(c,d)$-bicomodules, which are exactly the
+prafunctors $c\text{-}\Set\to d\text{-}\Set$; the vertical (tight) maps are the
+comonoid homomorphisms, i.e.\ retrofunctors (not ordinary functors); and the $2$-cells
+are natural transformations.
+\end{theorem}
+
+The identification of the horizontal maps is made pointwise by a chain of six
+equivalent descriptions.
+
+\begin{proposition}[{\cite[Prop.~3.9]{SGF}}]\label{prop:sixway}
+For polynomial comonads $c,d$ there are equivalences
+\[
+\Comod(\Poly)(c,d)\;\simeq\;\PRA(c\text{-}\Set,\,d\text{-}\Set)
+\;=\;\CLP(c\text{-}\Set,\,d\text{-}\Set)
+\;\simeq\;[\,d,\ \Set[c]\,]
+\;\simeq\;[\,d,\ \Fam((c\text{-}\Set)\op)\,],
+\]
+where $\CLP$ denotes the connected-limit-preserving functors.
+\end{proposition}
+
+The result we actually want to compare against workers is the factorization of a
+single prafunctor, because it is what performs the ``keep versus discard'' split.
+
+\begin{proposition}[{\cite[Prop.~3.6]{SGF}}, aggregation factorization]\label{prop:factor}
+Every prafunctor $F\colon c\text{-}\Set\to\Set$ factors as
+\[
+c\text{-}\Set \xrightarrow{\;F/1\;} \Set^{F1} \xrightarrow{\;\Sigma\;} \Set,
+\]
+where $F/1$ is a \emph{right adjoint} --- the genuine polynomial/bicomodule content
+--- and $\Sigma$ is the coproduct, a \emph{left adjoint} ``aggregation tail'' that
+carries no bicomodule data.
+\end{proposition}
+
+The moral of Proposition~\ref{prop:factor} is exactly a keep/discard split: the
+bicomodule content lives in the right-adjoint factor $F/1$, and the coproduct
+$\Sigma$ is a tail one adds on top and which the correspondence does not see.
+
+\begin{remark}[handedness]\label{rem:handedness}
+Variance conventions differ across the literature: \cite{SGF} writes bicomodules as
+$c\text{-}\Set\to d\text{-}\Set$, while Spivak's ``Categories by Kan extension''
+writes the reversed $c'\text{-}\Set\to c\text{-}\Set$ via the opposite handedness on
+bicomodules. It is the same theorem, but any concrete identification must first pin
+the convention. We use the \cite{SGF} direction throughout.
+\end{remark}
+
+\section{The Workers retract}\label{sec:workers}
+
+We recall the result of \cite{workersProof}. It is proved there in full and verified
+computationally for shape sets of size $\le 3$; we import it and reuse its notation.
+
+Write $A:=\Store{S}\otimes\Store{T}=\Store{(S\times T)}$ (the Workers grading) and
+$B:=\Store{S}\lhd\Store{T}$ (the BHM grading). By Definition~\ref{def:store} and the
+two product formulas, $A$ has shapes $S\times T$ with directions $S\times T$
+everywhere, while $B$ has shapes $\{(s,g):s\in S,\ g\colon S\to T\}=S\times T^{S}$ and
+directions $S\times T$ everywhere. So a shape of $B$ carries a whole \emph{branch
+map} $g\colon S\to T$, where a shape of $A$ carries only a point $t\in T$.
+
+\begin{theorem}[{\cite[Thm.~1.1]{workersProof}}]\label{thm:retract}
+Define $\sigma\colon A\to B$ by $\sigma_1(s,t)=(s,\const_t)$ with identity backward
+map, and $r\colon B\to A$ by $r_1(s,g)=(s,g(s))$ (\emph{self-evaluation}) with
+identity backward map. Then $r\circ\sigma=\mathrm{id}_A$, while
+$\sigma\circ r\ne\mathrm{id}_B$ whenever $|S|,|T|\ge 2$. Hence
+$A=\Store{S}\otimes\Store{T}$ is a non-trivial retract of $B=\Store{S}\lhd\Store{T}$.
+\end{theorem}
+
+\begin{corollary}[the discarded data]\label{cor:idem}
+The idempotent $e:=\sigma\circ r$ has $e_1(s,g)=(s,\const_{g(s)})$ and identity
+backward map. It collapses each branch map $g$ to the constant at its self-evaluation
+$g(s)$; its image is $A$. The data it discards is precisely the non-constant branch
+maps $g\colon S\to T$ --- the store-of-store structure that $\lhd$ carries and
+$\otimes$ forgets.
+\end{corollary}
+
+For orientation we also recall how the store comonad's own comultiplication sits over
+the retraction; this is the sense in which ``$\otimes$ is the diagonal of $\lhd$.''
+
+\begin{proposition}[{\cite[Thm.~3.1]{workersProof}}]\label{prop:diag}
+Let $d\colon S\to S\times S$ be the diagonal and $\Store{d}\colon\Store{S}\to
+\Store{(S\times S)}$ its store image (shape $s\mapsto(s,s)$, backward $\pi_2$). Then
+$r_{S,S}\circ\delta=\Store{d}$: the store comultiplication $\delta$ is a lift of the
+$\otimes$-diagonal along the retraction $r$.
+\end{proposition}
+
+Corollary~\ref{cor:idem} is the crux for the comparison. The workers retract keeps a
+point-valued datum ($g(s)\in T$, equivalently the entangled state $S\times T$) and
+discards the branch map's dependence on inputs other than the current one.
+
+\section{The conjecture, and where it breaks}\label{sec:conj}
+
+We can now line the two keep/discard splits up.
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+ & \textbf{kept} & \textbf{discarded (tail)}\\
+\hline
+SGF factorization (Prop.~\ref{prop:factor}) & $F/1$: right adjoint & $\Sigma$: coproduct (left adjoint)\\
+Workers retract (Cor.~\ref{cor:idem}) & $A=\Store{(S\times T)}$ & non-constant branch maps $g\colon S\to T$\\
+\hline
+\end{tabular}
+\end{center}
+
+The parallel is real: in each row a rich construction is split into a piece the
+relevant correspondence recognises and a tail it does not. It motivates the following.
+
+\begin{conjecture}[worker $=$ bicomodule/PRA]\label{conj:worker-pra}
+There is a choice of polynomial comonads $(c,d)$ for which the BHM grading
+$B=\Store{S}\lhd\Store{T}$ presents a $(c,d)$-bicomodule, equivalently a prafunctor
+$c\text{-}\Set\to d\text{-}\Set$; under the aggregation factorization of
+Proposition~\ref{prop:factor}, the retract $A=\Store{S}\otimes\Store{T}$ of
+Theorem~\ref{thm:retract} is the right-adjoint (bicomodule-content) factor, and the
+data discarded by the idempotent $e$ of Corollary~\ref{cor:idem} is the coproduct
+tail $\Sigma$. Consequently ``worker'' $=$ ``parametric right adjoint / bicomodule,''
+and the retract kernel $=$ the aggregation tail.
+\end{conjecture}
+
+We do not claim Conjecture~\ref{conj:worker-pra}. Two gaps stand between the suggestive
+table and a proof; naming them precisely is the real content of this section.
+
+\begin{gap}[the apparent reversal of adjointness]\label{gap:adjoint}
+The two ``discarded tails'' point in opposite adjoint directions, and the conjecture
+as stated papers over this. In Proposition~\ref{prop:factor} the discarded factor is
+$\Sigma$, a \emph{coproduct}, hence a \emph{left} adjoint; the \emph{kept} factor
+$F/1$ is the right adjoint. In Corollary~\ref{cor:idem} the discarded data is the set
+of branch maps $g\colon S\to T$. But branch maps are \emph{exponential} data: they
+are the elements of $T^{S}$, and the power $(-)^{S}$ is a \emph{right} adjoint (right
+adjoint to the copower $S\times(-)$) --- the adjoint flavour the SGF factorization
+\emph{keeps} in its $F/1$ factor. On the face of it, then, the workers retract discards right-adjoint
+content while the SGF factorization discards left-adjoint content. Either (i) the
+correct comparison reverses one of the two splits (e.g.\ via the handedness of
+Remark~\ref{rem:handedness}, or by comparing $\sigma$ rather than $e$), so that the
+exponential branch data reappears on the kept side; or (ii) the analogy is only
+formal and Conjecture~\ref{conj:worker-pra} is false. Deciding which is the first
+task of a proof session. A concrete sub-question: is the exponential $T^S$ in a
+$B$-shape the connected-limit content that $F/1$ retains, with the genuine
+$\Sigma$-tail located elsewhere (e.g.\ in the coproduct $S\cdot(-)$ that makes
+$\Store{S}=S\cdot\yon^S$ a sum of representables in the first place)?
+\end{gap}
+
+\begin{gap}[which two comonads?]\label{gap:cd}
+Proposition~\ref{prop:sixway} is about maps \emph{between fixed comonads},
+$\Comod(\Poly)(c,d)$, whereas $\Store{S}\otimes\Store{T}$ and
+$\Store{S}\lhd\Store{T}$ are \emph{monoidal products of two comonads}, producing new
+polynomials rather than a map between two others. Before the correspondence can bite,
+one must say what plays the role of $(c,d)$. Candidates: (a) take $c=\Store{T}$,
+$d=\Store{S}$ and read $\Store{S}\lhd\Store{T}$ as (the carrier of) a bicomodule via
+the composite comonad structure --- but $\lhd$ of two comonads need not be a comonad,
+so this requires care; (b) fix $c=d=\yon$ (the terminal category) and read everything
+as an endo-prafunctor of $\Set$, in which case the correspondence degenerates and the
+comparison is only with the single-variable Proposition~\ref{prop:factor}; (c) use
+the store comonads' status as codiscrete categories (Definition~\ref{def:store}) to
+make $\Store{S},\Store{T}$ the two objects and the graded composition a genuine
+bicomodule between them. Only (c) has a chance of engaging the full
+Theorem~\ref{thm:sgf-main}; verifying that the BHM grading \emph{is} the
+corresponding bicomodule is not done here.
+\end{gap}
+
+\begin{remark}[the nearest neighbour, and why it is not a shortcut]
+The graded-comonad reading of workers has an established relative:
+Capucci--Myers's ``contextads'' \cite{ContextadsWreaths}, where a polynomial monad
+transposes to a dependently graded comonad and composition multiplies the grade. Its
+Theorem~A.4 ($\mathrm{Kl}(T)\simeq\mathrm{Ctx}(\odot)$ for a parametric right adjoint
+monad $T$) is stated for exactly the PRA class that appears here --- but it is left
+\emph{unproven} in \cite{ContextadsWreaths}. So the literature already gestures at
+``graded composition lives in the PRA world,'' but it does not supply the
+bicomodule identification we need, and cannot be cited as a proof of
+Conjecture~\ref{conj:worker-pra}. If anything, settling Gaps~\ref{gap:adjoint}
+and~\ref{gap:cd} would bear on Theorem~A.4, not the other way round.
+\end{remark}
+
+\section{What a proof session must settle}\label{sec:conc}
+
+The correspondence of Spivak--Garner--Fairbanks and the workers retract are each
+solid; the bridge between them is not yet built. This note has reduced ``is a worker a
+bicomodule?'' to two precise tasks.
+
+\begin{enumerate}
+\item[(1)] \textbf{Resolve the adjointness reversal (Gap~\ref{gap:adjoint}).} The
+exponential branch data $T^{S}$ that the retract discards is right-adjoint-flavoured,
+whereas the SGF factorization discards a coproduct. Determine whether a handedness or
+$\sigma$-versus-$e$ change of comparison puts the two splits on the same side, or
+whether the analogy fails.
+\item[(2)] \textbf{Pin the comonads (Gap~\ref{gap:cd}).} Exhibit the pair $(c,d)$ for
+which $\Store{S}\lhd\Store{T}$ is a $(c,d)$-bicomodule, presumably using the store
+comonads as codiscrete categories, and check that the corresponding prafunctor's
+Proposition~\ref{prop:factor} factorization has the workers retract as its
+right-adjoint factor.
+\end{enumerate}
+
+If both succeed, Conjecture~\ref{conj:worker-pra} holds and ``worker'' acquires a
+clean semantics inside $\Poly$: a worker is a parametric right adjoint, its
+composition is bicomodule composition, and the retract that separates entanglement
+from nesting is the aggregation factorization. That is worth having --- it would place
+the state axis of the compositional-correctness program inside the same framed
+bicategory $\Cathash$ that already houses the directed (retrofunctor) axis. If either
+fails, the failure is itself informative: it would say that state-entanglement is a
+\emph{different} kind of collapse from data-aggregation, and would sharpen the
+question of what the store-of-store structure really is. Both outcomes are progress;
+neither is available without the proof session.
+
+\begin{thebibliography}{9}
+
+\bibitem{AhmanUustalu}
+D.~Ahman and T.~Uustalu,
+\emph{Directed containers as categories},
+in \emph{Proc.\ MSFP 2016}, EPTCS 207, 2016, pp.~89--98.
+arXiv:1604.01187.
+
+\bibitem{ContextadsWreaths}
+M.~Capucci and D.~J.~Myers,
+\emph{Contextads as wreaths; Kleisli, Para, and Span constructions},
+arXiv:2410.21889, 2024.
+
+\bibitem{NiuSpivak}
+N.~Niu and D.~I.~Spivak,
+\emph{Polynomial Functors: A Mathematical Theory of Interaction},
+arXiv:2312.00990, 2023.
+
+\bibitem{SGF}
+D.~I.~Spivak, R.~Garner and A.~Fairbanks,
+\emph{Functorial aggregation},
+J.\ Pure Appl.\ Algebra \textbf{229} (2025), no.~2, art.~107883.
+arXiv:2111.10968.
+
+\bibitem{workersProof}
+MacBeth,
+\emph{The Workers $\otimes$-grading is a retract of the BHM $\lhd$-grading},
+Kodamai internal proof note, 2026-08-29.
+Prior art: J.~Braithwaite, J.~Hedges and D.~Mihejevs (ACT 2026), graded monad
+$T_P(X)=X\lhd P$.
+
+\end{thebibliography}
+
+\end{document}
