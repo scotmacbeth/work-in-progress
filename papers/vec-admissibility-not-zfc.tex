@@ -1,0 +1,456 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+% ---- theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{question}[theorem]{Question}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---- macros ----
+\renewcommand{\Vec}{\mathrm{Vec}}
+\newcommand{\Set}{\mathrm{Set}}
+\newcommand{\Cat}{\mathrm{Cat}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Add}{\mathrm{Add}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\Ext}{\mathrm{Ext}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\Mod}{\text{-}\mathrm{Mod}}
+\newcommand{\Kar}{\mathrm{Kar}}
+\newcommand{\Soc}{\mathrm{Soc}}
+\newcommand{\pd}{\mathrm{pd}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\tri}{\triangleleft}
+\newcommand{\den}[1]{\llbracket #1 \rrbracket}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ket}[1]{\mathfrak{#1}}
+\DeclareMathOperator{\cf}{cf}
+
+\begin{document}
+
+\title[Container-admissibility of $\Vec$ is not a theorem of ZFC]{Container-admissibility of $\Vec$ is not a theorem of ZFC}
+\author{MacBeth}
+\address{Kodamai}
+\thanks{Internal technical note, Kodamai AI Mathematician program. Consolidates the PROVE sessions of 2026-09-20 and 2026-09-21. Comments to Neil Ghani and Robin Langer.}
+\date{21 September 2026}
+
+\begin{abstract}
+A base category $\C$ is \emph{$\tri$-admissible} when the family of endofunctors it presents through the container denotation $\den{-}$ is closed under composition---the minimal condition under which the composition of directed containers has a denotational meaning over $\C$. We show that $\tri$-admissibility of the category $\Vec_k$ of vector spaces over a countable field is \emph{not provable in ZFC}. The governing question (Conjecture~6.2 / Gap-$S$) reduces to the projectivity, over the full linear ring $S=\End_k(E)$ of a countable-dimensional space $E$, of the countable product $M=\prod_{\N}(\bigoplus_{\N} E)$ of a non-finitely-generated projective. We first collapse the conjecture to a Dual-Baer test---$M$ is projective if and only if it is $R$-projective---then prove, by a Baer--Specker cardinal count, that $M$ projective forces $2^{\aleph_0}=2^{\aleph_1}$. Hence under the Continuum Hypothesis $M$ is not projective, $\Vec$ is $\tri$-inadmissible, and the conjecture fails; so it is not a theorem of ZFC. In the residual case $2^{\aleph_0}=2^{\aleph_1}$ the count is silent, and we reframe the whole question through a single homological invariant: the conjecture is equivalent to $\pd_S M=0$, and the cokernel of $M$ inside a free module is the countable product of a projective-dimension-one seed, so that admissibility becomes an instance of the Osofsky--Jensen problem of whether a product raises projective dimension. This residual is genuinely open---both a ZFC refutation and full independence are live---though the structural evidence (a large dual, a collapse threshold that forcing can arrange while preserving reflection, and a Whitehead-shaped decomposition) leans toward independence.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{The problem}
+Directed containers are the polynomial-functor presentation of small categories: under the equivalence $\mathrm{DCont}\simeq\Cat$ a directed container \emph{is} a small category, its shapes the objects and its positions the morphisms out of an object~\cite{ahman-uustalu,shapiro-spivak}. This is the structural backbone of a program that models stateful and interactive systems---agent orchestration, supply networks, tool-calling protocols---as directed containers and reads their compositional correctness off categorical invariants. The engine of that program is a composition operation: containers compose by \emph{substitution}, written $\tri$, which on the underlying polynomial functors is composition of functors.
+
+For containers valued in $\Set$ this is unproblematic; substitution always exists. But the program's ambition is to run the same machinery over other bases---$\Vec$, for tax and blockchain arithmetic; additive categories, for the linear systems of machine learning---and there the first question is whether substitution has a meaning at all. Following the weakest useful formulation, call a base category $\C$ \emph{$\tri$-admissible} if the image of the container denotation functor $\den{-}\colon\Fam(\C^{\op})\to[\C,\C]$ is closed under composition: for all containers $p,q$ there is a container $p\tri q$ with $\den{p\tri q}\cong\den{p}\circ\den{q}$ (Definition~\ref{def:adm}). Admissibility is the license to compose. Without it, there is no denotational composition of directed containers over $\C$, and the whole apparatus stalls at the base.
+
+\subsection*{The gap}
+$\Set$ is admissible and $\Vec$ sits at the opposite degeneracy: its monoidal unit for $\tri$ is the zero object, which makes the shape data of a composite invisible and turns admissibility into a delicate closure question rather than a triviality~\cite{macbeth-admissibility}. That question was isolated as a single conjecture about additive endofunctors of $\Vec$---Conjecture~6.2, also called Gap-$S$---and had stood open through a sequence of failed attempts to construct an ``exotic'' obstruction by hand. The September~2026 \emph{module reduction}~\cite{macbeth-reduction} recast it as a concrete problem in the module theory of the full linear ring $S=\End_k(E)$ but stopped short of a decision, and---this is the point of departure for the present note---it explicitly recorded that a natural cardinality obstruction ``cannot refute projectivity.'' It can.
+
+\subsection*{The result}
+Fix a countable field $k$, let $E=k^{(\N)}$ (countable dimension), $S=\End_k(E)$, let $P=\bigoplus_{\N}E$ be the standard non-finitely-generated projective $S$-module, and set
+\[
+  M \;=\; \prod_{\N} P \;=\; \prod_{r\in\N}\Bigl(\bigoplus_{m\in\N} E\Bigr).
+\]
+The reduction identifies $\tri$-admissibility of $\Vec$ (in the relevant instance, Conjecture~6.2) with the projectivity of $M$ over $S$ (Theorem~\ref{thm:reduction}). Our main theorem is a cardinal-counting obstruction to that projectivity.
+
+\begin{theorem}[Main Theorem, ZFC]\label{thm:main-intro}
+If $M$ is projective as a left $S$-module, then $2^{\aleph_0}=2^{\aleph_1}$. Consequently, whenever $2^{\aleph_0}<2^{\aleph_1}$---in particular under the Continuum Hypothesis---$M$ is not projective, so $\Vec$ is $\tri$-inadmissible and Conjecture~6.2 is false. Hence \emph{Conjecture~6.2 is not a theorem of \textup{ZFC}}.
+\end{theorem}
+
+This is, to our knowledge, the first point at which the compositional-systems program meets genuine set-theoretic sensitivity: a purely categorical closure property of $\Vec$ is shown to fail in every model of CH, and CH is consistent, so no ZFC proof of it can exist. (Whether it \emph{also} holds in some model of ZFC---i.e.\ whether the conjecture is fully independent rather than merely unprovable---is the open question of Section~\ref{sec:residual}.) The reduction is a theorem of ZFC (Section~\ref{sec:reduction}); the counting is a theorem of ZFC (Section~\ref{sec:main}); only the ambient value of the continuum function is variable.
+
+\subsection*{The method}
+The headline rests on the module reduction (Theorem~\ref{thm:reduction}, which identifies the conjecture with ``$M$ projective'') together with a single new idea: a \emph{Baer--Specker cardinal count}. If $M$ were projective, Kaplansky's theorem~\cite{kaplansky} decomposes it as a direct sum $\bigoplus_{i\in I}M_i$ of countably generated pieces; because $M$ is not countably generated the index set has $|I|\ge\aleph_1$; each summand has nonzero dual into $E$, so the dual $\Hom_S(M,E)$ has $k$-dimension at least $2^{|I|}\ge 2^{\aleph_1}$; but a slenderness computation pins that dimension at exactly $2^{\aleph_0}$. The collision $2^{\aleph_1}\le 2^{\aleph_0}$ is the theorem.
+
+Alongside it we record an independent structural fact of its own interest---a \emph{Dual-Baer collapse} (Theorem~\ref{thm:I}): $S$ contains a free left ideal of rank $\mathfrak c$ (a Baer--Specker construction), and this is exactly enough, via the projectivity-domain calculus behind Trlifaj's Dual Baer Criterion~\cite{trlifaj-dbc}, to force every $R$-projective left $S$-module of at most $\mathfrak c$ generators to be projective. Since $|M|\le\mathfrak c$, the conjecture is equivalent not only to ``$M$ projective'' but to the single lifting test ``$M$ $R$-projective,'' and---a point we return to in Section~\ref{sec:residual}---this closes the most obvious independence shortcut, since the packaged Dual-Baer independence theorem requires a semiartinian ring and $S$ is not one. The collapse is not a link in the proof of the Main Theorem; the count settles that directly.
+
+The delicate feature of the count---and the reason the verdict is conditional rather than absolute---is that it is precisely the argument that proves the Baer--Specker group $\Z^{\N}$ non-free over $\Z$, but with one term changed. Over $\Z$ the dual $\Hom(\Z^{\N},\Z)$ collapses to countable rank (Specker's theorem), producing an \emph{absolute} $2^{\mathfrak c}$-versus-$\aleph_0$ contradiction. Over $S$ the identity $\prod_{\N}E\cong S$ keeps the dual \emph{large}, of dimension $\mathfrak c$; the very freeness that voided every naive obstruction is what demotes the contradiction to the conditional gap $2^{\aleph_1}$ versus $2^{\aleph_0}$.
+
+\subsection*{Consequences}
+Theorem~\ref{thm:main-intro} settles the standing working hypothesis of the program---that Gap-$S$ was ``plausibly true / ZFC-decidable''---in the negative: the composition of directed containers over $\Vec$ is not unconditionally well defined. It also corrects a specific misstep in~\cite{macbeth-reduction}, which derived the inequality $2^{|I|}\le 2^{\aleph_0}$ and dismissed it; the missing observation is $|I|\ge\aleph_1$, which converts it into $2^{\aleph_1}\le 2^{\aleph_0}$. Structurally (Section~\ref{sec:structure}) $M$ turns out to be flat, Mittag--Leffler, and $\aleph_1$-projective---the exact profile of $\Z^{\N}$---so that the conjecture is equivalent to $M$ being a direct sum of countably generated submodules, and its failure is a \emph{global} defect orthogonal to local projectivity. In the residual regime $2^{\aleph_0}=2^{\aleph_1}$ (Sections~\ref{sec:structure}--\ref{sec:residual}) the count is silent, and we reframe the residual as a single homological invariant: the conjecture is equivalent to $\pd_S M=0$, where the cokernel of $M$ inside the free module $\Phi\cong S$ is the countable product $\prod_{\N}N_0$ of a projective-dimension-one seed $N_0=\prod_{\N}E/\bigoplus_{\N}E$ (Theorem~\ref{thm:pd-reframe}). Admissibility thus becomes the Osofsky--Jensen question of whether a countable product of $\pd$-$1$ modules raises projective dimension over $S$. We bound $\pd_S M$ between $1$ (when $2^{\aleph_0}<2^{\aleph_1}$, the Main Theorem) and a continuum-degree $d+1$ (a Gruson--Jensen filtration bound), and record that \emph{both} a ZFC refutation and full independence remain live, with an evidential---not proved---lean toward independence and the sharp open question (\emph{can $\pd_S M=0$?}) that would decide it.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes the container framing and states the module reduction. Section~\ref{sec:reduction} proves the Dual-Baer collapse (Theorem~\ref{thm:I}). Section~\ref{sec:main} proves the Main Theorem. Section~\ref{sec:structure} places $M$ in the almost-free hierarchy, identifies the controlling cokernel as $\prod_{\N}N_0$, derives the projective-dimension reframing $\text{Conj.\ \ref{conj:62}}\Leftrightarrow\pd_S M=0$ with its bounds, and records the (order-free, continuum-independent) $\kappa$-projectivity reduction. Section~\ref{sec:residual} treats the residual case and the independence lean. Section~\ref{sec:concl} draws the consequences for the container program.
+
+\subsection*{Provenance and honesty}
+Every claim graded ``ZFC'' below is a proved theorem, verified adversarially in the source PROVE sessions~\cite{macbeth-reduction,macbeth-trlifaj,macbeth-ch,macbeth-kappa,macbeth-osofsky}. The proved content (Sections~\ref{sec:prelim}--\ref{sec:structure}) rests on the classical literature and on two deep-read external sources: Trlifaj's Dual Baer Criterion~\cite{trlifaj-dbc} and the Herbera--Trlifaj almost-free theory~\cite{herbera-trlifaj}, both read at source. The classical Gruson--Jensen estimate---$\pd\le n+1$ for an $\aleph_n$-generated flat module~\cite{gruson-jensen}---is invoked at its standard statement. The lean toward independence in Section~\ref{sec:residual} is \emph{evidential and explicitly not a proof}; the Herbera--Trlifaj results it quotes (Theorem~2.9(i), Example~6.8, Corollary~7.3) are used only to locate the open problem, never to support a proved claim. One sharpening---that Osofsky's continuum-sensitive global-dimension theorem~\cite{osofsky} would give $\pd_S M\le d$, hence $\pd_S M=1$ under CH---rests on a recollection of that theorem's exact value that we have \emph{not} verified at source; it appears only in Remark~\ref{rem:osofsky}, and no proved claim depends on it.
+
+\section{The container framing and the module reduction}\label{sec:prelim}
+
+We recall only what the proof uses. For containers, directed containers, and the equivalence with $\Cat$, see~\cite{ahman-uustalu,shapiro-spivak}; for the admissibility trichotomy over general bases, see~\cite{macbeth-admissibility}.
+
+\subsection{Containers and admissibility}
+Let $\C$ be a category with the small coproducts and products used below. Write $\Fam(\C^{\op})$ for the category whose objects are pairs $(S,P)$ with $S$ a set and $P\colon S\to\C$ a family; its \emph{denotation} is the endofunctor
+\[
+  \den{S,P}\,X \;=\; \coprod_{s\in S}\C(P(s),X).
+\]
+When $\C=\Set$ this is the usual container functor $X\mapsto\coprod_{s}X^{P(s)}$; over an additive $\C$ the internal hom $\C(P(s),-)$ replaces the power.
+
+\begin{definition}\label{def:adm}
+$\C$ is \emph{$\tri$-admissible} if for all $p,q\in\Fam(\C^{\op})$ there exists $p\tri q\in\Fam(\C^{\op})$ with $\den{p\tri q}\cong\den{p}\circ\den{q}$; equivalently, if the image of $\den{-}$ is closed under composition of endofunctors.
+\end{definition}
+
+This is deliberately the weakest hypothesis---no monoidal structure, no canonical choice of $p\tri q$---so that a non-existence result proved against it is maximally strong. Over $\Set$ every category is admissible; over $\Vec$ admissibility is subtle because the unit object is $0$ and the shape set of a composite becomes invisible, which is where the following single instance concentrates the difficulty.
+
+\subsection{The additive functors over \texorpdfstring{$\Vec$}{Vec}}
+Work in $\A=\Add(\Vec_k,\Vec_k)$, the category of additive endofunctors of $\Vec_k$ and natural transformations. Write $h_k=\Hom_k(k,-)\cong\mathrm{id}$ for the identity (representable at $k$) and $h_E=\Hom_k(E,-)$ for the representable at $E$. The relevant functors are
+\[
+  A=\bigoplus_{\N}h_k\ \ (A(X)=\textstyle\bigoplus_m X),\qquad
+  F=\prod_{\N}A\ \ (F(X)=\textstyle\prod_r\bigoplus_m X),
+\]
+together with $F_{\mathrm{fin}}=\bigoplus_{\N}A$ and the quotient $Q=F/F_{\mathrm{fin}}$. Since $E=k^{(\N)}$, one has $h_E=\Hom_k(k^{(\N)},-)=\prod_{\N}(-)$, hence $F=\Hom_k(E,\bigoplus_{\N}-)$: the functor of the conjecture.
+
+\begin{conjecture}[6.2 / Gap-$S$]\label{conj:62}
+$F$ is projective in $\A$ (equivalently, $F\cong\bigoplus_{\Lambda}h_E$ for some $\Lambda$). Equivalently, the comparison map $\iota_*\colon\Ext^1_{\A}(F,F_{\mathrm{fin}})\to\Ext^1_{\A}(F,F)$ is injective.
+\end{conjecture}
+
+The reduction of $\tri$-admissibility of $\Vec$ to Conjecture~\ref{conj:62} is established in~\cite{macbeth-admissibility,macbeth-reduction}: the substitution of the two containers presenting $\bigoplus_{\N}$ produces exactly $F$, and admissibility at that instance asks that $F$ be again a coproduct of representables---the projective objects of $\A$. We take this reduction as given and pass to modules.
+
+\subsection{The module reduction}
+Let $S=\End_k(E)$, the ring of column-finite $\N\times\N$ matrices over $k$, and let $\C_0\subseteq\Vec_k$ be the full subcategory of spaces of dimension $\le\aleph_0$.
+
+\begin{theorem}[Module reduction; {\cite[Thm.~1--2]{macbeth-reduction}}]\label{thm:reduction}
+Every $X\in\C_0$ is a retract of $E$, and $E\oplus E\cong E$; hence $\C_0\simeq\Kar(S)$ and $\Add(\C_0,\Vec)\simeq S\Mod$ via $T\mapsto T(E)$. The functors $A,F,F_{\mathrm{fin}},Q$ are $\aleph_1$-continuous (each value has countable support), so restriction to $\C_0$ is faithful and
+\[
+  \Nat_{\Vec}(T,T')\;\cong\;\Hom_S\bigl(T(E),T'(E)\bigr),
+\]
+naturally in $T,T'$, and $\Ext^1_{\A}(T,T')\cong\Ext^1_S(T(E),T'(E))$ for $T,T'\in\{A,F,F_{\mathrm{fin}},Q,\dots\}$. Under $T\mapsto T(E)$,
+\[
+\begin{array}{c|c}
+  \text{functor} & \text{left $S$-module}\\\hline
+  \mathrm{id}=h_k & E\ \text{(simple projective $=Se_{00}$)}\\
+  A=\bigoplus_m h_k & P=\bigoplus_m E\ \text{(projective, countably generated, non-f.g.)}\\
+  h_E & S\ \text{(free rank $1$)}\\
+  F=\prod_r A & M=\prod_r P\\
+  F_{\mathrm{fin}}=\bigoplus_r A & M_{\mathrm{fin}}=\bigoplus_r P\\
+  Q=F/F_{\mathrm{fin}} & M/M_{\mathrm{fin}}
+\end{array}
+\]
+In particular $\Vec$ is $\tri$-admissible (Conjecture~\ref{conj:62}) if and only if $M$ is projective over $S$.
+\end{theorem}
+
+We use freely the following facts about $S$, all proved in~\cite[\S2--3]{macbeth-reduction}. For countable $k$: $|S|=|k|^{\aleph_0}=\mathfrak c$ and $\dim_k S=\mathfrak c$, so $|M|\le\mathfrak c$.
+
+\begin{proposition}[Ring facts; {\cite[Thm.~3]{macbeth-reduction}}]\label{prop:ring}
+$S=\End_k(E)$ is von Neumann regular; hence every $S$-module is flat and every short exact sequence of $S$-modules is pure. $S$ is right self-injective but \emph{not} left self-injective; equivalently $E$ is not an injective left $S$-module. The two-sided ideal lattice is $\{0,\,F_0,\,S\}$ with $F_0$ the finite-rank operators, $\Soc({}_SS)=F_0$, and $S/F_0$ simple with zero socle---so $S$ is \emph{not} semiartinian.
+\end{proposition}
+
+The single most important structural fact is the following freeness identity, the module shadow of the representability of $\prod_{\N}\mathrm{id}=h_E$.
+
+\begin{theorem}[Freeness; {\cite[Thm.~2]{macbeth-reduction}}]\label{thm:free}
+As left $S$-modules $\prod_{r\in\N}E\cong S$, free of rank $1$, via $\Psi(s)=(s\cdot e_r)_r$ (a column-finite matrix is exactly an arbitrary sequence of its columns). Consequently $\Phi:=\prod_{r,m}E\cong S$ and $\prod_{\N}S\cong S$, and $M$ sits inside a free module, $M_{\mathrm{fin}}\subseteq\bigoplus_m S\subseteq M\subseteq\Phi\cong S$.
+\end{theorem}
+
+\begin{corollary}[Baer--Specker void; {\cite[Thm.~4]{macbeth-reduction}}]\label{cor:bs-void}
+The Specker-type identity $\Hom_S(\prod_r E,E)=\bigoplus_r\Hom_S(E,E)$ holds and is \emph{consistent with $\prod_r E$ being free} (indeed it is free, Theorem~\ref{thm:free}). Hence no ``product $\ne$ coproduct'' argument can exhibit an exotic non-lifting map or prove $M$ non-projective by a size gap alone.
+\end{corollary}
+
+Corollary~\ref{cor:bs-void} explains why every attempt to build an obstruction by hand failed: the mechanism such constructions invoke is neutralised by product-absorption. Theorem~\ref{thm:main-intro} succeeds precisely because it does not build a map---it counts. Chase's theorem~\cite{chase} sharpens the puzzle: all products of projective left $S$-modules are projective if and only if $S$ is left perfect and right coherent, and $S$ is right coherent (von Neumann regular) but not left perfect; so \emph{some} product of projectives over $S$ is non-projective. Chase's witness, however, is an \emph{uncountable} power, while $\prod_{\N}S\cong S$ is free---the countable product $M$ falls in exactly the gap Chase leaves open.
+
+Two further facts about the fixed module $M$ are load-bearing below. Both are theorems of ZFC.
+
+\begin{lemma}[Non-countable generation; {\cite[\S5, F1]{macbeth-reduction}}]\label{lem:F1}
+$M=\prod_r P$ is not countably generated as a left $S$-module.
+\end{lemma}
+
+The proof is a diagonalisation against any countable family (a Bergman-type argument in the reduced structure $M/M_{\mathrm{fin}}$); note that cardinality alone cannot see this, since $|M|=\mathfrak c$ equals the size of a countably generated $S$-module. The detailed argument is in~\cite[\S5]{macbeth-reduction}.
+
+\begin{lemma}[Small dual; {\cite[Thm.~F(a)]{macbeth-reduction}}]\label{lem:F2}
+$\dim_k\Hom_S(M,E)=2^{\aleph_0}$. Indeed $\Hom_S(M,E)\cong\bigoplus_r\Hom_S(P,E)\cong\bigoplus_r k^{\N}$ by slenderness of the finite-dimensional target $E$, and $\dim_k\bigl(\bigoplus_r k^{\N}\bigr)=\aleph_0\cdot\mathfrak c=2^{\aleph_0}$.
+\end{lemma}
+
+Only the upper bound $\dim_k\Hom_S(M,E)\le 2^{\aleph_0}$ is used in Section~\ref{sec:main}.
+
+\section{The Dual-Baer collapse}\label{sec:reduction}
+
+Before counting, we record why the two things being counted---$M$ projective and $M$ $R$-projective---coincide over $S$. Recall the Dual Baer notion~\cite{trlifaj-dbc}: a left module $N$ is \emph{$R$-projective} if every homomorphism $N\to S/I$ into a cyclic quotient by a left ideal $I$ lifts through $S\twoheadrightarrow S/I$. Projective always implies $R$-projective; the converse is the Dual Baer Criterion, which fails for general rings but holds under a generation bound provided the ring has a large free ideal.
+
+\begin{lemma}[A free left ideal of rank $\mathfrak c$]\label{lem:free-ideal}
+$S$ contains a free left ideal $L\cong S^{(\mathfrak c)}$.
+\end{lemma}
+
+\begin{proof}
+By Theorem~\ref{thm:free}, $S\cong\prod_{n\in\N}S$ as left modules. Fix an almost-disjoint family $\{A_i\}_{i\in X}$ of infinite subsets of $\N$ with $|X|=\mathfrak c$ (e.g.\ the branches of $2^{<\omega}$). Define $w_i\in\prod_n S$ by $(w_i)_n=1_S$ if $n\in A_i$ and $0$ otherwise. If a finite left-combination $\sum_k s_{i_k}w_{i_k}=0$, then for each $n$, $\sum_{k:\,n\in A_{i_k}}s_{i_k}=0$; by almost-disjointness choose $n\in A_{i_{k_0}}$ lying in no other $A_{i_k}$, forcing $s_{i_{k_0}}=0$. Thus $\{w_i\}$ is left-independent and $\bigoplus_i Sw_i\cong S^{(\mathfrak c)}$; transporting through the isomorphism gives a free left ideal $L\subseteq S$.
+\end{proof}
+
+\begin{remark}
+This is genuinely stronger than the free ideal of rank $\dim_k E=\aleph_0$ furnished by Trlifaj's Example~2.6 (a partition of a basis), and it is what carries the collapse all the way to $\mathfrak c\ge\mu(M)$. The construction is the Baer--Specker almost-disjoint trick used on the left.
+\end{remark}
+
+\begin{lemma}[Left Dual Baer upgrade]\label{lem:dbc-upgrade}
+Every $R$-projective left $S$-module $N$ generated by at most $\mathfrak c$ elements is projective.
+\end{lemma}
+
+\begin{proof}
+The projectivity domain $\mathrm{Pr}^{-1}(N)=\{X:N\text{ is }X\text{-projective}\}$ is closed under submodules and direct sums~\cite[16.12]{anderson-fuller},~\cite[Lem.~2.2]{trlifaj-dbc}. If $N$ is $R$-projective then $S\in\mathrm{Pr}^{-1}(N)$, hence the free ideal $L\cong S^{(\mathfrak c)}$ of Lemma~\ref{lem:free-ideal} lies in $\mathrm{Pr}^{-1}(N)$, so $N$ is $S^{(\mathfrak c)}$-projective. As $N$ is generated by at most $\mathfrak c$ elements there is an epimorphism $g\colon S^{(\mathfrak c)}\twoheadrightarrow N$; $S^{(\mathfrak c)}$-projectivity makes $\Hom(N,-)$ exact on $0\to\ker g\to S^{(\mathfrak c)}\to N\to 0$, so $\mathrm{id}_N$ lifts, $g$ splits, and $N$ is a summand of a free module.
+\end{proof}
+
+\begin{theorem}[The collapse, ZFC]\label{thm:I}
+$\text{Conjecture~\ref{conj:62}}\iff M\text{ is projective}\iff M\text{ is }R\text{-projective}.$
+\end{theorem}
+
+\begin{proof}
+The first equivalence is Theorem~\ref{thm:reduction}. For the second: projective implies $R$-projective always; conversely apply Lemma~\ref{lem:dbc-upgrade} to $N=M$, valid because $M$ is generated by at most $|M|\le\mathfrak c$ elements.
+\end{proof}
+
+Theorem~\ref{thm:I} upgrades the conjecture from ``$R$-projectivity is only necessary'' to a genuine ZFC equivalence, and it forecloses the shortest independence route: Trlifaj's independence theorem for the Dual Baer Criterion~\cite[Thm.~4.4]{trlifaj-dbc} requires the ring to be \emph{small semiartinian}, which $S$ is not (Proposition~\ref{prop:ring}). So the packaged independence theorem does not apply to $S$; whatever the status of the conjecture, it is not an instance of the known Dual-Baer independence results. We turn to what does decide it under CH.
+
+\section{The Main Theorem: a Baer--Specker cardinal count}\label{sec:main}
+
+\begin{lemma}[Nonzero dual on projectives]\label{lem:dual-nonzero}
+Every nonzero countably generated projective left $S$-module $N$ has $\Hom_S(N,E)\ne 0$.
+\end{lemma}
+
+\begin{proof}
+Fix an embedding $N\subseteq S^{(\N)}$ as a direct summand and a nonzero $n=\sum_i n_ie_i\in N$ (finite sum, $n_i\in S$) with some $n_j\ne 0$. As $n_j\in\End_k(E)$ is a nonzero endomorphism, choose $w\in E$ with $n_j(w)\ne 0$. Define the left-$S$-linear map $\psi\colon S^{(\N)}\to E$ on the free basis by $\psi(e_j)=w$ and $\psi(e_i)=0$ for $i\ne j$. Then $\psi(n)=\sum_i n_i\psi(e_i)=n_j\cdot w=n_j(w)\ne 0$, so $\psi|_N\in\Hom_S(N,E)$ is nonzero.
+\end{proof}
+
+\begin{theorem}[Main Theorem]\label{thm:main}
+If $M$ is projective, then $2^{\aleph_0}=2^{\aleph_1}$.
+\end{theorem}
+
+\begin{proof}
+Suppose $M$ is projective.
+
+\emph{Kaplansky decomposition.} By Kaplansky's theorem~\cite{kaplansky} a projective module is a direct sum of countably generated submodules: $M=\bigoplus_{i\in I}M_i$ with each $M_i$ countably generated projective; discard zero summands, so every $M_i\ne 0$.
+
+\emph{The index set is uncountable.} If $|I|\le\aleph_0$ then $M$ is a countable direct sum of countably generated modules, hence countably generated, contradicting Lemma~\ref{lem:F1}. So $|I|\ge\aleph_1$.
+
+\emph{Dual of the coproduct.} Since $\Hom_S(-,E)$ turns coproducts into products,
+\[
+  \Hom_S(M,E)\;=\;\Hom_S\Bigl(\bigoplus_{i\in I}M_i,\,E\Bigr)\;=\;\prod_{i\in I}\Hom_S(M_i,E).
+\]
+
+\emph{Lower bound.} By Lemma~\ref{lem:dual-nonzero} each $V_i:=\Hom_S(M_i,E)\ne 0$; pick $0\ne v_i\in V_i$. Then $k^I\to\prod_i V_i$, $(a_i)\mapsto(a_iv_i)$, is $k$-linear and injective, so $\dim_k\Hom_S(M,E)\ge\dim_k k^I$. By the Erd\H{o}s--Kaplansky theorem, for infinite $I$ one has $\dim_k k^I=|k|^{|I|}\ge 2^{|I|}$. Hence, using $|I|\ge\aleph_1$ and monotonicity of the continuum function,
+\[
+  \dim_k\Hom_S(M,E)\;\ge\;2^{|I|}\;\ge\;2^{\aleph_1}.
+\]
+
+\emph{Upper bound.} By Lemma~\ref{lem:F2}, $\dim_k\Hom_S(M,E)=2^{\aleph_0}$.
+
+\emph{Collision.} Therefore $2^{\aleph_1}\le\dim_k\Hom_S(M,E)=2^{\aleph_0}\le 2^{\aleph_1}$, so $2^{\aleph_0}=2^{\aleph_1}$.
+\end{proof}
+
+\begin{corollary}\label{cor:ch}
+If $2^{\aleph_0}<2^{\aleph_1}$---in particular under CH ($2^{\aleph_0}=\aleph_1<\aleph_2\le 2^{\aleph_1}$) and under GCH---then $M$ is not projective, so $\Vec$ is $\tri$-inadmissible and Conjecture~\ref{conj:62} is false. Via Theorem~\ref{thm:I}, $M$ is also not $R$-projective under CH.
+\end{corollary}
+
+\begin{corollary}\label{cor:not-zfc}
+Conjecture~\ref{conj:62}, equivalently $\tri$-admissibility of $\Vec$, is not a theorem of \textup{ZFC}: it fails in every model of CH, and CH is consistent with \textup{ZFC}.
+\end{corollary}
+
+\begin{remark}[The correction]
+The reduction note~\cite[(P2)]{macbeth-reduction} computed, from a hypothetical Kaplansky decomposition, exactly the inequality $2^{|I|}\le 2^{\aleph_0}$ and concluded ``cardinality cannot refute projectivity.'' The missing step is $|I|\ge\aleph_1$ (Lemma~\ref{lem:F1}), which turns $2^{|I|}\le 2^{\aleph_0}$ into $2^{\aleph_1}\le 2^{\aleph_0}$. The inequality is not weak: it asserts that the continuum function is constant on $[\aleph_0,\aleph_1]$, a demand that CH refutes.
+\end{remark}
+
+\begin{remark}[Why conditional, not absolute: the $\Z^{\N}$ parallel]\label{rem:zn}
+The same schema proves the Baer--Specker group $\Z^{\N}$ non-free over $\Z$: a free decomposition $\Z^{\N}=\bigoplus_{i\in I}\Z$ has $|I|=\mathfrak c$, so $\Hom(\Z^{\N},\Z)=\prod_I\Z$ would have cardinality $2^{\mathfrak c}$, while Specker's theorem gives $\Hom(\Z^{\N},\Z)=\Z^{(\N)}$ of cardinality $\aleph_0$---an \emph{absolute} contradiction, because the dual collapses to countable rank. Over $S$, Theorem~\ref{thm:free} keeps the dual large ($\dim_k\Hom_S(M,E)=\mathfrak c$, Lemma~\ref{lem:F2}), so the contradiction is only $2^{\aleph_1}$ versus $2^{\aleph_0}$. The ``void Baer--Specker'' of Corollary~\ref{cor:bs-void} is exactly what demotes an absolute ZFC refutation to a CH-conditional one: same count, different dual size, different verdict.
+\end{remark}
+
+\section{Structural placement and the projective dimension of \texorpdfstring{$M$}{M}}\label{sec:structure}
+
+The Main Theorem is silent when $2^{\aleph_0}=2^{\aleph_1}$. To locate the residual question we do two things: place $M$ in the almost-free hierarchy, and reframe the conjecture as the value of a single homological invariant, $\pd_S M$, that does not name the continuum. The reframing turns admissibility into a recognisable classical problem---whether a product raises projective dimension---and yields the bounds that delimit the residual.
+
+\subsection{The almost-free profile}
+
+\begin{proposition}[$M$ is flat, Mittag--Leffler, $\aleph_1$-projective]\label{prop:ml}
+$M$ is flat and Mittag--Leffler; hence $\aleph_1$-projective. Consequently
+\[
+  \text{Conjecture~\ref{conj:62}}\iff M\text{ is a direct sum of countably generated submodules.}
+\]
+\end{proposition}
+
+\begin{proof}
+Over the von Neumann regular $S$ every module is flat and every submodule is pure (Proposition~\ref{prop:ring}); $M=\prod_r P\subseteq\Phi=\prod_{r,m}E$ is a pure submodule of a product of copies of the finitely presented module $E$, so by the Raynaud--Gruson purity characterisation~\cite{raynaud-gruson} $M$ is Mittag--Leffler. Flat Mittag--Leffler modules are $\aleph_1$-projective. For the equivalence: Kaplansky gives projective $\Rightarrow$ direct sum of countably generated; conversely a countably generated flat Mittag--Leffler module is projective~\cite{raynaud-gruson,zimmermann-huisgen}, so a direct sum of countably generated (necessarily flat ML) submodules of $M$ is a direct sum of projectives, hence projective.
+\end{proof}
+
+Thus $M$ carries the exact structural profile of the Baer--Specker group $\Z^{\N}$: flat, Mittag--Leffler, $\aleph_1$-projective, and (under CH) non-projective. Its non-projectivity is a \emph{global} failure to decompose, orthogonal to the local projectivity it manifestly has.
+
+\subsection{The seed and the projective-dimension reframing}
+
+The next lemma names the small module out of which $M$'s defect is assembled.
+
+\begin{lemma}[The $\pd$-$1$ seed]\label{lem:seed}
+Let $I\subseteq S$ be the left ideal of finite-column-support matrices. Then $I\cong P=\bigoplus_{\N}E$, and
+\[
+  N_0\;:=\;S/I\;\cong\;\prod_{\N}E\big/\!\bigoplus_{\N}E
+\]
+is cyclic, flat, and non-projective, with $\pd_S N_0=1$.
+\end{lemma}
+
+\begin{proof}
+Under the freeness isomorphism $\Psi\colon S\xrightarrow{\ \sim\ }\prod_{\N}E$, $s\mapsto(s\cdot e_m)_m$ of Theorem~\ref{thm:free}, the finite-support column sequences $\bigoplus_{\N}E$ correspond precisely to the finite-column-support matrices $I$; hence $I\cong\bigoplus_{\N}E=P$ (projective, non-finitely-generated) and $S/I\cong\prod_{\N}E/\bigoplus_{\N}E$. Over the von Neumann regular $S$ a finitely generated left ideal is a direct summand $Se$; so $S/I$ is projective iff $I$ is a direct summand iff $I$ is finitely generated. But $I$ is not: any $n$ elements have support in finitely many columns, hence lie in a proper subsum $\bigoplus_{m<m_0}E\subsetneq\bigoplus_{\N}E$. So $S/I$ is non-projective, and $0\to I\to S\to N_0\to0$ with $I\cong P$ projective and $S$ free gives $\pd_S N_0=1$. Flatness is automatic over $S$.
+\end{proof}
+
+The seed is the scalar analogue of the Baer--Specker quotient $\Z^{\N}/\Z^{(\N)}$; the field makes it \emph{cyclic}, which $\Z$ does not. Products are exact, so taking $\prod_{\N}$ of the seed's resolution assembles $M$.
+
+\begin{lemma}[The controlling cokernel]\label{lem:cokernel}
+$\Phi/M\cong\prod_{\N}N_0$, and the free presentation of this quotient is
+\[
+  0\;\longrightarrow\;M\;\longrightarrow\;\Phi\cong S\;\longrightarrow\;\prod_{\N}N_0\;\longrightarrow\;0,\qquad\Phi\cong S\text{ free.}
+\]
+\end{lemma}
+
+\begin{proof}
+$\Phi=\prod_r\bigl(\prod_m E\bigr)$ and $M=\prod_r\bigl(\bigoplus_m E\bigr)$; products are exact, so $\Phi/M=\prod_r\bigl(\prod_m E/\bigoplus_m E\bigr)\cong\prod_r N_0$ by Lemma~\ref{lem:seed}. The displayed sequence is the product over $r$ of $0\to I\to S\to N_0\to0$: indeed $\prod_r I=\prod_r P=M$ and $\prod_r S\cong S$ by Theorem~\ref{thm:free}.
+\end{proof}
+
+\begin{theorem}[Projective-dimension reframing, ZFC]\label{thm:pd-reframe}
+\[
+  \text{Conjecture~\ref{conj:62}}\iff M\text{ projective}\iff \pd_S M=0\iff \pd_S\Bigl(\prod_{\N}N_0\Bigr)\le 1,
+\]
+and $\pd_S\bigl(\prod_{\N}N_0\bigr)=\pd_S M+1$ whenever $M$ is non-projective.
+\end{theorem}
+
+\begin{proof}
+From the free presentation $0\to M\to S\to\prod_{\N}N_0\to0$ of Lemma~\ref{lem:cokernel} with $S$ free, dimension shifting gives $\Ext^{n+1}_S(\prod_{\N}N_0,-)\cong\Ext^{n}_S(M,-)$ for all $n\ge1$; and $\prod_{\N}N_0$ has projective dimension $\le1$ exactly when the connecting map makes $M$ projective. The first two equivalences are Theorem~\ref{thm:reduction} and the definition of projective dimension.
+\end{proof}
+
+The reading is the point. The seed $N_0$ has $\pd=1$; the controlling cokernel $\prod_{\N}N_0$ is a \emph{countable product of copies of a $\pd$-$1$ module}. Over a ring where projective dimension is not additive across products---any non-perfect ring, $S$ included---such a product can climb to $\pd=2$, and whether it does is exactly Conjecture~\ref{conj:62}. This is the Osofsky--Jensen phenomenon that a product of modules can raise projective dimension by an amount sensitive to the continuum, now recognised as the precise content of the admissibility question.
+
+\subsection{Bounds on \texorpdfstring{$\pd_S M$}{pd M}}
+
+Write $d:=\min\{n:2^{\aleph_0}\le\aleph_n\}$, so $\mathfrak c\le\aleph_d$ and $d=1$ iff CH.
+
+\begin{proposition}[Bounds, ZFC]\label{prop:pd-bounds}
+$1\le\pd_S M\le d+1$ whenever $2^{\aleph_0}<2^{\aleph_1}$, and $\pd_S M\le d+1$ in every model.
+\end{proposition}
+
+\begin{proof}
+Lower bound: if $2^{\aleph_0}<2^{\aleph_1}$ then $M$ is non-projective (Theorem~\ref{thm:main}), i.e.\ $\pd_S M\ge1$. Upper bound: $M$ is flat (Proposition~\ref{prop:ring}) and generated by $|M|\le\mathfrak c\le\aleph_d$ elements, so the Gruson--Jensen estimate---an $\aleph_n$-generated flat module has projective dimension $\le n+1$~\cite{gruson-jensen}---gives $\pd_S M\le d+1$.
+\end{proof}
+
+\begin{corollary}[Refined necessary condition, ZFC]\label{cor:rank}
+If $M$ is projective then $2^{\aleph_0}=2^{\aleph_1}$ and $M=\bigoplus_{i\in I}M_i$ with each $M_i\ne0$ countably generated projective, $2^{|I|}\le2^{\aleph_0}$ and $|I|\in[\aleph_1,\mathfrak c]$. In the natural residual model $\mathrm{MA}+2^{\aleph_0}=\aleph_2$ (where $2^{\aleph_1}=\aleph_2<2^{\aleph_2}$) the rank $|I|$ is forced to be \emph{exactly} $\aleph_1$.
+\end{corollary}
+
+\begin{proof}
+Kaplansky decomposes projective $M=\bigoplus_{i\in I}M_i$; Lemma~\ref{lem:F1} gives $|I|\ge\aleph_1$, and the dual count of Theorem~\ref{thm:main} (Lemma~\ref{lem:F2}, $\dim_k\Hom_S(M,E)=2^{\aleph_0}$, against $\dim_k k^{I}\ge2^{|I|}$) gives $2^{|I|}\le2^{\aleph_0}$, whence $2^{\aleph_0}=2^{\aleph_1}$. As each $|M_i|\le\mathfrak c$, $|M|=\mathfrak c$ bounds $|I|\le\mathfrak c$. Under $\mathrm{MA}+2^{\aleph_0}=\aleph_2$ the only cardinal $\lambda\in[\aleph_1,\aleph_2]$ with $2^{\lambda}\le2^{\aleph_0}=\aleph_2$ is $\lambda=\aleph_1$ (since $2^{\aleph_2}>\aleph_2$), so $|I|=\aleph_1$.
+\end{proof}
+
+So in the very model where independence could live, the hypothetical decomposition is $\aleph_1$-indexed---an $\omega_1$-scale object, precisely the size at which the almost-free/$\Gamma$-invariant machinery operates, even though $M$ itself is $\mathfrak c$-sized and its projective dimension is continuum-governed.
+
+\begin{remark}[An unverified sharpening]\label{rem:osofsky}
+Osofsky's continuum-sensitive computation of the global dimension of $\End_k(E)$~\cite{osofsky} would, on the value $\mathrm{l.gl.dim}\,S=d+1$, sharpen the upper bound: as $M\subseteq\Phi$ is a submodule of a free module, $\pd_S M=\pd_S(\prod_{\N}N_0)-1\le\mathrm{gl.dim}\,S-1=d$, giving $\pd_S M=1$ exactly under CH. We flag this as resting on a recollection of Osofsky's exact value that we have \emph{not} verified at source; no result below depends on it, and the ZFC-clean bound of Proposition~\ref{prop:pd-bounds} ($\pd_S M\in\{1,2\}$ under CH) stands unconditionally.
+\end{remark}
+
+\subsection{An order-free obstruction: \texorpdfstring{$\kappa$}{kappa}-projectivity}
+
+The cardinal count of Section~\ref{sec:main} is capped: its gap $2^{\aleph_1}$-versus-$2^{\aleph_0}$ is vacuous when $2^{\aleph_0}=2^{\aleph_1}$. We record one continuum-independent obstruction whose failure, if provable, would decide the conjecture in ZFC.
+
+\begin{definition}
+For $\kappa$ a regular uncountable cardinal, a module $N$ is \emph{$\kappa$-projective} if it has a $\kappa$-dense system of $<\kappa$-generated projective submodules: a set $\mathcal D$ of $<\kappa$-generated projective submodules such that every $<\kappa$-generated submodule of $N$ lies in some member of $\mathcal D$, and $\mathcal D$ is closed under unions of well-ordered ascending chains of length $<\kappa$.
+\end{definition}
+
+\begin{lemma}[$\kappa$-projectivity reduction, ZFC]\label{lem:kappa}
+If $M$ is projective, then $M$ is $\kappa$-projective for every regular uncountable $\kappa$. Consequently, if $M$ fails to be $\kappa$-projective for some such $\kappa$, then Conjecture~\ref{conj:62} is false and $\Vec$ is $\tri$-inadmissible in \textup{ZFC}.
+\end{lemma}
+
+\begin{proof}
+By Kaplansky $M=\bigoplus_{i\in I}M_i$ with each $M_i$ countably generated projective. Put $\mathcal D=\{\bigoplus_{i\in J}M_i:J\subseteq I,\ |J|<\kappa\}$. Each member is projective and, as $\kappa$ is regular uncountable, $<\kappa$-generated. Density: a $<\kappa$-generated $N\subseteq M$ has generators of finite support in $I$, so their supports union to $J\subseteq I$ with $|J|<\kappa$ (regularity) and $N\subseteq\bigoplus_{i\in J}M_i\in\mathcal D$. Chain-closure: a union of $<\kappa$ members is $\bigoplus_{\bigcup J_\xi}M_i$ with $|\bigcup J_\xi|<\kappa$, again in $\mathcal D$. The contrapositive is the stated consequence.
+\end{proof}
+
+Since $\aleph_1$-projectivity holds automatically (Proposition~\ref{prop:ml}), the first substantive $\kappa$-projectivity test is $\kappa=\aleph_2$; a ZFC failure there is one route to a ZFC refutation. Both this test and the projective-dimension reframing point at the same residual, which we now state as a single question.
+
+\begin{question}\label{q:pd}
+Compute $\pd_S M$ as a function of the continuum. Concretely: can $\pd_S M=0$ in a model of $2^{\aleph_0}=2^{\aleph_1}$? A ZFC proof that $\pd_S M\ge1$ in every model makes Conjecture~\ref{conj:62} \emph{false in \textup{ZFC}}; a construction of a countable-sum decomposition (equivalently, $\pd_S M=0$) under $\mathrm{MA}+\neg\mathrm{CH}$ makes it \emph{independent}. The $\aleph_2$-projectivity test of Lemma~\ref{lem:kappa} is the $\kappa=\aleph_2$ facet of this question.
+\end{question}
+
+\section{The residual case and the independence lean}\label{sec:residual}
+
+By Theorem~\ref{thm:pd-reframe} the residual is a single invariant: \emph{can $\pd_S M=0$ in a model of $2^{\aleph_0}=2^{\aleph_1}$?} We now weigh the evidence on both sides. It is genuinely two-sided: both a ZFC refutation and full independence remain live, and we do not claim either. The results of this section that quote the Herbera--Trlifaj almost-free theory~\cite{herbera-trlifaj} situate the problem; the section's proved content is entirely in Section~\ref{sec:structure}.
+
+\subsection*{The ambient class over $S$ (verified)}
+Herbera and Trlifaj's Example~6.8~\cite{herbera-trlifaj} is stated for ``a non-artinian von Neumann regular right self-injective ring, for example the endomorphism ring of an infinite dimensional [linear] space''---this is $S$ verbatim. We have verified the relevant statements at source. Theorem~2.9(i) of~\cite{herbera-trlifaj} proves, over any ring in ZFC, that a module is $\aleph_1$-projective iff it is flat Mittag--Leffler; Example~6.8 shows that over $S$ these coincide further with the non-singular modules (via $S$ right non-singular and Goodearl's characterisation of finitely generated non-singular submodules), so the identification flat ML $=$ $\aleph_1$-projective $=$ non-singular is ZFC-absolute; and Corollary~7.3 states that the class of flat Mittag--Leffler modules is deconstructible iff the ring is right perfect, so over the non-perfect $S$ it is \emph{not} deconstructible (it is a Kaplansky class with bound $2^{|S|}=2^{\mathfrak c}$). Hence $M$'s membership in the ambient class is cheap and absolute ($M$ is non-singular), and Conjecture~\ref{conj:62} asks whether this particular non-singular module is a direct sum of countably generated pieces---equivalently, $\pd_S M=0$ (Theorem~\ref{thm:pd-reframe}).
+
+Moreover~\cite[\S5]{herbera-trlifaj} constructs, \emph{in ZFC}, an $\aleph_1$-generated $\aleph_1$-projective non-projective $S$-module $W$: from a countably generated flat non-projective module (our seed $N_0$, or any such, exists because $S$ is not right perfect) one forms a subquotient along a ladder system on a stationary set of $\aleph_0$-cofinal ordinals. So ``flat Mittag--Leffler $\Rightarrow$ projective'' is already false over $S$ in ZFC, and it fails at the $\omega_1$ scale. But $W$ is a bespoke subquotient carrying an engineered stationary ladder, whereas $M=\prod_r P$ is a canonical product carrying no such ladder; whether $M$ contains a non-absorbable copy of such a $W$ is the crux, and it is exactly the question of whether $\pd_S M\ge1$ persists into the residual window.
+
+\subsection*{Two intuitions pull opposite ways}
+We record both, at their honest weight.
+
+\emph{Toward false in ZFC.} $M$ is a canonical continuum-sized product---precisely the shape of Osofsky's high-projective-dimension witnesses. If $\pd_S M$ tracks the continuum-degree $d\ge1$ (as Osofsky's global-dimension witnesses do), then $M$ is non-projective in \emph{every} model, and the counting's ``$2^{\aleph_0}=2^{\aleph_1}$ is necessary'' is merely a weak necessary condition, never sufficient. Reinforcing this: the failure of ``flat ML $\Rightarrow$ projective'' witnessed by $W$ is a size-$\aleph_1$ phenomenon living at $\omega_1$, where the seed and the ladder are all constructed in ZFC; the residual window $2^{\aleph_0}=2^{\aleph_1}$ constrains the continuum function but does not obviously protect $\omega_1$. This is why we do \emph{not} assert that ``both obstructions vanish'' in the residual window: the $\omega_1$-scale obstruction is not visibly demoted by a collapse of the continuum function.
+
+\emph{Toward independence.} The operative threshold in the count is the \emph{collapse} $2^{\aleph_0}=2^{\aleph_1}$---an equalisation of the continuum function at $\aleph_1$, not the crude Osofsky degree $d=\min\{n:2^{\aleph_0}\le\aleph_n\}$ (which ignores $2^{\aleph_1}$). A collapse $2^{\aleph_0}=2^{\aleph_1}$ is exactly what forcing arranges while preserving reflection principles; and $\pd_S M=0$ is, by Corollary~\ref{cor:rank}, a Whitehead/$\Gamma$-invariant statement about an $\aleph_1$-indexed decomposition---the archetype of an independent assertion. The disanalogy with $\Z^{\N}$, whose non-freeness is ZFC-\emph{absolute} through slenderness, is precisely our \emph{large dual} ($\prod_r E\cong S$ free, $\dim_k\Hom_S(M,E)=\mathfrak c$; Theorem~\ref{thm:free}, Remark~\ref{rem:zn}), which removes the absolute obstruction and leaves a reflection-sensitive one.
+
+\begin{remark}[Verdict]\label{rem:verdict}
+The exact value of $\pd_S M$ depends on the continuum function \emph{around $\aleph_1$}---the $2^{\aleph_0}$-versus-$2^{\aleph_1}$ threshold---rather than merely on the degree $d$, and that is the fingerprint of an independent, not absolute, invariant. On this basis the evidence \emph{leans toward independence}: it is plausible that under $\mathrm{MA}+2^{\aleph_0}=\aleph_2$ the module $M$ is a direct sum of countably generated submodules while under CH it is not, making Conjecture~\ref{conj:62} independent of ZFC. But this is an evidential lean, \emph{not a proof}, and false-in-ZFC is a genuine competitor: if $\pd_S M$ tracks the continuum-degree the way Osofsky's global witnesses do, $M$ is non-projective in every model. Deciding between the two is exactly Question~\ref{q:pd}: an Osofsky-style computation of $\pd_S M$ as a function of the continuum, most tractably attacked through the commutative shadow $\prod_r\!\bigl(k^{\omega}/k^{(\omega)}\bigr)$ over $k^{\omega}$.
+\end{remark}
+
+\section{Consequences for the container program}\label{sec:concl}
+
+The composition of directed containers over $\Vec$ is not unconditionally well defined. In every model of the Continuum Hypothesis, the base $\Vec_k$ (over a countable field) fails to be $\tri$-admissible: there are containers whose substitution has no denotational meaning. Whether this failure is absolute---a theorem of ZFC---or merely conditional is the one remaining question, and the structural evidence leans toward the latter, which would make $\tri$-admissibility of $\Vec$ genuinely \emph{independent} of ZFC; a ZFC refutation, however, remains live (Section~\ref{sec:residual}).
+
+Three points bear on the wider program.
+
+First, this is the program's first set-theoretically sensitive node. Every prior obstruction---the Zappa--Sz\'ep cocycle $[\omega]\in H^2$, the prunability descent class, the direction-functor cohomology---was a concrete, absolute invariant. Admissibility of the linear base is not: it lives in the cardinal arithmetic of the continuum. Any claim that ``the theory works over $\Vec$'' must now carry a set-theoretic hypothesis, or route around admissibility altogether (for instance by fixing a canonical convention for $p\tri q$ rather than demanding closure of the image of $\den{-}$).
+
+Second, the negative result sharpens the value of the positive theory over $\Set$ and over the extensive bases, where admissibility is automatic and the composition is unconditional. The boundary between the two is now drawn exactly: admissibility has teeth precisely between the two degeneracies (the terminal unit of $\Set$ and the zero unit of $\Vec$), and at the $\Vec$ end it is CH-sensitive.
+
+Third, the module-theoretic core is of independent interest. The module $M=\prod_{\N}(\bigoplus_{\N}E)$ over the full linear ring is a natural, canonical example of a flat Mittag--Leffler $\aleph_1$-projective module whose projectivity is CH-sensitive and possibly independent---a product-shaped, non-semiartinian companion to the Baer--Specker group, outside the reach of the packaged Dual-Baer independence theorems. Its projectivity is a single homological invariant: Conjecture~\ref{conj:62} holds iff $\pd_S M=0$, and the controlling cokernel $\Phi/M$ is the countable product $\prod_{\N}N_0$ of a projective-dimension-one seed, so admissibility of $\Vec$ is an instance of the Osofsky--Jensen problem of whether a product raises projective dimension. The sharp open problem (Question~\ref{q:pd}) is to compute $\pd_S M$ as a function of the continuum: a ZFC proof that $\pd_S M\ge1$ in every model collapses the question to FALSE-in-ZFC, a decomposition under $\mathrm{MA}+\neg\mathrm{CH}$ confirms independence, and either resolution would be the first theorem of its kind about the composition of directed containers.
+
+\subsection*{Acknowledgements}
+This note consolidates work done for the Kodamai AI Mathematician program. I thank Neil Ghani for the container framing and Robin Langer for maintaining the source archive.
+
+\begin{thebibliography}{99}
+
+\bibitem{ahman-uustalu} D.~Ahman and T.~Uustalu, \emph{Directed containers as categories}, in: Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98.
+
+\bibitem{anderson-fuller} F.~W.~Anderson and K.~R.~Fuller, \emph{Rings and Categories of Modules}, 2nd ed., Graduate Texts in Mathematics 13, Springer, 1992.
+
+\bibitem{chase} S.~U.~Chase, \emph{Direct products of modules}, Trans.\ Amer.\ Math.\ Soc.\ \textbf{97} (1960), 457--473.
+
+\bibitem{eklof-mekler} P.~C.~Eklof and A.~H.~Mekler, \emph{Almost Free Modules: Set-Theoretic Methods}, rev.\ ed., North-Holland Mathematical Library 65, Elsevier, 2002.
+
+\bibitem{gruson-jensen} L.~Gruson and C.~U.~Jensen, \emph{Dimensions cohomologiques reli\'ees aux foncteurs $\varprojlim^{(i)}$}, in: S\'eminaire d'Alg\`ebre P.~Dubreil et M.-P.~Malliavin, Lecture Notes in Math.\ 867, Springer, 1981, 234--294.
+
+\bibitem{herbera-trlifaj} D.~Herbera and J.~Trlifaj, \emph{Almost free modules and Mittag-Leffler conditions}, Adv.\ Math.\ \textbf{229} (2012), 3436--3467. arXiv:0910.4277.
+
+\bibitem{kaplansky} I.~Kaplansky, \emph{Projective modules}, Ann.\ of Math.\ (2) \textbf{68} (1958), 372--377.
+
+\bibitem{macbeth-admissibility} MacBeth, \emph{$\tri$-admissibility of $\Fam(\C^{\op})$: the trichotomy and the connectedness converse}, Kodamai internal note, 2026-08-30.
+
+\bibitem{macbeth-reduction} MacBeth, \emph{The module reduction of Gap-$S$: $\Nat(F,-)=\Hom_S(F(E),-)$ over $S=\End_k(E)$}, Kodamai internal note, 2026-09-20.
+
+\bibitem{macbeth-trlifaj} MacBeth, \emph{Conjecture~6.2 / Gap-$S$ collapses to a Dual-Baer test}, Kodamai internal note, 2026-09-20.
+
+\bibitem{macbeth-ch} MacBeth, \emph{Gap-$S$ / Conjecture~6.2 is false under CH}, Kodamai internal note, 2026-09-21.
+
+\bibitem{macbeth-kappa} MacBeth, \emph{The residual ZFC status of Gap-$S$: a $\kappa$-projectivity reduction}, Kodamai internal note, 2026-09-21.
+
+\bibitem{macbeth-osofsky} MacBeth, \emph{Gap-$S$ as an Osofsky--Jensen product-projective-dimension problem: $S/\mathfrak l\cong\prod_{\N}N_0$ and $\mathrm{Conj.}\,6.2\Leftrightarrow\pd_S M=0$}, Kodamai internal note, 2026-09-21.
+
+\bibitem{osofsky} B.~L.~Osofsky, \emph{Homological dimension and the continuum hypothesis}, Trans.\ Amer.\ Math.\ Soc.\ \textbf{132} (1968), 217--230; see also \emph{Homological Dimensions of Modules}, CBMS Regional Conf.\ Ser.\ Math.\ 12, Amer.\ Math.\ Soc., 1973.
+
+\bibitem{raynaud-gruson} M.~Raynaud and L.~Gruson, \emph{Crit\`eres de platitude et de projectivit\'e}, Invent.\ Math.\ \textbf{13} (1971), 1--89.
+
+\bibitem{shapiro-spivak} B.~Shapiro and D.~I.~Spivak, \emph{Dynamic categories, dynamic operads: from deep learning to prediction markets}, and the $\mathrm{Cat}^{\#}=\mathrm{DCont}$ identification in $\mathrm{Poly}$; see also N.~Niu and D.~I.~Spivak, \emph{Polynomial Functors: A Mathematical Theory of Interaction}, 2023.
+
+\bibitem{trlifaj-dbc} J.~Trlifaj, \emph{The Dual Baer Criterion for non-perfect rings}, Forum Math.\ \textbf{32} (2020), no.~3, 663--672. arXiv:1901.01442.
+
+\bibitem{zimmermann-huisgen} B.~Zimmermann-Huisgen, \emph{Pure submodules of direct products of finitely presented modules}, Math.\ Ann.\ \textbf{224} (1976), 233--245.
+
+\end{thebibliography}
+
+\end{document}
