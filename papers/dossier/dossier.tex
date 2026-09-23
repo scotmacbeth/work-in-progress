@@ -13,6 +13,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amsthm,amssymb}
+\usepackage{stmaryrd}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{
@@ -48,6 +49,24 @@
 \newcommand{\Hcoh}{H^2}
 \newcommand{\dd}{\mathfrak{d}}
 \newcommand{\cont}{\mathfrak{c}}
+% -- macros for the set-theoretic frontier chapter (I.6) --
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\Ext}{\mathrm{Ext}}
+\newcommand{\Nat}{\mathrm{Nat}}
+\newcommand{\Add}{\mathrm{Add}}
+\newcommand{\Soc}{\mathrm{Soc}}
+\newcommand{\pd}{\mathrm{pd}}
+\newcommand{\supp}{\mathrm{supp}}
+\newcommand{\tri}{\triangleleft}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\bb}{\mathfrak{b}}
+\DeclareMathOperator{\cf}{cf}
+\newtheorem{question}[theorem]{Question}
+\newcommand{\den}[1]{\llbracket #1 \rrbracket}
 
 \title{Compositional Correctness via Directed Containers:\\
        A Complete Technical Dossier}
@@ -322,20 +341,375 @@ it. Knowing the boundary is itself the result.
 % ASSEMBLE FROM: /home/agent/projects/papers/four-monoidal-chapter.tex  [proved]  [ASSEMBLE]
 \assemble{m-containers, change-of-base, fullness-unit-connectedness all proved; $\{\mathrm{Id}\}$ collapse is the sharp negative.}
 
-\chapter{The set-theoretic frontier: Vec-admissibility and the Gap-S arc}
-This is the frontier of the Theory pillar, and it is open. Whether $\VecC$ is
-$\lhd$-admissible (Conjecture~6.2) reduces to a projectivity question over the
-full linear ring $S=\mathrm{End}_k(E)$. The module $M$ has generation number
-$\mu_S(M)=\dd$, the dominating number; consequently the conjecture is
-\emph{false} under $\mathrm{CH}$, $\mathrm{MA}$, and in the Cohen model. The
-composability boundary of a categorical semantics is thus a cardinal
-characteristic of the continuum --- the crown jewel of the arc. The residual
-case (the random-real model, $\dd=\aleph_1<\cont$) is unresolved, and the full
-ZFC status is unproved. The chapter ends the Theory pillar honestly, on the live
-edge.
-% ASSEMBLE FROM: /home/agent/projects/papers/vec-admissibility-not-zfc.tex  [proved: FALSE under CH]  [STUB]
-% ASSEMBLE FROM: /home/agent/projects/expository/containers-over-vec.tex  [proved]  [STUB]
-\assemble{linear-containers-vec, left-adjoint-over-vec proved; the $\mu_S(M)=\dd$ sharpenings are memory-only and need write-up; residual OPEN (see Honest Ledger item 1).}
+\chapter{The set-theoretic frontier: Vec-admissibility and the Gap-\texorpdfstring{$S$}{S} arc}
+\label{ch:frontier}
+
+This is the frontier of the Theory pillar, and it is open. Every obstruction so
+far in this document --- the Zappa--Sz\'ep cocycle $[\omega]\in\Hcoh$, the
+prunability descent class, the direction-functor cohomology --- has been a
+concrete, \emph{absolute} invariant: computed once, its verdict holds in every
+model of set theory. The admissibility of the linear base $\VecC$ is the first
+node of the programme that is not like this. Whether $\VecC$ is
+$\tri$-admissible turns out to be governed by the cardinal arithmetic of the
+continuum, and its exact truth value changes from one model of ZFC to another.
+
+The result of this chapter is a single, sharp identity. The composability of the
+linear base reduces to the projectivity of one module $M$ over the full linear
+ring $S=\End_k(E)$, and the \emph{minimal number of generators} of that module
+is exactly the dominating number:
+\[
+   \boxed{\ \mu_S(M) \;=\; \dd\ }.
+\]
+A cardinal characteristic of the continuum is the load-bearing invariant of a
+functor-category admissibility question. From this identity the conjecture is
+\emph{false} in every model with $\dd=\cont$ --- in particular under $\mathrm{CH}$,
+under Martin's Axiom, and in the Cohen model --- and the only surviving positive
+case is squeezed into the narrow window $2^{\aleph_0}=2^{\dd}$, whose canonical
+witness is the random-real model. Whether $M$ is projective there is the
+programme's deepest open problem. The chapter ends the Theory pillar on that live
+edge, as it should.
+
+Everything in \S\S\ref{sec:frontier-reduction}--\ref{sec:frontier-sharp} is
+\emph{proved} in ZFC; the residual of \S\ref{sec:frontier-residual} is
+\emph{open}. Nothing in this chapter is lean-verified, and nothing is externally
+published (Honest Ledger, items 1 and 4).
+
+\section{From admissibility to a module}\label{sec:frontier-reduction}
+
+Recall the denotation of a family $(S,P)\in\Fam(\mathcal C^{\op})$, the object
+that presents a container over the base $\mathcal C$:
+\[
+   \den{S,P}\,X \;=\; \coprod_{s\in S}\mathcal C(P(s),X).
+\]
+The base $\mathcal C$ is \emph{$\tri$-admissible} when the image of $\den{-}$ is
+closed under composition of endofunctors --- the minimal condition under which
+the composition $p\tri q$ of two directed containers has any denotational
+meaning over $\mathcal C$ (Chapter~\ref{ch:frontier} uses only this weakest
+form; a non-existence result proved against it is maximally strong). Over
+$\Set$ every base is admissible; over $\VecC$ the unit object is $0$ and the
+shape set of a composite becomes invisible, and the whole difficulty
+concentrates in a single instance.
+
+\begin{conjecture}[6.2 / Gap-$S$]\label{conj:frontier}
+Over a countable field $k$, the additive endofunctor
+$F=\prod_{r\in\N}\bigl(\bigoplus_{m\in\N}(-)\bigr)$ of $\VecC_k$ is a coproduct
+of representables; equivalently, $\VecC_k$ is $\tri$-admissible at the instance
+presenting $\bigoplus_\N(-)$.
+\end{conjecture}
+
+The reduction to algebra is the spine of the arc and is proved in the module
+note~\cite{macbeth-reduction}. Let $E=k^{(\N)}$ and $S=\End_k(E)$, the ring of
+column-finite $\N\times\N$ matrices over $k$; for countable $k$, $|S|=\cont$.
+Restriction to the subcategory of countable-dimensional spaces identifies
+additive endofunctors with left $S$-modules via $T\mapsto T(E)$, sending
+$\Nat(T,T')\cong\Hom_S(T(E),T'(E))$ and $\Ext^1$ to $\Ext^1$. Under this
+dictionary the identity functor maps to the simple projective $E$, the countable
+coproduct $\bigoplus_\N(-)$ to $P=\bigoplus_\N E$ (a countably generated,
+non-finitely-generated projective), and the functor of the conjecture to
+\[
+   M \;=\; \prod_{r\in\N} P \;=\; \prod_{r\in\N}\bigoplus_{m\in\N} E .
+\]
+
+\begin{theorem}[Module reduction {\cite[Thm.~1--2]{macbeth-reduction}}; proved, ZFC]
+\label{thm:frontier-reduction}
+$\VecC_k$ is $\tri$-admissible at the instance of
+Conjecture~\ref{conj:frontier} if and only if $M$ is projective as a left
+$S$-module.
+\end{theorem}
+
+Two structural facts about $S$ drive everything below, and both are peculiar to
+the \emph{noncommutative} full linear ring. First, $S$ is von Neumann regular,
+so every module is flat and every submodule is pure. Second --- and this is the
+identity that makes the arc subtle rather than routine ---
+\[
+   \prod_{r\in\N} E \;\cong\; S \quad\text{as left $S$-modules,}
+   \tag{$\ast$}\label{eq:free}
+\]
+free of rank one, because a column-finite matrix \emph{is} an arbitrary sequence
+of its columns~\cite[Thm.~2]{macbeth-reduction}. The identity~\eqref{eq:free} is
+the homogeneity of $S$: its minimal idempotents are mutually conjugate, so a
+countable product of copies of the regular module reassembles into $S$. A
+commutative ring has no such homogeneity, and this is exactly why the
+tempting commutative surrogate $k^\omega$ is not faithful to the
+problem~\cite{macbeth-shadow}; the phenomenon is intrinsically noncommutative.
+
+Identity~\eqref{eq:free} has an immediate and destructive consequence for the
+obvious attack. One would like to prove $M$ non-projective by a Baer--Specker
+``product-is-bigger-than-coproduct'' argument, exhibiting an exotic map that
+cannot lift. But~\eqref{eq:free} makes the relevant product \emph{free}, so the
+dual of $M$ stays large ($\dim_k\Hom_S(M,E)=\cont$) and no size-gap argument can
+succeed: the Baer--Specker mechanism is neutralised~\cite[Thm.~4]{macbeth-reduction}.
+Any refutation must count something finer than cardinality, and any positive
+proof must survive the collapse of the naive obstruction. This is the shape of
+the whole difficulty.
+
+Before counting, one reduction removes the shortest independence route. Call a
+module \emph{$R$-projective} (Dual Baer) if every map into a cyclic quotient
+$S/I$ lifts through $S\twoheadrightarrow S/I$; projective always implies
+$R$-projective.
+
+\begin{theorem}[Dual-Baer collapse {\cite{macbeth-trlifaj}}; proved, ZFC]
+\label{thm:frontier-dbc}
+$M$ is projective if and only if $M$ is $R$-projective.
+\end{theorem}
+
+The proof uses that $S$ contains a free left ideal of rank $\cont$ (an
+almost-disjoint-family construction inside~\eqref{eq:free}), which upgrades
+$R$-projectivity to projectivity for any module generated by at most $\cont$
+elements; $M$ is one, since $|M|\le\cont$. Theorem~\ref{thm:frontier-dbc}
+matters because it forecloses Trlifaj's packaged independence theorem for the
+Dual Baer Criterion, which requires the ring to be \emph{small semiartinian} ---
+a hypothesis $S$ fails. Whatever the status of Conjecture~\ref{conj:frontier},
+it is not an off-the-shelf instance of known Dual-Baer independence.
+
+\section{The first count: false under CH}\label{sec:frontier-count}
+
+The original refutation counts the dual of a hypothetical decomposition. It
+rests on two ZFC facts about the fixed module $M$: it is \emph{not} countably
+generated~\cite[\S5]{macbeth-reduction} (a Bergman-style diagonalisation, invisible
+to cardinality since $|M|=\cont$), and its dual is small, $\dim_k\Hom_S(M,E)=2^{\aleph_0}$~\cite[Thm.~F]{macbeth-reduction}.
+
+\begin{theorem}[First count {\cite{macbeth-ch}}; proved, ZFC]
+\label{thm:frontier-firstcount}
+If $M$ is projective then $2^{\aleph_0}=2^{\aleph_1}$. Consequently, if
+$2^{\aleph_0}<2^{\aleph_1}$ --- in particular under $\mathrm{CH}$ and under
+$\mathrm{GCH}$ --- then $M$ is not projective, $\VecC$ is $\tri$-inadmissible,
+and Conjecture~\ref{conj:frontier} is false.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By Kaplansky's theorem a projective module is a direct sum of countably
+generated submodules, $M=\bigoplus_{i\in I}M_i$ with each $M_i\ne0$. If
+$|I|\le\aleph_0$ then $M$ is countably generated, a contradiction; so
+$|I|\ge\aleph_1$. Each nonzero countably generated projective has nonzero dual,
+so
+$\Hom_S(M,E)=\prod_{i\in I}\Hom_S(M_i,E)$ contains a copy of $k^{I}$, giving
+$\dim_k\Hom_S(M,E)\ge 2^{|I|}\ge2^{\aleph_1}$ by Erd\H{o}s--Kaplansky. But the
+dual has dimension $2^{\aleph_0}$, so $2^{\aleph_1}\le 2^{\aleph_0}$, forcing
+equality.
+\end{proof}
+
+The parallel with the Baer--Specker group $\Z^\N$ is exact and instructive.
+There the same schema gives an \emph{absolute} contradiction ($\Z^\N$ is non-free
+in ZFC), because Specker's theorem collapses the dual to countable rank. Over
+$S$ the freeness~\eqref{eq:free} keeps the dual large, and the contradiction
+degrades from ``$\aleph_0$ versus $2^{\cont}$'' to merely ``$2^{\aleph_0}$
+versus $2^{\aleph_1}$.'' The void Baer--Specker is precisely what demotes an
+absolute refutation to a CH-conditional one: same count, different dual size,
+different verdict.
+
+Theorem~\ref{thm:frontier-firstcount} is silent when $2^{\aleph_0}=2^{\aleph_1}$.
+The original note nominated $\mathrm{MA}+2^{\aleph_0}=\aleph_2$ as the natural
+residual model in which independence might live. The next section removes exactly
+that model.
+
+\section{The sharp invariant: \texorpdfstring{$\mu_S(M)=\dd$}{mu(M)=d}}\label{sec:frontier-sharp}
+
+The first count sees only the crude cut $|I|\ge\aleph_1$: the index set of a
+Kaplansky decomposition is uncountable. The sharpening computes its true size.
+Write $\dd$ for the dominating number --- the least size of a family in
+$(\N^\N,\le^*)$ cofinal for eventual domination, equivalently the least number of
+compact sets covering Baire space $\N^\N$ (a set is compact iff it is contained
+in some $\prod_r[0,g(r)]$). In ZFC, $\aleph_1\le\bb\le\dd\le\cont$.
+
+For $x\in M$ write $\supp(x)=\{(r,m):x_{r,m}\ne0\}$; each fibre
+$\supp(x)_r=\{m:(r,m)\in\supp(x)\}$ is finite (this is the block-column
+constraint defining $M\subseteq\prod_{r,m}E$). The action only shrinks supports:
+$\supp(A\cdot x)\subseteq\supp(x)$ for $A\in S$, because $(A\cdot
+x)_{r,m}=A(x_{r,m})$ vanishes wherever $x_{r,m}$ does.
+
+\begin{theorem}[The generator number is $\dd$; proved, ZFC]\label{thm:frontier-mu}
+$\mu_S(M)=\dd$.
+\end{theorem}
+
+\begin{proof}
+\emph{Lower bound $\mu_S(M)\ge\dd$.} Let $G$ generate $M$; put $\kappa=|G|$, so
+$\kappa\ge\aleph_0$ and $|[G]^{<\omega}|=\kappa$. Fix $0\ne v\in E$, and for each
+$f\in\N^\N$ let $x^f\in M$ be the \emph{graph element} $x^f_{r,f(r)}=v$, all other
+entries $0$; it lies in $M$ (one nonzero entry per row) and has
+$\supp(x^f)=\{(r,f(r)):r\}$. Since $G$ generates, $x^f=\sum_{g\in
+F}A_g\,g$ for a finite $F\subseteq G$ and $A_g\in S$; by support-shrinking and
+additivity, $\supp(x^f)\subseteq\bigcup_{g\in F}\supp(g)$. Setting
+$U^F_r=\bigcup_{g\in F}\supp(g)_r$ (finite, a finite union of finite sets), this
+says $f(r)\in U^F_r$ for every $r$, i.e.\ $f\in\prod_r U^F_r$. Hence
+\[
+   \N^\N \;=\; \bigcup_{F\in[G]^{<\omega}} \prod_r U^F_r ,
+\]
+a covering of Baire space by $\le\kappa$ compact sets. The least such number is
+$\dd$, so $\kappa\ge\dd$.
+
+\emph{Upper bound $\mu_S(M)\le\dd$.} Fix a $\le^*$-dominating family
+$\{h_\xi:\xi<\dd\}\subseteq\N^\N$. For each $\xi$ set
+$M_\xi=\{x\in M: x_{r,m}=0\text{ for } m>h_\xi(r)\}$. As a set
+$M_\xi=\prod_r E^{\,h_\xi(r)+1}$; reindexing by the countably infinite set
+$\{(r,m):m\le h_\xi(r)\}$ this is $\prod_\N E\cong S$ by~\eqref{eq:free}, so
+$M_\xi$ is \emph{cyclic}, $M_\xi=S\cdot g_\xi$. Given $x\in M$, let
+$N_x(r)=\max\supp(x)_r$; choose $\xi$ with $N_x\le^* h_\xi$, say $N_x(r)\le
+h_\xi(r)$ for $r\ge r_0$. Then $x=x\cdot\mathbf 1_{r\ge r_0}+x\cdot\mathbf
+1_{r<r_0}$: the first summand lies in $M_\xi$, the second has finite total
+support, hence lies in the countably generated $M_{\mathrm{fin}}=\bigoplus_{r,m}E$.
+Thus $\{g_\xi:\xi<\dd\}$ together with countably many matrix units generate $M$,
+and $\mu_S(M)\le\dd+\aleph_0=\dd$.
+\end{proof}
+
+The proof turns on the two faces of $\dd$: the lower bound is
+$\dd=\mathrm{cov}(\text{compact})$, the upper bound is $\dd=\min|\text{dominating
+family}|$. The upper bound uses~\eqref{eq:free} in an essential way --- the same
+freeness that voids Baer--Specker is what collapses each ``staircase region''
+$M_\xi$ to a \emph{cyclic} module, so that the only cost of generating $M$ is the
+growth of supports (which is $\dd$), never the values.
+
+\section{The sharpened refutation, and why it matters}\label{sec:frontier-refute}
+
+The generator number feeds the dual count directly, replacing the crude
+$|I|\ge\aleph_1$ by $|I|\ge\dd$.
+
+\begin{theorem}[Sharpened count; proved, ZFC]\label{thm:frontier-sharpcount}
+If $M$ is projective then $2^{\dd}=2^{\aleph_0}$. Consequently, if
+$2^{\aleph_0}<2^{\dd}$ then $M$ is not projective and
+Conjecture~\ref{conj:frontier} is false.
+\end{theorem}
+
+\begin{proof}
+A Kaplansky decomposition $M=\bigoplus_{i\in I}M_i$ has $|I|\ge\mu_S(M)=\dd$ by
+Theorem~\ref{thm:frontier-mu} (the summands' generators generate $M$). As in
+Theorem~\ref{thm:frontier-firstcount}, $\dim_k\Hom_S(M,E)\ge 2^{|I|}\ge2^{\dd}$,
+while $\dim_k\Hom_S(M,E)=2^{\aleph_0}$; so $2^{\dd}\le2^{\aleph_0}$, and equality
+follows since $\dd\ge\aleph_0$.
+\end{proof}
+
+\begin{corollary}[The false region; proved, ZFC]\label{cor:frontier-false}
+If $\dd=\cont$ then Conjecture~\ref{conj:frontier} is false. In particular it is
+false under $\mathrm{CH}$, under Martin's Axiom $\mathrm{MA}+\neg\mathrm{CH}$,
+and in the Cohen model.
+\end{corollary}
+
+\begin{proof}
+If $\dd=\cont$ then $2^{\dd}=2^{\cont}>2^{\aleph_0}$ by Cantor, so
+Theorem~\ref{thm:frontier-sharpcount} applies. $\mathrm{CH}$ gives
+$\dd=\aleph_1=\cont$; $\mathrm{MA}$ gives $\dd=\cont$; and adding Cohen reals
+makes $\mathrm{cov}(\mathcal M)=\cont\le\dd$, so $\dd=\cont$ there as
+well~\cite{blass,bartoszynski-judah}.
+\end{proof}
+
+This strictly enlarges the false region of the first count, and it does so by
+eating the very model the first count had to leave open. Under
+$\mathrm{MA}+2^{\aleph_0}=\aleph_2$ one has $2^{\aleph_0}=2^{\aleph_1}$, so
+Theorem~\ref{thm:frontier-firstcount} is silent --- this was the nominated
+residual model for possible independence. But $\mathrm{MA}$ forces $\dd=\cont$,
+so Corollary~\ref{cor:frontier-false} \emph{refutes} the conjecture there. The
+sharpening removes $\mathrm{MA}+\neg\mathrm{CH}$ from the residual entirely.
+
+\paragraph{The crown-jewel reading.}
+Theorem~\ref{thm:frontier-mu} is the reason this arc is worth its length. A
+question about the composition of directed containers over the linear base ---
+whether two containers substitute into a third --- has been reduced to a single
+cardinal, and that cardinal is not $\aleph_1$ or $\cont$ but the dominating
+number $\dd$, a genuine characteristic from the Cicho\'n diagram. The
+composability boundary of a categorical semantics is thus located inside the
+combinatorics of Baire space. To the author's knowledge this is the first place
+in the container programme --- and one of very few places anywhere in the
+semantics of computation --- where a definability/composability question is
+answered by a cardinal characteristic of the continuum rather than by a fixed
+invariant.
+
+\paragraph{Varying the ground division ring cannot force the issue.}
+One might hope to make the refutation \emph{absolute} by tuning a parameter:
+replace $k$ by a division ring $D$, so $S_D=\End_D(V)$ with
+$V=D^{(\N)}$. The freeness~\eqref{eq:free} holds over every $D$ by the same
+matrix-unit homogeneity, so the generator number is unchanged --- $\mu_{S_D}(M)=\dd$
+for every $D$ --- while only the dual ceiling moves: $M$ projective now forces
+$|D|^{\dd}=|D|^{\aleph_0}$. The lower bound stays pinned at $\dd$; only one side
+of the coincidence slides with $|D|$.
+
+\begin{corollary}[Easton silence; proved, ZFC]\label{cor:frontier-easton}
+For every division ring $D$ it is consistent with ZFC that
+$|D|^{\dd}=|D|^{\aleph_0}$; hence no choice of $D$ makes the counting obstruction
+prove $M$ non-projective in ZFC.
+\end{corollary}
+
+For $|D|\le\cont$ this is the random-real model ($\dd=\aleph_1$,
+$2^{\aleph_0}=2^{\aleph_1}$); for larger $|D|$ with $\cf(|D|)>\dd$ it follows
+from Easton's theorem on the freedom of the continuum function. The honest scope
+matters: Corollary~\ref{cor:frontier-easton} shows the \emph{lever} cannot force
+falsity in ZFC; it does \emph{not} construct $M$ projective. Varying $D$
+relocates the computation but does not decide it.
+
+\section{The residual, honestly}\label{sec:frontier-residual}
+
+The two counts together confine any surviving positive case to the window
+\[
+   2^{\aleph_0} \;=\; 2^{\dd}, \qquad\text{equivalently}\qquad \dd<\cont ,
+\]
+strictly smaller than the first count's $2^{\aleph_0}=2^{\aleph_1}$. The
+canonical model is the \emph{random-real model}, where
+$\bb=\dd=\aleph_1<\cont=\aleph_2$ and $2^{\aleph_0}=2^{\aleph_1}=\aleph_2$; there
+$\mu_S(M)=\dd=\aleph_1$ and the count permits a decomposition
+$M=\bigoplus_{\aleph_1}(\text{countably generated projective})$. Whether that
+decomposition exists is the open crux.
+
+Why the naive positive route fails is itself diagnostic, and worth stating
+precisely, because it locates where any future proof must act. One is tempted to
+build the decomposition from the staircase filtration $M=\bigcup_{\xi<\aleph_1}
+M_\xi$ of Theorem~\ref{thm:frontier-mu}: each $M_\xi\cong S$ is projective, and
+each successor quotient $M_{h_{\xi+1}}/M_{h_\xi}\cong\prod_r
+E^{\,h_{\xi+1}(r)-h_\xi(r)}$ is again a countable product of $E$'s, hence
+projective. By Eklof's lemma a \emph{continuous} well-ordered filtration with
+projective quotients would force $M$ projective. The route fails at a single
+point: the filtration is \emph{not continuous at limits}. For a limit $\lambda$
+of cofinality $\omega$, $\bigcup_{\xi<\lambda}M_{h_\xi}\subsetneq
+M_{\sup_\xi h_\xi}$ --- an element whose support grows to $\sup_\xi h_\xi$
+pointwise but is dominated by no single $h_\xi$ is excluded --- and repairing the
+gap by taking unions destroys the clean $\prod E$ form of the successor quotient.
+The non-projectivity, if present, is stored in the post-limit quotients. This is
+exactly the Whitehead/$\Gamma$-invariant signature: the obstruction lives at the
+limit stages of an $\aleph_1$-filtration, not in the generator count.
+$\mu_S(M)=\dd$ supplies the \emph{length} of the filtration but not a projective
+\emph{continuous} one.
+
+\begin{question}[the residual; open]\label{q:frontier}
+Is $M$ projective in the random-real model --- equivalently, can
+$\pd_S M=0$ hold in a model of $2^{\aleph_0}=2^{\dd}$? A ZFC proof that
+$\pd_S M\ge1$ in every model makes Conjecture~\ref{conj:frontier} false in ZFC;
+a decomposition in the random-real model makes it independent of ZFC.
+\end{question}
+
+The reframing through projective dimension~\cite{macbeth-osofsky} makes the
+question recognisable: the cokernel of $M$ inside the free module
+$\Phi\cong S$ is $\prod_\N N_0$, a countable product of copies of a fixed
+projective-dimension-one seed $N_0=S/I\cong\prod_\N E/\bigoplus_\N E$, so
+Conjecture~\ref{conj:frontier} is exactly the Osofsky--Jensen question of
+whether a product raises projective dimension, sharpened to name the continuum.
+The ZFC bracket $1\le\pd_S M\le d+1$ (with $d=\min\{n:2^{\aleph_0}\le\aleph_n\}$)
+holds unconditionally.
+
+The evidence is genuinely two-sided, and it is worth stating at honest weight.
+\emph{Toward independence}: the operative threshold is the collapse
+$2^{\aleph_0}=2^{\dd}$, an equalisation of the continuum function that forcing
+can arrange while preserving reflection, and $\pd_S M=0$ is a Whitehead-shaped
+statement about an $\aleph_1$-indexed decomposition --- the archetype of an
+independent assertion; the large dual (from~\eqref{eq:free}) removes the absolute
+obstruction that makes $\Z^\N$'s non-freeness a theorem of ZFC.
+\emph{Toward false-in-ZFC}: $M$ is a canonical continuum-sized product, the exact
+shape of Osofsky's high-projective-dimension witnesses; and the failure of ``flat
+Mittag--Leffler $\Rightarrow$ projective'' over $S$ is already an $\omega_1$-scale
+phenomenon witnessed in ZFC~\cite{herbera-trlifaj}, which the residual window
+constrains the continuum function without obviously demoting. The structural
+evidence leans toward independence, but this is an evidential lean, not a proof,
+and false-in-ZFC remains a live competitor. Deciding between them is
+Question~\ref{q:frontier}, and it must be settled \emph{natively} over $S$: the
+commutative surrogate $k^\omega$ is not faithful, precisely because the
+freeness~\eqref{eq:free} that carries the whole reduction is intrinsically
+noncommutative~\cite{macbeth-shadow}.
+
+This is where the Theory pillar ends: not on a solved theorem but on a sharp
+open one, with the boundary of the linear base's composability pinned to a
+cardinal characteristic of the continuum and the last question --- projectivity
+in the random-real model --- honestly unanswered.
+
+% ASSEMBLE FROM: /home/agent/projects/papers/vec-admissibility-not-zfc.tex  [proved: FALSE under CH]  [ASSEMBLED]
+% ASSEMBLE FROM: /home/agent/projects/proofs/2026-09-22-gapS-mu-M-is-dominating-number.md  [proved: mu=d]  [WRITTEN IN]
+% Provenance: registry linear-containers-vec.json (mu-M-is-dominating-number [proved]); reconciled with vec-admissibility-not-zfc.tex whose residual {2^A0=2^A1} is here shrunk to {2^A0=2^d} (MA now refuted, not residual).
 
 %==============================================================================
 \part{Applications}
@@ -472,5 +846,29 @@ meaning internally refereed by Rick. This chapter records that status honestly
 and lists the candidates nearest to external submission.
 % (no source file: state plainly; top grade = internal peer-reviewed)  [GAP]
 \assemble{GAP --- nothing published; top grade internal peer-reviewed. See Honest Ledger item 4.}
+
+%==============================================================================
+%  Bibliography.  Seeded during the I.6 assembly session (2026-09-23); extend as
+%  later chapters are assembled in.
+%==============================================================================
+\begin{thebibliography}{99}
+
+\bibitem{bartoszynski-judah} T.~Bartoszy\'nski and H.~Judah, \emph{Set Theory: On the Structure of the Real Line}, A K Peters, 1995.
+
+\bibitem{blass} A.~Blass, \emph{Combinatorial cardinal characteristics of the continuum}, in: Handbook of Set Theory (M.~Foreman, A.~Kanamori, eds.), Springer, 2010, 395--489.
+
+\bibitem{herbera-trlifaj} D.~Herbera and J.~Trlifaj, \emph{Almost free modules and Mittag-Leffler conditions}, Adv.\ Math.\ \textbf{229} (2012), 3436--3467. arXiv:0910.4277.
+
+\bibitem{macbeth-reduction} MacBeth, \emph{The module reduction of Gap-$S$: $\Nat(F,-)=\Hom_S(F(E),-)$ over $S=\End_k(E)$}, Kodamai internal note, 2026-09-20.
+
+\bibitem{macbeth-trlifaj} MacBeth, \emph{Conjecture~6.2 / Gap-$S$ collapses to a Dual-Baer test}, Kodamai internal note, 2026-09-20.
+
+\bibitem{macbeth-ch} MacBeth, \emph{Gap-$S$ / Conjecture~6.2 is false under CH}, Kodamai internal note, 2026-09-21.
+
+\bibitem{macbeth-osofsky} MacBeth, \emph{Gap-$S$ as an Osofsky--Jensen product-projective-dimension problem: $\mathrm{Conj.}\,6.2\Leftrightarrow\pd_S M=0$}, Kodamai internal note, 2026-09-21.
+
+\bibitem{macbeth-shadow} MacBeth, \emph{The Gap-$S$ free identity $\prod_r S\cong S$ has no commutative shadow: the homogeneity of the full linear ring}, Kodamai internal note, 2026-09-22.
+
+\end{thebibliography}
 
 \end{document}
