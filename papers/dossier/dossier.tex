@@ -14,6 +14,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{stmaryrd}
+\usepackage{tikz-cd}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
 \hypersetup{
@@ -66,7 +67,19 @@
 \newcommand{\bb}{\mathfrak{b}}
 \DeclareMathOperator{\cf}{cf}
 \newtheorem{question}[theorem]{Question}
+\newtheorem{notation}[theorem]{Notation}
 \newcommand{\den}[1]{\llbracket #1 \rrbracket}
+% -- macros for the preliminaries chapter (representables, Yoneda, Kan, Day) --
+\newcommand{\yA}{y^{A}}
+\newcommand{\yy}{y^{(-)}}
+\newcommand{\Lan}{\mathrm{Lan}}
+\newcommand{\Ran}{\mathrm{Ran}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\ob}{\mathrm{ob}}
+\newcommand{\co}{\mathbin{\text{\small$\bullet$}}}
+\newcommand{\Day}{\circledast}
+\newcommand{\Dayc}{\odot}
+\newcommand{\iso}{\cong}
 
 \title{Compositional Correctness via Directed Containers:\\
        A Complete Technical Dossier}
@@ -100,11 +113,15 @@ be assembled.
 \addcontentsline{toc}{chapter}{How to read this document}
 %==============================================================================
 
-This is a working skeleton of a much larger document. It compiles, and its
-front matter (this chapter, the Overview, and the Honest Ledger) is real prose
-meant to be read. Everything below Part~I is scaffolding: each section opens
-with a short genuine lead-in and then carries a machine-readable assembly
-directive of the form
+This is a document being assembled in stages. It compiles at every stage, and
+several chapters are already written in full: the front matter (this chapter, the
+Overview, and the Honest Ledger), the preliminaries (Chapter~\ref{ch:prelim}),
+the $\Hcoh$-cluster (Chapter~\ref{ch:cluster}), the set-theoretic frontier
+(Chapter~\ref{ch:frontier}), and the AI\,+\,Lean pipeline
+(Chapter~\ref{ch:pipeline}). These are finished prose meant to be read.
+
+The remaining chapters are \emph{scaffolded}: each opens with a short genuine
+lead-in and then carries a machine-readable assembly directive of the form
 \begin{center}
 \texttt{\% ASSEMBLE FROM: <path>\quad[grade]\quad[ASSEMBLE|STUB|GAP]}
 \end{center}
@@ -113,7 +130,8 @@ assembly session, together with the strongest current trust grade of the
 material and one of three assembly tags: \textsc{assemble} (a written source
 exists and mainly needs merging), \textsc{stub} (partial material exists;
 writing is required), or \textsc{gap} (no artifact yet; must be drafted or
-framed as illustrative).
+framed as illustrative). A reader can therefore tell at a glance which chapters
+are load-bearing and which are still promissory.
 
 \paragraph{The trust grades.}
 Throughout, claims carry a trust grade drawn from the programme's standard
@@ -278,7 +296,343 @@ structured family, not one theorem wearing three hats.
 \part{Theory}
 %==============================================================================
 
+\chapter{Preliminaries: the machinery}
+\label{ch:prelim}
+
+This chapter fixes notation and recalls the standard tools the rest of the
+dossier leans on, in one place, so that the later chapters can move without
+pausing to reintroduce them. \emph{Almost everything here is standard} and is
+collected for self-containedness: the Yoneda lemma is Yoneda's and Mac Lane's;
+density and the coend/Kan calculus follow Mac Lane~\cite{maclane}, Riehl~\cite{riehl},
+and Loregian~\cite{loregian}; Day convolution is Day's~\cite{day1970}. The only
+programme-internal content is the \emph{container reading} of each tool --- the
+translation into shapes and positions --- which is \emph{proved} and is what
+makes the later theorems computable. Two facts of Ghani's are foregrounded because
+the composition machinery uses them as black boxes: that the container-extension
+functor \emph{is} a left Kan extension along the representable embedding
+(\S\ref{sec:prelim-density}), and that the closed structure of a Day category is
+\emph{forced on representables and extended by density} (\S\ref{sec:prelim-day}).
+
+The reader who wants a map: \S\ref{sec:prelim-yoneda}--\ref{sec:prelim-density}
+(representables, Yoneda, density, the extension functor) are used everywhere the
+$(\mathrm{L})$ side appears --- the equivalence chain of
+Chapter~\ref{ch:eqchain}, and, in an essential and less obvious way, the module
+reduction of the set-theoretic frontier (Chapter~\ref{ch:frontier}), where
+$\Nat(F,-)\iso\Hom_S(F(E),-)$ is Yoneda in disguise. Section~\ref{sec:prelim-dcont}
+fixes the directed-container and composition ($\tri$) notation carried by the
+Zappa--Sz\'ep chapters. Section~\ref{sec:prelim-day} (Day convolution) supports
+the change-of-base chapter (Chapter~\ref{ch:cob}). Section~\ref{sec:prelim-coh}
+fixes the cohomological conventions --- $\Hcoh$, the class $[\omega]$, the
+Lyndon--Hochschild--Serre transgression --- on which the correctness criterion and
+the $\Hcoh$-cluster of Chapter~\ref{ch:cluster} stand.
+
+\paragraph{Conventions.}
+$\Set$ is the category of sets and functions. For a locally small category
+$\mathcal C$ we write $\mathcal C(a,b)$ for its hom-set; $\ob\,\mathcal C$ for its
+objects. Functors are covariant unless a superscript $\op$ says otherwise. A
+\emph{presheaf} on $\mathcal C$ is a functor $\mathcal C\op\to\Set$; a
+\emph{copresheaf} is a functor $\mathcal C\to\Set$. We write $\iso$ for canonical
+(natural) isomorphism and are careful to say \emph{which} isomorphism when it
+matters.
+
+% =====================================================================
+\section{Representable functors and the Yoneda lemma}
+\label{sec:prelim-yoneda}
+% =====================================================================
+
+Every construction in the dossier eventually reduces to a hom-set. The
+representable functors are the functors that \emph{are} a hom-set with one
+argument held fixed, and they generate everything else.
+
+\begin{definition}[Representable copresheaf]
+\label{def:prelim-rep}
+Fix a set $A$. The \emph{covariant representable} at $A$ is
+\[
+  \yA \;:=\; \Set(A,-)\;:\;\Set \longrightarrow \Set,
+  \qquad
+  \yA(X) = \Set(A,X) = X^{A},
+\]
+sending $f\colon X\to Y$ to post-composition $\yA(f)=f\circ(-)$. A copresheaf
+$F\colon\Set\to\Set$ is \emph{representable} if $F\iso\yA$ for some $A$, the
+\emph{representing object}.
+\end{definition}
+
+\begin{remark}[The container reading]
+\label{rem:prelim-containerrep}
+A \emph{container} is a pair $(S,P)$ of a set $S$ of \emph{shapes} and a family
+$P\colon S\to\Set$ of \emph{position sets}, with \emph{extension}
+\[
+  \den{S,P}\;:\;\Set\to\Set,
+  \qquad
+  \den{S,P}(X) \;=\; \sum_{s\in S}\Set\!\bigl(P(s),X\bigr).
+\]
+The \emph{representable container} has a single shape and $A$ positions,
+$(S,P)=(1,A)$, and $\den{1,A}(X)=\Set(A,X)=\yA(X)$. So representable copresheaves
+are exactly the extensions of single-shape containers, and the coproduct in the
+general formula is a coproduct \emph{of representables} indexed by shapes. This is
+the whole story, phrased below first as a Kan extension
+(\S\ref{sec:prelim-density}) and then as a Day convolution
+(\S\ref{sec:prelim-day}). The same extension formula, over a base $\mathcal C$
+other than $\Set$, is the object of study of Chapter~\ref{ch:frontier}.
+\end{remark}
+
+Definition~\ref{def:prelim-rep} is uniform in $A$: a function $a\colon A'\to A$
+induces, by \emph{pre}-composition, a natural transformation $\yA\Rightarrow
+y^{A'}$. Thus $A\mapsto\yA$ is a functor $\yy\colon\Set\op\to[\Set,\Set]$, the
+\emph{Yoneda embedding}. It is genuinely an embedding, as the Yoneda lemma shows.
+
+\begin{theorem}[Yoneda lemma; standard]
+\label{thm:prelim-yoneda}
+For any functor $F\colon\Set\to\Set$ and any set $A$ there is a bijection
+\[
+  \Theta_{F,A}\;:\;\Nat(\yA,\,F)\;\xrightarrow{\ \iso\ }\;F(A),
+  \qquad \Theta(\alpha)=\alpha_{A}(\id_{A}),
+\]
+natural in $F$ and $A$.
+\end{theorem}
+
+\begin{proof}
+The inverse sends $x\in F(A)$ to $\Psi(x)$ with $\Psi(x)_{X}(g)=F(g)(x)$ for
+$g\colon A\to X$; naturality of $\Psi(x)$ is functoriality,
+$F(h)(F(g)(x))=F(h\circ g)(x)$. Then $\Theta(\Psi(x))=F(\id_A)(x)=x$. Conversely,
+for $\alpha\colon\yA\Rightarrow F$ and $x=\alpha_A(\id_A)$, naturality of $\alpha$
+at $g\colon A\to X$ chased on $\id_A$ gives $\alpha_X(g)=F(g)(x)=\Psi(x)_X(g)$, so
+$\Psi(x)=\alpha$. Naturality in $F$ and $A$ is the same chase.
+\end{proof}
+
+\begin{corollary}[Full faithfulness]
+\label{cor:prelim-ff}
+$\Nat(\yA,y^{B})\iso\Set(B,A)$, naturally; the Yoneda embedding
+$\yy\colon\Set\op\to[\Set,\Set]$ is fully faithful. Natural transformations
+between representables are exactly functions, in the opposite direction.
+\end{corollary}
+
+Corollary~\ref{cor:prelim-ff} is the reason the container-morphism convention
+(Notation~\ref{not:prelim-cont}) has position maps running \emph{backwards}: a map
+of representables is a backwards map of representing objects.
+
+% =====================================================================
+\section{Density, the extension functor, and \texorpdfstring{$\Fam(\Set\op)$}{Fam(Set-op)}}
+\label{sec:prelim-density}
+% =====================================================================
+
+The Yoneda lemma says representables see everything. Density says they \emph{are}
+everything, once colimits are allowed.
+
+\begin{theorem}[Density / co-Yoneda; standard]
+\label{thm:prelim-density}
+Every functor $F\colon\Set\to\Set$ is canonically a colimit of representables:
+\[
+  F \;\iso\; \int^{A\in\Set} F(A)\co \yA,
+\]
+where $F(A)\co\yA$ is the $F(A)$-fold copower of $\yA$. Equivalently $F$ is the
+colimit of the representables $\yA\xrightarrow{\Psi(x)}F$ over the category of
+elements $(A,x)$, $x\in F(A)$.
+\end{theorem}
+
+\begin{proof}[Reference]
+The density formula, dual to Yoneda; Riehl~\cite[\S6.2]{riehl},
+Loregian~\cite[Ch.~2]{loregian}. Its universal property is
+Theorem~\ref{thm:prelim-yoneda} read backwards: a cocone from $F(A)\co\yA$ to $G$
+is a family $F(A)\to\Nat(\yA,G)\iso G(A)$ natural in $A$, i.e.\ a natural
+transformation $F\Rightarrow G$.
+\end{proof}
+
+The representables are thus a \emph{dense generator} of $[\Set,\Set]$: two
+constructions that agree on representables and preserve the relevant colimits
+agree everywhere. This uniformity is the workhorse of the whole $(\mathrm{L})$
+side.
+
+\begin{notation}[$\Cont$ and $\Fam(\Set\op)$]
+\label{not:prelim-cont}
+A morphism of containers $(S,P)\to(T,Q)$ is a pair $(u,v)$ with $u\colon S\to T$ a
+map of shapes and $v$ a family $v_s\colon Q(u\,s)\to P(s)$ of position maps
+\emph{going backwards}. This is exactly an $S$-indexed family of objects of
+$\Set\op$ together with a map of index sets and, over it, morphisms in $\Set\op$;
+hence
+\[
+  \Cont\;\iso\;\Fam(\Set\op),
+\]
+the \emph{free coproduct completion} of $\Set\op$ --- the universal category with
+small coproducts containing $\Set\op$. Under $\den{-}$, a family
+$(P(s))_{s\in S}$ maps to $\sum_{s\in S}y^{P(s)}$.
+\end{notation}
+
+\begin{theorem}[Extension is a left Kan extension; Ghani's observation, proved]
+\label{thm:prelim-lan}
+Let $\mathcal A$ be a category and $Y\colon\mathcal A\to\Fam(\mathcal A)$ the
+singleton embedding $a\mapsto(a)$. For any $F\colon\mathcal A\to\mathcal E$ into a
+category with small coproducts, the coproduct-preserving extension
+$\widehat F\bigl((a_s)_{s\in S}\bigr)=\coprod_{s\in S}F(a_s)$ is the left Kan
+extension $\Lan_Y F$, and it preserves representables ($\widehat F\circ Y\iso F$).
+Specialising $\mathcal A=\Set\op$, $F=\yy$, and $\mathcal E=[\Set,\Set]$, the
+container-extension functor is that Kan extension:
+\[
+  \den{-}\;=\;\Lan_Y\,\yy,\qquad \den{S,P}\;=\;\coprod_{s\in S}y^{P(s)}.
+\]
+\end{theorem}
+
+\begin{proof}
+By the pointwise coend formula~\cite[Ch.~X]{maclane} and the description of
+morphisms out of a singleton in a free coproduct completion,
+$\Fam(\mathcal A)(Ya,(a_s)_s)\iso\coprod_{s}\mathcal A(a,a_s)$, so
+\[
+  (\Lan_Y F)\bigl((a_s)_s\bigr)
+  \iso\int^{a}\Bigl(\coprod_s\mathcal A(a,a_s)\Bigr)\co F(a)
+  \iso\coprod_s\int^{a}\mathcal A(a,a_s)\co F(a)
+  \iso\coprod_s F(a_s),
+\]
+the inner coend being density (Theorem~\ref{thm:prelim-density}) at $a_s$.
+Preservation of representables is the one-term case $S=1$. For
+$\mathcal A=\Set\op$ and $F=\yy$ this reads
+$\den{S,P}=\coprod_s y^{P(s)}$, whose value at $X$ is
+$\sum_s\Set(P(s),X)=\den{S,P}(X)$ (Remark~\ref{rem:prelim-containerrep}). A size
+remark: although $\Set\op$ is not small, part of the statement is really the
+universal property of the free coproduct completion, which holds verbatim, and the
+coproducts landed on are small since shape sets are.
+\end{proof}
+
+Two consequences are used without reproof throughout Part~I: (i) any structure on
+$\Set\op$ transported to $\Cont$ need only be defined on singletons and extended
+by coproducts, and the result is automatically the Kan extension; (ii) to check a
+functor out of $\Cont$ agrees with $\den{-}$ it suffices to check agreement on
+representables plus preservation of coproducts. ``A container is a coproduct of
+representables'' is not a slogan but a computational method.
+
+% =====================================================================
+\section{Directed containers and the composition operator \texorpdfstring{$\tri$}{<|}}
+\label{sec:prelim-dcont}
+% =====================================================================
+
+The extension functors above are the raw material; the $(\mathrm{L})$ side of the
+correctness criterion asks which of them compose \emph{with themselves}
+coherently. That is the content of directed containers, whose full theory ---
+including the equivalence chain --- is Chapter~\ref{ch:eqchain}. Here we fix only
+the notation the composition chapters need.
+
+The category $\Cont$ carries a monoidal structure $\tri$, \emph{composition},
+that on extensions is composition of endofunctors:
+$\den{p\tri q}\iso\den{p}\circ\den{q}$. Concretely, with $p=(S,P)$ and
+$q=(T,Q)$, a shape of $p\tri q$ is a shape $s\in S$ together with a $P(s)$-indexed
+family of shapes of $q$, and a position is a dependent pair --- the ``a shape,
+then a shape at each position'' law that makes $\tri$ the substitution tensor. The
+unit is the identity container $y^{1}=(1,1)$, whose extension is the identity
+functor.
+
+\begin{definition}[Directed container, informally]
+\label{def:prelim-dcont}
+A \emph{directed container} is a container $p$ equipped with the structure of a
+$\tri$-comonoid: a counit $p\to y^1$ and a comultiplication $p\to p\tri p$
+satisfying the comonoid laws. Equivalently --- and this is the equivalence chain
+--- it is a small category, a polynomial comonoid in $\Poly$, or a cofunctor
+domain, one object presented four ways. We write $\DCont$ for the category of
+directed containers.
+\end{definition}
+
+\begin{theorem}[The equivalence chain; assembled in Chapter~\ref{ch:eqchain}]
+\label{thm:prelim-chain}
+There are equivalences of categories
+\[
+  \Cont\ \supseteq\ \DCont\ \simeq\ (\text{polynomial comonoids in }\Poly)\ \simeq\ \Cat,
+\]
+where $\Cat$ is the category of small categories and (co)functors. The
+directed-container comonoid data are exactly a category's identities and
+composition.
+\end{theorem}
+
+This is the $(\mathrm{L})$ condition: a system \emph{is} composable-with-itself
+precisely when it is a directed container, equivalently a small category. The
+proof, and the four independent lines of work that converge on it, are the subject
+of Chapter~\ref{ch:eqchain}; we state it here only so that later chapters may say
+``directed container'' and ``small category'' interchangeably.
+
+% =====================================================================
+\section{Day convolution and the four monoidal structures}
+\label{sec:prelim-day}
+% =====================================================================
+
+Besides $\tri$, the category $\Cont$ carries tensors transported from monoidal
+structures on the base by \emph{Day convolution}. These are the setting of the
+change-of-base chapter (Chapter~\ref{ch:cob}); we record only the degeneration
+that makes them coend-free.
+
+\begin{definition}[Day convolution; standard]
+\label{def:prelim-day}
+For a small monoidal category $(\mathcal C,\otimes,I)$ the \emph{Day convolution}
+of copresheaves $F,G$ is
+\[
+  (F\Day G)(c)=\int^{c_1,c_2}\mathcal C(c_1\otimes c_2,c)\times F(c_1)\times G(c_2),
+\]
+with unit $y^{I}$. Then $([\mathcal C,\Set],\Day,y^{I})$ is monoidal, cocontinuous
+in each variable, and $\yy$ is strong monoidal: $y^{a}\Day y^{b}\iso y^{a\otimes
+b}$~\cite{day1970}.
+\end{definition}
+
+\begin{proposition}[Degenerate Day on containers; proved]
+\label{prop:prelim-degen}
+For any monoidal structure $\star$ on $\Set$, Day convolution induces on
+$\Cont\iso\Fam(\Set\op)$ a monoidal structure $\Dayc_\star$ given \emph{without any
+coend} by
+\[
+  p\ \Dayc_\star\ q \;=\;\Bigl(S_p\times S_q,\ (s,t)\mapsto p[s]\star q[t]\Bigr),
+\]
+where $p=(S_p,p[-])$, $q=(S_q,q[-])$. Shapes multiply; only the position law
+changes.
+\end{proposition}
+
+\begin{proof}
+Write $p=\coprod_s y^{p[s]}$, $q=\coprod_t y^{q[t]}$
+(Theorem~\ref{thm:prelim-lan}). Day is cocontinuous in each variable, so
+$p\Dayc_\star q\iso\coprod_{s,t}(y^{p[s]}\Dayc_\star y^{q[t]})
+\iso\coprod_{s,t}y^{p[s]\star q[t]}$ by strong monoidality on representables; read
+off the container by Theorem~\ref{thm:prelim-lan}. The coend has been discharged
+on the generators.
+\end{proof}
+
+Taking $\star\in\{+,\times\}$ gives two of the four tensors on $\Cont$ (the
+additive and Dirichlet convolutions); the substitution tensor $\tri$ of
+\S\ref{sec:prelim-dcont} is a third, and it is \emph{not} a Day convolution. The
+classification --- which tensors arise, and which are closed --- is
+Chapter~\ref{ch:cob}. One fact from there is used as a black box: each Day tensor
+is closed, and its internal hom is \emph{forced} on representables,
+$[y^{a},H]_{\Day}\iso H((-)\otimes a)$, then extended by density; for the
+Dirichlet tensor $[y^{a},y^{b}]$ is the ``shapes are morphisms'' container with
+shape set $\Cont(y^{a},y^{b})$. Density \emph{determines} this internal hom but
+does not hand it to every cocontinuous functor for free --- preservation of a
+right adjoint is a separate, checkable fact --- which is exactly the subtlety the
+$\{\mathrm{Id}\}$ collapse of Chapter~\ref{ch:cob} turns on.
+
+% =====================================================================
+\section{Cohomological conventions}
+\label{sec:prelim-coh}
+% =====================================================================
+
+The global condition $[\omega]=0$ is a statement in low-degree cohomology. We fix
+conventions here; the theorems are Chapters~\ref{ch:zs}--\ref{ch:cluster}.
+
+For a group $G$ and a $G$-module $M$ we write $\Hcoh(G;M)$ for the second group
+cohomology, classifying extensions $1\to M\to E\to G\to1$ up to equivalence; the
+class of an extension is its \emph{Schreier class}. For a groupoid $\mathcal G$ we
+use the cohomology of its classifying space, which for a \emph{connected}
+groupoid reduces to that of its vertex group $\pi$: $\Hcoh(\mathcal G;M)\iso
+\Hcoh(\pi;M)$. The class we call $[\omega]$ is the obstruction to a coherent weld
+of two systems --- the Schreier class of the Zappa--Sz\'ep extension realising
+their composite; the criterion $(\mathrm{G})\iff[\omega]=0$ is
+Chapter~\ref{ch:crit}.
+
+Two structural tools recur. For a normal extension
+$1\to\mathcal D\to\pi\to\Gamma\to1$ the \emph{Lyndon--Hochschild--Serre spectral
+sequence} has $E_2^{p,q}=H^{p}(\Gamma;H^{q}(\mathcal D;M))$ converging to
+$H^{p+q}(\pi;M)$; its degree-two \emph{transgression} $d_2$ is the differential
+that, in the programme's identification, carries the holonomy
+($d_2(\varphi)=\varphi_*[\omega]$). And the phrase ``$[\omega]$ is a differential,
+not a summand'' means precisely that a base-edge class fails to survive to the
+abutment when $d_2\neq0$. These are the load-bearing facts behind the
+``filtration, not product'' grammar of the $\Hcoh$-cluster
+(Chapter~\ref{ch:cluster}); we invoke them there by name.
+
 \chapter{The equivalence chain}
+\label{ch:eqchain}
 The local condition $(\mathrm{L})$ rests on the identification of four objects
 that were developed independently: ordinary containers, directed containers,
 polynomial comonoids, and small categories. This chapter assembles the chain
@@ -293,6 +647,7 @@ first \emph{be} one of these objects.
 \assemble{equivalence chain, M1--M4 lean-verified; assemble four dialects into one statement.}
 
 \chapter{Zappa--Sz\'ep products and distributive laws as the composition tool}
+\label{ch:zs}
 Given local pieces, composition is a \emph{weld}, and the canonical weld of two
 categories/comonads is the Zappa--Sz\'ep product, equivalently a distributive
 law. This chapter develops the pairwise criterion: two directed containers
@@ -304,6 +659,7 @@ in the next chapter.
 \assemble{pairwise-ZS proved; holonomy-composition / ZS bridge peer-reviewed (Rick).}
 
 \chapter{The correctness criterion $(\mathrm{L})\wedge[\omega]=0\in \Hcoh$}
+\label{ch:crit}
 Here the two threads join into the thesis equation. The global condition
 $(\mathrm{G})$ of the pairwise criterion is identified with the vanishing of a
 degree-two cohomology class $[\omega]\in \Hcoh$, so that a composite is correct
@@ -480,6 +836,7 @@ that forced it.
 \assemble{separation proved (existence witness computed); prunability-is-degree-1-descent proved; $\Hcoh_{\Cat_B}$ reduction proved; protomodular unifier refuted; product decomposition \eqref{eq:cluster-decomp} speculative; two-tier tower proved; $\Hcoh$-engines lean-verified.}
 
 \chapter{Change-of-base, $\Fam(\mathcal{C}^{\mathrm{op}})$ generality, and the $\{\mathrm{Id}\}$ classification}
+\label{ch:cob}
 How far does the equation generalise? The natural setting is containers over a
 general base, i.e.\ $\Fam(\mathcal{C}^{\mathrm{op}})$, with change-of-base along
 functors and monads. This chapter assembles the positive generality results
@@ -1163,6 +1520,15 @@ and lists the candidates nearest to external submission.
 %  later chapters are assembled in.
 %==============================================================================
 \begin{thebibliography}{99}
+
+% -- Chapter 1 (Preliminaries): standard references --
+\bibitem{day1970} B.~Day, \emph{On closed categories of functors}, in: Reports of the Midwest Category Seminar IV, Lecture Notes in Mathematics 137, Springer, 1970, pp.~1--38.
+
+\bibitem{loregian} F.~Loregian, \emph{(Co)end Calculus}, London Mathematical Society Lecture Note Series 468, Cambridge University Press, 2021.
+
+\bibitem{maclane} S.~Mac Lane, \emph{Categories for the Working Mathematician}, 2nd ed., Graduate Texts in Mathematics 5, Springer, 1998.
+
+\bibitem{riehl} E.~Riehl, \emph{Category Theory in Context}, Aurora: Dover Modern Math Originals, Dover, 2016.
 
 \bibitem{bartoszynski-judah} T.~Bartoszy\'nski and H.~Judah, \emph{Set Theory: On the Structure of the Real Line}, A K Peters, 1995.
 
