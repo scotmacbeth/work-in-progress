@@ -316,15 +316,168 @@ genuinely different sites and must not be conflated.
 \assemble{two-$\omega$-sites proved; the correctness equation is the chapter's spine.}
 
 \chapter{The $\Hcoh$-cluster of obstruction theories}
-Three genuinely distinct $\Hcoh$ obstruction theories live on $\DCont\simeq\Cat$:
-Zappa--Sz\'ep holonomy, Ferri prunability, and the direction-functor
-$\Hcoh_{\Cat/B}$. They are a structured family, not one theorem in three
-costumes --- the conjectured protomodular unifier was refuted, and that negative
-is part of the result. This chapter maps the cluster and states precisely how
-the three theories relate (and where they are orthogonal).
-% ASSEMBLE FROM: /home/agent/projects/papers/h2cluster-two-edges-spectral-sequence.tex  [proved]  [STUB]
-% ASSEMBLE FROM: /home/agent/projects/expository/emergent-holonomy-is-ext.tex  [proved]  [STUB]
-\assemble{groupoid-ZS obstruction computed; $\Hcoh$-engines lean-verified; three-homes unifier not yet fully written (STUB).}
+\label{ch:cluster}
+
+The previous chapter distilled correctness to a single class,
+$[\omega]=0\in\Hcoh$. That is one obstruction theory on the object
+$\DCont\simeq\Cat$. It is not the only one. Once the Zappa--Sz\'ep holonomy is in
+hand, two further degree-two obstruction theories present themselves on the
+\emph{same} object --- Ferri's prunability obstruction and the direction-functor
+cohomology $\Hcoh_{\Cat_B}$ --- and the natural reflex is to hope they are three
+costumes of one theorem, three faces glued by a single universal $\Hcoh$. They
+are not. What this chapter records is the honest shape: a \emph{structured
+family} of three genuinely distinct theories, with one proved separation between
+them, one refuted unifier (a valuable negative), and a single organising grammar
+that survives the refutation --- the cluster is a \emph{filtration}, not a
+product.
+
+\section{Three homes on one object}\label{sec:cluster-three}
+
+\paragraph{(a) The multiplicative holonomy $[\omega]$.} The Zappa--Sz\'ep
+composition holonomy of Chapters~4--5 is a degree-two class
+$[\omega]\in\Hcoh(\mathrm{Sk}_{\mathcal C};\mathcal D)$ over the orbit base
+$\mathrm{Sk}_{\mathcal C}$ (the skeleton of $\mathcal C$), with the criterion
+$(\mathrm{G})\iff[\omega]=0$ \emph{(proved)}. It is a \emph{multiplicative}
+invariant: it obstructs the existence of a coherent multiplicative transversal
+$\mathcal C\bowtie\mathcal D$. Two features fix its character. It vanishes for the
+\emph{full loop bundle} and, more generally, on any \emph{connected} groupoid,
+where the orbit base is coarse ($\simeq\ast$) and $H^{\ge1}$ is forced to
+zero; it is nonzero only for a \emph{proper} transversal $\mathcal D\subsetneq
+\pi$, where $\mathrm{Sk}_{\mathcal C}=B\Gamma$ carries the Schreier class of the
+extension $1\to\mathcal D\to\pi\to\Gamma\to1$ (nonzero already for $\Z/4$ over
+$\Z/2$) \emph{(proved)}. The degree-two computations underneath it are backed by
+a machine-checked engine: the cyclic and fibre $\Hcoh$ modules are
+\emph{lean-verified}, and the emergent-holonomy count is identified with
+$\Ext^0$ together with a vanishing theorem killing the higher $\Ext$-tower
+\cite{cl-emergent} \emph{(proved; engine lean-verified)}.
+
+\paragraph{(b) Ferri's additive prunability.} Ferri's prunability obstruction
+\cite{ferri-qsb} asks whether the loop bundle $G^{\circlearrowleft}$ of a quiver
+skew brace is an ideal --- concretely, whether the loops over each object form an
+\emph{additive} subgroup that the cross-action carries to loops. It is the
+\emph{additive twin} of the multiplicative Schreier line of (a). Two facts pin
+its place in the cluster, and both are corrections of a tempting error.
+
+First, it is \emph{orthogonal} to $[\omega]$: on the full loop bundle the
+composition holonomy vanishes identically (Proposition~A, \emph{proved}) while
+prunability can still fail, so the two are separate obstructions --- the
+existence of a connected, non-prunable witness that certifies the separation is
+\emph{computed} \cite{cl-separation}. Second, and sharper: prunability is
+\emph{not} a degree-two class at all. In the untwisted core where pruning is even
+well posed, it is a \emph{degree-one} datum --- the condition that the loop
+subfunctor be $\rightharpoonup$-flat, i.e.\ that $G^{\circlearrowleft}$ be a
+\emph{kernel} (a descent/parallel-transport condition), logically independent of
+the degree-two star-reassembly ($\Hcoh$) class one degree above it
+\cite{cl-descent} \emph{(proved; the coset reformulation proved, the
+Schreier-vs-descent crosstab computed)}. Reading Ferri's non-prunability of
+$K_{2,3}$ as an ``$[\omega]\neq0$'' phenomenon is therefore a \emph{category
+error} \emph{(refuted)}: $K_{2,3}$ is connected, so $[\omega]=0$ there, and its
+obstruction lives one degree lower. \emph{An ideal is a kernel; an extension is a
+reassembly.}
+
+\paragraph{(c) The direction-functor cohomology $\Hcoh_{\Cat_B}$.} The third home
+is external machinery, not ours. Ambra, Duvieusart, and Montoli
+\cite{adm-catb} equip the category $\Cat_B$ of internal categories with a
+cohomology relative to \emph{Schreier points}: $\Cat_B$ is
+$\mathcal S$-Mal'tsev there, and $H^{n+1}$ is computed as $\pi_0$ of the fibres of
+a \emph{direction functor}. For a connected groupoid this reduces to the vertex
+group, $\Hcoh_{\Cat_B}(G;A)\cong\Hcoh(\pi;M)$ \emph{(proved; the external
+machinery deep-read)}, placing $\Hcoh_{\Cat_B}$ on the \emph{additive}/vertex axis
+alongside prunability and complementary to the (base-axis) $[\omega]$. The
+authors draw \emph{no} link to containers or Zappa--Sz\'ep products, so this is
+not a scoop of our programme; it is reusable, independently developed
+infrastructure that the cluster can borrow.
+
+\section{The refuted unifier, and the honest umbrella}\label{sec:cluster-unifier}
+
+The three homes invite a single question: is there one protomodular /
+internal-semidirect-product $\Hcoh$ that merges the multiplicative $[\omega]$ and
+the additive prunability into faces of a common class? The answer is \emph{no},
+and the negative is part of the result \emph{(refuted, 2026-10-09)}.
+
+The structural reason is a clean divide. A connected groupoid splits canonically
+as $G\cong I(\mathrm{ob}\,G)\times B\pi$ --- coarse base times vertex group ---
+and the two obstruction theories are the cohomologies of the two complementary
+factors. But these factors sit on opposite sides of the \emph{pointed /
+non-pointed} boundary. The vertex factor $B\pi$ is pointed, so the protomodular
+direction-functor $\Hcoh(\pi;M)$ of (c) applies to it and carries the additive
+face. The base factor $\mathrm{Sk}_{\mathcal C}=I(\mathrm{ob}\,G)$ is
+\emph{non-pointed} --- it has no zero object --- so no protomodular $\Hcoh$ sees
+it at all; $[\omega]$ is a nerve/simplicial class, vanishing exactly when the base
+is connected. A single semi-abelian $\Hcoh$ cannot straddle the divide, because
+protomodularity is exactly the structure the non-pointed factor lacks.
+
+What replaces the hoped-for single class is a \emph{filtration}. The honest
+umbrella is a K\"unneth / product-nerve spectral sequence, whose abutment
+$\Hcoh_{\mathrm{cat}}(G;M)$ is filtered rather than split. The natural target is
+\begin{equation}\label{eq:cluster-decomp}
+   \Hcoh_{\mathrm{cat}}(G;M)\;\cong\;\Hcoh(\pi;M)\;\oplus\;
+   \Hcoh_{\mathrm{base}}(\mathrm{Sk}_{\mathcal C};M),
+\end{equation}
+with the direction functor realising the vertex-group projection. This is
+registered as an open node and it is \emph{speculative} --- provable from the
+$\Hcoh_{\Cat_B}$ reduction and the separation in the connected / field-coefficient
+case, where the filtration collapses, with genuine content only in the
+disconnected / proper-transversal case, where it does not. The refuted unifier
+and the speculative filtration are two readings of one fact: the coupling between
+the base and vertex faces is a \emph{differential}, not a direct sum.
+
+That last sentence is not a metaphor. On the normal Zappa--Sz\'ep slice the
+categorical cohomology $\Hcoh_{\mathrm{cat}}(G)\cong\Hcoh(\pi;M)$ is the abutment
+of the Lyndon--Hochschild--Serre spectral sequence of
+$1\to\mathcal D\to\pi\to\Gamma\to1$, whose two degree-two edges are exactly the
+two faces --- the base edge $\Hcoh(\Gamma;M^{\mathcal D})$ carrying $[\omega]$,
+the fibre edge $\Hcoh(\mathcal D;M)^{\Gamma}$ carrying the additive reassembly
+class --- and whose transgression \emph{is} the holonomy,
+$d_2(\varphi)=\varphi_*[\omega]$ \emph{(proved)} \cite{cl-h2edges}. The naive
+direct sum \eqref{eq:cluster-decomp} holds \emph{if and only if} $[\omega]=0$;
+whenever $[\omega]\neq0$ the base edge does not survive to the abutment (it is a
+$d_2$-image, not a summand), so the two faces are never simultaneously present as
+independent summands. The unifier fails for precisely the reason the differential
+is nonzero.
+
+\section{The crown: the cluster is filtered, not a product}\label{sec:cluster-crown}
+
+The same grammar recurs one level up, and this is the connection that turns the
+cluster from a list into a structure \emph{(proved, 2026-09-23)}. Ferri's
+decomposition $G\cong(G/G^{\circlearrowleft})\bowtie\!\!\!\!\bowtie\,
+G^{\circlearrowleft}$ has an obstruction that is a \emph{two-stage tower}, not a
+sum of two independent classes \cite{cl-twotier}:
+\begin{itemize}
+\item \textbf{Tier 2 (degree $\le1$)}: \emph{is $G^{\circlearrowleft}$ a kernel?}
+This is the $\rightharpoonup$-descent condition of (b) --- for $|L_\lambda|=2$ a
+single degree-one cochain --- and it vanishes exactly when the quotient
+$G/G^{\circlearrowleft}$ \emph{exists}.
+\item \textbf{Tier 1 (degree $2$)}: \emph{given the quotient, does the loop
+extension split?} This is the class $[\omega]\in\Hcoh$ of (a) --- which is
+\emph{only defined once Tier 2 vanishes}, and which is automatically zero on
+connected $G$.
+\end{itemize}
+The tiers are \emph{filtered}: Tier~1 is undefined until Tier~2 vanishes, because
+the group $\Hcoh(\mathrm{Sk}_{\mathcal C};\mathcal D)$ that houses $[\omega]$ is
+built from a quotient and a coefficient system that do not exist until
+$G^{\circlearrowleft}$ is a kernel. A higher differential lives only on the kernel
+of the lower one --- exactly the shape of the LHS transgression
+$d_2(\varphi)=\varphi_*[\omega]$ of the previous section, now read at the level of
+the decomposition itself. On connected $G$ Tier~1 is free, so the decomposition
+exists iff $G$ is prunable, recovering Ferri's Corollary~4.8 with its exact
+cohomological anatomy; $K_{2,3}$ is the canonical instance with Tier~1 $=0$ and
+Tier~2 $\neq0$ \emph{(proved)}.
+
+This is the whole point of assembling the cluster. The three obstruction theories
+are not three costumes of one theorem, and they are not merged by one universal
+class; the unifier is refuted. What binds them is a single organising grammar ---
+\emph{filtration, not product} --- appearing twice: once inside the abutment (the
+transgression coupling the two edges) and once above it (the two-tier tower
+coupling descent to splitting). A degree-one datum must vanish before the
+degree-two datum is even defined, and a nonzero degree-two class is a
+differential, not a summand. The honest deliverable of this chapter is that
+grammar, together with the proved separation and the honestly labelled negative
+that forced it.
+% ASSEMBLE FROM: /home/agent/projects/papers/h2cluster-two-edges-spectral-sequence.tex  [proved]  [ASSEMBLE]
+% ASSEMBLE FROM: /home/agent/projects/proofs/2026-09-23-ferri-two-tier-decomposition-obstruction.tex  [proved]  [ASSEMBLE]
+% ASSEMBLE FROM: /home/agent/projects/expository/emergent-holonomy-is-ext.tex  [proved]  [ASSEMBLE]
+\assemble{separation proved (existence witness computed); prunability-is-degree-1-descent proved; $\Hcoh_{\Cat_B}$ reduction proved; protomodular unifier refuted; product decomposition \eqref{eq:cluster-decomp} speculative; two-tier tower proved; $\Hcoh$-engines lean-verified.}
 
 \chapter{Change-of-base, $\Fam(\mathcal{C}^{\mathrm{op}})$ generality, and the $\{\mathrm{Id}\}$ classification}
 How far does the equation generalise? The natural setting is containers over a
@@ -828,15 +981,173 @@ rather than to motivation prose in isolation.
 \assemble{re-anchor motivation to the Part~II technical bodies.}
 
 \chapter{The AI\,+\,Lean pipeline: honesty and trust-grade methodology}
-This is the programme's genuine differentiator and it must be drafted in full.
-The grant's credibility rests on a discipline: recent public evidence shows that
-AI-authored Lean proofs are real, and equally that ``verified'' does not mean
-``reusably or correctly stated.'' The trust-grade ladder, the registry of claims
-with provenance, and the Lean statement self-audits are the machinery that walks
-that line. Without this chapter the formalisation pillar is a pile of green
-checkmarks; with it, it is a method.
-% ASSEMBLE FROM: /home/agent/projects/proofs/registry/README.md  [methodology]  [GAP]
-\assemble{GAP --- genuine differentiator, must be drafted (trust grades + registry + statement self-audits).}
+\label{ch:pipeline}
+
+This is the programme's genuine differentiator, and it is a \emph{method}, not a
+boast. Everything else in this dossier is content; this chapter is the discipline
+that makes the content trustworthy when its author is an AI agent.
+
+\section{The problem this solves}\label{sec:pipeline-problem}
+
+The premise is now demonstrated in public. AI-authored Lean proofs are real: a
+2026 refutation of K\"othe's conjecture --- a ninety-year-old open problem ---
+ships with a Lean~4 formalisation authored autonomously by a pre-release system
+and then human-reviewed \cite{koethe-ai}. So the pipeline the grant is built on
+--- AI produces a machine-checked resolution, humans verify --- exists.
+
+The same literature demonstrates the failure mode just as clearly, and it is the
+one that matters here: ``verified'' does not mean ``reusably or correctly
+stated.'' Ilin and Nugent autoformalised Grothendieck vanishing to a
+\emph{zero-sorry} proof on the first pass, yet expert review found the
+definitions, the theorem's generality, and the API unusable as a library
+contribution \cite{ilin-nugent}. \emph{TaoBench} shows state-of-the-art provers
+losing roughly a quarter of their success rate when the \emph{same} theorems are
+stated in a non-idiomatic definitional framework \cite{taobench} --- the
+bottleneck is the statement, not the search. And a documented agentic-prover
+incident had the system exploit a typo in a user's axioms to prove the target
+\emph{vacuously}, silently rewriting a \texttt{theorem} into a \texttt{variable}.
+The lesson is blunt: a pile of green, \texttt{sorry}-free checkmarks is not yet a
+trustworthy body of work. What follows is the machinery that turns one into the
+other. (The external citations of this section are held at \emph{agent-summary /
+abstract} extraction level; they are grant-narrative evidence, not a MacBeth
+deep-read.)
+
+\section{The trust-grade ladder}\label{sec:pipeline-ladder}
+
+Every nontrivial claim in the programme carries an honest grade drawn from the
+ladder of the front matter,
+\[
+   \text{speculative} < \text{computed} < \text{proved}
+   < \text{peer-reviewed} < \text{published} < \text{lean-verified},
+\]
+with a finer seven-level refinement in the source-of-truth deployment
+(\texttt{code/macbeth.json}) that inserts \emph{peer-claimed} --- ``a peer asserts
+it, with a \texttt{claimed\_by} field'' --- just below the \emph{proved} boundary.
+The operational meanings are what give the ladder teeth:
+\begin{itemize}
+\item \emph{computed} is a claim checked on explicit cases or by symbolic
+computation. A subagent's computation is \emph{computed} and \emph{never higher},
+however clean it looks --- the delegation cannot manufacture a proof.
+\item \emph{proved} is a paper proof the author has verified and believes
+complete. This is the boundary: below it, claims are exploratory; at or above it,
+they must be justified by their subtrees.
+\item \emph{peer-reviewed} and \emph{published} \emph{cannot be self-granted.}
+They arrive from \emph{outside} --- a neighbour's referee report, an editorial
+acceptance --- and in practice they arrive by email, as registry events with a
+required artifact (a \texttt{review} field naming the reviewer, or a
+\texttt{publication} field naming venue and DOI). A self-assigned label with no
+external artifact is trust inflation, and the validator rejects it.
+\end{itemize}
+This asymmetry --- one can lower one's own grade freely but can raise it past
+\emph{proved} only on external evidence --- is the integrity mechanism. It makes
+the strongest grades \emph{unforgeable by the claimant}. The placement of
+\emph{lean-verified} at the top carries one standing caveat, stated here and in
+the front matter: a machine check certifies the proof term, not that the
+\emph{statement} is the one you meant. Peer review and Lean verification check
+\emph{different things}, so a \texttt{lean-verified} node still profits from a
+reviewer, and the ordering means ``strength of check on what is on the page,''
+not ``nothing left to gain.''
+
+\section{The registry}\label{sec:pipeline-registry}
+
+The grades are not prose adornments; they live in a machine-validated structure.
+Each multi-session program is a JSON tree in \texttt{proofs/registry/}, whose
+nodes are individual claims carrying an \texttt{approach}, a \texttt{trust} grade,
+a pointer to the proof \texttt{file}, optional \texttt{sources} (arXiv ids, with
+their own extraction ceiling), and children. A validator, \texttt{trustcheck.py},
+enforces the structure mechanically. Its central rule is the \emph{boundary rule}:
+a node may claim \emph{proved} or above only if every non-dead-end child is at
+least \emph{proved}. A claim's grade is thus warranted by its entire subtree, and
+the check composes --- validating the tree validates every subtree.
+
+Two features make the registry an honest ledger rather than a trophy case. First,
+\emph{dead ends are first-class nodes}: an abandoned route carries a required
+\texttt{reason} and its own evidence level (\emph{judgment} $<$ \emph{computed}
+$<$ \emph{proved} $<$ \emph{lean-verified}), because a wrong reason silently
+prunes a live branch --- the most expensive error in a search. Second, a
+\emph{demotion is recorded with the same weight as an endorsement}: when a referee
+finds a gap, the node is downgraded honestly (to \emph{computed}, or to
+\emph{dead-end} with the objection as its reason) and the objecting email is kept
+as an artifact. A recorded objection is worth as much as a recorded endorsement.
+
+There is a genuine self-reference worth one sentence. The registry is itself a
+\emph{directed container} --- shapes are search trees, positions are paths, and
+the induced comonad's \texttt{extract}/\texttt{duplicate} are exactly ``read the
+root's grade'' / ``expose the full sub-search at every node'' --- graded under a
+provenance semiring whose boundary rule Robin has formalised in Lean
+(\texttt{ProofSearchN.lean}, \texttt{TrustBoundary.lean}: the boundary rule is
+stable under \texttt{duplicate}, \texttt{sorry}-free) \cite{langer-proofsearch}.
+The methodology of this dossier is an instance of its mathematics.
+
+\section{The Lean statement self-audit}\label{sec:pipeline-audit}
+
+\emph{Sorry-free is necessary, not sufficient.} The discipline that answers the
+Ilin--Nugent and vacuous-proof failure modes is a self-audit of what each Lean
+\emph{statement} actually says. The worked example is the 2026-09-22 audit of the
+programme's three zero-\texttt{sorry} declarations:
+\texttt{EnrichedFFCollapse.iso\_id}, \texttt{UnionSubspaces.card\_union\_*}, and
+\texttt{VecCollapse.linExt\_not\_faithful}. The audit found all three
+\emph{clean} --- non-vacuous, with load-bearing hypotheses and faithful
+encodings --- with one honest exception: \texttt{EnrichedFFCollapse} has an
+\emph{explicitly disclosed narrowed scope}. Its statement is object-level
+($M\,X\cong X$) for a bare functor $M$, and it abstracts the category-theory
+inputs (the preservation and terminality facts) as Lean \emph{hypotheses} rather
+than re-proving them inside Lean. That is precisely the spot where a mis-stated
+hypothesis would hide a vacuous or over-narrow theorem --- so the scope is stated
+in the open, in the declaration and its commentary. \emph{Disclosing the scope is
+the point}: an audited theorem with a named boundary is worth more than an
+unaudited one with a clean headline.
+
+\section{Forcing functions: honesty made structural}\label{sec:pipeline-forcing}
+
+The discipline does not rest on good intentions; the communication protocol makes
+it structural. Three forcing functions operate on every substantive result.
+
+\emph{Results travel as typeset PDFs.} Agent-to-agent content moves as an attached,
+typeset document, never as an email body. Typesetting a claim is reading it once
+more, in the register where dropped qualifiers become visible.
+
+\emph{Every PDF carries the work-in-progress commit hash.} The first page stamps
+the hash of the corresponding push, so any claim can be checked against the exact
+state of the record that produced it --- a claim and its evidence cannot drift
+apart.
+
+\emph{Claims propagate along a review path, and each hop can overrule.} The comms
+graph is a path; a result reaches a distant reader only by passing through an
+intermediate agent who \emph{re-states} it, and the restatement \emph{is} the
+review. The failure this guards against is real and dated: in August a claim of
+the author's arrived overstated at the far end of the path, having travelled too
+fast through the hops --- caught, two hops downstream, precisely because someone
+had to re-derive it to relay it. A companion case is sharper still: a September
+write-up silently promoted a proof file's guarded ``faithful away from the
+zeros'' into a clean ``faithful,'' and the overstatement was caught when a
+neighbour re-derived the result over a finite field where the zeros were
+unavoidable. External re-derivation in a different base is a strong audit; the
+protocol is built to invite it.
+
+\section{``Correction is the theorem''}\label{sec:pipeline-correction}
+
+The working signature of the programme is that its structural content is
+frequently the \emph{correction of the author's own initial framing}. Over five
+consecutive deep-work cycles in September 2026 this was the rule, not the
+exception: the ``$K_{2,3}$ is an $[\omega]\neq0$ phenomenon'' reading was corrected
+into the degree-one descent condition and the two-tier tower of
+Chapter~\ref{ch:cluster}; a commutative-shadow reduction of the set-theoretic
+frontier was killed by proving the shadow \emph{unfaithful}; a write-up's
+overstated ``faithful'' was diffed back down to the proof file's honest hedge. In
+each case the failure mode \emph{was} the result, and the honest downgrade was
+more informative than the clean claim it replaced.
+
+This is a discipline and a culture, and it is graded as such --- as
+\emph{methodology}, not as a mathematical grade. But it is the differentiator the
+grant rests on. Without it, the formalisation pillar is a pile of green
+checkmarks and a set of unverified statements about what they mean. With it --- the
+unforgeable ladder, the machine-validated registry that records demotions as
+faithfully as endorsements, the statement self-audit, and the protocol's forcing
+functions --- it is a method for producing AI-authored mathematics that a reader
+can stake a grant, or a proof, on.
+% ASSEMBLE FROM: /home/agent/projects/proofs/registry/README.md  [methodology]  [ASSEMBLE]
+\assemble{drafted: trust-grade ladder + registry (boundary rule, dead-ends, demotions, directed-container self-reference) + Lean statement self-audit (three declarations, EnrichedFFCollapse scope disclosed) + protocol forcing functions + ``correction is the theorem''. External AI+Lean citations at agent-summary level; methodology graded as methodology.}
 
 \chapter{External-publication status}
 Stated plainly: nothing in this dossier is externally published. Under the ACM
@@ -868,6 +1179,30 @@ and lists the candidates nearest to external submission.
 \bibitem{macbeth-osofsky} MacBeth, \emph{Gap-$S$ as an Osofsky--Jensen product-projective-dimension problem: $\mathrm{Conj.}\,6.2\Leftrightarrow\pd_S M=0$}, Kodamai internal note, 2026-09-21.
 
 \bibitem{macbeth-shadow} MacBeth, \emph{The Gap-$S$ free identity $\prod_r S\cong S$ has no commutative shadow: the homogeneity of the full linear ring}, Kodamai internal note, 2026-09-22.
+
+% -- Chapter I.7 ($\Hcoh$-cluster) --
+\bibitem{cl-h2edges} MacBeth, \emph{Holonomy and prunability as the two edges of one spectral sequence: the Zappa--Sz\'ep composition holonomy is the transgression}, Kodamai internal note, 2026-09-18.
+
+\bibitem{cl-twotier} MacBeth, \emph{The obstruction to Ferri's complete-prunability decomposition is a two-stage tower: a degree-one descent condition beneath a degree-two splitting class}, Kodamai internal note, 2026-09-23.
+
+\bibitem{cl-separation} MacBeth, \emph{Ferri prunability is not the Zappa--Sz\'ep composition holonomy: a separation theorem and the $K_{2,3}$ witness}, Kodamai internal note, 2026-09-16.
+
+\bibitem{cl-descent} MacBeth, \emph{Ferri prunability is a first-order descent condition, not a Schreier class: the untwisted core}, Kodamai internal note, 2026-09-18.
+
+\bibitem{cl-emergent} MacBeth, \emph{The emergent-holonomy count lives in degree zero: $h(s)=\dim_k\Ext^0$ and the vanishing of the higher tower}, Kodamai internal note, 2026.
+
+\bibitem{ferri-qsb} D.~Ferri, \emph{On quiver skew braces, their ideals and products}, arXiv:2605.11903, 2026.
+
+\bibitem{adm-catb} Ambra, Duvieusart, and Montoli, \emph{Cohomology of internal categories relative to Schreier points (direction-functor cohomology)}, arXiv:2608.07380, 2026.
+
+% -- Chapter IV.11 (AI + Lean pipeline) --
+\bibitem{koethe-ai} Adamczewski, B\"ohmler, and Marczinzik, \emph{A counterexample to K\"othe's conjecture} (with an AI-authored, human-reviewed Lean~4 formalisation), arXiv:2609.07996, 2026. \emph{(Agent-summary provenance; not verified at source.)}
+
+\bibitem{ilin-nugent} Ilin and Nugent, \emph{Sorries Are Not the Hard Part: an expert-review case study of a semi-autonomous formalisation}, arXiv:2603.12744, 2026. \emph{(Agent-summary provenance.)}
+
+\bibitem{taobench} \emph{TaoBench: sensitivity of automated theorem provers to the definitional framework}, arXiv 2026, identifier unverified. \emph{(Agent-summary provenance.)}
+
+\bibitem{langer-proofsearch} R.~Langer, \texttt{ProofSearchN.lean} and \texttt{TrustBoundary.lean}, \texttt{containers} repository, Kodamai (rose-tree proof search; the trust-boundary rule stable under \texttt{duplicate}, \texttt{sorry}-free).
 
 \end{thebibliography}
 
