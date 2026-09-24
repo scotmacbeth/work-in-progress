@@ -1,0 +1,456 @@
+\chapter{Zappa--Sz\'ep products and distributive laws as the composition tool}
+\label{ch:zs}
+Given local pieces, composition is a \emph{weld}, and the canonical weld of two
+categories/comonads is the Zappa--Sz\'ep product, equivalently a distributive
+law. This chapter develops the pairwise criterion: two directed containers
+compose iff the local condition $(\mathrm{L})$ and a global condition
+$(\mathrm{G})$ both hold. It is the machinery that makes ``$[\omega]=0$'' precise
+in the next chapter.
+
+\section{Composition is a weld}\label{sec:zs-weld}
+
+Fix the standing dictionary of the preliminaries: a directed container is a
+$\tri$-comonoid, and $\DCont\iso\Cat$ identifies it with a small category
+(Definition~\ref{def:prelim-dcont}, the chain of Theorem~\ref{thm:prelim-chain}).
+Under this identification the objects of the container are its shapes, the
+morphisms out of a shape are its positions, identities are roots, and composition
+is position-concatenation \cite{AU16}.
+
+The question of this chapter is not how to run \emph{one} directed container --- a
+functor already does that, and a functor cannot fail --- but how to \emph{combine
+two}. Running two compositional systems that share a resource is the
+\emph{interleaving} of two handoff categories, and interleaving is not composition
+along a fixed topology. It is a weld: the two systems must be fitted together
+inside a single third system so that each morphism of the whole decomposes,
+uniquely and coherently, into a piece from one factor followed by a piece from the
+other. The canonical such weld is the Zappa--Sz\'ep product, and its structural
+carrier is a distributive law.
+
+\begin{definition}[Wide subcategory, strict factorisation]\label{def:zs-sfs}
+Throughout $\K$ is a small category and every subcategory is \emph{wide}: $\C
+\subseteq\K$ is wide if $\ob\C=\ob\K$, it is closed under composition, and it
+contains every identity. Write $\operatorname{dom}$, $\operatorname{cod}$ for
+source and target. Given wide $\C,\D\subseteq\K$, the pair $(\C,\D)$ is a
+\emph{strict factorisation system} of $\K$, written $\K=\C\bowtie\D$, if every
+morphism $f\in\K$ factors \emph{uniquely} as $f=c\circ d$ with $c\in\C$ and $d\in
+\D$. We call $\K$ the \emph{Zappa--Sz\'ep product} of $\C$ and $\D$.
+\end{definition}
+
+We fix the orientation once and for all: the $\D$-part acts first (at the source),
+the $\C$-part second (at the target). This is the many-object generalisation of
+the classical object. For monoids $M,N$ (one-object categories), a Zappa--Sz\'ep
+product $M\bowtie N$ is a monoid $K$ containing $M,N$ as submonoids for which the
+multiplication map $M\times N\to K$, $(m,n)\mapsto mn$, is a bijection: every
+element has a unique expression as an $M$-element times an $N$-element. This is the
+maximally general way two monoids sit inside a third; when $N$ is normal it is the
+semidirect product $M\ltimes N$, when both are normal the direct product
+\cite{brin}.
+
+The point that makes the weld nontrivial with many objects is that $\D$ need
+\emph{not} be the endomorphisms. It may carry \emph{cross-object} arrows, so a
+factorisation $f=c\circ d$ moves the object at which the two factors meet. Welding
+then demands that a single ``pivot object'' be located, simultaneously and
+coherently, for every morphism of $\K$. This is a genuine recognition problem with
+no one-object shadow: at one object a factorisation either exists and one writes it
+down, or it does not.
+
+\section{The distributive law: the algebra of the weld}\label{sec:zs-law}
+
+When a weld exists, $\K$ is reconstructed from $\C$, $\D$, and a distributive law
+$\lambda\colon\D\tri\C\Rightarrow\C\tri\D$ generalising the matched-pair calculus
+of monoids to two genuine many-object categories. This is the categorical form of
+the correspondence between distributive laws and strict factorisations
+\cite{rw,street}, and for directed containers it is exactly Ahman--Uustalu's
+composition construction \cite{AhmanUustaluDL}. We record the data, the axioms, and
+the associativity theorem.
+
+Throughout, for composable $d\in\D$ and $c\in\C$ we write ${}^{d}c$ for the
+\emph{left action} of $d$ on $c$ (a $\C$-arrow) and $c^{d}$ for the \emph{right
+restriction} of $d$ by $c$ (a $\D$-arrow).
+
+\begin{definition}[Distributive law / matched pair of categories]\label{def:zs-law}
+A \emph{distributive law} $\lambda\colon\D\tri\C\Rightarrow\C\tri\D$ assigns to each
+composable pair $(d,c)$ with $d\in\D$, $c\in\C$, $\operatorname{dom}(d)=
+\operatorname{cod}(c)$ a pair $\lambda(d,c)=({}^{d}c,\,c^{d})$ with ${}^{d}c\in\C$,
+$c^{d}\in\D$ and
+\[
+  \operatorname{dom}(c^{d})=\operatorname{dom}(c),\quad
+  \operatorname{cod}({}^{d}c)=\operatorname{cod}(d),\quad
+  \operatorname{dom}({}^{d}c)=\operatorname{cod}(c^{d}),
+\]
+so that ${}^{d}c\circ c^{d}$ has the same source and target as $d\circ c$. It is a
+\emph{matched pair} if, for all composable data,
+\begin{description}
+\item[(U)] ${}^{\id}c=c$,\quad $c^{\id}=\id_{\operatorname{dom} c}$,\quad
+  ${}^{d}\id=\id_{\operatorname{cod} d}$,\quad $\id^{d}=d$;
+\item[(ZS2)] ${}^{(d'\circ d)}c={}^{d'}\!\bigl({}^{d}c\bigr)$;
+\item[(ZS3)] $c^{(d'\circ d)}=\bigl({}^{d}c\bigr)^{d'}\!\circ c^{d}$;
+\item[(ZS1)] ${}^{d}(c_2\circ c_1)={}^{d}c_2\circ{}^{(c_2^{d})}c_1$;
+\item[(ZS4)] $(c_2\circ c_1)^{d}=c_1^{(c_2^{d})}$.
+\end{description}
+\end{definition}
+
+The four axioms are Brin's matched-pair axioms \cite{brin}, typed for two
+many-object categories: (ZS2) says $\D$ acts on $\C$ on the left, (ZS3) is the
+cocycle for the restriction over $\D$-composition, and (ZS1),(ZS4) are the
+compatibilities with $\C$-composition. They reduce verbatim to the monoid axioms
+when each factor has one object.
+
+\begin{definition}[The product category]\label{def:zs-prod}
+Given a matched pair, $\C\bowtie\D$ has the shared object set, hom-sets
+$(\C\bowtie\D)(a,b)=\coprod_{m}\C(m,b)\times\D(a,m)$, identities
+$(\id_a,\id_a)$, and composition
+\[
+  (c_2,d_2)\cdot(c_1,d_1)=\bigl(c_2\circ{}^{d_2}c_1,\ c_1^{d_2}\circ d_1\bigr),
+\]
+for $(c_1,d_1)\colon a\to b$ (so $d_1\colon a\to m_1$, $c_1\colon m_1\to b$) and
+$(c_2,d_2)\colon b\to e$.
+\end{definition}
+
+At one object this is precisely the classical Zappa--Sz\'ep multiplication
+$(m_2,n_2)(m_1,n_1)=\bigl(m_2\,{}^{n_2}m_1,\ m_1^{n_2}\,n_1\bigr)$.
+
+\begin{theorem}[Axioms $\iff$ associativity]\label{thm:zs-axioms}
+\emph{(proved)}\;
+$\C\bowtie\D$ of Definition~\ref{def:zs-prod} is a category if and only if
+$\lambda$ is a matched pair. The unit laws are equivalent to \textnormal{(U)}; a
+single associativity instance splits into its $\C$-coordinate, governed by
+\textnormal{(ZS1)+(ZS2)}, and its $\D$-coordinate, governed by
+\textnormal{(ZS3)+(ZS4)}.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The unit laws for $(\id,\id)$ unwind directly to (U). For associativity, expand
+both bracketings of $(c_3,d_3)(c_2,d_2)(c_1,d_1)$ by Definition~\ref{def:zs-prod}.
+Both have a $\C$-composite first coordinate and a $\D$-composite second coordinate,
+and the two expansions agree iff the coordinates agree separately. The
+$\C$-coordinate discrepancy is ${}^{(d_3\circ d_2)}c_1$ versus
+${}^{d_3}({}^{d_2}c_1)$ together with a distribution of ${}^{d}(-)$ over a
+$\C$-composite --- exactly (ZS2) and (ZS1). The $\D$-coordinate discrepancy is
+$c_1^{(d_3\circ d_2)}$ versus $({}^{d_2}c_1)^{d_3}\!\circ c_1^{d_2}$ together with
+the distribution of $(-)^{d}$ over a $\C$-composite --- exactly (ZS3) and (ZS4).
+The only place $\D$ being a genuine category rather than a family of monoids enters
+is that the restrictions composed in the $\D$-coordinate must be composable across
+a change of object; the typing of Definition~\ref{def:zs-law} guarantees this. The
+converse reads the same identity chain from associativity back to the axioms.
+\end{proof}
+
+The next lemma runs the correspondence the other way: it extracts the law from a
+weld and certifies that the abstract product recovers $\K$.
+
+\begin{lemma}[Extraction from a strict factorisation]\label{lem:zs-extract}
+Let $(\C,\D)$ be a strict factorisation of $\K$. For composable $d\in\D$, $c\in\C$
+let ${}^{d}c\in\C$, $c^{d}\in\D$ be the unique factorisation of $d\circ c\in\K$:
+\[
+  d\circ c={}^{d}c\circ c^{d}.
+\]
+Then $\lambda$ is a matched pair, and $\Phi\colon\C\bowtie\D\to\K$,
+$\Phi(c,d)=c\circ d$, is an isomorphism of categories.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Each axiom is obtained by factoring one $\K$-morphism two ways and invoking
+uniqueness. For (ZS2)/(ZS3), factor $(d'\circ d)\circ c$ as
+\[
+  (d'\circ d)\circ c
+  = d'\circ\bigl({}^{d}c\circ c^{d}\bigr)
+  = \bigl(d'\circ{}^{d}c\bigr)\circ c^{d}
+  = {}^{d'}\!\bigl({}^{d}c\bigr)\circ\bigl({}^{d}c\bigr)^{d'}\!\circ c^{d},
+\]
+the last step factoring $d'\circ{}^{d}c$, composable since
+$\operatorname{cod}{}^{d}c=\operatorname{cod} d=\operatorname{dom} d'$; here
+$\bigl({}^{d}c\bigr)^{d'}$ and $c^{d}$ compose \emph{in $\D$} because
+$\operatorname{dom}\bigl({}^{d}c\bigr)^{d'}=\operatorname{dom}{}^{d}c=
+\operatorname{cod} c^{d}$ --- the one place $\D$ being a genuine category matters.
+Comparing with the direct factorisation of $(d'\circ d)\circ c$ and invoking
+uniqueness yields the $\C$-part (ZS2) and $\D$-part (ZS3). Factoring $d\circ(c_2
+\circ c_1)$ two ways yields (ZS1)/(ZS4), and the units are immediate. Finally
+$\Phi$ is a bijection on each hom-set (it \emph{is} the factorisation), preserves
+identities, and preserves composition by the rewrite $d\circ c={}^{d}c\circ c^{d}$,
+so it is an isomorphism.
+\end{proof}
+
+Thus when a weld exists, $\K$ is genuinely the Zappa--Sz\'ep product of the
+categories $\C$ and $\D$, and $\lambda$ is the precise carrier of the mutual
+action --- the data one would extract to \emph{run} the composite system.
+
+\section{The recognition problem and the free-presheaf lemma}\label{sec:zs-lemma}
+
+Theorem~\ref{thm:zs-axioms} and Lemma~\ref{lem:zs-extract} describe the algebra
+\emph{once} a weld exists. The decision problem is prior: given $\K$ and a
+prescribed right factor $\D$, does a complementary $\C$ exist at all? The whole
+answer turns on one observation --- the presheaf form of ``free module $=$ has a
+basis'' --- which we isolate first.
+
+The hom-sets of $\K$ into a fixed target $b$ assemble into a presheaf: a right
+$\D$-set.
+
+\begin{definition}[Right $\D$-set, representable, free, target presheaf]\label{def:zs-free}
+A \emph{right $\D$-set} is a presheaf $M\colon\D^{\op}\to\Set$: each $d\colon a\to
+m$ gives $x\mapsto x\cdot d$, with $x\cdot\id=x$ and $(x\cdot d')\cdot d=x\cdot
+(d'\circ d)$. The \emph{representable} at $m$ is $\D(-,m)$ with action by
+precomposition; $M$ is \emph{free} if it is isomorphic to a coproduct of
+representables. For an object $b$ of $\K$, the \emph{target presheaf}
+$\Hom_\K(-,b)\colon\D^{\op}\to\Set$ sends $a$ to $\Hom_\K(a,b)$ and $d\colon a'\to
+a$ to precomposition $f\mapsto f\circ d$; it is a right $\D$-set because $\D
+\subseteq\K$.
+\end{definition}
+
+\begin{lemma}[Free $=$ unique factorisation]\label{lem:zs-free}
+\emph{(proved)}\;
+Let $\D$ be a small category and $M\colon\D^{\op}\to\Set$. The following are
+equivalent.
+\begin{enumerate}
+\item $M$ is free.
+\item There is a family $B=(B_m\subseteq M(m))_{m\in\ob\D}$ such that for every
+object $a$ and every $x\in M(a)$ there is a \emph{unique} pair $(c,d)$ with $c\in
+B_m$ (some $m$) and $d\in\D(a,m)$ satisfying $x=c\cdot d$.
+\end{enumerate}
+When they hold, $M\iso\coprod_{m}\coprod_{c\in B_m}\D(-,m)$, and $B$ is a
+\emph{basis}.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+$(2)\Rightarrow(1)$: $\varphi_a(c,d)=c\cdot d$ is a well-defined presheaf morphism
+by contravariance of $M$ and precomposition on $\D(-,m)$; it is objectwise
+bijective by hypothesis, hence an isomorphism. $(1)\Rightarrow(2)$: given
+$\psi\colon\coprod_i\D(-,m_i)\iso M$, set $c_i:=\psi_{m_i}(\id_{m_i})$; by Yoneda
+the $i$-th component is ``multiply by $c_i$'', and since $\psi$ is an isomorphism
+every $x$ equals $c_i\cdot d$ for a unique index $i$ and --- the representable being
+a genuine set of morphisms --- a unique $d$. This is (2) with $B_m=\{c_i:m_i=m\}$.
+\end{proof}
+
+\begin{remark}[The endomorphism specialisation]\label{rem:zs-monoids}
+If $\D=\E$ is the disjoint union of vertex monoids ($\E(a,a)=\End(a)$,
+$\E(a,b)=\varnothing$ for $a\neq b$), a presheaf on $\E$ is a family of right
+$\End(a)$-sets, freeness is freeness of each fibre, and a basis $B_a$ is one
+representative per $\End(a)$-orbit. So Lemma~\ref{lem:zs-free} reduces to
+``free $\End(a)$-set $=$ has an orbit transversal'' fibre by fibre.
+\end{remark}
+
+\section{The pairwise criterion}\label{sec:zs-criterion}
+
+The key observation is that, for a weld, a free basis of $\Hom_\K(-,b)$ is
+\emph{forced} to be the family of $\C$-arrows into $b$. There is nothing to choose:
+the factorisation dictates the basis and the basis dictates the factorisation.
+
+\begin{theorem}[Pairwise Zappa--Sz\'ep criterion]\label{thm:zs-criterion}
+\emph{(proved)}\;
+Let $\K$ be a small category and $\D\subseteq\K$ a wide subcategory. The following
+are equivalent.
+\begin{enumerate}
+\item There is a wide subcategory $\C\subseteq\K$ with $\K=\C\bowtie\D$.
+\item Both:
+\begin{itemize}
+\item[\textnormal{(L)}] for every object $b$, the right $\D$-set $\Hom_\K(-,b)$ is
+free; and
+\item[\textnormal{(G)}] free bases $B_b$ of $\Hom_\K(-,b)$ can be chosen so that
+$\C:=\bigcup_{b}B_b$ is a wide subcategory of $\K$.
+\end{itemize}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+The only interaction the proof uses is that a basis element $c\in B_m\subseteq
+\Hom_\K(m,b)$ and $d\in\D(a,m)$ give the composite $c\cdot d=c\circ d\colon a\to b$
+in $\K$.
+
+$(1)\Rightarrow(2)$: with $B_b:=\{c\in\C:\operatorname{cod}(c)=b\}$, uniqueness of
+the factorisation says each $f\colon a\to b$ is $c\circ d$ for a unique $c\in B_b$,
+$d\in\D(a,\operatorname{dom} c)$; by Lemma~\ref{lem:zs-free}, $B_b$ is a basis, so
+$\Hom_\K(-,b)$ is free --- this is (L). Since each $\C$-arrow has one codomain,
+$\bigcup_b B_b=\C$, wide by hypothesis --- this is (G).
+
+$(2)\Rightarrow(1)$: let $\C=\bigcup_b B_b$ be the wide subcategory from (G); then
+$B_b=\{c\in\C:\operatorname{cod}(c)=b\}$. Freeness with basis $B_b$ gives, for each
+$f\colon a\to b$, a unique $(c,d)$ with $c\in B_b\subseteq\C$, $d\in\D$, $f=c\circ
+d$. Any $f=c'\circ d'$ with $c'\in\C$ has $\operatorname{cod}(c')=b$, so $c'\in
+B_b$, and uniqueness over $B_b$ forces $(c',d')=(c,d)$. Hence the factorisation is
+unique over all of $\C$, and $(\C,\D)$ is a strict factorisation.
+\end{proof}
+
+\begin{remark}[Why two levels]\label{rem:zs-twolevels}
+Condition (L) concerns the right $\D$-action alone: it asks that the action be
+\emph{free}, so bases exist, one choice per target. It is the analogue of ``free
+module,'' and is checkable target by target. Condition (G) is the cross-target
+constraint: the independently chosen bases must \emph{cohere} into a single
+subcategory. The two can come apart (Proposition~\ref{prop:zs-ce}), and the gap is
+a holonomy --- the failure of the candidate $\lambda$ to be consistently
+single-valued. Asking for (G) is exactly asking when a wide $\D$ \emph{extends} to
+a strict factorisation, the subject of Rosebrugh--Wood \cite{rw}. Its cohomological
+classification is the business of the next chapter (Chapter~\ref{ch:crit}); here we
+record only the shape of the obstruction.
+\end{remark}
+
+\subsection*{The single-category specialisation}\label{sec:zs-single}
+
+\begin{corollary}\label{cor:zs-single}
+\emph{(proved)}\;
+Take $\D=\E$, the endomorphism subcategory. Then $\K=\C\bowtie\E$ for some wide
+$\C$ if and only if \textnormal{(L$'$)} each $\Hom_\K(a,b)$ is free as a right
+$\End(a)$-set, and \textnormal{(G$'$)} per-orbit representatives can be chosen to
+close into a wide subcategory.
+\end{corollary}
+
+\begin{proof}[Proof sketch]
+By Remark~\ref{rem:zs-monoids}, freeness of the $\E$-presheaf $\Hom_\K(-,b)$ is
+fibrewise freeness of each $\Hom_\K(a,b)$ over $\End(a)$, a basis is one
+representative per orbit, and (G) becomes closure of the representatives.
+\end{proof}
+
+\subsection*{The classical anchor}\label{sec:zs-monoid}
+
+At one object the recognition problem is vacuous and only the algebra survives.
+
+\begin{proposition}[Classical Zappa--Sz\'ep recovered]\label{prop:zs-monoid}
+\emph{(proved)}\;
+Let $M,N$ be monoids as one-object categories. A matched pair
+(Definition~\ref{def:zs-law}) is exactly a left action ${}^{n}m$ of $N$ on $M$ and
+a right action $m^{n}$ of $M$ on $N$ satisfying Brin's four axioms, and the product
+$M\bowtie N$ (Definition~\ref{def:zs-prod}) is the classical Zappa--Sz\'ep product
+with multiplication $(m_2,n_2)(m_1,n_1)=\bigl(m_2\,{}^{n_2}m_1,\ m_1^{n_2}\,n_1
+\bigr)$. Such products are precisely the monoids $K$ with submonoids $M,N$ for which
+$M\times N\to K$ is a bijection.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+With one object every typing constraint in Definition~\ref{def:zs-law} is vacuous,
+(U) and (ZS1)--(ZS4) become the unit laws and Brin's four identities \cite{brin},
+and the coproduct $\coprod_m$ in Definition~\ref{def:zs-prod} is trivial. The last
+sentence is Theorem~\ref{thm:zs-criterion} read at one object: (L) is freeness of
+$K$ as a right $N$-set and (G), for basis $M$, is that $M\times N\to K$ is a
+bijection with $M$ a submonoid.
+\end{proof}
+
+\begin{remark}[Update monads, honestly]\label{rem:zs-au}
+It is tempting to call Ahman--Uustalu's update monad \cite{au-update} the
+degenerate (semidirect) instance, but this overclaims and we avoid it. The update
+monad $TX=S\to(P\times X)$ is the writer-over-reader twist of a \emph{monoid and a
+set} through a single one-sided action \cite{au-update}; its directed container is
+the action category $S\rtimes P$ \cite{AU16}. A Zappa--Sz\'ep product is the
+twist of two \emph{monoids} through two mutually twisting actions. The honest
+relationship is analogy and handedness: the update monad is not literally a
+Zappa--Sz\'ep product of two monoids, and a genuine factorisation enters only if
+$P$ itself splits as $P=A\bowtie B$.
+\end{remark}
+
+\section{A genuinely pairwise obstruction}\label{sec:zs-ce}
+
+One might suspect the two-level phenomenon is an artefact of $\D$ being the
+endomorphisms --- that allowing cross-object arrows in $\D$ always dissolves the
+global obstruction. It does not.
+
+\begin{example}[Rigid twist over a cross-object factor]\label{ex:zs-ce}
+Let $\K$ have objects $w,a,x,y$ with $\End(a)=\{\id_a,g\}$, $g^2=\id_a$, the other
+endomorphism monoids trivial, and
+\[
+  \Hom(a,x)=\{p,pg\},\ \Hom(x,y)=\{s,s_2\},\ \Hom(a,y)=\{q,qg\},\
+  \Hom(w,a)=\{d,gd\},
+\]
+$\Hom(w,x)=\{pd,pgd\}$, $\Hom(w,y)=\{qd,qgd\}$, where $pg=p\circ g$, $gd=g\circ d$,
+the rigid twist $s\circ p=q$, $s_2\circ p=qg$, and the forced composites $p\circ
+d=pd$, $s\circ pd=qd$, $s_2\circ pd=qgd$, etc. Let $\D=\{\id_w,\id_a,\id_x,\id_y,
+g,d,gd\}$.
+\end{example}
+
+\begin{proposition}\label{prop:zs-ce}
+\emph{(proved)}\;
+In Example~\ref{ex:zs-ce}, $\D$ is a wide subcategory containing the cross-object
+arrows $d,gd\colon w\to a$; every $\Hom_\K(-,b)$ is free as a right $\D$-set
+\emph{(L holds)}, yet no wide $\C$ makes $(\C,\D)$ a strict factorisation
+\emph{(G fails)}. Hence $\K$ has no weld over this $\D$ despite the cross-object
+factor.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+$\D$ is closed ($g\circ g=\id_a$, $g\circ d=gd$, $g\circ gd=d$). The bases
+$B_w=\{\id_w\}$, $B_a=\{\id_a\}$ (the orbit $\{\id_a,g,d,gd\}$ is a single free
+$\D$-orbit), $B_x=\{\id_x,p\}$, $B_y=\{\id_y,q,s,s_2\}$ witness (L); note $s,s_2$
+are forced into $B_y$ because $\D$ has no non-identity arrow out of $x$. For (G),
+any closing $\C$ must pick $t\in\{p,pg\}$ and a basis $B_y$ containing $s,s_2$ and
+exactly one of $q,qg$. Closure needs $s\circ t,\ s_2\circ t\in B_y$; but $s\circ
+p=q$ and $s_2\circ p=qg$ (and symmetrically for $pg$) force $B_y$ to contain
+\emph{both} $q$ and $qg$ --- impossible. So no $\C$ closes: (G) fails, and by
+Theorem~\ref{thm:zs-criterion} there is no weld.
+\end{proof}
+
+\begin{remark}\label{rem:zs-inert}
+The cross-arrow $d$ enters $\D$ as a free $\langle g\rangle$-torsor $\{d,gd\}$ into
+$a$; it enlarges $\D$ to a genuine many-object category and keeps every hom-presheaf
+free, but it is inert against the branch obstruction at $a\to x\rightrightarrows y$.
+Promoting $\D$ from vertex monoids to a category with cross-object arrows does not
+dissolve the holonomy. This is Theorem~\ref{thm:zs-criterion} in its genuinely
+pairwise form. All claims of this section are machine-checked by finite-category
+scripts: exhaustive over all $1152$ wide subcategories, $\K$ admits no strict
+factorisation over $\D$; and Theorem~\ref{thm:zs-axioms} is confirmed with zero
+disagreements over all type-correct laws in the tested finite cases.
+\end{remark}
+
+\section{The bridge: orchestration composites are Zappa--Sz\'ep products}\label{sec:zs-bridge}
+
+The abstract weld becomes the operative composition tool through one further
+identification, which is where the container model earns the machinery above. In
+the polynomial-functor model of interaction \cite{NiuSpivak}, an agent that may
+issue queries from a set $S$ and, for each $s$, receive a reply from $P(s)$ is the
+container $p=(S,P)=\sum_{s\in S}y^{P(s)}$; a handoff topology --- who may delegate
+to whom, staying put, concatenating handoffs --- is a directed container, i.e.\ a
+small category (Definition~\ref{def:prelim-dcont}). Running \emph{two}
+orchestrations that share a resource is the interleaving of two directed
+containers, and this interleaving is a Zappa--Sz\'ep product $\K=\C\bowtie\D$.
+
+\begin{proposition}[Holonomy--composition / Zappa--Sz\'ep bridge]\label{prop:zs-bridge}
+\emph{(peer-reviewed)}\;
+The composite of two shared-resource orchestrations, presented as a small
+(handoff) category $\K$ with prescribed right factor $\D$ the resource-internal
+part, is the Zappa--Sz\'ep product $\C\bowtie\D$ of directed containers in the sense
+of Ahman--Uustalu's distributive-law construction \cite{AhmanUustaluDL}, with $\C$
+the genuine dispatch/handoff factor. Consequently the joint agent exists if and only
+if the weld exists, i.e.\ iff conditions \textnormal{(L)} and \textnormal{(G)} of
+Theorem~\ref{thm:zs-criterion} both hold; when it does, the mutual action is carried
+by the distributive law $\lambda$ of Definition~\ref{def:zs-law}.
+\end{proposition}
+
+The identification itself --- that the orchestration composite \emph{is}
+$\C\bowtie\D$, and hence that its existence is governed by the weld --- is the delta
+over Ahman--Uustalu, whose account builds the joint container when a distributive
+law is supplied but offers no measure of its absence. Proposition~\ref{prop:zs-bridge}
+is peer-reviewed (Rick); we take Ahman--Uustalu's construction \cite{AhmanUustaluDL}
+as prior art and claim none of it. The concrete consequence is a decision procedure:
+a cheap fibrewise freeness test (L), checkable target by target, gates the more
+expensive global closure search (G), and only its successes feed the search. The
+matched-pair calculus of \S\ref{sec:zs-law} then exhibits $\lambda$ explicitly as
+the data one extracts to run the composite.
+
+What remains is to make the residual obstruction (G) precise. It is a holonomy: the
+independently chosen free bases fail to glue, and the failure is a monodromy around
+the dispatch/return loop --- the categorical form of ``a flat bundle is trivial iff
+its holonomy vanishes.'' Under the abelian-vertex, trivial-left-action hypothesis
+the free $\D$-orbits form a base category, the vertex automorphism groups form a
+coefficient presheaf, and the defect of a transversal is a normalised $2$-cocycle.
+The classification of (G) as a class in $\Hcoh$, and the precise statement that the
+weld exists iff $[\omega]=0$, is the subject of the next chapter
+(Chapter~\ref{ch:crit}); the cohomology conventions it uses are those of
+\S\ref{sec:prelim-coh}. Here we hand off (G) as exactly that: a global closure
+condition whose obstruction is a holonomy, waiting to be named.
+
+% -----------------------------------------------------------------------------
+% Operators introduced inline (not in the dossier preamble macro list), via
+% \operatorname / \bowtie / \rightrightarrows / \prescript-free super/subscripts:
+%   \operatorname{dom}, \operatorname{cod}  -- source and target of an arrow
+%   \bowtie                                 -- Zappa--Szep product (amssymb)
+%   \rightrightarrows                       -- parallel-pair arrow (amssymb)
+%   {}^{d}c   -- left action of a D-arrow d on a C-arrow c (a C-arrow)
+%   c^{d}     -- right restriction of d by c (a D-arrow)
+%   \ltimes, \rtimes -- semidirect / action-category products (amssymb)
+% All theorem environments use the shared per-chapter counter.
+% -----------------------------------------------------------------------------
+
+% BIBITEMS-USED
+% \bibitem{brin} M.~G.~Brin, \emph{On the Zappa--Sz\'ep product}, Comm.\ Algebra \textbf{33} (2005), 393--424.
+% \bibitem{rw} R.~Rosebrugh, R.~J.~Wood, \emph{Distributive laws and factorization}, J.\ Pure Appl.\ Algebra \textbf{175} (2002), 327--353.
+% \bibitem{street} R.~Street, \emph{The formal theory of monads}, J.\ Pure Appl.\ Algebra \textbf{2} (1972), 149--168.
+% \bibitem{au-update} D.~Ahman, T.~Uustalu, \emph{Update Monads: Cointerpreting Directed Containers}, TYPES 2013, LIPIcs \textbf{26} (2014), 1--23.
+% \bibitem{AU16} D.~Ahman, T.~Uustalu, \emph{Directed Containers as Categories}, MSFP 2016, EPTCS \textbf{207} (2016), 89--98.
+% \bibitem{AU16} D.~Ahman, T.~Uustalu, \emph{Directed Containers as Categories}, arXiv:1604.01187, 2016.
+% \bibitem{AhmanUustaluDL} D.~Ahman, T.~Uustalu, \emph{Distributive laws of directed containers}, Progress in Informatics, No.~10 (2013), 3--18, DOI 10.2201/NIIPI.2013.10.2.
+% \bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak, \emph{Polynomial Functors: A Mathematical Theory of Interaction}, arXiv:2312.00990, 2023.

@@ -1,0 +1,219 @@
+\chapter{The correctness criterion $(\mathrm{L})\wedge[\omega]=0\in \Hcoh$}
+\label{ch:crit}
+Here the two threads join into the thesis equation. The global condition
+$(\mathrm{G})$ of the pairwise criterion is identified with the vanishing of a
+degree-two cohomology class $[\omega]\in \Hcoh$, so that a composite is correct
+exactly when the local condition holds and the weld obstruction vanishes. The
+chapter also records the ``two $\omega$-sites'' result: the degree-1
+(prunability / descent) and degree-2 (holonomy / Schreier) obstructions live at
+genuinely different sites and must not be conflated.
+
+\section{The thesis equation}
+\label{sec:crit-thesis}
+
+The preceding chapter developed the pairwise Zappa--Sz\'ep criterion: given a
+handoff category $\mathcal{K}$ (a directed container, Definition~\ref{def:prelim-dcont},
+under the chain identification $\DCont\iso\Cat$, Theorem~\ref{thm:prelim-chain})
+and a prescribed wide subcategory $\mathcal{D}\subseteq\mathcal{K}$, a complementary
+factor $\mathcal{C}$ making $\mathcal{K}=\mathcal{C}\bowtie\mathcal{D}$ a Zappa--Sz\'ep
+product exists iff two conditions hold --- a \emph{local} freeness condition
+$(\mathrm{L})$ and a \emph{global} closure condition $(\mathrm{G})$ (see
+Chapter~\ref{ch:zs}, from which we \emph{receive} $(\mathrm{L})$ and $(\mathrm{G})$
+and do not re-derive them). This chapter contributes the identification of the
+second, global condition with a cohomological vanishing. Writing $\mathrm{Sk}_{\mathcal{C}}$
+for the skeleton orbit category and $\mathcal D$ for the reply (direction) functor as
+coefficients (cohomology conventions and the class $[\omega]$ as an LHS
+transgression: \S\ref{sec:prelim-coh}), the result of the chapter is that the
+global condition \emph{is} a degree-two obstruction, and hence the whole
+correctness verdict collapses to a single displayed equivalence:
+
+\begin{equation}
+\boxed{\ \text{a composite is correct}\quad\Longleftrightarrow\quad (\mathrm{L}) \ \wedge\ [\omega]=0\in \Hcoh\ }
+\label{eq:crit-thesis}
+\end{equation}
+
+Everything below either proves the right-hand identification $(\mathrm{G})\Leftrightarrow[\omega]=0$,
+exhibits the smallest faithful instance where the class is machine-checked, or
+warns against conflating this degree-two obstruction with the genuinely distinct
+degree-one obstruction living at another site.
+
+\section{The global condition is a degree-two class}
+\label{sec:crit-identification}
+
+The bridge from a distributive law to a Zappa--Sz\'ep product is classical and is
+used here as an input, not proved: a strict factorization system
+$\mathcal{K}=\mathcal{C}\bowtie\mathcal{D}$ is equivalently a distributive law
+$\lambda:\mathcal{D}\mathcal{C}\Rightarrow\mathcal{C}\mathcal{D}$ satisfying the
+matched-pair axioms, the directed-container instance of which is the composition
+construction of Ahman--Uustalu \emph{(peer-reviewed)}. What the source supplies
+\emph{over} that construction is a measure of its failure: Ahman--Uustalu's account
+builds the composite whenever a distributive law exists, but carries no invariant
+for when one does not.
+
+\begin{theorem}[$(\mathrm{G})$ is the vanishing of ${[\omega]}$; \emph{(proved)}]
+\label{thm:crit-g-is-omega}
+Fix a handoff category $\mathcal{K}$ and a prescribed wide subcategory
+$\mathcal{D}$ for which the local condition $(\mathrm{L})$ holds --- each
+hom-presheaf is a free right $\mathcal D$-set --- and for which the vertex-group
+hypothesis holds ($\mathcal D$ a disjoint union of abelian vertex groups with trivial
+left action). Then the complementary factor exists iff a single degree-two class
+vanishes:
+\[
+  \mathcal{C}\bowtie\mathcal{D}\ \text{exists}
+  \quad\Longleftrightarrow\quad
+  [\omega]=0\in \Hcoh(\mathrm{Sk}_{\mathcal{C}};\mathcal D),
+\]
+cohomology of the skeleton of the handoff category with coefficients in the
+direction functor $\mathcal D$ \cite{cl-emergent,cl-h2edges}. Equivalently, the global
+condition $(\mathrm{G})$ of the pairwise criterion is exactly the statement
+$[\omega]=0$.
+\end{theorem}
+
+The cohomology itself --- Baues--Wirsching cohomology of a small category, and its
+appearance in Schreier/factorization theory --- is classical; the delta over the
+peer-reviewed construction is the \emph{identification} of the orchestration
+composite with $\mathcal{C}\bowtie\mathcal{D}$ and hence of its obstruction with
+this class. Combining Theorem~\ref{thm:crit-g-is-omega} with the received pairwise
+criterion of Chapter~\ref{ch:zs} yields the boxed equation~\eqref{eq:crit-thesis}
+directly: correctness is $(\mathrm{L})\wedge(\mathrm{G})$, and $(\mathrm{G})$ is
+$[\omega]=0$.
+
+\begin{remark}[reading the class as holonomy]
+\label{rem:crit-holonomy}
+The class is the categorical form of ``a flat bundle is trivial iff its holonomy
+vanishes''. Under $(\mathrm{L})$ each partial handoff completes freely; the
+completions fail to glue into a single serialized joint agent exactly by the
+monodromy $[\omega]$ around the dispatch/return loop. Thus $(\mathrm{L})$ is
+completability of the parts and $[\omega]=0$ is coherence of their gluing --- the
+two halves of~\eqref{eq:crit-thesis}.
+\end{remark}
+
+\section{The minimal faithful instance: $[\omega]=\varepsilon$, machine-checked}
+\label{sec:crit-lean}
+
+The smallest place where the answer is ``no'' is a supervisor dispatching to a
+worker that may call back before returning --- unprotected re-entrancy, the
+DAO-class failure. This instance is faithful and its class is computed on the
+nose \emph{(lean-verified)}.
+
+\begin{definition}[the parametrized supervisor--worker category]
+\label{def:crit-family}
+Fix roles $\mathsf{S}$ (supervisor), $\mathsf{W}$ (worker), $\mathsf{R}$ (return),
+with the supervisor carrying a one-bit turn token, so
+$\End(\mathsf{S})=\{\id,\tau\}\iso\Z/2$. For $\varepsilon\in\Z/2$ let
+$\mathcal{K}_\varepsilon$ have generating handoffs $p,p\tau:\mathsf{S}\to\mathsf{W}$
+and worker outcomes $s,s_2:\mathsf{W}\to\mathsf{R}$, with the single length-two
+composite fixed by
+\[
+  s\circ p=q,\qquad s_2\circ p=q\cdot\tau^{\varepsilon}.
+\]
+The prescribed right factor is the token part
+$\mathcal{D}=\{\id_{\mathsf{S}},\tau,\id_{\mathsf{W}},\id_{\mathsf{R}}\}$. The bit
+$\varepsilon$ records whether the re-entrant outcome $s_2$ \emph{mutates} the token
+($\varepsilon=1$) or \emph{fixes} it ($\varepsilon=0$, a lock).
+\end{definition}
+
+The categorical obstruction of Theorem~\ref{thm:crit-g-is-omega} reduces, for
+$\mathcal{K}_\varepsilon$, to a finite $\mathbb{F}_2$ cochain complex. The base
+$\mathrm{Sk}_{\mathcal{C}}$ is the branch
+$\mathsf{S}\to\mathsf{W}\rightrightarrows\mathsf{R}$; the normalized
+(Baues--Wirsching) complex has $C^1\iso\mathbb{F}_2^2$, $C^2\iso\mathbb{F}_2^2$,
+$C^3=0$, so every $2$-cochain is a cocycle. The coboundary image is the diagonal
+$B^2=\langle(1,1)\rangle$, whence $\Hcoh=C^2/B^2\iso\mathbb{F}_2$, realised by the
+class map $\varphi(a,b)=b-a=a\oplus b$ with $\ker\varphi=B^2$. The defect cocycle
+of the natural transversal is $\omega_\varepsilon=(0,\varepsilon)$, so
+$\varphi(\omega_\varepsilon)=\varepsilon$.
+
+\begin{theorem}[${[\omega]=\varepsilon}$; \emph{(lean-verified)}]
+\label{thm:crit-lean}
+In a sorry-free Lean~4 development using no external library
+(\texttt{Containers/Reentrancy.lean}), the following are machine-checked over the
+finite complex above:
+\begin{itemize}
+\item $\ker\varphi=B^2$ and $\varphi$ surjective, together giving
+  $\Hcoh=C^2/B^2\iso\mathbb{F}_2$;
+\item $\varphi(\omega_\varepsilon)=\varepsilon$ --- the class form of
+  $[\omega]=\varepsilon$;
+\item $\omega_\varepsilon\in B^2\iff\varepsilon=0$ --- the membership form of
+  $[\omega]=0\iff\varepsilon=0$.
+\end{itemize}
+Consequently, on the minimal faithful model, the joint agent
+$\mathcal{C}\bowtie\mathcal{D}$ exists iff the worker fixes the token, and
+unprotected re-entrancy ($\varepsilon=1$) is the nonzero generator of
+$\Hcoh\iso\Z/2$.
+\end{theorem}
+
+\begin{remark}[the verification boundary, drawn honestly]
+\label{rem:crit-boundary}
+The Lean development certifies the \emph{finite $\mathbb{F}_2$ class computation}
+--- the last mile, from cochain complex to $[\omega]=\varepsilon$. The
+\emph{reduction} of the categorical obstruction of
+Theorem~\ref{thm:crit-g-is-omega} \emph{to} that complex --- that
+$\mathcal{K}_\varepsilon$ satisfies $(\mathrm{L})$ and the vertex-group
+hypothesis, that $\mathrm{Sk}_{\mathcal{C}}$ is the stated branch, and that
+the transversal defect is $(0,\varepsilon)$ --- is an \emph{(proved)}
+pen-and-paper input, not formalised. So: the last mile is machine-checked; the
+first mile is a cited pen-and-paper theorem.
+\end{remark}
+
+\section{Two $\omega$-sites: degree-1 descent versus degree-2 Schreier}
+\label{sec:crit-two-sites}
+
+The chapter closes with a warning that is also the natural lead-in to the
+following chapter. It is tempting to read \emph{every} obstruction to composing
+directed containers as the class $[\omega]$ of~\eqref{eq:crit-thesis}. This is
+false: there are two genuinely different obstruction sites, at two different
+cohomological degrees, and they must not be conflated \emph{(proved)}.
+
+\begin{theorem}[the two $\omega$-sites are irreducibly distinct; \emph{(proved)}]
+\label{thm:crit-two-sites}
+The obstruction to composing directed containers factors through two independent
+sites:
+\begin{itemize}
+\item a \textbf{degree-1} (prunability / descent) obstruction --- the
+  degree-one kernel-descent class, Ferri's condition on the ideal generated by the
+  weld; and
+\item the \textbf{degree-2} (holonomy / Schreier) obstruction $[\omega]\in\Hcoh$
+  of Theorem~\ref{thm:crit-g-is-omega} --- the Zappa--Sz\'ep monodromy.
+\end{itemize}
+These live at genuinely different sites \cite{cl-descent,cl-twotier,cl-separation,ferri-qsb}:
+prunability is a descent condition, not a
+Schreier $H^2$ class, and the two decouple --- there are witnesses with
+$[\omega]=0$ yet nontrivial degree-one obstruction, and conversely. In
+particular, ``prunability fails'' and ``$[\omega]\neq0$'' are not the same
+verdict, and identifying them is a category error.
+\end{theorem}
+
+Concretely, the degree-1 obstruction is the descent/subfunctor condition governing
+whether a weld can be \emph{pruned} to a subobject, while the degree-2 class
+$[\omega]$ governs whether the parts glue into a global serialized agent at all;
+on suitable witnesses one vanishes while the other does not, so neither dominates
+the other.
+
+\begin{remark}[a retired side-reading]
+\label{rem:crit-retired}
+An earlier framing predicted that a ``total'' versus ``partial'' composition split
+would be separated by a degree-one invariant. That specific prediction is
+withdrawn: for the correctness verdict~\eqref{eq:crit-thesis} the single
+degree-two class $[\omega]$ is the whole invariant, both the obstruction to
+existence and, via $\Hcoh\iso\mathbb{F}_2$ on the minimal model, the label of
+which system one has. The genuine two-site phenomenon of
+Theorem~\ref{thm:crit-two-sites} is a different statement --- prunability/descent
+versus Schreier holonomy --- and is not the retired split.
+\end{remark}
+
+The degree-2 class $[\omega]$ is, moreover, only \emph{one} of three obstruction
+theories that live on $\DCont\iso\Cat$: the Zappa--Sz\'ep holonomy of this
+chapter, the prunability/descent condition of
+Theorem~\ref{thm:crit-two-sites}, and a third category-cohomological home. The
+comparison of all three, and the question of a unifying protomodular home, is the
+subject of the following chapter~\ref{ch:cluster}; the two-$\omega$-sites result
+above is the entry point to it.
+
+% Operators introduced inline (not in the allowed macro list):
+% \mathrm{Sk} (skeleton orbit category), \operatorname{orb} (orbit).
+
+% BIBITEMS-USED
+% (day1970, loregian, maclane, riehl, cl-h2edges, cl-emergent, cl-separation,
+%  cl-descent, cl-twotier, ferri-qsb, adm-catb are already in the master and are
+%  reused, not relisted.)

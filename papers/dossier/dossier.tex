@@ -80,11 +80,21 @@
 \newcommand{\Day}{\circledast}
 \newcommand{\Dayc}{\odot}
 \newcommand{\iso}{\cong}
+% -- macros/packages added during the Theory-pillar assembly (2026-09-24) --
+\usepackage{booktabs}
+\usepackage{enumitem}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\cod}{cod}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\Id}{\mathrm{Id}}
 
 \title{Compositional Correctness via Directed Containers:\\
        A Complete Technical Dossier}
 \author{MacBeth \\ \small (with N.~Ghani, R.~Langer) \\ \small Kodamai}
-\date{2026-09-23 \\[0.5em] \textit{\small Draft skeleton --- assembly in progress.}}
+\date{2026-09-24 \\[0.5em] \textit{\small Draft --- Theory pillar assembled; Applications, Formalisation, and Impact bodies in progress.}}
 
 \begin{document}
 
@@ -114,13 +124,19 @@ be assembled.
 %==============================================================================
 
 This is a document being assembled in stages. It compiles at every stage, and
-several chapters are already written in full: the front matter (this chapter, the
-Overview, and the Honest Ledger), the preliminaries (Chapter~\ref{ch:prelim}),
-the $\Hcoh$-cluster (Chapter~\ref{ch:cluster}), the set-theoretic frontier
-(Chapter~\ref{ch:frontier}), and the AI\,+\,Lean pipeline
+the whole of Part~I (Theory) is now written in full, together with the front
+matter and one Part~IV chapter: this chapter, the Overview, and the Honest
+Ledger; the preliminaries (Chapter~\ref{ch:prelim}); the equivalence chain
+(Chapter~\ref{ch:eqchain}); Zappa--Sz\'ep products and distributive laws
+(Chapter~\ref{ch:zs}); the correctness criterion (Chapter~\ref{ch:crit}); the
+$\Hcoh$-cluster (Chapter~\ref{ch:cluster}); change-of-base and the
+$\{\mathrm{Id}\}$ classification (Chapter~\ref{ch:cob}); the set-theoretic
+frontier (Chapter~\ref{ch:frontier}); and the AI\,+\,Lean pipeline
 (Chapter~\ref{ch:pipeline}). These are finished prose meant to be read.
 
-The remaining chapters are \emph{scaffolded}: each opens with a short genuine
+The remaining chapters --- the whole of Parts~II (Applications) and III
+(Formalisation), and the two other Part~IV chapters --- are \emph{scaffolded}:
+each opens with a short genuine
 lead-in and then carries a machine-readable assembly directive of the form
 \begin{center}
 \texttt{\% ASSEMBLE FROM: <path>\quad[grade]\quad[ASSEMBLE|STUB|GAP]}
@@ -631,45 +647,11 @@ abutment when $d_2\neq0$. These are the load-bearing facts behind the
 ``filtration, not product'' grammar of the $\Hcoh$-cluster
 (Chapter~\ref{ch:cluster}); we invoke them there by name.
 
-\chapter{The equivalence chain}
-\label{ch:eqchain}
-The local condition $(\mathrm{L})$ rests on the identification of four objects
-that were developed independently: ordinary containers, directed containers,
-polynomial comonoids, and small categories. This chapter assembles the chain
-$\Cont\simeq\DCont\simeq(\text{poly comonoids})\simeq\Cat$ and fixes the
-notation used throughout the dossier. It is the foundation on which every later
-composition statement stands: to compose systems coherently, each system must
-first \emph{be} one of these objects.
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/directed-categories.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/roadmap.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/papers/dcont-cof.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/containers-monads-comonads-change-of-base.tex  [proved]  [ASSEMBLE]
-\assemble{equivalence chain, M1--M4 lean-verified; assemble four dialects into one statement.}
+\input{staging/eqchain.tex}
 
-\chapter{Zappa--Sz\'ep products and distributive laws as the composition tool}
-\label{ch:zs}
-Given local pieces, composition is a \emph{weld}, and the canonical weld of two
-categories/comonads is the Zappa--Sz\'ep product, equivalently a distributive
-law. This chapter develops the pairwise criterion: two directed containers
-compose iff the local condition $(\mathrm{L})$ and a global condition
-$(\mathrm{G})$ both hold. It is the machinery that makes ``$[\omega]=0$'' precise
-in the next chapter.
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/papers/pairwise-zappa-szep.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/reentrancy-machine-checked-obstruction.tex  [peer-reviewed]  [ASSEMBLE]
-\assemble{pairwise-ZS proved; holonomy-composition / ZS bridge peer-reviewed (Rick).}
+\input{staging/zs.tex}
 
-\chapter{The correctness criterion $(\mathrm{L})\wedge[\omega]=0\in \Hcoh$}
-\label{ch:crit}
-Here the two threads join into the thesis equation. The global condition
-$(\mathrm{G})$ of the pairwise criterion is identified with the vanishing of a
-degree-two cohomology class $[\omega]\in \Hcoh$, so that a composite is correct
-exactly when the local condition holds and the weld obstruction vanishes. The
-chapter also records the ``two $\omega$-sites'' result: the degree-1
-(prunability / descent) and degree-2 (holonomy / Schreier) obstructions live at
-genuinely different sites and must not be conflated.
-% ASSEMBLE FROM: /home/agent/projects/papers/reentrancy-machine-checked-obstruction.tex  [peer-reviewed]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/harness-is-a-worker.tex  [proved]  [ASSEMBLE]
-\assemble{two-$\omega$-sites proved; the correctness equation is the chapter's spine.}
+\input{staging/crit.tex}
 
 \chapter{The $\Hcoh$-cluster of obstruction theories}
 \label{ch:cluster}
@@ -835,21 +817,7 @@ that forced it.
 % ASSEMBLE FROM: /home/agent/projects/expository/emergent-holonomy-is-ext.tex  [proved]  [ASSEMBLE]
 \assemble{separation proved (existence witness computed); prunability-is-degree-1-descent proved; $\Hcoh_{\Cat_B}$ reduction proved; protomodular unifier refuted; product decomposition \eqref{eq:cluster-decomp} speculative; two-tier tower proved; $\Hcoh$-engines lean-verified.}
 
-\chapter{Change-of-base, $\Fam(\mathcal{C}^{\mathrm{op}})$ generality, and the $\{\mathrm{Id}\}$ classification}
-\label{ch:cob}
-How far does the equation generalise? The natural setting is containers over a
-general base, i.e.\ $\Fam(\mathcal{C}^{\mathrm{op}})$, with change-of-base along
-functors and monads. This chapter assembles the positive generality results
-($m$-containers, codensity/polynomiality, the four monoidal structures) and the
-sharp negative: the self-enriched full-and-faithful change-of-base container
-semantics collapses to $\{\mathrm{Id}\}$ --- no nontrivial effect monad supports
-it. Knowing the boundary is itself the result.
-% ASSEMBLE FROM: /home/agent/projects/papers/containers-over-a-base.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/containers-monads-comonads-change-of-base.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/mcontainers-codensity-polynomiality.tex  [peer-reviewed]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/admissibility-composition-product.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/four-monoidal-chapter.tex  [proved]  [ASSEMBLE]
-\assemble{m-containers, change-of-base, fullness-unit-connectedness all proved; $\{\mathrm{Id}\}$ collapse is the sharp negative.}
+\input{staging/cob.tex}
 
 \chapter{The set-theoretic frontier: Vec-admissibility and the Gap-\texorpdfstring{$S$}{S} arc}
 \label{ch:frontier}
@@ -1569,6 +1537,63 @@ and lists the candidates nearest to external submission.
 \bibitem{taobench} \emph{TaoBench: sensitivity of automated theorem provers to the definitional framework}, arXiv 2026, identifier unverified. \emph{(Agent-summary provenance.)}
 
 \bibitem{langer-proofsearch} R.~Langer, \texttt{ProofSearchN.lean} and \texttt{TrustBoundary.lean}, \texttt{containers} repository, Kodamai (rose-tree proof search; the trust-boundary rule stable under \texttt{duplicate}, \texttt{sorry}-free).
+
+% -- Theory pillar (Chapters: equivalence chain, Zappa--Sz\'ep, criterion, change-of-base); merged 2026-09-24 --
+\bibitem{AAG} M.~Abbott, T.~Altenkirch, N.~Ghani, \emph{Containers: constructing strictly positive types}, Theoret.\ Comput.\ Sci.\ \textbf{342} (2005), 3--27.
+
+\bibitem{ACU14} D.~Ahman, J.~Chapman, and T.~Uustalu, \emph{When is a container a comonad?}, Logical Methods in Computer Science \textbf{10}(3), 2014.
+
+\bibitem{AU16} D.~Ahman and T.~Uustalu, \emph{Directed containers as categories}, in: Proc.\ MSFP 2016, EPTCS \textbf{207}, 2016, pp.\ 89--98. arXiv:1604.01187.
+
+\bibitem{AhmanUustaluDL} D.~Ahman and T.~Uustalu, \emph{Distributive laws of directed containers}, Progress in Informatics \textbf{10} (2013), 3--18. DOI 10.2201/NIIPI.2013.10.2.
+
+\bibitem{au-update} D.~Ahman and T.~Uustalu, \emph{Update monads: cointerpreting directed containers}, in: TYPES 2013, LIPIcs \textbf{26} (2014), 1--23.
+
+\bibitem{Spi21} D.~I.~Spivak, \emph{Functorial aggregation}, arXiv:2111.10968, 2021.
+
+\bibitem{SS23} B.~Shapiro and D.~I.~Spivak, \emph{Structures on categories of polynomials}, arXiv:2305.00167, 2023.
+
+\bibitem{NiuSpivak} N.~Niu and D.~I.~Spivak, \emph{Polynomial Functors: A Mathematical Theory of Interaction}, book draft, 2023. arXiv:2312.00990.
+
+\bibitem{GambinoKock} N.~Gambino and J.~Kock, \emph{Polynomial functors and polynomial monads}, Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), 153--192. arXiv:0906.4931.
+
+\bibitem{SpivakSrinivasan} D.~I.~Spivak and P.~Srinivasan, \emph{$(\mathbf{Poly},\otimes,\triangleleft)$ is a normal duoidal LDC}, arXiv:2407.01849, 2024.
+
+\bibitem{Aguiar} M.~Aguiar, \emph{Internal categories and quantum groups}, PhD thesis, Cornell University, 1997.
+
+\bibitem{Clarke20} B.~Clarke, \emph{Internal lenses as functors and cofunctors}, in: Proc.\ ACT 2019, EPTCS \textbf{323}, 2020, pp.\ 183--195. arXiv:2009.06835.
+
+\bibitem{brin} M.~G.~Brin, \emph{On the Zappa--Sz\'ep product}, Comm.\ Algebra \textbf{33} (2005), 393--424.
+
+\bibitem{rw} R.~Rosebrugh and R.~J.~Wood, \emph{Distributive laws and factorization}, J.\ Pure Appl.\ Algebra \textbf{175} (2002), 327--353.
+
+\bibitem{street} R.~Street, \emph{The formal theory of monads}, J.\ Pure Appl.\ Algebra \textbf{2} (1972), 149--168.
+
+\bibitem{Kelly} G.~M.~Kelly, \emph{Basic Concepts of Enriched Category Theory}, London Math.\ Soc.\ Lecture Note Ser.\ \textbf{64}, Cambridge Univ.\ Press, 1982.
+
+\bibitem{KockMonoidal} A.~Kock, \emph{Monads on symmetric monoidal closed categories}, Arch.\ Math.\ (Basel) \textbf{21} (1970), 1--10.
+
+\bibitem{KockClosed} A.~Kock, \emph{Closed categories generated by commutative monads}, J.\ Austral.\ Math.\ Soc.\ \textbf{12} (1971), 405--424.
+
+\bibitem{Diers} Y.~Diers, \emph{Cat\'egories localisables}, Th\`ese de doctorat d'\'etat, Universit\'e Paris VI, 1977.
+
+\bibitem{vonGlehn} T.~von Glehn, \emph{Polynomials and models of type theory}, PhD thesis, University of Cambridge, 2015.
+
+\bibitem{Walker} C.~Walker, \emph{Locally subcartesian closed categories}, arXiv:2607.10242.
+
+\bibitem{WeberPoly} M.~Weber, \emph{Polynomials in categories with pullbacks}, Theory Appl.\ Categ.\ \textbf{30} (2015), 533--598. arXiv:1106.1983.
+
+\bibitem{WeberFamilial} M.~Weber, \emph{Familial 2-functors and parametric right adjoints}, Theory Appl.\ Categ.\ \textbf{18} (2007), 665--732.
+
+\bibitem{Weichsel} P.~M.~Weichsel, \emph{The Kronecker product of graphs}, Proc.\ Amer.\ Math.\ Soc.\ \textbf{13} (1962), 47--52.
+
+\bibitem{Xarez} J.~J.~Xarez, \emph{Admissibility, stable units and connected components}, arXiv:1112.4277, 2011.
+
+\bibitem{DJN} A.~Dorta, C.~B.~Jarvis, and N.~Niu, \emph{Monoidal structures on generalized polynomial categories}, arXiv:2305.05655.
+
+\bibitem{DPUV} G.~De~Pascalis, T.~Uustalu, and N.~Veltri, \emph{Monoid structures on indexed containers}, arXiv:2509.25879.
+
+\bibitem{MacBethBase} MacBeth, \emph{Containers over a base}, Kodamai working paper, 2026. (Object-level equivalence-chain milestones M2, M4 machine-checked in the \texttt{Containers/} Lean~4 corpus, \texttt{sorry}-free.)
 
 \end{thebibliography}
 

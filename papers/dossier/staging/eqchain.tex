@@ -1,0 +1,439 @@
+\chapter{The equivalence chain}
+\label{ch:eqchain}
+The local condition $(\mathrm{L})$ rests on the identification of four objects
+that were developed independently: ordinary containers, directed containers,
+polynomial comonoids, and small categories. This chapter assembles the chain
+$\Cont\simeq\DCont\simeq(\text{poly comonoids})\simeq\Cat$ and fixes the
+notation used throughout the dossier. It is the foundation on which every later
+composition statement stands: to compose systems coherently, each system must
+first \emph{be} one of these objects.
+
+%============================================================
+\section{One object, four dialects}\label{sec:chain-dialects}
+%============================================================
+
+The organising slogan of the chapter is that a small category, a directed
+container, and a polynomial comonoid are \emph{the same object spoken in three
+dialects}, sitting inside the larger world of containers as exactly those that
+carry comonad structure. The four vocabularies line up term for term.
+
+\begin{notation}[The four dialects]\label{not:chain-dialects}
+Throughout, we translate freely across the following dictionary.
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Container} & \textbf{Directed container} & \textbf{Polynomial} & \textbf{Category}\\
+\midrule
+shape $s\in S$ & shape $s$ & position $s\in p(1)$ & object $s$\\
+position $p\in P(s)$ & position $p$ & direction $p\in p[s]$ & morphism out of $s$\\
+--- & root $\mathsf o(s)$ & --- & identity $\id_s$\\
+--- & sub-shape $s\downarrow p$ & --- & codomain $\cod(p)$\\
+--- & shift $p\oplus q$ & --- & composite $q\circ p$\\
+container map & directed-container map & comonoid hom. & \emph{cofunctor}\\
+\bottomrule
+\end{tabular}
+\end{center}
+The bottom row is the one subtlety carried by this chapter: the equivalences of
+the chain are equivalences \emph{of categories} between directed containers and
+polynomial comonoids, whereas the identification with $\Cat$ is a bijection
+\emph{on objects}; the native morphisms are cofunctors, not functors
+(\S\ref{sec:chain-assembled}).
+\end{notation}
+
+The plan is: recall containers and their extension (\S\ref{sec:chain-cont});
+add the directed structure (\S\ref{sec:chain-dcont}); show that directed
+structure is \emph{exactly} comonad structure on the extension
+(\S\ref{sec:chain-comonad}); read that comonad as a small category
+(\S\ref{sec:chain-dictionary}); re-read the same data in $\Poly$ as a comonoid
+(\S\ref{sec:chain-poly}); and assemble the chain with its variance caveat and
+formalisation status (\S\ref{sec:chain-assembled}).
+
+%============================================================
+\section{Containers and the extension}\label{sec:chain-cont}
+%============================================================
+
+We recall only what the chain uses; the definitions and their basic theory are
+established in Chapter~\ref{ch:prelim}. A \emph{container} is a pair $(S,P)$ of
+a set $S$ of \emph{shapes} and a family $P\colon S\to\Set$ of \emph{positions}
+\cite{AAG}. Its \emph{extension} is the endofunctor
+\[
+  \den{S,P}(X)\;=\;\sum_{s\in S}X^{P(s)}\;=\;\sum_{s\in S}\Set\big(P(s),X\big),
+\]
+an element being a pair $(s,v)$ with $v\colon P(s)\to X$. As recorded in the
+preliminaries, containers organise into $\Cont\iso\Fam(\Set^{\op})$
+(Notation~\ref{not:prelim-cont}), a morphism $(S,P)\to(S',P')$ being a shape map
+$f\colon S\to S'$ \emph{forward} together with a position map
+$f^{\sharp}_{s}\colon P'(fs)\to P(s)$ \emph{backward}; the extension is the left
+Kan extension exhibited in Theorem~\ref{thm:prelim-lan}, and
+$\den{-}\colon\Cont\to\End(\Set)$ is full and faithful onto the polynomial
+functors by the Yoneda/density argument of
+Theorems~\ref{thm:prelim-yoneda}--\ref{thm:prelim-density}. We do not reprove
+these here.
+
+\begin{remark}[The backward variance is the whole story]\label{rem:chain-variance}
+The contravariance of $f^{\sharp}$ in positions is not incidental. It is the
+fibrewise opposite of $\Fam(\Set^{\op})$, and it is precisely what will force the
+morphisms of directed containers to be cofunctors rather than functors
+(\S\ref{sec:chain-assembled}). Every phenomenon in this chapter is a consequence
+of positions running backward while shapes run forward.
+\end{remark}
+
+%============================================================
+\section{Directed containers}\label{sec:chain-dcont}
+%============================================================
+
+Chapter~\ref{ch:prelim} introduced a directed container informally as a
+$\tri$-comonoid (Definition~\ref{def:prelim-dcont}). We now fix the explicit
+operational form used for all computations, following
+Ahman--Chapman--Uustalu \cite{ACU14}.
+
+\begin{definition}[Directed container]\label{def:chain-dcont}
+A \emph{directed container} is a container $(S,P)$ equipped with
+\begin{itemize}[nosep]
+  \item a \emph{root} $\mathsf o(s)\in P(s)$ for each $s\in S$;
+  \item a \emph{sub-shape} operation $s\downarrow p\in S$ for $p\in P(s)$;
+  \item a \emph{shift} $p\oplus q\in P(s)$ for $p\in P(s)$ and $q\in P(s\downarrow p)$;
+\end{itemize}
+subject, for all $s$, $p\in P(s)$, $q\in P(s\downarrow p)$ and
+$q'\in P((s\downarrow p)\downarrow q)$, to
+\begin{align*}
+  &\mathrm{(D1)} && s\downarrow\mathsf o(s)=s,
+  & &\mathrm{(D2)} && \mathsf o(s)\oplus q=q,
+  & &\mathrm{(D3)} && p\oplus\mathsf o(s\downarrow p)=p,\\
+  &\mathrm{(D4)} && s\downarrow(p\oplus q)=(s\downarrow p)\downarrow q,
+  & &\mathrm{(D5)} && (p\oplus q)\oplus q'=p\oplus(q\oplus q'). &&&&
+\end{align*}
+Directed containers and their morphisms (Definition~\ref{def:chain-dcm}) form the
+category $\DCont$.
+\end{definition}
+
+\begin{remark}[An indexed monoid]\label{rem:chain-indexed-monoid}
+Laws (D2), (D3), (D5) make each $P(s)$ a monoid-like structure with unit
+$\mathsf o(s)$; (D1) and (D4) track how sub-shapes nest. The typing of (D5)
+depends on (D4): for $p\oplus(q\oplus q')$ to be defined one needs
+$q\oplus q'\in P(s\downarrow p)$ with
+$(s\downarrow p)\downarrow(q\oplus q')=s\downarrow(p\oplus q)$, which is exactly
+(D4). This foreshadows the categorical reading, where the well-typedness of
+associative composition rests on the codomain law.
+\end{remark}
+
+%============================================================
+\section{Directed containers are comonads (M2)}\label{sec:chain-comonad}
+%============================================================
+
+The first link identifies directed structure with comonad structure on the
+extension. This is the content the roadmap calls milestone~M2.
+
+\begin{proposition}[The extension comonad, computed; \emph{proved}, \emph{lean-verified}]\label{thm:chain-comonad}
+Let $(S,P)$ be a directed container and $D:=\den{S,P}$. Define
+\[
+  \varepsilon_X(s,v)=v(\mathsf o(s)),\qquad
+  \delta_X(s,v)=\big(s,\ \lambda p.\,(s\downarrow p,\ \lambda q.\,v(p\oplus q))\big).
+\]
+Then $(D,\varepsilon,\delta)$ is a comonad, and each comonad law is exactly one
+directed-container law: the left counit is \textup{(D1)+(D2)}, the right counit
+is \textup{(D3)}, and coassociativity is \textup{(D4)+(D5)}. Conversely, every
+comonad structure on $\den{S,P}$ arises this way, so directed-container
+structures on $(S,P)$ correspond bijectively to comonad structures on
+$\den{S,P}$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Write $\delta(s,v)=(s,w)$ with $w(p)=(s\downarrow p,\lambda q.\,v(p\oplus q))$.
+\emph{Left counit:}
+$\varepsilon(s,w)=w(\mathsf o(s))=(s\downarrow\mathsf o(s),\lambda q.\,v(\mathsf o(s)\oplus q))
+=(s,v)$ using (D1) for the shape and (D2) for the value. \emph{Right counit:}
+$\varepsilon(w(p))=v(p\oplus\mathsf o(s\downarrow p))=v(p)$ by (D3).
+\emph{Coassociativity:} both composites of $\delta$ reduce to
+$\big(s,\lambda p.\,(s\downarrow p,\lambda q.\,((s\downarrow p)\downarrow q,
+\lambda q'.\,v(p\oplus(q\oplus q'))))\big)$, the inner shape agreeing by (D4) and
+the value by (D5). The converse is the reverse reading: full-and-faithfulness of
+$\den{-}$ (Theorem~\ref{thm:prelim-yoneda}) makes the displayed computations
+force (D1)--(D5) from the comonad laws.
+\end{proof}
+
+\begin{remark}[Provenance and formalisation]\label{rem:chain-M2}
+The biconditional is Ahman--Chapman--Uustalu \cite[Thm.\ 3.15]{ACU14}: the
+category of directed containers is the pullback of the forgetful functor
+$\mathrm{Comon}(\End\Set)\to\End(\Set)$ along $\den{-}$. The coordinate proof of
+the comonad laws above is machine-checked in Lean (the position-transfer
+comonad-law calculation, \texttt{[Quot.sound]}-only) \cite{MacBethBase}. We
+report this as \emph{lean-verified} at the level of the law-matching; the full
+pullback statement of \cite{ACU14} is \emph{proved} in the source and not
+independently re-formalised here.
+\end{remark}
+
+%============================================================
+\section{The object dictionary: directed containers are small categories (M4)}\label{sec:chain-dictionary}
+%============================================================
+
+The second link reads the comonad of \S\ref{sec:chain-comonad} as a small
+category. This is Ahman--Uustalu \cite{AU16}; we record the bijection of data.
+
+\begin{theorem}[Object dictionary \cite{AU16}; \emph{proved}]\label{thm:chain-dictionary}
+Directed-container structures on $(S,P)$ are in bijection with small categories
+$\mathcal C$ with object set $S$ and $P(s)=\coprod_{s'}\mathcal C(s,s')$ (the
+morphisms out of $s$), under
+\[
+  \ob\mathcal C=S,\quad
+  \mathcal C(s,s')=\{p\in P(s):s\downarrow p=s'\},\quad
+  \id_s=\mathsf o(s),\quad
+  q\circ p=p\oplus q.
+\]
+In particular $s\downarrow p=\cod(p)$, and every small category arises from a
+unique directed container.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+\emph{(Category $\Rightarrow$ directed container.)} Set
+$P(s)=\coprod_{s'}\mathcal C(s,s')$, $s\downarrow p=\cod(p)$,
+$\mathsf o(s)=\id_s$, $p\oplus q=q\circ p$. Then (D1) is $\cod(\id_s)=s$; (D2),
+(D3) are the unit laws; (D4) is $\cod(q\circ p)=\cod(q)$; (D5) is associativity,
+written with the order reversal $p\oplus q=q\circ p$.
+\emph{(Directed container $\Rightarrow$ category.)} Take
+$\mathcal C(s,s')=\{p\in P(s):s\downarrow p=s'\}$, identities $\mathsf o(s)$
+(landing in $\mathcal C(s,s)$ by (D1)), and composite $p\oplus q$ (landing in
+$\mathcal C(s,s'')$ by (D4)); unit laws are (D2),(D3), associativity is (D5).
+The two constructions are mutually inverse.
+\end{proof}
+
+\begin{corollary}[The two atoms]\label{cor:chain-atoms}
+One-shape directed containers ($|S|=1$) are exactly monoids; thin ones
+($|\mathcal C(s,s')|\le1$) are exactly preorders. Every small category is
+assembled from these two phenomena --- many objects and endo-loops.
+\end{corollary}
+
+\begin{example}[The two generating cases]\label{ex:chain-atoms}
+For the poset $\mathbf 2=\{0\xrightarrow{u}1\}$: $S=\{0,1\}$,
+$P(0)=\{\mathsf o(0),u\}$, $P(1)=\{\mathsf o(1)\}$, with $0\downarrow u=1$ and
+$u\oplus\mathsf o(1)=u$; the extension has $|\den{S,P}(1)|=3$, the three
+morphisms. For the monoid $\Z/3$: one shape $\star$, $P(\star)=\Z/3$,
+$\star\downarrow p=\star$, $\mathsf o(\star)=0$, $p\oplus q=p+q\bmod 3$; the
+extension is the shift comonad $DX=X^{3}$ with $\varepsilon(v)=v(0)$ and
+$\delta(v)=\lambda p.\lambda q.\,v(p+q)$. All laws are verified by hand in the
+source.
+\end{example}
+
+%============================================================
+\section{Polynomial comonoids (M5, bridge)}\label{sec:chain-poly}
+%============================================================
+
+The third dialect is Spivak's category $\Poly$ of polynomial endofunctors on
+$\Set$. A container $(S,P)$ is the polynomial $p=\sum_{s\in S}y^{P(s)}$ with
+$p(1)=S$ and $p[s]=P(s)$; container maps are maps of polynomials, so $\Cont$ is
+$\Poly$ under a change of name \cite{NiuSpivak,GambinoKock}. The composition
+tensor $\tri$ on $\Poly$ corresponds to composition of extensions,
+$\den{p\tri q}\iso\den p\circ\den q$.
+
+\begin{theorem}[Polynomial comonoids are categories \cite{Spi21,SS23,NiuSpivak}; \emph{proved} in the sources]\label{thm:chain-poly}
+The comonoids for $(\Poly,\tri,\yy)$ --- \emph{polynomial comonoids} --- are
+exactly small categories: the counit is the identity-assigning map and the
+comultiplication is composition, subject to the comonoid laws which are the
+category axioms. Their morphisms are the comonoid homomorphisms, and the
+resulting category is $\mathbb C\mathrm{at}^{\sharp}=\mathrm{Comod}(\Poly)$.
+\end{theorem}
+
+\begin{remark}[One structure, two derivations]\label{rem:chain-poly}
+A polynomial comonoid on $p=\den{S,P}$ is the same data as the extension comonad
+of Proposition~\ref{thm:chain-comonad}: comultiplication $\delta$ is
+$s\mapsto(s\downarrow p,\oplus)$ and counit $\varepsilon$ is $\mathsf o$.
+Ahman--Uustalu \cite{ACU14,AU16} and Spivak et al.\ \cite{Spi21,SS23} arrived at
+this identification independently, from datatypes and from interaction
+respectively. The translation is tabulated in
+Notation~\ref{not:chain-dialects}. This is milestone~M5; the full agreement of
+\emph{all} monoidal structures on $\Cont$ with the four products of $\Poly$
+(coproduct, product, $\tri$, Dirichlet) is \emph{open} and not formalised.
+\end{remark}
+
+%============================================================
+\section{The chain, assembled; and the variance caveat}\label{sec:chain-assembled}
+%============================================================
+
+Combining the links gives the chain of the chapter, which we now state precisely
+--- and correct where the informal slogan misleads.
+
+\begin{theorem}[The equivalence chain; \emph{proved}]\label{thm:chain-main}
+There are equivalences of categories
+\[
+  \DCont\;\simeq\;\mathrm{Comod}(\Poly)\;=\;\mathbb C\mathrm{at}^{\sharp},
+\]
+and a bijection, natural in the data, between the objects of these categories and
+small categories (Theorem~\ref{thm:chain-dictionary}). Directed containers embed
+into containers by the forgetful functor $\DCont\to\Cont$ that discards
+$(\mathsf o,\downarrow,\oplus)$; this functor is faithful and injective on
+objects but not full, so $\DCont$ is a proper (non-full) subclass of $\Cont$ ---
+exactly the containers whose extension carries a comonad structure
+(Proposition~\ref{thm:chain-comonad}).
+\end{theorem}
+
+\begin{remark}[Reading the chain of the chapter head]\label{rem:chain-reading}
+The displayed chain $\Cont\simeq\DCont\simeq(\text{poly comonoids})\simeq\Cat$
+must be read with two qualifications, both proved above.
+\begin{enumerate}[nosep]
+  \item The link $\Cont$--$\DCont$ is a \emph{containment}
+    $\Cont\supseteq\DCont$ (the forgetful functor of
+    Theorem~\ref{thm:chain-main}), not an equivalence: not every container is
+    directed.
+  \item The link to $\Cat$ is an equivalence \emph{on objects} only. As a
+    category, $\DCont\simeq\mathbb C\mathrm{at}^{\sharp}$, whose morphisms are
+    cofunctors, not functors (Theorem~\ref{thm:chain-morphisms} below).
+\end{enumerate}
+The genuine equivalences of categories are
+$\DCont\simeq\mathrm{Comod}(\Poly)=\mathbb C\mathrm{at}^{\sharp}$.
+\end{remark}
+
+We make the second qualification precise, since it governs how systems compose in
+every later chapter. The maps native to directed containers pull positions
+backward, $f^{\sharp}_{s}\colon P'(fs)\to P(s)$ (Remark~\ref{rem:chain-variance}),
+which under the dictionary lifts a morphism out of $fs$ to one out of $s$ --- the
+variance of a \emph{cofunctor}, not a functor.
+
+\begin{definition}[Directed-container morphism]\label{def:chain-dcm}
+A morphism $D\to D'$ of directed containers is a container morphism
+$(f,f^{\sharp})$ satisfying, for all $s$, $h\in P'(fs)$ and
+$k\in P'((fs)\downarrow'h)$,
+\begin{align*}
+  &\mathrm{(M0)} && f\big(s\downarrow f^{\sharp}_{s}(h)\big)=(fs)\downarrow'h,\\
+  &\mathrm{(M1)} && f^{\sharp}_{s}\big(\mathsf o'(fs)\big)=\mathsf o(s),\\
+  &\mathrm{(M2)} && f^{\sharp}_{s}(h\oplus'k)
+      =f^{\sharp}_{s}(h)\ \oplus\ f^{\sharp}_{\,s\downarrow f^{\sharp}_{s}(h)}(k).
+\end{align*}
+\end{definition}
+
+\begin{definition}[Cofunctor \cite{Aguiar,Clarke20,Spi21}]\label{def:chain-cofunctor}
+A \emph{cofunctor} $\varphi\colon\mathcal C\co\mathcal D$ is an object map
+$\varphi_0$ together with a lift assigning to each object $c$ and morphism
+$h\colon\varphi_0c\to d$ a morphism $\varphi^{\uparrow}(c,h)\colon c\to c'$,
+subject to
+$\mathrm{(C0)}\ \varphi_0(\cod\varphi^{\uparrow}(c,h))=\cod(h)$,
+$\mathrm{(C1)}\ \varphi^{\uparrow}(c,\id_{\varphi_0c})=\id_c$, and
+$\mathrm{(C2)}\ \varphi^{\uparrow}(c,h'\circ h)
+=\varphi^{\uparrow}(c',h')\circ\varphi^{\uparrow}(c,h)$ with
+$c'=\cod\varphi^{\uparrow}(c,h)$. Small categories and cofunctors form
+$\mathbf{Cof}=\mathbb C\mathrm{at}^{\sharp}$, the comonoids in
+$(\Poly,\tri)$ and their homomorphisms \cite{Spi21,SS23}.
+\end{definition}
+
+\begin{theorem}[The morphism dictionary \cite{AU16,SS23}; \emph{proved}, \emph{lean-verified}]\label{thm:chain-morphisms}
+The assignment $(f,f^{\sharp})\mapsto(\varphi_0:=f,\ \varphi^{\uparrow}(s,h):=f^{\sharp}_{s}(h))$
+is an isomorphism of categories
+\[
+  \DCont\;\cong\;\mathbf{Cof},
+\]
+matching \textup{(M0)--(M2)} to \textup{(C0)--(C2)} term for term under the
+substitutions ``position out of $s$ $=$ morphism out of $s$'' and
+``$x\oplus y=y\circ x$''. This isomorphism is formalised in Lean~4 with zero
+\texttt{sorry} and zero axioms \cite{MacBethBase}.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Under the object dictionary the two sides are literally the same data: $f$ is an
+object map and $f^{\sharp}$ is a lift. (M0) is the codomain law (C0); (M1) is the
+unit law (C1); and, writing $p=f^{\sharp}_s(h)$, $s'=s\downarrow p$, the shift
+law (M2) reads
+$f^{\sharp}_s(k\circ'h)=\varphi^{\uparrow}(s',k)\circ\varphi^{\uparrow}(s,h)$,
+which is (C2). The correspondence is a bijection on every hom-set and preserves
+identities and composition (position maps compose backward,
+$(g\circ f)^{\sharp}_s=f^{\sharp}_s\circ g^{\sharp}_{fs}$), and it is a bijection
+on objects by Theorem~\ref{thm:chain-dictionary}; a bijective-on-objects fully
+faithful functor is an isomorphism of categories.
+\end{proof}
+
+\begin{proposition}[The dictionary does not extend to $\Cat$ with functors; \emph{proved} \cite{AU16,SS23}]\label{prop:chain-notcat}
+There is no functor $\DCont\to\Cat$ agreeing with the object dictionary on
+objects and full. Already for the terminal category $\mathbf 1$ and
+$\mathbf 2=\{0\to1\}$ there is exactly one cofunctor $\mathbf 1\co\mathbf 2$ but
+two functors $\mathbf 1\to\mathbf 2$, so
+$|\DCont(D_{\mathbf 1},D_{\mathbf 2})|=1<2=|\Cat(\mathbf 1,\mathbf 2)|$. The
+comparison is not even monotone: $|\Cat(\mathbf 3,\mathbf 2)|=4<5=|\mathbf{Cof}(\mathbf 3,\mathbf 2)|$
+while $|\Cat(\mathbf 2,\mathbf 2)|=3>2=|\mathbf{Cof}(\mathbf 2,\mathbf 2)|$, so
+neither hom-set contains the other.
+\end{proposition}
+
+\begin{remark}[Why the variance is the useful half]\label{rem:chain-lens}
+The covariant variant (position maps $P(s)\to P'(fs)$ under the mirror-image
+conditions) recovers functors exactly, but these are \emph{not} morphisms of the
+underlying container. The contravariant, native half is the \emph{Put} of a delta
+lens \cite{Clarke20}: a directed-container morphism is the update-propagating
+component of a bidirectional transformation. Every later composition statement in
+this dossier --- supply-chain stages, agent hierarchies, state updates ---
+composes its maps as cofunctors; reading them as functors keeps the Get and
+silently discards the Put, and even changes the count of maps
+(Proposition~\ref{prop:chain-notcat}).
+\end{remark}
+
+\begin{remark}[Formalisation status of the chain]\label{rem:chain-status}
+Against the roadmap milestones, the object-level chain is verified as follows.
+\emph{M1} (containers, the representation theorem) is standard and recorded in
+Chapter~\ref{ch:prelim}. \emph{M2} (directed container $=$ comonad,
+Proposition~\ref{thm:chain-comonad}) is \emph{proved} in \cite{ACU14} with the
+law-matching \emph{lean-verified} \cite{MacBethBase}. \emph{M4}
+($\DCont\cong\mathbf{Cof}$, Theorem~\ref{thm:chain-morphisms}) is
+\emph{lean-verified}, zero \texttt{sorry} and zero axioms \cite{MacBethBase}.
+Milestones \emph{M5} (agreement of all four monoidal products with $\Poly$,
+Remark~\ref{rem:chain-poly}) and \emph{M6} (the double category $\mathbb O\mathrm{rg}$
+of orchestration) are \emph{open}: stated in the sources as targets, not yet
+formalised, and not claimed here.
+\end{remark}
+
+% =====================================================================
+% NEW OPERATORS USED (not in the allowed macro list) — for the integrator:
+%   \cod, \dom   : \DeclareMathOperator{\cod}{cod}, {\dom}{dom}
+%   \sharp on Cat: written inline as \mathbb C\mathrm{at}^{\sharp}
+%   \mathbf{Cof} : category of cofunctors (written inline, no macro)
+%   \mathbb O\mathrm{rg} : Spivak's Org double category (written inline)
+%   \mathrm{Comod}, \mathrm{Comon} : written inline
+%   f^{\sharp}   : container position component (written inline as ^{\sharp})
+% Allowed macros used: \Cont \DCont \Cat \Poly \Fam \End \tri
+%   \op \Set \Z \den{..} \yy \id \ob \co \iso
+% =====================================================================
+
+% BIBITEMS-USED
+% (copied verbatim from the source .tex bibliographies; merge into master bib)
+%
+% \bibitem{AAG} M.~Abbott, T.~Altenkirch, N.~Ghani,
+% \emph{Containers: constructing strictly positive types},
+% Theoret.\ Comput.\ Sci.\ \textbf{342} (2005), 3--27.
+%
+% \bibitem{ACU14}
+% D.~Ahman, J.~Chapman, and T.~Uustalu.
+% \emph{When is a container a comonad?}
+% Logical Methods in Computer Science \textbf{10}(3), 2014.
+%
+% \bibitem{AU16}
+% D.~Ahman and T.~Uustalu.
+% \emph{Directed containers as categories}.
+% In \emph{Proc.\ MSFP 2016}, EPTCS \textbf{207}, 2016, pp.\ 89--98.
+% \href{https://arxiv.org/abs/1604.01187}{arXiv:1604.01187}.
+%
+% \bibitem{Spi21}
+% D.~I.~Spivak.
+% \emph{Functorial aggregation}.
+% \href{https://arxiv.org/abs/2111.10968}{arXiv:2111.10968}, 2021.
+%
+% \bibitem{SS23}
+% B.~Shapiro and D.~I.~Spivak.
+% \emph{Structures on categories of polynomials}.
+% \href{https://arxiv.org/abs/2305.00167}{arXiv:2305.00167}, 2023.
+%
+% \bibitem{Aguiar}
+% M.~Aguiar.
+% \emph{Internal categories and quantum groups}.
+% PhD thesis, Cornell University, 1997.
+%
+% \bibitem{Clarke20}
+% B.~Clarke.
+% \emph{Internal lenses as functors and cofunctors}.
+% In \emph{Proc.\ ACT 2019}, EPTCS \textbf{323}, 2020, pp.\ 183--195.
+% \href{https://arxiv.org/abs/2009.06835}{arXiv:2009.06835}.
+%
+% \bibitem{GambinoKock} N.~Gambino and J.~Kock,
+% \emph{Polynomial functors and polynomial monads},
+% Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), 153--192. arXiv:0906.4931.
+%
+% \bibitem{NiuSpivak} N.~Niu and D.~I.~Spivak,
+% \emph{Polynomial Functors: A Mathematical Theory of Interaction},
+% book draft, 2023. arXiv:2312.00990.
+%
+% \bibitem{MacBethBase} MacBeth,
+% \emph{Containers over a base}, Kodamai working paper, 2026.

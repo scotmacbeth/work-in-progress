@@ -1,0 +1,548 @@
+\chapter{Change-of-base, $\Fam(\mathcal{C}^{\mathrm{op}})$ generality, and the $\{\mathrm{Id}\}$ classification}
+\label{ch:cob}
+How far does the equation generalise? The natural setting is containers over a
+general base, i.e.\ $\Fam(\mathcal{C}^{\mathrm{op}})$, with change-of-base along
+functors and monads. This chapter assembles the positive generality results
+($m$-containers, codensity/polynomiality, the four monoidal structures) and the
+sharp negative: the self-enriched full-and-faithful change-of-base container
+semantics collapses to $\{\mathrm{Id}\}$ --- no nontrivial effect monad supports
+it. Knowing the boundary is itself the result.
+
+%========================================================================
+\section{The base as a degree of freedom}
+\label{sec:cob-setup}
+
+Recall from Chapter~\ref{ch:prelim} that a container is an object of
+$\Fam(\Set^{\op})$ (Notation~\ref{not:prelim-cont}) and that its extension is a
+left Kan extension along the representable embedding (Theorem~\ref{thm:prelim-lan}),
+\[
+  \den{S,P}\,X \;=\; \sum_{s\in S}\Set(P_s,X)\;=\;\sum_{s\in S}X^{P_s}.
+\]
+The formula has exactly one silent parameter: the hom-set $\Set(P_s,X)$. Replace
+$\Set$ by a category $\mathcal{C}$ and read positions out in $\mathcal{C}$'s
+internal hom, and the same syntax presents a wholly different world.
+
+\begin{definition}[Containers over a base]\label{def:cob-fam}
+For a closed symmetric monoidal category $(\mathcal{C},\otimes,I,[-,-])$ with
+small coproducts, $\Fam(\mathcal{C}^{\op})$ has objects $(S,P)$ with $S$ a set of
+shapes and $P_s\in\mathcal{C}$ a \emph{position object} for each $s$, and
+morphisms $(S,P)\to(T,Q)$ a shape map $f\colon S\to T$ together with, per $s$, a
+$\mathcal{C}$-map $Q_{f(s)}\to P_s$ (contravariant in positions). The
+\emph{extension} into $\mathcal{C}$-enriched endofunctors is
+\[
+  \den{S,P}\;=\;\sum_{s\in S}[P_s,-]\;\colon\;\mathcal{C}\to\mathcal{C}.
+\]
+\end{definition}
+
+A single construction thus covers the whole programme, selected by the base:
+$\mathcal{C}=\Set$ gives ordinary containers; $\mathcal{C}=\mathrm{Kl}(M)$ for a
+monad $M$ gives \emph{effectful} ($M$-)containers, whose positions are read in a
+Kleisli category; $\mathcal{C}=\VecC$ gives linear containers; and
+$\mathcal{C}=\Cat$ recovers directed containers and hence small categories
+(Chapter~\ref{ch:prelim}, \S\ref{sec:prelim-dcont}). The assignment
+$\mathcal{C}\mapsto\Fam(\mathcal{C}^{\op})$ is functorial: a functor
+$F\colon\mathcal{C}\to\mathcal{D}$ induces $\Fam(F^{\op})$, acting as $F$ on
+positions and identically on shapes, and the total category assembling all bases
+is a bifibration over $\Set$ whose fibrewise opposite is the contravariance in
+positions \cite{vonGlehn}. \emph{Change of base} along $F\colon\Set\to\mathcal{C}$
+is the transport of the standard theory into $\mathcal{C}$; when $F$ is
+(co)monoidal it carries (co)monoidal structure, and that is where effects and
+directedness enter.
+
+The remainder of the chapter is a suite of positive generality results
+(\S\S\ref{sec:cob-mcont}--\ref{sec:cob-admiss}), a diagnosis of the linear wall
+(\S\ref{sec:cob-vec}), and the collapse that fixes the exact boundary of a
+\emph{uniform} enriched semantics (\S\ref{sec:cob-collapse}).
+
+%========================================================================
+\section{Positive suite I: $m$-containers, codensity, polynomiality}
+\label{sec:cob-mcont}
+
+The Kleisli base is the central instance and the one where two Kan-theoretic
+invariants of the effect first appear. Fix a monad $M=(M,\eta,\mu)$ on $\Set$; an
+\emph{$M$-container} is a container $(S,P)$ whose positions are read in
+$\mathrm{Kl}(M)$, with $M$-extension $\den{S,P}_M X=\sum_{s}\Set(P_s,MX)$. All
+results of this section are \emph{peer-reviewed} (Rick).
+
+\begin{theorem}[Identification and factorisation; \emph{peer-reviewed}]\label{thm:cob-mfactor}
+$M\text{-}\Cont=\Fam(\mathrm{Kl}(M)^{\op})$, and as endofunctors, naturally in
+$(S,P)$,
+\[
+  \den{S,P}_M\;=\;\den{S,P}\circ M .
+\]
+\end{theorem}
+
+So an $M$-container functor is an \emph{ordinary polynomial functor with a
+trailing $M$}. This one factorisation is the lever for everything below: every
+structural question about $\den{-}_M$ becomes a question about the single
+trailing $M$. The proof is a direct unfolding of the two hom-descriptions.
+
+\begin{theorem}[Faithful always; fullness $=$ codensity; \emph{peer-reviewed}]\label{thm:cob-codensity}
+$\den{-}_M\colon M\text{-}\Cont\to[\Set,\Set]$ is \emph{always faithful}
+(the Kleisli unit $\eta$ is a section, so container data is read back off any
+induced transformation). It is \emph{full} --- hence fully faithful --- if and
+only if \textup{(i)} each functor $\Set(A,M{-})$ is connected, and \textup{(ii)}
+$M$ is \emph{codense}, i.e.\ the canonical monad map $M\Rightarrow\Ran_M M$ into
+its own codensity monad is an isomorphism.
+If $M$ is affine ($M1\cong1$) then \textup{(i)} holds automatically, so
+\emph{affine $+$ codense $\Rightarrow$ fully faithful}.
+\end{theorem}
+
+The engine is that precomposition $(-)\circ M$ has right adjoint $\Ran_M$, so
+every hom-set $\Nat(\Set(A,M{-}),H)$ is a value of the right Kan extension along
+$M$; the fullness obstruction is exactly the failure of the unit
+$M\Rightarrow\Ran_M M=\Phi$ (the codensity monad, $\Phi(A)=\Nat(\Set(A,M{-}),M)$)
+to be invertible. The verdict is genuinely selective.
+
+\begin{example}[The effects sort themselves]\label{ex:cob-effects}
+The finite-distribution monad $\mathsf{D}$ is affine and codense, so
+$\den{-}_{\mathsf{D}}$ \emph{is} fully faithful (modulo the standard rigidity
+$\Nat(\mathsf{D},\mathsf{D})=\{\id\}$). By contrast $\mathsf{Maybe}$, exceptions $X+E$, the writer
+$E\times(-)$ and the reader $(-)^R$ ($|R|\ge2$) all fail codensity and so lose
+fullness. The reader is affine but \emph{not} codense
+($\Phi(A)=(RA)^R\neq A^R=MA$), showing (i) and (ii) are independent conditions.
+\end{example}
+
+\begin{remark}[The wrong criterion]\label{rem:cob-wrongcrit}
+The natural guess ``$\den{-}_M$ is full iff $M$ preserves coproducts'' is false
+for the target $[\Set,\Set]$: that is the criterion for the coarser
+Kleisli-enriched target, and it gives the wrong verdict on $\mathsf{D}$. The writer
+$E\times(-)$ \emph{preserves} coproducts yet fails codensity
+($\Phi(1)=|E|^{|E|}\neq|E|$ for $|E|\ge2$), a clean refutation. The controlling
+invariant is the codensity monad $\Ran_M M$, not coproduct preservation.
+\end{remark}
+
+The second invariant governs composition. Call $M$ \emph{polynomial} if
+$M\cong\sum_{i\in I}(-)^{B_i}$, i.e.\ $M=\den{\lceil M\rceil}$ for a container
+$\lceil M\rceil$.
+
+\begin{theorem}[Composition $=$ polynomiality; \emph{peer-reviewed}]\label{thm:cob-compose}
+\emph{(Sufficiency, unconditional.)} If $M$ is polynomial then
+$p\tri_M q:=p\tri\lceil M\rceil\tri q$ satisfies
+$\den{p\tri_M q}_M\cong\den{p}_M\circ\den{q}_M$ naturally, so the essential image
+of $\den{-}_M$ is closed under composition. The operation $\tri_M$ is associative
+but has a two-sided unit up to container isomorphism \emph{only} when $M=\Id$: it
+is semigroupal, not monoidal.
+\emph{(Necessity, conditional.)} The converse --- closure $\Rightarrow M$
+polynomial --- holds on an exactly delimited class strictly larger than the
+\emph{fully symmetric} world: for super-polynomial $M$ (a cardinality law, ruling
+out powerset, $\mathsf{D}$, ultrafilter, continuation); for analytic $M$ with
+$M\emptyset=\emptyset$ (right-cancellation of plethysm, at unbounded degree and
+nesting); for analytic $M$ of bounded wreath depth (an imprimitivity invariant
+subsuming multiset and symmetric powers); and for the free-algebra monad of every
+unital non-flat operad with a commutative binary composite and
+$\Delta_{C_2}\notin\mathcal{S}$. It \emph{fails} for partially symmetric unital
+operads: a ternary operation with cyclic ($C_3$) slot-symmetry and an absorbed
+unit is non-polynomial yet composition-closed.
+\end{theorem}
+
+The one genuinely open point is the converse of the last clause
+($\Delta_{C_2}\in\mathcal{S}\Rightarrow$ closed), verified for the all-binary
+inhabitant at small arities and open in general. Within the fully symmetric world
+--- which contains all the applied effect monads (multiset, distribution,
+powerset) --- composition $\iff$ flatness $\iff$ polynomiality.
+
+\begin{corollary}[The trade-off; \emph{peer-reviewed}]\label{cor:cob-tradeoff}
+Fullness (codensity) and composability (polynomiality) are independent invariants
+of $M$ that trade oppositely across the standard effects. The writer $E\times(-)$
+is polynomial, hence composes, but is not codense, hence not full. The
+distribution monad $\mathsf{D}$ is affine and codense, hence full, but is not polynomial,
+hence does not compose. \emph{Probability keeps faithful naming and loses
+composition; error keeps composition and loses faithful naming.} In particular
+the folklore ``composes $\iff$ commutative and affine'' is false: $\mathsf{D}$ is affine
+and commutative but does not compose, while $\mathsf{Maybe}$ is neither yet does.
+\end{corollary}
+
+%========================================================================
+\section{Positive suite II: the change-of-base census}
+\label{sec:cob-changebase}
+
+Beyond the Kleisli identification, the same frame $\Fam((-)^{\op})$ absorbs a
+census of monad/comonad transports, each a change of base or a fibrewise transport
+read in the appropriate variance. All are \emph{proved} in the companion material.
+
+\begin{proposition}[Position transfer: monads become comonads; \emph{proved}]\label{prop:cob-transfer}
+Because positions are contravariant, a monad $M$ on $\Set$ postcomposed on the
+position family, $G(S,P)=(S,M\circ P)$, is a \emph{comonad} on $\Cont$ --- with
+counit $\eta$ and comultiplication $\mu$ on the fibres --- and this is a
+biconditional: the comonad laws for $G$ hold iff the monad laws for $M$ do
+(single-shape containers realise every fibre). Globally $G=\Lan_{(S,P)}M$. Dually
+a comonad on $\Set$ yields a monad on $\Cont$. This is the slogan of the whole
+frame in miniature: \emph{a monad on the base is a comonad on the fibrewise
+opposite}.
+\end{proposition}
+
+\begin{proposition}[The $\forall/\exists$ liftings; \emph{proved}]\label{prop:cob-liftings}
+Quantifying a predicate container over positions gives two liftings. The
+$\exists$-lifting is exactly composition, $E=\tri$, a bifunctor on all of $\Cont$
+with unit $\yy$. The $\forall$-lifting $A=\Pi$ is a bifunctor only on
+\emph{cartesian} morphisms in its first argument (the pushforward is indexed by
+set-sections of the backward position map, which are unique iff the map is a
+bijection), and on that domain it is a left module of $(\Cont,\tri,\yy)$. The
+mixed comparison $A\,X\,(E\,Y\,C)\to E\,(A\,X\,Y)\,C$ is an isomorphism iff $X$ is
+\emph{linear}. This is the semantic content of $M$ lifting to containers iff $M$
+is cartesian, seen one level down.
+\end{proposition}
+
+\begin{proposition}[The free monad on a container; \emph{proved}]\label{prop:cob-free}
+A signature is a container, and its free monad --- the type of effect trees --- is
+a monad on $\Cont$ built by iterated $\tri$-composition. In the linear instance
+over a monoidal base, the free $\tri$-monoid on the one-shape container
+$C=(\star,A)$ is $C^{*}=(\N,(A^{\otimes n})_n)$, with
+$\den{C^{*}}(W)=\bigoplus_{n\ge0}A^{\otimes n}\otimes W=T(A)\otimes W$ the tensor
+algebra: over $\VecC$ this is O'Neill's free monad, realised functorially.
+\end{proposition}
+
+The composition question of \S\ref{sec:cob-mcont} is the fifth census entry, and
+the position transfer and liftings are the fibrewise ones; naming the frame turns
+a list of theorems into a single diagram.
+
+%========================================================================
+\section{Positive suite III: the four monoidal structures}
+\label{sec:cob-four}
+
+The base $\Cont$ itself carries four monoidal structures, previewed in
+Chapter~\ref{ch:prelim}, \S\ref{sec:prelim-day}: the coproduct $+$, the product
+$\times$, the Dirichlet tensor $\Day$ (Definition~\ref{def:prelim-day}; on
+containers the shapes and positions both multiply, cf.\
+Proposition~\ref{prop:prelim-degen}), and the substitution operator $\tri$. Their
+full classification is a topic in its own right; we record here only the map and
+the closure results the rest of the dossier uses. All are \emph{proved}; the Lean
+certifications are noted where they exist.
+
+\paragraph{Why exactly these four.} Every monoidal structure $(\star,I)$ on $\Set$
+induces one on $\Cont$ by Day convolution \cite{day1970,NiuSpivak}: with
+$p\,\Day_\star\,q=(S_p\times S_q,(s,t)\mapsto p_s\star q_t)$ and unit $y^{I}$.
+Call a structure \emph{convolutional} if it preserves coproducts in each variable
+and closes the representables.
+
+\begin{theorem}[Day classification; \emph{proved}]\label{thm:cob-dayclass}
+$(\star,I)\mapsto(\Day_\star,y^{I})$ is an \emph{equivalence} from monoidal
+structures on $\Set$ to convolutional monoidal structures on $\Cont$. Two of the
+four are its values, $\times=\Day_{(+,\varnothing)}$ and
+$\Day=\Day_{(\times,1)}$; the coproduct $+$ and the substitution $\tri$ lie
+outside the family (they fail coproduct-preservation in a variable). This
+explains the ``upside-down'' arithmetic --- the product's positions are a
+\emph{disjoint union} because it is the Day convolution of the \emph{coproduct} of
+sets, $y^{A+B}\cong y^{A}\times y^{B}$.
+\end{theorem}
+
+\begin{theorem}[Pointwise $=$ product; \emph{proved}]\label{thm:cob-pointwise}
+Among \emph{all} monoidal structures on $\Cont$ --- Day or not --- the categorical
+product $\times$ is the unique one whose extension is the pointwise product of
+functors, $\den{p\ast q}\cong\den{p}\times\den{q}$. Being pointwise is the rare
+property, not the generic one; in particular $\den{-}$ is strong monoidal into
+$([\Set,\Set],\times)$ \emph{only} for the cartesian structure.
+\end{theorem}
+
+\begin{theorem}[The comparitor; \emph{proved}]\label{thm:cob-comparitor}
+For each $p$, $p\,\Day\,(-)$ is the left Kan extension of $p\tri(-)$ along the
+representable embedding, and the comparison $p\,\Day\,q\to p\tri q$ is the counit
+of the resulting coreflection: $p\,\Day\,(-)$ is the terminal
+coproduct-preserving approximation to $p\tri(-)$. The Dirichlet tensor is the
+substitution operator with its dependency switched off --- and not by fiat: it is
+the Day-ification of $\tri$, which is why the two agree on representables
+($y^{A}\,\Day\,y^{B}=y^{A\times B}=y^{A}\tri y^{B}$).
+\end{theorem}
+
+\paragraph{Closures.} The Dirichlet tensor is closed, with internal hom the
+container whose \emph{shapes are the container morphisms} \cite{NiuSpivak}; this
+closure is machine-checked --- $(\Cont,\Day,\yy)$ is a closed monoidal category in
+Lean~4, currying and uncurrying inverse on the nose (\emph{lean-verified},
+\texttt{Dirichlet.lean}). The substitution operator $\tri$ is \emph{not}
+left-closed but carries a right coclosure, whose comonoids are the directed
+containers, hence the small categories \cite{AU16}. And $\Cont$ is
+cartesian closed but \emph{not} locally cartesian closed, so it does not model
+dependent type theory --- a fact worth stating plainly, and one the frontier
+chapter revisits.
+
+\paragraph{Interaction.} The pair $(\Day,\tri)$ is a normal duoidal category
+\cite{SpivakSrinivasan}, and its interchange law houses the comparitor. Its double
+comonoids --- objects that are comonoids for both tensors compatibly --- are
+classified: they are exactly the \emph{sets of commutative monoids}, by a
+fibrewise Eckmann--Hilton collapse (\emph{proved}), correcting the plausible guess
+``the degenerate polynomials'' in both directions.
+
+%========================================================================
+\section{Positive suite IV: when does substitution exist over a base?}
+\label{sec:cob-admiss}
+
+The Dirichlet tensor $p\Day q=(S\times T,(P_s\otimes Q_t))$ exists over
+\emph{every} closed monoidal base. The substitution product $\tri$ --- the one
+whose comonoids are categories --- is different: it mostly does not exist, and
+where it does, its existence is not a matter of degree but a sharp theorem. Call
+$\mathcal{C}$ \emph{$\tri$-admissible} if the image of $\den{-}$ is closed under
+composition, $\den{p\tri q}\cong\den{p}\circ\den{q}$ for all $p,q$. All results
+below are \emph{proved} (the $\Set\times\VecC_{\mathrm{fd}}$ result on an
+explicitly stated locus).
+
+Everything is controlled by one necessary condition, obtained by evaluating any
+candidate composite at the terminal object $\mathbf{1}=[0,X]$.
+
+\begin{lemma}[Shape Lemma; \emph{proved}]\label{lem:cob-shape}
+If $\mathcal{C}$ is $\tri$-admissible then for every $P$ and every set $T$ the
+internal hom $[P,\,T\cdot\mathbf{1}]$ is a copower of $\mathbf{1}$ (here
+$T\cdot\mathbf{1}=\coprod_T\mathbf{1}$). The base must \emph{see} the external
+shape set inside itself, as a copower of $\mathbf{1}$.
+\end{lemma}
+
+On the set-like extreme admissibility does not merely coexist with the rest of the
+structure --- it forces it.
+
+\begin{theorem}[Extensive rigidity and the forced package; \emph{proved}]\label{thm:cob-rigidity}
+Let $\mathcal{C}$ be nontrivial, infinitary lextensive and cartesian closed. If
+$\mathcal{C}$ is $\tri$-admissible then its unit $\mathbf{1}$ is \emph{connected}
+($\mathcal{C}(\mathbf{1},-)$ preserves small coproducts); consequently $\den{-}$
+is fully faithful and the reindexing functor $F_q=\Fam(\den{q}^{\op})$ is left
+adjoint to $(-)\tri q$ for \emph{every} $q$. In particular $\Set\times\Set$ is
+inadmissible, its unit $(1,1)$ being disconnected. Fullness of $\den{-}$ and
+existence of the reindexing left adjoint are literally the same comparison lemma
+applied twice.
+\end{theorem}
+
+The converse fails --- connectedness alone is not enough --- and the exact
+condition upgrades the necessary Shape Lemma to a sufficient one.
+
+\begin{theorem}[Characterisation; \emph{proved}]\label{thm:cob-char}
+For $\mathcal{C}$ nontrivial, infinitary lextensive and cartesian closed,
+$\mathcal{C}$ is $\tri$-admissible iff the Shape Lemma holds, equivalently iff an
+external distributive law holds. When $\mathcal{C}$ has a connected-components
+functor $\pi_0\dashv(-)\cdot\mathbf{1}$ (as every Grothendieck topos does), this
+reads: \emph{$\mathcal{C}$ is $\tri$-admissible iff $\pi_0$ preserves finite
+products.}
+\end{theorem}
+
+This single criterion unifies the two ways admissibility can fail. The
+disconnected unit of $\Set\times\Set$ and the connected-unit obstruction below are
+one phenomenon, $\pi_0(X\times Y)\not\cong\pi_0 X\times\pi_0 Y$; it is co-extensive
+with the \emph{stable-units} property of the connected-components reflection in
+categorical Galois theory \cite{Xarez}, though established here via the
+distributive law rather than by descent.
+
+\begin{theorem}[Connected is not sufficient; \emph{proved}]\label{thm:cob-gluing}
+The Artin gluing $\mathrm{Gl}((-)^2)$ is a Grothendieck topos with a
+\emph{connected} unit that is nonetheless $\tri$-inadmissible: its $\pi_0$ is not
+multiplicative, since for the single edge $K$ one has $\pi_0(K\times K)=2\neq1$
+(Weichsel's theorem \cite{Weichsel}). This is exactly the gap between the internal
+(Gambino--Kock) composition, which every topos supports \cite{GambinoKock}, and
+the external-shape composition of $\den{-}$.
+\end{theorem}
+
+On the opposite, additive pole the situation inverts. Over $\VecC_{\mathrm{fd}}$
+every object is copower-tiny, so $\tri$ collapses onto the Dirichlet tensor,
+$p\tri q=p\Day q$, and $(-)\tri q$ has a left adjoint only when $q$ has a single
+shape; the unit is always disconnected. Between the poles the admissible region is
+thin but inhabited: $\Set\times\VecC_{\mathrm{fd}}$ is admissible (on its locus)
+with a disconnected unit, combining a rigid distributive factor with a flexible
+copower-tiny one --- so the extensive-pole characterisation does not extend to a
+global one (\emph{proved}). The organising fact behind the whole map is
+determinacy.
+
+\begin{theorem}[Determinacy; \emph{proved}]\label{thm:cob-determinacy}
+If $\mathbf{1}$ is connected then $\den{-}$ is injective on objects up to
+isomorphism, so $p\tri q$ is \emph{determined} by $\mathcal{C}$ and admissibility
+is a property of $\mathcal{C}$. If $\mathbf{1}$ is disconnected this can fail: over
+$\VecC_{\mathrm{fd}}$ the objects $(\{*\},k^2)$ and $(\{1,2\},k)$ present the same
+functor $X\mapsto X\oplus X$ but are not isomorphic, so $\tri$ becomes a
+\emph{choice} and the base-change question stops being about $\mathcal{C}$ at all.
+\end{theorem}
+
+%========================================================================
+\section{The linear wall: $\VecC$ is neither full nor faithful}
+\label{sec:cob-vec}
+
+The sharpest instrument for separating the four notions of ``container in a
+category'' --- external families $\Fam(\mathcal{C}^{\op})$, indexed
+dependent-polynomial functors over an LCC base \cite{GambinoKock}, fibrational
+containers \cite{vonGlehn}, and Walker's locally subcartesian closed weakening
+\cite{Walker} --- is a base that fails \emph{both} extensivity and local cartesian
+closure. The category $\VecC$ of vector spaces is exactly such a base: the
+comparison $\coprod^{\Set}\to\oplus$ is not an isomorphism, and there is no
+internal dependent product $\Pi$. Off the ``good'' zone a base fails for exactly
+one of two independent reasons, loss of extensivity (shapes no longer recoverable,
+$\den{-}$ no longer full) or loss of internal $\Pi$ ($\tri$ and closedness
+collapse); toposes lose neither, quantales and affine bases lose only the second
+(reached by Walker's affine repair), and $\VecC$ and $R\text{-}\mathrm{Mod}$ lose
+both, so only the external approach reaches them. Three theorems make this
+quantitative; all are \emph{proved}.
+
+\begin{theorem}[Fullness $=$ unit-connectedness; \emph{proved}]\label{thm:cob-T1}
+For any closed symmetric monoidal $\mathcal{C}$ with small coproducts, $\den{-}$ is
+fully faithful iff the monoidal unit $I$ is \emph{connected}
+($\mathcal{C}(I,-)$ preserves small coproducts). This is \emph{not} extensivity of
+$\mathcal{C}$: $\Set\times\Set$ is (l)extensive yet its unit $(1,1)$ is
+disconnected and $\den{-}$ is not full (the two ``crossed'' transformations are
+unrealised), while $\Set$ is full not because it is extensive but because $1$ is
+connected. It recovers Abbott--Altenkirch--Ghani \cite{AAG} by naming that hidden
+hypothesis. The reconstruction of a container from an abstract familially
+representable functor is Diers' \cite{Diers}, and uses extensivity of the
+\emph{codomain}, not the base --- which is why the folklore said ``extensivity''.
+\end{theorem}
+
+\begin{corollary}[The linear collapse; \emph{proved}]\label{cor:cob-veccollapse}
+Over $\mathcal{C}=\VecC$ the unit is $k$ and $\VecC(k,-)$ is the underlying-set
+functor, which does not preserve $\oplus$: the comparison $\coprod^{\Set}_t
+X_t\to\bigoplus_t X_t$ is \emph{neither surjective} (it misses cross-summand sums)
+\emph{nor injective} (it collapses the zero vector, which sits in every summand).
+Hence over $\VecC$ the extension $\den{-}$ is \emph{neither full nor faithful} ---
+the failure of faithfulness being precisely that $\oplus$ collapses tagged zeros.
+This is the honest strength of the linear denotation: the on-the-nose
+container/functor correspondence that holds over $\Set$ breaks in \emph{both}
+directions over an additive base.
+\end{corollary}
+
+The other two theorems measure the remaining obstructions, on independent seams.
+The Dirichlet tensor $\Day$ is closed iff a familial-representability functor
+$\Phi$ is representable; over the linear base this holds \emph{only} on the corner
+$\Fam_{\mathrm{fin}}(\VecC_{\mathrm{fd}}^{\op})$ of finite shape-sets and
+finite-dimensional positions (the load-bearing conjunct is
+\emph{dualizable-and-summable}), failing over both $\Fam(\VecC_{\mathrm{fd}}^{\op})$
+and $\Fam(\VecC^{\op})$ by dual mechanisms (\emph{proved}). The substitution
+product $\tri$ is left-closed exactly where it collapses onto $\Day$ --- over a
+base whose positions are dualizable (tiny), $\tri=\Day$ and the left hom is the
+Dirichlet hom --- so it is left-closed on
+$\Fam_{\mathrm{fin}}(\VecC_{\mathrm{fd}}^{\op})$ and obstructed over every
+extensive base (\emph{proved}). Extensivity is thus \emph{opposed} to
+$\tri$-left-closedness: the property whose failure costs fullness and Dirichlet
+closedness is exactly what would buy substitution closedness. These are the seams
+Weber's distributivity-$\delta$ and familial-functor theories
+\cite{WeberPoly,WeberFamilial} place on different rungs; the composition-monoid
+refinement of the indexed corner is \cite{DPUV}, and the general-base tensor and
+its comonoids-as-enriched-categories are Dorta--Jarvis--Niu \cite{DJN}.
+
+%========================================================================
+\section{The $\{\mathrm{Id}\}$ collapse}
+\label{sec:cob-collapse}
+
+The linear wall shows a \emph{specific} base failing. The final result is
+stronger and structural: over \emph{no} nontrivial effect does the natural
+self-enriched semantics enjoy a uniform full-and-faithfulness theorem. The
+apparent counterexample --- the reader monad, whose Kleisli category is cartesian
+closed --- is the pivot that makes the point.
+
+There are three extensions of an $M$-container into endofunctors, with three
+notions of naturality. Fix a monad $M$ and write $\mathcal{C}=\mathrm{Kl}(M)$.
+
+\begin{itemize}
+\item[\textbf{(A)}] the \emph{ordinary} extension
+  $\den{-}_M\colon\Fam(\mathrm{Kl}(M)^{\op})\to[\Set,\Set]$, whose morphisms are
+  pure natural transformations: faithful always, full iff $M$ codense and each
+  $\Set(A,M{-})$ connected (Theorem~\ref{thm:cob-codensity});
+\item[\textbf{(B)}] the \emph{Kleisli-presheaf} extension
+  $\den{-}^{\mathrm{Kl}}\colon\Fam(\mathrm{Kl}(M)^{\op})\to[\mathrm{Kl}(M),\Set]$,
+  a coproduct of representables: by ordinary co-Yoneda it is \emph{always} full
+  and faithful, at the price that its morphisms are Kleisli-natural;
+\item[\textbf{(C)}] the \emph{self-enriched} extension, defined when
+  $\mathcal{C}$ is monoidal closed, $\den{S,P}=\sum_s[P_s,-]\colon\mathcal{C}\to
+  \mathcal{C}$, which realises the enriched-Yoneda desideratum
+  $\Nat(\sum_s[P_s,-],F)\cong\prod_s F(P_s)$ \cite{Kelly}.
+\end{itemize}
+The three are one factorisation, $\den{-}_M=R\circ\den{-}^{\mathrm{Kl}}$ with
+$R=(-)\circ F$ restriction along the free functor $F\colon\Set\to\mathrm{Kl}(M)$;
+all loss of ordinary fullness lives in $R$, and its size is exactly the codensity
+monad $\Ran_M M$.
+
+Two independent invariants govern (C):
+\[
+  \mathcal{CL}=\{M:\mathrm{Kl}(M)\text{ monoidal closed}\},\qquad
+  \mathcal{UN}=\{M:\text{the monoidal unit of }\mathrm{Kl}(M)\text{ is connected}\}.
+\]
+Closedness ($\mathcal{CL}$, available by Kock's criterion \cite{KockMonoidal,KockClosed})
+makes (C) \emph{exist}; connectedness ($\mathcal{UN}$, i.e.\ $M$ preserves small
+coproducts, since $\mathrm{Kl}(M)(1,X)=MX$) makes it \emph{full}
+(Theorem~\ref{thm:cob-T1}). They are logically independent --- the cartesian-closed
+reader sits in $\mathcal{CL}\setminus\mathcal{UN}$, the writer in $\mathcal{UN}\setminus\mathcal{CL}$ --- and over a
+Kleisli base they meet in exactly one monad.
+
+\begin{lemma}[Closed $+$ initial $\Rightarrow$ terminal; \emph{lean-verified}]\label{lem:cob-closedinitial}
+In any symmetric monoidal closed category with an initial object $\emptyset$, the
+object $[\emptyset,X]$ is terminal for any $X$. (Each $(-)\otimes A$ is a left
+adjoint, so $C\otimes\emptyset\cong\emptyset$, whence
+$\mathcal{K}(C,[\emptyset,X])\cong\mathcal{K}(\emptyset,X)\cong1$.) The argument
+uses \emph{only} monoidal closedness and an initial object --- neither cartesian
+closedness nor connectedness, the two independent axes.
+\end{lemma}
+
+\begin{theorem}[$\mathcal{CL}\cap\mathcal{UN}=\{\Id\}$; \emph{proved}, core \emph{lean-verified}]\label{thm:cob-collapse}
+Let $M$ be a commutative strong monad on $\Set$. The self-enriched $M$-container
+extension $\sum_s[P_s,-]\colon\mathrm{Kl}(M)\to\mathrm{Kl}(M)$ is full and faithful
+if and only if $M\cong\Id$. Equivalently $\mathcal{CL}\cap\mathcal{UN}=\{\Id\}$: no nontrivial
+effect --- not even an idempotent (localization) monad --- carries a uniform
+enriched full-and-faithful semantics.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Fullness of (C) $\iff M\in\mathcal{CL}\cap\mathcal{UN}$. \emph{Step 1:} $\mathcal{UN}$ forces the writer
+form. If $M$ preserves small coproducts then the copower-comparison
+$T\times M1\to MT$ is a natural bijection, so $M\cong(-)\times E$ with $E=M1$, and
+the monad laws are the laws of a (commutative) monoid on $E$. \emph{Step 2:} $\mathcal{CL}$
+forces $E\cong1$. The base $\mathrm{Kl}(M)$ is monoidal closed with initial object
+$\emptyset$ (since $\mathrm{Kl}(M)(\emptyset,B)=1$), so
+Lemma~\ref{lem:cob-closedinitial} supplies a terminal $\top$; then
+$\Set(C,M\top)=\mathrm{Kl}(M)(C,\top)\cong1$ forces $M\top\cong1$, and the writer
+form gives $|\top|\cdot|E|=1$, so $E\cong1$ and $M\cong\Id$. \emph{Step 3:} $\Id$
+qualifies ($\Set$ cartesian closed, $\Set(1,-)=\Id$ preserves coproducts).
+\end{proof}
+
+The core of this collapse --- the closed-plus-initial-forces-terminal engine of
+Lemma~\ref{lem:cob-closedinitial}, together with the resulting
+identity-only classification --- is machine-checked in Lean~4
+(\emph{lean-verified}, \texttt{EnrichedFFCollapse}).
+
+\begin{corollary}[No idempotent escape; \emph{proved}]\label{cor:cob-noidem}
+No nontrivial idempotent monad lies in $\mathcal{CL}\cap\mathcal{UN}$: membership in $\mathcal{UN}$ forces the
+writer form, and a writer monad is idempotent only for $E\cong1$; the terminal
+monad $LX=1$ already fails connectedness, $L(1+1)=1\neq2=L1+L1$.
+\end{corollary}
+
+\begin{remark}[The reader, reconciled]\label{rem:cob-reader}
+The collapse dissolves the apparent paradox. Cartesian closedness of
+$\mathrm{Kl}(\mathsf{Reader}_S)$ buys the \emph{availability} of (C), not its
+fullness: the unit $1$ has global-points functor $(-)^S$, which fails to preserve
+coproducts for $|S|\ge2$, so (C) is not full. The reader's failure is
+enrichment-invariant --- non-codensity in (A), a disconnected unit in (C), one
+obstruction wearing two masks --- and (B) is full only for Kleisli-natural, not
+pure, morphisms. Enrichment relocates the obstruction; it does not remove it.
+\end{remark}
+
+\paragraph{The boundary, and the handoff.} The chapter has traced how far the
+correctness equation generalises. It survives change of base wholesale --- as
+$m$-containers with two computable invariants (\S\ref{sec:cob-mcont}), as the
+census of transports (\S\ref{sec:cob-changebase}), as the four monoidal
+structures with their closures (\S\ref{sec:cob-four}), and as substitution over
+exactly the $\pi_0$-multiplicative bases (\S\ref{sec:cob-admiss}) --- but it does
+\emph{not} survive as a \emph{uniform self-enriched full-and-faithful} semantics
+over any nontrivial effect: that is the $\{\Id\}$ wall of
+Theorem~\ref{thm:cob-collapse}, a statement about general effect monads. A
+different wall stands over a \emph{single} additive base: the linear denotation
+over $\VecC$ (\S\ref{sec:cob-vec}) is already neither full nor faithful, and the
+Vec-admissibility question of whether $F=\Hom(E,\bigoplus_{\N}-)$ is free pushes
+the boundary into set theory. That set-theoretic frontier --- where the verdict
+becomes independent of ZFC --- is the subject of the next chapter,
+Chapter~\ref{ch:frontier}.
+
+% Operators introduced inline (not among the shared macros): $\mathrm{Kl}(M)$
+% (Kleisli category), $\mathrm{Gl}$ (Artin gluing), $\pi_0$ (connected components),
+% $[-,-]$ (internal hom of the base), $\Phi=\Ran_M M$ (codensity monad),
+% $\mathcal{CL},\mathcal{UN}$ (closedness/connectedness classes), $T\cdot\mathbf{1}$ (copower).
+
+% BIBITEMS-USED
+% \bibitem{AAG} M.~Abbott, T.~Altenkirch, N.~Ghani, \emph{Containers: constructing strictly positive types}, Theoret.\ Comput.\ Sci.\ \textbf{342} (2005), 3--27.
+% \bibitem{AU16} D.~Ahman and T.~Uustalu, \emph{Directed containers as categories}, Electron.\ Proc.\ Theor.\ Comput.\ Sci.\ \textbf{207} (2016), 89--98. arXiv:1604.01187.
+% \bibitem{Diers} Y.~Diers, \emph{Cat\'egories localisables}, Th\`ese de doctorat d'\'etat, Universit\'e Paris VI, 1977.
+% \bibitem{DJN} A.~Dorta, C.~B.~Jarvis, and N.~Niu, \emph{Monoidal structures on generalized polynomial categories}, arXiv:2305.05655.
+% \bibitem{DPUV} G.~De Pascalis, T.~Uustalu, N.~Veltr\`i, \emph{Monoid structures on indexed containers}, arXiv:2509.25879.
+% \bibitem{GambinoKock} N.~Gambino and J.~Kock, \emph{Polynomial functors and polynomial monads}, Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), 153--192. arXiv:0906.4931.
+% \bibitem{HedgesPoly} J.~Hedges, \emph{A first look at programming in Poly}, blog post, \texttt{julesh.com}, 2026.
+% \bibitem{Kelly} G.~M.~Kelly, \emph{Basic Concepts of Enriched Category Theory}, London Math.\ Soc.\ Lecture Note Ser.\ \textbf{64}, Cambridge Univ.\ Press, 1982.
+% \bibitem{KockMonoidal} A.~Kock, \emph{Monads on symmetric monoidal closed categories}, Arch.\ Math.\ (Basel) \textbf{21} (1970), 1--10.
+% \bibitem{KockClosed} A.~Kock, \emph{Closed categories generated by commutative monads}, J.\ Austral.\ Math.\ Soc.\ \textbf{12} (1971), 405--424.
+% \bibitem{NiuSpivak} N.~Niu and D.~I.~Spivak, \emph{Polynomial Functors: A Mathematical Theory of Interaction}, book draft, 2023. arXiv:2312.00990.
+% \bibitem{ShapiroSpivak} B.~Shapiro and D.~I.~Spivak, \emph{Structures on categories of polynomials}, arXiv:2305.00167.
+% \bibitem{SpivakSrinivasan} D.~I.~Spivak and P.~Srinivasan, \emph{$(\mathbf{Poly},\otimes,\triangleleft)$ is a normal duoidal LDC}, arXiv:2407.01849, 2024.
+% \bibitem{vonGlehn} T.~von Glehn, \emph{Polynomials and models of type theory}, PhD thesis, University of Cambridge, 2015.
+% \bibitem{Walker} C.~Walker, \emph{Locally subcartesian closed categories}, arXiv:2607.10242.
+% \bibitem{WeberPoly} M.~Weber, \emph{Polynomials in categories with pullbacks}, Theory Appl.\ Categ.\ \textbf{30} (2015), 533--598. arXiv:1106.1983.
+% \bibitem{WeberFamilial} M.~Weber, \emph{Familial 2-functors and parametric right adjoints}, Theory Appl.\ Categ.\ \textbf{18} (2007), 665--732.
+% \bibitem{Weichsel} P.~M.~Weichsel, \emph{The Kronecker product of graphs}, Proc.\ Amer.\ Math.\ Soc.\ \textbf{13} (1962), 47--52.
+% \bibitem{Xarez} J.~J.~Xarez, \emph{Admissibility, stable units and connected components}, arXiv:1112.4277, 2011.
