@@ -1,0 +1,30 @@
+\chapter{Supply chains}
+\label{ch:supply}
+
+A supply chain, abstracted to a small category, is a directed container in the sense of Ahman--Uustalu, so the machinery of Chapters~\ref{ch:crit} and~\ref{ch:zs} applies verbatim. Welding a supplier flow to a consumer flow that share a warehouse is a Zappa--Sz\'ep composition $\Cont \tri \Cont$; the existence of a coherent global schedule is exactly the $(L)\wedge(G)$ criterion, and an inventory inconsistency between two routes to the same delivered good is a nonzero obstruction class $[\omega]$. This chapter records what the registry has \emph{computed}; it is deliberately a stub, and the full mathematical body is not yet written out.
+
+% TODO(prove): full supply-chain body
+
+\section{The composition criterion, instantiated}
+
+Two flows sharing a warehouse compose --- the Zappa--Sz\'ep product $C \tri D$ exists --- if and only if the two routes agree on lot-provenance. This is the correctness criterion of Chapter~\ref{ch:crit} read in supply-chain terms: the local condition $(L)$ asks that the hom-presheaves of relabelings be free, and the global condition $(G)$ asks that a chosen basis close under composition. When both hold, the welded chain admits a single-valued global schedule; when $(G)$ fails, no distributive law exists and the routes cannot be reconciled on the nose.
+
+\begin{remark}
+The registry entry grades this instantiation \emph{computed}. The general theorems it rests on are cited as shared stubs and are \emph{not} re-graded here: that a small category is a directed container is lean-verified, the pairwise Zappa--Sz\'ep criterion is proved, and the identification of $(G)$ with a cohomological obstruction is proved (Chapter~\ref{ch:zs}). What is computed is the domain instantiation --- an object-level directed container $(S,P,o,+)$ with its $D$-laws, checked by hand and by machine.
+\end{remark}
+
+\section{The unit-mismatch obstruction}
+
+The obstruction lives in $\Hcoh(\mathrm{Sk}_C; \Z/n) \iso \Z/n$, where the cyclic group $\Z/n$ is a lot-cursor: supply-chain bookkeeping cycles through $n$ inventory units. For the worked lot-cursor family $W_{n,\varepsilon}$, in which a rework route shifts the cursor by $\varepsilon$, the class is computed to be
+\[
+  [\omega(W_{n,\varepsilon})] = \varepsilon \in \Z/n .
+\]
+Thus $\varepsilon = 0$ is the composing regime: the rework route preserves the lot-cursor, $[\omega] = 0$, and $C \tri D$ exists. Any $\varepsilon \neq 0$ is the obstructed regime: the inventory is off by $\varepsilon$ units, $[\omega]$ is nonzero, and there is no coherent global schedule. The obstruction does not merely flag a mismatch --- it \emph{measures} it, in units.
+
+\begin{remark}
+At $n = 2$ this reproduces the proved orchestration re-entrancy bit of Chapter~\ref{ch:zs}: the parity class $[\omega] = \varepsilon \in \Z/2$. The same machine at $n = 2$ also computes an olog merge conflict along a shared type. These are recorded as siblings of the supply-chain computation, not as independent results.
+\end{remark}
+
+\section{Scope and honesty}
+
+This chapter is a stub. The computation --- category axioms, the conditions $(L)$ and $(H)$, the skeleton shape, the coboundary lattice $\mathrm{B}^2$, the class $[\omega] = \varepsilon$, and the cross-check on the count of section-preserving splittings --- resides in the registry and its machine-check script; the written-out mathematical body does not yet exist and is flagged above for development. Nothing here is presented as a new proved theorem. In particular, the claim that a \emph{real} supply chain literally presents a category (on-the-nose associativity, inventory path-equations holding exactly) is \emph{open}: this example builds a faithful minimal abstraction and applies the established theorems to it, and does not assert object-level fidelity. That modelling criterion is a separate theorem to be earned.

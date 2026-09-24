@@ -82,6 +82,7 @@
 \newcommand{\iso}{\cong}
 % -- macros/packages added during the Theory-pillar assembly (2026-09-24) --
 \usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{enumitem}
 \DeclareMathOperator{\dom}{dom}
 \DeclareMathOperator{\cod}{cod}
@@ -94,7 +95,7 @@
 \title{Compositional Correctness via Directed Containers:\\
        A Complete Technical Dossier}
 \author{MacBeth \\ \small (with N.~Ghani, R.~Langer) \\ \small Kodamai}
-\date{2026-09-24 \\[0.5em] \textit{\small Draft --- Theory pillar assembled; Applications, Formalisation, and Impact bodies in progress.}}
+\date{2026-09-24 \\[0.5em] \textit{\small Draft --- all four pillars assembled (Theory, Applications, Formalisation, Impact); a handful of Applications chapters remain honest stubs, and the tax chapter is illustrative-only. See the Honest Ledger.}}
 
 \begin{document}
 
@@ -123,31 +124,34 @@ be assembled.
 \addcontentsline{toc}{chapter}{How to read this document}
 %==============================================================================
 
-This is a document being assembled in stages. It compiles at every stage, and
-the whole of Part~I (Theory) is now written in full, together with the front
-matter and one Part~IV chapter: this chapter, the Overview, and the Honest
-Ledger; the preliminaries (Chapter~\ref{ch:prelim}); the equivalence chain
-(Chapter~\ref{ch:eqchain}); Zappa--Sz\'ep products and distributive laws
-(Chapter~\ref{ch:zs}); the correctness criterion (Chapter~\ref{ch:crit}); the
-$\Hcoh$-cluster (Chapter~\ref{ch:cluster}); change-of-base and the
-$\{\mathrm{Id}\}$ classification (Chapter~\ref{ch:cob}); the set-theoretic
-frontier (Chapter~\ref{ch:frontier}); and the AI\,+\,Lean pipeline
-(Chapter~\ref{ch:pipeline}). These are finished prose meant to be read.
+This is a document assembled in stages, and all four pillars are now written.
+Part~I (Theory) is complete: the preliminaries (Chapter~\ref{ch:prelim}); the
+equivalence chain (Chapter~\ref{ch:eqchain}); Zappa--Sz\'ep products and
+distributive laws (Chapter~\ref{ch:zs}); the correctness criterion
+(Chapter~\ref{ch:crit}); the $\Hcoh$-cluster (Chapter~\ref{ch:cluster});
+change-of-base and the $\{\mathrm{Id}\}$ classification (Chapter~\ref{ch:cob});
+and the set-theoretic frontier (Chapter~\ref{ch:frontier}). Part~II
+(Applications) runs from GA / island models (Chapter~\ref{ch:ga}), through the
+flagship blockchain re-entrancy chapter (Chapter~\ref{ch:blockchain}), security
+audits (Chapter~\ref{ch:security}) and agent orchestration
+(Chapter~\ref{ch:orchestration}), to supply chains (Chapter~\ref{ch:supply}) and
+tax (Chapter~\ref{ch:tax}). Part~III (Formalisation) records the milestone ledger
+(Chapter~\ref{ch:milestones}), the sorry-free corpus (Chapter~\ref{ch:corpus}),
+and the two machine-checked pillars --- the $\Hcoh$-engines and free/cofree
+comonad (Chapter~\ref{ch:h2engines}) and the change-of-base adjunction and
+collapse theorems (Chapter~\ref{ch:leancob}). Part~IV (Impact) gives the
+economic reading (Chapter~\ref{ch:economic}), the AI\,+\,Lean pipeline
+(Chapter~\ref{ch:pipeline}), and the external-publication status.
 
-The remaining chapters --- the whole of Parts~II (Applications) and III
-(Formalisation), and the two other Part~IV chapters --- are \emph{scaffolded}:
-each opens with a short genuine
-lead-in and then carries a machine-readable assembly directive of the form
-\begin{center}
-\texttt{\% ASSEMBLE FROM: <path>\quad[grade]\quad[ASSEMBLE|STUB|GAP]}
-\end{center}
-naming the source paper(s) whose bodies will be pulled in during a later
-assembly session, together with the strongest current trust grade of the
-material and one of three assembly tags: \textsc{assemble} (a written source
-exists and mainly needs merging), \textsc{stub} (partial material exists;
-writing is required), or \textsc{gap} (no artifact yet; must be drafted or
-framed as illustrative). A reader can therefore tell at a glance which chapters
-are load-bearing and which are still promissory.
+Not every chapter carries the same weight, and the document says so at a glance.
+Each downstream chapter is graded, and a few are deliberately \emph{stubs} or
+\emph{gaps}: the tax chapter (Chapter~\ref{ch:tax}) has \emph{no} formal artifact
+and is framed as illustrative-only (Honest Ledger item~2); supply chains
+(Chapter~\ref{ch:supply}) and part of the security-audit chapter rest on registry
+computations whose full written bodies are still owed; and milestones M5--M6 are
+open / conjectural rather than proved (Honest Ledger item~3). Every headline claim
+carries its trust grade inline, so a reader can tell load-bearing results from
+promissory ones without leaving the page.
 
 \paragraph{The trust grades.}
 Throughout, claims carry a trust grade drawn from the programme's standard
@@ -291,9 +295,16 @@ The Catala / tax-computation application (\S II.3) is currently a design sketch
 no proof, no Lean, and no running code. It is framed throughout as
 illustrative-only.
 
-\item \textbf{Equivalence-chain Lean milestones M5--M6 are unproved.}
-Milestones M1--M4 of the equivalence chain are lean-verified; M5 and M6 are not
-formalised. The chain is complete on paper but not machine-checked end to end.
+\item \textbf{Equivalence-chain milestones M5--M6 are not proved --- not even on paper.}
+Milestones M1--M4 (with converses M2b, M3b) are lean-verified. M5 and M6 are
+\emph{neither} formalised \emph{nor} proved on paper: the registry grades M5
+(enriched $\DCont=\mathbf{Cof}$) \emph{unclassified}, recording that
+Clarke--Di~Meglio state the enriched statement \emph{open}, and grades M6
+($\infty$-$\DCont=\Cat$, Kan~Chen's Conjecture~7.2) \emph{speculative}. So the
+formalised chain is exactly the non-enriched, $1$-categorical core M1--M4; the
+enriched and $\infty$-categorical extensions are frontier, not ledger. Any claim
+that ``the equivalence programme is fully formalised'' must be read as scoped to
+M1--M4 (see Chapter~\ref{ch:milestones}).
 
 \item \textbf{Nothing is externally published.}
 Under the ACM authorship rule an AI agent cannot be sole author, and the
@@ -1193,117 +1204,35 @@ in the random-real model --- honestly unanswered.
 \part{Applications}
 %==============================================================================
 
-\chapter{GA / island-model composition}
-Genetic-algorithm island models compose subpopulations along a migration
-topology. That topology \emph{is} the distributive law; whether the composite
-evolutionary system is coherent is whether the Zappa--Sz\'ep product exists.
-Diversity dynamics are then determined by the same weld condition, with strong
-empirical agreement (Kendall's $W=1.0$ across the measured runs).
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/ga-containers.tex  [computed]  [ASSEMBLE]
-\assemble{computed; migration topology = the distributive law.}
+\input{staging/app-ga.tex}
 
-\chapter{Blockchain: re-entrancy as a failed distributive law}
-Smart contracts are coalgebras for $p(X)=(O\times X)^{I}$; composing two
-contracts requires a distributive law between them. Re-entrancy --- the DAO-class
-bug --- is precisely the case $[\omega]\neq 0$: the weld fails, and the failure
-is a wrong interleaving. This chapter is the flagship application, and its core
-obstruction computation is machine-checked.
-% ASSEMBLE FROM: /home/agent/projects/papers/reentrancy-machine-checked-obstruction.tex  [peer-reviewed]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/ethereum-containers.tex  [computed]  [ASSEMBLE]
-\assemble{peer-reviewed; the DAO-class bug is $[\omega]\neq 0$.}
+\input{staging/app-blockchain.tex}
 
-\chapter{Tax computation (Catala)}
-Tax law composes: an ontology DAG of definitions, scope composition of rules,
-and comonadic event-sourced projections of taxable events. The categorical
-picture is clean and suggestive. \emph{Honest gap:} there is no formal artifact
---- no proof, no Lean, no running Catala integration. This chapter is included as
-an illustrative target and a statement of intent, not a result.
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/directed-containers-tax.tex  [speculative]  [GAP]
-\assemble{NO artifact (Honest Ledger item 2). Frame as illustrative-only.}
+\input{staging/app-tax.tex}
 
-\chapter{Agent orchestration: the harness is a worker}
-An agent harness is a worker in the store-comonad sense: it carries state and
-observes it. Composing stateful workers requires a comonad distributive law, and
-a wrong interleaving of two workers is the re-entrancy class again --- the same
-$[\omega]\neq 0$ failure in a different domain. This chapter assembles the
-worker-orchestration results and the tool-calling-protocol picture.
-% ASSEMBLE FROM: /home/agent/projects/papers/harness-is-a-worker.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/tool-calling-protocols-directed-containers.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/workers-state-via-tensor.tex  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/papers/effects-coeffects-containers.tex  [proved]  [ASSEMBLE]
-\assemble{orchestration-ZS, workers-type-hierarchy proved.}
+\input{staging/app-orchestration.tex}
 
-\chapter{Security audits as failed distributive laws}
-State-divergence bugs of the class surfaced by professional audits
-(Trail-of-Bits style) are, structurally, failed distributive laws: two
-operations that do not commute past each other in the way the intended
-composite assumes. This chapter frames the audit finding as an $[\omega]\neq 0$
-witness and connects it to the blockchain chapter.
-% ASSEMBLE FROM: /home/agent/projects/expository/2026-10-04-security-audits-failed-distributive-laws.tex  [computed]  [STUB]
-\assemble{STUB; extends the blockchain obstruction picture to audit findings.}
+\input{staging/app-security.tex}
 
-\chapter{Supply chains}
-Supply-chain composition welds supplier and consumer processes; the existence of
-a coherent global schedule is a Zappa--Sz\'ep condition. This chapter is a stub
-built from the supply-chain-ZS registry entry.
-% ASSEMBLE FROM: /home/agent/projects/proofs/registry/supply-chain-zs.json  [computed]  [STUB]
-\assemble{STUB; computed in registry, needs a written body.}
+\input{staging/app-supply.tex}
 
 %==============================================================================
 \part{Formalisation}
 %==============================================================================
 
-\chapter{Milestones M1--M6: status}
-The equivalence chain is tracked as a sequence of formalisation milestones.
-This chapter presents the status table: M1--M4 are lean-verified; M5 and M6 are
-proved on paper but not yet formalised (Honest Ledger item~3). The table is the
-authoritative record of what the machine has and has not checked.
-% ASSEMBLE FROM: /home/agent/projects/proofs/registry/equivalence-chain.json  [M1-M4 lean-verified; M5-M6 open]  [ASSEMBLE+STUB]
-\assemble{build the M1--M6 status table from the registry JSON; M5--M6 rows are open.}
+\input{staging/form-milestones.tex}
 
-\chapter{The sorry-free Lean corpus}
-The programme maintains a sorry-free Lean~4 corpus of 66 modules under
-\texttt{Containers/}. This chapter surveys the corpus: for each module, the
-theorem it establishes and its trust grade. Building the full
-module\,$\to$\,theorem\,$\to$\,grade table is outstanding work.
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/*.lean  [lean-verified]  [GAP]
-\assemble{lean-verified (66 modules); per-module theorem/grade table to be built (GAP).}
+\input{staging/form-corpus.tex}
 
-\chapter{$\Hcoh$-engines and the free/cofree comonad in Lean}
-The obstruction machinery of Part~I is partly machine-checked: the free and
-cofree comonad constructions with their universal properties, and the cyclic and
-fibre $\Hcoh$ ``engines'' that compute the holonomy classes. This chapter
-assembles those Lean developments.
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/Free.lean  [lean-verified]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/FreeUniversal.lean  [lean-verified]  [ASSEMBLE]
-% ASSEMBLE FROM: cyclic-h2-*.lean, fibre-h2-z2.lean (H2 engine modules)  [lean-verified]  [ASSEMBLE]
-\assemble{lean-verified; free/cofree UP + $\Hcoh$ engines.}
+\input{staging/form-h2engines.tex}
 
-\chapter{Change-of-base adjunction and collapse theorems in Lean}
-The change-of-base story of \S I.5 has a machine-checked core: the composition
-left adjoint $F_q\dashv(-)\lhd q$ with naturality, and the collapse theorems ---
-the $\VecC$ biproduct collapse, the QPF abs/repr collapse, and the enriched
-full-and-faithful $\{\mathrm{Id}\}$ collapse. This chapter assembles them.
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/CompLeftAdjoint.lean  [lean-verified]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/CompLeftAdjointNatQ.lean  [lean-verified]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/VecCollapse.lean  [lean-verified]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/QpfCollapse.lean  [lean-verified]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/projects/lean/Containers/Containers/EnrichedFFCollapse.lean  [lean-verified]  [ASSEMBLE]
-\assemble{lean-verified; adjunction + three collapse theorems.}
+\input{staging/form-leancob.tex}
 
 %==============================================================================
 \part{Impact}
 %==============================================================================
 
-\chapter{Where compositional correctness has economic consequences}
-The applications are not chosen at random: they are the domains where a wrong
-weld costs money. A re-entrancy bug drains a contract; a mis-composed audit
-misses a divergence; a wrong worker interleaving corrupts agent state. This
-chapter re-anchors the impact narrative to the technical bodies of Part~II,
-rather than to motivation prose in isolation.
-% ASSEMBLE FROM: /home/agent/projects/papers/compositional-correctness-synthesis.tex (intro)  [proved]  [ASSEMBLE]
-% ASSEMBLE FROM: /home/agent/git/ghani-containers/motivation.tex  [speculative]  [ASSEMBLE]
-\assemble{re-anchor motivation to the Part~II technical bodies.}
+\input{staging/imp-economic.tex}
 
 \chapter{The AI\,+\,Lean pipeline: honesty and trust-grade methodology}
 \label{ch:pipeline}
@@ -1594,6 +1523,8 @@ and lists the candidates nearest to external submission.
 \bibitem{DPUV} G.~De~Pascalis, T.~Uustalu, and N.~Veltri, \emph{Monoid structures on indexed containers}, arXiv:2509.25879.
 
 \bibitem{MacBethBase} MacBeth, \emph{Containers over a base}, Kodamai working paper, 2026. (Object-level equivalence-chain milestones M2, M4 machine-checked in the \texttt{Containers/} Lean~4 corpus, \texttt{sorry}-free.)
+
+\bibitem{langer-va-ga} R.~Langer, L.~Vega, and Claude, \emph{Island Models as Directed Containers}, Kodamai internal note, June 2026. (Origin of the categorical GA framework and its empirical measurements; source for Chapter~\ref{ch:ga}.)
 
 \end{thebibliography}
 

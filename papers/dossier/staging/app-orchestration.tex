@@ -1,0 +1,366 @@
+\chapter{Agent orchestration: the harness is a worker}
+\label{ch:orchestration}
+
+The thesis of this chapter is a single reduction: the correctness of an agent
+orchestration is a \emph{comonad distributive law}, and the obstruction to its existence is
+the very same cohomology class $[\omega]\in\Hcoh$ that governs re-entrancy in the blockchain
+setting of Chapter~\ref{ch:blockchain}. We arrive there in four moves. A stateful agent --- a
+\emph{worker} --- is a container morphism out of a domain tensored with one fixed state
+object; the harness that runs a tool-calling protocol is not a meta-object but that
+protocol's own comonad, so a protocol \emph{is} a directed container; workers stratify into a
+small type hierarchy (pure morphism, store-comonad worker, lens); and when effect and coeffect
+must be threaded through one another the composition rule is a \emph{reverse entwining}, valid
+exactly when the effect monad does not branch. Throughout, the honest verdict is the same as in
+the source notes: for a single agent the structure is a rename, and it earns its keep only under
+composition, where it converts a scattered, implicit correctness condition into one named object
+checked in one place. No result in this chapter is new; every fact is proved, and where noted
+machine-checked, in the cited notes, and the contribution is the accounting.
+
+\section{The harness is a worker}\label{sec:orch-harness}
+
+Recall the container vocabulary of Part~I. A \emph{container} $S\triangleright P$ is a shape set
+$S$ with a position family $P:S\to\mathsf{Set}$, with extension the polynomial functor
+$\den{S\triangleright P}(X)=\sum_{s:S}(P\,s\to X)$; a morphism $(S\triangleright P)\to(T\triangleright
+Q)$ is a forward map $f:S\to T$ on shapes together with a backward, contravariant family
+$\prod_{s}(Q(f\,s)\to P\,s)$ on positions. Two composition operators act on containers: the
+Dirichlet tensor $\otimes$, which multiplies shapes and multiplies positions (extension the
+Day convolution $\Day$ of the product), and the substitution $\tri$, whose extension is
+functor composition \cite{Spi21,SS23}.
+
+\begin{definition}[State object and worker]\label{def:orch-worker}
+For a set $S$ the \emph{state object} is the container $\Delta S:=S\triangleright(\lambda\_.\,S)$,
+whose extension is the \emph{store comonad}
+\[
+  \den{\Delta S}(X)=\textstyle\sum_{s:S}X^{S}=S\times X^{S}=\mathrm{Store}_S\,X,
+\]
+a current state paired with a reader $X^S=(S\to X)$; as a directed container it is the
+codiscrete category on $S$. A \emph{worker of state $S$ from $X$ to $Y$} is a container morphism
+$w:\Delta S\otimes X\to Y$.
+\end{definition}
+
+The content of the reformulation is that ``stateful agent'' needs no new machinery: state is
+one fixed tensor factor, and the container-morphism discipline forces the rest.
+
+\begin{theorem}[Unfolding a worker; \emph{proved}, arithmetic Lean-checked]\label{thm:orch-unfold}
+A worker $w:\Delta S\otimes X\to Y$ with $X=X_0\triangleright X_1$, $Y=Y_0\triangleright Y_1$ is
+exactly a pair
+\[
+  \mathrm{fwd}:S\times X_0\to Y_0,
+  \qquad
+  \mathrm{bwd}:\textstyle\prod_{(s,x_0)}\big(Y_1(\mathrm{fwd}(s,x_0))\to S\times X_1\,x_0\big),
+\]
+and, by the universal property of the product, $\mathrm{bwd}$ splits into a
+\emph{state-writeback} $\mathrm{bwd}_S:\prod Y_1(\cdots)\to S$ and an ordinary back-map
+$\mathrm{bwd}_X:\prod Y_1(\cdots)\to X_1\,x_0$. The forward leg reads $(\text{state},\text{input})$
+and answers; the backward leg writes back a new state and answers the input.
+\end{theorem}
+
+This is the whole of ``a stateful step,'' typed: neither leg is postulated, both are consequences
+of the tensor's position-\emph{product} $S\times X_1\,x_0$. The verdict for a single worker is
+deliberately deflationary.
+
+\begin{proposition}[One worker is threaded state, re-spelled; \emph{proved}]\label{prop:orch-single}
+On the lens fragment $X=\mathsf{y}$, $Y=A\triangleright(\lambda\_.B)$, a worker $\Delta S\to
+A\triangleright(\lambda\_.B)$ is exactly a pair
+\[
+  \mathrm{get}:S\to A,\qquad \mathrm{put}:S\times B\to S,
+\]
+the ordinary ``read the state to answer; write the state back'' of hand-threaded code. The store's
+counit is $\mathrm{get}$ and its comultiplication is ``duplicate the register'' --- operations
+hand-threaded code already performs.
+\end{proposition}
+
+\begin{remark}[The honest single-worker ledger]\label{rem:orch-single-honest}
+For a system of one stateful agent the store comonad is a rename: more category theory, no more
+safety. We say so plainly, because the value must be sought under composition, and it is not sought
+in vain --- agentic systems are systems of \emph{many} interacting agents.
+\end{remark}
+
+\paragraph{Two ways to stack, only one free.}
+Tensoring two state objects multiplies their states on the nose, whereas substituting nests a store
+inside a store:
+\begin{equation}\label{eq:orch-stack}
+  \Delta S\otimes\Delta T=\Delta(S\times T),
+  \qquad
+  \Delta S\tri\Delta T=(S\times T^{S})\triangleright(\cdots)\ \ne\ \Delta(S\times T),
+\end{equation}
+the latter recording not a pair of states but a whole branch map $S\to T$; at $|S|=|T|=2$ these
+are $4\cdot\mathsf{y}^4$ against $8\cdot\mathsf{y}^4$, an explicit retract $r\circ\sigma=\id$ (not
+an equality, not a fibre), \emph{proved} and Lean-checked (\texttt{WorkersRetract.lean}). The
+tensor \eqref{eq:orch-stack} is the composite of two \emph{non-interacting} workers --- independent
+registers, ``ask both, answer both'' --- and it is free precisely because it assumes non-interference.
+
+\paragraph{The interacting composite is neither.}
+The workers an orchestration actually composes \emph{interact}: a supervisor over a worker that can
+call back into the supervisor (re-entrancy), or two workers reading and writing a shared ledger.
+There the registers are not independent, so the composite is neither the free tensor nor a bare
+nesting; it is a \emph{Zappa--Sz\'ep weld} $\Delta S\bowtie\Delta T$, in which each store acts on
+the other, and a weld is a \emph{comonad distributive law} $\lambda$ recording how the two contexts
+interleave: which side reads first, whose write the other sees. Comonads, unlike the data they
+carry, do not compose for free \cite{AhmanUustaluDL}; without a valid $\lambda$ there is no composite
+worker at all.
+
+\begin{theorem}[Existence of the weld is a cohomology class; \emph{imported, proved elsewhere}]
+\label{thm:orch-omega}
+Present two interacting stateful workers as directed containers $C,D$. A consistent interleaving of
+their harnesses --- a comonad distributive law, equivalently a Zappa--Sz\'ep weld $C\bowtie D$ ---
+exists if and only if a freeness condition \textup{(L)} holds and an obstruction class
+$[\omega]\in\Hcoh$ vanishes, $\text{(G)}\Leftrightarrow[\omega]=0$
+\cite{macbeth-reduction,cl-emergent,AhmanUustaluDL}. At the smallest re-entrant supervisor--worker
+model the class lives in $\Hcoh\cong\Z/2$ and equals a single bit
+\begin{equation}\label{eq:orch-bit}
+  [\omega]=\varepsilon\in\Z/2,
+  \qquad
+  \varepsilon=\text{``does the worker mutate shared state the supervisor depends on?''},
+\end{equation}
+so the weld exists iff $\varepsilon=0$.
+\end{theorem}
+
+This is the identical obstruction that classifies re-entrancy in Chapter~\ref{ch:blockchain}: a
+\emph{wrong} interleaving --- a $\lambda$ violating the coherence axioms --- is precisely the
+state-divergence / re-entrancy defect, one agent reading context another has already invalidated,
+and $[\omega]\ne0$ is a globally inconsistent interleaving assembled one locally reasonable call site
+at a time.
+
+\begin{remark}[Where the machine check stops --- \emph{honest boundary}]\label{rem:orch-lean}
+The class computation \eqref{eq:orch-bit} is machine-checked in Lean~4, \texttt{sorry}-free and
+Mathlib-free (\texttt{Reentrancy.lean}): the file certifies that the cocycle $\omega(\varepsilon)$ is
+a coboundary exactly when $\varepsilon=0$. What Lean certifies is the finite $\mathbb{F}_2$ class
+computation; the \emph{reduction} of the categorical obstruction to that cochain complex is proved
+pen-and-paper and is \emph{not} formalised.
+% TODO(orchestration): a store-comonad restatement of the reduction "store-comonad interleaving
+% <=> distributive law <=> [omega]" directly in store-comonad vocabulary, and formalisation of the
+% categorical-to-cochain reduction, remain open (invoked here only at the directed-container level,
+% where Delta S lives). Do not upgrade the grade of Thm~\ref{thm:orch-omega} beyond "imported".
+\end{remark}
+
+\begin{remark}[What threading does, and does not, do]\label{rem:orch-threading}
+Hand-threading two shared states does not escape the distributive law: every call site that reads one
+register and writes another silently commits to an implicit $\lambda$, and nothing checks the per-site
+choices are globally consistent. The store-comonad worker does not make the composite exist
+automatically --- no formalism can, because sometimes it genuinely does not --- but it
+\emph{concentrates} the decision: the interleaving is one named object $\lambda$, its validity one
+class $[\omega]$, both inspectable before the system runs, in one place, rather than reconstructed
+from scattered call sites after it breaks.
+\end{remark}
+
+\section{Tool-calling protocols are directed containers}\label{sec:orch-protocol}
+
+The preceding section modelled the agent's \emph{state}. This section identifies the object the
+agent talks \emph{through}. An agent does its work by calling tools: it emits a typed request and the
+harness returns a typed response, folded back into context before the next step. That discipline ---
+which requests are well-formed, which responses each may receive, how responses accumulate --- is a
+tool-calling protocol, and it is a container.
+
+\begin{definition}[Tool-calling protocol]\label{def:orch-protocol}
+A \emph{tool-calling protocol} is a container $S\triangleright P$ in which $S$ is the set of
+well-formed request schemas an agent may emit and, for each $s:S$, $P\,s$ is the set of admissible
+responses the harness may return to $s$. One \emph{step} is the endofunctor
+$\den{S\triangleright P}(X)=\sum_{s:S}(P\,s\to X)$: choose a request, continue as a function of the
+response.
+\end{definition}
+
+Up to the reading of $S$ and $P$, the step endofunctor is not new: it is the session-coalgebra
+functor $F(X)=\coprod_{a}X^{B_a}$ of Keizer--Basold--P\'erez, itself traced to Gambino--Kock.
+% NEWBIB: A.C. Keizer, H. Basold, J.A. Perez, "Session coalgebras: a coalgebraic view on session
+% types and communication protocols," ACM TOPLAS 2021, arXiv:2011.05712.
+What has not been done is to carry the identification past the single step, and the missing ingredient
+is the harness.
+
+\begin{proposition}[The harness is the protocol's comonad; \emph{identification, proved}]
+\label{prop:orch-harness-comonad}
+A tool-calling protocol whose harness threads context coherently --- an empty initial context, a way
+to read the current context to answer without a further request, and an associative extension of a
+context by a step --- is a directed container: the counit is ``answer from the current context,''
+the comultiplication is ``expose the context of each continuation,'' and the category axioms are
+exactly the coherence of context threading. By the seed equivalence chain
+\begin{equation}\label{eq:orch-chain}
+  \DCont\ \iso\ \Cat\ \iso\ \Cat^{\sharp}\ \subset\ \Poly
+\end{equation}
+\textup{(directed container $\iso$ small category $\iso$ polynomial comonad)}
+\cite{AU16,ACU14,SS23} it is therefore a small category and a polynomial comonad.
+\end{proposition}
+
+This is Definition of a directed container read in the protocol's vocabulary, not a new theorem; but
+it is the move the session-coalgebra literature stops one refinement short of, and once the protocol
+is a comonad three structures are immediate rather than invented.
+
+\begin{corollary}[The interaction trace is the cofree comonad; \emph{proved}]\label{cor:orch-trace}
+The interaction trace of a protocol $S\triangleright P$ --- the tree of all runs, each a sequence of
+request/response pairs --- is the cofree comonad on the tool functor, with labels the agent's
+observable outputs. A single conversation is one root-to-node branch; the counit reads the current
+node, the comultiplication re-roots the trace at each node.
+\end{corollary}
+
+\begin{corollary}[Protocols compose in two ways; \emph{proved}]\label{cor:orch-compose}
+Two protocols compose by substitution $C\tri D$ (run $D$ at each response position of $C$ ---
+a supervisor delegating to a sub-protocol) and by Dirichlet tensor $C\otimes D$ (offer both protocols'
+requests independently --- two non-interacting tools). The interesting composite, of two protocols
+that share state, is neither, and is the Zappa--Sz\'ep weld of \S\ref{sec:orch-harness}, obstructed by
+$[\omega]$.
+\end{corollary}
+
+\begin{remark}[Running the agent is an interaction law]\label{rem:orch-run}
+The comonad reading also locates the agent: its tool-issuing behaviour is a monad of effects, and
+executing it against the harness is the pairing of that monad with the protocol comonad by an
+\emph{interaction law}, the categorical form of ``running'' the agent.
+% NEWBIB: S. Katsumata, E. Rivas, T. Uustalu, "Interaction laws of monads and comonads," LICS 2020,
+% arXiv:1912.13477.
+We do not develop the agent-monad here; the point is that ``run'' becomes a standard construction
+rather than an operational primitive.
+\end{remark}
+
+The engineering payoff is that the multi-agent correctness question is not a testing problem but a
+computable obstruction: for an orchestration of many interacting agents, that obstruction
+(Theorem~\ref{thm:orch-omega}) is the compositional-correctness guarantee worth naming.
+
+\section{The workers type hierarchy}\label{sec:orch-hierarchy}
+
+Between the memoryless agent and the fully interacting weld sits a short, exact hierarchy of worker
+types, each a special case of the last, and each with three coincident readings.
+
+\begin{definition}[The hierarchy]\label{def:orch-hierarchy}
+\leavevmode
+\begin{enumerate}
+\item A \emph{pure agent} is a bare container morphism $X\to Y$ (no state factor): control down,
+data up, memoryless.
+\item A \emph{worker} of state $S$ is a morphism $\Delta S\otimes X\to Y$
+(Definition~\ref{def:orch-worker}); equivalently a coKleisli arrow of the store comonad
+$p\mapsto\Delta S\otimes p$, so worker composition is coKleisli composition.
+\item A \emph{lens} is the monomial fragment $X=\mathsf{y}$, $Y=A\triangleright(\lambda\_.B)$ of a
+worker: a $\mathrm{get}/\mathrm{put}$ pair (Proposition~\ref{prop:orch-single}).
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[One picture, three names; \emph{proved}]\label{prop:orch-three-names}
+A worker $\Delta S\otimes X\to Y$ has three coincident presentations: \emph{downstairs} (containers)
+a forward/backward pair with a state-writeback; \emph{one level up} (functors) a coKleisli arrow of
+the store comonad $S\times(-)^S$; and \emph{sideways} (optics) a lens with an input interface bolted
+on --- the $\Delta S$ factor contributing the bidirectional $\mathrm{get}/\mathrm{put}$, the $X$
+factor an ordinary delegate/amalgamate. The tensor is what makes the three coincide.
+\end{proposition}
+
+The hierarchy is not merely a taxonomy: it is \emph{graded}, and the grade is the content.
+
+\begin{proposition}[Workers form a state-graded category; \emph{proved}]\label{prop:orch-graded}
+A worker of state $S$ from $X$ to $Y$ is an element of $\Hom_{\Cont}(\Delta S\otimes X,\,Y)$, and
+workers compose with the state \emph{multiplying}: a state-$S$ worker followed by a state-$T$ worker
+is a state-$(S\times T)$ worker, because $\Delta S\otimes\Delta T=\Delta(S\times T)$
+\eqref{eq:orch-stack}. The grade $S$ accumulates by product; this composition is
+\emph{unobstructed} (the grade simply grows), in contrast to the weld, where interaction reinstates
+the $[\omega]$ obstruction.
+\end{proposition}
+
+\begin{remark}[Why the grading is honest about interaction]\label{rem:orch-grading-honest}
+The state-graded category composes \emph{non-interacting} workers, and there the multiplication of
+grades is the whole story --- no obstruction, because the tensor assumes independence. The moment two
+graded workers must \emph{share} a register, one leaves the graded category for the weld of
+\S\ref{sec:orch-harness}, and the branch-map data that $\tri$ records but $\otimes$ collapses
+\eqref{eq:orch-stack} is exactly where the interleaving decision --- and its class $[\omega]$ ---
+lives. The hierarchy thus separates cleanly into an obstruction-free axis (grade accumulation under
+$\otimes$) and the obstructed axis (interaction under $\bowtie$).
+\end{remark}
+
+\begin{example}[A running balance]\label{ex:orch-balance}
+With state $S=\Z$ and interface ``deposit or query,'' the worker
+$\mathrm{fwd}(s,\mathsf{dep}\,n)=\mathrm{fwd}(s,\mathsf{bal})=s$ (report the pre-state) with writeback
+$\mathrm{bwd}_S(s,\mathsf{dep}\,n)=s+n$, $\mathrm{bwd}_S(s,\mathsf{bal})=s$ is exactly a
+$\mathrm{get}/\mathrm{put}$ lens. Its type guaranteed, before any run, that precisely a read-and-answer
+and a state-writeback had to be supplied and nothing else could sneak in --- ``correct by construction''
+for a single stateful agent, with the caveats of Remark~\ref{rem:orch-single-honest} intact.
+\end{example}
+
+\section{Effects and coeffects: the reverse-entwining arrow}\label{sec:orch-arrow}
+
+The workers of \S\ref{sec:orch-hierarchy} carry \emph{state}. A richer orchestration threads two
+computational modes at once: an \emph{effect} (the agent fails, chooses, logs) and a \emph{coeffect}
+(the agent reads ambient context --- an environment, a history, a budget). On containers both arise
+from a \emph{single} $\mathsf{Set}$-monad $M$, fed along the two axes, and the variance of positions
+decides the outcome.
+
+\begin{definition}[The two feeds of one monad]\label{def:orch-feeds}
+For a $\mathsf{Set}$-monad $M$ (with a $\prod$-cointerpretation support lifting $P^\star$), feeding
+$M$ along shapes gives the Ahman--Bauer \emph{effect monad} $T_M(S\triangleright P)=MS\triangleright
+P^\star$ --- shapes are covariant, so $T_M$ is a \textbf{monad} on $\Cont$; feeding $M$ along positions
+gives the \emph{coeffect comonad} $G_M(S\triangleright P)=S\triangleright(M\circ P)$ --- positions are
+contravariant, so $G_M$ is a \textbf{comonad}. There is no third axis and no choice in the outcome.
+% NEWBIB: D. Ahman, A. Bauer, "Comodule representations of second-order functionals," JLAMP 146 (2025),
+% arXiv:2409.17664.  (effect monad T_M, Thm 6.3)
+\end{definition}
+
+\begin{theorem}[The two feeds always entwine; \emph{proved, one mechanical gap flagged}]
+\label{thm:orch-bialgebra}
+For every such $M$ there is a canonical mixed distributive law $\lambda:T_M G_M\Rightarrow G_M T_M$
+--- the oplax product-comparison $M(\prod_b Z_b)\to\prod_b M(Z_b)$ of $M$, read on positions ---
+satisfying the four entwining axioms, so $G_M$ lifts to a comonad on $T_M$-algebras and $T_M$ to a
+monad on $G_M$-coalgebras (a Turi--Plotkin $\lambda$-bialgebra). This holds unconditionally,
+nondeterminism ($\mathcal P_f$) and lists included.
+\end{theorem}
+
+\noindent The one axiom whose fully symbolic verification depends on the weak Mendler datum
+(mult-$T$) is complete in mechanism but not written out as an index-chase over an arbitrary lifting;
+it is machine-verified across three containers including the branching case $M=\mathcal P_f$. We flag
+this rather than blur it.
+% TODO(orchestration): mult-T index-chase for lambda over an arbitrary prod-cointerpretation lifting
+% is mechanical and not spelled out (Remark e2gap in the source). Grade of Thm~\ref{thm:orch-bialgebra}
+% stays "proved with one flagged mechanical gap"; do not upgrade.
+
+The reverse orientation is another story, and it is the one an orchestration needs: to
+\emph{sequentially compose} programs that read context and then produce effects, one must commute the
+effect out through the coeffect.
+
+\begin{definition}[Effect--coeffect arrow]\label{def:orch-arrow}
+An \emph{effect--coeffect arrow} $p\rightsquigarrow q$ is a container morphism $G_M p\to T_M q$: it
+reads its input through the coeffect $G_M$ and delivers its output through the effect $T_M$. Composing
+two such arrows requires a compositor $\kappa:G_M T_M\Rightarrow T_M G_M$ --- the \emph{reverse}
+orientation of the always-valid $\lambda$ of Theorem~\ref{thm:orch-bialgebra}, on positions the
+\emph{lax} product-comparison $\prod_b M(Z_b)\to M(\prod_b Z_b)$.
+\end{definition}
+
+\begin{theorem}[The arrow exists iff the reverse entwining does iff $M$ is non-branching;
+\emph{proved, Maybe Lean-checked}]\label{thm:orch-arrow}
+For a $\prod$-cointerpretation $\mathsf{Set}$-monad $M$ the following are equivalent:
+\begin{enumerate}
+\item the effect--coeffect arrows $G_M p\to T_M q$ form a category (indeed a Hughes arrow / Freyd
+category over $(\Cont,\times)$);
+\item there is a natural $\kappa:G_M T_M\Rightarrow T_M G_M$ satisfying the four mixed-law axioms;
+\item $M$ is \emph{non-branching} (every operation has arity $\le1$).
+\end{enumerate}
+The unit laws hold for every $M$; the sole obstructed axiom is associativity (mult-$T$, a
+``union of products $\ne$ product of unions'' discrepancy when $\mu^M$ merges leaves), and a second,
+independent obstruction --- $T_M$ has no \emph{natural} strength for $\times$ when $M$ branches, by
+leaf-symmetry --- blocks the $\mathrm{first}$ operator likewise. Branching disables the arrow twice
+over, both failures equivalent to arity $\le1$.
+% NEWBIB: J. Hughes, "Generalising monads to arrows," Sci. Comput. Program. 37 (2000) 67-111.
+% NEWBIB: R. Atkey, "What is a categorical model of arrows?," ENTCS 229(5) (2011) 19-37.
+% NEWBIB: T. Uustalu, V. Vene, "Comonadic notions of computation," ENTCS 203(5) (2008) 263-284.
+% NEWBIB: J. Power, H. Watanabe, "Combining a monad and a comonad," TCS 280 (2002) 137-162.
+\end{theorem}
+
+\begin{theorem}[Classification of the positive class; \emph{proved}]\label{thm:orch-classify}
+A cartesian $\prod$-cointerpretation monad $M$ is non-branching if and only if it is a
+\emph{writer-with-absorbing-exceptions} monad
+\[
+  MX\ \iso\ E+A\times X,\qquad (A,\cdot,e)\ \text{a monoid},\ (E,\odot)\ \text{a left $A$-set},
+\]
+with writer unit $x\mapsto(e,x)$ and the log $A$ acting on the exceptions $E$; the arrow category
+exists throughout this class. Non-branching is a genuinely new dividing line, provably independent of
+commutativity and of affineness.
+\end{theorem}
+
+\begin{remark}[What is machine-checked, and the honest synthesis]\label{rem:orch-arrow-lean}
+The smallest genuinely effectful arrow category, $M=\mathsf{Maybe}$, is formalised in Lean~4
+(\texttt{BiKleisliMaybe.lean}): an abstract \texttt{MixedDistrib} structure with the four axioms
+including associativity E2$'$, from which biKleisli composition and its associativity law are derived
+\texttt{sorry}-free. The general associativity across the whole writer-with-exceptions class
+(Theorem~\ref{thm:orch-classify}) is proved in coordinates but not yet Lean-certified.
+% TODO(orchestration): Lean-certify E2' across the whole E+Ax(-) class (currently coordinates-only).
+The synthesis worth stating for the grant is that the three container-native modes of welding
+compositional systems carry \emph{three different} obstructions: the Zappa--Sz\'ep weld of directed
+containers is obstructed by a cohomology class $[\omega]\in\Hcoh$ (\S\ref{sec:orch-harness},
+Chapter~\ref{ch:blockchain}); the state-graded category of workers is \emph{unobstructed}
+(Proposition~\ref{prop:orch-graded}); and the effect--coeffect arrow is obstructed by a Boolean arity
+condition (Theorem~\ref{thm:orch-arrow}). They do not unify into a master theorem, and the honest
+claim is exactly that: \emph{whether} two agents compose is, in each mode, a computable invariant of
+the parts --- but which invariant depends on the axis.
+\end{remark}

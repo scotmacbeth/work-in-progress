@@ -1,0 +1,102 @@
+\chapter{Tax computation (Catala)}
+\label{ch:tax}
+This chapter is the deliberate exception in the Applications pillar: it carries
+\emph{no formal artifact}. There is no proof, no Lean development, and no running
+integration with the Catala tax-DSL --- only a categorical reading of how a
+statutory tax engine is shaped, offered as an illustrative target and a statement
+of intent. Every structural claim below is \emph{speculative}; nothing here is
+asserted as a result, and the reader should treat the whole chapter as a
+conjectural design sketch aligned with Honest-Ledger item~2.
+
+\begin{remark}[No artifact --- read this first]\label{rem:tax-noartifact}
+Unlike the other Applications chapters, this one is not backed by a computed
+witness, a paper proof, or machine-checked code. The correspondences it draws
+between a Catala tax pipeline and the container machinery of Part~I are
+\emph{suggestive analogies}, graded \emph{speculative} throughout. They are
+included because the picture is clean and points at concrete future work, not
+because any of it has been established. Where the text uses the vocabulary of
+Part~I ($\Cont$, $\DCont$, $\Cat$, $\tri$, $\Hcoh$), it does so by analogy only,
+without claiming that the identifications have been checked.
+\end{remark}
+
+\section{The categorical picture (speculative)}\label{sec:tax-picture}
+
+A regulator-scrutinised tax engine exhibits three structures that \emph{look}
+directed-container-shaped. We record them as targets.
+
+\paragraph{An ontology DAG of definitions.} The statutory corpus behind an engine
+is a typed, heterogeneous, acyclic graph of principles, decisions, requirements,
+generators and derived artefacts. Read as a container $(S,P)$, the shape $S$ is
+the whole typed DAG and the positions $P_s$ are its nodes; \emph{restriction}
+zooms to the sub-DAG reachable from a generator node, and an audit that walks
+every node against its local sub-DAG has the \emph{shape} of a comonadic
+$\mathrm{extend}$. The \emph{conjectural} payoff is a compositionality law: that
+auditing a sub-DAG and embedding the verdict agrees with auditing the whole and
+restricting. We do not claim this law holds --- only that, if the audit is a genuine
+comonad coextension, it \emph{would}, and that a violation \emph{would} signal a
+bug. This is a target, grade \emph{speculative}.
+
+\paragraph{Scope composition of rules.} A Catala pipeline composes sub-scopes in
+statutory dependency order: \texttt{output of <SubScope> with \{\ldots\}}
+followed by field projection. Under the analogy, a scope is a shape, its typed
+fields are positions, sub-scope invocation is restriction, and the flow of one
+scope's outputs into the next scope's inputs is composition --- the substitution
+grammar $\tri$ of \S\ref{sec:prelim-dcont}, read informally. Catala additionally
+carries \emph{exception priority}: when several rules claim one output field, its
+compiler resolves the conflict by a declared priority order. In container terms
+this would be a \emph{partial order on positions} refining a directed container.
+We flag it as \emph{worth formalising}; we have not formalised it, and whether a
+partially-ordered directed container captures Catala's default-logic semantics is
+\emph{conjectural}.
+
+\paragraph{Comonadic event-sourced projections.} A taxable event stream, with its
+deterministic replay discipline (``the same events in the same order produce the
+same state''), reads as the most explicitly comonadic of the three: the stream is
+the shape, each event a position, \texttt{query} an $\mathrm{extract}$, and
+\texttt{apply} an $\mathrm{extend}$-step. The determinism requirement has the form
+of a comonad law, $\mathrm{extract}\circ\mathrm{extend}\,f = f$. We state this as
+an \emph{observation about form}, not a verified equation: we have not exhibited
+the comonad, checked its laws, or connected it to an implementation.
+
+\section{Where the correctness equation would enter (statement of intent)}\label{sec:tax-intent}
+
+If the three structures above were made precise, the dossier's organising
+equation --- correctness $\iff (\mathrm{L})\wedge[\omega]=0\in\Hcoh$ --- would have a
+natural, and entirely \emph{conjectural}, reading here. The local condition
+$(\mathrm{L})$ would say each rule module is a directed container (a small
+category of sub-scope restrictions and their composites); the global condition
+$[\omega]=0$ would obstruct \emph{welding} independently-authored rule modules ---
+across statutory boundaries, tax years, or jurisdictions --- into one coherent
+engine, with a nonzero class flagging a genuine conflict between overlapping
+rule sets that no priority order can silently reconcile. This is a hypothesis
+about \emph{where} the machinery would attach, offered to motivate future work.
+
+\begin{conjecture}[Illustrative only; \emph{speculative}]\label{conj:tax-illustrative}
+There is a directed-container model of a Catala tax pipeline in which
+(i)~sub-scope composition is the substitution product $\tri$, (ii)~exception
+priority is a partial order on positions, and (iii)~the obstruction to welding
+two independently-authored rule modules is a class $[\omega]\in\Hcoh$ that
+vanishes iff the modules admit a coherent common refinement.
+\end{conjecture}
+
+We state Conjecture~\ref{conj:tax-illustrative} to fix the target precisely, not
+because we have evidence beyond the structural analogy of \S\ref{sec:tax-picture}.
+It is unproven, unformalised, and untested against a real Catala corpus. The
+honest deliverable of this chapter is exactly that target, plus the discipline of
+labelling it as such.
+
+\begin{remark}[The intended next step]\label{rem:tax-next}
+The minimal artifact that would move this chapter off \emph{speculative} is a
+small worked Catala example --- two overlapping rule scopes --- with the directed
+container written out explicitly and the priority partial order checked against
+Catala's compiled default logic. Until such an artifact exists, this chapter
+remains a statement of intent. It is retained in the dossier for the same reason
+the Honest Ledger is near the front: a programme that claims a unifying equation
+must be equally clear about the domains where the equation is only aspirational.
+\end{remark}
+
+% GRADE: speculative throughout; GAP chapter, no artifact (Honest Ledger item 2).
+% TODO: replace with a real worked Catala example (two overlapping scopes) +
+%       explicit directed container + priority partial order checked against
+%       Catala's compiled default logic, if/when such an artifact is produced.
+% Macros used from shared set: \Cont \DCont \Cat \Hcoh \tri \Id \iso (by analogy only).

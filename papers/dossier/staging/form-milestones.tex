@@ -1,0 +1,216 @@
+\chapter{Milestones M1--M6: status}
+\label{ch:milestones}
+This chapter is the authoritative formalisation ledger for the equivalence
+programme. It records, milestone by milestone, exactly what has been
+machine-checked in Lean~4, what is proved only on paper or in the literature, and
+what remains open or conjectural. The single governing rule is honesty against the
+proof registry (\texttt{registry/equivalence-chain.json}): where the roadmap prose
+and the registry disagree on a grade, the registry wins and the discrepancy is
+flagged in place. Milestones \emph{M1}--\emph{M4} (with the converses \emph{M2b},
+\emph{M3b}) are \emph{lean-verified}; milestones \emph{M5} and \emph{M6} are
+\emph{not} formalised and are not even uniformly proved on paper --- this is
+Honest~Ledger item~3, made explicit in \S\ref{sec:mile-open}.
+
+%============================================================
+\section{The milestone ledger}\label{sec:mile-ledger}
+%============================================================
+
+The programme decomposes the object- and morphism-level identification
+$\DCont\iso\mathbf{Cof}=\mathbb C\mathrm{at}^{\sharp}$, and its enriched and
+$\infty$-categorical extensions, into six milestones. Table~\ref{tab:milestones}
+is the ledger: each row carries the registry node, a one-line statement, the
+\emph{exact} trust grade recorded in the registry, the Lean declaration or proof
+file, and the formalisation status. Grades are quoted verbatim from the JSON; they
+are not rounded up.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Milestones M1--M6, graded against \texttt{equivalence-chain.json}. Grades
+are the registry \texttt{trust} fields verbatim. Only M1--M4 (and the converses
+M2b, M3b) are lean-verified; M5 and M6 are not formalised.}
+\label{tab:milestones}
+\begin{tabular}{@{}llp{4.1cm}lp{2.9cm}l@{}}
+\toprule
+\textbf{M\#} & \textbf{Node} & \textbf{Statement} & \textbf{Grade} & \textbf{Lean module / file} & \textbf{Status}\\
+\midrule
+M1  & \texttt{m1-representation}      & Container representation: $\den{-}$ full and faithful & \emph{lean-verified} & \texttt{Container.repr\_full\_faithful} & formalised\\
+M2  & \texttt{m2-comonad-laws}        & Directed container $\Rightarrow$ comonad (D1--D5) & \emph{lean-verified} & \texttt{DirectedContainer.} \texttt{comonad\_laws} & formalised\\
+M2b & \texttt{m2b-converse}           & Comonad $\Rightarrow$ directed container; both round-trips by \texttt{rfl} & \emph{lean-verified} & \texttt{ComonadConverse.} \texttt{recover\_forward\_eq\_id} & formalised\\
+M3  & \texttt{m3-comonoid-forward}    & Directed container is a $\tri$-comonoid in $\Cont$ & \emph{lean-verified} & \texttt{DirectedContainer.} \texttt{toComonoid} (\texttt{Comonoid.lean}) & formalised\\
+M3b & \texttt{m3b-comonoid-converse}  & Every $\tri$-comonoid is a directed container; iso of packagings & \emph{lean-verified} & \texttt{Container.Comonoid.} \texttt{toDirectedContainer\_} \texttt{toComonoid} (\texttt{ComonoidConverse.lean}) & formalised\\
+M4  & \texttt{m4-dcont-cof}           & $\DCont=\mathbf{Cof}$: morphism-level iso of categories & \emph{lean-verified} & \texttt{DContMorphism.} \texttt{toCofunctor} & formalised\\
+M5  & \texttt{m5-enriched-dcont-cof}  & Enriched $\DCont=\mathbf{Cof}$ & \emph{unclassified} & --- & open, not formalised\\
+M6  & \texttt{m6-infinity-dcont}      & $\infty$-$\DCont=\Cat$ (Chen, Conj.\ 7.2) & \emph{speculative} & --- & conjecture, not formalised\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% NOTE: JSON grades M5 = "unclassified" and M6 = "speculative". The dossier roadmap
+% prose describes M5--M6 as "open/proved-on-paper"; the registry does NOT record
+% either as proved. Trusting the JSON: M5 is unclassified (its source states the
+% result is open) and M6 is speculative (a conjecture). Neither is marked
+% lean-verified or proved. See \S\ref{sec:mile-open}.
+% TODO(integrator): the Lean declarations M1--M4/M2b/M3b live in RaggedR/macbeth-seed
+% (see \cite{MacBethBase}); confirm module qualification (Containers.*) at merge time.
+
+%============================================================
+\section{The verified core: M1--M4}\label{sec:mile-core}
+%============================================================
+
+The four load-bearing milestones, together with the two converses, are all graded
+\emph{lean-verified} in the registry, with zero \texttt{sorry} and axiom
+dependencies restricted to \texttt{[Quot.sound]} (via \texttt{funext}); the
+Dirichlet-coherence sub-file depends on no axioms at all.
+
+\paragraph{M1 --- representation.}
+Registry node \texttt{m1-representation}, Lean
+\texttt{Container.repr\_full\_faithful}, graded \emph{lean-verified}. This is the
+statement that the extension $\den{-}\colon\Cont\to\End(\Set)$ is full and faithful
+onto the polynomial functors --- the foundation the whole chain stands on, so that
+every downstream identification may be read either in $\Cont$ or in $[\Set,\Set]$.
+
+\paragraph{M2 / M2b --- directed containers are comonads.}
+Node \texttt{m2-comonad-laws} (Lean \texttt{DirectedContainer.comonad\_laws}) proves
+the forward direction: the comonad laws on $\den{S,P}$ are exactly (D1)--(D5), the
+left counit $=$ (D1)+(D2), the right counit $=$ (D3), coassociativity $=$
+(D4)+(D5). Node \texttt{m2b-converse} (Lean
+\texttt{ComonadConverse.recover\_forward\_eq\_id}) proves the converse and certifies
+\emph{both} round-trips by \texttt{rfl}. Both are \emph{lean-verified}; the
+mathematics is Ahman--Chapman--Uustalu \cite{ACU14}.
+
+\paragraph{M3 / M3b --- the $\tri$-comonoid packaging.}
+Node \texttt{m3-comonoid-forward} (Lean
+\texttt{Containers.DirectedContainer.toComonoid}, file \texttt{Comonoid.lean})
+states the same data \emph{internally} to $(\Cont,\tri,\Id)$ --- no $\Ext$, no
+$[\Set,\Set]$: right counit $=$ (D3), left counit $=$ (D1)+(D2), coassociativity
+$=$ (D4)+(D5). Its converse \texttt{m3b-comonoid-converse} (Lean
+\texttt{Containers.Container.Comonoid.toDirectedContainer\_toComonoid}, file
+\texttt{ComonoidConverse.lean}) is fully verified with \emph{both} round-trips
+certified (counit by \texttt{rfl}, comultiplication via \texttt{ContainerMorphism.}
+\texttt{ext\_eq}), upgrading M3/M3b to a genuine isomorphism of packagings
+$\mathrm{DirectedContainer}\;C=\mathrm{Comonoid}\;C$. Both \emph{lean-verified}.
+
+\paragraph{M4 --- the morphism-level isomorphism $\DCont=\mathbf{Cof}$.}
+Node \texttt{m4-dcont-cof}, Lean \texttt{Containers.DContMorphism.toCofunctor},
+graded \emph{lean-verified}. This is the delicate milestone: the correct morphisms
+are \emph{cofunctors}, not functors, because the position map
+$f^{\sharp}_{s}\colon P'(fs)\to P(s)$ is contravariant. The registry preserves the
+refuted naive reading as an explicit dead-end (node \texttt{morphisms-are-functors},
+grade \emph{dead-end}, refutation \emph{computed}: ``\#functors $\neq$ \#cofunctors
+in 17 of 36 test pairs''), and carries a provenance note (2026-07-14) recording
+that the original \texttt{Cofunctor.lean} was orphaned by a PR-close during a repo
+reorg, not lost to an out-of-memory event, and that \texttt{DContCat.lean} is a
+rebuild of an artifact that had been on a feature branch all along --- lesson:
+\emph{merge or back up before stacking}.
+
+\begin{remark}[Axiom hygiene]\label{rem:mile-axioms}
+The registry records the \texttt{\#print axioms} audit for the comonoid layer:
+\texttt{toComonoid} and its relatives depend on \texttt{[Quot.sound]} only, while
+the Dirichlet monoidal structure (\texttt{contDirichletMonoidal}, node
+\texttt{four-monoidal-lean}) depends on \emph{no} axioms --- every coherence is
+\texttt{rfl}. This is the sense in which ``\emph{lean-verified}'' in
+Table~\ref{tab:milestones} is a strong grade: it is not merely ``compiles'' but
+``compiles with an audited and minimal axiom footprint''.
+\end{remark}
+
+%============================================================
+\section{The open frontier: M5 and M6 (Honest Ledger item 3)}\label{sec:mile-open}
+%============================================================
+
+This section states plainly what the registry records and what it does not. Neither
+M5 nor M6 is \emph{lean-verified}, and --- against the roadmap's informal
+``proved-on-paper'' framing --- neither is graded \emph{proved} in the registry
+either. This is the third item of the dossier's Honest Ledger.
+
+\paragraph{M5 --- enriched $\DCont=\mathbf{Cof}$.}
+Registry node \texttt{m5-enriched-dcont-cof}, attributed in the registry to
+Clarke--Di~Meglio, graded \textbf{\emph{unclassified}}. The registry note is
+unambiguous: ``Clarke--Di Meglio 2022 state this is open. No sequel since.'' So M5
+is \emph{not} proved on paper; it is an open problem inherited from the literature,
+with no formalisation and no proof artifact on disk.
+% NOTE: JSON says trust = "unclassified" and the node's own note says the result is
+% OPEN. The dossier roadmap called M5 "proved-on-paper" -- that is not what the
+% registry records. Do NOT upgrade M5 to proved or lean-verified.
+
+\paragraph{M6 --- $\infty$-$\DCont=\Cat$.}
+Registry node \texttt{m6-infinity-dcont}, graded
+\textbf{\emph{speculative}}. The registry records this as Kan~Chen's
+Conjecture~7.2: that an
+$\infty$-categorical directed-container notion recovers $\Cat$ (the
+$(\infty,1)$-categorical target). It is a conjecture, not a theorem; there is no
+proof file and no Lean module.
+% NOTE: JSON says trust = "speculative". Again the roadmap's "open/proved-on-paper"
+% wording overstates the registry. M6 is a conjecture. Do NOT mark it proved or
+% lean-verified.
+% TODO(browse): the registry records arXiv:2209.01144 (M5) and arXiv:2601.22968 (M6)
+% as sources, but sources.json titles 2601.22968 as "Distributive Laws of Monadic
+% Containers" -- a mismatch consistent with the known sources.json arXiv-id-collision
+% issue (questions/sources-json-arxiv-id-collisions-2026-09-23.md). Do NOT emit a
+% formal \cite/\bibitem for either until the ids are deep-read and reconciled in a
+% browse session; author-name attribution above is deliberate and provenance-safe.
+
+\begin{remark}[Honest Ledger item 3, stated for the record]\label{rem:mile-ledger3}
+Milestones M5 and M6 are proved neither in Lean nor (uniformly) on paper: the
+registry grades them \emph{unclassified} and \emph{speculative} respectively, and
+the M5 source explicitly declares the enriched statement open. Any claim in the
+grant narrative that ``the equivalence programme is fully formalised'' must be read
+as scoped to M1--M4 (with converses M2b, M3b). The formalised core is exactly the
+non-enriched, $1$-categorical chain; the enriched and $\infty$-categorical
+extensions are frontier, not ledger.
+\end{remark}
+
+%============================================================
+\section{Adjacent verified structure}\label{sec:mile-adjacent}
+%============================================================
+
+The registry carries further \emph{lean-verified} material orbiting the milestones,
+useful to cite when the grant narrative reaches beyond the bare chain. The Zappa--
+Sz\'ep associativity criterion (node \texttt{zs-lean}, Lean
+\texttt{MatchedPair.zs\_iff\_assoc}) is \emph{lean-verified}. All four monoidal
+structures on $\Cont$ --- coproduct, product, Dirichlet tensor, and the sequential
+operator $\tri$ --- are machine-checked with bifunctorial action, associators,
+unitors, naturality, pentagon and triangle, plus extension-functor comparison isos
+(node \texttt{four-monoidal-lean}, \emph{lean-verified}), as is the comparitor
+$C\otimes D\to C\tri D$ exhibiting the Dirichlet tensor as the uniform fragment of
+$\tri$ (node \texttt{dirichlet-is-uniform-fragment-of-seq}, \emph{lean-verified},
+with the machine-checked non-surjectivity witness \texttt{dirToSeq\_not\_surjective}).
+
+\begin{remark}[Grades of the surrounding theory are mixed --- cite carefully]\label{rem:mile-mixed}
+Not everything adjacent to the chain is verified, and the registry is deliberate
+about the gap. The Day-family classification (node \texttt{day-family-classification},
+Theorem~A) is graded \emph{proved} (paper, not Lean); the uniform closure formula
+(\texttt{uniform-closure-formula}) is only \emph{computed} --- one hand-check plus
+literature instances, no write-up artifact (\texttt{file: null}) --- and the closed
+convolutional classification (\texttt{closed-convolutional-classification}) is
+\emph{speculative}, missing its necessity direction. The comparitor no-go
+(\texttt{comparitor-comonoid-nogo}) is \emph{speculative}. The fibrational comonoid
+layer (\texttt{fibrational-comonoid-layer}) is graded \emph{peer-reviewed} in the
+sense that the equivalence is an established, refereed result
+(Shapiro--Spivak \cite{SS23}) --- not that anything new was proved; a full-PDF audit
+found it scooped in full. When these results feed the grant, quote the registry
+grade, not the ambition. Only Table~\ref{tab:milestones}'s M1--M4 rows carry the
+\emph{lean-verified} guarantee.
+\end{remark}
+
+% =====================================================================
+% NEW OPERATORS / NAMES USED (not in the allowed macro list) -- for the integrator:
+%   \Ext          : written inline as \Ext (extension functor); if undefined use \den{-}
+%   \mathbf{Cof}  : category of cofunctors (written inline, no macro)
+%   \mathbb C\mathrm{at}^{\sharp} : Cat-sharp (written inline)
+%   \texttt{...}  : Lean declaration / file names verbatim from the registry
+% Allowed macros used: \Cont \DCont \Cat \Poly \tri \Id \iso \den{..}
+% =====================================================================
+
+% CITATIONS
+% Existing keys reused: \cite{ACU14} \cite{AU16} \cite{SS23} \cite{MacBethBase}
+%   (ACU14 = arXiv 1604.01187 mathematics for M2/M2b/M3/M3b/M4 sources;
+%    SS23 = arXiv 2305.00167 for the fibrational layer).
+%
+% NEWBIB: ClarkeDiMeglio22 -- B. Clarke and M. Di Meglio,
+%   "An introduction to enriched cofunctors" (or the 2022 enriched-cofunctor note),
+%   arXiv:2209.01144, 2022.   [source of M5; states the enriched result is OPEN]
+%
+% NEWBIB: Chen26 -- K. Chen,
+%   "[infinity-directed containers / Conjecture 7.2]",
+%   arXiv:2601.22968, 2026.   [source of M6; Conjecture 7.2, speculative]

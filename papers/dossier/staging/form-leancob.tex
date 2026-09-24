@@ -1,0 +1,100 @@
+\chapter{Change-of-base adjunction and collapse theorems in Lean}
+\label{ch:leancob}
+
+This chapter reports the machine-checked core of the change-of-base story: the left adjoint to sequential composition $(-)\tri q$, its parameter naturality, and four collapse phenomena that certify where the container-extension functor fails to be injective on objects or faithful on morphisms. Every declaration cited below is \emph{lean-verified}; the whole corpus is sorry-free and, apart from one use of \texttt{Classical.choose}, builds on Lean~4 core with no Mathlib. In keeping with the dossier's self-audit discipline, each statement is described exactly as the source file states it --- including the variances and the disclosed narrowings, which are the load-bearing content rather than incidental.
+
+
+\section{The left adjoint $F_q \dashv (-)\tri q$}
+\label{sec:leancob-fq}
+
+Fix a container $q=(T\tri Q)$ and write $L_q\,p := p\tri q$ (\texttt{Container.seq}) for right whiskering by $q$, an endofunctor of $\Cont$. The file \texttt{CompLeftAdjoint.lean} builds an explicit left adjoint
+\[
+  F_q\,(R\tri U) \;=\; \bigl(R \tri \lambda\rho.\;\llbracket q\rrbracket\,(U\,\rho)\bigr),
+  \qquad \llbracket q\rrbracket X = \textstyle\sum_{t:T}(Q\,t \to X),
+\]
+i.e. $F_q$ is the identity on shapes and applies the extension of $q$ to every position set. The object map is \texttt{Container.leftAdj}; the action on morphisms is \texttt{Container.leftAdjMap}. The decisive point recorded in the file is the \emph{variance}: a $\texttt{ContainerMorphism}$ runs forward on shapes and \emph{backward} on positions, so $F_q$ must run $\llbracket q\rrbracket$ over the backward leg, \texttt{Ext.map (\(\varphi\).onPos \(\rho\))}; pushing $\llbracket q\rrbracket$ forwards, as a shape-level reading of the formula suggests, does not even typecheck. The functor laws are \texttt{leftAdjMap\_id} and \texttt{leftAdjMap\_comp}.
+
+The unit $\eta_r : r \to F_q\,r \tri q$ (\texttt{Container.adjUnit}, the ``generic element'' map) and counit $\varepsilon_p : F_q\,(p\tri q)\to p$ (\texttt{Container.adjCounit}) are given as explicit container morphisms.
+
+\begin{theorem}[triangle identities, \texttt{lean-verified}]
+\label{thm:leancob-triangles}
+$\varepsilon_{F_q r}\circ F_q\eta_r = \id$ (\texttt{Container.triangle\_leftAdj}) and $(\varepsilon_p\tri q)\circ\eta_{p\tri q}=\id$ (\texttt{Container.triangle\_seq}).
+\end{theorem}
+
+The file is careful to separate the triangles from naturality: the triangles say $\eta,\varepsilon$ are compatible \emph{pointwise}, but do not by themselves make them natural transformations. The two naturality squares $\eta:\Id\Rightarrow L_q\circ F_q$ (\texttt{adjUnit\_naturality}) and $\varepsilon:F_q\circ L_q\Rightarrow\Id$ (\texttt{adjCounit\_naturality}) supply the missing content; together with the functor laws for $L_q$ (\texttt{whiskerRight\_id}, \texttt{whiskerRight\_comp}) and the two triangles they constitute the full adjunction $F_q\dashv L_q$. The hom-set bijection $\Cont(F_q r,p)\iso\Cont(r,p\tri q)$ is packaged as the mutually inverse \texttt{adjTranspose} / \texttt{adjUntranspose} (round trips \texttt{adjUntranspose\_adjTranspose}, \texttt{adjTranspose\_adjUntranspose}), with naturality in both variables. Here a second variance is stated exactly as in the file: because $\Cont(F_q -,p)$ is \emph{contravariant in} $r$, the left-hand naturality square \texttt{adjTranspose\_naturality\_left} is indexed by $\varphi:r'\to r$.
+
+\begin{remark}[non-vacuity control]
+Every law is proved by \texttt{ContainerMorphism.ext' rfl (fun \_ \_ => rfl)}. To rule out vacuity, \texttt{adjCounitPerturbed\_naturality} exhibits a perturbed counit (injecting at a flipped \texttt{qBool}-position) that \emph{still} satisfies the naturality square yet \emph{breaks} \texttt{triangle\_seq}: naturality and the triangles are genuinely independent probes, and each law's content lives on the position leg.
+\end{remark}
+
+\section{Parameter naturality: $F$ is contravariant in $q$}
+\label{sec:leancob-natq}
+
+The file \texttt{CompLeftAdjointNatQ.lean} certifies how $F_q$ varies as $q$ varies, and here the variance is stated exactly as the source does. Right whiskering $(-)\tri q$ is \emph{covariant} in $q$; since the family of right adjoints is covariant, the family of left adjoints must be \emph{contravariant}. Concretely, a morphism $\psi:q\to q'$ yields
+\[
+  F_\psi : F_{q'}\Rightarrow F_q \qquad(\text{note the reversal}),
+\]
+the transformation \texttt{Container.leftAdjOnq}, identity on shapes and $\psi.\texttt{toNat}$ on positions. This is the only assignment of the correct variance: $F_{q'}r\to F_q r$ runs backward on positions from $\llbracket q'\rrbracket$ to $\llbracket q\rrbracket$, which is exactly what $\psi.\texttt{toNat}:\texttt{Ext } q\Rightarrow\texttt{Ext } q'$ supplies.
+
+\begin{proposition}[contravariant functoriality, \texttt{lean-verified}]
+$F_{\id_q}=\id$ (\texttt{leftAdjOnq\_id}) and $F_{\psi\circ\psi'}=F_{\psi'}\circ F_\psi$ (\texttt{leftAdjOnq\_comp}) --- the order reversing precisely because $F$ is contravariant in $q$.
+\end{proposition}
+
+The remaining declarations record: naturality of $F_\psi$ in $r$ (\texttt{leftAdjOnq\_naturality}); the two compatibility squares tying unit and counit at $q$ and $q'$ along $\psi$ (\texttt{adjUnit\_naturality\_q}, \texttt{adjCounit\_naturality\_q}), the counit square being taken over the genuine shared corner $F_{q'}\circ L_q$ rather than a non-existent square between compound endofunctors; and the packaging \texttt{leftAdjOnq\_eq\_mate}, that $F_\psi$ \emph{is} the mate of $L_\psi$ under $F_q\dashv L_q$ and $F_{q'}\dashv L_{q'}$. A perturbed candidate for $F_{\id}$ (\texttt{leftAdjOnqPerturbed\_naturality}) again satisfies naturality-in-$r$ while failing \texttt{leftAdjOnq\_id}, isolating what naturality does and does not pin down.
+
+\section{The Vec biproduct collapse, and the non-faithfulness hedge}
+\label{sec:leancob-vec}
+
+The file \texttt{VecCollapse.lean} formalises the Theorem-D collapse over $\VecC_{\mathrm{fd}}$ \cite{macbeth-reduction}. The one idea is that over $\VecC$ a finite coproduct is a biproduct, so it equals the product: the linear extension replaces the shape-indexed $\sum$ of the set extension by a $\prod$,
+\[
+  \texttt{LExt}\,(S,\mathrm{Pos})\,X \;=\; (s:S)\to(\mathrm{Pos}\,s \to X),
+\]
+positions being carried by their finite basis types. That single $\Sigma\!\to\!\Pi$ shift is the biproduct collapse. The two containers $p=(\{\ast\},k^2)$ and $p'=(\{1,2\},k)$ then present the same functor $X\mapsto X\oplus X$: the collapse isomorphism $\texttt{LExt}\,p\iso\texttt{LExt}\,p'$ is \texttt{collapseIso} (a \texttt{LinNatIso}, with naturality), and both extensions are isomorphic --- not merely surjected onto --- the common two-power $\texttt{Pow2}\,X=(\mathrm{Bool}\to X)$ via \texttt{pIso}, \texttt{p'Iso} (\texttt{collapse\_factors\_through\_cover}).
+
+\begin{proposition}[object half of Theorem D, \texttt{lean-verified}]
+There is no bijection between the shape set of $p$ ($\mathrm{Unit}$) and that of $p'$ ($\mathrm{Bool}$): \texttt{shapes\_not\_equiv}. Hence $p\not\iso p'$ as containers although their linear extensions agree, and $\llbracket-\rrbracket$ is not injective on objects on the collapse locus.
+\end{proposition}
+
+The file then formalises the \emph{morphism} half, and the exact hedge must be carried: this corrects an earlier ``faithful'' clause, caught on 2026-09-11 by Robin Langer's $\mathbb F_q$ re-derivation.
+
+\begin{theorem}[corrected Theorem D, morphism half --- the extension is NOT faithful, \texttt{lean-verified}]
+\label{thm:leancob-notfaithful}
+\texttt{linExt\_not\_faithful} states: the two distinct container morphisms \texttt{zeroMor1} $\neq$ \texttt{zeroMor2} of type $(\{\ast\},k)\to(\{1,2\},k)$ over $\mathbb F_2$ --- differing only in their shape map, both with zero position map --- induce the \emph{same} natural transformation $\texttt{LinExt}(\texttt{srcUnit})\Rightarrow\texttt{LinExt}(\texttt{witnessD})$ at every pointed value type. The mechanism is \texttt{induced\_zero\_of\_zeroPos} (the union-lemma collapse). Generalised: \texttt{not\_faithful\_of\_two\_shapes} gives, for any target with two distinct shapes, two distinct single-shape morphisms inducing the same transformation.
+\end{theorem}
+
+Together with \texttt{shapes\_not\_equiv} this machine-checks that over a field the $\oplus$-extension is \emph{neither} full \emph{nor} faithful. The Lean witness verifies the non-faithful \emph{direction} (the smallest and the $|T|\ge2$ cases); the quantitative collapse-defect count and the two-sided equivalence ``faithful $\iff |T|\le1\lor S=\varnothing$'' are cited from the proof file, not re-proved in Lean.
+
+\section{The QPF abs/repr collapse: $\mathrm{Bag}_2=\mathrm{Sym}^2$}
+\label{sec:leancob-qpf}
+
+The file \texttt{QpfCollapse.lean} formalises the abs/repr (quotient-of-polynomial-functor) pattern as the constructive tool for identification loci. The witness is the two-leaf bag. The polynomial functor is the two-position container \texttt{pairC} ($\mathrm{Shape}=\mathrm{Unit}$, $\mathrm{Pos}=\mathrm{Bool}$), whose extension is $\texttt{Poly}\,X=X\times X$; the identification $\texttt{Ext pairC}\,X\iso\texttt{Poly}\,X$ is machine-checked (\texttt{polyOfExt}, \texttt{extOfPoly}, and the two round trips). Then $\texttt{Bag2}\,X$ (Lean: \texttt{Bag}$_2$) is the quotient of $\texttt{Poly}\,X$ by the leaf-swap $(a,b)\sim(b,a)$, i.e. $\mathrm{Sym}^2 X=(X\times X)/\mathrm{swap}$.
+
+\begin{proposition}[the QPF structure, \texttt{lean-verified}]
+$\texttt{abs}=\texttt{Quotient.mk}$; \texttt{repr} is the noncomputable section built from \texttt{Quotient.exists\_rep}; the split-surjection law $\texttt{abs}\circ\texttt{repr}=\id$ is \texttt{abs\_repr}. Naturality \texttt{abs\_map} holds definitionally, and $\texttt{abs}(a,b)=\texttt{abs}(b,a)$ is \texttt{abs\_swap}. The data is packaged as the record \texttt{MinimalQPF} with instance \texttt{bag2QPF} (Lean: \texttt{bag}$_2$\texttt{QPF}) on \texttt{pairC}.
+\end{proposition}
+
+Unlike \texttt{VecCollapse}, where \texttt{abs} is an isomorphism (an exact identification), here \texttt{abs} is a \emph{proper} quotient by the leaf-swap; that swap is exactly the leaf-symmetry that obstructs $\mathrm{Arr}_M$ from being a category in the effect--coeffect result, so this is the smallest genuine collapse locus rather than a toy.
+
+\section{The enriched full-and-faithful collapse $\mathcal{CL}\cap\mathcal{UN}=\{\Id\}$ (narrowed scope)}
+\label{sec:leancob-enriched}
+
+The file \texttt{EnrichedFFCollapse.lean} machine-checks the algebraic core of the classification: for a commutative strong monad $M$ on $\mathrm{Set}$, Neil's self-enriched $M$-container extension $\sum_s[P_s,-]:\mathrm{Kl}(M)\to\mathrm{Kl}(M)$ is fully faithful iff $M=\Id$.
+
+\begin{remark}[disclosed narrowed scope --- state exactly]
+\label{rem:leancob-scope}
+This file does \emph{not} constitute a full internal proof of the classification. Two narrowings are disclosed by the source and must be carried verbatim:
+\begin{itemize}
+\item \textbf{Object-level statement.} The verified conclusion \texttt{NeilEnrichedFF.iso\_id} is that $M\,X\iso X$ for every $X$ --- the collapse of the \emph{underlying bare functor} of $M$. The upgrade to $M\iso\Id$ \emph{as a monad} is \emph{not} formalised (the file states $\Id$ carries a unique monad structure and cites the paper for this final step). The bonus \texttt{writer\_collapse\_natural} checks only the naturality of the writer collapse, the sole new content of that upgrade.
+\item \textbf{Category-theory inputs abstracted as Lean hypotheses.} The two category-theoretic facts are taken as hypotheses in the record \texttt{NeilEnrichedFF}, not re-proved in Lean: \texttt{preserve} (membership in $\mathcal{UN}$: the copower comparison $M T\iso\sum_{t:T}M1$ is a bijection) and \texttt{top}/\texttt{terminal} (the consequence of $\mathcal{CL}$: a terminal object with $M\top\iso1$). The file explicitly does \emph{not} prove that closedness gives \texttt{terminal} nor that connectedness gives \texttt{preserve}; those steps (using Kock's theorem and the T1 fullness result) are cited but not verified here.
+\end{itemize}
+\end{remark}
+
+Within that scope the development is complete and \texttt{lean-verified} (Mathlib-free, using a hand-rolled bijection structure \texttt{Bij}). Step~1, \texttt{writerForm}, derives the writer form $M T\iso T\times M1$ from \texttt{preserve}. The load-bearing algebra is \texttt{factorUnitOfProdUnit}: if a product $X\times E$ is a singleton then the factor $E$ is a singleton (the proof turns on definitional eta for $\mathrm{PUnit}$). Combining, \texttt{NeilEnrichedFF.E\_iso\_unit} gives $M1\iso1$, and \texttt{NeilEnrichedFF.iso\_id} gives the object-level collapse $M X\iso X$.
+
+\begin{remark}[summary of the four collapses]
+The four loci sit on a spectrum of exactness. \texttt{VecCollapse} and \texttt{EnrichedFFCollapse} are \emph{iso}-collapses (\texttt{abs} an isomorphism; a bare functor forced to be $\Id$); \texttt{QpfCollapse} is a \emph{proper} quotient collapse; and \texttt{VecCollapse} additionally certifies a genuine \emph{failure} of faithfulness (Theorem~\ref{thm:leancob-notfaithful}). The composition adjunction of Sections~\ref{sec:leancob-fq}--\ref{sec:leancob-natq} supplies the change-of-base machinery under which these presentations are compared.
+\end{remark}
+
+% NEWBIB: niu-spivak-poly = N. Niu and D. I. Spivak, "Polynomial Functors: A Mathematical Theory of Interaction", arXiv:2312.00990 (Def. 6.59 left coclosure, Prop. 6.68) --- source of the object $F_q$.
+% NEWBIB: avigad-carneiro-hudon-qpf = J. Avigad, M. Carneiro, S. Hudon, "Data Types as Quotients of Polynomial Functors", ITP 2019, LIPIcs vol. 141, pp. 6:1--6:19, doi 10.4230/LIPIcs.ITP.2019.6 --- the abs/repr QPF definition.
+% NEWBIB: kock-commutative-monads = A. Kock, "Closed categories generated by commutative monads", J. Austral. Math. Soc. 12 (1971) 405--424 --- cited (not re-proved) input to the enriched classification.

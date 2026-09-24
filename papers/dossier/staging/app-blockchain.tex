@@ -1,0 +1,365 @@
+\chapter{Blockchain: re-entrancy as a failed distributive law}
+\label{ch:blockchain}
+
+The DAO attack of 2016 drained roughly a third of a live fund through one structural
+flaw: a contract called out to an external party \emph{before} updating its own
+bookkeeping, and the callee re-entered the still-open call and spent against stale
+state. This chapter argues that this failure mode is not a heuristic ``smell'' but a
+computable invariant. A smart contract is a coalgebra for a polynomial functor;
+running two contracts that share a resource is not composition along a fixed handoff
+topology (which cannot fail) but the \emph{interleaving} of two, and the interleaving
+of two directed containers is a Zappa--Sz\'ep product whose existence is governed by a
+single degree-two cohomology class $[\omega]$. Unprotected re-entrancy is exactly
+$[\omega]\neq 0$: the weld fails, and the failure is a wrong interleaving. On the
+minimal faithful model the class equals a concrete one-bit cocycle, and that identity
+is machine-checked in Lean~4.
+
+\section{The idea: re-entrancy is a failed distributive law}
+
+We state the thesis before building the apparatus, because the apparatus exists to make
+this one sentence precise and checkable.
+
+\begin{quotation}
+\noindent\emph{Composing two shared-resource contracts requires a distributive law of
+their handoff categories; that law is a Zappa--Sz\'ep weld $\mathcal{C}\bowtie\mathcal{D}$;
+the weld exists iff a degree-two class $[\omega]\in\Hcoh(\mathrm{Sk}_{\mathcal C};\Delta)$
+vanishes; and unprotected re-entrancy is precisely the case $[\omega]\neq 0$.}
+\end{quotation}
+
+The three moves --- contract as coalgebra, interaction as Zappa--Sz\'ep product,
+obstruction as an $\Hcoh$ class --- are developed in the next three sections. The
+payoff, in Section~\ref{sec:blk-machine}, is that on the smallest instance faithful to
+the DAO pattern the class collapses to a single field element $\varepsilon\in\mathbb{F}_2$:
+the bit recording whether the re-entrant branch \emph{mutates} the caller's shared
+state. The identity $[\omega]=\varepsilon$ is then a finite fact settled by a proof
+assistant with no room for hand-waving.
+
+Two grades travel with this chapter, matching the two source strata. The core
+obstruction computation --- that the interleaving obstruction is a degree-two class and
+that on the minimal model it equals the token-mutation bit, machine-checked in Lean ---
+is carried at \textsc{[peer-reviewed]} (referee: Rick). The Ethereum/EVM modelling that
+instantiates it --- blocks as containers, contracts as coalgebras, the DAO as the $s_2$
+branch --- is carried at \textsc{[computed]}: a translation exercise, not a theorem.
+
+\begin{remark}[why the degree is two, not zero or one]
+Multi-agent-systems work places cellular-sheaf obstructions of degree $H^0$ (consensus)
+and $H^1$ (identifiability) on the agents' \emph{communication} graph, asking whether the
+parties currently agree. The container obstruction sits one degree up, on the
+\emph{handoff} category, and asks the prior question: can the parties be fused into one
+consistent joint system at all? Re-entrancy is the smallest place where the answer is
+no. This degree contrast is argued in the source obstruction note \cite{cl-h2edges}.
+\end{remark}
+
+\section{Smart contracts as polynomial coalgebras}
+\label{sec:blk-coalg}
+
+We recall the container model of a contract, at grade \textsc{[computed]}, following the
+Ethereum-as-container development.
+
+\begin{definition}[contract as a polynomial coalgebra]
+A \emph{smart contract} with state set $\Sigma$, input type $I$ (function signatures
+with arguments), and output type $O$ (return values and emitted events) is a coalgebra
+for the polynomial functor
+\[
+  p(X)=(O\times X)^{I},
+  \qquad
+  \mathrm{step}\colon \Sigma \longrightarrow (O\times\Sigma)^{I}.
+\]
+Given a state $\sigma$ and an input $i$, the contract emits an output $o\in O$ and a new
+state $\sigma'\in\Sigma$.
+\end{definition}
+
+As a container, $p(X)=(O\times X)^I$ has a single shape (the interface is fixed),
+positions indexed by $I$, and at each position the value $O\times X$: an observable output
+paired with a next state. This is a Mealy machine; had the output depended only on the
+state we would have the Moore machine $p(X)=O\times X^I$.
+
+\begin{example}[the Gateway marketplace]
+\label{ex:blk-gateway}
+The Gateway NFT marketplace contract is such a coalgebra. Its state $\Sigma$ is the tuple
+of on-chain mappings (token data, listings, authorities, pending fees, the next-id
+counter); its input $I$ is the disjoint union of signatures
+$\mathsf{mint}+\mathsf{list}+\mathsf{buy}+\mathsf{delist}+\mathsf{reserveTokenId}+
+\mathsf{withdrawFees}+\cdots$; its output $O$ ranges over success/revert, the events
+$\mathsf{Minted},\mathsf{Listed},\mathsf{Sold},\mathsf{Transfer}$, and return values. On
+input $\mathsf{buy}(\mathrm{tokenId}{=}42,\mathrm{Commercial})$ the step function verifies
+the listing, distributes payment (fee to minter, remainder to seller), mints a license
+token, emits events, and returns the updated state.
+\end{example}
+
+The blockchain itself supplies the ambient directed container into which contracts are
+embedded: a block is the container $H\tri P$ separating header (shape) from transaction
+slots (positions), and the chain of blocks is a directed container --- equivalently a
+small category whose objects are blocks and whose morphisms are ancestor paths, the
+free category on the parent graph \cite{AU16}. We record this only to locate contracts;
+the obstruction lives one level down, in how two contracts \emph{interleave}.
+
+\begin{remark}[the pivot from the source]
+The Ethereum note observes that two contracts interacting is a composition of
+polynomial coalgebras, with interface the composition product $p_A\tri p_B$ on $\Poly$,
+and states --- at grade \textsc{[computed]} --- that ``re-entrancy is what happens when
+the composition $p_A\tri p_B$ has a non-trivial distributive law with $p_B\tri p_A$,
+[and] the re-entrancy guard is precisely the refusal to admit such a distributive law.''
+The remainder of this chapter is the promotion of that sentence to a measured invariant:
+the distributive law is a Zappa--Sz\'ep weld, and its failure is a degree-two class.
+\end{remark}
+
+\section{Composition, interleaving, and the Zappa--Sz\'ep weld}
+\label{sec:blk-zs}
+
+We now move to grade \textsc{[peer-reviewed]}. The vocabulary is Ahman--Uustalu's; the
+identification of the interleaving obstruction with a cohomology class is the source
+note's contribution.
+
+\begin{definition}[directed container, handoff category]
+A directed container equips a container $(S,P)$ with a root, a sub-position operation, and
+a position-concatenation. By Ahman--Uustalu, directed containers are exactly small
+categories: objects are shapes, morphisms out of $s$ are positions $P(s)$, identities are
+roots, composition is concatenation \cite{AU16}. We call this category the \emph{handoff
+category} and write $\tri$ for the composition product of directed containers.
+\end{definition}
+
+\begin{definition}[Zappa--Sz\'ep product]
+Let $\mathcal K$ be a small category and $\mathcal D\subseteq\mathcal K$ a wide
+subcategory (same objects). A \emph{Zappa--Sz\'ep product} $\mathcal K=\mathcal C\bowtie
+\mathcal D$ is a second wide subcategory $\mathcal C$ such that every morphism of
+$\mathcal K$ factors \emph{uniquely} as a $\mathcal C$-morphism followed by a
+$\mathcal D$-morphism --- a strict factorization system, equivalently a distributive law
+$\lambda\colon\mathcal D\mathcal C\Rightarrow\mathcal C\mathcal D$ satisfying the
+matched-pair axioms. For directed containers this is the distributive-law composition of
+Ahman--Uustalu \cite{AU16}; its data is a matched pair of mutual actions.
+\end{definition}
+
+The pivotal fact, absent from Ahman--Uustalu and supplied by the source, is that the
+\emph{complementary factor $\mathcal C$ may or may not exist}. Composition along a single
+fixed topology is a functor and cannot fail; the interleaving of two shared-resource
+systems is a Zappa--Sz\'ep product, and its existence is exactly what the obstruction
+measures. The identification is:
+\[
+  \mathcal C\bowtie\mathcal D \text{ exists}
+  \qquad\Longleftrightarrow\qquad
+  [\omega]=0\in \Hcoh(\mathrm{Sk}_{\mathcal C};\Delta),
+\]
+the degree-two cohomology of the handoff category's skeleton with coefficients in the
+reply (direction) functor $\Delta$ \cite{cl-h2edges}. The cohomology itself is classical
+(Baues--Wirsching); the delta over Ahman--Uustalu is the identification of the
+interleaving composite with $\mathcal C\bowtie\mathcal D$ and hence of its obstruction
+with this class. The class is a categorical holonomy: each partial handoff completes
+freely, but the completions fail to glue into a globally serialized system by a
+monodromy around the dispatch/return loop \cite{cl-emergent}.
+
+% NEWBIB: H.-J. Baues, G. Wirsching, "Cohomology of small categories", J. Pure Appl. Algebra 38 (1985), 187--211.
+
+\section{The obstruction is a degree-two class, and it is machine-checked}
+\label{sec:blk-machine}
+
+We now specialize to the minimal faithful model of the caller/callee pattern and compute
+the class. Everything in this section is \textsc{[peer-reviewed]}, and its finite core is
+machine-checked in Lean~4.
+
+\subsection*{The parametrized supervisor--worker category}
+
+Fix three roles: $\mathsf S$ (supervisor / caller), $\mathsf W$ (worker / callee
+running), $\mathsf R$ (a return point). The supervisor carries a one-bit \emph{turn
+token}; toggling it is an involution $\tau$ with $\tau^2=\id$, so
+$\operatorname{End}(\mathsf S)=\{\id_{\mathsf S},\tau\}\cong\Z/2$. The generating handoffs are
+\[
+  p,\ p\tau\colon\mathsf S\to\mathsf W \quad(\text{dispatch in turn-state $0$ resp.\ $1$}),
+  \qquad
+  s,\ s_2\colon\mathsf W\to\mathsf R \quad(\text{two worker outcomes}),
+\]
+with composites $q,q\tau\colon\mathsf S\to\mathsf R$ and right $\Z/2$-action
+$p\cdot\tau=p\tau$, $q\cdot\tau=q\tau$. The prescribed right factor is the
+supervisor-internal (token) part
+$\mathcal D=\{\id_{\mathsf S},\tau,\id_{\mathsf W},\id_{\mathsf R}\}$, a wide subcategory
+whose only nontrivial vertex group is $G_{\mathsf S}\cong\Z/2$; the left factor
+$\mathcal C$ --- the genuine dispatch/return part --- is what a Zappa--Sz\'ep product
+would have to supply.
+
+\begin{definition}[the family $\mathcal K_\varepsilon$]
+\label{def:blk-family}
+For $\varepsilon\in\Z/2$ let $\mathcal K_\varepsilon$ be the category above with the single
+length-two composite fixed by
+\[
+  s\circ p = q,
+  \qquad
+  s_2\circ p = q\cdot\tau^{\varepsilon},
+\]
+where $s$ is ``the worker returns normally'' and $s_2$ is ``the worker re-enters'' ---
+calls back into the supervisor before returning. Thus
+$\varepsilon=[\,s_2\circ p = q\tau\,]$ records whether the re-entrant outcome
+\emph{mutates} the token ($\varepsilon=1$, unprotected re-entry) or \emph{fixes} it
+($\varepsilon=0$, a state-protected re-entry / a lock).
+\end{definition}
+
+Each $\mathcal K_\varepsilon$ is a genuine category with $\mathcal D$ wide, and the reading
+is exact: re-entrancy --- the callee mutating shared caller state during a pending call ---
+is precisely the $s_2$-branch dragging the token when $\varepsilon=1$ \cite{macbeth-reduction}.
+
+\subsection*{The finite $\mathbb{F}_2$ complex}
+
+The categorical obstruction of \cite{cl-h2edges} is, for $\mathcal K_\varepsilon$,
+computed by an explicit orbit/cochain calculation in the analytic source
+\cite{macbeth-reduction}. We import its output; the reduction \emph{to} the complex is a
+cited pen-and-paper input, isolated here as three separable facts (each a future
+formalisation target).
+
+\begin{proposition}[the reduction; {\cite{macbeth-reduction}}]
+\label{prop:blk-red}
+Fix $\varepsilon\in\Z/2$. Then:
+\begin{itemize}
+\item[\textup{(i)}] $\mathcal K_\varepsilon$ satisfies the freeness condition
+  \textnormal{(L)} (each hom-presheaf is a free right $\Delta$-set) and the vertex-group
+  hypothesis ($\Delta$ a disjoint union of abelian vertex groups with trivial left action);
+\item[\textup{(ii)}] the skeleton orbit category $\mathrm{Sk}_{\mathcal C}$ is the branch
+  $\mathsf S\to\mathsf W\rightrightarrows\mathsf R$, with both middle arrows $[s],[s_2]$
+  composing after $[p]$ to the single arrow $[q]$, \emph{independent of $\varepsilon$};
+\item[\textup{(iii)}] the normalized (Baues--Wirsching) cochain complex is
+  $C^1\cong\mathbb{F}_2^2$, $C^2\cong\mathbb{F}_2^2$, $C^3=0$, with coboundary
+  $\delta^1 h=(h[p]-h[q],\,h[p]-h[q])$ and defect $2$-cocycle of the natural transversal
+  $T=\{p,q,s,s_2\}$ equal to $\omega_T(\varepsilon)=(0,\varepsilon)$.
+\end{itemize}
+\end{proposition}
+
+Everything after Proposition~\ref{prop:blk-red} is finite linear algebra over
+$\mathbb{F}_2$, and it is this part that is formalised. Since $C^3=0$ we have $Z^2=C^2$.
+The coboundary image is the diagonal,
+\[
+  B^2=\operatorname{im}\delta^1=\{(t,t):t\in\mathbb{F}_2\}=\langle(1,1)\rangle,
+\]
+so $\Hcoh=C^2/B^2\cong\mathbb{F}_2$, realised by the \emph{class map}
+\[
+  \varphi\colon\mathbb{F}_2^2\to\mathbb{F}_2,
+  \qquad
+  \varphi(a,b)=b-a=a\oplus b,
+\]
+whose kernel is exactly $B^2$. The defect cocycle is
+$\omega_\varepsilon:=\omega_T(\varepsilon)=(0,\varepsilon)$, so
+$\varphi(\omega_\varepsilon)=\varepsilon$: trivial for $\varepsilon=0$ and the nonzero
+generator for $\varepsilon=1$. Chaining with the obstruction theorem gives the dichotomy
+\[
+  \mathcal C\bowtie\mathcal D \text{ exists}
+  \iff [\omega_\varepsilon]=0
+  \iff \varepsilon=0 .
+\]
+
+\begin{remark}[reading the class]
+The two coordinates of $\omega$ are the two worker outcomes; the coboundary diagonal is the
+freedom to relabel which token-state is ``canonical.'' The class is nonzero precisely
+because the two outcomes disagree on that relabelling by one token-flip --- the re-entrant
+branch's side effect. This is the categorical form of ``a flat bundle is trivial iff its
+holonomy vanishes'': each partial handoff completes freely, but the completions fail to glue
+into a global serialized agent by a single $\Z/2$ monodromy around the dispatch/return loop.
+\end{remark}
+
+\subsection*{What is machine-checked}
+
+The finite $\mathbb{F}_2$ computation is transcribed into Lean~4 and machine-checked. The
+development is sorry-free and uses no external library --- in particular no Mathlib ---
+because the entire computation is finite, so the substantive facts close by \texttt{decide}
+or case exhaustion. The model takes $\mathbb{F}_2=\texttt{Bool}$ with \texttt{xor} as
+addition ($=$ subtraction in characteristic two), and defines $C^2$, $\delta^1$, $B^2$,
+$\omega_T$, $\varphi$ as \texttt{C2}, \texttt{d1}, \texttt{InB2}, \texttt{omega},
+\texttt{phi}.
+
+\begin{theorem}[the certified statement; {\cite{macbeth-reduction}}]
+\label{thm:blk-lean}
+In \texttt{Containers/Reentrancy.lean}, sorry-free and without external libraries, the
+following are machine-checked:
+\begin{itemize}
+\item \texttt{phi\_ker\_eq\_inB2} and \texttt{phi\_surjective}, together giving the
+  isomorphism $\Hcoh=C^2/B^2\cong\mathbb{F}_2$ realised by $\varphi$;
+\item \texttt{phi\_omega}: $\varphi(\omega_\varepsilon)=\varepsilon$ --- the class form of
+  $[\omega]=\varepsilon$;
+\item \texttt{omega\_inB2\_iff\_zero}: $\omega_\varepsilon\in B^2\iff\varepsilon=0$ --- the
+  membership form, i.e.\ the joint agent $\mathcal C\bowtie\mathcal D$ exists iff the worker
+  fixes the token.
+\end{itemize}
+Consequently, on the finite complex of Proposition~\ref{prop:blk-red}, the obstruction class
+equals the token-mutation bit, and unprotected re-entrancy ($\varepsilon=1$) is the nonzero
+generator of $\Hcoh\cong\Z/2$.
+\end{theorem}
+
+The proofs are as short as they read: \texttt{phi\_omega} is a two-case split closing by
+\texttt{rfl}, \texttt{omega\_inB2\_iff\_zero} rewrites by $\ker\varphi=B^2$ then by
+$\varphi(\omega_\varepsilon)=\varepsilon$, and \texttt{phi\_ker\_eq\_inB2} is a four-case
+exhaustion over $(a,b)\in\mathbb{F}_2^2$. The brevity is the point: once the categorical
+obstruction is reduced to this complex, $[\omega]=\varepsilon$ is a finite fact a proof
+assistant settles with no room for hand-waving.
+
+\subsection*{The verification boundary, drawn honestly}
+
+The Lean development certifies the \emph{finite $\mathbb{F}_2$ class computation}: given the
+complex of Proposition~\ref{prop:blk-red}, it proves $\Hcoh\cong\mathbb{F}_2$,
+$\varphi(\omega_\varepsilon)=\varepsilon$, and the membership dichotomy. It does \emph{not}
+certify the \emph{reduction} of the categorical obstruction to that complex --- that
+$\mathcal K_\varepsilon$ satisfies (L) and the vertex-group hypothesis, that
+$\mathrm{Sk}_{\mathcal C}$ is the stated branch, and that the transversal defect is
+$(0,\varepsilon)$ (all of Proposition~\ref{prop:blk-red}) --- which is established by hand in
+\cite{macbeth-reduction} and imported here as input. In one line: \emph{the last mile ---
+from cochain complex to $[\omega]=\varepsilon$ --- is machine-checked; the first mile ---
+from category to cochain complex --- is a cited pen-and-paper theorem.}
+
+% TODO(lean): formalise the first mile --- the orbit category Sk_C, the freeness argument (L), and the transversal defect computation omega_T=(0,e) --- currently pen-and-paper in \cite{macbeth-reduction}.
+
+\section{The EVM instantiation: the DAO and the token bit}
+\label{sec:blk-evm}
+
+We close by grounding the model in the EVM, at grade \textsc{[computed]}. The claim is that
+$\mathcal K_\varepsilon$ is the DAO pattern stripped to its skeleton, and that the design
+bit $\varepsilon$ is a familiar engineering quantity.
+
+Read the three roles concretely. The supervisor $\mathsf S$ is the vulnerable contract
+holding the shared resource --- in the DAO, the balance ledger. The dispatch $p$ is the
+external call: \texttt{msg.sender.call\{value: \ldots\}("")}, made \emph{before} the
+ledger is updated. The worker $\mathsf W$ is the callee, an attacker-controlled fallback
+function. Its two outcomes are the crux:
+\begin{itemize}
+\item $s$ --- the worker returns normally, control comes back to $\mathsf S$, and the ledger
+  is decremented as intended;
+\item $s_2$ --- the worker \emph{re-enters}: its fallback calls back into $\mathsf S$'s
+  withdraw entry point while the first call is still open and the ledger still reads the
+  pre-withdrawal balance.
+\end{itemize}
+The token is the shared state whose consistency across the pending call is the whole
+question. The bit $\varepsilon$ is whether the re-entrant branch $s_2$ mutates that state
+relative to the normal branch $s$: for the DAO, $\varepsilon=1$, because the second
+withdrawal succeeds against stale state and the composite $s_2\circ p$ lands in the
+token-flipped composite $q\tau$ rather than the serialized $q$. By
+Theorem~\ref{thm:blk-lean}, $[\omega]=\varepsilon=1\neq 0$: the two contract invocations
+admit \emph{no} Zappa--Sz\'ep weld into a single well-defined serialized agent, and the
+``composite contract'' the attacker exercises is a genuinely different --- wrongly
+interleaved --- system.
+
+\begin{remark}[the re-entrancy guard is a coboundary]
+The standard mitigations are exactly the move $\varepsilon:1\mapsto 0$. The
+checks-effects-interactions pattern updates the ledger \emph{before} the external call, so
+the $s_2$ branch reads the already-decremented balance and $s_2\circ p=q$: the token is
+fixed, $\varepsilon=0$. A mutex re-entrancy guard (\texttt{nonReentrant}) forbids the $s_2$
+edge outright by refusing the second entry while the first is open --- in the source's
+words, ``the re-entrancy guard is precisely the refusal to admit such a distributive law''
+\cite{macbeth-reduction}. Either way the defect cocycle moves from $(0,1)$ to $(0,0)$, into
+the coboundary $B^2=\langle(1,1)\rangle$, and the weld exists. The guard does not
+\emph{detect} the obstruction; it \emph{annihilates} the class.
+\end{remark}
+
+\begin{remark}[scope and honesty]
+Two limits are worth stating. First, $\mathcal K_\varepsilon$ is the minimal faithful model:
+one supervisor, one worker, a one-bit token, a single length-two composite. Larger handoff
+topologies --- several mutually re-entrant contracts, deeper call stacks --- carry a class in
+a genuinely larger $\Hcoh$, and reducing them to a scalar is not claimed here. Second, the
+EVM reading of this section is a \textsc{[computed]} translation: it asserts that the DAO's
+call graph instantiates $\mathcal K_1$ and that guards realize $\varepsilon=0$, but it does
+not formalise the EVM semantics. What is \textsc{[peer-reviewed]} and machine-checked is the
+mathematical core: on $\mathcal K_\varepsilon$, unprotected re-entrancy is the nonzero
+generator of $\Hcoh\cong\Z/2$, and the joint contract exists iff the callee fixes the shared
+token.
+\end{remark}
+
+% NEWBIB: The DAO reentrancy exploit (June 2016) --- see e.g. P. Daian, "Analysis of the DAO exploit", Hacking Distributed, 2016; and the survey in N. Atzei, M. Bartoletti, T. Cimoli, "A survey of attacks on Ethereum smart contracts (SoK)", POST 2017, LNCS 10204, 164--186.
+
+The through-line of the dossier's grant narrative appears here in its sharpest form:
+compositional correctness has direct economic consequences, the correctness criterion is a
+cohomology class, and on the canonical failure that class is not merely definable but
+\emph{finite and machine-checked}. Re-entrancy is the smallest place where two systems
+cannot be fused, and $[\omega]=\varepsilon$ is why.

@@ -1,0 +1,127 @@
+\chapter{Where compositional correctness has economic consequences}
+\label{ch:economic}
+
+The applications collected in Part~II are not a scattered list of domains that happen
+to admit a categorical gloss. They are, to a first approximation, the domains in which a
+\emph{wrong weld costs money}: a re-entrancy bug drains a contract, a mis-composed audit
+misses a divergence, a wrong worker interleaving corrupts shared agent state. This short
+chapter does one job --- it re-anchors that economic reading to the technical bodies that
+license it, so that the impact claim is a corollary of proved theorems rather than a piece
+of free-floating motivation. The single sentence it defends is: \emph{all three failures
+are one obstruction}, the non-vanishing of $[\omega]\in\Hcoh$.
+
+\section{The through-line: a wrong weld costs money}
+\label{sec:econ-throughline}
+
+The recurring, expensive failure mode of engineered systems is not that a component is
+wrong but that two correct components are wrong \emph{together}. This is exactly the shape
+the programme's core theorem addresses. Composing two directed systems is a Zappa--Sz\'ep
+weld in $\DCont\iso\Cat$ (Chapter~\ref{ch:eqchain}, Chapter~\ref{ch:zs}), and that weld is
+correct precisely when a first-order lifting condition $(\mathrm{L})$ holds and a
+degree-two obstruction vanishes:
+\[
+  \text{correct composition}\quad\iff\quad (\mathrm{L})\ \wedge\ [\omega]=0\in\Hcoh .
+\]
+Both halves are \emph{proved} in the closed cases (the pairwise Zappa--Sz\'ep criterion and
+the identification $(\mathrm{G})\iff[\omega]=0$; see Chapter~\ref{ch:zs}), and the
+holonomy--Zappa--Sz\'ep bridge underlying the obstruction is \emph{peer-reviewed}. The
+economic content of the chapter is the observation that the three most developed
+applications are precisely the settings where the composite --- not the parts --- is what
+carries value, and so where a non-vanishing $[\omega]$ is not a mathematical curiosity but
+a loss.
+
+\section{Three failures, one obstruction}
+\label{sec:econ-three}
+
+Each application is obtained by specialising the base of the general construction and
+reading off what $[\omega]$ becomes. The uniformity is the point: the same class, computed
+in three domains, is three distinct known failure modes.
+
+\paragraph{Smart contracts (Chapter~\ref{ch:blockchain}).}
+A contract's storage and its call structure are two directed systems that must compose via
+a distributive law. Re-entrancy is the failure of that law, and the obstruction lands in a
+two-element group: $[\omega]=\varepsilon\in\Z/2$, with $[\omega]=0$ the safe contract and
+$[\omega]=1$ the exploitable one. This is the sharpest specialisation in the programme ---
+a finite, decidable obstruction whose arithmetic is \emph{Lean-verified}, and whose
+standalone note is \emph{peer-reviewed}. The 2016 DAO exploit, which drained on the order
+of tens of millions of dollars from a withdrawal function correct in isolation, is the
+canonical instance of $[\omega]=1$; that figure is a historical fact about a deployed
+contract, not a quantity the model predicts. What the model contributes is the
+identification of the bug's \emph{location} --- the interleaving, formalised as
+$[\omega]\neq0$ --- and the fact that checking it is a decidable computation.
+
+\paragraph{Security audits (Chapter~\ref{ch:security}).}
+An audit composes local checks, each of which may pass, into a verdict about the whole. A
+mis-composed audit is one whose composite misses a global divergence that no single local
+check can see --- the defect is a property of the composite, invisible to the parts. In the
+programme's language this is the same non-vanishing obstruction: an audit is sound exactly
+when the weld of its local certificates carries $[\omega]=0$, and ``the search for a bug''
+becomes ``the search for a failed distributive law.'' The structural identification is
+\emph{proved}; the concrete audit calculus lives in Chapter~\ref{ch:security}.
+
+\paragraph{Agent orchestration (Chapter~\ref{ch:orchestration}).}
+Composing two agent orchestrations is literally the Zappa--Sz\'ep weld of two directed
+containers: orchestrating them interleaves their control exactly as the mutual action of
+$C\bowtie D$. A wrong worker interleaving --- a deadlock, or a corruption of shared agent
+state --- is a non-vanishing $[\omega]$, and correct orchestration is again
+$(\mathrm{L})\wedge[\omega]=0$. This identification is \emph{proved}; the tool-calling /
+harness refinement (a protocol is a directed container, the harness its comonad, with
+$[\omega]=\varepsilon\in\Z/2$) is \emph{Lean-verified} at the arithmetic core.
+
+\begin{remark}[why ``one obstruction'' is a claim, not a slogan]
+The three paragraphs above are not three analogies to a common template. They are three
+evaluations of \emph{one} class $[\omega]\in\Hcoh$ at three choices of base, and the class
+is known not to be an artefact of a single presentation: there are two genuinely distinct
+$[\omega]$-sites, \emph{not} related by isotropy restriction (\emph{proved}), and $[\omega]$
+sits as a base edge of the Lyndon--Hochschild--Serre coupling analysed in
+Chapter~\ref{ch:cluster}. That is why re-entrancy, audit divergence, and interleaving
+corruption can be the same obstruction without the identification collapsing into a
+tautology.
+\end{remark}
+
+\section{Why the specialisation is principled, not post-hoc}
+\label{sec:econ-principled}
+
+A natural worry is that reading an economic failure as $[\omega]\neq0$ is a retrofit --- that
+one could dress any bug in cohomological language after the fact. The programme's answer is
+that the framework being specialised is itself \emph{forced}, not invented. The directed-container
+structure is derived: unpacking what a comonad structure forces on a container produces the
+root, the sub-shape map, and the shift operation, and the comonad laws produce exactly the
+five directed-container laws --- every piece determined by the problem, none postulated. The
+definition is a theorem, not a stipulation.
+
+\begin{remark}[speculative economic reading]
+The step from ``the framework's definitions are forced'' to ``therefore its economic
+specialisations are principled rather than opportunistic'' is an interpretive, \emph{speculative}
+argument, and is graded as such. It is a claim about \emph{why the model deserves trust}, not a
+proved statement about any market. Concretely: no economic figure in this chapter is derived
+from the theory. The DAO loss is historical; the general assertion that compositional bugs are
+economically dominant is motivating context, not a measured quantity; and any projected
+cost-of-audit or cost-of-failure savings would require empirical work the programme has not
+done. What is proved is narrower and stronger --- that in these domains the correctness
+question \emph{is} the vanishing of a specific, sometimes finite, obstruction.
+\end{remark}
+
+\section{The decision procedure and its economic reading}
+\label{sec:econ-procedure}
+
+The payoff is a design principle, stated compactly: \emph{to certify a composite directed
+system, check $(\mathrm{L})$ and compute $[\omega]$.} Where $[\omega]$ lands in a finite
+group --- as it does for the re-entrancy model, where $[\omega]=\varepsilon\in\Z/2$ --- this
+is a \emph{decidable} check, and its arithmetic has been \emph{Lean-verified} (the
+$\Hcoh$-engine trio and the re-entrancy witness of Part~III). The economic reading of this
+procedure is direct: an audit, in this language, is the computation of $[\omega]$, and a
+contract or an orchestration is certified safe when the computation returns $0$. Where the
+obstruction is finite the certification is not merely conceptual but mechanical.
+
+\begin{remark}[honest scope of the impact claim]
+The impact claim is deliberately bounded. It is that these three domains are governed by a
+common, sometimes computable, obstruction --- \emph{proved} for orchestration and
+re-entrancy, \emph{peer-reviewed} and \emph{Lean-verified} for the re-entrancy witness,
+\emph{proved} (structural) for the audit identification. It is \emph{not} a claim that the
+programme has quantified any economic saving, published any external result, or built the
+tax-computation application named in the grant (which has \emph{no artifact}; see the Honest
+Ledger). The value on offer is a correct localisation of where composition fails and a
+decision procedure where the obstruction is finite --- which, in domains where a wrong weld
+costs money, is precisely the leverage worth having.
+\end{remark}

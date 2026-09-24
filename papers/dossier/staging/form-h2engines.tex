@@ -1,0 +1,96 @@
+\chapter{$\Hcoh$-engines and the free/cofree comonad in Lean}
+\label{ch:h2engines}
+
+This chapter reports the machine-checked core of the programme's two structural pillars, as they are \emph{literally} stated in the Lean~4 sources. First: the free monad on a container, built as a monoid in $(\Cont,\tri,\Id)$, together with its universal property. Second: three $\Hcoh$-engines that compute holonomy classes $\Hcoh(C_n;\Z/m)$ as explicit quotient groups. Every declaration cited below is \texttt{sorry}-free and axiom-clean (\texttt{Quot.sound} at worst); in keeping with the ``Lean statement self-audit'' discipline, we state each theorem as it stands and disclose every narrowed scope. All files are Lean~4 core, Mathlib-free.
+
+\section{The free monad as a $\tri$-monoid}
+\label{sec:free-monoid}
+
+The file \texttt{Containers/Free.lean} [lean-verified] realises the free monad on a container $C=(S\tri P)$ as a \emph{monoid} in the monoidal category $(\Cont,\tri,\Id)$ --- the exact mirror of the directed-container-as-$\tri$-comonoid picture. It is the container-coordinate discharge of Gambino--Kock's Theorem~4.5, whose monad laws are there declared ``lengthy but routine'' and omitted.
+
+\begin{definition}[The free container]
+\texttt{Container.free} sends $C$ to the container whose shapes are closed $P$-trees \texttt{PTree C} (the initial algebra of $Y\mapsto 1+\Sigma_{s:S}(P\,s\to Y)$) and whose positions are their \emph{leaves} \texttt{leaves}, not all vertices. Directions $=$ leaves is precisely the free/cofree distinction: the cofree comonad carrier would take directions $=$ all vertices (Niu--Spivak Prop.~8.18).
+\end{definition}
+
+The structure maps are \texttt{Container.freeUnit} ($\eta:\Id\Rightarrow m$, picking the bare leaf \texttt{lf}) and \texttt{Container.freeMult} ($\mu:m\tri m\Rightarrow m$), whose forward component is grafting \texttt{graft} and whose backward component is \texttt{split}, the section that cuts a leaf-path at its unique $t$-leaf boundary.
+
+\begin{theorem}[Free monad, three monoid laws]
+\label{thm:freeMonoid}
+\texttt{Container.freeMonoid} [lean-verified] exhibits \texttt{C.free} as a term of \texttt{Container.Monoid}, i.e.\ it discharges all three $\tri$-monoid laws as equations of container morphisms:
+\begin{itemize}
+  \item \textbf{left unit} by \texttt{rfl} on both components;
+  \item \textbf{right unit}: shape half \texttt{graft\_unit\_right} ($\texttt{graft}\,t\,(\lambda\_.\,\texttt{lf})=t$), position half \texttt{split\_unit\_right}, reconciled by the transport lemma \texttt{leaves\_nd\_transport};
+  \item \textbf{associativity}: shape half \texttt{graft\_assoc} (Lemma~C), position half \texttt{split\_assoc} (Lemma~D), the transported \texttt{ContainerMorphism.ext\_eq} position obligation.
+\end{itemize}
+Axiom-clean (\texttt{Quot.sound} only).
+\end{theorem}
+
+The honest content here is that \texttt{split\_assoc} states, verbatim, the regrouping of a leaf of the doubly-grafted tree into $\langle\langle\ell,w\rangle,x\rangle$ --- the associativity of leaf-path concatenation --- transported along \texttt{graft\_assoc}. Nothing is hidden behind an abbreviation: the statement is the raw \texttt{ext\_eq} obligation.
+
+\section{The universal property of the free monad}
+\label{sec:free-universal}
+
+\texttt{Containers/FreeUniversal.lean} [lean-verified] adds the universal arrow from $X$ to the forgetful functor $U:\mathrm{Mon}(\Cont)\to\Cont$. The insertion of generators is \texttt{Container.freeInsert} ($\alpha_X:X\to m_X$, $s\mapsto\texttt{nd}\,s\,(\lambda\_.\,\texttt{lf})$). Given a monoid $M$ and $g:X\to M$, the extension \texttt{Container.freeExtend} packages the shape map \texttt{freeExtShape} (tree recursion: a leaf goes to the unit $\varepsilon$, a node to $\mu_M$) with the position map \texttt{freeExtPos}.
+
+\begin{theorem}[The adjunction triangle]
+\label{thm:triangle}
+\texttt{Container.freeExtend\_triangle} [lean-verified] proves $\alpha_X\mathbin{;}\hat g = g$ in full (both components). The shape half is \texttt{freeExtShape\_triangle}, which uses $M$'s \emph{right-unit} law \texttt{mult\_right\_unit}; the position half uses its backward companion \texttt{mult\_right\_unit\_pos}. \texttt{Container.freeExtend\_unit} separately proves $\hat g$ preserves the monoid unit.
+\end{theorem}
+
+\begin{theorem}[Multiplication homomorphism, shape half; uniqueness on shapes]
+\label{thm:mult-fwd}
+\texttt{Container.freeExtShape\_mult} [lean-verified] proves the \emph{shape half} of the multiplication homomorphism law $\mu\mathbin{;}\hat g=(\hat g\tri\hat g)\mathbin{;}\mu_M$, by tree induction reducing to $M$'s left-unit \texttt{mult\_left\_unit} (base) and associativity \texttt{mult\_assoc\_shape} (step). \texttt{Container.freeExtShape\_unique} proves that any shape map matching the two recursion equations of $\hat g_1$ equals $\hat g_1$ --- object-level uniqueness of the extension, by a transport-free structural induction.
+\end{theorem}
+
+\begin{remark}[Disclosed scope --- what is \emph{not} yet formalised]
+\label{rem:scope-universal}
+The file's own header states the boundary, and honesty requires repeating it. Two pieces remain open:
+\begin{enumerate}
+  \item the \textbf{backward (position) half} of the multiplication homomorphism law (\texttt{freeExtPos\_mult}): its two $M$-law inputs \texttt{mult\_left\_unit\_pos} and \texttt{mult\_assoc\_pos} are in place and the \emph{base case} (\texttt{lf}) is verified, but the \emph{node step} is not;
+  \item \textbf{backward-uniqueness}, the position half of \texttt{freeExtShape\_unique}, which needs \texttt{split}-bijectivity not yet in \texttt{Free.lean}.
+\end{enumerate}
+Thus the universal property is machine-checked \emph{on shapes} throughout, and \emph{on positions} for the triangle and the unit law, but the full position-level multiplication homomorphism and position-level uniqueness are pending. The chapter claims exactly this and no more.
+\end{remark}
+
+The declarations \texttt{mult\_left\_unit\_pos}, \texttt{mult\_assoc\_pos}, \texttt{mult\_assoc\_shape}, and \texttt{mult\_right\_unit\_pos} are extracted from $M$'s packaged monoid laws by \texttt{ContainerMorphism.onPos\_congr} and \texttt{congrArg onShapes}; they are \emph{hypotheses} (``$M$ is a monoid''), never obligations of this file.
+
+\section{The unified cyclic $\Hcoh$-engine: $\Hcoh(C_n;\Z/m)\iso\Z/\gcd(n,m)$}
+\label{sec:gcd-engine}
+
+\texttt{2026-09-18-cyclic-h2-gcd.lean} [lean-verified], namespace \texttt{CyclicH2Gcd}, computes, for $C_n=\Z/n$ acting \emph{trivially} on $M=\Z/m$, the group $\Hcoh(C_n;\Z/m)$ as the cokernel of the norm map $\cdot n$ on $\Z/m$, identified with $\Z/(n\Z+m\Z)$.
+
+\begin{theorem}[B\'ezout and the arithmetic core]
+\label{thm:bezout}
+\texttt{bezout} [lean-verified] proves $\gcd(a,b)=a\cdot s+b\cdot t$ over $\Z$ from scratch by \texttt{Nat.gcd.induction} (no Mathlib). \texttt{dvd\_iff} proves $(\exists s\,t,\ x=n s+m t)\iff\gcd(n,m)\mid x$, i.e.\ $n\Z+m\Z=\gcd(n,m)\Z$.
+\end{theorem}
+
+\begin{theorem}[The cohomology group and its $\gcd$ identification]
+\label{thm:gcd-H2}
+\texttt{H2 n m} is defined as the explicit \texttt{Quotient} of $\Z$ by \texttt{cobRel} ($a-b\in n\Z+m\Z$), carrying a by-hand abelian-group structure (\texttt{instAdd}, \texttt{instZero}, \texttt{instNeg}, with \texttt{H2.add\_comm}, \texttt{H2.add\_assoc}, \texttt{H2.zero\_add}, \texttt{H2.add\_zero}, \texttt{H2.neg\_add\_cancel}). \texttt{H2.mk\_eq\_iff\_dvd} proves $\llbracket a\rrbracket=\llbracket b\rrbracket\iff\gcd(n,m)\mid(a-b)$, and \texttt{H2.mk\_eq\_zero\_iff\_dvd} its $b=0$ form. All [lean-verified].
+\end{theorem}
+
+The two prior engines fall out as specialisations, verified in-file: \texttt{base\_edge\_recovers} recovers $\Hcoh(C_n;\Z)\iso\Z/n$ as the case $m=0$ (via \texttt{Nat.gcd\_zero\_right}), and \texttt{fibre\_edge\_recovers} recovers $\Hcoh(\Z/2;\Z/2)\iso\Z/2$ as $n=m=2$. The $K_{2,3}$ cardinality witnesses \texttt{card\_2\_0}, \texttt{card\_3\_0}, \texttt{card\_2\_2}, \texttt{card\_2\_4}, \texttt{card\_4\_2}, \texttt{card\_3\_3}, and the cover \texttt{cover\_2\_2}, exhibit exactly $\gcd(n,m)$ distinct classes for each concrete pair.
+
+\begin{remark}[Disclosed black box]
+\label{rem:gcd-blackbox}
+The Lean deliverable is the \emph{algebra} $\mathrm{coker}(\cdot n\text{ on }\Z/m)\iso\Z/\gcd(n,m)$. That the reduced $2$-periodic complex \emph{computes group cohomology} of $C_n$ is cited (Brown, \emph{Cohomology of Groups}, \S VI.9), not re-proved. The topology is a black box; the arithmetic is fully formal.
+\end{remark}
+
+\section{The two superseded engines: norm and fibre}
+\label{sec:norm-fibre}
+
+The unified engine of Section~\ref{sec:gcd-engine} subsumes two earlier, still-verified files that make the reduction concrete on each edge of the H$^2$-cluster.
+
+\paragraph{Base edge (norm map).} \texttt{2026-09-16-cyclic-h2-norm.lean} [lean-verified], namespace \texttt{CyclicH2}, formalises the reduced cyclic cochain complex $\texttt{d0}\dots\texttt{d3}$ with $\texttt{d1}=\texttt{d3}=\cdot n$ (the norm) and $\texttt{d0}=\texttt{d2}=0$ under the trivial action. It proves the complex identities \texttt{d1\_comp\_d0}, \texttt{d2\_comp\_d1}, \texttt{d3\_comp\_d2}; that every element is a $2$-cocycle (\texttt{twoCocycle}) and the coboundaries are exactly $n\Z$ (\texttt{twoCoboundary\_iff}); and builds \texttt{H2 n} $=\Z/n\Z$ with its abelian-group structure and \texttt{H2.mk\_eq\_iff\_dvd}. The grant-critical $K_{2,3}$ corollaries \texttt{H2\_two\_distinct}, \texttt{H2\_two\_cover}, \texttt{H2\_three\_distinct}, \texttt{H2\_three\_cover} give $\Hcoh(C_2;\Z)\iso\Z/2$ and $\Hcoh(C_3;\Z)\iso\Z/3$ as ``$n$ classes covering $\Z$.''
+
+\paragraph{Fibre edge ($\Z/2$ coefficients).} \texttt{2026-09-17-fibre-h2-z2.lean} [lean-verified], namespace \texttt{FibreH2}, computes $\Hcoh(\Z/2;\Z/2)\iso\Z/2$ from the \emph{normalized bar} complex of $C_2$ directly, modelling $M=\Z/2$ as \texttt{Bool} under \texttt{bne}. Because the norm $\cdot2$ is identically zero (\texttt{Z2.add\_self}), the coboundary image collapses to $\{0\}$. The split/nonsplit dichotomy --- the substance of the decoupling witness --- is fully formalised:
+\begin{itemize}
+  \item \texttt{fZ4} (the carry cocycle $f(a,b)=a\wedge b$, factor set of $0\to\Z/2\to\Z/4\to\Z/2\to0$) is a genuine $2$-cocycle (\texttt{fZ4\_cocycle}) and \texttt{fZ4\_not\_coboundary} proves it is \emph{not} the coboundary of \emph{any} $1$-cochain --- the nonsplit defect is real;
+  \item \texttt{fKlein} (the constant $0$ factor set of the Klein extension) splits: \texttt{fKlein\_isCoboundary};
+  \item hence \texttt{classZ4\_ne\_zero}, \texttt{classKlein\_eq\_zero}, and the decoupling conclusion \texttt{classZ4\_ne\_classKlein}: $[\pi]\neq0=[\mathrm{Klein}]$ in $\Hcoh(\Z/2;\Z/2)$.
+\end{itemize}
+The abstract identification of this bar $\Hcoh$ with the LHS fibre edge $E_2^{0,2}$ is cited (\S VI.9; the placement is in \texttt{h2cluster-lhs-transgression}), not re-proved; the concrete cocycle classes and the group are fully formal.
+
+\begin{remark}[Provenance and role in the dossier]
+These three engines supply the $\Hcoh$-valued invariants that decide compositional decomposability throughout the programme; the free-monad construction of Sections~\ref{sec:free-monoid}--\ref{sec:free-universal} supplies the dual, generative half --- the $\tri$-monoid whose comonoid mirror is the directed container~\cite{cl-emergent}. Together they are the formalisation deliverable: an $\Hcoh$-engine to detect obstructions and a machine-checked free/cofree construction to build the composites, in the reduced coordinate form of the module reduction~\cite{macbeth-reduction}.
+\end{remark}

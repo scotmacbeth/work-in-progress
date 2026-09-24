@@ -1,0 +1,258 @@
+\chapter{GA / island-model composition}
+\label{ch:ga}
+
+Island-model genetic algorithms are the cleanest application in the dossier: a
+migration graph is literally a directed container, and the question of whether
+two coupled island systems form one coherent evolutionary system is literally
+the question of whether their comonads admit a distributive law. This chapter
+transports the categorical GA framework of Langer--Vega \cite{langer-va-ga}
+onto the $(\mathrm{L})\wedge[\omega]=0$ spine of the dossier. The headline is a
+dictionary: \emph{a migration topology is a distributive law, and coherence of
+the composite is the existence of a Zappa--Sz\'ep product}. Everything
+combinatorial here is \emph{proved} (it reproves the directed-container
+theorems of Ahman--Uustalu in the GA setting); everything about empirical
+diversity dynamics is imported at the grade the source states --- \emph{computed}
+--- and is not inflated.
+
+\section{Migration topology is a distributive law}
+\label{sec:ga-headline}
+
+Fix a genome type $\Sigma$ and let $\mathrm{Pop}(\Sigma)$ be scored
+populations. In the Langer--Vega framework \cite{langer-va-ga} genetic
+operators are Kleisli morphisms for an evolution monad
+$\mathcal T=\mathrm{Reader}(\Gamma)\times\mathrm{Writer}(\Lambda)\times
+\mathrm{State}(S)$ (configuration, diversity log, PRNG state), pipelines are
+Kleisli composites, and an \emph{island functor} $I_G$ lifts a strategy to an
+$n$-island system migrating along a directed graph $G=(V,E)$.
+
+The structural claim of this chapter is that the migration graph is not merely a
+parameter but is itself a piece of composition data of the kind Part~I studies.
+
+\begin{proposition}[Migration topology $=$ directed container; \emph{proved}]
+\label{prop:ga-topology-dcont}
+Let $G=(V,E)$ be a migration graph and $\mathrm{Free}(G)$ its free category
+(objects $V$, morphisms directed paths, composition concatenation). Then
+$\mathrm{Free}(G)$ is a
+directed container $D_G$, hence --- by the equivalence chain
+$\DCont\simeq\Cat$ of Chapter~\ref{ch:eqchain} --- a $\tri$-comonoid, and it
+induces a comonad $W_G=\den{D_G}$ on $\Set$.
+\end{proposition}
+
+This is condition $(\mathrm{L})$ made concrete: \emph{each} island model
+composes coherently with itself because its migration graph freely generates a
+category, and every small category is a directed container. The interesting
+question is $(\mathrm{G})$ --- the weld of \emph{two} island models --- and it
+is exactly a distributive law.
+
+\begin{theorem}[Coherence $=$ Zappa--Sz\'ep existence; \emph{proved}]
+\label{thm:ga-headline}
+Let $G,H$ be migration graphs with reachability comonads $W_G,W_H$. The
+composite $W_H\circ W_G$ carries a comonad structure --- i.e.\ the two island
+models compose into one coherent evolutionary system --- if and only if the
+directed containers $D_G,D_H$ admit a distributive law, equivalently a
+Zappa--Sz\'ep product $D_H\bowtie D_G$. This is the specialisation of the
+Ahman--Uustalu correspondence (Chapter~\ref{ch:zs}) to $D_G,D_H$; the weld
+obstruction is the class $[\omega]$ of Chapter~\ref{ch:crit}, and coherence is
+$[\omega]=0$.
+\end{theorem}
+
+So the migration \emph{topology} of the composite \emph{is} the distributive law
+threading $G$-paths through $H$-paths, and whether that composite is a
+well-defined evolutionary system is whether the Zappa--Sz\'ep product exists. The
+rest of the chapter unpacks the two halves --- the single-system comonad
+(Level~1) and the pairwise weld (Level~2) --- and then imports the empirical
+diversity story honestly.
+
+\section{Level 1: the reachability comonad}
+\label{sec:ga-level1}
+
+\begin{definition}[Migration container]
+\label{def:ga-mig-container}
+The \emph{one-step migration container} of $G$ is $C_G=(V,N_G)$ with
+$N_G(i)=\{i\}\cup\{j:(i,j)\in E\}$ the closed out-neighbourhood. In general
+$C_G$ is \emph{not} a directed container: the shift $\oplus$ would demand
+$N_G(j)\subseteq N_G(i)$ whenever $j\in N_G(i)$, i.e.\ transitive closure, which
+the ring, the star, and most topologies fail.
+\end{definition}
+
+The fix is to pass to the free category, which is exactly
+Proposition~\ref{prop:ga-topology-dcont}: the positions become \emph{paths}
+rather than edges, and concatenation supplies an associative, unital shift.
+
+\begin{definition}[Reachability comonad; \emph{proved}]
+\label{def:ga-reach}
+$D_G$ has shapes $V$, positions $P(i)=\mathrm{Path}_G(i)$ (finite directed paths
+from $i$), root $\mathsf{o}(i)=\varepsilon_i$ (empty path), sub-shape
+$i\mathbin\downarrow p=\mathrm{target}(p)$, and shift $p\oplus q=p\cdot q$. Its
+extension is the \emph{reachability comonad}
+\[
+   W_G(X)\;=\;\den{D_G}(X)\;=\;\sum_{i\in V}X^{\mathrm{Path}_G(i)},
+   \qquad
+   \varepsilon(i,v)=v(\varepsilon_i),
+   \quad
+   \delta(i,v)=\bigl(i,\;p\mapsto(\mathrm{target}(p),\;q\mapsto v(p\cdot q))\bigr).
+\]
+The comonad laws hold because paths form a category: the counit laws are ``empty
+path is identity'' and the coassociativity law is associativity of
+concatenation.
+\end{definition}
+
+\begin{remark}[What the comonad means for GAs]
+\label{rem:ga-contextual}
+An element $(i,v)\in W_G(\mathrm{Pop}(\Sigma))$ assigns a population to every
+island reachable from $i$: the \emph{contextual view} from island $i$.
+\textsc{Extract} returns $i$'s own population; \textsc{duplicate} equips each
+reachable $j$ with \emph{its} contextual view. The island functor $I_G$ of
+\cite{langer-va-ga} is the one-step truncation: $I_G^{k}$ uses paths of length
+$\le k$, and $W_G$ is the $k\to\infty$ limit
+$\mathrm{Path}_G(i)=\bigcup_k\mathrm{Path}_G^{\le k}(i)$. This is the precise
+sense in which the comonad is the ``full multi-step'' structure of which
+migration is the truncation.
+\end{remark}
+
+A migration \emph{policy change} $G\to H$ on a fixed vertex set is a container
+morphism $C_G\to C_H$: a shape map $u:V\to V$ reindexing islands and a
+\emph{backward} position map $f_i:N_H(u\,i)\to N_G(i)$ pulling each new neighbour
+back to an old one \emph{(proved, by the representation theorem
+$\Cont\iso\Fam(\Set^\op)$ of Chapter~\ref{ch:prelim})}. The backward direction
+is not incidental: migration pulls individuals \emph{from} neighbours, and a
+map of representables is a backward map of representing objects. Raising
+connectivity (say $C_5\to K_5$) forces $f_i$ to be non-injective --- the
+inevitable data loss is the ``cost'' of denser migration.
+
+\section{Level 2: composition via Zappa--Sz\'ep --- the weld condition}
+\label{sec:ga-level2}
+
+By Chapter~\ref{ch:zs}, a distributive law of directed containers $D_G,D_H$ is
+four operations $(\mathsf{st},\mathsf{sp},\mathsf{ts},\mathsf{tp})$ ---
+``how a movement in one graph shifts the shape and induces a position in the
+other'' --- subject to root, sub-shape, and shift compatibilities, the last of
+which are precisely the Zappa--Sz\'ep conditions (ZS1--ZS4). Their content is a
+\emph{mutual action}: each system's moves rewrite the other's state, and the
+rewrite must decompose consistently across multi-step paths. Theorem~2 of
+Ahman--Uustalu then assembles the composite directed container $D_H\bowtie D_G$
+(shapes $V_H\times V_G$; positions interleaved $H$/$G$-paths, each step in one
+graph potentially redirecting steps in the other), whose comonad is $W_H W_G$.
+
+\begin{example}[Independent islands: trivial weld; \emph{proved}]
+\label{ex:ga-independent}
+When the two GAs do not interact,
+$\mathsf{st}(i,j,q)=i$, $\mathsf{sp}(i,j,q)=\mathsf{o}_G(i)$,
+$\mathsf{ts}(i,j,p)=j$, $\mathsf{tp}(i,j,p)=\mathsf{o}_H(j)$: a move in one leaves
+the other's shape fixed and lands on its root. The Zappa--Sz\'ep conditions
+collapse to the root laws, $[\omega]=0$, and $W_H W_G$ is the product comonad.
+This is the $(\mathrm{L})\wedge[\omega]=0$ criterion at its trivial fixed point.
+\end{example}
+
+\begin{example}[Fitness-coupled migration; \emph{computed}]
+\label{ex:ga-coupled}
+Let GA$_1$ evolve neural weights on a ring $G=C_n$ and GA$_2$ evolve
+architectures on a star $H=K_{1,m}$, coupled so that migrating an architecture
+to spoke $j$ triggers weight migration to the island corresponding to $j$. Then
+$\mathsf{st}(i,\mathrm{hub},(\mathrm{hub}\to j))$ redirects $i$ to the $G$-island
+matching spoke $j$. The Zappa--Sz\'ep conditions constrain which
+$G$-island/$H$-spoke correspondences are coherent: \emph{not every coupling is a
+valid weld}, and the invalid ones are exactly those where the mutual influence
+fails to decompose across composite paths --- i.e.\ where $[\omega]\neq0$. The
+specific correspondences here are illustrative, checked on small $n,m$ rather
+than proved in general.
+\end{example}
+
+This is the GA face of the dossier's thesis. Two evolutionary subsystems fuse
+into one correct system precisely when their local pieces are directed
+containers ($(\mathrm{L})$, automatic here) \emph{and} the global weld
+obstruction vanishes ($[\omega]=0$, i.e.\ a Zappa--Sz\'ep product exists). The
+open problem of \cite{langer-va-ga} --- construct the laxator explicitly and
+check its coherence --- becomes: \emph{for which pairs $D_G,D_H$ does a
+distributive law exist, and what is $D_H\bowtie D_G$?} The Zappa--Sz\'ep
+conditions are a decision procedure --- finitely many equations in
+$(\mathsf{st},\mathsf{sp},\mathsf{ts},\mathsf{tp})$ --- so for small graphs
+composability is decidable by enumeration \emph{(computed)}.
+
+\section{Diversity dynamics and the laxator as obstruction}
+\label{sec:ga-diversity}
+
+The empirical driver of \cite{langer-va-ga} was that migration topology governs
+diversity dynamics. We report those findings at the source's grade and do not
+promote them.
+
+\begin{remark}[Empirical concordance; \emph{computed}]
+\label{rem:ga-empirical}
+The source reports that migration topology determines diversity dynamics with
+perfect rank concordance, \emph{Kendall's $W=1.0$}, across the tested
+configurations, and a universal ordering for sustained diversity
+\[
+   \text{none} \;>\; \text{ring} \;>\; \text{star} \;>\; \text{random}
+   \;>\; \text{fully connected}.
+\]
+Both figures are \emph{computed} (empirical, from the reported experiments), not
+proved. In particular $W=1.0$ is the exact value the source states and is not to
+be read as a theorem. A separately reported ``$5.5\times$ structural constant''
+for time-varying random topologies is likewise \emph{computed} and is flagged
+below as future work, not a result of this chapter.
+\end{remark}
+
+The container perspective offers a \emph{structural reading} of this ordering
+via the algebraic connectivity $\lambda_2(G)$, which governs how fast the
+truncated path spaces $\mathrm{Path}_G^{\le k}$ saturate to the full path space.
+Large $\lambda_2$ (e.g.\ $K_n$) saturates quickly, so $W_G$ collapses to the
+global view early and diversity erodes; small $\lambda_2$ (e.g.\ $C_n$, large
+$n$) keeps islands' contextual views distinct for many generations, sustaining
+diversity. This gives a mechanism --- \emph{more room in the comonad when
+$\lambda_2$ is small} --- consistent with the ordering.
+
+\begin{remark}[Laxator as obstruction; \emph{computed / heuristic}]
+\label{rem:ga-laxator}
+The laxator $\varphi_G:I_G(\sigma_1)\circ_K I_G(\sigma_2)\Rightarrow
+I_G(\sigma_1\circ_K\sigma_2)$ measures the failure of $I_G$ to preserve Kleisli
+composition strictly. Two ends are on firm ground and one is a sketch. It is the
+\emph{identity iff $G$ has no edges} \emph{(proved)}: then
+$\mathrm{Path}_G(i)=\{\varepsilon_i\}$, $W_G(X)=X^n$ is the product comonad, and
+$I_G(\sigma)=\sigma^n$ commutes with composition. When $G$ has edges,
+$I_G(\sigma_1)\circ_K I_G(\sigma_2)$ migrates twice while
+$I_G(\sigma_1\circ_K\sigma_2)$ migrates once, and $\varphi_G$ is exactly that
+extra migration step acting as a \emph{partial} distributive law --- the
+distance from the trivial weld of Example~\ref{ex:ga-independent}. The
+claim that $\|\varphi_G\|$ tracks $\lambda_2(G)$ (fast mixing $\Rightarrow$ large
+laxator, $K_n$ maximal, long $C_n$ minimal) is the source's
+\emph{proof-sketch-level} argument and is carried here as \emph{computed /
+heuristic}, not proved; the precise identification of $\|\varphi_G\|$ with a
+norm of the obstruction cocycle is left open. % TODO(ga): make the norm
+% identification precise -- relate $\|\varphi_G\|$ to a cocycle representative of
+% $[\omega]$ and to $\lambda_2$; currently heuristic, source gives only a sketch.
+\end{remark}
+
+\begin{remark}[Toward Level 3: adaptive topologies]
+\label{rem:ga-level3}
+When the migration topology rewires over time (driven by fitness or diversity
+feedback) the directed container is no longer fixed: the system becomes a
+dynamical system in Spivak's $\mathbb{O}\mathbf{rg}$ over $\Poly$
+\cite{NiuSpivak,Spi21}, the polynomial (interface) changing each step and a
+horizontal morphism encoding the rewiring. The reported ``$5.5\times$'' constant
+for time-varying random topologies would, on this reading, be the numerical
+signature of a genuinely lax horizontal morphism \emph{(speculative)}. This is
+flagged as future work; no theorem is claimed. % TODO(ga): the precise
+% $\mathbb{O}\mathbf{rg}$ reference for dynamic/adaptive topologies is not in the
+% dossier bibliography -- see NEWBIB shapiro-org below.
+\end{remark}
+
+% ASSEMBLE FROM: /home/agent/git/ghani-containers/ga-containers.tex  [computed]  [ASSEMBLE]
+% Provenance: combinatorial content (free category is a directed container; the
+% reachability comonad; distributive-law = composability; composite directed
+% container) is PROVED, reproving Ahman--Uustalu (\cite{ACU14,AU16,AhmanUustaluDL})
+% in the GA setting. Empirical content (Kendall's W=1.0; diversity ordering;
+% 5.5x constant; laxator-vs-lambda_2) is COMPUTED/empirical per the source and is
+% reported un-inflated.
+%
+% NEWBIB: langer-va-ga -- R. Langer, L. Vega, and Claude, "A categorical
+%   framework for genetic algorithms" (Kodamai / Langer--Vega), 2026. [SOURCE of
+%   the GA framework, island functor, laxator, and the Kendall's W=1.0 /
+%   diversity-ordering empirics.]
+% NEWBIB: beck-dl -- J. Beck, "Distributive laws", in Seminar on Triples and
+%   Categorical Homology Theory, LNM 80, Springer, 1969, pp. 119--140. [The
+%   comonad distributive-law definition and the composite-comonad theorem.]
+% NEWBIB: shapiro-org -- B. Shapiro and D. I. Spivak, "Dynamic categories,
+%   dynamic operads: from deep learning to prediction markets", or the Org double
+%   category reference for adaptive/time-varying interfaces. [Used only in the
+%   speculative Level-3 remark; distinct from SS23 "Structures on categories of
+%   polynomials".]

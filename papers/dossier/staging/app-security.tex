@@ -1,0 +1,160 @@
+\chapter{Security audits as failed distributive laws}
+\label{ch:security}
+Professional smart-contract audits (Trail-of-Bits style) keep surfacing the same
+shape of bug: two components, each provably correct in isolation, produce a
+global failure when composed. This chapter reads that recurring finding through
+the obstruction picture of the blockchain chapter (Chapter~\ref{ch:blockchain}):
+a \emph{state-divergence} audit finding is a failed distributive law, and the
+concrete divergence the auditor exhibits is an $[\omega]\neq0$ witness in
+$\Hcoh$. It is a modest extension --- a reframing with predictive bite, not a new
+theorem --- and is graded \emph{computed} throughout: the only machine-checked
+claim it leans on is the pre-existing re-entrancy obstruction, referenced not
+reproved.
+
+%========================================================================
+\section{From the re-entrancy weld to the audit desk}
+\label{sec:security-frame}
+
+Chapter~\ref{ch:blockchain} models a contract as a coalgebra for
+$p(X)=(O\times X)^{I}$ and identifies re-entrancy with the failure of the weld
+between two contracts to admit a coherent distributive law
+$\delta\colon S\,T\Rightarrow T\,S$; the obstruction is a class
+$[\omega]\in\Hcoh$, and the composite is safe exactly when
+$[\omega]=\varepsilon$ (the criterion of Chapter~\ref{ch:crit}, machine-checked
+in the re-entrancy corpus). The observation of this chapter is that the same
+frame names a \emph{second}, larger family of audit findings that are not
+temporal re-entrancy at all: \emph{state divergence}, where two representations
+of one logical value drift apart under composition. Trail of Bits described one
+such bug in exactly the compositional idiom --- ``two independently-correct
+components created a security failure through incorrect interaction'' --- and
+that idiom is precisely the laxator-as-obstruction picture.
+
+When two effectful components $S$ and $T$ are composed, the composite $S\circ T$
+is a well-behaved structure again only if a distributive law
+$\delta\colon S\,T\Rightarrow T\,S$ exists and is coherent. Local correctness of
+$S$ and of $T$ says nothing about whether $\delta$ exists. A missing or
+non-coherent $\delta$ is not cosmetic: it is the obstruction, and downstream it
+is the bug. The audit finding --- a concrete input that drives the two
+representations apart --- is a witness that $\delta$ does not exist; in the
+$\Hcoh$-graded reading of Chapter~\ref{ch:crit} it is an $[\omega]\neq0$ witness.
+
+%========================================================================
+\section{State divergence as a missing distributive law}
+\label{sec:security-toy}
+
+The clean toy case is the Provenance Blockchain finding (Trail of Bits,
+2026-08-25). Two modules each hold a notion of token supply: a \emph{Marker}
+module carries a cached \texttt{supply} field, and a \emph{Bank} module carries
+the live, authoritative supply. Each is correct on its own terms. An
+authorization check compares the two supplies to gate a privileged action; when
+both read as $0$ --- a state the composed system permits --- the check
+degenerates to \texttt{0 == 0} $\rightarrow$ \texttt{true} and grants
+unauthorized mint/withdraw. Two correct components, one trivial bypass under
+composition.
+
+Model the shared logical value ``token supply'' as an object $L$, and give each
+component a writer/state monad over its own copy:
+\[
+  S = (-)\times L_{\mathrm{cache}}\quad(\text{Marker's stale view}),
+  \qquad
+  T = (-)\times L_{\mathrm{live}}\quad(\text{Bank's authoritative view}).
+\]
+Composing the two modules forms $S\circ T$ and reads a single supply out of it.
+The intended coherence --- ``the two views agree on the one value they both
+denote'' --- is exactly a distributive law
+$\delta\colon S\,T\Rightarrow T\,S$ whose unit square commutes: the value read
+through the cache equals the value read through the authoritative store. The
+invariant $L_{\mathrm{cache}}=L_{\mathrm{live}}$ is the statement that $\delta$
+is well-defined. The bug is that no coherent $\delta$ exists: cache and store are
+mutated on different code paths, so the square fails to commute after certain
+interleavings, and the two representations diverge. The authorization predicate
+$\varphi(L_{\mathrm{cache}},L_{\mathrm{live}})$ was written assuming coherence;
+under divergence it is evaluated off its intended domain, where
+$L_{\mathrm{cache}}=L_{\mathrm{live}}=0$ makes it fire spuriously. The divergence
+\emph{is} the failed distributive law; the \texttt{0 == 0} bypass is what the
+missing $\delta$ looks like at the call site.
+
+\begin{remark}[The two readings coincide]\label{rem:security-two-readings}
+What a category theorist should see is a non-existent distributive law between
+two monads over a shared object $L$; what a security engineer should see is their
+own bug --- ``two sources of truth for one value, kept in sync by convention
+rather than by construction.'' These are the same statement. The audit's
+concrete counterexample input is the $[\omega]\neq0$ witness of
+Chapter~\ref{ch:crit}: it certifies that the obstruction class is nonzero by
+exhibiting an interleaving on which the coherence square fails.
+\end{remark}
+
+The remedy is likewise the categorical move of Chapter~\ref{ch:blockchain}: make
+$\delta$ hold \emph{by construction} rather than by assumption. Reading a single
+state variable mutated only at controlled entry points, instead of two separately
+maintained representations, forces the two views to coincide on the nose --- it
+literally makes the distributive law hold, rather than hoping an invariant is
+preserved by convention.
+
+%========================================================================
+\section{A taxonomy indexed by which law fails}
+\label{sec:security-taxonomy}
+
+The value of the frame is that it indexes otherwise-unrelated audit patterns by
+\emph{which} categorical law breaks, turning ad hoc pattern-matching into a
+checklist. The source note collects three shapes; we record them as the frame's
+predictive content, not as proved results.
+
+\begin{enumerate}[leftmargin=2.2em]
+  \item \textbf{State divergence} $=$ failed distributive law between two monads:
+        two representations of one logical value (two modules; two entry points
+        into one component; two channels onto one pot; or a verification channel
+        and a settlement channel across a bridge) admit no coherent $\delta$.
+        This is the best-populated class, spanning public witnesses from a
+        re-entrancy accounting slip to a nine-figure cross-chain bridge exploit
+        --- the \emph{same} missing $\delta$, differing only in where the two
+        non-commuting channels sit.
+  \item \textbf{Temporal / cross-callback misalignment} $=$ re-entrancy with an
+        $\Hcoh$ obstruction: the order-of-effects law of a single lax structure
+        composed across a callback boundary, safe iff $[\omega]=\varepsilon$.
+        This is the case already pinned down formally in
+        Chapter~\ref{ch:blockchain}; the state-divergence class is its sibling
+        under a different broken law.
+  \item \textbf{Self-composition via iteration} $=$ interchange/associativity
+        failure of an iterate $T\circ T\circ\cdots$: a single locally-correct
+        operation composed with itself in a loop, where a per-step check does not
+        survive the fold. This is the security-domain shadow of the
+        self-plethysm phenomenon of the change-of-base chapter --- composition
+        survives self-composition only when flatness was present to begin with.
+\end{enumerate}
+
+The frame supplies the auditor a hunt list indexed by structure: two sources of
+truth for one value (look for the distributive law); a callback boundary (look
+for the $\Hcoh$ class); a loop over an externally-observable operation (look for
+the non-flat iterate). For the temporal case the criterion is already sharp and
+machine-checked ($[\omega]=\varepsilon$); the other two shapes are, at present,
+structural descriptions awaiting the same treatment.
+
+%========================================================================
+\section{Status and honest scope}
+\label{sec:security-status}
+
+This chapter is a \emph{stub} extending the blockchain obstruction picture, not a
+standalone proved result. No new theorem is established here. The one formally
+verified claim invoked is the pre-existing re-entrancy obstruction of
+Chapter~\ref{ch:blockchain} ($[\omega]=\varepsilon$ in $\Hcoh$, machine-checked);
+the categorical models of state divergence and of the iteration case are
+structural descriptions, and the exploit names, dates, and figures are taken from
+public audit sources as recorded in the author's research notes. The grade is
+\emph{computed}: a genuine but modest reframing whose bite is unification and
+prediction --- one categorical defect, $\delta$ absent, whose blast radius across
+the public witnesses spans roughly two orders of magnitude of loss --- rather
+than a certificate the chapter itself discharges. The natural next step, and the
+reason the stub earns its place in the dossier, is to lift the state-divergence
+and iteration shapes to the same checkable $\Hcoh$-graded criterion that
+Chapter~\ref{ch:crit} already gives for the temporal case.
+
+% CROSS-REFS USED: \ref{ch:blockchain} (re-entrancy / distributive-law flagship;
+%   NB: the blockchain chapter in dossier.tex currently carries no \label ---
+%   it needs \label{ch:blockchain} added after its \chapter line, line ~1206),
+%   \ref{ch:crit} (the (L) and [omega]=0 criterion, defined in staging/crit.tex).
+% MACROS USED: \Hcoh, \den (global preamble), \assemble (global).
+% CITATIONS: none new. Exploit sources (Trail of Bits, public postmortems) are
+%   named inline as prose, as in the source expository note; no bib keys required.
+% TODO: if the state-divergence / iteration shapes are ever formalised, upgrade
+%   this stub from grade "computed" to the criterion grade of Chapter~\ref{ch:crit}.

@@ -1,0 +1,119 @@
+\chapter{The sorry-free Lean corpus}
+\label{ch:corpus}
+
+The theory of this dossier is not only proved on paper; its load-bearing
+theorems are machine-checked. The formalisation lives in a single Lean~4
+package, \texttt{Containers}, comprising \textbf{66} modules that build the
+category $\Cont$ of containers, the sub-theory of directed containers
+$\DCont \iso \Cat$, the four monoidal structures on $\Cont$, and the
+application-facing results (Zappa--Sz\'ep welds, emergent holonomy, trust and
+trajectory systems). The corpus is deliberately austere: almost every module is
+\emph{Type}-level Lean~4 core with \textbf{no Mathlib dependency}, so the trust
+base is the Lean kernel plus, where noted, \texttt{funext}/\texttt{Quot.sound}
+(propositional extensionality). The corpus is \textbf{sorry-free}: every literal
+occurrence of the token \texttt{sorry} across all 66 files sits inside a
+docstring asserting sorry-freeness, never in a proof term.
+
+\section{What ``lean-verified'' means, and what it does not}
+
+We grade this corpus \textbf{lean-verified}. The standing caveat is the usual
+one and must be stated plainly: a machine-checked proof term certifies that the
+\emph{stated} proposition type-checks, not that the stated proposition is the
+one a reader intends by the English name of the theorem --- the statement, not
+the proof, is where residual trust lives. Accordingly the table below records
+each module's headline \emph{as the module's own docstring states it}, and flags
+in the Notes column every caveat the sources themselves declare: a narrowed
+scope, a step left informal, or a genuine axiom footprint
+(\texttt{noncomputable}/\texttt{open Classical}). Several modules go further and
+pin their footprint with an in-file \texttt{\#print axioms} audit; where a
+docstring makes a positive axiom claim we record it. Modules with an em dash in
+Notes are clean: they close by \texttt{rfl}, kernel \texttt{decide}, or
+definitional proof irrelevance, with at most \texttt{funext}/\texttt{Quot.sound}.
+
+The three-column longtable runs across page breaks. Module and declaration names
+are set in \texttt{typewriter}; the middle column paraphrases the docstring
+headline.
+
+\begin{longtable}{@{}p{0.24\textwidth}p{0.50\textwidth}p{0.20\textwidth}@{}}
+\toprule
+\textbf{Module} & \textbf{What it establishes} & \textbf{Notes} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Module} & \textbf{What it establishes} & \textbf{Notes} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{3}{r@{}}{\emph{continued on next page}} \\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{ActionLifting} & Neil's \texttt{All} ($\prod$) predicate lifting is a cartesian-only action of $\tri$: \texttt{actionAll\_assoc}, \texttt{actionAll\_unit}, \texttt{actionAll\_snd}. & lean-verified \\
+\texttt{AffineClassification} & Theorem~T1: monads on $M X = E + A\times X$ are monoids on $E\sqcup A$ with $E$ a left-zero ideal (kernel-\texttt{decide} bijection). & Set-monad level; non-cartesian aborting monads out of scope \\
+\texttt{Basic} & Containers, their extension (polynomial) functor $\Ext$, morphisms, and the representation theorem. & lean-verified \\
+\texttt{BiKleisli} & Abstract biKleisli category of a mixed distributive law: unit laws \texttt{unit\_left}/\texttt{unit\_right} and \texttt{acomp\_assoc}. & $(3)\!\iff\!(4)$ non-branching step separate, not formalised here \\
+\texttt{BiKleisliAffine} & Effect--coeffect arrow category for the whole non-branching class $E+A\times(-)$; all four E1$'$--E4$'$ axioms. & lean-verified \\
+\texttt{BiKleisliMaybe} & Effect--coeffect arrow category for $M=\mathrm{Maybe}$, all four E1$'$--E4$'$ discharged. & lean-verified \\
+\texttt{BiKleisliWriter} & Effect--coeffect arrow category for $M=\mathrm{Writer}\ A$ over an arbitrary monoid; E1$'$--E4$'$. & lean-verified \\
+\texttt{BranchingObstruction} & Negative half of the dichotomy: for branching $M$ the reverse compositor $\kappa$ fails E2$'$. & lean-verified \\
+\texttt{CoKleisli} & CoKleisli extension, composition and canonical strength for directed-container comonads. & lean-verified \\
+\texttt{Cofunctor} & Directed-container morphisms are cofunctors: hom-set bijection $\DCont \iso \mathrm{Cof}$, both round trips. & lean-verified \\
+\texttt{ComonadConverse} & Converse (M2b): a container comonad recovers a directed container; \texttt{cShape} forced to $\Id$. & lean-verified \\
+\texttt{Comonoid} & A directed container is a $\tri$-comonoid in $(\Cont,\tri,I)$ via \texttt{toComonoid}. & lean-verified \\
+\texttt{ComonoidConverse} & Converse (M3b): a $\tri$-comonoid in $(\Cont,\tri,I)$ is a directed container. & lean-verified \\
+\texttt{CompLeftAdjoint} & Explicit left adjoint $F_q \dashv (-)\tri q$: object/morphism maps, unit, counit, both triangles. & lean-verified \\
+\texttt{CompLeftAdjointNatQ} & Naturality of $F_q$ in the parameter $q$: contravariant functoriality and mate identity. & lean-verified \\
+\texttt{Composition} & Container composition $\tri$ ($\llbracket G\tri F\rrbracket=\llbracket G\rrbracket\circ\llbracket F\rrbracket$); unitors and associator as isos. & lean-verified \\
+\texttt{Cont} & The category $\Cont$: identity/composition of container morphisms, category laws hold definitionally. & lean-verified \\
+\texttt{DContCat} & Directed containers as small categories; morphisms as cofunctors; round-trip position bijection. & lean-verified \\
+\texttt{Directed} & Directed containers (D1--D5) and the comonad induced on the extension $\Ext C$. & lean-verified \\
+\texttt{Dirichlet} & The Dirichlet tensor $(\Cont,\otimes,y)$; positions $P s\times Q t$ vs.\ the product's $P s\oplus Q t$. & taxonomy coda left informal (needs quotients) \\
+\texttt{DirichletClosed} & $(\Cont,\otimes,y)$ is closed: internal hom \texttt{ihom}, adjunction \texttt{dirichlet\_closure}, currying naturality. & lean-verified; all \texttt{rfl} \\
+\texttt{DirichletComonoid} & Bare $\otimes$-comonoids in $\Cont$ are families of monoids (forward, \texttt{toFamilyOfMonoids}). & axiom-audited (\texttt{Quot.sound} only) \\
+\texttt{DirichletComonoidConverse} & Converse: a family of monoids assembles a bare $\otimes$-comonoid. & axiom-audited \\
+\texttt{DirichletHomPi} & Dirichlet internal hom in $\Pi$-form: $[q,r]\iso\prod_i (r\tri q[i]\!\cdot\! y)$. & lean-verified \\
+\texttt{DirichletMonoid} & Bare $\otimes$-monoids are a monoid on shapes plus an oplax functor on fibres (forward). & axiom-free (no \texttt{Quot.sound}) \\
+\texttt{DirichletMonoidConverse} & Converse: monoid-on-shapes plus oplax fibres assembles a bare $\otimes$-monoid. & axiom-audited \\
+\texttt{Disjointness} & The Disjointness Lemma for internal exact factorisations (\texttt{disjointness}). & axiom-audited \\
+\texttt{DualTransfer} & The comonad $\to$ monad transfer on containers. & lean-verified \\
+\texttt{EmergentHolonomy} & Emergent holonomy: orchestration synthesises a stabiliser neither agent has (\texttt{emergent\_holonomy}). & axiom-audited (no \texttt{Classical.choice}) \\
+\texttt{EndpointLocality} & A functor out of the codiscrete category is a trivial iso-system (endpoint locality). & lean-verified \\
+\texttt{EnrichedFFCollapse} & The enriched-ff classification collapse $\mathcal{CL}\cap\mathcal{UN}=\{\Id\}$. & final $\Id$-monad-uniqueness step not formalised \\
+\texttt{FibredTransfer} & $G_M$ is a fibred comonad: reindexing-stability and cartesian preservation. & lean-verified \\
+\texttt{FourMonoidal} & The four monoidal structures on $\Cont$ ($\tri$, $\otimes$, product, coproduct). & lean-verified \\
+\texttt{Free} & The free monad on a container as a $\tri$-monoid. & lean-verified \\
+\texttt{FreeUniversal} & The universal property of the free monad on a container. & lean-verified \\
+\texttt{HolonomyWitness} & $\mathbb{Z}/2$-holonomy witness: machine-checked refutation of ``liftings are holonomy-free''. & lean-verified \\
+\texttt{MonadComonadTransfer} & The monad $\to$ comonad transfer on containers. & lean-verified \\
+\texttt{Monoidal} & $(\Cont,\tri,I)$ is a monoidal category (coherence). & lean-verified \\
+\texttt{PlethysmCancellation} & Bottom-degree cancellation: algebraic engine of plethysm right-cancellation. & bottom-degree ($a_0{=}0$) engine only per LEAN.md; \texttt{psOrd} classical/\texttt{noncomputable} \\
+\texttt{ProofSearch} & Proof-search trees as a directed container. & lean-verified \\
+\texttt{ProofSearchN} & N-ary proof-search trees as a directed container. & lean-verified \\
+\texttt{QpfCollapse} & QPFs as the constructive presentation of a collapse/identification locus ($\mathrm{Bag}_2=\mathrm{Sym}^2$). & \texttt{repr} \texttt{noncomputable} (\texttt{Classical.choose}), intrinsic to QPFs \\
+\texttt{ReaderGroupoidLifting} & The $\mathbb{Z}/2$ groupoid: a Reader-monad lifting that is neither $\prod$ nor $\Sigma$. & lean-verified \\
+\texttt{ReaderStateOutsidePiMendler} & Reader and State fall outside $\prod$-Mendler: their $\mu$ drops leaves ($\kappa_\mu$ non-total). & lean-verified (\texttt{decide}) \\
+\texttt{Reentrancy} & The re-entrancy obstruction $[\omega]=\varepsilon$ as finite $\mathbb{F}_2$ linear algebra; $\Hcoh\iso\mathbb{F}_2$. & lean-verified \\
+\texttt{SeqCoprodDistrib} & Left distributivity of $\tri$ over the coproduct. & lean-verified \\
+\texttt{SeqProdDistrib} & Right distributivity of $\tri$ over the product. & lean-verified \\
+\texttt{Sequential} & The sequential operator $\tri$ and its monoidal structure. & lean-verified \\
+\texttt{SigmaLift} & The $\Sigma$-container lifting is $M\tri(-)$: a $\tri$-monoid makes it a monad on $\Cont$. & lean-verified \\
+\texttt{StateComonad} & The state object $\Delta S$, the codiscrete category, and the store comonad. & lean-verified \\
+\texttt{StateComonadTensor} & Lemma 3.1 at the comonad level: the store comonad tensors. & lean-verified \\
+\texttt{StateProductLifting} & The product of directed containers, and the store category $\mathbb{S}\times C$. & lean-verified \\
+\texttt{TMCartesianBoundary} & The $T_M$-side cartesian-preservation boundary: $\mathrm{Maybe}$ preserves, $\mathrm{Pf}$ does not. & lean-verified (\texttt{decide}) \\
+\texttt{TensorCoprodDistrib} & Distributivity of the Dirichlet tensor over the coproduct. & lean-verified \\
+\texttt{TimesCoprodDistrib} & Distributivity of the categorical product over the coproduct. & lean-verified \\
+\texttt{TimesMonoid} & Bare $\times$-monoids are a monoid on shapes plus an oplax functor on fibres. & lean-verified \\
+\texttt{TimesMonoidConverse} & Converse: monoid-on-shapes plus oplax coproduct fibres assembles a bare $\times$-monoid. & axiom-audited \\
+\texttt{Trajectory} & Trajectory systems: circular verification implies $\tau=\bot$. & lean-verified \\
+\texttt{TrajectoryComposition} & Composition of trajectory evaluation with trust evaluation. & lean-verified \\
+\texttt{Trust} & Trust systems: the certificate lemma and transport of trust; grade $\tau$. & \texttt{tau}/\texttt{derivGrade} \texttt{noncomputable} (well-founded recursion, \texttt{open Classical}) \\
+\texttt{TrustBoundary} & The trust boundary on registry trees is stable under \texttt{duplicate}. & lean-verified \\
+\texttt{UnionSubspaces} & The union-of-subspaces counting lemma. & lean-verified \\
+\texttt{VecCollapse} & The $\VecC_{\mathrm{fd}}$ collapse locus: two containers, one linear functor. & lean-verified \\
+\texttt{Workers} & The category of Workers, graded by $(\mathrm{Set},\times)$. & lean-verified \\
+\texttt{WorkersRetract} & The Workers $\otimes$-grading is a retract of the BHM $\tri$-grading. & lean-verified \\
+\texttt{ZappaSzep} & The Zappa--Sz\'ep product of monoids: cocycle axioms $\iff$ associativity. & lean-verified \\
+
+\end{longtable}
