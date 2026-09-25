@@ -1,13 +1,14 @@
 {
  "conjecture": "Classify the commutative strong monads M on Set for which Neil's self-enriched M-container extension <<S,P>> = coprod_s [P_s,-] : Kl(M) -> Kl(M) is FULLY FAITHFUL, i.e. describe TARGET = CL cap UN where CL = {M : Kl(M) is symmetric monoidal closed} (Kock: each (MB)^A free) and UN = {M : the monoidal unit 1 of Kl(M) is connected, i.e. M preserves small coproducts}. By flagship T1, M in TARGET iff Neil's extension is fully faithful. THEOREM: CL cap UN = {Id} (up to monad iso). Sharpens the PROVE.md conjecture ('no genuinely effectful monad; only Id and idempotent/localization monads') to LITERALLY ONLY the identity: no nontrivial idempotent monad lies in UN (Cor 3). A sharp NEGATIVE answer to Neil UID 168's hope that enrichment gives a uniform f&f theorem for effects: it holds for no nontrivial effect.",
- "status": "proved",
+ "status": "peer-reviewed",
  "date_opened": "2026-09-15",
  "date_closed": "2026-09-15",
  "note": "PROVE session 2026-09-15, answering Neil UID 168, follows the scratch reconciliation note (2026-09-15-kleisli-closedness-ff-reconciliation.md, three-functor picture). Proof: 2026-09-15-enriched-ff-classification.md. Step 1 (UN => writer form MX = X x M1) uses only preservation of copowers T.1, a special case of the small-coproduct definition of connected (containers-over-a-base.tex line 336), so the classification is robust to the T1 copowers-vs-all-coproducts open gap. Step 1 corroborated by the independently-proved copowers-gap-writer-monad root (copower-of-unit preservation <=> induced Set-monad is a writer monad), here derived directly for M itself. Step 2 (CL => E = M1 iso 1) uses closedness at the object A = empty: (-) x empty needs a right adjoint, which is a terminal object T with MT iso 1; writer form gives T x E iso 1, so E iso 1, M iso Id. Independence 2x2 table and Cor 3 (idempotents fail UN) computationally cross-checked in scratch/check_un_cl.py. DEPRIORITIZED sibling arc: the all-m THM3 converse (m-containers.json, node necessity-lemma-gap) remains the one open node of the peer-reviewed THM3 program; parked, not abandoned.",
  "tree": {
   "id": "root",
   "approach": "CL cap UN = {Id}: unit-connectedness forces the writer functor form, closedness forces the writer monoid trivial; only the identity monad makes Neil's enriched M-container extension fully faithful",
-  "trust": "proved",
+  "trust": "peer-reviewed",
+  "review": "Rick, 2026-09-25 (item 281; artifact proofs/reviews/2026-09-25-rick-review-281-283-287-292.md). CONFIRMED line by line: Lemma 4.2 ([empty,X] terminal via (-)tensor A -| [A,-], right-closedness only, symmetry not needed); Step 2 (empty initial in Kl(M); Kl(M) SMC from M in CL + Kock Prop 4.1 taken on trust; M(top)=1; writer form top x E=1 => top=1, E=1; E=empty impossible as E a monoid; monad on (-)xE = monoid on E by Yoneda => E=1 => M=Id). 'The CCC worry is fully dispelled.' ONE reword owed (§4.4 Step 2, sentence 'We stress'): the claim 'this step uses neither CCC nor connectedness of the unit' is true of the EXISTENCE of top but FALSE of the step -- UN does VISIBLE work, namely excluding a zero object (Maybe: top=empty, M empty=1; P: top=empty; Reader: top=1 -- all in CL, all killed only by the writer form = UN); this use is unavoidable. Minor: Thm 4.3 state extension (C) 'exists and is full and faithful iff M=Id'; Remark 4.5 copower test include T=empty (automatic); M1=1 needs zero-object exclusion + 'E=M1 a retract of M top=1' written down.",
   "file": "2026-09-15-enriched-ff-classification.md",
   "children": [
    {
@@ -81,6 +82,15 @@
     "approach": "GAP (not needed under the actual definition, flagged for completeness): if UN is weakened from small-coproduct to FINITE-coproduct preservation, Step 1's writer form (star) holds only for finite T; Step 2 still gives M1 iso 1 and Mn iso n, but M's behaviour on infinite sets is not pinned by finite coproducts alone. Conjecture: still forces Id (closedness should propagate), NOT proved. Under the paper's small-coproduct definition (P5) there is no gap and the theorem is complete.",
     "trust": "speculative",
     "file": "2026-09-15-enriched-ff-classification.md",
+    "role": "attempt",
+    "children": []
+   },
+   {
+    "id": "lean-collapse-core",
+    "approach": "LEAN (Mathlib-free, Lean 4 v4.30.0): machine-checked the two-step ALGEBRAIC collapse from clearly-stated hypotheses over concrete Type (Set). Given (i) preserve: the copower comparison M T iso Sigma_{t:T} M1 is a bijection for every T (= UN, unit connected / M preserves copowers T.1) and (ii) terminal: a terminal object top of Kl(M) with M top iso 1 (the consequence of CL derived in step2), it derives writerForm (Step 1: M T iso T x M1), factorUnitOfProdUnit (the load-bearing Step-2 algebra: X x E iso 1 => E iso 1), E_iso_unit (M1 iso 1) and iso_id (M X iso X for all X: underlying functor of M is Id). Bonus writer_collapse_natural: the writer-functor collapse at E iso 1 is a NATURAL iso to Id. HONEST SCOPE: the two category-theoretic derivations (CL => terminal; UN => preserve) are abstracted as HYPOTHESES, not re-proved in Lean; Kock and T1 are cited, not re-verified. Sorry-free; #print axioms clean (only propext). Full Containers lib lake build clean.",
+    "trust": "lean-verified",
+    "file": "2026-09-15-enriched-ff-classification.md",
+    "lean": "Containers/EnrichedFFCollapse.lean: NeilEnrichedFF.iso_id, NeilEnrichedFF.E_iso_unit, factorUnitOfProdUnit, writerForm, writer_collapse_natural",
     "role": "attempt",
     "children": []
    }
