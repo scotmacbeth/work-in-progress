@@ -1,0 +1,336 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage[most]{tcolorbox}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Sb}{\mathrm{Sb}}
+\newcommand{\Gp}{\mathrm{Gp}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\bic}{\blacktriangleright\!\!\blacktriangleleft}
+\newcommand{\Soc}{\operatorname{Soc}}
+\newcommand{\id}{\mathrm{id}}
+
+\title{The obstruction to a skew-brace bicrossed decomposition is a
+\emph{bilinear} second-cohomology class\\
+\large The additive forgetful map descends; the product forgetful map is not injective (the $W_4$ separation)}
+\author{MacBeth \\ \small Kodamai}
+\date{25 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\textbf{Recipient:} internal (Kodamai; for Neil Ghani / Robin Langer).\\[2pt]
+\textbf{Scope:} kernel ideal $D$ a \emph{trivial brace}; base ring Rathee--Yadav
+$H^2_\Sb$ machinery (arXiv:2601.12371).
+\end{center}
+
+\begin{tcolorbox}[colback=gray!6,colframe=black,title=\textbf{Trust grade (honest)}]
+\textbf{\texttt{proved}} for the whole cohomological package below, \emph{contingent on
+two clearly separated inputs}:
+\begin{itemize}\itemsep1pt
+\item[(a)] Task~1 (well-definedness of the additive forgetful map $\varphi_+$) is
+proved here from first principles at the cochain level, \textbf{airtight, with no extra
+hypothesis} beyond the standing trivial-brace-kernel hypothesis (\S\ref{sec:crux}).
+\item[(b)] The numerical split-triple counts for $W_1$--$W_4$ on $\Z/8,\ \Z_2^2,\ \Z_2\times\Z_4$
+(and in particular $W_4=(\text{mult},\text{add},\text{sb})=(\mathrm{Y},\mathrm{Y},\mathrm{N})$)
+are imported as \textbf{\texttt{computed}} from the enumerator
+(scratch file \texttt{2026-09-25-kernel-triviality-check.md}); they are not re-derived here.
+\end{itemize}
+The \emph{cohomological identification} of these computed splits with the vanishing of the
+three classes $[\Omega],[\tau],[\beta]$ is the new \texttt{proved} content.
+The \textbf{non-trivial-brace-kernel} instances on $\Z_2\times\Z_4$
+(\texttt{sb\#11}, \texttt{sb\#15}; kernel additively $\Z/4$ but internally a non-trivial
+brace) are \textbf{OPEN} and lie outside Rathee--Yadav; see \S\ref{sec:open}.
+\end{tcolorbox}
+
+\section{Setup and standing hypotheses}
+
+Let $(G,+,\circ)$ be a skew (left) brace: $(G,+)$ and $(G,\circ)$ are groups and
+$a\circ(b+c)=(a\circ b)-a+(a\circ c)$. Write $\lambda_a(b)=-a+(a\circ b)$, so
+$a\circ b=a+\lambda_a(b)$. Fix an \emph{ideal} $D\trianglelefteq G$ and the induced extension
+\begin{equation}\label{eq:ext}
+0\longrightarrow D \stackrel{i}{\longrightarrow} G \stackrel{\pi}{\longrightarrow} H:=G/D \longrightarrow 0 .
+\end{equation}
+We take $H$ as the acting skew brace and $D=:I$ as the kernel, following the notation of
+Rathee--Yadav (arXiv:2601.12371, hereafter \textbf{RY}).
+
+\medskip
+\noindent\textbf{Standing hypothesis (SH).} $D$ is a \emph{trivial brace}: $(D,+)$ abelian and
+$a\circ b=a+b$ on $D$. Then $H$ acts on $D$ via a \emph{good triplet} $(\nu,\mu,\sigma)$
+determined by any set-theoretic st-section $s:H\to G$ ($s(0)=0$, $\pi s=\id_H$):
+\[
+\nu_h(x)=\lambda_{s(h)}(x),\qquad
+\mu_h(x)=-s(h)+x+s(h),\qquad
+\sigma_h(x)=s(h)^{-1}\circ x\circ s(h),
+\]
+where $\nu:(H,\circ)\to\operatorname{Aut}(D,+)$ is a homomorphism and
+$\mu:(H,+)\to\operatorname{Aut}(D,+)$, $\sigma:(H,\circ)\to\operatorname{Aut}(D,+)$
+are anti-homomorphisms (RY \S2). These actions are independent of the choice of $s$.
+All four canonical witnesses $W_1$--$W_4$ have trivial-brace kernels, so (SH) holds and RY
+applies directly (scratch file, this session).
+
+\subsection*{RY second cohomology of a skew brace}
+
+To an st-section $s$ RY associate the pair of $2$-cochains
+\begin{align}
+\beta(h_1,h_2)&:=-s(h_1+h_2)+s(h_1)+s(h_2),\label{eq:beta}\\
+\tau(h_1,h_2)&:=-s(h_1\circ h_2)+\bigl(s(h_1)\circ s(h_2)\bigr)
+=\nu_{h_1\circ h_2}\bigl(\bar\tau(h_1,h_2)\bigr),\label{eq:tau}
+\end{align}
+with $\bar\tau(h_1,h_2):=s(h_1\circ h_2)^{-1}\circ s(h_1)\circ s(h_2)$.
+RY prove (their eqn.\ following (3.9), citing Lebed--Vendramin / Rathee--Yadav~[20]) that
+$(\beta,\tau)\in Z^2_\Sb(H,D)$ \emph{iff}
+\begin{equation}\label{eq:310}
+\begin{aligned}
+\mu_{\lambda_{h_1}(h_3)}(\tau(h_1,h_2))-\tau(h_1,h_2+h_3)+\tau(h_1,h_3)
+={}&\nu_{h_1}(\beta(h_2,h_3))+\mu_{h_1\circ h_3}(\beta(h_1,-h_1))\\
+&-\beta(-h_1,h_1\circ h_3)-\beta(h_1\circ h_2,\lambda_{h_1}(h_3)),
+\end{aligned}
+\tag{3.10}
+\end{equation}
+together with $\beta\in Z^2_\Gp((H,+),D;\mu)$ and $\bar\tau\in Z^2_\Gp((H,\circ),D;\sigma)$.
+Equation (3.10) is the \emph{bilinear coupling}: it is a genuine constraint tying $\beta$ to
+$\tau$. The group $H^2_\Sb(H,D)=Z^2_\Sb/B^2_\Sb$ classifies brace extensions
+\eqref{eq:ext} inducing the fixed triplet $(\nu,\mu,\sigma)$ (RY \S3), the zero class being
+the split (bicrossed) extension.
+
+\section{Task 1 (crux): the additive forgetful map descends}\label{sec:crux}
+
+\begin{definition}
+$\displaystyle \varphi_+:H^2_\Sb(H,D)\longrightarrow H^2_\Gp\bigl((H,+),D;\mu\bigr),\qquad
+[(\beta,\tau)]\longmapsto[\beta].$
+\end{definition}
+
+Well-definedness is the statement that a \emph{brace coboundary}---the shift of $(\beta,\tau)$
+under a change of normalised st-section---shifts the $\beta$-component by an
+\emph{additive} group $2$-coboundary, so that $[\beta]$ is independent of the representative.
+The danger, flagged explicitly, is that the (3.10) coupling might inject $\tau$-dependent
+terms into the $\beta$-shift that are \emph{not} additive coboundaries. We prove it does not.
+
+\paragraph{The coboundary group $B^2_\Sb$ (parametrisation of section change).}
+Any two normalised st-sections $s,s'$ of \eqref{eq:ext} have $\pi s=\pi s'=\id_H$, so
+$s'(h)$ and $s(h)$ lie in the same fibre and differ by an element of $D$. Setting
+\begin{equation}\label{eq:sectionchange}
+\theta(h):=-s(h)+s'(h)\in D,\qquad\text{equivalently}\qquad s'(h)=s(h)+\theta(h),\quad \theta(0)=0,
+\end{equation}
+parametrises \emph{all} changes of normalised st-section by an arbitrary $\theta:H\to D$ with
+$\theta(0)=0$. By definition $B^2_\Sb(H,D)$ is the set of shifts
+$(\beta'-\beta,\ \tau'-\tau)$ realised as $\theta$ ranges over such maps.
+
+\begin{lemma}[Additive component of a brace coboundary]\label{lem:betacobound}
+Under \eqref{eq:sectionchange}, with $\beta,\beta'$ the additive cochains \eqref{eq:beta}
+of $s,s'$,
+\begin{equation}\label{eq:betashift}
+(\beta'-\beta)(h_1,h_2)=\mu_{h_2}\bigl(\theta(h_1)\bigr)-\theta(h_1+h_2)+\theta(h_2)
+\;=\;(d\theta)(h_1,h_2),
+\end{equation}
+the standard normalised group $2$-coboundary for the additive group $(H,+)$ acting on $(D,+)$
+via the right action $\mu$. In particular the shift is \textbf{independent of $\tau$, of $\nu$
+and of $\sigma$}.
+\end{lemma}
+
+\begin{proof}
+Compute in the (possibly non-abelian) group $(G,+)$, using only associativity and the
+definition $\mu_h(y)=-s(h)+y+s(h)$; every displayed term below lies in the abelian normal
+subgroup $D$.
+\begin{align*}
+\beta'(h_1,h_2)
+&=-s'(h_1+h_2)+s'(h_1)+s'(h_2)\\
+&=-\bigl(s(h_1{+}h_2)+\theta(h_1{+}h_2)\bigr)+\bigl(s(h_1)+\theta(h_1)\bigr)+\bigl(s(h_2)+\theta(h_2)\bigr)\\
+&=-\theta(h_1{+}h_2)+\underbrace{\bigl(-s(h_1{+}h_2)+s(h_1)\bigr)}_{=\ \beta(h_1,h_2)-s(h_2)}
+   +\theta(h_1)+s(h_2)+\theta(h_2)\\
+&=-\theta(h_1{+}h_2)+\beta(h_1,h_2)+\bigl(-s(h_2)+\theta(h_1)+s(h_2)\bigr)+\theta(h_2)\\
+&=-\theta(h_1{+}h_2)+\beta(h_1,h_2)+\mu_{h_2}\bigl(\theta(h_1)\bigr)+\theta(h_2).
+\end{align*}
+The regrouping in the third line is pure associativity: $-s(h_1{+}h_2)+s(h_1)=\beta(h_1,h_2)-s(h_2)$
+from \eqref{eq:beta}, and inserting it leaves the string
+$\dots+\beta(h_1,h_2)-s(h_2)+\theta(h_1)+s(h_2)+\dots$, whose middle block
+$-s(h_2)+\theta(h_1)+s(h_2)=\mu_{h_2}(\theta(h_1))$. All five surviving summands lie in the
+abelian group $(D,+)$, so they commute and
+\[
+(\beta'-\beta)(h_1,h_2)=\mu_{h_2}(\theta(h_1))-\theta(h_1+h_2)+\theta(h_2). \qedhere
+\]
+\end{proof}
+
+\begin{theorem}[Task 1]\label{thm:phiplus}
+$\varphi_+$ is well-defined: if $(\beta_1,\tau_1)$ and $(\beta_2,\tau_2)$ are cohomologous in
+$Z^2_\Sb(H,D)$, then $[\beta_1]=[\beta_2]$ in $H^2_\Gp((H,+),D;\mu)$. Consequently
+$\varphi_+$ is a group homomorphism. \textbf{No hypothesis beyond {\rm(SH)} is needed}; the
+compatibility (3.10) does not obstruct.
+\end{theorem}
+
+\begin{proof}
+Cohomologous means $(\beta_1,\tau_1)-(\beta_2,\tau_2)\in B^2_\Sb$, i.e.\ realised by some
+$\theta:H\to D$ with $\theta(0)=0$ via a change of st-section \eqref{eq:sectionchange}. By
+Lemma~\ref{lem:betacobound} the additive component is $\beta_1-\beta_2=d\theta\in
+B^2_\Gp((H,+),D;\mu)$. Hence $[\beta_1]=[\beta_2]$. Additivity of $\varphi_+$ is immediate from
+$\beta_{(\beta_1+\beta_2)}=\beta_1+\beta_2$ (RY note the association $(\beta,\tau)\mapsto\beta$
+is $\Z$-linear on cochains).
+\end{proof}
+
+\begin{remark}[Why the coupling does not leak, and contrast with $\varphi_\circ$]\label{rem:diagonal}
+The point is structural: \eqref{eq:beta} is \emph{verbatim} the additive group $2$-cocycle of
+the underlying extension $0\to(D,+)\to(G,+)\to(H,+)\to0$, and $\mu$ is exactly its conjugation
+action; so $\beta$ never "sees" $\circ$, and its coboundary is forced to be the additive one.
+RY's multiplicative forgetful map $\varphi_\circ:[(\beta,\tau)]\mapsto[\bar\tau]$ into
+$H^2_\Gp((H,\circ),D;\sigma)$ descends by the dual computation (their well-definedness proof,
+$\sim$line 813): with $\theta_1(h):=\nu_h^{-1}(\theta(h))$,
+\[
+(\bar\tau_1-\bar\tau_2)(h_1,h_2)=\theta_1(h_2)-\theta_1(h_1\circ h_2)+\sigma_{h_2}(\theta_1(h_1)),
+\]
+a $\sigma$-twisted multiplicative coboundary---\emph{involving no $\beta$}. Thus the
+coboundary map
+\[
+\theta\ \longmapsto\ \bigl(d\theta|_+,\ d\theta|_\circ\bigr)\in
+B^2_\Gp((H,+),D;\mu)\times B^2_\Gp((H,\circ),D;\sigma)
+\]
+is \emph{diagonal}: (3.10) couples the \emph{cocycles} but not the \emph{coboundaries}.
+This is precisely why \emph{both} forgetful maps descend---and, as \S\ref{sec:crown} shows, why
+their product can still fail to be injective. We derived $\varphi_+$ directly, not by symmetry:
+the additive case is in fact the simpler of the two (no $\nu$-renormalisation), and the
+manifest decoupling is the content, not an assumption.
+\end{remark}
+
+\paragraph{Exact coboundary formula used.} For the record,
+\[
+B^2_\Gp\bigl((H,+),D;\mu\bigr):\quad
+(d\theta)(h_1,h_2)=\mu_{h_2}(\theta(h_1))-\theta(h_1+h_2)+\theta(h_2),\qquad \theta:H\to D,\ \theta(0)=0,
+\]
+the normalised inhomogeneous coboundary for the right $\mu$-module $(D,+)$; and
+$\beta'-\beta=d\theta$ by Lemma~\ref{lem:betacobound}.
+
+\section{Task 2: the identification (trivial-kernel case)}\label{sec:assemble}
+
+\begin{definition}[Product forgetful map]
+\[
+\Phi=(\varphi_\circ,\varphi_+):\ H^2_\Sb(H,D)\longrightarrow
+H^2_\Gp\bigl((H,\circ),D;\sigma\bigr)\times H^2_\Gp\bigl((H,+),D;\mu\bigr),\quad
+[(\beta,\tau)]\mapsto\bigl([\bar\tau],[\beta]\bigr),
+\]
+with $\varphi_\circ$ Rathee--Yadav's (well-defined, \S line 813) and $\varphi_+$ ours
+(Theorem~\ref{thm:phiplus}).
+\end{definition}
+
+\begin{theorem}[Cohomological identification of the decomposition obstruction]\label{thm:identify}
+Assume {\rm(SH)}. Let $[\Omega]:=[(\beta,\tau)]\in H^2_\Sb(H,D)$ be the class of the extension
+\eqref{eq:ext} (with the good triplet $(\nu,\mu,\sigma)$ determined by $G$). Then
+\[
+[\Omega]=0
+\ \Longleftrightarrow\
+\text{\eqref{eq:ext} splits (has a brace-hom section)}
+\ \Longleftrightarrow\
+G\cong (G/D)\bic D
+\ \Longleftrightarrow\
+D\ \text{has a sub-skew-brace complement.}
+\]
+\end{theorem}
+
+\begin{proof}
+The first equivalence is intrinsic to the RY classification: $H^2_\Sb(H,D)$ is in
+bijection with equivalence classes of brace extensions of $H$ by $D$ inducing
+$(\nu,\mu,\sigma)$ (RY \S3), and the zero class is exactly the split/bicrossed extension---so
+$[\Omega]=0$ iff \eqref{eq:ext} is equivalent to the split extension iff it admits a brace-hom
+section. The remaining equivalences---split $\Leftrightarrow$ internal bicrossed product
+$\Leftrightarrow$ sub-skew-brace complement---are the registry result
+\texttt{corrected-equivalence-1-2-3} (via Ferri, Thm 3.18), cited, not re-derived.
+\end{proof}
+
+\begin{remark}[No coprimality]\label{rem:nocoprime}
+The equivalence ``$[\Omega]=0\Leftrightarrow$ split'' is purely the classification statement and
+needs \textbf{no} coprimality/Hall/Schur--Zassenhaus hypothesis. Coprimality enters RY only in
+the much stronger Thm~4.3 (a skew-brace Schur--Zassenhaus: $H^2_\Sb(H,D)=0$ \emph{entirely},
+forcing \emph{every} extension to split) when $\gcd(|D|,|H|)=1$. Our witnesses are the opposite
+regime---$|D|$ and $|H|$ share primes, $H^2_\Sb\neq0$, and the \emph{specific} class $[\Omega]$
+decides the specific decomposition.
+\end{remark}
+
+\section{Task 3: the $W_4$ separation (crown)}\label{sec:crown}
+
+Let $W_4$ be the skew brace with $(G,+)=\Z_2\times\Z_4$ and $D=\{0\}\times\Z/4$, an ideal that is
+a trivial brace (scratch file). The enumerator gives the split triple
+\[
+(\text{mult-split},\ \text{add-split},\ \text{sb-split})=(\mathrm{YES},\ \mathrm{YES},\ \mathrm{NO})
+\qquad[\texttt{computed}].
+\]
+
+\begin{theorem}[$\Phi$ is not injective]\label{thm:W4}
+For $W_4$, $[\Omega]\neq0$ in $H^2_\Sb(H,D)$ while $\Phi([\Omega])=(0,0)$. Hence $\ker\Phi\neq0$:
+\textbf{vanishing of $[\Omega]$ is strictly stronger than simultaneous vanishing of both group
+Schreier classes} $[\bar\tau]$ and $[\beta]$.
+\end{theorem}
+
+\begin{proof}
+Translate each split through the identification.
+\begin{itemize}\itemsep2pt
+\item \emph{add-split $=\mathrm{YES}$}: the additive extension $0\to(D,+)\to(G,+)\to(H,+)\to0$
+splits, so its class $[\beta]=0$ in $H^2_\Gp((H,+),D;\mu)$; i.e.\ $\varphi_+([\Omega])=0$
+(Theorem~\ref{thm:phiplus}).
+\item \emph{mult-split $=\mathrm{YES}$}: the multiplicative extension
+$0\to(D,\circ)\to(G,\circ)\to(H,\circ)\to0$ splits, so $[\bar\tau]=0$ in
+$H^2_\Gp((H,\circ),D;\sigma)$; i.e.\ $\varphi_\circ([\Omega])=0$.
+\item \emph{sb-split $=\mathrm{NO}$}: by Theorem~\ref{thm:identify}, $D$ has no sub-skew-brace
+complement $\Rightarrow$ \eqref{eq:ext} does not split $\Rightarrow[\Omega]\neq0$.
+\end{itemize}
+Therefore $\Phi([\Omega])=(0,0)$ with $[\Omega]\neq0$.
+\end{proof}
+
+\begin{corollary}[The obstruction is irreducibly bilinear]
+$[\Omega]$ is not detected by either group cohomology alone, nor by their product: the
+decomposition obstruction lives in the \emph{coupling} (3.10) between $\beta$ and $\tau$, not in
+$[\beta]$ or $[\bar\tau]$. Concretely, $\beta=d\theta_1$ for some additive $1$-cochain
+$\theta_1$ and $\bar\tau=d\theta_2$ for some multiplicative $1$-cochain $\theta_2$, yet
+\emph{no single} $\theta$ trivialises the pair $(\beta,\tau)$ simultaneously; that
+simultaneous-triviality defect is $[\Omega]$.
+\end{corollary}
+
+\begin{remark}[Socle cross-reference: why the separation is possible]\label{rem:socle}
+RY Thm~3.5 states: if $D=I\le\Soc(G)$ (equivalently $\mu$ trivial and $\nu_h^{-1}=\sigma_h$
+for all $h$) then the brace extension splits \emph{iff} its associated $\Lambda$-group extension
+does. Thus $I\le\Soc$ collapses brace-splitting onto group-splitting and \emph{forbids} a
+$W_4$-type separation. The separation in Theorem~\ref{thm:W4} therefore \emph{requires}
+$D\not\le\Soc(G)$. This is consistent with, and independently corroborated by, RY's own
+Example~3.4/4.19: on the \emph{same} additive group $\Z_2\times\Z_4$ the socle has order $2$, and
+RY exhibit an ideal $I\cong\Z_2\times\Z_2$ (order $4>|\Soc|$, hence $I\not\le\Soc$) whose brace
+extension does not split even though the $\Lambda$-group extension does. Our $W_4$ ideal
+$D\cong\Z/4$ is a different ideal of a brace on the same additive group, but the mechanism is
+identical: $D\not\le\Soc(G)$ is exactly the failure of the Thm~3.5 hypothesis that permits
+``both group extensions split, brace does not.'' (RY's $\Lambda$-group extension splitting and our
+componentwise $(\text{mult},\text{add})$-splittings are logically distinct statements; we invoke
+Thm~3.5 only for the qualitative ``$I\le\Soc\Rightarrow$ no separation,'' not for a numerical claim.)
+\end{remark}
+
+\section{Open: non-trivial-brace kernels}\label{sec:open}
+
+Hypothesis (SH) is essential: RY's $H^2_\Sb$ is built for a \emph{trivial-brace} kernel. On
+$\Z_2\times\Z_4$ the enumerator finds $4$ skew braces (e.g.\ \texttt{sb\#11}, \texttt{sb\#15}) realising
+the same $(\mathrm{Y},\mathrm{Y},\mathrm{N})$ obstruction with a kernel that is additively $\Z/4$
+but \emph{internally a non-trivial brace} ($\lambda|_D\neq\id$). These lie outside RY and the
+present identification. Whether an analogous product-forgetful map and bilinear obstruction
+exist for non-trivial-brace kernels is \textbf{OPEN}.
+
+\section*{Summary}
+\begin{itemize}\itemsep1pt
+\item[\textbf{T1}] $\varphi_+:[(\beta,\tau)]\mapsto[\beta]$ descends, \texttt{proved}, airtight,
+no extra hypothesis; the $\beta$-shift under any change of st-section is the additive coboundary
+$d\theta$ (Lemma~\ref{lem:betacobound}), $\tau$-independent. The coupling (3.10) is on cocycles,
+not coboundaries.
+\item[\textbf{T2}] For trivial-brace $D$, $[\Omega]=[(\beta,\tau)]$ and
+$[\Omega]=0\Leftrightarrow$ split $\Leftrightarrow G\cong(G/D)\bic D\Leftrightarrow$
+sub-skew-brace complement (Thm~\ref{thm:identify}); no coprimality.
+\item[\textbf{T3}] $W_4$: $\Phi([\Omega])=(0,0)$ yet $[\Omega]\neq0$; $\Phi$ non-injective; the
+obstruction is bilinear and requires $D\not\le\Soc(G)$ (Thm~\ref{thm:W4}, Rem.~\ref{rem:socle}).
+\item[\textbf{Open}] Non-trivial-brace kernels (\texttt{sb\#11/15}) outside RY.
+\end{itemize}
+
+\end{document}
