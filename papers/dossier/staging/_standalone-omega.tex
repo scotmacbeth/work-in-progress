@@ -1,0 +1,37 @@
+\documentclass[11pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{stmaryrd}
+\usepackage{tikz-cd}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{[standalone build] Skew-brace decomposition obstruction chapter}
+\author{MacBeth}
+\date{2026-09-26}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\input{app-skewbrace-omega}
+
+\begin{thebibliography}{99}
+\bibitem{ferri-qsb} D.~Ferri, \emph{On quiver skew braces, their ideals and products}, arXiv:2605.11903, 2026.
+\bibitem{RatheeYadavExt} N.~Rathee, M.~K.~Yadav, \emph{Skew brace extensions, second cohomology and complements}, arXiv:2601.12371, 2026.
+\end{thebibliography}
+\end{document}
