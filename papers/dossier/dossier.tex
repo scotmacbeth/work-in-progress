@@ -775,15 +775,24 @@ That last sentence is not a metaphor. On the normal Zappa--Sz\'ep slice the
 categorical cohomology $\Hcoh_{\mathrm{cat}}(G)\cong\Hcoh(\pi;M)$ is the abutment
 of the Lyndon--Hochschild--Serre spectral sequence of
 $1\to\mathcal D\to\pi\to\Gamma\to1$, whose two degree-two edges are exactly the
-two faces --- the base edge $\Hcoh(\Gamma;M^{\mathcal D})$ carrying $[\omega]$,
-the fibre edge $\Hcoh(\mathcal D;M)^{\Gamma}$ carrying the additive reassembly
+two faces --- the base edge, into which the holonomy class
+$[\omega]\in\Hcoh(\Gamma;\mathcal D)$ enters via $\varphi_*$,
+and the fibre edge $\Hcoh(\mathcal D;M)^{\Gamma}$ carrying the additive reassembly
 class --- and whose transgression \emph{is} the holonomy,
-$d_2(\varphi)=\varphi_*[\omega]$ \emph{(proved)} \cite{cl-h2edges}. The naive
-direct sum \eqref{eq:cluster-decomp} holds \emph{if and only if} $[\omega]=0$;
+$d_2(\varphi)=\varphi_*[\omega]$ \emph{(proved)} \cite{cl-h2edges}. (A caveat: the
+fibre-edge class is a property of the additive coefficient group alone --- for the
+$\Z/4$ slice it is the extension $0\to\{0,2\}\to\Z/4\to\Z/2\to0$, the same for any
+skew-brace groupoid with additive group $\Z/4$, prunable or not. It \emph{ignores
+the loop sets}, so it is \emph{not} the prunability obstruction of (b), which is a
+degree-one condition on the loop sets; the tempting reading ``prunability $=$
+fibre-edge nonsplitting'' was refuted 2026-09-18.) The naive
+direct sum \eqref{eq:cluster-decomp} holds \emph{only if} $[\omega]=0$;
 whenever $[\omega]\neq0$ the base edge does not survive to the abutment (it is a
 $d_2$-image, not a summand), so the two faces are never simultaneously present as
-independent summands. The unifier fails for precisely the reason the differential
-is nonzero.
+independent summands. The converse fails in general: $[\omega]=0$ does \emph{not}
+force the sum to be clean, since split extensions need not collapse at $E_2$
+(Totaro; Charlap--Vasquez). The unifier fails for precisely the reason the
+differential is nonzero.
 
 \section{The crown: the cluster is filtered, not a product}\label{sec:cluster-crown}
 

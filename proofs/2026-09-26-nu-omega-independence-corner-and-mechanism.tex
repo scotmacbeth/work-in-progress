@@ -1,0 +1,158 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+
+% ---- commit hash of the work-in-progress release (STEP 1) ----
+\newcommand{\committag}{COMMITHASHPLACEHOLDER}
+
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\nubr}{[\nu]}
+\newcommand{\Om}{[\Omega]}
+
+\title{$[\nu]\perp[\Omega]$: the $|G|=16$ corner and the moving-$\nu$ cocycle mechanism}
+\author{MacBeth}
+\date{2026-09-26}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{tabular}{rl}
+\textbf{For:} & Rick \\
+\textbf{Author:} & MacBeth \\
+\textbf{Date:} & 2026-09-26 (WAKE deep-work)\\
+\textbf{Grade:} & \textsc{Computed} (explicit witness + machine-checked derivation on a witness)\\
+\textbf{Registry:} & \texttt{quiver-skew-brace-zs.json} --- node \texttt{cross-independence-nu-omega} (was \texttt{computed})\\
+\textbf{WIP commit:} & \texttt{\committag}\\
+\end{tabular}
+\end{center}
+
+\begin{abstract}
+\noindent\textbf{Grade of this note: \textsc{Computed}} (explicit witness + machine-checked
+derivation on a witness). \emph{Not proved}: the general converse-as-theorem has one un-closed
+step (see \S4).\\[4pt]
+Related: \texttt{[[nu-variation-direct-factor-orthogonal]]} (proved 09-25, the invariant-level
+orthogonality); \texttt{[[bilinear-skew-brace-h2-identification-proved]]} (peer-reviewed, the
+$\Om$ home); \texttt{[[nontrivial-kernel-orthogonal-to-obstruction]]}.
+\end{abstract}
+
+\section{Setup}
+Skew-brace extension $0\to D\to G\to H\to 0$, $D$ an ideal with $(D,+),(D,\circ)$ abelian.
+$a\circ b = a + \lambda_a(b)$, $\lambda:(G,\circ)\to\Aut(G,+)$ a homomorphism.
+Section-independent invariants $(\mu,\sigma,\nubr,\Om)$. $L := \im(\lambda|_D)\le\Aut(D,+)$,
+residue $[\nu_h]=\nu_h\cdot L\in\Aut(D)/L$.
+
+Already \textsc{proved} (09-25): the $\nu$-orbit is a free transitive $L^{H\setminus 0}$-torsor
+(L1); $[\nu_h]$ section-independent (L2); $[\beta],[\bar\tau]$ and the splitting predicate
+$\nu$-free \& constant on the torsor (L3); orthogonality holds at the \textbf{invariant} level
+(naive gauge-\textsc{orbit} product is \textsc{false} --- flipping $\nu$ forces a coboundary).
+Open piece $=$ cross-independence $\nubr\perp\Om$, only \texttt{computed} on $\Z_2\times\Z_4$
+(all 6 combos), and only in the $|D|=4$ regime where $L\neq 1\Rightarrow L=\Aut(D)$ is a size
+artifact.
+
+\section{The flagged corner --- CLOSED at $|G|=16$ (computed)}
+Script: \texttt{scratch/2026-09-26-nu-corner-construction.py} (runs clean).
+
+\medskip\noindent\textbf{Construction.}
+$(G,+)=\Z/2\times\Z/8$, $D=\{(0,x)\}\cong\Z/8$, $H=\Z/2$, $\Aut(D)=(\Z/8)^{*}\cong\Z/2\times\Z/2$.
+$\lambda$ from the unit-scaling family $\varphi_{u,t}(j,y)=(j,\;u\cdot y + j\cdot t)$,
+$u\in\{1,3,5,7\}$, $t\in\{0,4\}$; $U(i,x)=5^{(x\bmod 2)}\cdot 3^{i}\pmod 8$ a homomorphism
+$(G,\circ)\to\text{units}$. Two witnesses differing \textbf{only} in the $t$-part (invisible on
+$D\Rightarrow$ identical $L$ and $\nu$):
+\begin{itemize}
+  \item \textbf{G0 (split):} $\lambda^0_{(i,x)}=\varphi_{U(i,x),0}$;
+  \item \textbf{G1 (non-split):} $\lambda^1_{(i,x)}=\varphi_{U(i,x),4i}$
+        ($T(i,x)=4i$ a homomorphism $(G,\circ)\to\{0,4\}$).
+\end{itemize}
+Then $L=\{1,5\}$ (order $2$, \textbf{proper nontrivial} in $\Aut(D)$); base lift $s(1)=(1,0)$
+gives $\nu_1=\,\cdot\,U(1,0)=\,\cdot\,3\notin L$; residue $[\nu_1]=\{3,7\}\neq L$.
+
+\medskip\noindent\textbf{All six verification items PASS (identically on G0, G1):}
+valid skew brace (compat over all $16^3$ triples); $D$ ideal, both ops abelian;
+$1\subsetneq L\subsetneq\Aut(D)$; residue nontrivial; L1 ($\nu$-values over the $8$ lifts of
+$h=1$ are exactly $\{3,7\}=3\cdot L$, free $L$-torsor), L2, L3;
+\textbf{cross-tab:} SAME $(L,\nubr)=(\{1,5\},\{3,7\})$ on both, yet $\Om=0$ for G0
+(complement $\{(0,0),(1,0)\}$ closed under both ops) and $\Om\neq 0$ for G1
+(both order-$2$ candidates fail $\circ$-closure: $(1,x)\circ(1,x)=(0,4)$).
+
+\medskip\noindent$\Rightarrow$ A witness with \textbf{genuinely moving $\nu$} ($L\neq 1$)
+carrying a \textbf{nontrivial residue} ($L\subsetneq\Aut(D)$) exists at $|G|=16$, and
+$\nubr\perp\Om$ cross-independence persists there --- no longer a $|D|=4$ artifact.
+
+\section{The moving-$\nu$ cocycle equations (derived natively; machine-checked on a witness)}
+Script/derivation: \texttt{scratch/2026-09-26-moving-nu-cocycle-derivation.\{md,py\}} (sympy green).
+RY (2601.12371) only cover trivial kernels; ref [20] is RY's own 2102.12235; there is NO
+``Letourmy--Vendramin cohomology of skew braces''. So this is native. Cochains valued in $D$;
+$\nu_h := \lambda_{s(h)}|_D\in\Aut(D,+)$; $T$ $=$ additive-difference circle factor set.
+\begin{itemize}
+  \item[\textbf{(a)}] additive $2$-cocycle:
+    $\mu_{h_1}\beta(h_2,h_3)+\beta(h_1,h_2+h_3)=\beta(h_1,h_2)+\beta(h_1+h_2,h_3)$, $\mu$ a hom.
+  \item[\textbf{(b)}] circle $2$-cocycle ($\circ$-mirror in abelian $(D,\circ)$).
+  \item[\textbf{(c)}] cross eq (generalized RY 3.10):
+  \begin{align*}
+    \mu_h\,\nu_h\,\beta(k,l) + T(h,k+l)
+      &= T(h,k) - \mu_{h\circ k}\mu_h^{-1}\beta(h,-h) + \beta(h\circ k,-h)\\
+      &\quad{}+ \mu_{(h\circ k)-h}T(h,l) + \beta\big((h\circ k)-h,\; h\circ l\big).
+  \end{align*}
+  \item action-block \textbf{coupling-1} (no $\beta,\tau$):
+    $\nu_h\,\mu_k\,\nu_h^{-1}=\mu_{\lambda^H_h(k)}$, and $\Lambda_{(d,h)}\equiv\nu_h\pmod L$.
+\end{itemize}
+$\nu$ enters (c) \textbf{exactly once}, as $\mu_h\,\nu_h\,\beta(k,l)$.
+
+\medskip\noindent Machine-checked on the witness $(G,+)=\Z_2\times\Z_4$, $D=\{0\}\times\Z/4$,
+$\lambda_{(x,y)}(x',y')=(x',(-1)^{x+y}y')$ [$(D,+)=\Z/4$, $(D,\circ)=$ Klein, $\lambda|_D=$ neg]:
+coordinate $\oplus,\circledast$ reproduce true $+,\circ$; (a),(b),(c), coupling-1,
+$\Lambda\equiv\nu$ all True over all $H$-triples / $64$ pairs / $3$ sections.
+
+\section{Verdict --- two levels (this reproduces \& explains the 09-25 correction)}
+\begin{itemize}
+  \item \textbf{Cochain level: GENUINE COUPLING (not $\nu$-free).} The term $\mu_h\,\nu_h\,\beta(k,l)$
+    means moving $\nu_h$ within its $L$-coset forces a compensating change in the circle factor
+    set $\tau$.
+  \item \textbf{Invariant level: INDEPENDENCE.} Because $a\circ b=a+\lambda_a(b)$, once $(G,+)$
+    (i.e.\ $\mu,\beta$) and $\lambda$ (i.e.\ $\nu$ and the $L$-part) are fixed, $\circ$ --- hence
+    $\tau$ --- is \textbf{determined}, not freely chosen; eq (c) merely \emph{defines} $T$ from
+    $\beta$ and the action block, uniquely up to circle-coboundary, and the induced $\tau$
+    satisfies (b). So $\nu$ imposes \textbf{no existence obstruction on $\beta$}: for every
+    $\beta$ and every admissible $\nu$ a compatible $\tau$ exists $\Rightarrow$ $H^2_{\nubr}$
+    (obstruction classes at fixed residue) is $\nubr$-independent as an abstract group; $\nubr$
+    is an orthogonal direct factor. The coupling is confined to coboundaries $\to$ invisible to
+    $H^{*}$. This is exactly the registered 09-25 shape.
+\end{itemize}
+
+\section{The ONE un-closed step (why this is \texttt{computed}, not \texttt{proved})}
+The invariant-level independence argument in \S3 rests on: \textbf{eq (c) is auto-solvable for
+$T$ given ANY $\beta$, and the resulting $\circ$ is associative / (b) holds automatically.}
+Structurally this should follow from ``$\circ$ is determined by $+$ and $\lambda$, and $\lambda$
+a homomorphism $\Rightarrow$ $(G,\circ)$ a group'', i.e.\ the RHS of (c) is automatically a
+$T$-coboundary. The derivation \textsc{verified} this on the witness and argued it structurally,
+but did \textbf{not} close the general ``RHS is always a $T$-coboundary'' step. Until that is a
+clean proof (associativity of $\circ$ $\Rightarrow$ solvability of (c) for all $\beta$, uniform
+in the admissible residue), the general converse ($\Om\neq 0$ with prescribed $[\nu']$) stays
+\textbf{\texttt{computed}} (witnessed at $|D|=4$ and now $|D|=8$), not \texttt{proved}.
+
+\medskip\noindent\textbf{Note on the $|D|=4$ witness.} There $\nu$ and $\beta$
+\emph{anti-correlate} ($\nu_1=$ neg $\Leftrightarrow$ $\beta$ in the neg-fixed $2$-torsion), so
+the coupling term is present but never ``bites''; separating distinct $\nubr$ needs
+$L\subsetneq\Aut(D)$, i.e.\ the $|G|=16$ witness of \S1 --- which is precisely why the corner
+mattered.
+
+\section{Next (seed PROVE.md)}
+Close \S4: prove that associativity of $a\circ b=a+\lambda_a(b)$ (equivalently $\lambda$ a
+skew-brace $\lambda$-map) forces eq (c) to be solvable for $T$ for every additive cocycle
+$\beta$, uniformly over admissible residues $\nubr$ --- upgrading
+\texttt{cross-independence-nu-omega} from \texttt{computed} to \texttt{proved}. Then the map
+$\{\text{extensions/fixed }(\mu,\sigma)\}\to\{\nubr\}\times\{\Om\text{-value}\}$ is a genuine
+product (surjective), completing the internal-replacement / decomposition-obstruction
+coordinate picture.
+
+\end{document}

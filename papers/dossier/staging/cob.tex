@@ -458,15 +458,21 @@ Kleisli base they meet in exactly one monad.
 In any symmetric monoidal closed category with an initial object $\emptyset$, the
 object $[\emptyset,X]$ is terminal for any $X$. (Each $(-)\otimes A$ is a left
 adjoint, so $C\otimes\emptyset\cong\emptyset$, whence
-$\mathcal{K}(C,[\emptyset,X])\cong\mathcal{K}(\emptyset,X)\cong1$.) The argument
-uses \emph{only} monoidal closedness and an initial object --- neither cartesian
-closedness nor connectedness, the two independent axes.
+$\mathcal{K}(C,[\emptyset,X])\cong\mathcal{K}(\emptyset,X)\cong1$.) The
+\emph{existence} of the terminal object uses \emph{only} monoidal closedness and
+an initial object --- neither cartesian closedness nor connectedness. The Step-2
+\emph{collapse} $E\cong1$ below is another matter: there connectedness
+($\mathcal{UN}$, via the writer form) does visible, unavoidable work, namely in
+excluding a zero object $\top\cong\emptyset$. Indeed $\mathsf{Maybe}$
+($\top\cong\emptyset$, $M\emptyset\cong1$), powerset ($\top\cong\emptyset$), and
+the reader ($\top\cong1$) all lie in $\mathcal{CL}$ yet are eliminated only by the
+writer form, i.e.\ by membership in $\mathcal{UN}$.
 \end{lemma}
 
 \begin{theorem}[$\mathcal{CL}\cap\mathcal{UN}=\{\Id\}$; \emph{proved}, core \emph{lean-verified}]\label{thm:cob-collapse}
 Let $M$ be a commutative strong monad on $\Set$. The self-enriched $M$-container
-extension $\sum_s[P_s,-]\colon\mathrm{Kl}(M)\to\mathrm{Kl}(M)$ is full and faithful
-if and only if $M\cong\Id$. Equivalently $\mathcal{CL}\cap\mathcal{UN}=\{\Id\}$: no nontrivial
+extension $\sum_s[P_s,-]\colon\mathrm{Kl}(M)\to\mathrm{Kl}(M)$ exists and is full
+and faithful if and only if $M\cong\Id$. Equivalently $\mathcal{CL}\cap\mathcal{UN}=\{\Id\}$: no nontrivial
 effect --- not even an idempotent (localization) monad --- carries a uniform
 enriched full-and-faithful semantics.
 \end{theorem}

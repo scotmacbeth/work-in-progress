@@ -100,13 +100,22 @@ interleave: which side reads first, whose write the other sees. Comonads, unlike
 carry, do not compose for free \cite{AhmanUustaluDL}; without a valid $\lambda$ there is no composite
 worker at all.
 
-\begin{theorem}[Existence of the weld is a cohomology class; \emph{imported, proved elsewhere}]
+\begin{theorem}[Existence of the weld is a cohomology class; \emph{distributive-law$\leftrightarrow$weld half imported (Ahman--Uustalu); $[\omega]$ half proved in the normal/abelian regime}]
 \label{thm:orch-omega}
-Present two interacting stateful workers as directed containers $C,D$. A consistent interleaving of
-their harnesses --- a comonad distributive law, equivalently a Zappa--Sz\'ep weld $C\bowtie D$ ---
-exists if and only if a freeness condition \textup{(L)} holds and an obstruction class
-$[\omega]\in\Hcoh$ vanishes, $\text{(G)}\Leftrightarrow[\omega]=0$
-\cite{macbeth-reduction,cl-emergent,AhmanUustaluDL}. At the smallest re-entrant supervisor--worker
+Present two interacting stateful workers as directed containers $C,D$ whose
+interaction is carried by a \emph{normal} vertex-bundle
+$1\to\mathcal D\to\pi\to\Gamma\to1$ with \emph{abelian} vertex fibre $\mathcal D$,
+and \emph{fix} the mutual actions of the two contexts. Suppose the freeness
+condition \textup{(L)} holds of those actions. Then the weld \emph{with those
+actions} --- a comonad distributive law, equivalently a Zappa--Sz\'ep weld
+$C\bowtie D$ --- exists if and only if the obstruction class
+$[\omega]\in\Hcoh(\mathrm{Sk}_{\mathcal C};\mathcal D)$ vanishes,
+$\text{(G)}\Leftrightarrow[\omega]=0$. The equivalence ``comonad distributive law
+$\leftrightarrow$ Zappa--Sz\'ep weld'' is \emph{imported} from Ahman--Uustalu
+\cite{AhmanUustaluDL}; the identification of the weld's existence with $[\omega]=0$
+is proved in the groupoid Zappa--Sz\'ep notes \cite{macbeth-reduction,cl-emergent}
+for exactly this normal, abelian vertex-bundle regime (non-normal or non-abelian
+matched pairs are \emph{not} covered). At the smallest re-entrant supervisor--worker
 model the class lives in $\Hcoh\cong\Z/2$ and equals a single bit
 \begin{equation}\label{eq:orch-bit}
   [\omega]=\varepsilon\in\Z/2,
@@ -115,6 +124,15 @@ model the class lives in $\Hcoh\cong\Z/2$ and equals a single bit
 \end{equation}
 so the weld exists iff $\varepsilon=0$.
 \end{theorem}
+
+\begin{remark}[The two-store case is open --- \emph{flagged}]\label{rem:orch-twostore}
+Whether the weld $\Delta S\bowtie\Delta T$ of \emph{two store comonads} falls inside
+the normal, abelian vertex-bundle regime of Theorem~\ref{thm:orch-omega} --- so that
+the criterion $\text{(G)}\Leftrightarrow[\omega]=0$ applies to it verbatim --- is
+\emph{open}. It is the principal open item of the tool-calling / orchestration
+programme; the theorem above is stated for a fixed normal/abelian interaction datum
+and does not, on its own, settle the general two-store weld.
+\end{remark}
 
 This is the identical obstruction that classifies re-entrancy in Chapter~\ref{ch:blockchain}: a
 \emph{wrong} interleaving --- a $\lambda$ violating the coherence axioms --- is precisely the
