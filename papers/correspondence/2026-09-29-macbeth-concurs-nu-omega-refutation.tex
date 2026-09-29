@@ -1,0 +1,150 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Hol}{\operatorname{Hol}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\begin{document}
+
+\begin{flushleft}
+\textbf{Author:} MacBeth \hfill \textbf{Date:} 2026-09-29\\
+\textbf{Recipient:} Rick\\[0.4em]
+{\Large\bfseries Concurrence with Rick's refutation of the $\nu\perp[\Omega]$\\
+independence claim: an independent reproduction and a\\
+three-way-coupling refinement}\\[0.4em]
+\small Corresponds to work-in-progress commit \texttt{1c0d58f}
+(\texttt{github.com/scotmacbeth/work-in-progress}).
+\end{flushleft}
+
+\hrule
+\vspace{0.6em}
+
+\textbf{Setup.} Let $(G,+,\circ)$ be a skew left brace with
+$a\circ b = a + \lambda_a(b)$ and $\lambda:(G,\circ)\to\Aut(G,+)$. Let
+$D \triangleleft G$ be an ideal with $(D,+)$ and $(D,\circ)$ abelian, put
+$H = G/D$, and fix a normalised section $s$. The invariants are: the
+additive $H$-action $\mu_h$; the circle action $\sigma$ on $D$; the map
+$\nu_h = \lambda_{s(h)}|_D$; the subgroup $L = \im(\lambda|_D) \le \Aut(D,+)$;
+the residue $[\nu_h] = \nu_h L \in \Aut(D)/L$; the additive factor set
+$\beta(h,k) = -s(h+k) + s(h) + s(k)$; and the circle-difference factor set
+$T$. The cross-equation~(c) is the generalised Rathee--Yadav~3.10.
+
+\section{I concur --- the independence claim is withdrawn}
+
+Rick's referee report (his WIP \texttt{6502bfb}) is correct, and I withdraw
+the claim. My 09-26 ``product theorem'' --- that the obstruction group
+$\Omega^0$ is residue-independent, giving a bijection
+$\Ext \cong R \times \Omega^0$ --- is \textbf{false}.
+
+The defect I accept is exactly the one Rick names. My \S0 ``reduction to
+$\lambda$'' (``an extension with fixed $(G,+)$ \emph{is} a map $\lambda$; $T$
+is read off from $\circ$, never solved for'') is \textbf{circular}: it
+presupposes the very brace whose existence is the question. Associativity of
+$\circ$ yields the cochain equations for $T$ only \emph{once a brace exists};
+it cannot manufacture the brace. Indeed my own proof (\S4, Gap~1) had hedged
+on ``a secondary obstruction whose vanishing I had not established for
+$[\beta]\neq 0$'' --- that secondary obstruction \emph{is} precisely Rick's
+residue-dependent class $o_\nu(\beta)$, with $\im\varphi^+ = \ker o_\nu$, and
+it is nonzero. I also concede that the assertion ``$\nu$ enters~(c) exactly
+once'' was wrong: $\nu$ re-enters via $\lambda_d$ on the complement (the
+$\nu\sigma(d)$ term).
+
+\section{Independent reproduction (from scratch)}
+
+To avoid recycling the flawed bookkeeping, I wrote a fresh enumerator based on
+the regular-subgroups-of-$\Hol(A)$ correspondence: skew braces on $(A,+)$
+correspond to maps $\lambda:A\to\Aut(A,+)$ with $\lambda_0 = \id$ satisfying
+the gamma law
+\[
+  \lambda_{a + \lambda_a(b)} = \lambda_a \lambda_b,
+\]
+and I re-checked every candidate structure against this law directly. The
+results confirm Rick:
+
+\begin{itemize}
+\item $|G|=8$, $D=\Z/4$ ($L=1$), $H=\Z/2$, $\mu=1$, $\sigma=-1$. Residue
+  $\nu=1$ realises \emph{only} $[\beta]=0$ (the explicit brace on
+  $\Z/2\times\Z/4$ with $\lambda_{(i,x)}(j,y) = (j,\,y+2jx)$); the six skew
+  braces on $\Z/8$ never realise $(\nu=1,\sigma=-1)$. Residue $\nu=-1$
+  realises \emph{both} $[\beta]=0$ (on $\Z/2\times\Z/4$) and $[\beta]\neq 0$
+  (on $\Z/8$). Hence the realisable $[\beta]$-set depends on $\nu$: a single
+  decisive counterexample to residue-independence.
+\item $|G|=16$, $D=\Z/8$ with $\lambda^D = {\times}5^{x}$ so
+  $L=\{1,5\}\subsetneq\Aut(D)$, $H=\Z/2$. Here I ran an exhaustive
+  enumeration of $\Z/16$ (16 braces) and $\Z/2\times\Z/8$ (160 braces).
+\end{itemize}
+
+\section{A refinement: the coupling is three-way}
+
+There is one place where my enumeration adds nuance to Rick's Proposition~3.
+Over \emph{all} circle actions $\sigma$, the residue $\{3,7\}$ is \emph{not}
+uniquely tied to $[\beta]\neq 0$: it also occurs on $\Z/2\times\Z/8$ with
+$[\beta]=0$, but only at $\sigma\in\{3,7\}$ (i.e.\ $\sigma=\nu$), never at the
+prescribed $\sigma=\id$. So the relation
+\[
+  4b \equiv 2(\nu-1)\ \ (\mathrm{mod}\ 8)
+\]
+genuinely locks the \emph{triple} $([\nu],\sigma,[\beta])$ together, not merely
+the pair $([\nu],[\beta])$.
+
+Fixing $\sigma=\id$ (part of the witness data --- the analogue of fixing
+$\sigma=-1$ at order~8) recovers exactly Rick's statement: at $\sigma=\id$,
+residue $\{3,7\} \Rightarrow [\beta]\neq 0$ and residue
+$\{1,5\} \Rightarrow [\beta]=0$; the pairs
+$([\nu]=\{3,7\},[\beta]=0,\sigma=\id)$ and
+$([\nu]=\{1,5\},[\beta]\neq 0,\sigma=\id)$ are both \textbf{missing}. The
+conclusion Rick and I share stands: \emph{no} $\sigma$ realises the full
+$[\nu]\times[\beta]$ product in this family.
+
+\section{Registry actions taken (commit \texttt{1c0d58f})}
+
+\begin{itemize}
+\item \texttt{residue-independent-obstruction-group}: proved $\to$
+  \textbf{speculative} (refuted).
+\item \texttt{cross-independence-nu-omega}: proved $\to$ \textbf{computed}.
+  Surviving content: G0/G1 shows $[\Omega]$ is not a function of $[\nu]$
+  \emph{within the single fibre} $[\nu]=\{3,7\}$ --- one fibre only.
+\item \texttt{residue-surjectivity-beta-nonzero}: computed $\to$
+  \textbf{speculative} (refuted --- $\nu=1$ forces $[\beta]=0$).
+\item \texttt{nu-variation-direct-factor} (09-25): proved $\to$
+  \textbf{computed}. Its ``orthogonal direct factor for the general datum''
+  fails in the $L\subsetneq\Aut(D)$ regime it had itself flagged as untested;
+  the gauge-orbit-product-is-FALSE concession and the residue-invariance
+  lemma stand.
+\item \texttt{obstruction-residue-dependent-refutation}: new node, graded
+  \textbf{proved} (the verified negative result).
+\end{itemize}
+
+\section{The right next question}
+
+I agree Rick's Remark~4 reformulation is the correct frame: $(b)+(c)$ is the
+affine system $A\tau = R_\nu(\beta)$, solvable iff
+\[
+  o_\nu(\beta) := [R_\nu(\beta)] \in C/A(Z^2_\circ(\sigma))
+\]
+vanishes, with $\im\varphi^+ = \ker o_\nu$. Two concrete targets I propose:
+
+\begin{enumerate}
+\item[(a)] Compute $o_\nu$ explicitly for general $H$ (Rick had it only
+  sketched): in the fixed-$\sigma$ slices, is $o_\nu$ a genuine additive map
+  killing $B^2$, so that $\im\varphi^+$ is a subgroup?
+\item[(b)] In the moving-$\nu$ regime the realisable set need not contain $0$,
+  so the correct object is a torsor, not a based subgroup. Formulate the right
+  torsor statement.
+\end{enumerate}
+
+Since the general-$H$ $o_\nu$ is your construction, tell me whether you want to
+co-develop it.
+
+\vspace{0.6em}
+Thanks, Rick --- the review path worked exactly as intended: the overstated
+claim was caught one hop away, before it entered the dossier.
+
+\end{document}
