@@ -1,15 +1,22 @@
 %==============================================================================
 %  STAGING FRAGMENT --- skew-brace decomposition obstruction [Omega]
 %  ASSEMBLE FROM:
-%    proofs/2026-09-25-bilinear-skew-brace-h2-identification.tex  [peer-reviewed]
-%    proofs/2026-09-24-partial-pruning-bilinear-obstruction.tex   [proved]
-%    proofs/2026-09-24-heap-transport-refuted-localization.tex    [proved]
-%    proofs/2026-09-25-nu-variation-direct-factor.tex             [proved]
-%    proofs/2026-09-25-nontrivial-kernel-orthogonality.tex        [proved]
-%    proofs/2026-09-26-nu-omega-product-theorem.md                [proved]
-%    proofs/2026-09-26-nu-omega-independence-corner-and-mechanism.md [computed]
-%  STATUS 2026-09-26: standalone chapter; NOT yet \input into dossier.tex
-%  (pending Neil's steer on whether this becomes its own pillar chapter).
+%    proofs/2026-09-25-bilinear-skew-brace-h2-identification.tex   [peer-reviewed]
+%    proofs/2026-09-24-partial-pruning-bilinear-obstruction.tex    [proved]
+%    proofs/2026-09-24-heap-transport-refuted-localization.tex     [proved]
+%    proofs/2026-09-29-solvability-obstruction-o-nu.tex            [proved]/[computed]
+%    proofs/reviews/2026-09-26-cross-independence-nu-omega.md   (refutation, Rick)
+%  STATUS 2026-09-29: standalone chapter; NOT yet \input into dossier.tex.
+%    CORRECTIVE REVISION. The 2026-09-26 draft carried a THIRD theorem asserting
+%    that the internal residue [nu] and the obstruction [Omega] are independent
+%    coordinates (a product Ext = R x Omega^0). That claim was REFUTED (Rick
+%    referee report 2026-09-26; MacBeth from-scratch reproduction 2026-09-29;
+%    registry node cross-independence-nu-omega demoted proved->computed;
+%    residue-independent-obstruction-group and residue-surjectivity-beta-nonzero
+%    -> speculative). It is REPLACED here by the honest repair: a residue-DEPENDENT
+%    solvability obstruction o_nu with im phi^+ = ker o_nu [proved, trivial kernel].
+%    Do NOT \input into the main dossier until Neil steers on whether this is its
+%    own pillar chapter; push to work-in-progress only, NOT publishable-result.
 %
 %  Self-contained macro guard so the fragment compiles both alone (via the
 %  _standalone wrapper) and after later \input into the dossier preamble.
@@ -21,12 +28,15 @@
 \providecommand{\Ext}{\mathrm{Ext}}
 \providecommand{\Hom}{\mathrm{Hom}}
 \providecommand{\id}{\mathrm{id}}
+\providecommand{\im}{\operatorname{im}}
+\providecommand{\ker}{\operatorname{ker}}
 \providecommand{\Z}{\mathbb{Z}}
 \providecommand{\D}{\mathcal{D}}
 \providecommand{\Hcoh}{H^2}
 \newcommand{\bic}{\bowtie}          % bicrossed (Zappa--Szep) product
 \newcommand{\ovtau}{\bar\tau}
 \newcommand{\Om}{[\Omega]}
+\newcommand{\onu}{o_\nu}
 \providecommand{\ract}{\triangleright}
 % NB on merge into dossier.tex: this fragment cites \cite{ferri-qsb} (already in
 % the dossier bib) and \cite{RatheeYadavExt} (arXiv:2601.12371, deep-read), which
@@ -39,7 +49,7 @@
 % deep-read citation floor -- so it is deliberately NOT cited here. If a precise
 % citation to it is wanted, deep-read it first and upgrade its sources entry.
 
-\chapter{The decomposition obstruction of a skew brace: a bilinear class, independent of the internal residue}
+\chapter{The decomposition obstruction of a skew brace: a bilinear class, and its residue-dependent solvability}
 \label{ch:skewbrace-omega}
 
 A skew brace is the algebraic shadow of a set-theoretic solution of the
@@ -51,10 +61,26 @@ $(G/D)\bic D$? This chapter answers three questions about the obstruction to tha
 decomposition. It \emph{names} the obstruction (a class in Rathee--Yadav skew-brace
 cohomology, \textsc{[peer-reviewed]}); it \emph{measures} the obstruction (a
 genuinely \emph{bilinear} class, strictly finer than the two underlying group
-Schreier classes, \textsc{[proved]}); and it \emph{isolates} the obstruction from
-the one datum most easily confused with it --- the internal relabelling residue
-$[\nu]$ --- by proving they are independent coordinates (\textsc{[proved]}, with
-one surjectivity residual \textsc{[computed]}).
+Schreier classes, \textsc{[proved]}); and it asks how the obstruction relates to the
+one datum most easily confused with it --- the internal relabelling residue
+$[\nu]$. The honest answer to the third question is the point of this chapter, and
+it is not the one an earlier draft gave.
+
+\begin{quote}\small
+\textbf{A correction on the record.} A 2026-09-26 draft of this chapter claimed a
+\emph{third theorem}: that the residue $[\nu]$ and the obstruction $\Om$ are
+\emph{independent coordinates}, so that the moduli of extensions factors as a
+product $R\times\Omega^0$. That claim is \textbf{false}. It was refuted by Rick
+(referee report, 2026-09-26) and reproduced from scratch (2026-09-29): the
+residue $[\nu]$, the circle action $\sigma$, and the additive class $[\beta]$
+(hence $\Om$) are genuinely \emph{coupled}. The false argument reduced the
+existence question to ``read $\circ$ off from $+$ and $\lambda$'' --- which
+presupposes the very brace whose existence was in question. What replaces the
+product theorem is sharper and true: a residue-\emph{dependent} solvability
+obstruction $\onu$, a homomorphism whose kernel is exactly the set of additive
+classes that extend to a full brace with the prescribed residue
+(\S\ref{sec:omega-onu}). The coupling, not the independence, is the content.
+\end{quote}
 
 The result answers, in group-theoretic language, Ferri's Remark~3.20 on when a
 quiver skew brace splits off an ideal \cite{ferri-qsb}, and it supplies the
@@ -65,7 +91,8 @@ word of warning before we begin, because the two are so easily conflated: the
 class $[\omega]$. The \emph{decomposition} axis of this chapter --- ``does $G$
 factor \emph{through a prescribed ideal} $D$'' --- is strictly finer, and its
 obstruction $\Om$ lives in a two-operation cohomology that no single group class
-can see. Keeping the two apart is the point.
+can see. Keeping the two apart is one point; keeping the obstruction apart from the
+residue-\emph{solvability} question is the other.
 
 %------------------------------------------------------------------------------
 \section{The three theorems}\label{sec:omega-intro}
@@ -122,44 +149,51 @@ on a single star of the ambient groupoid, and closure there propagates to all
 stars.
 \end{theorem}
 
-\begin{theorem}[Independence, \textsc{[proved]}; \S\S\ref{sec:omega-residue}--\ref{sec:omega-product}]
+\begin{theorem}[Residue-dependent solvability; \S\ref{sec:omega-onu}]
 \label{thm:C-informal}
-The internal relabelling residue $[\nu]\in\prod_h\Aut(D,+)/L$ (where
-$L:=\operatorname{im}(\lambda\!\mid_D)$) is an \emph{orthogonal direct factor} of
-the section-independent data, independent of $\Om$. Fixing $(H\text{-brace},\mu,
-\sigma,L)$, the equivalence classes of extensions with a given realised residue
-form a torsor under a residue-\emph{independent} obstruction group $\Omega^0$;
-consequently
-\(
-   \bigl([\nu],\Om\bigr)\colon \Ext \xrightarrow{\ \sim\ } R\times\Omega^0
-\)
-is a bijection --- \emph{every realised residue co-occurs with every value of the
-obstruction.} That every coupling-admissible residue is realised (surjectivity of
-the residue map) is \textsc{[computed]}, not \textsc{[proved]}; it does not affect
-the product structure.
+The internal relabelling residue $[\nu]$ and the obstruction are \emph{not}
+independent. Under (SH) there is a residue-dependent \emph{solvability obstruction}
+--- a group homomorphism
+\[
+   \onu\colon\Hcoh_+ := \Hcoh_{\Gp}\big((H,+),D;\mu\big)\ \longrightarrow\ C^3/A(Z^2_\circ)
+\]
+killing additive coboundaries --- such that an additive class $[\beta]$ extends to
+a full skew-brace cocycle inducing the fixed triplet \emph{if and only if}
+$\onu([\beta])=0$; equivalently $\im\varphi_+=\ker\onu$ \textup{(\textsc{[proved]},
+trivial kernel, general $H$)}. Because $\onu$ depends on the residue $\nu$, the set
+of realisable additive classes moves with the residue: at $|G|=8$, residue $\nu=1$
+\emph{forces} $[\beta]=0$ \textup{(\textsc{[proved]})}. Beyond the trivial-kernel
+regime the dependence is \textsc{[computed]}: at $|G|=16$ the residue, circle action,
+and additive class are locked by a three-way relation
+$4b\equiv2(\nu\sigma-1)\ (\mathrm{mod}\ 8)$, and $\onu$ becomes \emph{affine}, so
+$\im\varphi_+$ is a torsor that can miss the origin.
 \end{theorem}
 
 The method is uniform and worth stating in one breath. Because
-$a\circ b=a+\lambda_a(b)$, once the additive group $(G,+)$ and the homomorphism
-$\lambda$ are fixed, the circle operation --- hence the factor set $\ovtau$ --- is
-\emph{determined}, never solved for. The residue $[\nu]$ is the $D\to D$ block of
-$\lambda$; the obstruction $\Om$ is the off-diagonal, section-varying part. The
-block-triangular structure of the brace axioms then does all the work: the residue
-is cut out by an action-only equation that never mentions the obstruction cochain,
-and the obstruction is cut out by an affine equation whose homogeneous part is
-residue-free. Orthogonality is not a coincidence of small examples; it is the
-shape of the equations.
+$a\circ b=a+\lambda_a(b)$, the circle factor set $\ovtau$ is not a free
+coordinate: given a genuine brace it is \emph{determined} by $(G,+)$ and
+$\lambda$. But this determination presumes a brace already exists --- it cannot be
+used to \emph{manufacture} one. The real question, ``does an extension with a
+prescribed residue exist at all?'', is the solvability of an inhomogeneous linear
+system, and its obstruction is the class $\onu$. The residue $[\nu]$ is the $D\to
+D$ block of $\lambda$; the obstruction $\Om$ is the off-diagonal, section-varying
+part. The block-triangular structure of the brace axioms cuts out the
+\emph{admissible} residues by an action-only equation (\S\ref{sec:omega-setup});
+but it does \emph{not} decouple \emph{solvability} --- the inhomogeneous term of
+the coupling equation carries the residue, and that is where $\onu$ lives.
 
 \medskip\noindent\textit{Outline.}
-\S\ref{sec:omega-setup} records the factor-set calculus and the coupling equation.
-\S\ref{sec:omega-identify} proves Theorem~\ref{thm:A-informal} (identification).
-\S\ref{sec:omega-bilinear} proves Theorem~\ref{thm:B-informal} (bilinearity and
-base-localisation). \S\ref{sec:omega-residue} isolates the residue $[\nu]$ as an
-orthogonal factor and shows non-trivial kernels do not disturb $\Om$.
-\S\ref{sec:omega-product} proves the product Theorem~\ref{thm:C-informal}.
-\S\ref{sec:omega-corner} gives the genuine $|G|=16$ computational witness and
-states the single open residual precisely. \S\ref{sec:omega-ledger} is the honest
-ledger and the relation to Ferri's Remark~3.20.
+\S\ref{sec:omega-setup} records the factor-set calculus and the coupling equation,
+and flags exactly where the residue enters. \S\ref{sec:omega-identify} proves
+Theorem~\ref{thm:A-informal} (identification). \S\ref{sec:omega-bilinear} proves
+Theorem~\ref{thm:B-informal} (bilinearity and base-localisation).
+\S\ref{sec:omega-onu} constructs the solvability obstruction $\onu$ and proves
+$\im\varphi_+=\ker\onu$ (Theorem~\ref{thm:C-informal}), carrying along the
+residue-invariance lemma and the sharp negative that orthogonality fails already
+at the cochain level. \S\ref{sec:omega-coupling} makes the residue-dependence
+explicit at $|G|=8$ and $|G|=16$ and states the torsor phenomenon.
+\S\ref{sec:omega-ledger} is the honest ledger --- including the refuted claim on
+the record --- and the relation to Ferri's Remark~3.20.
 
 %------------------------------------------------------------------------------
 \section{Setup: factor sets and the coupling equation}\label{sec:omega-setup}
@@ -167,11 +201,10 @@ ledger and the relation to Ferri's Remark~3.20.
 With $(G,+)$ fixed, a skew-brace structure making $D$ an ideal is \emph{exactly} a
 homomorphism $\lambda\colon G\to\Aut(G,+)$ satisfying
 $\lambda_{a\circ b}=\lambda_a\lambda_b$ (with $a\circ b:=a+\lambda_a(b)$) and
-leaving $D$ invariant. The circle factor set is then read off from $\circ$; it is
-never independently posited. This is the reduction that governs everything below:
-the question ``does an extension with a prescribed residue exist?'' is a question
-about $\lambda$, and the coordinates $\beta,\ovtau$ are the shadow of the single
-identity $\lambda_{a\circ b}=\lambda_a\lambda_b$.
+leaving $D$ invariant. This is a genuine \emph{existence} question: whether such a
+$\lambda$ exists, with a prescribed residue, is not settled by ``reading $\circ$
+off from $+$''. Given a brace, the circle factor set is read off from $\circ$; but
+the equations below are what decide whether the brace is there to begin with.
 
 \begin{definition}[Inner group and residue]\label{def:residue}
 The \emph{inner group} is $L:=\{\lambda_e\!\mid_D : e\in D\}=\operatorname{im}
@@ -196,15 +229,26 @@ written $T(h,k):=s(h)\circ s(k)-s(h\circ_H k)\in D$):
   &\text{\rm(coupling-1)}\quad \nu_h\,\mu_k\,\nu_h^{-1}=\mu_{\lambda^H_h(k)}. \tag{$\ast$}
 \end{align}
 Here $\lambda^H\colon(H,\circ_H)\to\Aut(H,+)$ is the induced $H$-brace map. Two
-structural facts about this system carry the whole chapter, and we flag them now:
+structural facts about this system carry the chapter, and we must state them with
+care, because an earlier draft over-read them:
 \begin{itemize}
-\item In equations \textup{(a)--(c)}, the residue datum $\nu$ appears \emph{exactly
-   once}, in the term $\mu_h\nu_h\beta(k,l)$ of \textup{(c)}.
 \item Equation \textup{(coupling-1)} constrains the residue using only
-   $\nu,\mu,\lambda^H$ --- it mentions neither $T$ nor $\beta$.
+   $\nu,\mu,\lambda^H$ --- it mentions neither $T$ nor $\beta$. This is the
+   \emph{admissibility} of a residue: a genuinely block-triangular, obstruction-free
+   condition. It determines \emph{which} residues can occur.
+\item The residue $\nu$ enters \textup{(c)} through the inhomogeneous term
+   $\mu_h\nu_h\beta(k,l)$. In the trivial-kernel (SH) regime this is its
+   \emph{only} appearance in \textup{(a)--(c)}; but for a non-trivial kernel
+   $\nu$ re-enters through $\lambda_d$ acting on the additive complement (the
+   $\nu\sigma(d)$ term of the complement cochain), so it appears \emph{twice}.
 \end{itemize}
-This is the block-triangularity: the residue side and the obstruction side of the
-system decouple.
+The crucial correction to the earlier draft is this. That the \emph{homogeneous}
+part of \textup{(c)} is $\nu$-free (it is: see \S\ref{sec:omega-onu}) does
+\emph{not} make the \emph{inhomogeneous} solvability $\nu$-free. Admissibility of a
+residue is block-triangular; \emph{solvability with that residue} is not. The
+inhomogeneous term $\mu_h\nu_h\beta$ is exactly what the solvability obstruction
+$\onu$ measures, and it carries the residue explicitly. Block-triangularity buys
+admissibility, and nothing more.
 
 %------------------------------------------------------------------------------
 \section{The obstruction is a skew-brace cohomology class}\label{sec:omega-identify}
@@ -352,270 +396,228 @@ family found $504$ vertex-splitting-but-not-decomposing configurations and $0$ w
 complements; the star-transport lemma held in $1008/1008$ cases.)
 
 %------------------------------------------------------------------------------
-\section{The internal residue is an orthogonal factor}\label{sec:omega-residue}
+\section{The residue-dependent solvability obstruction}\label{sec:omega-onu}
 
-We now separate $\Om$ from the datum most easily mistaken for part of it: the
-residue $[\nu]$, which records how the internal action $\lambda$ relabels $D$ along
-a section. All of this section is \textsc{[proved]}.
+We now come to the residue $[\nu]$, the datum most easily mistaken for part of
+$\Om$. The honest statement is that they are \emph{coupled}, and that the coupling
+is measured by a single homomorphism $\onu$. Two facts about the residue survive
+from the analysis and are worth isolating first, because they are true and were
+never in question; it is only the \emph{independence} conclusion drawn from them
+that failed.
 
-\begin{lemma}[Torsor lemma]\label{lem:torsor}
-As $s'$ ranges over all normalised sections, $(\nu'_h)_{h\neq0}$ ranges over
-exactly $T_\nu:=\prod_{h\neq0}\nu_h L$, a torsor under the free transitive action
-of $L^{H\setminus0}$. Explicitly $\nu'_h=\nu_h\circ\lambda_{e(h)}\!\mid_D$ with
-$e(h)=\lambda_{s(h)}^{-1}(\theta(h))$.
-\end{lemma}
-
-\begin{lemma}[Residue invariance]\label{lem:res-inv}
+\begin{lemma}[Residue invariance, \textsc{[proved]}]\label{lem:res-inv}
 The cosets $[\nu_h]=\nu_h L\in\Aut(D,+)/L$ are section-independent, and
 $\nu_{h_1}\nu_{h_2}=\nu_{h_1\circ h_2}\cdot\lambda_{\ovtau(h_1,h_2)}\!\mid_D$ with
 $\lambda_{\ovtau}\!\mid_D\in L$. When $L\trianglelefteq\Aut(D,+)$ (automatic if
 $\Aut(D,+)$ is abelian, e.g.\ $D$ cyclic), $[\nu]\colon(H,\circ)\to\Aut(D,+)/L$ is a
-homomorphism.
+homomorphism. As $s'$ ranges over all normalised sections, $(\nu'_h)_{h\neq0}$
+ranges over exactly the torsor $T_\nu:=\prod_{h\neq0}\nu_h L$ under
+$L^{H\setminus0}$, with invariant residue $[\nu]$.
 \end{lemma}
 
-\begin{lemma}[Obstruction $\nu$-freeness / descent, ``fact B'']\label{lem:nu-free}
-With $(D,+),(D,\circ)$ abelian, $[\beta]$, $[\ovtau]$ and the predicate
-``$\Om=0$'' are constant on the torsor $T_\nu$ and refer to no $\nu$. Concretely
-the section-shifts $(\beta'-\beta)=d\theta$ and
-$(\ovtau'-\ovtau)=d_\sigma e$ involve no $\nu$.
-\end{lemma}
-
-\begin{theorem}[Orthogonal direct factor, \textsc{[proved]}]\label{thm:ortho}
-The section-independent invariants of the extension are
-$\bigl(\mu,\sigma,[\nu],\Om\bigr)$, and the residue $[\nu]=([\nu_h])_h\in
-\prod_h\Aut(D,+)/L$ is orthogonal to $\Om$:
-\begin{enumerate}
-\item its section ambiguity is a full torsor $T_\nu$ over $L^{H\setminus0}$ with
-   invariant residue $[\nu]$ --- an ``$H^1$ over $L$'';
-\item $[\beta]$, $[\ovtau]$ and splitting are $\nu$-free and constant on $T_\nu$,
-   and $[\nu]$ is defined without reference to $\beta$, $\ovtau$ or the ambient
-   defect.
-\end{enumerate}
-\end{theorem}
-
-It is worth being exact about \emph{which} orthogonality holds, because a weaker
-statement is false and the distinction is the crux.
-
-\begin{proposition}[Not a gauge-orbit product --- the sharp negative, \textsc{[proved]}]
+\begin{proposition}[Orthogonality fails already at the cochain level, \textsc{[proved]}]
 \label{prop:not-orbit}
 The gauge action of the section group on the cochain triple
 $(\nu,\beta,\ovtau)$ is \emph{not} a direct product of a $\nu$-action and an
 obstruction-action: $\ker(\Psi_{\mathrm{obs}})+\ker(\Psi_\nu)\neq\Theta$. For the
 braces $\mathtt{sb\#11},\mathtt{sb\#15}$ on $\Z/2\times\Z/4$ with $D=\{0\}\times\Z/4$
 ($L=\Aut(D,+)=\Z/2$), any section that flips $\nu_1$ forces
-$d\theta(1,1)=(0,2)\neq0$.
+$d\theta(1,1)=(0,2)\neq0$: moving the residue drags a nonzero change in the
+obstruction cochain.
 \end{proposition}
 
-That is: at the level of \emph{orbits} (raw cochains), moving the residue is
-coupled to a nonzero change in the obstruction cochain. But that change is a
-coboundary --- invisible to cohomology. Orthogonality holds for \emph{classes}, and
-fails for orbits. The independence theorem is a statement about classes; the
-negative proposition is the fence that stops us over-claiming it.
+Proposition~\ref{prop:not-orbit} was, in the refuted draft, the ``fence'' meant to
+keep an independence claim from overreaching. In hindsight it was the warning that
+the claim should not have been made: the residue and the obstruction cochain move
+\emph{together}, and the only question is whether the coupled motion is a
+coboundary (invisible to cohomology) or genuine. It is genuine, and $\onu$ is what
+detects it.
 
-\paragraph{Non-trivial kernels do not disturb $\Om$.}
-Dropping (SH) --- allowing $D$ to be a non-trivial brace --- changes the residue's
-behaviour but not the obstruction:
+\paragraph{The coupling operators.}
+Write $C^k$ for the normalised $k$-cochains $H^k\to D$. Read the coupling (c) as an
+affine-linear equation in the multiplicative datum, for fixed $\beta$. Define two
+$\Z$-linear operators $C^2\to C^3$:
+\begin{align}
+(P\tau)(h_1,h_2,h_3)&:=\mu_{\lambda^H_{h_1}(h_3)}\!\big(\tau(h_1,h_2)\big)
+-\tau(h_1,h_2{+}h_3)+\tau(h_1,h_3),\label{eq:P}\\[2pt]
+(Q\beta)(h_1,h_2,h_3)&:=\nu_{h_1}\!\big(\beta(h_2,h_3)\big)
++\mu_{h_1\circ h_3}\!\big(\beta(h_1,-h_1)\big)
+-\beta(-h_1,\,h_1{\circ}h_3)-\beta(h_1{\circ}h_2,\,\lambda^H_{h_1}(h_3)).\label{eq:Q}
+\end{align}
+Both operators depend only on the fixed triplet and on the group structure of $H$
+--- \emph{no brace is presupposed}, which is exactly the circular step the refuted
+argument stumbled over. With the twist $T\colon C^2\to C^2$,
+$(T\ovtau)(h_1,h_2):=\nu_{h_1\circ h_2}(\ovtau(h_1,h_2))$ (so the additive form is
+$\tau=T\ovtau$), the coupling (c) reads
+\begin{equation}\label{eq:coupling}
+P(T\ovtau)=Q\beta .
+\end{equation}
+Let $A:=P\circ T$ restricted to $Z^2_\circ:=Z^2_\Gp((H,\circ),D;\sigma)$; its
+image $A(Z^2_\circ)\le C^3$ is a subgroup.
 
-\begin{theorem}[Kernel non-triviality is orthogonal, \textsc{[proved]}]\label{thm:kernel}
-For an ideal $D$ with $(D,+)$ abelian, $\nu$ is section-independent for all
-sections iff $\lambda_e\!\mid_D=\id$ for all $e\in D$ iff $D$ is a trivial brace.
-When $D$ is a non-trivial brace, the sole effect is to make $\nu$
-section-dependent; the descent maps $\varphi_+,\varphi_\circ$ and the ambient
-common-complement defect are unchanged. Explicitly, for a lift $k$ of an order-$2$
-quotient, $k\circ k=(k+k)+(\lambda_k-\id)(k)$, and $G\cong H\bic D$ iff there is
-$k\in A:=\{k:k+k=0\}$ with $(\lambda_k-\id)(k)=0$; the defect
-$(\lambda_k-\id)(k)$ uses $\lambda_k$ for a lift $k\notin D$, an ambient feature
-into which $\nu$ never enters.
-\end{theorem}
+\begin{definition}[The solvability obstruction]\label{def:onu}
+\[
+   \onu(\beta):=[\,Q\beta\,]\ \in\ C^3\big/A(Z^2_\circ),\qquad \beta\in Z^2_+ .
+\]
+\end{definition}
 
-The witness makes the orthogonality vivid: on $\Z/2\times\Z/4$ with
-$(D,+)\cong\Z/4$, the non-trivial-brace kernels $\mathtt{sb\#11},\mathtt{sb\#15}$
-(with $(D,\circ)\cong\Z_2^2$) and the trivial-brace $\mathtt{sb\#1}$ share the same
-$A=\{(1,0),(1,2)\}$, the same defect $(0,2)\neq0$, hence the same
-$[\beta]=[\ovtau]=0$ and $\Om\neq0$; they differ \emph{only} in the number of
-realisable $\nu_1$ ($1$ versus $2$). Kernel non-triviality is carried entirely by
-$\nu$, and $\nu$ never touches $\Om$.
+The whole content of Theorem~\ref{thm:C-informal} is one formal identity.
 
-%------------------------------------------------------------------------------
-\section{The product theorem}\label{sec:omega-product}
+\begin{lemma}[Linchpin: the diagonal coboundary satisfies the coupling, \textsc{[proved]}]
+\label{lem:linchpin}
+Let $\theta\colon H\to D$, $\theta(0)=0$, be arbitrary, set
+$\theta_1(h):=\nu_h^{-1}(\theta(h))$, and let $\beta:=d_+\theta$ be the
+$\mu$-twisted additive coboundary and $\ovtau:=d_\circ\theta_1$ the
+$\sigma$-twisted multiplicative coboundary. Then $P(T\,d_\circ\theta_1)=Q(d_+\theta)$
+identically in $\theta$.
+\end{lemma}
 
-We can now upgrade orthogonality of a single pair of invariants to a global product
-decomposition of the moduli of extensions. Fix the additive group $(G,+)$, the
-subgroup $D$ (hence $\mu$ and the additive class $[\beta]$), the $D$-brace
-$(L,\lambda\!\mid_D)$, the $H$-brace $(H,+,\circ_H)$, and the circle action
-$\sigma$. Among all skew-brace structures $\circ$ on $(G,+)$ realising this data
-with $D$ an ideal, taken up to equivalence of extensions, let $R$ be the set of
-\emph{realised} residues $[\nu]$.
+\begin{proof}
+This is exactly $B^2_\Sb\subseteq Z^2_\Sb$ restricted to component (c): the diagonal
+coboundary $(d_+\theta,d_\circ\theta_1)$ lies in $Z^2_\Sb$, so satisfies
+\eqref{eq:coupling}. Rathee--Yadav establish $B^2\subseteq Z^2$ as a formal
+identity in $\theta$ and the triplet, requiring no brace to exist. The identity was
+additionally verified exhaustively by machine over all $\theta$ and all good
+triplets harvested from genuine braces, holding on $12/12$, $32/32$, $9/9$,
+$192/192$ instances for $(H,D)=(\Z/2,\Z/4),(\Z/2,(\Z/2)^2),(\Z/3,\Z/3),(\Z/4,\Z/4)$.
+\end{proof}
 
-\begin{theorem}[Residue-independent obstruction group; product, \textsc{[proved]}]
-\label{thm:product}
-\leavevmode
+\begin{theorem}[$\onu$ is a homomorphism and $\im\varphi_+=\ker\onu$, \textsc{[proved]}]
+\label{thm:onu}
+Fix the good triplet $(\nu,\mu,\sigma)$ with $D$ a trivial brace. Then:
 \begin{enumerate}
-\item For every $r\in R$, the equivalence classes of extensions with residue $r$
-   form a torsor under an abelian group $\Omega^0$ that is \emph{independent of
-   $r$}.
-\item Consequently $\bigl([\nu],\Om\bigr)\colon\Ext\to R\times\Omega^0$ is a
-   bijection: every realised residue co-occurs with every value of $\Om$.
+\item[\rm(1)] $\onu(d_+\theta)=0$ for every $\theta$; hence $\onu$ descends to a map
+   $\onu\colon\Hcoh_+\to C^3/A(Z^2_\circ)$, $[\beta]\mapsto[Q\beta]$.
+\item[\rm(2)] $\onu$ is a group homomorphism, additive in $[\beta]$.
+\item[\rm(3)] $\im\varphi_+=\ker\onu$. Equivalently: an additive class $[\beta]$
+   extends to a full skew-brace cocycle inducing $(\nu,\mu,\sigma)$ \emph{iff}
+   $\onu([\beta])=0$.
 \end{enumerate}
 \end{theorem}
 
-\begin{proof}[Proof (four steps)]
-\emph{Step 1 (the residue side is $T$-free).} By (coupling-1), the admissible
-residues are cut out using only $\nu,\mu,\lambda^H$ --- never $T$ or $\beta$. This
-is block-triangularity: the $D\to D$ block of $\lambda$, carrying the residue,
-satisfies a closed system not involving the off-diagonal obstruction block.
-
-\emph{Step 2 (for fixed $\nu$, the valid $T$ form an $\varnothing$-or-torsor under
-a $\nu$-free group $Z^0$).} Read (c) as an equation for $T$ with
-$\beta,\mu,\nu,\lambda^H$ fixed. It is \emph{affine} in $T$, with homogeneous part
-\[
-   U(h,k{+}_H l)=U(h,k)+\mu_{(h\circ k)-h}\,U(h,l). \tag{$c^0$}
-\]
-The crux is that $(h\circ k)-h=\lambda^H_h(k)$ in $H$, so the twist
-$\mu_{(h\circ k)-h}=\mu_{\lambda^H_h(k)}$ depends only on $\mu$ and $\lambda^H$
---- \emph{not on $\nu$}. Together with the homogeneous circle-cocycle condition
-$(b^0)$ (also $\nu$-free), set $Z^0:=\{U:H\times H\to D \mid (b^0)\wedge(c^0)\}$,
-manifestly independent of $\nu$ and $\beta$. If $T,T'$ both solve (b)$\wedge$(c)
-then $U:=T-T'\in Z^0$ (the $\mu_h\nu_h\beta$ term and all $\beta$-terms cancel on
-subtraction), and if $T$ solves (b)$\wedge$(c) and $U\in Z^0$ then $T+U$ does. So
-the solution set $\mathcal T(\nu)$ is empty or a torsor under the $\nu$-free group
-$Z^0$.
-
-\emph{Step 3 (coboundaries are $\nu$-free; the obstruction group).} A change of
-section shifts $T$ by a coboundary from a subgroup $B^0\subseteq Z^0$, shifts $\nu$
-within its $L$-coset (residue preserved, Lemma~\ref{lem:res-inv}) and shifts
-$\beta$ by an additive coboundary. The $T$-coboundaries $B^0$ are $\nu$-free
-(Lemma~\ref{lem:nu-free}). Put $\Omega^0:=Z^0/B^0$. For each realised residue $r$,
-the equivalence classes of extensions with residue $r$ are a torsor under
-$\Omega^0$, and since $Z^0,B^0$ are $\nu$-free, $\Omega^0$ is residue-independent.
-This is (1).
-
-\emph{Step 4 (the product).} By (1), for each realised $r$ the class $\Om$ ranges
-over the entire $\Omega^0$ as the extension ranges over the full torsor
-$\Ext(r)$. Fixing a base-point identification $\Ext(r)\cong\Omega^0$, every value
-of $\Omega^0$ is attained for every realised $r$, and because each $\Ext(r)$ is a
-\emph{full} torsor the conclusion is base-point independent. Thus
-$([\nu],\Om)$ is a bijection onto $R\times\Omega^0$.
+\begin{proof}
+(1) By Lemma~\ref{lem:linchpin}, $Q(d_+\theta)=P(T\,d_\circ\theta_1)\in A(Z^2_\circ)$
+since $d_\circ\theta_1\in Z^2_\circ$; so $\onu$ kills $B^2_+$ and factors through
+$\Hcoh_+=Z^2_+/B^2_+$. (2) $Q$ is $\Z$-linear (each summand of \eqref{eq:Q} is
+additive in $\beta$ because $\nu_{h_1},\mu_{h_1\circ h_3}\in\Aut(D,+)$ and
+reindexing is additive) and $A(Z^2_\circ)$ is a subgroup. (3) If
+$[\beta]=\varphi_+[(\beta,\ovtau)]$ then $(\beta,\ovtau)\in Z^2_\Sb$, so by
+\eqref{eq:coupling} $Q\beta=P(T\ovtau)\in A(Z^2_\circ)$ and $\onu([\beta])=0$.
+Conversely, if $\onu([\beta])=0$ there is $\ovtau\in Z^2_\circ$ with
+$P(T\ovtau)=Q\beta$; then $(\beta,\ovtau)$ satisfies (a),(b),(c), so by RY's
+characterisation $(\beta,\ovtau)\in Z^2_\Sb$ and
+$[\beta]=\varphi_+[(\beta,\ovtau)]\in\im\varphi_+$. \emph{This direction constructs
+the brace cocycle; it does not presuppose one --- the circular step of the refuted
+argument is thereby avoided.}
 \end{proof}
 
-Nothing in the proof uses $[\beta]=0$: the theorem holds for every additive class.
-The reader should note where each hypothesis is spent. That $(D,+),(D,\circ)$ are
-abelian gives the factor-set calculus (a)--(c); fixing the $H$-brace $\lambda^H$
-makes the twist in $(c^0)$ $\nu$-free; fixing $\mu,\sigma$ makes $(b^0)$ and $B^0$
-$\nu$-free. This is the ``internal-replacement'' statement in its cleanest form:
-\emph{changing the internal relabelling action $[\nu]$ does not change which
-decomposition obstructions $\Om$ are available.} They are independent coordinates
-of the moduli.
+The reformulation --- ``(b)$+$(c) is affine $A\tau=R_\nu(\beta)$; solvability $=$
+vanishing of $\onu(\beta)$; $\im\varphi_+=\ker\onu$'' --- is Rick's Remark~4 from
+the referee report. The construction of the general-$H$ operators
+\eqref{eq:P}--\eqref{eq:Q}, the descent via the linchpin identity, and the analysis
+below are the content added here.
 
-\begin{corollary}[Split $\perp$ residue, \textsc{[proved]}]\label{cor:split}
-The split value $\Om=0$ is realisable iff $[\beta]=0$ (additive split), uniformly
-in the residue: a sub-skew-brace complement is a fortiori an additive complement,
-so $\Om=0\Rightarrow[\beta]=0$; conversely $[\beta]=0$ makes every admissible
-residue realisable by a bicrossed product, which is split. Hence when $[\beta]=0$,
-$\Ext\cong R\times\Omega^0$ with split and non-split each a residue-independent
-subset; when $[\beta]\neq0$ no extension is split, and the realisable $\Om$-values
-are the non-zero classes, attained uniformly across all realised residues.
-\end{corollary}
+\begin{proposition}[Cross-validation, \textsc{[computed]}]\label{prop:cross}
+For $H=\Z/2$ with $D=\Z/4$ (all $4$ triplets) and $D=(\Z/2)^2$ (all $16$ triplets),
+and for $H=\Z/3$ with $D=\Z/3$, the abstractly computed $\ker\onu\subseteq\Hcoh_+$
+equals the $\Aut(D)$-saturated set of additive classes realised by genuine skew
+braces with the given triplet (independent regular-subgroup-of-holomorph
+enumeration). For $D=(\Z/2)^2$ the obstruction is genuinely nonzero for many
+triplets: it cuts $|\Hcoh_+|=4$ down to $|\ker\onu|=2$, matched exactly --- a
+stringent test of \eqref{eq:P}--\eqref{eq:Q}, the twist $T$, and the descent.
+\end{proposition}
+
+This is the precise replacement for the retracted independence theorem. There is no
+product $R\times\Omega^0$: the realisable additive classes are $\ker\onu$, and
+$\ker\onu$ \emph{depends on $\nu$} through the $\nu_{h_1}(\beta(h_2,h_3))$ term of
+\eqref{eq:Q}. The next section makes that dependence visible.
 
 %------------------------------------------------------------------------------
-\section{A genuine $|G|=16$ witness, and the one open step}\label{sec:omega-corner}
+\section{Explicit residue-dependence, and a torsor}\label{sec:omega-coupling}
 
-The independence is easy to believe --- and easy to dismiss as a small-example
-artifact. When $|D|=4$ one has $\Aut(\Z/4,+)=\Z/2$, so $L\neq1$ forces
-$L=\Aut(D,+)$; the residue then has no room to be a \emph{proper} coset, and the
-coupling never bites. A convincing witness must have $L\neq1$ \emph{and}
-$L\subsetneq\Aut(D,+)$, which needs $|D|\ge8$, hence $|G|\ge16$. This corner is
-where the phenomenon is real, and it is \textsc{[computed]}.
-
-\begin{example}[The $|G|=16$ corner, \textsc{[computed]}]\label{ex:corner}
-Take $(G,+)=\Z/2\times\Z/8$, $D=\{(0,x)\}\cong\Z/8$, $H=\Z/2$, so
-$\Aut(D,+)=(\Z/8)^\times\cong\Z/2\times\Z/2$. Use the unit-scaling family
-$\varphi_{u,t}(j,y)=(j,\ u\cdot y+j\cdot t)$ and the homomorphism
-$U(i,x)=5^{x\bmod 2}\cdot 3^{i}\pmod 8$. Two structures differ only in a part
-invisible on $D$ (so they share $L$ and $\nu$):
+\paragraph{$|G|=8$: channel~1, linear (in the RY regime).}
+Take $H=\Z/2$, $D=\Z/4$, $\mu$ trivial, $\sigma=\sigma_1$. Normalised cochains are
+single values $b=\beta(1,1)$, $t=\ovtau(1,1)\in D$; here $\nu_{1\circ1}=\nu_0=\id$
+so $T$ acts trivially, $A(Z^2_\circ)=2D^\sigma$, and $\onu$ evaluates to
 \[
-   G_0:\ \lambda^0_{(i,x)}=\varphi_{U(i,x),\,0}
-   \qquad
-   G_1:\ \lambda^1_{(i,x)}=\varphi_{U(i,x),\,4i},
+   \onu(b)=0\iff (1+\nu)\,b\in 2D^{\sigma}.
 \]
-where $T(i,x)=4i$ is a homomorphism $(G,\circ)\to\{0,4\}$. Then
-$L=\{1,5\}$ is a \emph{proper, non-trivial} subgroup, $1\subsetneq L\subsetneq
-\Aut(D,+)$; the base lift $s(1)=(1,0)$ gives $\nu_1=\ (\cdot 3)\notin L$ and residue
-$[\nu_1]=\{3,7\}\neq L$. Both structures carry the \emph{same}
-$(L,[\nu])=(\{1,5\},\{3,7\})$, yet $\Om=0$ for $G_0$ (the complement
-$\{(0,0),(1,0)\}$ is closed under both operations) and $\Om\neq0$ for $G_1$
-(every order-$2$ candidate fails $\circ$-closure: $(1,x)\circ(1,x)=(0,4)$). So
-independence persists at genuine moving $\nu$ with non-trivial residue --- it is
-not a $|D|=4$ size artifact.
-\end{example}
+With $\sigma=-1$, $D^\sigma=\{0,2\}$ and $2D^\sigma=\{0\}$, so
+\[
+   \nu=1:\ 2b=0\iff b\in\{0,2\}\iff[\beta]=0;\qquad
+   \nu=-1:\ 0\in\{0\}\ \text{always}\iff[\beta]\ \text{free}.
+\]
+So $\nu=1$ \emph{forces} $[\beta]=0$ (the additive group must be $\Z/2\times\Z/4$,
+not $\Z/8$), while $\nu=-1$ realises both classes. This is the decisive $|G|=8$
+coupling: the set of realisable $[\beta]$ genuinely depends on the residue, already
+inside the trivial-kernel (RY) regime. It is a corollary of Theorem~\ref{thm:onu}
+and matched by Proposition~\ref{prop:cross}. Compare the refuted claim, which
+would have required $[\beta]$ to be free of $\nu$.
 
-The moving-$\nu$ cocycle equations of Example~\ref{ex:corner} are exactly
-(a),(b),(c) of \S\ref{sec:omega-setup}, machine-checked on the witness; the
-mechanism verdict is the one already used in the product theorem. At the
-\emph{cochain} level there is a genuine coupling --- moving $\nu_h$ inside its
-$L$-coset forces a compensating change in $T$. At the \emph{invariant} level there
-is independence, because $a\circ b=a+\lambda_a(b)$ means that once $(G,+)$ (hence
-$\mu,\beta$) and $\lambda$ (hence $[\nu]$ and the $L$-part) are fixed, $\circ$ and
-therefore $T$ are \emph{determined}; equation (c) merely \emph{defines} $T$ from
-$\beta$ up to a circle-coboundary.
+\paragraph{$|G|=16$: channel~2, three-way, \textsc{[computed]}.}
+Take $D=\Z/8$ carrying the \emph{non-trivial} brace $\lambda^D_x=5^x$ (so
+$L=\{1,5\}\subsetneq\Aut(D)$), $H=\Z/2$. This is outside RY's trivial-kernel regime;
+the residue now enters a \emph{second} channel, through $\lambda_d$ on the additive
+complement, $\lambda_d(k)=k+\nu\sigma(d)-d$. Writing $b\in\Z/8$ for the additive
+$2$-cocycle, every realising extension satisfies the \textbf{three-way lock}
+\begin{equation}\label{eq:threeway}
+(\lambda^D_d-1)\,b=2\big(\nu\sigma(d)-d\big)\ \forall d,
+\qquad\text{at }d=1:\quad \boxed{\,4b\equiv 2(\nu\sigma-1)\ (\mathrm{mod}\ 8)\,}.
+\end{equation}
+Verified on \emph{all} $24$ genuine order-$16$ braces with this kernel: $8/8$ on
+$\Z/16$ ($[\beta]\neq0$) and $16/16$ on $\Z/2\times\Z/8$ ($[\beta]=0$). The residue
+and circle action enter \eqref{eq:threeway} \emph{only through the product}
+$\nu\sigma$ (mod $4$), which is then tied to the additive class:
+\[
+   [\beta]=0\ (b\ \text{even})\iff\nu\sigma\equiv1\ (\mathrm{mod}\ 4).
+\]
+This is why on $\Z/2\times\Z/8$ the residue $\{3,7\}$ co-occurs with $[\beta]=0$
+\emph{only} when $\sigma\in\{3,7\}$, never with $\sigma=\id$. The coupling is
+genuinely three-way $([\nu],\sigma,[\beta])$, not a two-way product.
 
-\begin{table}[h]
-\centering
-\begin{tabular}{@{}llll@{}}
-\toprule
-regime & additive group & $[\beta]$ & result \\
-\midrule
-product enum & $\Z/2\times\Z/8$ & $0$ &
-   every $\sigma$: full product of $([\nu],\Om)$; counts balanced \\
-equiv-classes & $\Z/2\times\Z/8$ & $0$ &
-   each admissible residue: exactly $2|L|$ classes ($|L|$ split, $|L|$ non-split) \\
-equiv-classes & $\Z/16$ & $\neq0$ (ord $2$) &
-   each residue: $2|L|$ classes, all non-split (uniform) \\
-equiv-classes & $\Z/32$ & $\neq0$ (ord $4$) &
-   residues $1,3,5,7$ all realised, each with exactly $4$ classes \\
-engine-verify & $\Z/32$ & $\neq0$ &
-   cross-equation (c) holds for all $28$ ideals ($H=\Z/4$) \\
-\bottomrule
-\end{tabular}
-\caption{Exact enumeration corroborating Theorem~\ref{thm:product}. The constant
-equivalence-class count per residue within each $(\sigma,L)$ block is the
-prediction $|\Ext(r)|=|\Omega^0|$. The $[\beta]\neq0$, order-$4$ case ($\Z/32$)
-realises all four admissible residues, refuting any fear that
-$(\chi-1)_*[\beta]\neq0$ could block existence.}
-\label{tab:enum}
-\end{table}
+\paragraph{What the $G_0/G_1$ corner really shows.}
+The old draft's centrepiece was a pair of genuine order-$16$ braces $G_0,G_1$ on
+$(G,+)=\Z/2\times\Z/8$ with $D\cong\Z/8$, $L=\{1,5\}$, sharing residue
+$[\nu_1]=\{3,7\}$ (with $\sigma=\cdot3$) and $[\beta]=0$, yet with $\Om=0$ for $G_0$
+and $\Om\neq0$ for $G_1$. This is a real computation and it says something true:
+\emph{$\Om$ is not a function of $[\nu]$}. But that is a statement about a
+\emph{single fibre} $[\nu]=\{3,7\}$ --- it does \emph{not} say the residue and the
+obstruction are independent. Indeed, an enumeration of all $176$ labelled braces in
+the $\Z/16\cup\Z/2\times\Z/8$ family shows \emph{no} value of $\sigma$ realises the
+full product $[\nu]\times\Om$: at $\sigma=\cdot3$ the residue $[\nu]=L$ is not
+admissible at all, and at $\sigma\in\{\id,\cdot5\}$ the pair $([\nu]=\{3,7\},\Om=0)$
+is missing. Reading ``$\Om$ not determined by $[\nu]$ in one fibre'' as
+``$[\nu]\perp\Om$'' was the error. The fibrewise non-determination survives as a
+\textsc{[computed]} fact; the product does not.
 
-\paragraph{The one open step, stated precisely.}
-Theorem~\ref{thm:product} (the product on \emph{realised} residues) is
-unconditional. What is \textsc{[computed]} but not \textsc{[proved]} is a single
-surjectivity statement:
+\paragraph{The torsor: a non-trivial-kernel effect.}
+In the trivial-kernel regime $\onu$ is \emph{linear} (Theorem~\ref{thm:onu}(2)), so
+$\im\varphi_+=\ker\onu$ is a \emph{based} subgroup: it always contains $0$, i.e.\ the
+split additive class $[\beta]=0$ is realisable with any prescribed residue. The
+no-basepoint phenomenon is strictly a \emph{non-trivial-kernel} effect, visible in
+\eqref{eq:threeway}: the right-hand side $2(\nu\sigma-1)$ is \textbf{constant in
+$b$}. Thus the obstruction is \emph{affine}, $4b=c$ with $c=2(\nu\sigma-1)$, and the
+realisable set of $b$ is a \emph{coset} of $\ker(\times4)=\{0,2,4,6\}$:
+\[
+   \nu\sigma\equiv1\ (\mathrm{mod}\ 4):\ c=0,\ b\in\{0,2,4,6\}\ni0\Rightarrow[\beta]=0\ \text{available};\qquad
+   \nu\sigma\equiv3\ (\mathrm{mod}\ 4):\ c=4,\ b\in\{1,3,5,7\}\not\ni0,
+\]
+a torsor with no basepoint: no split-additive brace exists with that $(\nu,\sigma)$;
+$[\beta]\neq0$ is forced. This is the honest form of the ``internal-replacement''
+statement the refuted product theorem was reaching for:
 
-\begin{quote}
-\emph{Surjectivity of the residue map for $[\beta]\neq0$:} every
-coupling-admissible residue is actually realised (i.e.\ $R=R_{\mathrm{adm}}$) when
-the additive extension is non-split.
+\begin{quote}\itshape
+Changing the internal relabelling $[\nu]$ does not leave the available
+decomposition obstructions untouched; it \emph{moves} them, through the affine
+offset $c=2(\nu\sigma-1)$. When the internal datum $\nu\sigma$ leaves the
+socle-like subgroup ($\nu\sigma\not\equiv1$), the realisable locus $\im\varphi_+$
+is a torsor over $\ker\onu$ that misses the origin.
 \end{quote}
 
-By Steps~2--3 this is equivalent to $\mathcal T(\nu)\neq\varnothing$ for every
-admissible $\nu$, i.e.\ to the assertion that the RHS of (c) is always a
-$T$-coboundary (equivalently: associativity of $\circ$ forces (c) to be solvable
-for $T$, uniformly in the admissible residue). It is verified on $\Z/16$ and
-$\Z/32$ (all admissible residues occur) and argued structurally on the witness,
-but not closed in general. Three things should be emphasised, in the interest of
-not over-claiming:
-\begin{itemize}
-\item the open residual concerns the \emph{residue map alone} --- it is not about
-   the coupling term, and not about the product structure, both of which are
-   established;
-\item it does not affect Theorem~\ref{thm:product}, which is a statement about the
-   realised set $R$;
-\item the exact $(\sigma,L)$-block grouping is clean only for $H=\Z/2$ (where
-   $\sigma$ is fully sampled at the single non-zero $h$); for $H=\Z/4$ the
-   equivalence-class table is corroborated under a coarser $\sigma$-grouping, while
-   the (c)-formula check there is exact.
-\end{itemize}
-Closing this residual is the business of a proof session, not this chapter; it is
-flagged in the honest ledger below.
+\noindent A general-$H$, general-kernel proof that $\im\varphi_+$ is an
+$\onu$-affine torsor (with the offset identified intrinsically as the class of the
+$\lambda_d$-complement cochain) is the natural next target; here it is
+\textsc{[computed]} on the $|G|=16$ family and \textbf{open} in general.
 
 %------------------------------------------------------------------------------
 \section{Honest ledger, and Ferri's Remark 3.20}\label{sec:omega-ledger}
@@ -631,31 +633,46 @@ descends; $\Om=0\iff$ bicrossed (trivial-kernel SH) & \textsc{[peer-reviewed]} \
 Product map $\Phi=(\varphi_\circ,\varphi_+)$ non-injective ($W_4$) & \textsc{[peer-reviewed]} \\
 $\Om$ is a bilinear class, strictly finer than both group Schreier classes;
 base-$\zeta$ localised; heap-transport refuted & \textsc{[proved]} \\
-$[\nu]$ is an orthogonal direct factor; gauge-orbit product is \emph{false},
-orthogonality holds at the invariant level & \textsc{[proved]} \\
-Non-trivial-brace kernels do not disturb $\Om$ (carried by $\nu$) & \textsc{[proved]} \\
-Product theorem $\Ext\cong R\times\Omega^0$, $\Omega^0$ residue-independent
-(on realised residues; unconditional) & \textsc{[proved]} \\
-$|G|=16$ genuine-$L$ corner; moving-$\nu$ (c) machine-checked & \textsc{[computed]} \\
-Surjectivity of the residue map for $[\beta]\neq0$ (every admissible residue
-realised) & \textsc{[computed]} \\
+Residue invariance ($[\nu_h]=\nu_h L$ section-independent; torsor $T_\nu$) & \textsc{[proved]} \\
+Orthogonality fails at the cochain level (not a gauge-orbit product) & \textsc{[proved]} \\
+$\onu\colon\Hcoh_+\to C^3/A(Z^2_\circ)$ well-defined group hom killing $B^2_+$;
+$\im\varphi_+=\ker\onu$ (trivial kernel, general $H$) & \textsc{[proved]} \\
+$\ker\onu=\im\varphi_+$ cross-validated vs genuine enumeration
+($H=\Z/2$: $D=\Z/4,(\Z/2)^2$; $H=\Z/3$) & \textsc{[computed]} \\
+$|G|=8$: $\onu(b)=0\Leftrightarrow(1+\nu)b\in2D^\sigma$; $\nu=1$ forces $[\beta]=0$
+(channel~1, linear) & \textsc{[proved]} \\
+$|G|=16$ three-way lock $4b\equiv2(\nu\sigma-1)\ (\mathrm{mod}\ 8)$; $\nu,\sigma,[\beta]$
+locked through $\nu\sigma$ (channel~2, non-trivial kernel) & \textsc{[computed]} \\
+Non-trivial kernel $\Rightarrow\onu$ affine $\Rightarrow\im\varphi_+$ a torsor,
+no basepoint when $\nu\sigma\not\equiv1$ & \textsc{[computed]} \\
+General-$H$/general-kernel affine-torsor theorem & \textbf{open} \\
 $\varphi_+$ descent and $W_4$ non-injectivity \texttt{decide} certificates & \textsc{[lean-verified]} \\
 \bottomrule
 \end{longtable}
 \end{center}
 
-Two honesty notes are load-bearing and belong on the record.
+Three honesty notes are load-bearing and belong on the record.
 \begin{itemize}
+\item \emph{The independence claim is withdrawn.} A 2026-09-26 draft asserted a
+   third theorem --- $[\nu]$ an orthogonal direct factor, $\Ext\cong R\times\Omega^0$.
+   It is \textbf{refuted} (Rick, 2026-09-26; reproduced 2026-09-29; registry
+   \emph{cross-independence-nu-omega} demoted proved$\to$computed,
+   \emph{residue-independent-obstruction-group} and
+   \emph{residue-surjectivity-beta-nonzero} $\to$ speculative). The error was a
+   circular reduction: ``read $\circ$ off from $+$ and $\lambda$'' presupposes the
+   brace whose existence is in question, and the \emph{homogeneous} coupling being
+   $\nu$-free does not make \emph{inhomogeneous} solvability $\nu$-free. What
+   replaces it is the residue-\emph{dependent} $\onu$ of \S\ref{sec:omega-onu}.
 \item \emph{No socle-necessity claim.} An earlier draft of the identification
-   asserted that separation ``requires $D\not\subseteq\Soc(G)$.'' On referee review
-   (Rick) this was found to be false --- a trivial-kernel brace with $D=\Soc(G)$
-   exactly nonetheless separates --- and the claim is \emph{deliberately omitted}
-   here. It is not needed for any result in this chapter.
+   asserted separation ``requires $D\not\subseteq\Soc(G)$.'' On referee review
+   (Rick) this was found false and is \emph{deliberately omitted}; it is not needed
+   for any result here.
 \item \emph{The general kernel is native.} The identification of $\Om$ with a
    published cohomology (Rathee--Yadav) is proved only for the trivial-kernel
    standing hypothesis. Housing the general non-trivial-kernel obstruction in a
    skew-brace $\Hcoh$ where $\nu$ is \emph{varying} cocycle data is native to this
-   programme and not yet reduced to any published theory; we do not claim otherwise.
+   programme and not yet reduced to any published theory; the $|G|=16$ analysis and
+   the torsor are \textsc{[computed]}, and we do not claim otherwise.
 \end{itemize}
 
 \paragraph{Relation to Ferri's Remark 3.20.}
@@ -668,15 +685,20 @@ Theorem~\ref{thm:B-informal} explains \emph{why} no purely group-theoretic
 (single-operation) criterion can suffice --- the obstruction is bilinear, and lives
 in the coupling that no forgetful functor to a group $\Hcoh$ can retain. The
 base-localisation of Theorem~\ref{thm:heap-refute} is the groupoid refinement:
-prunability is decided on one star and transported.
+prunability is decided on one star and transported. Theorem~\ref{thm:C-informal}
+adds the parametric picture: as the internal residue varies, prunability is
+governed by the residue-dependent homomorphism $\onu$, whose kernel --- the
+realisable additive classes --- moves with the residue.
 
 \paragraph{What this feeds.}
 For the grant, the chapter closes the skew-brace / Yang--Baxter instance of the
 decomposition programme with a clean separation of concerns: an \emph{existence}
 axis ($[\omega]$, Chapter~\ref{ch:zs}) and a strictly finer \emph{decomposition}
-axis ($\Om$, this chapter), the latter a bilinear invariant that is provably
-independent of the internal relabelling residue. The independence is the
-mathematical content of ``internal replacement'': one may re-index the internal
-action of a composite system without changing which structural decompositions are
-available to it. The single open surjectivity step is isolated, small, and does not
-touch the product structure --- it is the natural target of the next proof session.
+axis ($\Om$, this chapter), the latter a bilinear invariant. The relation to the
+internal relabelling residue is \emph{coupling}, not independence: the residue
+enters the solvability of the extension through the homomorphism $\onu$, and the
+honest form of ``internal replacement'' is that re-indexing the internal action
+\emph{moves} which decomposition obstructions are available --- linearly in the
+trivial-kernel regime, affinely (with a possible loss of basepoint) once the kernel
+is non-trivial. The general-$H$/general-kernel affine-torsor theorem is the isolated
+open target for the next proof session.
