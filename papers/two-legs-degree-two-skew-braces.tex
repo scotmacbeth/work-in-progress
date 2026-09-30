@@ -1,0 +1,386 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{problem}[theorem]{Problem}
+
+\newcommand{\Sb}{\mathrm{Sb}}
+\newcommand{\SKB}{\mathsf{SKB}}
+\newcommand{\Grp}{\mathsf{Grp}}
+\newcommand{\Ab}{\mathsf{Ab}}
+\newcommand{\RadRng}{\mathsf{RadRng}}
+\newcommand{\BR}{\mathsf{BR}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\Soc}{\operatorname{Soc}}
+\newcommand{\shat}{\widehat{\sigma}}
+\newcommand{\Hgp}{H^2_{\Grp}}
+
+\title{Two legs of degree two:\\
+\large the extension-classifying cocycle $H^2$ and the semi-abelian homology $H_2$
+of skew braces, and the open bridge between them}
+\author{MacBeth\\ \small Kodamai}
+\date{30 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Two ``second (co)homologies'' now circulate in skew-brace theory, and it is tempting to
+read one as a duplicate --- or a scoop --- of the other. They are not the same invariant
+seen twice. The first is a \emph{cohomology} $H^2$ that classifies extensions of a skew
+brace by an ideal: its coefficient is a \emph{module}, and its data include a
+\emph{residue-dependent} twist coming from the multiplicative action. The second is a
+\emph{homology} $H_2$ of Barr--Beck/Hopf-formula type in the semi-abelian category of skew
+braces: its coefficient is a choice of \emph{reflector}, its action is \emph{fixed}, and it
+is a Baer invariant of a single object rather than a classifier of extensions. We place the
+two side by side, catalogue the structural differences, and locate precisely the one place
+they should meet: an open universal-coefficients bridge --- ``one and a half hops'' --- from
+the homology leg to the cohomology leg. We state that bridge as a problem, not a theorem,
+and identify the radical-ring reflector as the natural candidate coefficient for a homology
+home of the extension-classifying obstruction.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{The problem: ``degree two'' is ambiguous.}
+Skew braces are the algebraic backbone of set-theoretic solutions to the Yang--Baxter
+equation, and their extension theory has become active on two fronts at once. Both fronts
+produce something a reader will call a ``second (co)homology of a skew brace,'' and the two
+objects are easy to conflate --- they carry the same numeral, they live over the same class
+of algebras, and they were both worked out in the same eighteen months.
+
+On the first front, Rathee and Yadav~\cite{RY} classify skew-brace extensions
+$0\to D\to G\to H\to 0$ by a second cohomology $H^2_{\Sb}(H,D)$ whose cocycles are
+\emph{pairs} $(\beta,\tau)$ --- an additive $2$-cocycle and a multiplicative $2$-cocycle
+coupled by a compatibility identity. On the second front, Gran, Letourmy and
+Vendramin~\cite{GLV} develop a \emph{homology} of skew braces of Barr--Beck type, presented
+by relative Hopf formulae in the semi-abelian category $\SKB$ and yielding a
+Stallings--Stammbach five-term exact sequence.
+
+\paragraph{The gap.}
+No account has yet said plainly how these two degree-two invariants relate. The silence
+invites two opposite errors. One is to assume they coincide --- that the homology $H_2$
+\emph{is} the cohomology $H^2$ dualised, so that either program subsumes the other. The
+other is to assume they are simply unrelated. Both errors matter here concretely: the
+present author's obstruction-theoretic results on skew-brace decomposition --- the bilinear
+class $[\Omega]$ and the residue-dependent solvability obstruction $o_\nu$ --- live squarely
+on the cohomology leg, and it is a genuine question whether the homology leg scoops them,
+duplicates them, or neighbours them.
+
+\paragraph{The result of this note.}
+It neighbours them. We give a side-by-side dictionary (Table~\ref{tab:legs}) of the two legs
+and argue that they differ in three structural invariants that no change of bookkeeping can
+reconcile:
+\begin{itemize}
+\item[(i)] \textbf{Coefficients.} The cohomology leg takes a \emph{module} $D$; the homology
+leg takes a \emph{reflector} $X\in\{\Grp,\RadRng,\BR,\Ab\}$ into a subvariety.
+\item[(ii)] \textbf{Residue.} The cohomology leg is \emph{residue-dependent}: its data
+include the multiplicative action $\nu$ and the $\circ$-conjugation twist. The homology leg
+is \emph{fixed-action}: the actions factor through the abelianisation and there is no residue
+datum at all.
+\item[(iii)] \textbf{What is classified.} The cohomology leg \emph{classifies extensions};
+the homology leg is a \emph{Baer invariant of one object}, and it treats non-abelian kernels
+only for \emph{central} extensions.
+\end{itemize}
+Having separated them, we then locate the single place they \emph{should} meet: a universal-coefficients
+passage from $H_2$ to $H^2$, scaffolded by the five-term sequence of~\cite{GLV} but left open
+there. We state it as Problem~\ref{prob:bridge} and no more --- this is a positioning note,
+not a claim.
+
+\paragraph{Why it matters.}
+For the compositional-correctness programme the payoff is a clean map of the territory: the
+$[\Omega]$/$o_\nu$ package is not scooped by the semi-abelian homology, because that homology
+computes a different invariant of a different flavour; and the two nonetheless share a precise,
+buildable target. Naming that target is the point.
+
+\paragraph{Outline.}
+Section~\ref{sec:prelim} fixes the minimal vocabulary. Section~\ref{sec:cohom} is the
+cohomology leg (Rathee--Yadav, and the author's $[\Omega]$ and $o_\nu$).
+Section~\ref{sec:hom} is the homology leg (Gran--Letourmy--Vendramin).
+Section~\ref{sec:dictionary} is the dictionary. Section~\ref{sec:bridge} states the open
+bridge. Section~\ref{sec:conclusion} draws the consequence for the programme.
+
+\medskip
+\noindent\emph{A typographic warning.} Throughout, $H^2$ (superscript) is always the
+\emph{cohomology} of Section~\ref{sec:cohom} and $H_2$ (subscript) always the \emph{homology}
+of Section~\ref{sec:hom}. The distinction between the two legs is exactly the distinction
+between the two positions of the ``$2$''.
+
+\section{Preliminaries}\label{sec:prelim}
+
+A \emph{skew brace} is a set $A$ with two group structures $(A,+)$ and $(A,\circ)$, sharing
+a unit $0$, related by the compatibility
+\[
+a\circ(b+c) = (a\circ b) - a + (a\circ c)\qquad(a,b,c\in A).
+\]
+Writing $\lambda_a(b) := -a + (a\circ b)$ gives the \emph{$\lambda$-action}
+$\lambda\colon (A,\circ)\to\Aut(A,+)$. An \emph{ideal} $D\trianglelefteq A$ is a normal
+subgroup of both $(A,+)$ and $(A,\circ)$ that is stable under $\lambda$; it is exactly the
+kernel of a skew-brace morphism, so ideals index quotients. A skew brace is a \emph{trivial
+brace} when $\circ=+$ (equivalently $\lambda\equiv\id$). The \emph{socle} is
+$\Soc(A) = \ker\lambda\cap Z(A,+)$. Skew braces and their morphisms form a variety $\SKB$,
+which is \emph{semi-abelian}~\cite{GLV}.
+
+Fix a skew-brace \emph{extension} of a base $H$ by an ideal $D$,
+\begin{equation}\label{eq:ext}
+0 \longrightarrow D \longrightarrow G \longrightarrow H \longrightarrow 0 ,
+\end{equation}
+and a normalised set-theoretic section $s\colon H\to G$ with $s(0)=0$. Following~\cite{RY}
+one reads off the \emph{good triplet}
+\[
+\nu\colon (H,\circ)\to\Aut(D,+),\qquad
+\mu\colon (H,+)\to\Aut(D,+),\qquad
+\sigma\colon (H,\circ)\to\Aut(D,+),
+\]
+by $\nu_h=\lambda_{s(h)}|_D$, $\mu_h(x)=-s(h)+x+s(h)$, and $\sigma_h(x)=s(h)^{-1}\circ x\circ s(h)$
+(the last is the $\circ$-conjugation, which we also write $\shat_h$). The triplet is
+independent of the choice of section. We call $\nu$ the \emph{residue} of the
+extension; it is the datum by which the multiplicative structure of $G$ acts on the additive
+structure of $D$, and it is precisely what the homology leg will not see.
+
+\section{The cohomology leg: extensions and their obstructions}\label{sec:cohom}
+
+\subsection{The Rathee--Yadav classification}
+The extensions~\eqref{eq:ext} realising a fixed good triplet are classified by a second
+cohomology $H^2_{\Sb}(H,D)$~\cite{RY}. A cocycle is a \emph{pair}
+\[
+(\beta,\tau),\qquad
+\beta\colon H\times H\to D \text{ (additive $2$-cocycle)},\quad
+\tau\colon H\times H\to D \text{ (multiplicative $2$-cocycle)},
+\]
+subject to a compatibility identity coupling $\beta$ and $\tau$ through the actions
+$\lambda,\nu,\mu$ (Rathee--Yadav's equation~(3.10)). The class $[(\beta,\tau)]$ vanishes iff
+the extension splits, i.e.\ iff $G$ decomposes as an internal Zappa--Sz\'ep-type product of
+$H$ and $D$. The coefficient is the \emph{module} $D$ together with its actions; the theory
+in~\cite{RY} is developed for $D$ a \emph{trivial brace} kernel.
+
+The point to hold onto is that a single degree-two class already \emph{carries two group
+Schreier classes inside it}: forgetting $\tau$ leaves an additive class, forgetting $\beta$
+leaves a multiplicative one, and the compatibility identity binds them.
+
+\subsection{The bilinear obstruction $[\Omega]$}
+For the decomposition problem ``does $G$ split as $(G/D)\bowtie D$ along an ideal $D$?'' the
+obstruction is a class $[\Omega]$, and it \emph{is} the Rathee--Yadav class $[(\beta,\tau)]$
+in the trivial-kernel case~\cite{RY}; this identification has been peer-reviewed within the
+group. Its structure is genuinely bilinear, and the following facts pin down how:
+\begin{itemize}
+\item The \emph{additive forgetful map} $\varphi_+\colon [(\beta,\tau)]\mapsto[\beta]$ into
+the group cohomology $\Hgp((H,+),D;\mu)$ is well defined, with no extra hypothesis: a change
+of section shifts $\beta$ by the standard additive $2$-coboundary, independently of $\tau$.
+(The \emph{multiplicative} forgetful map $\varphi_\circ\colon[(\beta,\tau)]\mapsto[\tau]$ is
+Rathee--Yadav's own.)
+\item The \emph{product map} $\Phi=(\varphi_\circ,\varphi_+)$ into
+$H^2_{\Grp}((H,\circ),D)\times \Hgp((H,+),D;\mu)$ \emph{fails to be injective}: on the
+$4\times4$ witness $H=\Z/2\times\Z/4$ there is a class with $[\Omega]\neq0$ but
+$\Phi([\Omega])=(0,0)$. The obstruction is therefore irreducibly bilinear --- it lives in the
+coupling and is strictly stronger than either group Schreier class.
+\end{itemize}
+Both the descent of $\varphi_+$ and the $\Phi$-non-injectivity are proved, and the crux lemma
+(the section-change computation) is machine-checked in Lean~4.
+
+\subsection{The residue-dependent solvability obstruction $o_\nu$}
+The forgetful maps raise the reverse question: which additive classes
+$[\beta]\in \Hgp((H,+),D;\mu)$ actually \emph{lift} to a full skew-brace cocycle inducing the
+fixed triplet --- that is, what is $\im\varphi_+$? The answer is an obstruction $o_\nu$, and
+its defining feature is that it is \emph{residue-dependent}: the additive class $[\beta]$, the
+residue $\nu$, and the multiplicative twist are \emph{coupled}, not independent.
+
+\begin{theorem}[trivial-brace-kernel regime; proved]\label{thm:onu}
+In the Rathee--Yadav (trivial-brace-kernel) setting, $o_\nu$ is a well-defined group
+homomorphism
+\[
+o_\nu\colon \Hgp((H,+),D;\mu)\longrightarrow C^3\big/A(Z^2_\circ),
+\qquad [\beta]\mapsto[Q\beta],
+\]
+killing the additive coboundaries, and
+\[
+\im\varphi_+ \;=\; \ker o_\nu .
+\]
+Equivalently, an additive class lifts to a skew-brace cocycle with the given triplet iff
+$o_\nu([\beta])=0$.
+\end{theorem}
+
+The proof is structural: the coupling operators are $\Z$-linear, a ``linchpin'' coboundary
+identity shows $o_\nu$ kills $B^2_+$, and Rathee--Yadav's cocycle characterisation supplies
+the surjection onto genuine cocycles as a cited black box. The $|G|=8$ collapsed slice
+($H=\Z/2$, $D=\Z/4$) is formalised sorry-free in Lean~4. Two honesty flags travel with the
+theorem: (a) it is proved \emph{in the trivial-brace-kernel regime}, resting on~\cite{RY}'s
+characterisation as a premise; and (b) beyond that regime the picture is sharper but not yet
+fully proved, as follows.
+
+\begin{remark}[non-trivial kernel; proved at $H=\Z/2$, computed in general]\label{rmk:nontriv}
+When $D$ is a \emph{non-trivial} brace, the correct home of the multiplicative datum is the
+group $(D,\circ)$ twisted by the $\circ$-conjugation $\shat$ --- not the additive $(D,+)$ ---
+and there is an intrinsic \emph{defect} $\delta_h=\nu_h\shat_h-\id$ measuring the failure of
+the trivial-kernel collapse. For $H=\Z/2$ this yields a proved ``three-way lock''
+$(\lambda^D_x-1)\,b = 2(\nu_1\shat_1(x)-x)$ (verified on all $112$ genuine kernels), and
+$\im\varphi_+=o_\nu^{-1}(0)$ becomes an \emph{affine} coset: it is a torsor with no basepoint
+exactly when $L:=\im\lambda^D\subsetneq\Aut(D)$ and $\nu\shat$ is non-socle. The general-$H$
+form of the obstruction is validated at operator level ($16/16$ triplets for $H=\Z/2$, exact
+assembly $33/33$) but its closed-form offset for general $H$ is \emph{computed}, not yet
+proved --- one symbolic step remains open.
+\end{remark}
+
+\subsection{The character of the leg}
+Three features recur. The coefficient is a \emph{module} $D$. The theory is
+\emph{residue-dependent}: $\nu$ and the $\circ$-twist are part of the data, and $o_\nu$ exists
+precisely to measure their coupling to $[\beta]$. And the invariant \emph{classifies
+extensions}: a class is an extension up to equivalence, and it vanishes iff the extension
+splits. Every one of these three is reversed on the other leg.
+
+\section{The homology leg: Baer invariants of one object}\label{sec:hom}
+
+\subsection{Barr--Beck homology via Hopf formulae}
+Gran, Letourmy and Vendramin~\cite{GLV} compute a \emph{homology} of skew braces in the
+semi-abelian category $\SKB$. It is comonadic (Barr--Beck) homology, made explicit by a
+\emph{relative Hopf formula}: for a free presentation $0\to K\to F\to B\to0$ and a reflector
+$F_X\colon\SKB\to X$ onto a subvariety $X$,
+\begin{equation}\label{eq:hopf}
+H_2(B,\,F_X) \;\cong\; \frac{K\cap[F,F]_X}{[K,F]_X},
+\qquad
+H_1(B,\,F_X) \;\cong\; \frac{B}{[B,B]_X},
+\end{equation}
+where $[\,\cdot\,,\,\cdot\,]_X$ is the $X$-relative commutator. The genuinely new algebraic
+object is the \emph{radicalator} $[I,A]_{\RadRng}$, the relative commutator for the reflector
+onto radical rings; the Huq and Smith commutators coincide with the abelian commutator
+$[\,\cdot\,,\,\cdot\,]_{\Ab}$. The main extension-level output is a Stallings--Stammbach
+\emph{five-term exact sequence} for a short exact sequence of skew braces.
+
+\subsection{The character of the leg}
+The coefficient here is not a module: it is a \emph{choice of reflector}
+$X\in\{\Grp,\RadRng,\BR,\Ab\}$, i.e.\ a choice of ``abelianisation direction'' into a
+subvariety. The theory is \emph{fixed-action}: the $\lambda$- and $\rho$-actions factor
+through the additive abelianisation $A_+/J_+$, so there is \emph{no residue datum} $\nu$ ---
+the very thing the cohomology leg is built around is quotiented away here by construction.
+And the invariant is a \emph{Baer invariant of one object} $B$: $H_2(B,F_X)$ is an invariant
+of $B$ (and $X$), computed from any free presentation, not a set of extensions of $B$ by a
+prescribed module. Non-abelian kernels are treated only for \emph{central} extensions, and
+the paper carries no numerical examples --- a size-$24$ database counterexample is invoked
+only to \emph{separate} commutators, not to compute a class.
+
+\section{The dictionary}\label{sec:dictionary}
+
+Table~\ref{tab:legs} is the centre of this note. Read down each column and the two legs are
+seen to disagree on every structural axis; read across each row and one sees why neither can
+be a relabelling of the other.
+
+\begin{table}[h]
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}p{0.26\textwidth} p{0.34\textwidth} p{0.34\textwidth}@{}}
+\toprule
+& \textbf{Cohomology leg} (\S\ref{sec:cohom}) & \textbf{Homology leg} (\S\ref{sec:hom})\\
+\midrule
+Invariant & $H^2_{\Sb}(H,D)$ (superscript) & $H_2(B,F_X)$ (subscript)\\
+Type & extension-\emph{classifying} & \emph{Baer invariant} of one object\\
+Coefficient & a \emph{module} $D$ (with actions) & a \emph{reflector} $X\in\{\Grp,\RadRng,\BR,\Ab\}$\\
+Cocycle / formula & pair $(\beta,\tau)$ + compatibility (3.10) & Hopf formula $(K\cap[F,F]_X)/[K,F]_X$\\
+Action & \emph{residue-dependent}: $\nu$, $\shat$ are data & \emph{fixed}: actions factor through $A_+/J_+$\\
+Residue $\nu$? & yes --- $o_\nu$ measures its coupling & no --- quotiented away\\
+Non-abelian kernel & general ideal $D$ & \emph{central} extensions only\\
+Vanishing means & extension splits & (leg-specific; not a splitting criterion)\\
+Extension output & the classification itself & Stallings--Stammbach $5$-term sequence\\
+Examples & explicit ($\Z/2\times\Z/4$, $\Z/8$, \dots) & none (separating counterexample only)\\
+Author's stake & $[\Omega]$, $\varphi_\pm$, $o_\nu$ live here & (neighbour; no overlap)\\
+Sources & Rathee--Yadav~\cite{RY} & Gran--Letourmy--Vendramin~\cite{GLV}\\
+\bottomrule
+\end{tabular}
+\caption{The two legs of degree two. The single class $H^2_{\Sb}$ classifies extensions with
+a residue-dependent module coefficient; the homology $H_2$ is a fixed-action Baer invariant
+with a reflector coefficient. No column agrees.}
+\label{tab:legs}
+\end{table}
+
+The decisive rows are \emph{coefficient}, \emph{residue}, and \emph{type}. A reflector is not
+a module and a module is not a reflector; a residue-dependent theory cannot be a
+fixed-action one; and a classifier of extensions is not a Baer invariant of a single object.
+These are not bookkeeping differences that a dualisation would erase.
+
+\section{The open bridge}\label{sec:bridge}
+
+And yet the two legs are not strangers. Degree-two homology and degree-two cohomology are
+related, in ordinary algebra, by universal coefficients: $H^2(-;M)$ is built from $H_2(-)$ by
+dualising into $M$, modulo an $\mathrm{Ext}$ term. The question is whether the semi-abelian
+$H_2$ of~\cite{GLV} feeds the extension-classifying $H^2$ of~\cite{RY} the same way. The
+honest description of the distance is \emph{one and a half hops}:
+
+\begin{enumerate}
+\item[\textbf{Hop 1.}] From the homology $H_2(B,F_X)$ to a derived functor of abelianisation.
+This is exactly what the Hopf formula~\eqref{eq:hopf} provides, and~\cite{GLV}'s five-term
+sequence is the scaffold linking $H_2$, $H_1$, and the abelianised kernel across an extension.
+\item[\textbf{Half a hop.}] From that derived functor, \emph{dualise / apply universal
+coefficients} into a module coefficient $D$ to reach a cocycle $H^2$ with module
+coefficients. This is the step that is \emph{not} carried out in~\cite{GLV} --- it is left
+open there --- and it is only ``half'' a hop because the target is not the na\"\i ve
+$H^2(-;D)$ but the residue-carrying $H^2_{\Sb}(H,D)$, and the residue $\nu$ must be
+\emph{reintroduced} on the cohomology side after the homology side has quotiented it away.
+\end{enumerate}
+
+\begin{problem}[the bridge]\label{prob:bridge}
+Construct a universal-coefficients passage from the semi-abelian homology $H_2(B,F_X)$
+of~\cite{GLV} to the extension-classifying cohomology $H^2_{\Sb}(H,D)$ of~\cite{RY}, with the
+five-term sequence of~\cite{GLV} as scaffold. In particular, determine which reflector $X$ and
+which coefficient recover the residue-dependent data $(\nu,\shat)$ of the cohomology leg, so
+that the obstructions $[\Omega]$ and $o_\nu$ acquire a homological description.
+\end{problem}
+
+We do not claim this bridge; we state it. Two remarks constrain the search. First, because the
+homology leg is fixed-action, any bridge must \emph{reintroduce} the residue --- so a plain
+dualisation cannot suffice, and the interesting content is exactly the recovery of $\nu$.
+Second, the radical-ring reflector is the natural candidate coefficient: the radicalator
+$[I,A]_{\RadRng}$ and $\RadRng$-centrality are the part of~\cite{GLV} that sees multiplicative
+(as opposed to purely additive) structure, which is where a homological home for the
+bilinear, $\circ$-twisted obstruction $[\Omega]$ would have to live. We flag
+$X=\RadRng$ as the candidate $[\Omega]$-analogue home and leave the construction open.
+
+\section{Consequence for the programme}\label{sec:conclusion}
+
+The extension-classifying obstructions $[\Omega]$ and $o_\nu$ have a published homology
+\emph{neighbour} --- the semi-abelian $H_2$ of Gran--Letourmy--Vendramin --- which they
+neither scoop nor duplicate. The two compute different invariants of different type over the
+same algebras: a residue-dependent, module-coefficient classifier of extensions on one side,
+a fixed-action, reflector-coefficient Baer invariant on the other. For the
+compositional-correctness programme this is the clean statement we wanted: the cohomological
+work is not pre-empted by the homological work, and the honest joint target is the bridge of
+Problem~\ref{prob:bridge}, whose natural coefficient we conjecture to be the radical-ring
+reflector. Building that bridge --- reintroducing the residue on the homology side --- is the
+next question, and it is a question about both legs at once.
+
+\medskip
+\noindent\emph{Provenance and scope.} The Rathee--Yadav classification and their
+multiplicative forgetful map are cited, not reproved. The identification $[\Omega]=[(\beta,\tau)]$
+is peer-reviewed within the group; the descent of $\varphi_+$ and the non-injectivity of
+$\Phi$ are proved and Lean-checked. Theorem~\ref{thm:onu} is proved in the trivial-brace-kernel
+regime, resting on~\cite{RY}'s cocycle characterisation as a premise; the non-trivial-kernel
+sharpening of Remark~\ref{rmk:nontriv} is proved at $H=\Z/2$ and computed in general, with one
+symbolic step open. The facts attributed to~\cite{GLV} are from a full-text reading of that
+paper. The bridge of Section~\ref{sec:bridge} is open and is not claimed. Gran--Letourmy--Vendramin
+themselves cite Rathee--Yadav's earlier 2024 cohomology paper (a distinct paper from the
+extension paper~\cite{RY} used here), a modest pre-existing bibliographic contact point between
+the semi-abelian and skew-brace traditions --- but not the bridge, which remains to be built.
+
+\begin{thebibliography}{9}
+\bibitem{RY}
+M.~Rathee and M.~K.~Yadav,
+\emph{Skew brace extensions, second cohomology and complements},
+arXiv:2601.12371.
+\bibitem{GLV}
+M.~Gran, T.~Letourmy and L.~Vendramin,
+\emph{Hopf formulae for the homology of skew braces},
+J. Pure Appl. Algebra \textbf{229} (2025), no.~11, 108085; arXiv:2409.18056.
+\end{thebibliography}
+
+\end{document}
