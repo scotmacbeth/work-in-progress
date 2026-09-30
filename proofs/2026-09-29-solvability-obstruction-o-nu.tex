@@ -1,0 +1,316 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage[most]{tcolorbox}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Sb}{\mathrm{Sb}}
+\newcommand{\Gp}{\mathrm{Gp}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\Soc}{\operatorname{Soc}}
+
+\title{The residue-dependent solvability obstruction $o_\nu$\\
+\large A group homomorphism $o_\nu:H^2_+\to C^3/A(Z^2_\circ)$ with $\im\varphi^+=\ker o_\nu$
+--- the honest repair of the refuted $[\nu]\perp[\Omega]$ product}
+\author{MacBeth \\ \small Kodamai}
+\date{29 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\textbf{Recipient:} Rick (co-developer of the reformulation; peer review); internal
+(Kodamai; Neil Ghani / Robin Langer).\\[2pt]
+\textbf{Scope:} kernel ideal $D$ a \emph{trivial brace} (RY regime) for the main theorem;
+the $|G|=16$ residue relation and the torsor statement extend to a
+\emph{non-trivial-brace} kernel and are flagged as such.
+\end{center}
+
+\begin{tcolorbox}[colback=gray!6,colframe=black,title=\textbf{Trust grade (honest)}]
+\textbf{\texttt{proved}} for the main theorem (Theorem~\ref{thm:main}: $o_\nu$ is a
+well-defined additive homomorphism killing $B^2_+$, and $\im\varphi^+=\ker o_\nu$),
+in the trivial-brace-kernel (RY) regime. The proof is \emph{structural} and rests on
+three inputs, each independently checked:
+\begin{itemize}\itemsep1pt
+\item[(i)] $\mathbb Z$-linearity of the coupling operators $P,Q$ --- manifest.
+\item[(ii)] the diagonal coboundary satisfies the coupling as a \textbf{formal identity}
+(Lemma~\ref{lem:linchpin}) --- proved from RY's $B^2\subseteq Z^2$, and verified
+\emph{exhaustively} by machine for $H\in\{\Z/2,\Z/3,\Z/4\}$ and non-cyclic $D=(\Z/2)^2$
+(\texttt{2026-09-29-coboundary-identity.py}).
+\item[(iii)] RY's cocycle characterisation $(\beta,\tau)\in Z^2_\Sb\Leftrightarrow$
+(a)$+$(b)$+$(c) --- cited from arXiv:2601.12371, and \emph{cross-validated}: the
+abstract $\ker o_\nu$ equals the genuine $\im\varphi^+$ from an independent
+regular-subgroup-of-holomorph enumeration on two sides
+(\texttt{2026-09-29-o-nu-kernel-vs-image.py}), \texttt{PASS} on $H=\Z/2$ ($D=\Z/4$ and
+$D=(\Z/2)^2$) and $H=\Z/3$.
+\end{itemize}
+The correctness of the operators $P,Q$ (that they transcribe RY (3.10)) is
+\texttt{proved}$+$\texttt{computed}: $P\tau=Q\beta$ holds identically on \emph{every}
+genuine trivial-kernel brace, $H\in\{\Z/2,\Z/3,\Z/4\}$
+(\texttt{2026-09-29-o-nu-operator-check.py}).
+The three-way $|G|=16$ relation $4b\equiv 2(\nu\sigma-1)\ (\mathrm{mod}\ 8)$ and the
+torsor statement (\S\ref{sec:g16}--\ref{sec:torsor}) are \texttt{computed} for a
+\emph{non-trivial-brace} kernel and lie \emph{outside} RY; they are flagged \textbf{open}
+for a general proof.
+\end{tcolorbox}
+
+\section{Background and the defect being repaired}\label{sec:setup}
+
+Fix a skew (left) brace $H$ (the base) and an abelian group $(D,+)$ (a trivial brace:
+$a\circ b=a+b$ on $D$). A skew-brace extension $0\to D\to G\to H\to 0$ with $D$ an ideal
+induces, via any normalised set-theoretic section $s:H\to G$, a \emph{good triplet}
+\[
+\nu:(H,\circ)\to\Aut(D,+)\ \text{(hom)},\quad
+\mu:(H,+)\to\Aut(D,+)\ \text{(anti-hom)},\quad
+\sigma:(H,\circ)\to\Aut(D,+)\ \text{(anti-hom)},
+\]
+$\nu_h=\lambda_{s(h)}|_D$, $\mu_h(x)=-s(h)+x+s(h)$, $\sigma_h(x)=s(h)^{-1}\circ x\circ s(h)$,
+independent of $s$ (Rathee--Yadav, arXiv:2601.12371, \S2; hereafter \textbf{RY}). Because
+$(G,+)$ is abelian in all our examples, $\mu$ is trivial; we nevertheless keep $\mu$
+general below.
+
+To such a triplet RY attach the group $H^2_\Sb(H,D)$ of \emph{skew-brace $2$-cocycles}
+$Z^2_\Sb$ modulo coboundaries $B^2_\Sb$, classifying the extensions inducing the fixed
+triplet. A cocycle is a \emph{pair} $(\beta,\bar\tau)$ subject to
+\begin{itemize}\itemsep1pt
+\item[(a)] $\beta\in Z^2_\Gp\big((H,+),D;\mu\big)$, the additive $2$-cocycle
+$\beta(h_1,h_2)=-s(h_1{+}h_2)+s(h_1)+s(h_2)$;
+\item[(b)] $\bar\tau\in Z^2_\Gp\big((H,\circ),D;\sigma\big)$, the multiplicative
+$2$-cocycle, with $\tau(h_1,h_2):=\nu_{h_1\circ h_2}(\bar\tau(h_1,h_2))=-s(h_1{\circ}h_2)+
+\big(s(h_1)\circ s(h_2)\big)$;
+\item[(c)] the \emph{coupling} RY (3.10), an equation binding $\tau$ and $\beta$.
+\end{itemize}
+The additive forgetful map $\varphi^+:H^2_\Sb\to H^2_+:=H^2_\Gp((H,+),D;\mu)$,
+$[(\beta,\bar\tau)]\mapsto[\beta]$, is a well-defined homomorphism (my
+2026-09-25 note, Theorem~1; \texttt{peer-reviewed}).
+
+\paragraph{The defect.} The refuted 2026-09-26 claim asserted that the residue $[\nu]$ and
+the additive class $[\beta]$ (hence the decomposition class $[\Omega]$) are independent
+coordinates. Rick's referee report (2026-09-26) and my from-scratch reproduction
+(2026-09-29) refuted it: the ``reduction to $\lambda$'' presupposed the very brace whose
+existence was in question. The homogeneous coupling being $\nu$-free does \emph{not} make
+the \emph{inhomogeneous} solvability $\nu$-free. This note replaces the false product by
+the correct object: a residue-dependent obstruction class governing exactly which additive
+classes $[\beta]$ extend to a full brace cocycle.
+
+\section{The coupling operators and the obstruction class}\label{sec:ops}
+
+Write $C^k$ for the normalised $k$-cochains $H^k\to D$. Read RY (3.10) as an
+\emph{affine-linear equation in the multiplicative datum, for fixed $\beta$}. Define two
+$\Z$-linear operators $C^2\to C^3$:
+\begin{align}
+(P\tau)(h_1,h_2,h_3)&:=\mu_{\lambda_{h_1}(h_3)}\!\big(\tau(h_1,h_2)\big)
+-\tau(h_1,h_2{+}h_3)+\tau(h_1,h_3),\label{eq:P}\\[2pt]
+(Q\beta)(h_1,h_2,h_3)&:=\nu_{h_1}\!\big(\beta(h_2,h_3)\big)
++\mu_{h_1\circ h_3}\!\big(\beta(h_1,-h_1)\big)
+-\beta(-h_1,\,h_1{\circ}h_3)-\beta(h_1{\circ}h_2,\,\lambda_{h_1}(h_3)).\label{eq:Q}
+\end{align}
+Here $\lambda$ is the base brace's $\lambda$ (fixed data). Both operators depend only on the
+fixed triplet and on the group structure of $H$; \textbf{no brace is presupposed}. With
+$T:C^2\to C^2$, $(T\bar\tau)(h_1,h_2):=\nu_{h_1\circ h_2}(\bar\tau(h_1,h_2))$ (so $\tau=T\bar\tau$),
+the coupling (c) reads
+\begin{equation}\label{eq:coupling}
+P(T\bar\tau)=Q\beta .
+\end{equation}
+
+\begin{lemma}[Operators transcribe RY (3.10)]\label{lem:opok}
+For every genuine skew brace $G$ with trivial-brace ideal $D$ and every section $s$, the
+honest cochains $\beta,\tau$ satisfy $P\tau=Q\beta$.
+\end{lemma}
+\begin{proof}[Verification]
+Exhaustively confirmed by machine on \emph{all} genuine trivial-kernel braces for
+$H\in\{\Z/2,\Z/3,\Z/4\}$ (orders $8,9,16$), \texttt{2026-09-29-o-nu-operator-check.py}:
+$P\tau=Q\beta$ on $6/6$, $8/8$, $3/3$, $3/3$, $16/16$ braces respectively. At $H=\Z/2$,
+$\mu$ trivial, one computes by hand $(P\tau)=2t$ and $(Q\beta)=(1+\nu)b$ with
+$t=\bar\tau(1,1),\ b=\beta(1,1)$, recovering RY (3.10) verbatim. The formula \eqref{eq:Q}
+is RY (3.10) read with the sign of $\tau$ moved to the left.
+\end{proof}
+
+Let $A:=P\circ T$ restricted to $Z^2_\circ:=Z^2_\Gp((H,\circ),D;\sigma)$; its image
+$A(Z^2_\circ)=P(T\,Z^2_\circ)\le C^3$ is a subgroup ($P,T$ linear, $Z^2_\circ$ a group).
+
+\begin{definition}[The obstruction]\label{def:onu}
+\[
+o_\nu(\beta):=[\,Q\beta\,]\ \in\ C^3\big/A(Z^2_\circ),\qquad \beta\in Z^2_+.
+\]
+\end{definition}
+
+\section{Main theorem: $o_\nu$ is a homomorphism and $\im\varphi^+=\ker o_\nu$}\label{sec:main}
+
+The whole content is one formal identity.
+
+\begin{lemma}[Linchpin: the diagonal coboundary satisfies the coupling]\label{lem:linchpin}
+Let $\theta:H\to D$, $\theta(0)=0$, be arbitrary, and set $\theta_1(h):=\nu_h^{-1}(\theta(h))$.
+Let $\beta:=d_+\theta$ be the $\mu$-twisted additive coboundary and $\bar\tau:=d_\circ\theta_1$
+the $\sigma$-twisted multiplicative coboundary, explicitly
+\[
+(d_+\theta)(h_1,h_2)=\mu_{h_2}(\theta(h_1))-\theta(h_1{+}h_2)+\theta(h_2),\qquad
+(d_\circ\theta_1)(h_1,h_2)=\sigma_{h_2}(\theta_1(h_1))-\theta_1(h_1{\circ}h_2)+\theta_1(h_2).
+\]
+Then $P(T\,d_\circ\theta_1)=Q(d_+\theta)$ identically in $\theta$.
+\end{lemma}
+\begin{proof}
+This is exactly the statement $B^2_\Sb\subseteq Z^2_\Sb$ restricted to component (c): the
+diagonal coboundary $(d_+\theta,\,d_\circ\theta_1)$ lies in $Z^2_\Sb$, so satisfies the
+coupling \eqref{eq:coupling}. RY establish $B^2\subseteq Z^2$ (their coboundaries are
+cocycles) as a formal identity in $\theta$ and the triplet, requiring \emph{no} brace to
+exist. We additionally verified the identity \emph{exhaustively} by machine
+(\texttt{2026-09-29-coboundary-identity.py}): over all $\theta$ and all good triplets
+harvested from genuine braces, it holds on $12/12$, $32/32$, $9/9$, $192/192$ instances for
+$(H,D)=(\Z/2,\Z/4),(\Z/2,(\Z/2)^2),(\Z/3,\Z/3),(\Z/4,\Z/4)$.
+\end{proof}
+
+\begin{theorem}[Main]\label{thm:main}
+Fix the good triplet $(\nu,\mu,\sigma)$ with $D$ a trivial brace. Then:
+\begin{enumerate}\itemsep2pt
+\item[\rm(1)] $o_\nu(d_+\theta)=0$ for every $\theta$; hence $o_\nu$ descends to a map
+$o_\nu:H^2_+\to C^3/A(Z^2_\circ)$, $[\beta]\mapsto[Q\beta]$.
+\item[\rm(2)] $o_\nu$ is a group homomorphism, additive in $[\beta]$.
+\item[\rm(3)] $\im\varphi^+=\ker o_\nu$. Equivalently: an additive class $[\beta]$ extends to
+a full skew-brace cocycle inducing $(\nu,\mu,\sigma)$ \emph{iff} $o_\nu([\beta])=0$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) By Lemma~\ref{lem:linchpin}, $Q(d_+\theta)=P(T\,d_\circ\theta_1)\in A(Z^2_\circ)$ since
+$d_\circ\theta_1\in Z^2_\circ$ (a coboundary is a cocycle). Hence $[Q(d_+\theta)]=0$, so
+$o_\nu$ kills $B^2_+$ and factors through $H^2_+=Z^2_+/B^2_+$. The target $C^3/A(Z^2_\circ)$
+is fixed by the triplet, so $o_\nu$ is well defined on classes.
+
+(2) $Q$ is $\Z$-linear (each summand of \eqref{eq:Q} is additive in $\beta$ because
+$\nu_{h_1},\mu_{h_1\circ h_3}\in\Aut(D,+)$ and reindexing is additive), and
+$A(Z^2_\circ)$ is a subgroup; so $[\beta]\mapsto[Q\beta]$ is a homomorphism.
+
+(3) ($\subseteq$) If $[\beta]=\varphi^+[(\beta,\bar\tau)]$ then $(\beta,\bar\tau)\in Z^2_\Sb$,
+so by (c)/\eqref{eq:coupling} $Q\beta=P(T\bar\tau)$ with $\bar\tau\in Z^2_\circ$ (from (b));
+thus $Q\beta\in A(Z^2_\circ)$ and $o_\nu([\beta])=0$.
+
+($\supseteq$) If $o_\nu([\beta])=0$ then $Q\beta\in A(Z^2_\circ)$, i.e.\ there is
+$\bar\tau\in Z^2_\circ$ with $P(T\bar\tau)=Q\beta$. Now the pair $(\beta,\bar\tau)$ satisfies
+(a) ($\beta\in Z^2_+$), (b) ($\bar\tau\in Z^2_\circ$), and (c) \eqref{eq:coupling}; by RY's
+characterisation $(\beta,\bar\tau)\in Z^2_\Sb$, whence $[\beta]=\varphi^+[(\beta,\bar\tau)]
+\in\im\varphi^+$. \emph{This direction constructs the brace cocycle; it does not presuppose
+one --- the circular step of the refuted argument is thereby avoided.}
+\end{proof}
+
+\begin{proposition}[Cross-validation]\label{prop:cross}
+For $H=\Z/2$ with $D=\Z/4$ (all $4$ triplets) and $D=(\Z/2)^2$ (all $16$ triplets), and for
+$H=\Z/3$ with $D=\Z/3$, the abstractly computed $\ker o_\nu\subseteq H^2_+$ equals the
+$\Aut(D)$-saturated set of additive classes realised by genuine skew braces with the given
+triplet (independent regular-subgroup-of-holomorph enumeration),
+\texttt{2026-09-29-o-nu-kernel-vs-image.py}.
+\end{proposition}
+
+For $D=(\Z/2)^2$ the obstruction is genuinely nonzero for many triplets: it cuts
+$|H^2_+|=4$ down to $|\ker o_\nu|=2$, matched exactly by the genuine enumeration --- a
+stringent test of \eqref{eq:P}--\eqref{eq:Q}, the twist $T$, and the descent.
+
+\section{Explicit residue-dependence I: $|G|=8$ (channel~1, linear)}\label{sec:g8}
+
+Take $H=\Z/2$, $D=\Z/4$, $\mu$ trivial, $\sigma=\sigma_1$. Normalised cochains are single
+values $b=\beta(1,1)$, $t=\bar\tau(1,1)\in D$; here $\nu_{1\circ1}=\nu_0=\id$ so $T$ acts
+trivially, $A(Z^2_\circ)=\{2t: t\in D^{\sigma}\}=2D^\sigma$, and $Q$ evaluates to
+\[
+o_\nu(b)=0\iff (1+\nu)\,b\in 2D^{\sigma}.
+\]
+The residue enters through \emph{channel~1}, the term $\nu_{h_1}(\beta)$ of \eqref{eq:Q}
+(the ``$1$'' is the complementary $\mu$-term, the ``$\nu$'' is channel~1). With $\sigma=-1$,
+$D^\sigma=\{0,2\}$, $2D^\sigma=\{0\}$:
+\[
+\nu=1:\ 2b=0\iff b\in\{0,2\}\iff[\beta]=0;\qquad
+\nu=-1:\ 0\in\{0\}\ \text{always}\iff[\beta]\ \text{free}.
+\]
+So $\nu=1$ \emph{forces} $[\beta]=0$ (the additive group must be $\Z/2\times\Z/4$, not
+$\Z/8$), while $\nu=-1$ realises both classes. This is precisely the refutation's decisive
+$|G|=8$ coupling, now a corollary of Theorem~\ref{thm:main} and matched by
+Proposition~\ref{prop:cross}.
+
+\section{Explicit residue-dependence II: $|G|=16$ (channel~2, three-way)}\label{sec:g16}
+
+Take $D=\Z/8$ carrying the \emph{non-trivial} brace $\lambda^D_x=5^x$ (so $L=\{1,5\}
+\subsetneq\Aut(D)$), $H=\Z/2$. This is outside RY's trivial-kernel regime; the residue now
+enters a \emph{second} channel, through $\lambda_d$ on the additive complement,
+$\lambda_d(k)=k+\nu\sigma(d)-d$ (Rick, eq.~(1)). Writing $b\in\Z/8$ for the additive
+$2$-cocycle and $\nu,\sigma$ for the residue and circle units, every realising extension
+satisfies the \textbf{three-way lock}
+\begin{equation}\label{eq:threeway}
+(\lambda^D_d-1)\,b=2\big(\nu\sigma(d)-d\big)\quad\forall d\in D,
+\qquad\text{at }d=1:\quad \boxed{\,4b\equiv 2(\nu\sigma-1)\ (\mathrm{mod}\ 8)\,}.
+\end{equation}
+Verified on \emph{all} $24$ genuine order-$16$ braces with this kernel
+(\texttt{2026-09-29-G16-residue-relation.py}): $8/8$ on $\Z/16$ ($[\beta]\neq0$) and
+$16/16$ on $\Z/2\times\Z/8$ ($[\beta]=0$). The residue and circle action enter
+\eqref{eq:threeway} \emph{only through the product $\nu\sigma$} (mod $4$), which is then
+tied to $[\beta]$:
+\[
+[\beta]=0\ (b\ \text{even})\iff \nu\sigma\equiv1\ (\mathrm{mod}\ 4).
+\]
+This explains the enumeration exactly: on $\Z/2\times\Z/8$ the residue $\{3,7\}$
+co-occurs with $[\beta]=0$ \emph{only} when $\sigma\in\{3,7\}$ (i.e.\ $\nu\sigma\equiv1$),
+never with $\sigma=\id$. The coupling is genuinely three-way $([\nu],\sigma,[\beta])$, not a
+two-way product --- the crisp refutation of the old ``$[\nu]\perp[\Omega]$'' claim.
+
+\section{The moving-$\nu$ regime: an affine obstruction and a torsor}\label{sec:torsor}
+
+In the trivial-kernel (RY) regime, $o_\nu$ is \emph{linear} (Theorem~\ref{thm:main}(2)), so
+$\im\varphi^+=\ker o_\nu$ is a \emph{based} subgroup: it always contains $0$, i.e.\ the
+split additive class $[\beta]=0$ is realisable with any prescribed residue. The
+moving-$\nu$ / no-basepoint phenomenon is a \emph{non-trivial-kernel} effect, visible in
+\eqref{eq:threeway}: the right-hand side $2(\nu\sigma-1)$ is \textbf{constant in $b$}. Thus
+the obstruction is \emph{affine}, $4b=c$ with $c=2(\nu\sigma-1)$, and the realisable set of
+$b$ is a \emph{coset} of $\ker(\times4)=\{0,2,4,6\}$:
+\[
+\nu\sigma\equiv1\ (\mathrm{mod}\ 4):\ c=0,\ b\in\{0,2,4,6\}\ni0\ \Rightarrow\ [\beta]=0\ \text{available};\qquad
+\nu\sigma\equiv3\ (\mathrm{mod}\ 4):\ c=4,\ b\in\{1,3,5,7\}\not\ni0,
+\]
+a \textbf{torsor with no basepoint}: no split-additive brace exists with that
+$(\nu,\sigma)$; $[\beta]\neq0$ is forced. Hence the honest replacement of the
+``internal-replacement coordinate'' story:
+
+\begin{quote}\itshape
+Which decomposition obstructions $[\beta]$ are \emph{available} is constrained by the
+internal relabelling through the affine offset $c=2(\nu\sigma-1)$. When the internal datum
+$\nu\sigma$ leaves the socle-like subgroup ($\nu\sigma\not\equiv1$), the realisable locus
+$\im\varphi^+$ is a torsor over $\ker o_\nu$ that misses the origin.
+\end{quote}
+
+\noindent A general-$H$, general-kernel proof that $\im\varphi^+$ is an
+$o_\nu$-\emph{affine} torsor (with the offset identified intrinsically as the class of the
+$\lambda_d$-complement cochain) is the natural next target; here it is \texttt{computed} on
+the $|G|=16$ family and \textbf{open} in general.
+
+\section*{Summary}
+\begin{itemize}\itemsep2pt
+\item[\textbf{Thm~\ref{thm:main}}] $o_\nu:H^2_+\to C^3/A(Z^2_\circ)$ is a well-defined
+group homomorphism killing $B^2_+$, and $\im\varphi^+=\ker o_\nu$. Trivial-brace kernel,
+general $H$. \texttt{proved} (structural; linchpin identity Lemma~\ref{lem:linchpin}
+exhaustively machine-checked; $\ker o_\nu=\im\varphi^+$ cross-validated against genuine
+enumeration).
+\item[\textbf{\S\ref{sec:g8}}] $|G|=8$: $o_\nu(b)=0\Leftrightarrow(1+\nu)b\in2D^\sigma$;
+$\nu=1$ forces $[\beta]=0$. Channel~1 (linear).
+\item[\textbf{\S\ref{sec:g16}}] $|G|=16$: $4b\equiv2(\nu\sigma-1)\ (\mathrm{mod}\ 8)$;
+$[\nu],\sigma,[\beta]$ locked three-way through $\nu\sigma$. Channel~2 (non-trivial kernel).
+\texttt{computed}.
+\item[\textbf{\S\ref{sec:torsor}}] Non-trivial kernel $\Rightarrow$ $o_\nu$ affine
+$\Rightarrow$ $\im\varphi^+$ a torsor, no basepoint when $\nu\sigma\not\equiv1$.
+\texttt{computed}; general proof \textbf{open}.
+\end{itemize}
+
+\noindent\textbf{Credit.} The reformulation ``(b)$+$(c) is affine $A\tau=R_\nu(\beta)$;
+solvability $=$ vanishing of $o_\nu(\beta)$; $\im\varphi^+=\ker o_\nu$'' is Rick's Remark~4
+(referee report, 2026-09-26). This note supplies the general-$H$ operators
+\eqref{eq:P}--\eqref{eq:Q}, the descent (Theorem~\ref{thm:main}) via the formal linchpin
+identity, and the two-channel / torsor analysis, all machine-cross-validated.
+
+\end{document}

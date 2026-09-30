@@ -1,0 +1,208 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Sb}{\mathrm{Sb}}
+
+\begin{document}
+
+\begin{flushleft}
+\textbf{Author:} MacBeth \hfill \textbf{Date:} 2026-09-30\\
+\textbf{Recipient:} Rick\\[0.4em]
+{\Large\bfseries The fixed-$\sigma$ slices of the residue-dependent\\
+solvability obstruction $o_\nu$: additivity, $B^2$-killing,\\
+and the torsor dichotomy}\\[0.4em]
+\small Corresponds to work-in-progress commit \texttt{COMMITHASH}
+(\texttt{github.com/scotmacbeth/work-in-progress}).
+\end{flushleft}
+
+\hrule
+\vspace{0.6em}
+
+Rick --- here are the fixed-$\sigma$ slices you asked for
+(your email of 2026-09-29, targets (a) and (b)), presented against your two
+read-points. The underlying object is the obstruction we settled on 09-29; this
+note slices it by the circle action $\sigma$ and reports the per-slice tables.
+Trust grades are stated inline and kept honest: the \emph{slice tables} are
+\texttt{computed} (verification), the \emph{main theorem} they instantiate is
+\texttt{proved}, and the general \emph{torsor} claim remains \texttt{computed}
+(not yet proved in general).
+
+\section{Setup and what is already proved}
+
+Fix a good triplet $(\nu,\mu,\sigma)$ for a skew-brace extension
+$0\to D\to G\to H\to 0$ with $D$ an ideal: $\nu:(H,\circ)\to\Aut(D,+)$ a
+homomorphism (the residue channel), $\mu:(H,+)\to\Aut(D,+)$ (trivial here, as
+$(G,+)$ is abelian), and $\sigma:(H,\circ)\to\Aut(D,+)$ an anti-homomorphism (the
+circle action). Reading Rathee--Yadav (3.10) as an affine-linear equation in the
+multiplicative datum for fixed $\beta$ gives two $\Z$-linear operators
+$P,Q:C^2\to C^3$; with $T(\bar\tau)(h_1,h_2)=\nu_{h_1\circ h_2}(\bar\tau(h_1,h_2))$
+and $A:=P\circ T$ restricted to $Z^2_\circ:=Z^2_{\mathrm{Gp}}((H,\circ),D;\sigma)$,
+the obstruction is
+\[
+  o_\nu:H^2_+\longrightarrow C^3\big/A(Z^2_\circ(\sigma)),\qquad
+  o_\nu([\beta])=[Q\beta].
+\]
+
+\noindent\textbf{Proved (09-29).} In the trivial-brace-kernel (RY) regime, for
+general $H$: $o_\nu$ is a well-defined group homomorphism that kills $B^2_+$, and
+\[
+  \boxed{\ \im\varphi^+=\ker o_\nu\ }
+\]
+--- an additive class $[\beta]$ extends to a full skew-brace cocycle inducing
+$(\nu,\mu,\sigma)$ iff $o_\nu([\beta])=0$. This is
+\texttt{proved} (structural; the linchpin identity
+$P(T\,d_\circ\theta_1)=Q(d_+\theta)$ is a formal consequence of $B^2\subseteq Z^2$,
+exhaustively machine-checked; $\ker o_\nu=\im\varphi^+$ cross-validated against an
+independent regular-subgroup enumeration). Full statement and proof:
+\texttt{proofs/2026-09-29-solvability-obstruction-o-nu.tex}, Theorem~1.
+
+\paragraph{The fixed-$\sigma$ slice framing (your Remark~4).}
+The target $A(Z^2_\circ(\sigma))$ depends on $\sigma$, while the domain $H^2_+$
+(computed with $\mu$ trivial) does not. So it is natural to slice: fix $\sigma$,
+vary the admissible residue $\nu$, and read $o_\nu\restriction_\sigma$ as a map
+$H^2_+\to C^3/A(Z^2_\circ(\sigma))$. Your two read-points then become per-slice
+questions, answered below.
+
+\section{Read-point (a): each slice is additive and kills $B^2_+$}
+
+\textbf{Claim (a).} For every fixed $\sigma$ and admissible $\nu$, the slice
+$o_\nu\restriction_\sigma$ is an \emph{additive} map $H^2_+\to C^3/A(Z^2_\circ(\sigma))$
+that \emph{kills $B^2_+$}; hence $\ker o_\nu\restriction_\sigma=\im\varphi^+$ is a
+based \emph{subgroup} of $H^2_+$. This is the slice restriction of
+Theorem~1 (\texttt{proved}); the tables below are the \texttt{computed}
+verification.
+
+I verified, per slice, (i)~$o_\nu(\beta_1+\beta_2)\equiv o_\nu(\beta_1)+o_\nu(\beta_2)
+\pmod{A}$ over \emph{all} pairs $\beta_1,\beta_2\in Z^2_+$, and
+(ii)~$o_\nu(d_+\theta)\equiv 0$ over \emph{all} additive coboundaries $d_+\theta$.
+Both pass with no exceptions
+(\texttt{scratch/2026-09-30-o-nu-fixed-sigma-slices.py}).
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llccccc}
+\toprule
+family & slice & residue & additivity & $B^2$-killing & $|\ker|/|H^2_+|$ & basepoint\\
+\midrule
+\multirow{4}{*}{$\substack{|G|=8\\ H{=}\Z/2,\,D{=}\Z/4}$}
+ & $\sigma=\id$   & $\nu=\id$  & $16/16$ & $4/4$ & $2/2$ & present\\
+ & $\sigma=\id$   & $\nu=-1$   & $16/16$ & $4/4$ & $2/2$ & present\\
+ & $\sigma=-1$    & $\nu=\id$  & $16/16$ & $4/4$ & $1/2$ & present\\
+ & $\sigma=-1$    & $\nu=-1$   & $16/16$ & $4/4$ & $2/2$ & present\\
+\midrule
+\multirow{2}{*}{$\substack{|G|=9\\ H{=}\Z/3,\,D{=}\Z/3}$}
+ & $\sigma=\id$   & $\nu=\id$  & $81/81$ & $9/9$ & $3/3$ & present\\
+ & $\sigma={\times}2$ & $\nu=\id$ & $81/81$ & $9/9$ & $1/3$ & present\\
+\bottomrule
+\end{tabular}
+\caption{Trivial-kernel (RY) slices. Additivity checked over all
+$|Z^2_+|^2$ pairs; $B^2$-killing over all $|B^2_+|$ coboundaries. Every slice is a
+homomorphism killing $B^2_+$; the kernel is a subgroup and always contains the
+origin (basepoint present). \texttt{computed}.}
+\end{table}
+
+\noindent Two remarks tying this to the closed forms. First, the domain size is
+$\sigma$-independent ($|H^2_+|=2$ at $|G|=8$, $=3$ at $|G|=9$), while the kernel
+\emph{size} moves with the slice: at $|G|=8$, $\sigma=-1$, $\nu=\id$ the kernel
+drops to $\{[\beta]=0\}$ (only the split class survives), recovering ``$\nu=\id$
+forces $[\beta]=0$''. Second, on the $H=\Z/2$ slices the abstract kernel agrees
+with the closed form
+\[
+  o_\nu(b)=0\iff (1+\nu)\,b\in 2D^{\sigma},
+\]
+verified as ``MATCHES'' on every row --- so the $|G|=8$ condition
+$(1+\nu)b\in 2D^\sigma$ falls out of the slice exactly as the per-$\sigma$
+membership test.
+
+\section{Read-point (b): the torsor dichotomy}
+
+\textbf{Claim (b).} A \emph{non-trivial-brace} kernel makes $o_\nu\restriction_\sigma$
+\emph{affine} rather than linear: the realising equation acquires a constant offset
+$c$, so the realisable locus $\im\varphi^+$ is a \emph{coset} of $\ker o_\nu$ --- a
+torsor. When that offset is nonzero the coset misses the origin: \emph{no split
+($[\beta]=0$) brace exists}, i.e.\ the torsor has \textbf{no basepoint}. This is
+\texttt{computed} on the $|G|=16$ witness family and \textbf{open} for a general
+proof.
+
+\paragraph{The two per-$\sigma$ conditions.} In the trivial-kernel regime
+(\S2) the per-$\sigma$ condition is the \emph{linear/subgroup} membership
+$(1+\nu)b\in 2D^\sigma$; the origin always solves it, so the basepoint is always
+present. In the non-trivial-kernel family $D=\Z/8$, $\lambda^D_x={\times}5^x$,
+$L=\{1,5\}\subsetneq\Aut(D)$, the residue re-enters through $\lambda_d$ on the
+complement and the per-$\sigma$ condition becomes the \emph{affine} three-way lock
+\[
+  4b\equiv 2(\nu\sigma-1)\pmod 8,\qquad\text{offset } c:=2(\nu\sigma-1)\bmod 8,
+\]
+constant in $b$. The realisable $b$ form the coset $\{b:4b=c\}$ of
+$\ker({\times}4)=\{0,2,4,6\}$, and
+\[
+  \text{basepoint present}\iff 0\in\{b:4b=c\}\iff c=0\iff \nu\sigma\equiv 1\pmod 4 .
+\]
+I verified both the affine lock and this basepoint dichotomy on all $24$ genuine
+order-$16$ braces with this kernel, sliced by $\sigma$.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llcccc}
+\toprule
+slice & residue & realisable $b$ & offset $c=2(\nu\sigma{-}1)$ & $\nu\sigma\bmod 4$ & basepoint\\
+\midrule
+$\sigma={\times}1$ & $\nu={\times}1$ & $\{0\}$ & $0$ & $1$ & present\\
+$\sigma={\times}1$ & $\nu={\times}3$ & $\{1\}$ & $4$ & $3$ & \textbf{absent}\\
+$\sigma={\times}1$ & $\nu={\times}5$ & $\{0\}$ & $0$ & $1$ & present\\
+$\sigma={\times}1$ & $\nu={\times}7$ & $\{1\}$ & $4$ & $3$ & \textbf{absent}\\
+$\sigma={\times}3$ & $\nu={\times}3$ & $\{0\}$ & $0$ & $1$ & present\\
+$\sigma={\times}3$ & $\nu={\times}7$ & $\{0\}$ & $0$ & $1$ & present\\
+$\sigma={\times}5$ & $\nu={\times}1$ & $\{0\}$ & $0$ & $1$ & present\\
+$\sigma={\times}5$ & $\nu={\times}3$ & $\{1\}$ & $4$ & $3$ & \textbf{absent}\\
+$\sigma={\times}5$ & $\nu={\times}5$ & $\{0\}$ & $0$ & $1$ & present\\
+$\sigma={\times}5$ & $\nu={\times}7$ & $\{1\}$ & $4$ & $3$ & \textbf{absent}\\
+$\sigma={\times}7$ & $\nu={\times}3$ & $\{0\}$ & $0$ & $1$ & present\\
+$\sigma={\times}7$ & $\nu={\times}7$ & $\{0\}$ & $0$ & $1$ & present\\
+\bottomrule
+\end{tabular}
+\caption{Non-trivial-kernel ($|G|=16$, $D=\Z/8$, $L=\{1,5\}$) slices. In each
+slice the affine lock $4b\equiv c$ holds on every realising brace, and the
+basepoint is present iff $c=0$ iff $\nu\sigma\equiv 1\pmod 4$. The rows with
+$\nu\sigma\equiv 3$ ($c=4$) realise \emph{only} $[\beta]\neq 0$: a torsor with no
+basepoint. \texttt{computed}.}
+\end{table}
+
+\noindent The dichotomy is crisp: whenever the internal datum $\nu\sigma$ leaves
+the socle-like subgroup ($\nu\sigma\not\equiv 1\bmod 4$), the offset $c=4\neq 0$
+and $\im\varphi^+$ is a torsor over $\ker o_\nu$ missing the origin --- $[\beta]=0$
+is \emph{forbidden}, the split additive brace does not exist for that $(\nu,\sigma)$.
+This is the honest replacement of the old ``internal-replacement coordinate''
+story, and the affine offset $c$ is the intrinsic obstruction to a basepoint.
+
+\paragraph{Grade, honestly.} The affine/torsor structure and the basepoint
+dichotomy are \texttt{computed} on this family and match every genuine brace; a
+general-$H$, general-kernel proof that $\im\varphi^+$ is an $o_\nu$-affine torsor
+(with $c$ identified intrinsically as the class of the $\lambda_d$-complement
+cochain) is the natural next target and is \textbf{open}. Nothing in the slice
+computation contradicts the 09-29 proof file --- the linear-slice tables of \S2
+and the affine-slice table of \S3 reproduce its $|G|=8$ and $|G|=16$ conditions
+exactly.
+
+\vspace{0.8em}
+\hrule
+\vspace{0.4em}
+\small
+Verification script: \texttt{scratch/2026-09-30-o-nu-fixed-sigma-slices.py}
+(reuses the four 09-29 scripts). All slices: additivity and $B^2$-killing pass
+with no exceptions; the $|G|=16$ affine lock and basepoint dichotomy pass on all
+$24$ genuine braces. Happy to co-develop the general torsor proof if you want to
+take the offset-as-a-class route.
+
+\end{document}
