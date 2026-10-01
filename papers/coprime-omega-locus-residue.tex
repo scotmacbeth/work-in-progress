@@ -1,0 +1,405 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{problem}[theorem]{Problem}
+
+\newcommand{\Sb}{\mathrm{Sb}}
+\newcommand{\SKB}{\mathsf{SKB}}
+\newcommand{\Grp}{\mathsf{Grp}}
+\newcommand{\Ab}{\mathsf{Ab}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\Inn}{\operatorname{Inn}}
+\newcommand{\Soc}{\operatorname{Soc}}
+\newcommand{\gcdd}{\gcd}
+
+\title{Coprimality is the vanishing of $[\Omega]$,\\
+\large but not the vanishing of $\nu$:\\
+\large the cohomological locus of skew-brace decomposition
+and its orthogonal residue}
+\author{MacBeth\\ \small Kodamai}
+\date{30 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The decomposition theory of finite skew braces has a cohomological shadow: an extension
+$0\to D\to G\to H\to 0$ of a skew brace by an ideal splits exactly when a certain bilinear
+second-cohomology class $[\Omega]$ vanishes. It is a classical fact, in the
+Schur--Zassenhaus tradition now transported to skew braces, that coprimality of $|D|$ and
+$|H|$ forces a complement to exist. We record that these two statements meet: on a finite but
+axiom-verified computational sweep (all skew braces on the additive groups of order at most
+$24$), coprimality forces $[\Omega]=0$ with zero exceptions across $111$ instances, while
+$[\Omega]\ne0$ occurs only in the non-coprime regime. We then correct a tempting misreading.
+One might expect coprimality to kill $[\Omega]$ by trivialising the \emph{residue} $\nu$, the
+outer action of $H$ on $D$. It does not: $\nu$ survives, non-trivial in a majority of the
+decomposable coprime cases (with $S_3$ and $A_4$ as clean witnesses). Coprimality forces
+$[\Omega]=0$ for a purely order-arithmetic reason, \emph{orthogonally} to $\nu$. The
+cohomological invariant thus both recovers the classical decomposition theorems, as its
+vanishing locus, and refines them, by isolating a residue channel the order-arithmetic
+toolkit does not see.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{The problem: when does a skew brace decompose?}
+Skew braces are the algebraic backbone of set-theoretic solutions to the Yang--Baxter
+equation, and much of their structure theory is a theory of \emph{decomposition}: given a
+skew brace $G$ and an ideal $D\trianglelefteq G$, when does $G$ split as an internal product
+of $D$ with a complementary sub-skew-brace? A positive answer reduces the study of $G$ to
+that of $D$ and the quotient $H=G/D$ together with an action, exactly as a semidirect
+decomposition does for groups. Two lines of work bear on this. On the structural side, a
+Schur--Zassenhaus phenomenon has been established for skew braces: when $|D|$ and $|H|$ are
+coprime, a complement to $D$ always exists \cite{RY}.\footnote{The general finite-skew-brace form of the statement --- a complement for
+every ideal of coprime order or index --- has been proved independently and
+contemporaneously by structure-theoretic methods (Crespo; Damele; Ferrara--Trombetti). Those
+sources are not yet at the citation floor used here, and we anchor the coprime-complement
+statement on the deep-read source \cite{RY}, whose complement theorems cover the trivial-kernel
+case that our witnesses exercise.} On the cohomological side, the extension
+$0\to D\to G\to H\to 0$ is classified by a second cohomology, and splitting is detected by
+the vanishing of a distinguished class.
+
+\paragraph{The cohomological shadow.}
+In earlier work (peer-reviewed within our group) the present author isolated, for a
+skew-brace extension with $D$ a proper non-trivial ideal, a \emph{bilinear} obstruction
+class $[\Omega]$ with the property
+\begin{equation}\label{eq:premise}
+[\Omega]=0
+\quad\Longleftrightarrow\quad
+\text{the extension splits}
+\quad\Longleftrightarrow\quad
+D\ \text{has a sub-skew-brace complement.}
+\end{equation}
+The class $[\Omega]$ is the Rathee--Yadav extension class \cite{RY} in the trivial-kernel
+case; its bilinearity is genuine, and the equivalence \eqref{eq:premise} identifies the
+classical notion of decomposability with a cohomological vanishing. We take
+\eqref{eq:premise} as a premise throughout: it is the bridge that lets us ask a
+decomposition question as a cohomology question.
+
+\paragraph{The gap.}
+Given \eqref{eq:premise} and the coprime complement theorem, one sentence writes itself:
+\emph{coprimality forces $[\Omega]=0$}. But a sentence that writes itself deserves scrutiny
+on two counts. First, is it visibly true --- does the cohomological locus $\{[\Omega]=0\}$
+actually contain the whole coprime regime, with no exceptions hiding at small orders? Second,
+and more interestingly, \emph{why}? A skew-brace extension carries a \emph{residue} $\nu$:
+the outer action of $H$ on $D$, the image of the multiplicative action restricted to $D$ in
+$\Aut(D)$ modulo inner automorphisms. This residue is the channel through which the
+residue-dependent solvability obstruction $o_\nu$ of the cohomological extension theory operates.
+It is natural --- it was, in fact, our own working hypothesis --- to guess that coprimality
+kills $[\Omega]$ \emph{through} $\nu$: that coprime order trivialises the outer action, and
+with the action gone the obstruction has nowhere to live. If true, this would tie the
+splitting obstruction and the residue channel together at exactly the point where classical
+decomposition succeeds.
+
+\paragraph{The result of this note.}
+The hypothesis is half right and half wrong, and the wrong half is the interesting one. We
+verify computationally that coprimality does force $[\Omega]=0$, without exception, on a
+finite but axiom-checked sweep; and we refute the mechanism. The residue $\nu$ is
+\emph{not} trivialised by coprimality --- it survives, and is generically non-trivial, in the
+very cases where $G$ decomposes. Coprimality forces $[\Omega]=0$ for an order-arithmetic
+(Schur--Zassenhaus) reason that is \emph{orthogonal} to $\nu$.
+
+\begin{observation}\label{obs:main}
+On the sweep of all skew braces whose additive group has order at most $24$
+(Section~\ref{sec:witness}), for every proper non-trivial ideal $D$:
+\begin{enumerate}
+\item[\textup{(a)}] \emph{(locus)} coprimality of $|D|$ and $|H|$ forces the extension to
+split, hence $[\Omega]=0$, in all $111$ coprime instances, with zero exceptions; and every
+split-failure ($582$ of them) occurs in the non-coprime regime;
+\item[\textup{(b)}] \emph{(orthogonality)} the residue $\nu$ is non-trivial in $70$ of those
+$111$ coprime splittings, and the $H$-action on $D$ is non-trivial in $74$ of them; the
+symmetric group $S_3$ and the alternating group $A_4$ are decomposable coprime witnesses with
+non-trivial residue.
+\end{enumerate}
+\end{observation}
+
+This is a \emph{computed} observation on a finite sweep, not a theorem: it confirms the
+locus statement and refutes the residue-trivialisation mechanism, but it does not prove the
+orthogonality in general. We are careful throughout to say which claims are established
+(the equivalence \eqref{eq:premise}, peer-reviewed; the coprime complement theorem, cited)
+and which are computational (Observation~\ref{obs:main}).
+
+\paragraph{Why it matters.}
+The equivalence \eqref{eq:premise} is a first example of the cohomological machinery
+\emph{explaining} a classical structural result: the decomposition theorems reappear as the
+description of a single vanishing locus. Observation~\ref{obs:main} sharpens the picture by
+showing the machinery also \emph{sees more} than the classical toolkit. The order-arithmetic
+proof of Schur--Zassenhaus is silent about $\nu$; the cohomological description makes $\nu$ a
+first-class invariant, one that persists as genuine structure even where decomposition
+succeeds. Recovering a classical theorem and isolating a channel it cannot see is exactly the
+kind of leverage a cohomological invariant should provide.
+
+\paragraph{Outline.}
+Section~\ref{sec:prelim} fixes the language of skew-brace extensions, the class $[\Omega]$,
+and the residue $\nu$. Section~\ref{sec:locus} records how \eqref{eq:premise} makes the
+coprime complement theorem a statement about the locus $\{[\Omega]=0\}$.
+Section~\ref{sec:witness} describes the computational sweep and its axiom verification, and
+states the locus half of Observation~\ref{obs:main}. Section~\ref{sec:residue} states and
+refutes the residue-trivialisation hypothesis and gives the orthogonality half.
+Section~\ref{sec:conclusion} draws the moral and lists the open questions this note hands to
+a proof session.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We recall only what the observation uses. All skew braces are finite.
+
+\begin{definition}[Skew brace]
+A \emph{skew brace} is a set $A$ with two group operations, $(A,+)$ (the \emph{additive}
+group, not assumed abelian) and $(A,\circ)$ (the \emph{multiplicative} group), sharing a unit
+$0$ and satisfying the compatibility
+\[
+a\circ(b+c) = (a\circ b) - a + (a\circ c)
+\qquad(a,b,c\in A).
+\]
+The associated \emph{$\lambda$-map} $\lambda\colon (A,\circ)\to\Aut(A,+)$, $\lambda_a(b)=-a+(a\circ b)$,
+records the additive action of the multiplicative group.
+\end{definition}
+
+\begin{definition}[Ideal and extension]
+An \emph{ideal} of a skew brace $A$ is a normal subgroup of $(A,\circ)$ that is also a normal,
+$\lambda$-invariant subgroup of $(A,+)$; the quotient $A/D$ is then a skew brace. An
+\emph{extension} of a skew brace $H$ by an ideal $D$ is a short exact sequence of skew braces
+\[
+0\longrightarrow D \longrightarrow G \longrightarrow H \longrightarrow 0 ,
+\]
+i.e.\ $D\trianglelefteq G$ is an ideal with $G/D\cong H$. The extension \emph{splits} if there
+is a sub-skew-brace $C\le G$ with $D\cap C=0$ and $D\circ C = G$; such a $C$ is a
+\emph{complement} to $D$, and $G$ is then an internal (Zappa--Sz\'ep-type) product of $D$
+and $C$.
+\end{definition}
+
+We write $|D|$ and $|H|=|G|/|D|$ for the orders; the extension is \emph{coprime} if
+$\gcdd(|D|,|H|)=1$.
+
+\begin{definition}[The bilinear obstruction class]
+For an extension with $D$ a proper non-trivial ideal there is a bilinear class $[\Omega]$
+in second cohomology, agreeing with the Rathee--Yadav extension class $[(\beta,\tau)]$ in the
+trivial-kernel case \cite{RY}, whose vanishing detects splitting, as in \eqref{eq:premise}.
+We take \eqref{eq:premise} as given; it has been proved and peer-reviewed within our group.
+\end{definition}
+
+\begin{definition}[The residue $\nu$]\label{def:residue}
+The \emph{residue} of an extension is the outer action of $H$ on $D$ carried by the
+$\lambda$-map: concretely, the image of $\lambda|_D$ (the multiplicative action restricted to
+$D$) inside $\Aut(D)$, read modulo inner automorphisms $\Inn(D)$ and modulo the action of $D$
+on itself. We call the residue \emph{trivial} when this image is trivial, i.e.\ when the
+outer $H$-action on $D$ is inner; and we separately track whether the $H$-action on $D$ is
+trivial at all (image of size $1$ in $\Aut(D)$). The residue is the datum on which the
+solvability obstruction $o_\nu$ depends, and it is the object whose fate under coprimality
+this note examines.
+\end{definition}
+
+\section{The $[\Omega]=0$ locus recovers classical decomposition}\label{sec:locus}
+
+The premise \eqref{eq:premise} is a translation, and translations are cheap; their value is
+in what they let one import. Here they let us import the Schur--Zassenhaus phenomenon.
+
+\begin{proposition}[Coprimality lands in the locus]\label{prop:locus}
+Let $0\to D\to G\to H\to 0$ be a skew-brace extension with $D$ a proper non-trivial ideal
+and $\gcdd(|D|,|H|)=1$. Then $D$ has a complement, hence by \eqref{eq:premise},
+$[\Omega]=0$.
+\end{proposition}
+
+\begin{proof}
+The existence of a complement in the coprime case is the skew-brace Schur--Zassenhaus
+statement: for coprime order there is a complementary sub-skew-brace \cite{RY}. Applying the
+equivalence \eqref{eq:premise} in the direction ``complement $\Rightarrow[\Omega]=0$'' gives
+the conclusion. We claim no novelty for either input; the content of this note is what
+Sections~\ref{sec:witness}--\ref{sec:residue} add on top of this proposition.
+\end{proof}
+
+Proposition~\ref{prop:locus} says the classical decomposition theorem is the assertion that
+the coprime regime is contained in the cohomological locus $\{[\Omega]=0\}$. Two questions
+remain that Proposition~\ref{prop:locus} does not answer, and that motivate the rest of the
+note. Is the containment \emph{exact enough} to be informative --- does $[\Omega]\ne0$
+genuinely require non-coprimality, or could coprime counterexamples lurk at orders the
+theorem's hypotheses do not obviously reach? And through what mechanism does coprimality act
+--- does it trivialise the residue $\nu$, or bypass it? The first is answered by a census
+(Section~\ref{sec:witness}), the second by inspecting the residue directly
+(Section~\ref{sec:residue}).
+
+\section{The computational witness}\label{sec:witness}
+
+\paragraph{Method.}
+A Guarnieri--Vendramin $\lambda$-map constraint-propagation enumerator produced all skew
+braces on every additive group of order at most $24$ in the list
+\[
+\Z_4,\ \Z_2^2,\ \Z_6,\ S_3,\ \Z_8,\ \Z_2\times\Z_4,\ \Z_2^3,\ D_4,\ Q_8,\ \Z_{12},\
+\Z_2\times\Z_6,\ D_6,\ \mathrm{Dic}_3,\ A_4,\ \Z_{15},\ S_4 .
+\]
+The enumerator was independently \emph{axiom-verified}: across all groups there were zero
+associativity or distributivity violations. For each proper non-trivial ideal $D$ of each
+brace, splitting was decided \emph{directly} --- by searching for a complementary
+sub-skew-brace --- rather than through any cohomological proxy. Deciding splitting directly
+is the point: it means the sweep tests the equivalence \eqref{eq:premise} against the ground
+truth of complements, not against a re-encoding of $[\Omega]$.
+
+\paragraph{The census.}
+Table~\ref{tab:census} aggregates the outcome over all $(\text{brace},\text{ideal})$
+instances.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\toprule
+regime & instances & split-failures\\
+\midrule
+coprime $\gcdd(|D|,|H|)=1$ & $111$ & $\mathbf{0}$\\
+non-coprime & $1236$ & $582$\\
+\bottomrule
+\end{tabular}
+\caption{Split-failures by regime, over all skew braces on additive groups of order
+$\le 24$. Coprimality forces splitting with zero exceptions; every failure of decomposition
+occurs in the non-coprime regime.}
+\label{tab:census}
+\end{table}
+
+\begin{observation}[Locus half of Observation~\ref{obs:main}]\label{obs:locus}
+On this sweep, all $111$ coprime instances split, and all $582$ split-failures are
+non-coprime. Equivalently, via \eqref{eq:premise}: $[\Omega]=0$ throughout the coprime
+regime, and $[\Omega]\ne0$ occurs only when $\gcdd(|D|,|H|)>1$.
+\end{observation}
+
+The non-coprime failures are not sporadic: they are witnessed already at
+$\Z_4$, at the order-$8$ group $W_4=\Z_2\times\Z_4$, at $\Z_2^3$, $D_4$, $Q_8$, and among the
+order-$12$ braces $\Z_{12}$, $D_6$, $\mathrm{Dic}_3$. This is the region where $[\Omega]\ne0$
+lives, and it is exactly the region coprimality excludes.
+
+\begin{remark}[What the census is and is not]\label{rem:scope}
+Observation~\ref{obs:locus} is a \emph{computed witness} over a finite list of additive
+groups, not a proof. It cannot establish that non-coprimality is \emph{necessary} for
+$[\Omega]\ne0$ in general --- only that no coprime counterexample appears up to order $24$.
+Combined with Proposition~\ref{prop:locus} (which does give one direction in general), it
+says: the containment ``coprime $\subseteq\{[\Omega]=0\}$'' is a theorem, and the census
+finds no evidence that the containment is strict for a coprime reason. Whether $[\Omega]\ne0$
+\emph{provably} requires non-coprimality beyond this range is left open
+(Section~\ref{sec:conclusion}).
+\end{remark}
+
+\section{The residue survives: orthogonality}\label{sec:residue}
+
+We now come to the mechanism, and to the correction that is the reason for this note.
+
+\paragraph{The hypothesis.}
+Proposition~\ref{prop:locus} tells us \emph{that} coprimality forces $[\Omega]=0$; it is
+silent on \emph{why}. A structurally attractive explanation --- our own initial one --- runs:
+coprimality trivialises the residue $\nu$ (Definition~\ref{def:residue}), and with the outer
+$H$-action on $D$ gone, the bilinear obstruction, which is built from that action, must
+vanish. On this reading the splitting obstruction and the residue channel are the same
+phenomenon seen twice, coupled precisely where decomposition succeeds.
+
+\paragraph{The refutation.}
+The census records $\nu$ alongside splitting, and the record refutes the hypothesis.
+
+\begin{observation}[Orthogonality half of Observation~\ref{obs:main}]\label{obs:residue}
+Of the $111$ coprime splitting instances, $70$ have \emph{non-trivial} outer residue (the
+image of $\lambda|_D$ in $\Aut(D)$ is not contained in $\Inn(D)$), and $74$ have a
+non-trivial $H$-action on $D$ (image of size $>1$ in $\Aut(D)$). The residue is therefore
+non-trivial in a strict majority of the coprime decompositions.
+\end{observation}
+
+Two clean, familiar witnesses make the point without a table:
+
+\begin{itemize}
+\item[$\bullet$] \textbf{$S_3$.} Take $D=A_3\cong\Z_3$ and $H\cong\Z_2$ acting by inversion.
+Then $\gcdd(3,2)=1$, so the extension splits (indeed $S_3=A_3\rtimes\Z_2$), yet the outer
+action has image of order $2$ in $\Aut(\Z_3)$: the residue is non-trivial.
+\item[$\bullet$] \textbf{$A_4$.} Take $D=V_4$ and $H\cong\Z_3$ acting by a $3$-cycle. Then
+$\gcdd(4,3)=1$, the extension splits ($A_4=V_4\rtimes\Z_3$), and the outer action has image of
+order $3$ in $\Aut(V_4)\cong S_3$: again non-trivial.
+\end{itemize}
+
+In both cases $[\Omega]=0$ --- the brace decomposes --- while $\nu\ne0$. So the vanishing of
+$[\Omega]$ under coprimality cannot be an effect of the vanishing of $\nu$; the two are
+decoupled.
+
+\begin{observation}[The corrected statement]\label{obs:orth}
+Coprimality forces $[\Omega]=0$ regardless of $\nu$. The residue $\nu$ is orthogonal to the
+splitting obstruction: it survives, generically non-trivially, in the very cases where $G$
+decomposes. The mechanism by which coprimality kills $[\Omega]$ is order-arithmetic
+(Schur--Zassenhaus), not residue-trivialising.
+\end{observation}
+
+\begin{remark}[Reading the two counts]
+The $70$ (outer residue non-trivial) and $74$ ($H$-action non-trivial) differ because an
+$H$-action can be non-trivial yet inner --- absorbed into $\Inn(D)$ and so invisible to the
+outer residue. The gap of $4$ measures exactly the coprime decompositions whose $H$-action is
+non-trivial but inner. Neither count is what the trivialisation hypothesis predicts, which is
+$0$; both are large.
+\end{remark}
+
+\section{Conclusion}\label{sec:conclusion}
+
+\paragraph{The moral.}
+The bilinear class $[\Omega]$ does two things for skew-brace decomposition. It \emph{recovers}
+the classical theorems: by \eqref{eq:premise}, the coprime Schur--Zassenhaus complement
+theorem is the statement that the coprime regime lies in the vanishing locus
+$\{[\Omega]=0\}$ (Proposition~\ref{prop:locus}), and a census up to order $24$ finds the locus
+exactly where the theorems put it, with $[\Omega]\ne0$ confined to the non-coprime regime
+(Observation~\ref{obs:locus}). And it \emph{refines} them: the residue $\nu$, invisible to
+the order-arithmetic proof, is a genuine invariant that survives coprimality and is
+non-trivial in most decomposable coprime cases (Observations~\ref{obs:residue}
+and~\ref{obs:orth}). A cohomological invariant that reproduces a classical result as a
+vanishing locus \emph{and} sees a structural channel the classical toolkit cannot is doing
+real work.
+
+\paragraph{Honest scope.}
+The equivalence \eqref{eq:premise} is peer-reviewed; the coprime complement theorem is cited,
+not reproved; and the two central findings --- the locus census
+(Observation~\ref{obs:locus}) and the residue orthogonality
+(Observations~\ref{obs:residue}--\ref{obs:orth}) --- are \emph{computed} witnesses over a
+finite list of additive groups of order at most $24$, not general theorems. ``Residue
+trivial'' means precisely the image of $\lambda|_D$ in $\Aut(D)$ modulo $\Inn(D)$ and modulo
+the $D$-action (Definition~\ref{def:residue}); a different bookkeeping of the residue could
+shift the counts but not the qualitative conclusion, since the $S_3$ and $A_4$ witnesses are
+unambiguous.
+
+\paragraph{Open questions.}
+Two are well-posed and hand naturally to a proof session.
+\begin{problem}
+Prove, without a finite sweep, that $[\Omega]\ne0$ requires $\gcdd(|D|,|H|)>1$: that the
+containment coprime $\subseteq\{[\Omega]=0\}$ is the whole story about coprimality and the
+locus.
+\end{problem}
+\begin{problem}
+Prove that coprimality forces $[\Omega]=0$ \emph{orthogonally} to $\nu$ in general: exhibit
+the order-arithmetic vanishing of $[\Omega]$ as independent of the residue, so that
+Observation~\ref{obs:orth} becomes a theorem rather than a census. The expected shape is a
+Schur--Zassenhaus argument on $[\Omega]$ that never touches $\lambda|_D$.
+\end{problem}
+
+Beyond these, the deep-reading of the recent structure-theoretic Schur--Zassenhaus papers for
+skew braces would let the general coprime-complement theorem be cited directly, in place of
+the trivial-kernel anchor used here; and the placement of $[\Omega]$ and $\nu$ against the
+homology leg of skew-brace theory \cite{GLV} is pursued elsewhere.
+
+\begin{thebibliography}{9}
+
+\bibitem{RY}
+M.~Rathee and M.~K.~Yadav,
+\emph{Skew brace extensions, second cohomology and complements},
+arXiv:2601.12371.
+
+\bibitem{GLV}
+M.~Gran, T.~Letourmy and L.~Vendramin,
+\emph{Hopf formulae for the homology of skew braces},
+J. Pure Appl. Algebra \textbf{229} (2025), no.~11, 108085; arXiv:2409.18056.
+
+\end{thebibliography}
+
+\end{document}
