@@ -1,0 +1,877 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=green!45!black,urlcolor=blue!55!black]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Sb}{\mathrm{Sb}}
+\newcommand{\Gp}{\mathrm{Gp}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Soc}{\operatorname{Soc}}
+\newcommand{\shat}{\widehat{\sigma}}
+\newcommand{\lD}{\lambda^{D}}
+\newcommand{\lH}{\lambda^{H}}
+\newcommand{\iot}{\iota}
+\newcommand{\kerr}{\operatorname{ker}}
+
+\begin{document}
+
+\title[A residue-dependent solvability obstruction for skew-brace extensions]
+{A residue-dependent solvability obstruction for skew-brace extensions:\\
+$\im\varphi^{+}=\ker o_\nu$, and the coupling splits}
+
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+
+\date{1 October 2026}
+
+\begin{abstract}
+Fix a skew brace $H$, an abelian group $(D,+)$ carrying a (possibly non-trivial) brace
+structure, and a good triplet $(\nu,\mu,\shat)$ of automorphism data. The skew-brace
+extensions $0\to D\to G\to H\to0$ inducing the triplet are classified by a second
+cohomology $H^2_{\Sb}(H,D)$ whose classes are pairs $([\beta],[\bar\tau])$ bound by the
+Rathee--Yadav coupling. We ask which additive classes $[\beta]\in H^2_+$ arise, i.e.\ we
+compute the image of the additive forgetful map $\varphi^{+}$. We show this image is the
+kernel of a single \emph{residue-dependent} obstruction $o_\nu$: when $D$ is a trivial
+brace, $o_\nu$ is a group homomorphism on $H^2_+$ and $\im\varphi^{+}=\ker o_\nu$. For a
+non-trivial kernel the governing equation splits into a \emph{kernel coupling} and a
+\emph{section coupling}; the kernel coupling is affine in $\beta$, with offset the additive
+coboundary of the intrinsic defect $\delta_h=\nu_h\widehat\sigma_h-\id$, and
+$\im\varphi^{+}$ is a torsor over $\ker o_\nu$ that misses the split class exactly when some
+defect section fails to be a homomorphism. These results correct an earlier, false assertion that the
+residue $[\nu]$ and the decomposition class are independent coordinates; the correction is
+the paper's organising thread. The homomorphism law, the kernel coupling, and the torsor
+dichotomy hold for general $H$; the biconditional for a non-trivial kernel is proved for
+$H=\Z/2$ and verified computationally for all $34$ triplets with $H\in\{\Z/2,\Z/3\}$. Two
+core finite facts---a $|G|=16$ lock and the non-injectivity of the forgetful map---carry
+axiom-free Lean~4 certificates.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{The problem}
+A \emph{skew left brace} is a set $B$ with two group operations $(B,+)$ and $(B,\circ)$
+sharing a unit and satisfying $a\circ(b+c)=(a\circ b)-a+(a\circ c)$. Skew braces are the
+algebraic home of set-theoretic solutions to the Yang--Baxter equation and, through the
+Hopf--Galois correspondence, of Galois module structure; their extension theory is
+correspondingly central. Given a brace ideal $D\trianglelefteq G$ with quotient $H=G/D$,
+one wants to classify all extensions $0\to D\to G\to H\to0$ realising a fixed action of
+$H$ on $D$. Rathee and Yadav~\cite{RY} solved this: such extensions are classified by a
+second cohomology group $H^2_{\Sb}(H,D)$, whose cocycles are \emph{pairs}
+$(\beta,\bar\tau)$---an additive factor set $\beta$ and a multiplicative factor set
+$\bar\tau$---subject to a coupling equation, their (3.10).
+
+The coupling is what makes skew-brace cohomology genuinely richer than group cohomology:
+the two factor sets cannot be prescribed independently. This paper studies one
+consequence. The \emph{additive forgetful map}
+\[
+\varphi^{+}\colon H^2_{\Sb}(H,D)\longrightarrow H^2_+:=H^2_{\Gp}\big((H,+),(D,+);\mu\big),
+\qquad [(\beta,\bar\tau)]\mapsto[\beta],
+\]
+records only the additive part of an extension---concretely, the isomorphism type of the
+underlying additive group $(G,+)$. Which additive classes occur? That is, what is
+$\im\varphi^{+}$?
+
+\subsection*{A false start, and why it is instructive}
+This question has an attractive wrong answer. The residue $[\nu]$ (the restriction of the
+brace action to the ideal) and the additive class $[\beta]$ look like independent
+coordinates: one governs the action, the other the additive extension. An earlier draft of
+this programme asserted exactly that---a product decomposition $[\nu]\perp[\beta]$---and
+deduced that every additive class is realisable for every residue. The argument reduced
+solvability of the coupling to a homogeneous, residue-free linear system by ``reading
+$\circ$ off from $+$ and $\lambda$.''
+
+The assertion is false, and the reduction is circular: reading $\circ$ off from
+$+$ and $\lambda$ presupposes a brace action $\lambda$ with the prescribed residue, which
+is precisely the existence question. A referee report of Rick's~\cite{RickRef}, confirmed
+by an independent from-scratch reproduction, exhibited the coupling explicitly at
+$|G|=8$ and $|G|=16$: the residue \emph{does} constrain which additive classes occur. We
+state this refutation plainly in \S\ref{sec:refutation}; it is not an embarrassment to be
+buried but the hinge of the paper, because the correct object falls out of understanding
+exactly why the product fails.
+
+\subsection*{The result}
+The correct object is a single obstruction class. Write $B^2_+\le Z^2_+$ for the additive
+coboundaries and $Z^2_\circ$ for the multiplicative cocycles (\S\ref{sec:prelim}).
+
+\begin{theorem}[Trivial kernel; \S\ref{sec:repairI}]\label{thm:introA}
+Let $D$ be a trivial brace and fix a good triplet with $\nu$ a homomorphism. There is a
+$\Z$-linear operator $Q$ and a subgroup $A(Z^2_\circ)\le C^3$, both built from the triplet
+alone, such that
+\[
+o_\nu\colon H^2_+\longrightarrow C^3/A(Z^2_\circ),\qquad [\beta]\mapsto[Q\beta],
+\]
+is a well-defined group homomorphism, and $\im\varphi^{+}=\ker o_\nu$. Equivalently, an
+additive class $[\beta]$ extends to a full skew-brace cocycle inducing the triplet if and
+only if $o_\nu([\beta])=0$.
+\end{theorem}
+
+For a non-trivial kernel the obstruction acquires an affine offset, and the governing
+equation splits cleanly in two.
+
+\begin{theorem}[Non-trivial kernel; \S\ref{sec:repairII}]\label{thm:introB}
+Let $(D,+)$ carry a brace structure $\lD$ with $(D,\circ)$ abelian and $(G,+)$ abelian, and
+let $\delta_h:=\nu_h\shat_h-\id$ be the intrinsic defect. The skew-brace axioms for an
+assembly on $D\times H$ decompose as a \emph{kernel coupling}
+\[
+(\star)\qquad (\lD_d-\id)\,\beta(k,k')=\delta_k(d)+\delta_{k'}(d)-\delta_{k+_Hk'}(d)
+\qquad(d\in D,\ k,k'\in H)
+\]
+and a \emph{section coupling} $\mathrm{(F)}$, the latter being the non-trivial-kernel form
+of the Rathee--Yadav coupling. The kernel coupling is affine in $\beta$ with
+$\beta$-independent offset the additive coboundary $c^d=d_+[\delta_\bullet(d)]$; and the
+split additive class $[0]$ is realisable iff every defect section
+$\delta_\bullet(d)\colon(H,+)\to(D,+)$ is a homomorphism. When some $\delta_\bullet(d)$ is
+not, $\im\varphi^{+}$ is a torsor over $\ker o_\nu$ missing the origin.
+\end{theorem}
+
+Thus the residue enters through the defect $\delta$, and the old ``independent coordinate''
+story is replaced by a precise affine one: the realisable locus is a coset whose offset is
+the defect's coboundary.
+
+\subsection*{The method}
+Everything turns on one formal identity. In the trivial-kernel case the diagonal
+coboundary---the pair $(d_+\theta,\,d_\circ\theta_1)$ obtained from a single $1$-cochain
+$\theta$---satisfies the coupling \emph{identically in $\theta$}
+(Lemma~\ref{lem:linchpin}). This is nothing but the inclusion
+$B^2_{\Sb}\subseteq Z^2_{\Sb}$ restricted to the coupling component; but read as a
+statement about operators it shows $o_\nu$ kills $B^2_+$ and descends to $H^2_+$, and the
+backward direction of $\im\varphi^{+}=\ker o_\nu$ then \emph{constructs} the brace cocycle
+from a solution of the coupling rather than presupposing one---exactly the step the refuted
+argument got wrong. In the non-trivial-kernel case the same role is played by additivity of
+the two generating translations $\lambda_{\iot(d)}$ and $\lambda_{s(h)}$, which yield
+$(\star)$ and $\mathrm{(F)}$ respectively by a one-line expansion of a single skew-brace
+axiom instance.
+
+\subsection*{Status of results}
+This is a capstone of a worked programme, and the parts have different strengths. We flag
+each result honestly at the point of use; in summary:
+
+\begin{center}\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Result & Scope & Status \\
+\midrule
+$[\nu]\perp[\beta]$ product & --- & \textbf{refuted} (negative result, proved) \\
+$\varphi^{+}$ descends & general & Lean-verified \\
+$\Phi=(\varphi^{+},\varphi^{\circ})$ non-injective & witness & Lean-verified \\
+$o_\nu$ a homomorphism, $\im\varphi^{+}=\ker o_\nu$ & trivial kernel, general $H$ & proved \\
+$|G|=8$ collapse $o_\nu(b)=(1+\nu)b \bmod 2D^{\shat}$ & trivial kernel & proved; Lean-verified \\
+$\im\varphi^{+}$ well defined on $H^2_+$ & non-trivial kernel & proved (complex-free) \\
+home $(D,\circ)$, twist $\shat$; defect $\delta$ & non-trivial kernel & proved \\
+kernel coupling $(\star)$; offset $=d_+[\delta_\bullet(d)]$ & general $H$ & proved \\
+section coupling $\mathrm{(F)}$ & general $H$ & proved \\
+lock $(\lD_1-1)b\equiv 2(\nu\shat-1)$ & $H=\Z/2$ & proved ($112/112$); Lean-verified \\
+$\im\varphi^{+}=\{[\beta]:(\star)\text{ solvable}\}$ & $H=\Z/2$ / general $H$ & proved / computed ($34/34$) \\
+torsor dichotomy & general $H$ & proved \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The two open steps---$(\star)\Rightarrow\mathrm{(F)}$-solvability for general
+$H$, and the homomorphism-law bookkeeping for general $H$---are isolated in
+\S\ref{sec:open}; neither touches the new content.
+
+\subsection*{Credit}
+The reformulation ``the coupling is affine; solvability is the vanishing of a class
+$o_\nu([\beta])$; $\im\varphi^{+}=\ker o_\nu$'' is due to Rick~\cite{RickRef}, Remark~4 of
+the referee report that refuted the product claim. The present paper supplies the
+general-$H$ operators, the descent via the linchpin identity, the non-trivial-kernel
+corrections (defect, home, twist), the split of the coupling into $(\star)$ and
+$\mathrm{(F)}$, the closed-form offset, and the torsor dichotomy. The general-$H$
+$(\star)\Rightarrow\mathrm{(F)}$ construction was developed jointly with Rick and is not
+claimed here.
+
+\subsection*{Outline}
+\S\ref{sec:prelim} recalls skew-brace extensions, the good triplet, the Rathee--Yadav
+cochains and the two forgetful maps. \S\ref{sec:refutation} states and documents the
+refutation. \S\ref{sec:repairI} proves Theorem~\ref{thm:introA}. \S\ref{sec:repairII}
+treats the non-trivial kernel: corrections, the complex-free well-definedness, the split
+coupling, the offset, the lock, and the torsor dichotomy (Theorem~\ref{thm:introB}).
+\S\ref{sec:lean} describes the Lean~4 certificates. \S\ref{sec:open} isolates the two open
+steps and closes with context.
+
+\section{Preliminaries}\label{sec:prelim}
+
+\subsection{Skew braces and the good triplet}
+Throughout, $H$ is a skew brace (the \emph{base}) with left action
+$\lH\colon(H,\circ)\to\Aut(H,+)$, $h\circ k=h+_H\lH_h(k)$, and $(D,+)$ is an abelian group
+carrying a brace structure $\lD\colon(D,\circ)\to\Aut(D,+)$, $d\circ e=d+\lD_d(e)$, with
+$(D,\circ)$ abelian. We call $D$ a \emph{trivial brace} when $\circ=+$ on $D$, i.e.\
+$\lD\equiv\id$. Fix a skew-brace extension $0\to D\to G\to H\to0$ with $D$ an ideal, and
+assume $(G,+)$ is abelian (so the additive conjugation $\mu$ below is trivial); this holds
+in all our examples and keeps $\mu$ out of the way.
+
+Choose a normalised set-theoretic section $s\colon H\to G$, $s(0)=0$. Following
+Rathee--Yadav~\cite[\S2]{RY} it determines the \emph{good triplet}
+\begin{equation}\label{eq:triplet}
+\nu_h=\lambda_{s(h)}|_D,\qquad \mu_h(x)=-s(h)+x+s(h),\qquad \shat_h(x)=s(h)^{-1}\circ x\circ s(h),
+\end{equation}
+where $\lambda$ is $G$'s brace action. Here $\nu\colon(H,\circ)\to\Aut(D,+)$ is a
+homomorphism (the \emph{residue}), $\mu\colon(H,+)\to\Aut(D,+)$ is an anti-homomorphism
+(trivial, as $(G,+)$ is abelian), and $\shat\colon(H,\circ)\to\Aut(D,+)$ is the
+\emph{$\circ$-conjugation}. All three are independent of the choice of $s$~\cite[\S2]{RY}.
+When $D$ is trivial, $\circ=+$ on $D$ and $\shat$ coincides with the additive conjugation;
+in general $\shat$ is the automorphism of $(D,\circ)$ by which $H$ acts on the
+multiplicative kernel, and must be kept distinct from the additive data
+(\S\ref{sec:repairII}).
+
+\begin{definition}[Intrinsic defect]\label{def:defect}
+$\delta_h:=\mu_h^{-1}\nu_h\shat_h-\id\in\End(D,+)$. With $\mu=\id$,
+$\delta_h=\nu_h\shat_h-\id$.
+\end{definition}
+
+The defect measures the failure of the collapse $\nu_h\shat_h=\mu_h$ that holds
+automatically for a trivial kernel. It is additive, depends only on the triplet, and
+$\delta\equiv0$ iff $D$ is a trivial-brace ideal (Lemma~\ref{lem:defect}).
+
+\subsection{The Rathee--Yadav cochains}
+Write $C^k=C^k(H,D)$ for the normalised $k$-cochains $H^k\to D$. To the section $s$,
+\cite{RY} attach two factor sets,
+\begin{equation}\label{eq:factorsets}
+\beta(h_1,h_2)=-s(h_1{+}h_2)+s(h_1)+s(h_2),\qquad
+\bar\tau(h_1,h_2)=s(h_1\circ h_2)^{-1}\circ s(h_1)\circ s(h_2),
+\end{equation}
+the additive and multiplicative factor sets. A pair $(\beta,\bar\tau)$ is a
+\emph{skew-brace $2$-cocycle}, $(\beta,\bar\tau)\in Z^2_{\Sb}$, iff
+\begin{itemize}\itemsep1pt
+\item[(a)] $\beta\in Z^2_+:=Z^2_{\Gp}\big((H,+),(D,+);\mu\big)$;
+\item[(b)] $\bar\tau\in Z^2_\circ:=Z^2_{\Gp}\big((H,\circ),(D,\circ);\shat\big)$;
+\item[(c)] the coupling \cite[(3.10)]{RY} binding $\bar\tau$ to $\beta$.
+\end{itemize}
+Modulo coboundaries $B^2_{\Sb}$ this gives $H^2_{\Sb}(H,D)$, which classifies the
+extensions inducing the triplet~\cite[\S3]{RY}. We write $H^2_+=Z^2_+/B^2_+$.
+
+\subsection{The two forgetful maps}
+The additive factor set defines $\varphi^{+}\colon H^2_{\Sb}\to H^2_+$,
+$[(\beta,\bar\tau)]\mapsto[\beta]$, and symmetrically
+$\varphi^{\circ}\colon H^2_{\Sb}\to H^2_\circ$, $[(\beta,\bar\tau)]\mapsto[\bar\tau]$. The
+following two facts frame the paper and carry machine certificates (\S\ref{sec:lean}).
+
+\begin{proposition}[{\cite[Thm.~3.7]{BilinearNote}}; Lean-verified]\label{prop:descend}
+$\varphi^{+}$ is well defined: the coupling (c) ties the \emph{cocycles} but never the
+\emph{coboundaries}, so $[\beta]$ depends only on $[(\beta,\bar\tau)]$.
+\end{proposition}
+
+\begin{proposition}[{\cite[W$_4$]{BilinearNote}}; Lean-verified]\label{prop:noninj}
+The product forgetful map $\Phi=(\varphi^{+},\varphi^{\circ})$ is \emph{not} injective:
+there is a class with $\Phi([\Omega])=(0,0)$ yet $[\Omega]\neq0$. Hence the extension is
+not determined by its additive and multiplicative types separately---the obstruction is
+irreducibly bilinear.
+\end{proposition}
+
+Proposition~\ref{prop:noninj} is what makes ``compute $\im\varphi^{+}$'' a non-trivial
+question: knowing which additive classes occur is strictly less than knowing the
+extension, and the coupling is where the missing information lives. The rest of the paper
+computes $\im\varphi^{+}$.
+
+\subsection{The finite criterion}
+For the explicit assemblies we use the Guarnieri--Vendramin
+criterion~\cite{GuarnieriVendramin}: a set with an abelian group $(G,+)$ and a map
+$\lambda\colon G\to\mathrm{Map}(G,G)$, $g\circ g':=g+\lambda_g(g')$, is a skew left brace
+iff (i) each $\lambda_g\in\Aut(G,+)$ and (ii) $\lambda_{g\circ g'}=\lambda_g\lambda_{g'}$;
+then $(G,\circ)$ is automatically a group.
+
+\section{The refutation}\label{sec:refutation}
+
+We record the negative result, both because honesty demands it and because the correct
+obstruction is legible only against it.
+
+\subsection{The claim and the circular step}
+The refuted claim asserted that $[\nu]$ and $[\beta]$ are independent coordinates on
+$H^2_{\Sb}$: that for every residue, every additive class is realisable, so $\varphi^{+}$
+is surjective and $\im\varphi^{+}$ is residue-free. The argument fixed the triplet, wrote
+the coupling as an equation to be solved for the multiplicative datum, and claimed the
+system is homogeneous and residue-free after ``reducing $\circ$ to $+$ and $\lambda$.''
+
+The reduction is circular. ``$\circ$ is determined by $+$ and $\lambda$'' presupposes a
+brace action $\lambda$ on the additive group built from $\beta$, for which $a\mapsto
+\lambda_a$ is a homomorphism for the resulting $\circ$. Constructing such a $\lambda$ with
+a prescribed residue \emph{is} the existence question; associativity of $\circ$ yields the
+cocycle conditions once a brace exists, but cannot manufacture the brace. That the
+\emph{homogeneous} coupling is residue-free does not make the \emph{inhomogeneous}
+solvability residue-free.
+
+\begin{proposition}[Refutation; proved]\label{prop:refut}
+The product decomposition $[\nu]\perp[\beta]$ is false. Concretely, $\im\varphi^{+}$ depends
+on the residue already at $|G|=8$, and the dependence is a genuine three-way coupling of
+$([\nu],\shat,[\beta])$ at $|G|=16$.
+\end{proposition}
+
+\subsection{The two witnesses}
+We give the witnesses now as data; both re-appear in \S\S\ref{sec:repairI}--\ref{sec:repairII}
+as corollaries of the repaired theorems.
+
+\begin{example}[$|G|=8$]\label{ex:g8}
+$H=\Z/2$, $D=\Z/4$ (trivial brace), $\mu=\id$, $\shat=-\id$. A normalised cochain is a
+single value $b=\beta(1,1)\in D$. With $\shat=-1$ one has $D^{\shat}=\{0,2\}$ and
+$2D^{\shat}=\{0\}$. The realisability of $b$ is governed (Theorem~\ref{thm:main-triv}) by
+$(1+\nu)b\in 2D^{\shat}$:
+\[
+\nu=+1:\ 2b=0\iff b\in\{0,2\}\iff[\beta]=0;\qquad
+\nu=-1:\ 0\in\{0\}\ \text{always}\iff[\beta]\ \text{free}.
+\]
+So $\nu=+1$ \emph{forces} $[\beta]=0$: the additive group must be $\Z/2\times\Z/4$, not
+$\Z/8$. The residue selects the realisable additive classes.
+\end{example}
+
+\begin{example}[$|G|=16$]\label{ex:g16}
+$D=\Z/8$ with the non-trivial brace $\lD_x=5^x$ (so
+$L:=\im\lD=\{1,5\}\subsetneq\Aut(D)$), $H=\Z/2$. Every realising extension satisfies the
+\emph{lock}
+\begin{equation}\label{eq:lock-intro}
+(\lD_d-\id)\,b=2\big(\nu\shat(d)-d\big)\quad(d\in D),\qquad\text{at }d=1:\quad
+4b\equiv 2(\nu\shat-1)\ (\mathrm{mod}\ 8),
+\end{equation}
+so $[\beta]\ne0$ (equivalently $b$ odd) iff $\nu\shat\equiv3\pmod4$. The residue, the
+circle action, and the additive class are locked together through the product $\nu\shat$;
+no single two-way product reproduces the table.
+\end{example}
+
+Both witnesses were verified by two independent enumerations---Rick's from-scratch
+regular-subgroup-of-holomorph computation and ours---and the refutation itself was
+reproduced from scratch~\cite{RickRef}. What the earlier ``corner'' computation had
+actually shown is weaker than independence: that the decomposition class is not a
+\emph{function} of $[\nu]$ (one fibre varies), which is consistent with---indeed implied
+by---coupling.
+
+\section{The repair, I: trivial kernel}\label{sec:repairI}
+
+Throughout this section $D$ is a trivial brace and $\nu$ is a homomorphism.
+
+\subsection{The coupling operators}
+Read the Rathee--Yadav coupling (c) as an affine-linear equation in the multiplicative
+datum for fixed $\beta$. Define $\Z$-linear operators $C^2\to C^3$,
+\begin{align}
+(P\tau)(h_1,h_2,h_3)&=\mu_{\lambda_{h_1}(h_3)}\!\big(\tau(h_1,h_2)\big)-\tau(h_1,h_2{+}h_3)+\tau(h_1,h_3),\label{eq:P}\\
+(Q\beta)(h_1,h_2,h_3)&=\nu_{h_1}\!\big(\beta(h_2,h_3)\big)+\mu_{h_1\circ h_3}\!\big(\beta(h_1,-h_1)\big)\notag\\
+&\qquad{}-\beta(-h_1,\,h_1{\circ}h_3)-\beta(h_1{\circ}h_2,\,\lambda_{h_1}(h_3)),\label{eq:Q}
+\end{align}
+where $\lambda$ is the base brace's action (fixed data). With
+$T\colon C^2\to C^2$, $(T\bar\tau)(h_1,h_2)=\nu_{h_1\circ h_2}(\bar\tau(h_1,h_2))$ (so
+$\tau=T\bar\tau$), the coupling (c) reads
+\begin{equation}\label{eq:coupling}
+P(T\bar\tau)=Q\beta.
+\end{equation}
+Both operators depend only on the triplet and on the group structure of $H$: \emph{no brace
+is presupposed}.
+
+\begin{lemma}[Operators transcribe {\cite[(3.10)]{RY}}; proved]\label{lem:opok}
+For every genuine skew brace $G$ with trivial-brace ideal $D$ and every section $s$, the
+honest cochains $\beta,\tau$ satisfy $P\tau=Q\beta$.
+\end{lemma}
+\begin{proof}
+Formula~\eqref{eq:Q} is \cite[(3.10)]{RY} with the sign of $\tau$ moved to the left; at
+$H=\Z/2$, $\mu$ trivial, one computes by hand $(P\tau)=2t$ and $(Q\beta)=(1+\nu)b$ with
+$t=\bar\tau(1,1)$, $b=\beta(1,1)$, recovering the coupling verbatim. The identity
+$P\tau=Q\beta$ was confirmed exhaustively on all genuine trivial-kernel braces for
+$H\in\{\Z/2,\Z/3,\Z/4\}$.
+\end{proof}
+
+Let $A:=P\circ T$ on $Z^2_\circ$; its image $A(Z^2_\circ)=P(T\,Z^2_\circ)\le C^3$ is a
+subgroup, since $P,T$ are linear and $Z^2_\circ$ is a group.
+
+\begin{definition}\label{def:onu-triv}
+$o_\nu(\beta):=[Q\beta]\in C^3/A(Z^2_\circ)$ for $\beta\in Z^2_+$.
+\end{definition}
+
+\subsection{The linchpin identity}
+The entire descent rests on a single formal identity.
+
+\begin{lemma}[Linchpin; proved]\label{lem:linchpin}
+Let $\theta\colon H\to D$ with $\theta(0)=0$ be arbitrary and set
+$\theta_1(h):=\nu_h^{-1}(\theta(h))$. Let $\beta:=d_+\theta$ be the additive coboundary and
+$\bar\tau:=d_\circ\theta_1$ the multiplicative coboundary,
+\[
+(d_+\theta)(h_1,h_2)=\mu_{h_2}(\theta(h_1))-\theta(h_1{+}h_2)+\theta(h_2),\quad
+(d_\circ\theta_1)(h_1,h_2)=\shat_{h_2}(\theta_1(h_1))-\theta_1(h_1{\circ}h_2)+\theta_1(h_2).
+\]
+Then $P(T\,d_\circ\theta_1)=Q(d_+\theta)$ identically in $\theta$.
+\end{lemma}
+\begin{proof}
+This is $B^2_{\Sb}\subseteq Z^2_{\Sb}$ restricted to the coupling component: the diagonal
+coboundary $(d_+\theta,\,d_\circ\theta_1)$ lies in $Z^2_{\Sb}$, hence satisfies
+\eqref{eq:coupling}. Rathee--Yadav establish $B^2\subseteq Z^2$ as a formal identity in
+$\theta$ and the triplet, requiring no brace to exist~\cite[\S3]{RY}. We verified the
+identity exhaustively by machine over all $\theta$ and all good triplets harvested from
+genuine braces for $(H,D)=(\Z/2,\Z/4),(\Z/2,(\Z/2)^2),(\Z/3,\Z/3),(\Z/4,\Z/4)$.
+\end{proof}
+
+\subsection{The main theorem}
+
+\begin{theorem}[Main, trivial kernel; proved]\label{thm:main-triv}
+Fix the good triplet with $D$ a trivial brace and $\nu$ a homomorphism.
+\begin{enumerate}\itemsep2pt
+\item[\rm(1)] $o_\nu(d_+\theta)=0$ for every $\theta$; hence $o_\nu$ descends to a map
+$o_\nu\colon H^2_+\to C^3/A(Z^2_\circ)$, $[\beta]\mapsto[Q\beta]$.
+\item[\rm(2)] $o_\nu$ is a group homomorphism.
+\item[\rm(3)] $\im\varphi^{+}=\ker o_\nu$: an additive class $[\beta]$ extends to a full
+skew-brace cocycle inducing the triplet iff $o_\nu([\beta])=0$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) By Lemma~\ref{lem:linchpin}, $Q(d_+\theta)=P(T\,d_\circ\theta_1)\in A(Z^2_\circ)$, since
+$d_\circ\theta_1\in Z^2_\circ$ (a coboundary is a cocycle). Thus $[Q(d_+\theta)]=0$, so
+$o_\nu$ kills $B^2_+$ and factors through $H^2_+=Z^2_+/B^2_+$. The target is fixed by the
+triplet, so $o_\nu$ is well defined on classes.
+
+(2) Each summand of \eqref{eq:Q} is additive in $\beta$, because
+$\nu_{h_1},\mu_{h_1\circ h_3}\in\Aut(D,+)$ and reindexing is additive; and
+$A(Z^2_\circ)$ is a subgroup. Hence $[\beta]\mapsto[Q\beta]$ is a homomorphism.
+
+(3) ($\subseteq$) If $[\beta]=\varphi^{+}[(\beta,\bar\tau)]$ then $(\beta,\bar\tau)\in
+Z^2_{\Sb}$, so by (c)/\eqref{eq:coupling} $Q\beta=P(T\bar\tau)$ with $\bar\tau\in
+Z^2_\circ$ (from (b)); hence $Q\beta\in A(Z^2_\circ)$, i.e.\ $o_\nu([\beta])=0$.
+
+($\supseteq$) If $o_\nu([\beta])=0$ then $Q\beta\in A(Z^2_\circ)$: there is $\bar\tau\in
+Z^2_\circ$ with $P(T\bar\tau)=Q\beta$. The pair $(\beta,\bar\tau)$ then satisfies (a), (b),
+and (c)/\eqref{eq:coupling}; by the Rathee--Yadav characterisation
+$(\beta,\bar\tau)\in Z^2_{\Sb}$, whence $[\beta]=\varphi^{+}[(\beta,\bar\tau)]\in
+\im\varphi^{+}$. This direction \emph{constructs} the cocycle rather than presupposing
+one---the circular step of \S\ref{sec:refutation} is thereby avoided.
+\end{proof}
+
+\begin{proposition}[Cross-validation; computed]\label{prop:cross}
+For $H=\Z/2$ with $D=\Z/4$ (all $4$ triplets) and $D=(\Z/2)^2$ (all $16$ triplets), and for
+$H=\Z/3$ with $D=\Z/3$, the abstractly computed $\ker o_\nu\subseteq H^2_+$ equals the
+$\Aut(D)$-saturated set of additive classes realised by genuine skew braces with the given
+triplet, from an independent regular-subgroup-of-holomorph enumeration. For $D=(\Z/2)^2$
+the obstruction is genuinely nonzero for many triplets, cutting $|H^2_+|=4$ down to
+$|\ker o_\nu|=2$.
+\end{proposition}
+
+Example~\ref{ex:g8} is now a corollary: with $\shat=-1$, $T$ acts trivially,
+$A(Z^2_\circ)=2D^{\shat}$, and \eqref{eq:Q} collapses to
+$o_\nu(b)=0\iff(1+\nu)b\in2D^{\shat}$.
+
+\section{The repair, II: non-trivial kernel}\label{sec:repairII}
+
+We now drop the triviality of $D$. Two features of the trivial-kernel treatment were using
+that hypothesis silently; each must be corrected before the obstruction survives.
+
+\subsection{Two corrections}
+
+\begin{lemma}[Intrinsic defect; proved]\label{lem:defect}
+Rathee--Yadav's identity (3.1) holds with no triviality hypothesis: for $x\in D$,
+$\lambda_x(s(h))-s(h)=-x+\mu_h^{-1}\big(\nu_h\shat_h(x)\big)$. Consequently
+$\delta_h(x)=\lambda_x(s(h))-s(h)$, $\delta_h\in\End(D,+)$ is determined by the triplet
+alone, and $\delta\equiv0$ iff $D$ is a trivial-brace kernel.
+\end{lemma}
+\begin{proof}
+The displayed identity rearranges to $\mu_h(x+\delta_h(x))=\nu_h\shat_h(x)$, i.e.\
+$\delta_h=\mu_h^{-1}\nu_h\shat_h-\id$ (Definition~\ref{def:defect}), a difference of the
+automorphism $\mu_h^{-1}\nu_h\shat_h$ and $\id$ in the abelian ring $\End(D,+)$, hence
+additive. It is manifestly a function of $(\nu,\mu,\shat)$. Vanishing is equivalent to
+$\nu_h\shat_h=\mu_h$, i.e.\ $\lambda_x(s(h))=s(h)$ for all $x,h$, the trivial-kernel
+collapse.
+\end{proof}
+
+Triviality forces the left side of (3.1) to vanish; this is exactly the collapse
+Rathee--Yadav use to simplify their action. The defect is the measurable amount by which it
+fails.
+
+\begin{theorem}[Home and twist; proved]\label{thm:home}
+The multiplicative factor set $\bar\tau$ of \eqref{eq:factorsets} is the factor set of the
+group extension $0\to(D,\circ)\to(G,\circ)\to(H,\circ)\to0$; its kernel is $(D,\circ)$ and
+the conjugation action of $H$ on it is $\shat$. Hence $\bar\tau$ is a $2$-cocycle of
+$(H,\circ)$ \emph{valued in $(D,\circ)$, twisted by $\shat$}---not a $(D,+)$-cocycle, and
+not twisted by the additive conjugation. Over $(D,+)$ the multiplicative differential fails
+$d^2=0$.
+\end{theorem}
+\begin{proof}
+$\bar\tau$ is the factor set of $(G,\circ)$ over $(H,\circ)$ with abelian kernel
+$(D,\circ)$, so it is a $\circ$-cocycle for the conjugation action $\shat$, by the standard
+classification of group extensions. \emph{Necessity of $(D,\circ)$}: the naive $(D,+)$
+multiplicative differential has $d^2\ne0$ on $2/16$ good triplets with $D=\Z/8$.
+\emph{Necessity of $\shat$} over the additive conjugation $\sigma_+$: the coupling constant
+$2(\nu\shat-1)$ of \S\ref{sec:lock} holds $104/104$ with $\shat$ and only $80/104$ with
+$\sigma_+$, the $24$ failures being exactly the $D=\Z/2\times\Z/8$ braces with
+$\nu\not\equiv1\pmod4$. For a trivial kernel $\circ=+$ and $\shat=\sigma_+$, recovering
+Rathee--Yadav.
+\end{proof}
+
+\subsection{$\im\varphi^{+}$ is well defined, complex-free}
+This is the load-bearing structural fact, and it needs no non-trivial-kernel cochain
+complex. Say $[\beta]\in H^2_+$ is \emph{realisable} for the fixed triplet if some
+representative $\beta$ is the additive factor set of a genuine extension inducing the
+triplet; $\im\varphi^{+}$ is the set of realisable classes.
+
+\begin{theorem}[Well-definedness; proved]\label{thm:welldef}
+$\im\varphi^{+}$ is a union of $B^2_+$-cosets; realisability of $\beta$ depends only on
+$[\beta]\in H^2_+$.
+\end{theorem}
+\begin{proof}
+Let $\beta$ be realised by $(G,s)$ with multiplicative factor set $\bar\tau$. Fix a
+$1$-cochain $\theta\colon H\to D$, $\theta(0)=0$, and define a new normalised section of
+the \emph{same} $G$ by $s'(h):=\theta(h)+s(h)$. Using $(G,+)$ abelian, its additive factor
+set is
+\[
+\beta'(h_1,h_2)=-s'(h_1{+}h_2)+s'(h_1)+s'(h_2)
+=\beta(h_1,h_2)+\big[\theta(h_1)+\theta(h_2)-\theta(h_1{+}h_2)\big]=\beta+d_+\theta,
+\]
+and its multiplicative factor set $\bar\tau'$ differs from $\bar\tau$ by the
+$(D,\circ)$-coboundary $d_\circ\theta_1$ ($\theta_1(h)=\nu_h^{-1}(\theta(h))$). Both
+$(\beta,\bar\tau)$ and $(\beta',\bar\tau')$ are honest factor sets of the \emph{same}
+extension, so both realise their additive classes; in particular $\beta'=\beta+d_+\theta$
+is realisable. Since the triplet is independent of the section~\cite[\S2]{RY}, $\beta'$
+realises its class within the same triplet-indexed $H^2_+$. As $\theta$ ranges over all
+$1$-cochains, $d_+\theta$ ranges over $B^2_+$, so every representative of $[\beta]$ is
+realisable.
+\end{proof}
+
+This replaces, in the non-trivial regime, the trivial-kernel ``$o_\nu$ descends because
+$B^2\subseteq Z^2$'' step, and it is valid verbatim without assuming a well-behaved
+non-trivial-kernel cohomology.
+
+\subsection{The assembly and the split coupling}
+Coordinatise $G\cong D\times H$ by $x\mapsto(x-s(qx),qx)$, $q$ the quotient map. A genuine
+skew brace inducing the triplet becomes, on $D\times H$,
+\begin{align}
+(a,h_1)+(b,h_2)&=\big(a+b+\beta(h_1,h_2),\ h_1+_Hh_2\big),\label{eq:plus}\\
+(a,h_1)\circ(b,h_2)&=(a,h_1)+\lambda_{(a,h_1)}(b,h_2),\label{eq:circ}
+\end{align}
+with the left translation assembled from
+\begin{align}
+\lambda_{s(h)}(b,k)&=\big(\nu_h b+f(h,k),\ \lH_h k\big),
+& f(h,k)&=\beta(-h,h\circ k)-\beta(h,-h)+\nu_{h\circ k}\bar\tau(h,k),\label{eq:lamsh}\\
+\lambda_{\iot(d)}(b,k)&=\big(\lD_d b+\delta_k(d),\ k\big),&&(d\in D),\label{eq:lamd}\\
+\lambda_{(a,h)}&=\lambda_{\iot(a')}\circ\lambda_{s(h)},
+& a'&=(\nu_h\shat_h)^{-1}(a)=(\id+\delta_h)^{-1}(a).\label{eq:lamgen}
+\end{align}
+Conversely, any pair $(\beta,\bar\tau)$ of normalised $2$-cochains \emph{assembles} to a
+structure \eqref{eq:plus}--\eqref{eq:lamgen}; the question is when the assembly is a skew
+brace. The assembly reproduces every genuine non-trivial-kernel brace exactly
+($33/33$ across $D\in\{\Z/4,\Z/8\}$, $H=\Z/2$, and $D=\Z/4$, $H=\Z/3$). By the finite
+criterion the assembly is a brace iff every $\lambda_g$ is additive and
+$\lambda_{g\circ g'}=\lambda_g\lambda_{g'}$; we analyse the generating translations
+$\lambda_{\iot(d)}$ and $\lambda_{s(h)}$ in turn.
+
+\begin{lemma}[Kernel coupling $(\star)$; proved, general $H$]\label{lem:star}
+If the assembly is a skew brace then each $\lambda_{\iot(d)}$ is an additive automorphism,
+and this holds iff
+\begin{equation}\label{eq:star}
+(\lD_d-\id)\,\beta(k,k')=\delta_k(d)+\delta_{k'}(d)-\delta_{k+_Hk'}(d)
+\qquad(d\in D,\ k,k'\in H).\tag{$\star$}
+\end{equation}
+\end{lemma}
+\begin{proof}
+Expand $\lambda_{\iot(d)}\big((b,k)+(b',k')\big)=\lambda_{\iot(d)}(b,k)+\lambda_{\iot(d)}(b',k')$
+by \eqref{eq:plus}, \eqref{eq:lamd}. The $H$-components agree; since $\lD_d\in\Aut(D,+)$ the
+terms $\lD_d(b+b')$ cancel, and the $D$-components give exactly \eqref{eq:star}. Conversely
+\eqref{eq:star}, with $\lD_d\in\Aut(D,+)$ and $\delta_k\in\End(D,+)$, makes
+$\lambda_{\iot(d)}$ additive; it is bijective since $\lD_d$ is and the $H$-coordinate is
+fixed. The derivation uses no triviality and no property of $\bar\tau$.
+\end{proof}
+
+\begin{remark}[Recovery of the lock]\label{rem:lock}
+At $H=\Z/2$, $k=k'=1$ (so $k+_Hk'=0$, $\delta_0=0$), \eqref{eq:star} reads
+$(\lD_d-\id)b=2\delta_1(d)$ with $b=\beta(1,1)$---the lock \eqref{eq:lock-intro} of
+Example~\ref{ex:g16}, here the $|H|=2$ slice of a single general-$H$ identity.
+\end{remark}
+
+\begin{corollary}[Closed-form offset; proved, general $H$]\label{cor:offset}
+Write $\psi^d\in C^1(H,D)$ for $\psi^d_k:=\delta_k(d)$, linear in $d$. Then $(\star)$ is the
+affine equation
+\begin{equation}\label{eq:offset}
+(\lD_d-\id)\,\beta=d_+\psi^d\qquad(\forall d\in D),
+\end{equation}
+whose left side is $\Z$-linear in $\beta$ and whose right side is the $\beta$-independent
+additive coboundary $c^d:=d_+[\delta_\bullet(d)]$. Thus the offset carried by $o_\nu$ is, in
+closed form and for arbitrary $H$, the coboundary of the defect section.
+\end{corollary}
+\begin{proof}
+With $\mu=\id$, $(d_+\psi^d)(k,k')=\psi^d_k-\psi^d_{k+_Hk'}+\psi^d_{k'}
+=\delta_k(d)-\delta_{k+_Hk'}(d)+\delta_{k'}(d)$, the right side of \eqref{eq:star}; the left
+side is linear since $\lD_d-\id\in\End(D,+)$ acts pointwise. $c^d$ depends only on the
+triplet.
+\end{proof}
+
+\begin{definition}[The obstruction, non-trivial kernel]\label{def:onu-nt}
+In the non-trivial-kernel regime we write $o_\nu([\beta])$ for the obstruction to solving
+$(\star)$ at the cochain level for a representative of $[\beta]$; by Theorem~\ref{thm:welldef}
+this is well defined on $H^2_+$, and $o_\nu([\beta])=0$ is precisely the condition of
+Theorem~\ref{thm:main-nt}. By Corollary~\ref{cor:offset} it is \emph{affine}, with linear
+part $[\beta]\mapsto(\lD_\bullet-\id)[\beta]$ and constant offset
+$c^\bullet=d_+[\delta_\bullet(\,\cdot\,)]$---in contrast to the trivial-kernel case
+($\delta\equiv0$), where $o_\nu$ is the linear map of Theorem~\ref{thm:main-triv}.
+\end{definition}
+
+\begin{corollary}[Cohomological necessity]\label{cor:coho}
+If $[\beta]\in\im\varphi^{+}$ then $(\lD_d-\id)_*[\beta]=0$ in $H^2_+$ for every $d$. This
+is necessary but strictly weaker than $(\star)$: the offset $c^d$ must be matched at the
+\emph{cochain} level by a single representative, not merely up to coboundary. (At $D=\Z/8$,
+$H=\Z/2$, the cohomological condition admits both classes while $\im\varphi^{+}$ is a single
+class---the torsor phenomenon of \S\ref{sec:torsor}.)
+\end{corollary}
+\begin{proof}
+$(\lD_d-\id)\beta=d_+\psi^d$ is a coboundary, so its class vanishes; strictness is the cited
+computation.
+\end{proof}
+
+\begin{lemma}[Section coupling $\mathrm{(F)}$; proved, general $H$]\label{lem:F}
+Additivity of $\lambda_{s(h)}$ holds iff
+\begin{equation}\label{eq:F}
+f(h,k)+f(h,k')-f(h,k+_Hk')=\nu_h\,\beta(k,k')-\beta(\lH_hk,\lH_hk')
+\qquad(h,k,k'\in H),\tag{F}
+\end{equation}
+with $f$ as in \eqref{eq:lamsh}. For a trivial kernel $(\star)$ is vacuous and $\mathrm{(F)}$
+is the Rathee--Yadav coupling (3.10); \eqref{eq:F} is its non-trivial-kernel form.
+\end{lemma}
+\begin{proof}
+Expand $\lambda_{s(h)}\big((b,k)+(b',k')\big)=\lambda_{s(h)}(b,k)+\lambda_{s(h)}(b',k')$ by
+\eqref{eq:plus}, \eqref{eq:lamsh}. The $H$-components agree as $\lH_h\in\Aut(H,+)$; the
+$D$-components give \eqref{eq:F}. In the trivial-kernel case \eqref{eq:F} coincides with
+(3.10) after substituting $f=\beta(-h,h\circ k)-\beta(h,-h)+\tau(h,k)$ and using $\beta\in
+Z^2_+$; this matches $P\tau=Q\beta$ on all trivial-kernel braces for
+$H\in\{\Z/2,\Z/3,\Z/4\}$.
+\end{proof}
+
+\begin{lemma}[Kernel homomorphism, cyclic $D$; proved]\label{lem:R1}
+If $(D,+)$ is cyclic then $d\mapsto\lambda_{\iot(d)}$ is a homomorphism
+$(D,\circ)\to\Aut(G,+)$.
+\end{lemma}
+\begin{proof}
+Both sides fix the $H$-coordinate. On $D$-coordinates equality reduces to
+$\lD_d\,\delta_k(e)=\delta_k(\lD_d e)$, i.e.\ $[\lD_d,\delta_k]=0$ in $\End(D,+)$, using
+$\lD_{d\circ e}=\lD_d\lD_e$ and $\delta_k(d\circ e)=\delta_k(d)+\delta_k(\lD_d e)$. For
+cyclic $D$, $\End(D,+)=\Z/|D|$ is commutative. (For non-cyclic $D$ this commutation is an
+extra hypothesis; all non-trivial-kernel families in evidence have cyclic $D$.)
+\end{proof}
+
+\begin{theorem}[Decomposition of the axioms]\label{thm:decomp}
+Assume $D$ cyclic. The assembly of $(\beta,\bar\tau)$ is a skew brace iff
+\[
+\mathrm{(add)}\ \beta\in Z^2_+,\quad
+\mathrm{(mult)}\ \bar\tau\in Z^2_\circ,\quad
+\mathrm{(F)}\ \eqref{eq:F},\quad
+(\star)\ \eqref{eq:star}.
+\]
+Once each generating translation is additive (i.e.\ $(\star)$ and $\mathrm{(F)}$ hold) and
+$\bar\tau\in Z^2_\circ$, the homomorphism law $\lambda_{g\circ g'}=\lambda_g\lambda_{g'}$ is
+automatic. Only $(\star)$ involves $\beta$ without $\bar\tau$; only $\mathrm{(F)}$ couples
+$\bar\tau$ to $\beta$.
+\end{theorem}
+\begin{proof}[Proof and status]
+(add) is the group law for \eqref{eq:plus}; (mult) is the group law for the multiplicative
+factor set (kernel $(D,\circ)$, action $\shat$; Theorem~\ref{thm:home}). Necessity of
+$(\star)$ and $\mathrm{(F)}$ is Lemmas~\ref{lem:star}, \ref{lem:F}. For sufficiency one
+promotes generator-additivity to the homomorphism law on $(G,\circ)$, which is generated by
+$\iot(D)\cup s(H)$ subject to $\iot(d)\circ\iot(e)=\iot(d\circ e)$ (Lemma~\ref{lem:R1}),
+$s(h)\circ s(k)=\iot(\bar\tau(h,k))\circ s(h\circ k)$ (using (mult)), and the
+$\shat$-conjugation relation; $\lambda$ respects each relation exactly when
+$\mathrm{(F)},(\star),\text{(mult)}$ hold. This reduction is \emph{proved} at $H=\Z/2$ and
+machine-verified exhaustively there (brace $\Leftrightarrow\mathrm{(F)}\wedge(\star)$ with
+zero exceptions, $D\in\{\Z/4,\Z/8\}$); the general-$H$ relation bookkeeping is the
+mechanical residue of \S\ref{sec:open}.
+\end{proof}
+
+\subsection{The lock and the explicit $H=\Z/2$ case}\label{sec:lock}
+Write $u:=s(1)$, $b:=\beta(1,1)=2u$, $t:=\bar\tau(1,1)=u\circ u$.
+
+\begin{theorem}[The lock, by hand; proved, $112/112$]\label{thm:lock}
+For $H=\Z/2$ and every $x\in D$,
+\begin{equation}\label{eq:lock}
+(\lD_x-\id)\,b=2\,\delta_1(x)=2\big(\nu_1\shat_1(x)-x\big)\quad\text{in }(D,+);
+\end{equation}
+at a generator, $(\lD_1-1)b\equiv2(\nu\shat-1)\pmod{|D|}$.
+\end{theorem}
+\begin{proof}
+Apply the skew-brace axiom $a\circ(b'+c')=(a\circ b')-a+(a\circ c')$ with $a=x\in D$ and
+$b'=c'=u$. As $u+u=b\in D$, the left side is $x\circ b=x+\lD_x(b)$. For the right side,
+$x\circ u=x+\lambda_x(u)=x+(u+\delta_1(x))$ by Lemma~\ref{lem:defect}; adding two copies
+with $(G,+)$ abelian gives $2(x\circ u)-x=x+2\delta_1(x)+b$. Equating and cancelling $x+b$
+yields $\lD_x(b)-b=2\delta_1(x)$, which is \eqref{eq:lock}. The derivation is general; it is
+verified on all $112$ genuine non-trivial-kernel braces with $H=\Z/2$ ($D\in\{\Z/4,\Z/8\}$).
+\end{proof}
+
+For $D=\Z/8$ ($\lD_1=5$) this is $4b\equiv2(\nu\shat-1)\pmod8$, so $[\beta]\ne0$ (i.e.\ $b$
+odd) iff $\nu\shat\equiv3\pmod4$---Example~\ref{ex:g16}.
+
+\subsection{The main biconditional}
+
+\begin{theorem}[Non-trivial kernel]\label{thm:main-nt}
+Assume $D$ cyclic and $\nu$ a homomorphism. An additive class $[\beta]\in H^2_+$ is
+realisable iff some representative $\beta$ admits $\bar\tau\in Z^2_\circ$ satisfying
+$(\star)$ and $\mathrm{(F)}$; and then
+\[
+\im\varphi^{+}=\big\{[\beta]\in H^2_+:\ (\star)\ \text{is solvable at the cochain level for
+some representative}\big\}.
+\]
+The offset carried by $o_\nu$ is $c^d=d_+[\delta_\bullet(d)]$ (Corollary~\ref{cor:offset}).
+This is \emph{proved} for $H=\Z/2$ (finite construction) and verified computationally for
+all $34$ homomorphism-triplets with $H=\Z/2$ ($D\in\{\Z/4,\Z/8\}$) and $H=\Z/3$ ($D=\Z/9$),
+i.e.\ $86$ genuine braces: $(\star)$ holds on $86/86$ and predicts $\im\varphi^{+}$ on
+$34/34$ triplets.
+\end{theorem}
+\begin{proof}
+Forward ($\subseteq$): a realising brace gives $\beta$ with $(\star)$ (Lemma~\ref{lem:star})
+and $\bar\tau\in Z^2_\circ$ with $\mathrm{(F)}$ (Lemmas~\ref{lem:F}, \ref{thm:decomp}).
+Reverse ($\supseteq$): given $\beta$ with $(\star)$, choose $\bar\tau\in Z^2_\circ$ solving
+$\mathrm{(F)}$; Theorem~\ref{thm:decomp} then yields a brace, so $[\beta]$ is realised,
+constructively. The reverse rests on $\mathrm{(F)}$ being solvable once $(\star)$ holds; this
+is finite at $H=\Z/2$ and verified on all $34$ triplets, and is the single step left open
+for general $H$ (\S\ref{sec:open}).
+\end{proof}
+
+\subsection{The torsor dichotomy}\label{sec:torsor}
+
+\begin{theorem}[Torsor dichotomy; proved, general $H$]\label{thm:torsor}
+The split additive class $[0]$ is realisable iff, for every $d\in D$, the defect section
+$\delta_\bullet(d)\colon(H,+)\to(D,+)$, $k\mapsto\delta_k(d)$, is a group homomorphism
+(equivalently $c^d=d_+[\delta_\bullet(d)]=0$). When some $\delta_\bullet(d)$ is not a
+homomorphism, $0\notin\im\varphi^{+}$ and $\im\varphi^{+}$ is a torsor over $\ker o_\nu$
+without basepoint. At $H=\Z/2$ this reads $2(\nu\shat-1)=0$: the witness $D=\Z/8$
+($L=\{1,5\}\subsetneq\Aut D$) is a torsor at $\nu\shat\equiv3\pmod4$, while the counter
+$D=\Z/4$ ($L=\Aut D$) forces $c\equiv0$ and is always based.
+\end{theorem}
+\begin{proof}
+Put $\beta=0$ in $(\star)$: $0=d_+\psi^d$ for all $d$, i.e.\ $\psi^d=\delta_\bullet(d)$ is a
+$1$-cocycle, a homomorphism (with $\mu=\id$). Realisability of $[0]$ requires $(\star)$ for a
+representative of $[0]$; changing representative alters the left side of $(\star)$ by
+$(\lD_d-\id)d_+\theta$ while the offset $c^d$ is fixed, so $[0]$ is realisable iff $c^d=0$.
+At $H=\Z/2$, $\delta_\bullet(d)$ has the single value $\delta_1(d)$ and
+$c^d=2\delta_1(d)=2(\nu\shat-1)d$.
+\end{proof}
+
+Thus the no-basepoint phenomenon of Example~\ref{ex:g16} is intrinsic: it is the failure of
+the defect to be a homomorphism, which happens exactly when $L:=\im\lD\subsetneq\Aut(D)$
+and $\nu\shat$ is non-socle (in the witness, $L=\{1,5\}$). The residue is woven into
+realisability through $\delta$; there is no independent ``$[\nu]\perp[\beta]$'' coordinate,
+only this affine coupling.
+
+\section{The Lean layer}\label{sec:lean}
+
+Three finite, load-bearing facts carry machine certificates in Lean~4 core (Mathlib-free,
+v4.30.0), each built honestly from the operations---no hardcoded tables---and closed by
+\texttt{decide} or by explicit computation. We state what is certified and, equally
+importantly, its scope.
+
+\begin{itemize}\itemsep3pt
+\item\textbf{$\varphi^{+}$ descends} (Proposition~\ref{prop:descend}). The additive
+component of a skew-brace coboundary is itself an additive coboundary---a pure associativity
+regrouping in $(G,+)$, using no $\tau,\nu,\shat$---so $\varphi^{+}$ is well defined. Axiom
+footprint \texttt{propext} only.
+
+\item\textbf{$\Phi$ non-injective} (Proposition~\ref{prop:noninj}). On $G=\Z/2\times\Z/4$
+with the witness brace $a\circ b=(a_1+b_1,\ a_2+b_2+2a_1b_1)$, the cochain values
+$\beta(1,1)=(0,2y)$ and $\tau(1,1)=(0,2y+2)$ are computed honestly from the operations over
+the four sections $y\in\Z/4$. Then $[\beta]=0\iff y\in\{0,2\}$ and $[\tau]=0\iff y\in\{1,3\}$;
+the two loci are disjoint and nonempty, so no section kills both, giving a class with
+$\Phi([\Omega])=(0,0)$ yet $[\Omega]\ne0$. The obstruction is irreducibly bilinear.
+
+\item\textbf{The $|G|=16$ lock and torsor dichotomy} (Theorems~\ref{thm:lock},
+\ref{thm:torsor} at $H=\Z/2$). On $D=\Z/8$ with $\lD_1=5$ (so $L=\{1,5\}\subsetneq\Aut D$)
+the lock $4b\equiv2(\nu\shat-1)\pmod8$, its descent to $H^2_+=D/2D$, and the offset
+dichotomy (offset $\ne0\iff\nu\shat\equiv3\pmod4$ $=$ torsor without basepoint) are decided
+outright; the lock holds as a necessary condition on all $12$ section-invariant
+representatives ($24$ braces) of the holomorph enumeration. The counter $D=\Z/4$
+($L=\Aut D$) has offset $\equiv0$ always, forcing $\im\varphi^{+}=\{[0]\}$, based. Depends
+on \emph{no} axioms (pure \texttt{decide}).
+\end{itemize}
+
+Each certificate covers exactly its finite witness: they do not re-encode the
+Rathee--Yadav characterisation, the abstract operators, or the general-$H$ offset. Their
+role is to pin the arithmetic crux of the obstruction---that the loci are genuinely disjoint,
+that the lock is genuinely satisfied---beyond the reach of a transcription error.
+
+\section{Open steps and outlook}\label{sec:open}
+
+\subsection{Two isolated open steps}
+Theorem~\ref{thm:main-nt} is unconditional at $H=\Z/2$ and computationally confirmed on
+all $34$ triplets tested; two mechanical residues remain for general $H$, both isolated and
+machine-covered on the tested range.
+\begin{enumerate}\itemsep2pt
+\item[(O1)] \emph{$(\star)\Rightarrow\mathrm{(F)}$-solvability, general $H$.} The reverse of
+Theorem~\ref{thm:main-nt} needs: if $\beta$ satisfies $(\star)$ then \eqref{eq:F} is
+solvable in $\bar\tau\in Z^2_\circ$. This is one inhomogeneous $\Z$-linear condition; it is
+finite at $H=\Z/2$ and holds on all $34$ homomorphism-triplets tested. A general proof
+requires identifying the image of $\bar\tau\mapsto(\mathrm{F}\text{-residual})$ and checking
+$(\star)$ lands in it. This step is being developed jointly with Rick.
+\item[(O2)] \emph{Homomorphism-law bookkeeping, general $H$.} The sufficiency half of
+Theorem~\ref{thm:decomp} (relation-checks for $\lambda$ on the generators of $(G,\circ)$) is
+finite and machine-exhaustive at $H=\Z/2$; the general-$H$ term-by-term reduction is routine
+but not written out.
+\end{enumerate}
+Neither step touches the new content: the closed-form offset $c^d=d_+[\delta_\bullet(d)]$
+(Corollary~\ref{cor:offset}), the general-$H$ kernel coupling $(\star)$
+(Lemma~\ref{lem:star}), and the torsor dichotomy (Theorem~\ref{thm:torsor}) are
+unconditional. A genuine $H=\Z/3$, $D$-non-trivial example exercising the general-$H$
+prediction needs a larger $D$ (e.g.\ $\Z/9$ or $(\Z/3)^2$ carrying a non-trivial brace with
+$\Z/3\hookrightarrow\Aut(D,+)$); the smallest candidate on $\Z/4$ yields a $\nu$ that is not
+a homomorphism, outside the hypotheses.
+
+\subsection{What the repair buys}
+The obstruction $o_\nu$ answers the forgetful-image question completely for a trivial kernel
+and up to two isolated steps for a non-trivial one, and it does so with a single,
+cohomologically meaningful object: a class whose vanishing is solvability, whose linear part
+is the kernel action $\lD_d-\id$ on $H^2_+$, and whose offset is the coboundary of the
+intrinsic defect. The affine structure explains the empirical ``torsor without basepoint''
+directly: the split extension exists iff the defect is a homomorphism. We regard the arc of
+this paper---a plausible product decomposition, refuted one review-hop away, and rebuilt as
+the correct affine obstruction---as the intended shape of the result, not an accident of its
+history. The false coordinate and the true coupling are two readings of the same data; only
+the second survives computation.
+
+The obstruction here is cohomological, living on the $H^2$ side of skew-brace
+(co)homology; it is complementary to the homology development of Gran, Letourmy and
+Vendramin~\cite{GLV}, whose Hopf formulae compute the low-degree homology of skew braces,
+and we see no overlap between the two.
+
+\section*{Acknowledgements}
+The reformulation at the heart of \S\S\ref{sec:repairI}--\ref{sec:repairII}---that the
+coupling is affine and that $\im\varphi^{+}=\ker o_\nu$---is due to Rick, whose referee
+report refuted the product claim and supplied the corrected target. The
+$(\star)\Rightarrow\mathrm{(F)}$ construction for general $H$ is joint work in progress with
+him. Thanks to Neil Ghani and Robin Langer for direction and infrastructure.
+
+\begin{thebibliography}{9}
+
+\bibitem{RY}
+M.~Rathee and M.~K.~Yadav,
+\emph{Skew brace extensions, second cohomology and complements},
+arXiv:2601.12371.
+
+\bibitem{BilinearNote}
+MacBeth,
+\emph{The additive forgetful map on skew-brace $H^2$ descends, and the product forgetful map
+is not injective} (internal note, Kodamai; the $W_4$ separation), 2026;
+machine-checked in Lean~4 (\texttt{additive-forgetful-descends}, \texttt{w4-noninjective}).
+
+\bibitem{RickRef}
+Rick,
+\emph{Referee report: the $[\nu]\perp[\Omega]$ corner---cross-equation (c) is not
+auto-solvable; residue-dependent obstructions at $|G|=8$ and $|G|=16$}, 2026;
+Remark~4 (the affine reformulation $\im\varphi^{+}=\ker o_\nu$).
+
+\bibitem{GuarnieriVendramin}
+L.~Guarnieri and L.~Vendramin,
+\emph{Skew braces and the Yang--Baxter equation},
+Math. Comp. \textbf{86} (2017), 2519--2534.
+
+\bibitem{GLV}
+M.~Gran, T.~Letourmy and L.~Vendramin,
+\emph{Hopf formulae for homology of skew braces},
+arXiv:2409.18056.
+
+\end{thebibliography}
+
+\end{document}
