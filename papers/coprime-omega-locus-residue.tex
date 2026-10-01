@@ -94,9 +94,10 @@ decomposition question as a cohomology question.
 \paragraph{The gap.}
 Given \eqref{eq:premise} and the coprime complement theorem, one sentence writes itself:
 \emph{coprimality forces $[\Omega]=0$}. But a sentence that writes itself deserves scrutiny
-on two counts. First, is it visibly true --- does the cohomological locus $\{[\Omega]=0\}$
-actually contain the whole coprime regime, with no exceptions hiding at small orders? Second,
-and more interestingly, \emph{why}? A skew-brace extension carries a \emph{residue} $\nu$:
+on two counts. First, is it \emph{informative} --- is the obstruction genuinely realised off
+the coprime region (so the vanishing locus is a proper sublocus, not all of the ambient
+cohomology), and does a direct computation that trusts neither the premise \eqref{eq:premise}
+nor the cited theorem confirm the picture? Second, and more interestingly, \emph{why}? A skew-brace extension carries a \emph{residue} $\nu$:
 the outer action of $H$ on $D$, the image of the multiplicative action restricted to $D$ in
 $\Aut(D)$ modulo inner automorphisms. This residue is the channel through which the
 residue-dependent solvability obstruction $o_\nu$ of the cohomological extension theory operates.
@@ -224,12 +225,14 @@ Sections~\ref{sec:witness}--\ref{sec:residue} add on top of this proposition.
 \end{proof}
 
 Proposition~\ref{prop:locus} says the classical decomposition theorem is the assertion that
-the coprime regime is contained in the cohomological locus $\{[\Omega]=0\}$. Two questions
-remain that Proposition~\ref{prop:locus} does not answer, and that motivate the rest of the
-note. Is the containment \emph{exact enough} to be informative --- does $[\Omega]\ne0$
-genuinely require non-coprimality, or could coprime counterexamples lurk at orders the
-theorem's hypotheses do not obviously reach? And through what mechanism does coprimality act
---- does it trivialise the residue $\nu$, or bypass it? The first is answered by a census
+the coprime regime is contained in the cohomological locus $\{[\Omega]=0\}$, and its
+contrapositive already settles that non-coprimality is \emph{necessary} for $[\Omega]\ne0$.
+Two questions remain that the proposition does not answer, and that motivate the rest of the
+note. First, is the containment \emph{informative} --- is the complementary locus
+$\{[\Omega]\ne0\}$ actually populated, so that non-coprimality is necessary but far from
+sufficient, and does a direct computation, trusting neither the cited theorem nor the premise
+\eqref{eq:premise}, confirm the whole picture? Second, through what mechanism does coprimality
+act --- does it trivialise the residue $\nu$, or bypass it? The first is answered by a census
 (Section~\ref{sec:witness}), the second by inspecting the residue directly
 (Section~\ref{sec:residue}).
 
@@ -282,13 +285,17 @@ lives, and it is exactly the region coprimality excludes.
 
 \begin{remark}[What the census is and is not]\label{rem:scope}
 Observation~\ref{obs:locus} is a \emph{computed witness} over a finite list of additive
-groups, not a proof. It cannot establish that non-coprimality is \emph{necessary} for
-$[\Omega]\ne0$ in general --- only that no coprime counterexample appears up to order $24$.
-Combined with Proposition~\ref{prop:locus} (which does give one direction in general), it
-says: the containment ``coprime $\subseteq\{[\Omega]=0\}$'' is a theorem, and the census
-finds no evidence that the containment is strict for a coprime reason. Whether $[\Omega]\ne0$
-\emph{provably} requires non-coprimality beyond this range is left open
-(Section~\ref{sec:conclusion}).
+groups, not a proof, and it is not needed for the containment direction: that non-coprimality
+is \emph{necessary} for $[\Omega]\ne0$ is already Proposition~\ref{prop:locus} in general. The
+census adds two things the proposition does not. First, it is an \emph{independent}
+confirmation of the whole picture: splitting was decided by direct complement search, so the
+coprime $0/111$ figure checks the cited Schur--Zassenhaus theorem and the premise
+\eqref{eq:premise} against ground truth rather than assuming them. Second, and substantively,
+it shows the obstruction is \emph{non-vacuous}: $[\Omega]\ne0$ genuinely occurs ($582$ times),
+so the locus $\{[\Omega]=0\}$ is a proper sublocus and non-coprimality is necessary but far
+from sufficient --- $654$ of the $1236$ non-coprime instances split regardless. What a
+finite census cannot do is characterise \emph{which} non-coprime extensions obstruct; that is
+left open (Section~\ref{sec:conclusion}).
 \end{remark}
 
 \section{The residue survives: orthogonality}\label{sec:residue}
@@ -349,9 +356,10 @@ $0$; both are large.
 The bilinear class $[\Omega]$ does two things for skew-brace decomposition. It \emph{recovers}
 the classical theorems: by \eqref{eq:premise}, the coprime Schur--Zassenhaus complement
 theorem is the statement that the coprime regime lies in the vanishing locus
-$\{[\Omega]=0\}$ (Proposition~\ref{prop:locus}), and a census up to order $24$ finds the locus
-exactly where the theorems put it, with $[\Omega]\ne0$ confined to the non-coprime regime
-(Observation~\ref{obs:locus}). And it \emph{refines} them: the residue $\nu$, invisible to
+$\{[\Omega]=0\}$ (Proposition~\ref{prop:locus}), and an independent census up to order $24$ ---
+deciding splitting by direct complement search --- confirms the picture while showing the
+obstruction is genuinely realised ($[\Omega]\ne0$ exactly $582$ times, all non-coprime), so
+the locus is a proper sublocus (Observation~\ref{obs:locus}). And it \emph{refines} them: the residue $\nu$, invisible to
 the order-arithmetic proof, is a genuine invariant that survives coprimality and is
 non-trivial in most decomposable coprime cases (Observations~\ref{obs:residue}
 and~\ref{obs:orth}). A cohomological invariant that reproduces a classical result as a
@@ -372,9 +380,10 @@ unambiguous.
 \paragraph{Open questions.}
 Two are well-posed and hand naturally to a proof session.
 \begin{problem}
-Prove, without a finite sweep, that $[\Omega]\ne0$ requires $\gcdd(|D|,|H|)>1$: that the
-containment coprime $\subseteq\{[\Omega]=0\}$ is the whole story about coprimality and the
-locus.
+Non-coprimality is necessary but not sufficient for $[\Omega]\ne0$ (Proposition~\ref{prop:locus}
+gives necessity; the census finds $654$ non-coprime splittings). Characterise, within the
+non-coprime regime, exactly which extensions obstruct --- a sharp structural criterion for
+$[\Omega]\ne0$ refining the order condition.
 \end{problem}
 \begin{problem}
 Prove that coprimality forces $[\Omega]=0$ \emph{orthogonally} to $\nu$ in general: exhibit

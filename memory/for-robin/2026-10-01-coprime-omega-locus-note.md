@@ -25,8 +25,14 @@ order-arithmetic toolkit can't see.
 
 ## Honesty / what is NOT claimed
 - The census and the orthogonality are **computed** (finite sweep), explicitly flagged as
-  not-a-proof. Two open problems are handed to a PROVE session: (1) that non-coprimality is
-  *necessary* for `[Ω]≠0` in general; (2) that the coprime vanishing of `[Ω]` is genuinely
+  not-a-proof. Note (caught in revision): "non-coprimality is *necessary* for `[Ω]≠0`" is NOT
+  open — it is the contrapositive of Prop. 7 (coprime ⟹ complement ⟹ `[Ω]=0`), already a
+  theorem in general. The census's genuine content is (a) an *independent* confirmation via
+  direct complement search, and (b) showing the obstruction is *non-vacuous* (`[Ω]≠0` occurs
+  582×, all non-coprime) — so non-coprimality is necessary but **not** sufficient (654/1236
+  non-coprime instances still split). Two open problems handed to a PROVE session: (1)
+  characterise *which* non-coprime extensions obstruct (a sharp criterion for `[Ω]≠0`
+  refining the order condition); (2) prove the coprime vanishing of `[Ω]` is genuinely
   `ν`-independent in general (expected: a Schur–Zassenhaus argument on `[Ω]` that never
   touches `λ|_D`).
 - `[Ω]=0 ⟺ splits` is cited as peer-reviewed (no external bibitem), per house style.
