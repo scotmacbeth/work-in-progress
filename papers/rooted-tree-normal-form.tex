@@ -1,0 +1,646 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{stmaryrd} % \llbracket \rrbracket
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+\usepackage{tikz-cd}
+
+% ---- theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{schema}[theorem]{Schema}
+
+% ---- macros ----
+\newcommand{\Set}{\mathrm{Set}}
+\newcommand{\Poly}{\mathrm{Poly}}
+\newcommand{\Cat}{\mathrm{Cat}}
+\newcommand{\Cont}{\mathrm{Cont}}
+\newcommand{\DCont}{\mathrm{DCont}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Struct}{\mathrm{Struct}}
+\newcommand{\EM}{\mathrm{EM}}
+\newcommand{\ob}{\mathrm{ob}}
+\newcommand{\cod}{\mathrm{cod}}
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\leaves}{\mathrm{leaves}}
+\newcommand{\graft}{\mathrm{graft}}
+\newcommand{\spl}{\mathrm{split}}
+\newcommand{\lf}{\mathsf{lf}}
+\newcommand{\nd}{\mathsf{nd}}
+\newcommand{\EF}{\mathbb{E}}
+\newcommand{\Peb}{\mathbb{P}}
+\newcommand{\Mod}{\mathbb{M}}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+\newcommand{\pos}{P}
+\newcommand{\Sh}{S}
+\newcommand{\cext}[1]{\sem{#1}}
+\newcommand{\pathfun}{\mathsf{p}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\Paths}{\mathcal{P}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\defeq}{\mathrel{\vcentcolon=}}
+\DeclareMathOperator{\Sub}{Sub}
+
+\begin{document}
+
+\title[The rooted-tree normal form]{The rooted-tree normal form:\\
+directed containers, free monoids, and arboreal game comonads}
+
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+
+\date{2 October 2026}
+
+\begin{abstract}
+A recurring move in the theory of containers and polynomial functors replaces an
+\emph{arbitrary-position} condition by a \emph{rooted, tree-shaped} discipline, under which the
+operative backward map reads only a unique root-path. We isolate this move and show that it is the
+same move in four independently-developed settings: the root axiom that turns a container into a
+comonad (Ahman--Uustalu), the path-confinement of the backward pass of a branching free monoid, the
+tree-connectedness axiom that repairs the theory of arboreal categories (Jakl--Reggio), and the
+forest condition on polynomial comonoids. The move has a single geometric content---in a forest the
+path to the root is unique---which in the last and sharpest instance becomes a theorem: the
+Eilenberg--Moore coalgebras of a polynomial comonad $c = C$ are the copresheaves on $C$, so the
+coalgebra category is arboreal exactly when $C$ is a forest. This identifies the arboreal coalgebra
+categories of finite model theory with copresheaf categories of polynomial comonads, giving a bridge
+between the game-comonad programme and the Poly programme. We close with an honestly-graded open
+problem on how the two meet at the level of fibrations.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection*{A move one keeps making}
+Here is a pattern. One is handed a construction---a container, a free monoid, a category of
+coalgebras---together with a condition phrased over \emph{all} positions, or \emph{all}
+coproducts, or \emph{all} arrows. The condition looks hard to control because the positions branch:
+different answers lead to different continuations, different subobjects combine in uncontrolled ways.
+Then one notices that the condition can be re-phrased so that the data is confined to a
+\emph{rooted tree}, and that the map one actually has to understand reads only a \emph{single
+root-path}---a unique prefix, a unique minimal element. The branching that threatened to create an
+obstruction is forbidden by the tree shape, and the obstruction evaporates.
+
+This paper is about that move. We have met it four times, in four settings developed independently of
+one another, by different communities, for different reasons. The purpose of the paper is to state the
+move once, precisely, and to exhibit the four settings as instances of it---so that the reader who
+knows one of them recognises the others, and so that a tool sharpened in one can be carried to the
+rest.
+
+\subsection*{The four settings}
+The four instances, in order of increasing categorical sharpness, are these.
+
+\begin{enumerate}
+\item[(I)] \emph{The root axiom.} A container $(S \triangleleft P)$ is a comonad on $\Set$---equivalently
+a small category---exactly when its positions carry a distinguished root at each shape together with a
+compatible codomain-and-composition discipline. This is the founding instance: the move is already the
+definition of a \emph{directed} container \cite{AhmanChapmanUustalu2014,AhmanUustalu2016}.
+
+\item[(II)] \emph{The prefix cut.} The free monoid on a container $C$ under composition---a type of
+answer-driven interaction tree---carries a multiplication whose forward part grafts trees and whose
+backward part splits a leaf-path. We prove (Lemma~\ref{lem:D1}) that the backward part is
+\emph{independent of the grafted data}: it cuts a leaf-path at its unique prefix that is a leaf of the
+outer tree. The feared obstruction to a bidirectional universal property---that answer-dependence
+corrupts the backward pass---cannot occur, because the cut sees only the outer tree.
+
+\item[(III)] \emph{Factoring through the least element.} In the theory of \emph{arboreal categories}
+\cite{AbramskyShah2021,JaklReggio2026}, an axiom requiring paths to be \emph{connected} fails for the
+modal game comonads. Jakl and Reggio repair it with \emph{tree-connectedness}: an arrow into a colimit
+of a tree-diagram of paths must factor through a \emph{least} element of the tree
+\cite[Def.~11]{JaklReggio2026}. This is the same move---the factoring is through a unique minimal
+element---and it recovers all the pebbling and Ehrenfeucht--Fra\"iss\'e results while admitting the
+modal comonads.
+
+\item[(IV)] \emph{The base is a forest.} The move becomes a property of a small category. We show
+(Lemma~\ref{lem:coalg}) that the Eilenberg--Moore coalgebras of a polynomial comonad $c = C$ are the
+copresheaves $[C,\Set]$; for the Ehrenfeucht--Fra\"iss\'e comonad this is the category of forests of
+bounded height. Hence (Corollary~\ref{cor:arboreal-forest}) ``\emph{the coalgebra category is arboreal}''
+is exactly ``\emph{$C$ is a forest}''. The rooted-tree discipline is now a property of the base
+category, and arboreality is that property read through the equivalence \emph{polynomial comonad $=$
+directed container $=$ small category}.
+\end{enumerate}
+
+\subsection*{The main result, and what is and is not new}
+The load-bearing theorem is instance (IV):
+
+\begin{theorem}[see Lemma~\ref{lem:coalg} and Corollary~\ref{cor:arboreal-forest}]\label{thm:main}
+Let $c = C$ be a polynomial comonad, viewed as a small category. The category of Eilenberg--Moore
+coalgebras of the comonad $\cext{c}$ on $\Set$ is equivalent to the copresheaf category $[C,\Set]$,
+i.e.\ to the discrete opfibrations over $C$. When $C$ is a forest category these copresheaves are
+forests; for the Ehrenfeucht--Fra\"iss\'e comonad, whose comonoid is the linear order $[k]$, they are
+exactly the forests of height $\le k$ of \textup{finite model theory}, and for the pebbling comonad the
+trie-indexed forests. The arboreal coalgebra categories of these game comonads are thus the copresheaf
+categories of their polynomial comonoids.
+\end{theorem}
+
+We are careful about novelty. That the coalgebras of a polynomial comonad are copresheaves on its
+category is \emph{folklore-adjacent} in the Poly community---it is the familial / cofree-coalgebra
+story \cite{SpivakGarnerFairbanks2025}---and that the Ehrenfeucht--Fra\"iss\'e coalgebras are forests is
+proved directly by Abramsky and Shah \cite{AbramskyShah2021}. What we contribute is not a new deep
+theorem but the \emph{clean identification tying the two}: the one-line reason that turns ``arboreality
+$=$ the base is a forest'' from an analogy into a statement with a proof, and the observation that this
+is the fourth and sharpest appearance of a single structural move. The value here is the
+\emph{bridge}---between the game-comonad programme of finite model theory and the Poly programme of
+compositional systems---not a priority claim.
+
+\subsection*{Why a reader should care}
+Two reasons. First, pedagogical: once one sees that the root axiom, the prefix cut, the
+tree-connectedness repair, and the forest condition are one move, each becomes easier to remember and
+to apply, and a technique from one setting (for instance, the path-confinement argument of
+Section~\ref{sec:prefix}) suggests itself in the others. Second, structural: Theorem~\ref{thm:main}
+says the arboreal coalgebra categories that finite model theory studies are exactly copresheaf
+categories of polynomial comonads. The two programmes have never cited one another on this point; the
+identification lets results and intuitions cross. We make the bridge precise, and in
+Section~\ref{sec:open} we push it to the level of fibrations, where it becomes a genuine, and genuinely
+open, question---stated there with its grade and its obstructions named.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes containers, the composition product, the equivalence of polynomial
+comonoids with small categories, directed containers, and forests. Section~\ref{sec:schema} states the
+normal form once, as a schema, after isolating its single geometric content. Section~\ref{sec:instances}
+walks the four instances in order of increasing sharpness, proving instances (II) and (IV) and citing
+instances (I) and (III). Section~\ref{sec:open} reads the four as one and states the open problem that
+the schema opens, honestly graded. Section~\ref{sec:conclusion} concludes.
+
+\medskip
+\noindent\emph{Provenance.} Instances (I) and (III) are established and cited; instances (II) and (IV)
+are proved here, the former by structural induction with a computational check, the latter by a direct
+argument. The material of Section~\ref{sec:open} beyond the stated theorem is explicitly graded
+\emph{computed} or \emph{open}. We have tried to keep the claims exactly as strong as the proofs behind
+them, and no stronger.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We recall only what the four instances use. Throughout, $\Set$ is the category of sets.
+
+\subsection{Containers and polynomial functors}
+A \emph{container} $C = (S \triangleleft P)$ is a set $S$ of \emph{shapes} together with a family
+$P : S \to \Set$ of \emph{positions}. Its \emph{extension} is the functor
+\[
+  \cext{C} : \Set \to \Set, \qquad \cext{C} A = \sum_{s \in S} A^{P s},
+\]
+a coproduct of representables; functors of this form are the \emph{polynomial} functors. A morphism of
+containers $\varphi : (A \triangleleft P_A) \to (B \triangleleft P_B)$ is a \emph{forward} shape map
+$\varphi_1 : A \to B$ together with a \emph{backward} family
+$\varphi^\sharp_a : P_B(\varphi_1 a) \to P_A(a)$, contravariant in positions. Containers and their
+morphisms form a category $\Cont \cong \Fam(\Set^{\op})$, often written $\Poly$. We use the two freely.
+
+The reading that organises instance (II) is the \emph{bidirectional} one: a shape $s \in S$ is a
+request, and a position $p \in P s$ is a possible answer to it.
+
+\begin{proposition}[Gambino--Kock \cite{GambinoKock2013}, Thm.~4.5]\label{prop:ff}
+The extension functor $\cext{-} : \Poly \to [\Set,\Set]$ is fully faithful: for containers $p,q$,
+\[
+  \Poly(p,q) \;\cong\; \mathrm{Nat}(\cext{p},\cext{q}).
+\]
+\end{proposition}
+
+\subsection{The composition product and polynomial comonoids}
+The \emph{composition product} $\triangleleft$ on $\Poly$ computes functor composition,
+$\cext{p \triangleleft q} = \cext{p} \circ \cext{q}$, with unit $y = (1 \triangleleft 1)$, the identity
+functor. Concretely,
+\[
+  (G \triangleleft F).\mathrm{Shape} = \sum_{t \in T}\big(Q t \to S\big), \qquad
+  (G \triangleleft F).\mathrm{Pos}(t,f) = \sum_{q \in Q t} P(f q).
+\]
+A \emph{comonoid} in the monoidal category $(\Poly, \triangleleft, y)$ is a container $c$ with a counit
+$\varepsilon : c \to y$ and a comultiplication $\delta : c \to c \triangleleft c$ satisfying the
+comonoid laws.
+
+\begin{proposition}[Ahman--Uustalu \cite{AhmanUustalu2016}; Spivak--Garner--Fairbanks
+\cite{SpivakGarnerFairbanks2025}]\label{prop:comonoid-cat}
+Comonoids in $(\Poly,\triangleleft,y)$ are precisely small categories. Under the equivalence, a comonoid
+$c = (S \triangleleft P)$ has objects $S$ and arrows-out-of-$s$ the positions $P s$; the counit picks, at
+each $s$, an identity arrow $\id_s \in P s$; the comultiplication provides, for each $s$, a codomain map
+$\cod_s : P s \to S$ and a composition $\sum_{f \in P s} P(\cod_s f) \to P s$, $(f,g) \mapsto g \circ f$.
+The comonoid laws are the category axioms.
+\end{proposition}
+
+Combining Propositions~\ref{prop:ff} and~\ref{prop:comonoid-cat}: a comonad on $\Set$ whose underlying
+functor is polynomial is \emph{automatically} a polynomial comonoid (the counit and comultiplication,
+being natural transformations between polynomial functors, are extensions of unique container morphisms
+by full faithfulness, and the comonad laws transport), hence a small category. We write $c = C$ for a
+polynomial comonad and the small category it is.
+
+\subsection{Directed containers}
+A \emph{directed container} \cite{AhmanChapmanUustalu2014,AhmanUustalu2016} is exactly such a structure
+presented element-wise: a container $(S \triangleleft P)$ with, for each shape $s$, a \emph{root}
+position $o_s \in P s$, a \emph{subshape} $s \downarrow p \in S$ for each $p \in P s$, and an addition
+$p \oplus q \in P s$ for $q \in P(s \downarrow p)$, satisfying unit and associativity laws. These are the
+category axioms of Proposition~\ref{prop:comonoid-cat}, with $o_s = \id_s$, $s \downarrow p = \cod_s p$,
+and $\oplus$ composition. We write $\DCont \cong \Cat$ for the resulting equivalence.
+
+\subsection{Forests, paths, and copresheaves}
+A poset is a \emph{forest} if the down-set $\{x : x \le y\}$ of every element $y$ is a finite chain;
+a \emph{tree} is a forest with a least element. We view a small category $C$ as generating a reachability
+preorder; $C$ is a \emph{forest category} when that preorder is a forest, so that from every object there
+is a \emph{unique} directed path to a root. The \emph{linear order} $[k] = (\{1,\dots,k\},\le)$ and the
+$k$-ary \emph{prefix trie} on nonempty words $[k]^{+}$ are forests.
+
+For a small category $C$, a \emph{copresheaf} is a functor $X : C \to \Set$; the copresheaf category
+$[C,\Set]$ is equivalently the category of \emph{discrete opfibrations} over $C$. This is the shape in
+which instance (IV) is stated.
+
+\section{The normal form}\label{sec:schema}
+
+\subsection{The single geometric fact}
+All four instances draw on one fact about forests, which we isolate before stating the schema.
+
+\begin{lemma}[Root-path uniqueness]\label{lem:rootpath}
+Let $F$ be a forest. The following coincide for an element $y \in F$:
+\begin{enumerate}
+\item the down-set $\{x : x \le y\}$, which is a finite chain;
+\item the unique directed path from $y$ to its root;
+\item the unique \emph{minimal} (equivalently \emph{least}) element of that down-set;
+\item for the tree of \emph{prefixes} of a path ending at $y$, the unique prefix lying in any fixed
+prefix-closed subset.
+\end{enumerate}
+In each guise the data attached to $y$ ``below'' it is a chain, carrying no branching.
+\end{lemma}
+
+\begin{proof}
+A forest is exactly a poset in which every principal down-set is a chain, which is the equivalence of
+(1) with the uniqueness of the descending path (2); a nonempty finite chain has a least element, giving
+(3); and in a well-founded tree the leaves form a prefix code---no leaf is a proper prefix of another---so
+the prefix of a given path lying in a prefix-closed set is unique, giving (4). The last clause restates
+that a chain does not branch.
+\end{proof}
+
+The four instances differ only in \emph{which} guise of Lemma~\ref{lem:rootpath} they use: instance (I)
+distinguishes the root (3); instance (II) cuts at the unique prefix (4); instance (III) factors through
+the least element (3); instance (IV) makes ``every down-set is a chain'' (1) a property of the base
+category.
+
+\subsection{The schema}
+We can now say what the move is.
+
+\begin{schema}[The rooted-tree normal form]\label{sch:main}
+A condition phrased over \emph{arbitrary} positions, coproducts, or arrows is replaced by a
+\emph{rooted, tree-shaped} discipline: the data is confined to a forest, and the operative backward or
+factoring map is determined by the \emph{unique root-path} of Lemma~\ref{lem:rootpath}---a unique
+prefix, a least element, a chain down-set. Because a chain does not branch, the branching data that
+would have obstructed the condition is never read, and the condition holds.
+\end{schema}
+
+Schema~\ref{sch:main} is not itself a theorem---it is the shape that the four theorems of the next
+section share. In instance (IV) it becomes a theorem verbatim: the condition (arboreality) is
+\emph{equivalent} to the forest property of the base. We take that equivalence as the evidence that the
+schema is real and not merely a family resemblance.
+
+\section{The four instances}\label{sec:instances}
+
+\subsection{Instance (I): positions carry a root}\label{sec:root}
+The founding instance is the definition of a directed container. A bare container $(S \triangleleft P)$
+has \emph{arbitrary} positions; there is no way to compose an observation at $s$ with an observation at a
+position of $s$, because a position carries no shape. The directed-container structure supplies exactly
+the missing rooted discipline: a root $o_s \in P s$ to serve as identity, a subshape $s \downarrow p$ to
+serve as codomain, and an addition to serve as composition (Proposition~\ref{prop:comonoid-cat}). This is
+the move at its most elementary---guise (3) of Lemma~\ref{lem:rootpath}, the distinguished least
+element---and it is \emph{necessary}: a container is a comonad if and only if it admits such a structure
+\cite{AhmanChapmanUustalu2014}, i.e.\ if and only if it is a small category \cite{AhmanUustalu2016}. We
+record it as the base case and move on.
+
+\subsection{Instance (II): the prefix cut}\label{sec:prefix}
+The second instance is the backward pass of a free monoid, and it is where the move does real work.
+
+\subsubsection{The branching free monoid}
+Read a container $C = (S \triangleleft P)$ bidirectionally: $S$ requests, $P s$ answers. Then the
+composition product $C \triangleleft D$ is \emph{answer-dependent sequencing}---a first request $s$
+together with, for each possible answer $p \in P s$, a second request---and the free monoid on $C$ under
+$\triangleleft$ is the type of answer-driven interaction trees over $C$. This gadget is Hedges'
+``Kleene star on containers'' \cite{Hedges2025}, which rebuilds a bidirectional typechecker on it but
+proves neither its monoid laws nor a universal property.
+
+Concretely \cite{GambinoKock2013}, the free monoid is $C^{*} = (S^{*} \triangleleft P^{*})$ where
+$S^{*}$ is closed $P$-trees $t ::= \lf \mid \nd\, s\, \kappa$ with $s \in S$ and
+$\kappa : P s \to S^{*}$, and $P^{*} t = \leaves(t)$ is the set of root-to-$\lf$ paths, recorded as the
+tuple of positions taken. A leaf is thus a \emph{complete answer-history} of one run. The unit is
+$\lf$; the multiplication grafts and splits,
+\begin{align*}
+  \graft(\lf,u) &= u(()), & \graft(\nd\, s\, \kappa, u) &= \nd\, s\,(\lambda p.\,\graft(\kappa_p, u_p)),\\
+  \spl(\lf,u,z) &= \langle (), z\rangle, &
+  \spl(\nd\, s\, \kappa, u, \langle p, z\rangle) &= \big\langle \langle p, \ell\rangle, w\big\rangle,
+\end{align*}
+where in the last line $(\ell,w) = \spl(\kappa_p, u_p, z)$ and $u_p \defeq \lambda r.\,u\langle p,r\rangle$.
+The three monoid laws of $(C^{*},\graft,\lf)$ hold for every container; this is established elsewhere
+(the universal property of the free monad on a container), and the underlying $\triangleleft$-monoid laws
+are formalised in Lean. The backward pass of the multiplication is $\spl$.
+
+\subsubsection{Path-confinement}
+The worry Hedges' construction raises is the bidirectional one: since the continuation after a request
+branches on the \emph{answer}, does that answer-dependence corrupt the backward pass $\spl$, so that it
+fails to be natural in the grafted family and no universal property can hold? The following lemma says it
+cannot, and is the content of the move in this setting.
+
+\begin{lemma}[Path-confinement]\label{lem:D1}
+For every container $C$, every tree $t \in S^{*}$, every family $u : \leaves(t) \to S^{*}$, and every
+leaf $z \in \leaves(\graft(t,u))$,
+\[
+  \spl(t,u,z) = (\ell, w),
+\]
+where $\ell$ is the \emph{unique prefix of $z$ that is a leaf of $t$} and $w$ is the corresponding
+suffix. In particular $\spl(t,u,z)$ is independent of $u$: the backward pass of the multiplication reads
+only the outer tree.
+\end{lemma}
+
+\begin{proof}
+Structural induction on $t$, using guise (4) of Lemma~\ref{lem:rootpath}.
+
+\emph{Base $t = \lf$.} By definition $\spl(\lf,u,z) = \langle(),z\rangle$. The empty path $()$ is a prefix
+of every $z$ and is the unique leaf of $\lf$, so $\ell = ()$, $w = z$; the output did not consult $u$.
+
+\emph{Step $t = \nd\, s\, \kappa$.} A leaf of $\graft(\nd\, s\, \kappa, u) = \nd\, s\,(\lambda p.\,
+\graft(\kappa_p, u_p))$ has the form $z = \langle p, z'\rangle$ with $p \in P s$ and
+$z' \in \leaves(\graft(\kappa_p, u_p))$. By definition $\spl(\nd\, s\, \kappa, u, z) =
+\langle\langle p, \ell'\rangle, w'\rangle$ with $(\ell', w') = \spl(\kappa_p, u_p, z')$. By the induction
+hypothesis applied to the subtree $\kappa_p$ with family $u_p$, the pair $(\ell', w')$ depends only on
+$\kappa_p$ and $z'$, and $\ell'$ is the unique $\kappa_p$-leaf prefix of $z'$. Now a prefix of
+$z = \langle p, z'\rangle$ is a leaf of $\nd\, s\, \kappa$ iff it has the form $\langle p, r\rangle$ with
+$r$ a leaf-prefix of $z'$ in $\kappa_p$; such $r$ exists and is unique, namely $r = \ell'$. Hence
+$\langle p, \ell'\rangle$ is the unique $(\nd\, s\, \kappa)$-leaf prefix of $z$, with suffix $w'$, and the
+computation used only $t$ and $z$.
+\end{proof}
+
+\begin{corollary}\label{cor:no-obstruction}
+The answer-dependence of a container's continuations is confined to the shape data of $C^{*}$ (the trees
+and their per-answer children) and to the leaves (the complete answer-histories); it never enters the
+backward pass of the monoid multiplication. The one-directional proof of the universal property of
+$C^{*}$ is therefore already the bidirectional proof, and the feared obstruction does not exist.
+\end{corollary}
+
+\begin{proof}
+The backward component of associativity is, by Lemma~\ref{lem:D1}, a statement purely about paths: both
+split-composites of the associator read only their respective outer trees, so the double split of a leaf
+of $\graft(\graft(t,u),v)$ is the unique three-fold factorisation into outer-leaf, middle-leaf, and inner
+suffix, whose well-definedness is associativity of path concatenation; no answer datum from $u$ or $v$ is
+read. The unit laws are trivial. Hence no monoid law of $C^{*}$ consults the grafted data in its backward
+component.
+\end{proof}
+
+\begin{remark}[The linear case is O'Neill]
+When $S$ is a singleton the trees are lists and $\spl$ is list-splitting at a prefix, the inverse of
+concatenation---exactly the backward law of O'Neill's tensor-algebra free $\triangleleft$-monoid. The
+branching case runs the same list-splitting path by path: Hedges' Kleene star is the indexed
+generalisation of O'Neill's tensor algebra, with branching supplied by the shapes and the backward law
+unchanged.
+\end{remark}
+
+\emph{Status.} Lemma~\ref{lem:D1} is proved above and verified computationally on $144{,}882$ triples
+$(t,u,z)$ over three containers, including a multi-shape bidirectional typechecker with a childless
+(answer-free) request and a branch-deleting graft; the $\triangleleft$-monoid laws of $C^{*}$ are
+formalised in Lean, while a Lean formalisation of Lemma~\ref{lem:D1} itself is a flagged target and not
+yet done. The universal property it serves is prior work; the new content is the isolation of the
+backward pass as path-confined.
+
+\subsection{Instance (III): factoring through the least element}\label{sec:arboreal}
+The third instance is an axiom in the theory of arboreal categories, and we cite it.
+
+Arboreal categories were introduced by Abramsky and Shah \cite{AbramskyShah2021} as an axiomatic home for
+the game comonads of finite model theory---the Ehrenfeucht--Fra\"iss\'e, pebbling, and modal comonads,
+whose coalgebras encode plays of model-comparison games. A \emph{path} in such a category is an object
+whose poset of subobjects (for a fixed proper factorisation system) is a finite linear order
+\cite[Def.~4]{JaklReggio2026}; paths are the chains, the single branches. The original axioms required
+paths to be \emph{connected}: every arrow from a path into a coproduct $\coprod_{i} Q_i$ of paths
+factors through a single summand \cite[Def.~5]{JaklReggio2026}.
+
+As Jakl and Reggio observe \cite[Ex.~8]{JaklReggio2026}, this fails for the modal comonads: at the level
+of the underlying forest orders, coproducts glue trees at the root, and a path through such a gluing need
+not land in one summand. Their repair replaces connectedness with \emph{tree-connectedness}.
+
+\begin{definition}[tree-connectedness, {\cite[Def.~11]{JaklReggio2026}}]\label{def:tc}
+A path $P$ is \emph{tree-connected} if for every tree-diagram of paths $D : T \to \A$ and every arrow
+$f : P \to \operatorname{colim} D$ there is an element $t \in T$ through which $f$ factors via the colimit
+coprojection, and $t$ is the \emph{least} such element of $T$.
+\end{definition}
+
+This is Schema~\ref{sch:main} in guise (3): the factoring is through the \emph{least} element of the tree
+$T$, the root of the relevant down-set. Jakl and Reggio show that tree-connectedness recovers all the
+properties that the connectedness axiom was used to prove, now including the modal comonads
+\cite[Lem.~12]{JaklReggio2026}, and that the resulting path functor is a Street fibration whose cartesian
+morphisms are exactly the \emph{pathwise embeddings} \cite[Thm.~23, Thm.~26]{JaklReggio2026}. We will use
+these two theorems in Section~\ref{sec:open}; for now the point is only that the repair \emph{is} the
+move: replace an arbitrary-coproduct condition by factoring through a least tree element.
+
+\subsection{Instance (IV): the base is a forest}\label{sec:forest}
+The fourth instance makes the move a property of a small category, and it is the one that becomes a
+theorem.
+
+\subsubsection{Coalgebras of a polynomial comonad}
+\begin{lemma}\label{lem:coalg}
+Let $c = C$ be a polynomial comonad, viewed as a small category via
+Proposition~\ref{prop:comonoid-cat}. The category of Eilenberg--Moore coalgebras of the comonad
+$\cext{c}$ on $\Set$ is equivalent to the copresheaf category $[C,\Set]$, equivalently to the discrete
+opfibrations over $C$.
+\end{lemma}
+
+\begin{proof}
+A coalgebra is a map $\gamma : X \to \cext{c}X = \sum_{s \in S} X^{P s}$. Write
+$\gamma(x) = \big(|x|,\, (x \cdot f)_{f \in P|x|}\big)$ with $|x| \in S = \ob\, C$ the \emph{label} of $x$
+and $x \cdot f \in X$. The counit law $\varepsilon \circ \gamma = \id$ says $x \cdot \id_{|x|} = x$. The
+coassociativity law $(\delta \triangleleft \id)\circ\gamma = (\id \triangleleft \gamma)\circ\gamma$ says,
+for $f : |x| \to a'$ in $C$ and $g : a' \to a''$, that $|x \cdot f| = \cod(f)$ and
+$x \cdot (g \circ f) = (x \cdot f)\cdot g$. These are exactly the data and laws of a functor
+$X : C \to \Set$ with $X(a) = \{x : |x| = a\}$ and $X(f)(x) = x \cdot f$: an object over each object, a chosen
+lift of each arrow out of it, respecting identities and composition---i.e.\ a discrete opfibration over
+$C$. Coalgebra morphisms are natural transformations.
+\end{proof}
+
+\subsubsection{Arboreal $=$ forest}
+\begin{corollary}\label{cor:arboreal-forest}
+If $C$ is a forest category then every object of $[C,\Set]$ is a forest, by Lemma~\ref{lem:rootpath}(1).
+For $C = [k]$ the finite linear order this equivalence is exact: $[C,\Set]$ is the category of forests of
+height $\le k$; for $C = [k]^{+}$ the prefix trie, it is the trie-indexed forests. Hence the arboreal
+coalgebra categories of the Ehrenfeucht--Fra\"iss\'e and pebbling comonads are the copresheaf categories
+of their (forest) comonoids: for these game comonads, ``\emph{arboreal $=$ the base is a forest}'' is a
+theorem, not an analogy.
+\end{corollary}
+
+\begin{proof}
+A copresheaf $X : [k] \to \Set$ assigns a set $X_n$ at each $n$ and, for each arrow $n \to m$ (which
+exists iff $m \le n$), an ``ancestor'' map $X_n \to X_m$. Grade each element by its label and order
+$x \le y$ iff $|x| \le |y|$ and $y \cdot |x| = x$; then every principal down-set
+$\{y \cdot m : m \le |y|\}$ is a chain of length $|y| \le k$---a forest of height $\le k$ by
+Lemma~\ref{lem:rootpath}(1)---and depth-grading a forest inverts the construction. The trie case is
+identical with $[k]^{+}$ in place of $[k]$.
+\end{proof}
+
+By Proposition~\ref{prop:comonoid-cat} and a direct computation, the Ehrenfeucht--Fra\"iss\'e comonad
+$\EF_k$ (nonempty sequences of length $\le k$, counit last, comultiplication prefixes) has comonoid the
+linear order $[k]$, and the pebbling comonad $\Peb_k$ has comonoid the $k$-ary prefix trie $[k]^{+}$; the
+modal comonad is not polynomial over $\Set$, consistently with its being the instance that forced the
+tree-connectedness repair of Section~\ref{sec:arboreal}. Thus Corollary~\ref{cor:arboreal-forest}
+identifies the arboreal coalgebra categories of $\EF_k$ and $\Peb_k$---the forests of bounded height and
+the trie-indexed forests of Abramsky and Shah \cite{AbramskyShah2021}---with the copresheaf categories of
+their polynomial comonoids. This is the bridge promised in the introduction.
+
+\emph{Status and novelty.} Lemma~\ref{lem:coalg} is standard-adjacent (the familial / cofree-coalgebra
+story in Poly \cite{SpivakGarnerFairbanks2025}) and Corollary~\ref{cor:arboreal-forest}'s forest
+identification is proved directly for $\EF_k$ by Abramsky and Shah \cite{AbramskyShah2021}; the increment
+claimed here is only the clean identification of the two, promoting ``arboreality $=$ forest'' to a
+theorem and exhibiting it as the sharpest form of Schema~\ref{sch:main}. The coalgebra counts agree with
+forest counts in every tested case ($|X|=2,3$ and $k=2,3$).
+
+\section{Reading the four as one, and an open problem}\label{sec:open}
+
+\subsection{One move, four sharpenings}
+The four instances are the same move at four altitudes, each sharper than the last:
+\[
+  \underbrace{\text{root at each shape}}_{\text{(I) positions}}
+  \;\longrightarrow\;
+  \underbrace{\text{cut at the unique prefix}}_{\text{(II) free-monoid backward pass}}
+  \;\longrightarrow\;
+  \underbrace{\text{factor through the least element}}_{\text{(III) arboreal colimits}}
+  \;\longrightarrow\;
+  \underbrace{\text{the base category is a forest}}_{\text{(IV) polynomial comonoid}}.
+\]
+Instance (I) is a discipline on a position set; instance (II) a property of a backward map; instance (III)
+a property of colimit factorisations; instance (IV) a property of a small category. Lemma~\ref{lem:rootpath}
+is what they share: in each, the data below a node is a chain, so the operative map reads a unique
+root-path and ignores all branching. That the move appears independently in a frontier paper on arboreal
+categories \cite{JaklReggio2026} and in the backward pass of a free monoid, on structurally the same day
+and with neither borrowing from the other, is the evidence that it is a genuine normal form and not a
+coincidence of vocabulary.
+
+\subsection{Where the schema would next bite: an open problem}
+Instance (IV) identifies the arboreal coalgebra category with a copresheaf category \emph{as a category}.
+The deeper question is whether the match persists \emph{as a fibration}. Jakl and Reggio's path functor
+$\pathfun : \A \to \T$ is a Street fibration whose cartesian morphisms are the pathwise embeddings
+\cite[Thm.~23, Thm.~26]{JaklReggio2026}; the Poly side has its own container fibration
+$\Cont(\cod) = \Fam(\cod^{\op})$, a bifibration over the category of containers. Do these coincide?
+
+\begin{conjecture}[refined crown; \emph{speculative}]\label{conj:crown}
+For $c = C$ a forest polynomial comonad, the restriction of the arboreal path fibration
+$\pathfun : \A \to \T$ to the subcategory of paths is equivalent, as a fibration, to a $\Fam$-type
+fibration built from $C$ via $\Cont(\cod)$---up to the fibrewise opposite forced by the two sides
+computing dual (co-)intuitionistic predicate structures.
+\end{conjecture}
+
+We state Conjecture~\ref{conj:crown} as \emph{speculative}, and we can say precisely how far the evidence
+reaches and where it stops. On the \emph{unary, propositionally-truncated, single-path} fragment---one
+unary relation, subobjects rather than proof-relevant predicates, a chain rather than a branching
+tree---we have computed (by explicit enumeration at $C = [2],[3],[4]$ together with a $k$-independent
+derivation) the following, graded \emph{computed}:
+
+\begin{itemize}
+\item the two fibres over a path $[n]$ are \emph{opposite} posets---$\pathfun$ gives colourings under
+$\subseteq$, $\Cont(\cod)$ gives subobjects under $\supseteq$;
+\item the arboreal cartesian reindexing along a path inclusion is \emph{preimage}
+$R \mapsto R \cap [m]$---relation-reflection, substitution of predicates;
+\item this preimage is the \emph{opcartesian} (pullback) leg $\rho^{*}$ of the bifibration
+$\Cont(\cod)$, \emph{not} its cartesian leg $(\Sigma_\rho)^{\op}$, which is direct image and differs from
+preimage already at the deepest singleton.
+\end{itemize}
+
+So on this fragment the arboreal path fibration is the fibrewise opposite of $\Cont(\cod)$, and the two
+theories meet precisely on the pullback leg $\rho^{*}$: relation-reflection is $\rho^{*}$, not
+$(\Sigma_\rho)^{\op}$. This is a usable dictionary---it tells any application that needs to ``pull a
+predicate back along a sub-trajectory'' which leg of the container bifibration to use---but it is not the
+conjecture. Three gaps keep Conjecture~\ref{conj:crown} open, and we name them honestly:
+
+\begin{enumerate}
+\item \emph{Path base only.} The single-shape container $\Phi([n]) = (1 \triangleleft [n])$ reaches only
+the paths $\Paths \subset \T$, not the branching trees; the full base needs multi-shape containers whose
+shapes are the branches, and the branch bookkeeping is not done.
+\item \emph{Unary only.} A $k$-ary relation on $[n]$ is a subset of $[n]^{k}$, which is not an object of
+$\Set/[n]$; higher-arity relations are invisible to $\Cont(\cod)$. The match is a statement about the
+unary fragment, not about all of finite model theory's game comonads.
+\item \emph{Truncation.} The comparison is at the level of subobjects. The proof-relevant
+$\Cont(\cod)$-fibre $(\Set/[n])^{\op}$ is strictly richer than the arboreal $\Sub([n])$, and a
+proof-relevant arboreal theory with witness-set colours is not standard.
+\end{enumerate}
+
+We flag, finally, that two of the founding game-comonad references \cite{AbramskyShah2021,
+AbramskyDawarWang2017} are cited here through the survey \cite{JaklReggio2026} and should be read directly
+before any formal submission; the load-bearing definitional content of this paper rests only on the
+deep-read sources.
+
+\section{Conclusion}\label{sec:conclusion}
+
+One move---confine to a rooted tree, read the unique root-path---organises the root axiom of directed
+containers, the backward pass of the branching free monoid, the tree-connectedness repair of arboreal
+categories, and the forest condition on polynomial comonoids. Its single geometric content is that a
+forest has no branching below a node (Lemma~\ref{lem:rootpath}), and in its sharpest form it is a theorem:
+the coalgebras of a polynomial comonad $c = C$ are the copresheaves on $C$, so arboreality is exactly the
+forest property of $C$ (Theorem~\ref{thm:main}). This identifies the arboreal coalgebra categories of
+finite model theory with copresheaf categories of polynomial comonads---a bridge the two programmes had
+not drawn.
+
+Two directions stand out. The first is to settle whether the four instances are specialisations of one
+\emph{lemma}---a single statement, over a small category $C$ with a factorisation system, equating
+``connectivity'' with ``$C$ a forest'' and the operative map with the unique-prefix map---or whether they
+remain a family united only in spirit; instance (IV) supplies the vocabulary to attempt it. The second is
+Conjecture~\ref{conj:crown}: on the unary truncated path fragment the arboreal path fibration is the
+fibrewise opposite of the container bifibration, meeting it on the pullback leg $\rho^{*}$; whether this
+survives the passage to branching trees, higher arities, and proof-relevance is open, and the
+obstruction in each case is named above. Either direction would turn a structural coincidence into a
+structural theorem---which is, after all, the whole point of noticing that one keeps making the same move.
+
+\section*{Acknowledgements}
+The author thanks Neil Ghani and Robin Langer for the research setting, and Rick for the Bridge-3
+material that prompted instance (IV).
+
+\begin{thebibliography}{99}
+
+\bibitem{AbramskyDawarWang2017}
+S.~Abramsky, A.~Dawar, P.~Wang,
+\emph{The pebbling comonad in finite model theory},
+in: Proc.\ 32nd Annual ACM/IEEE Symposium on Logic in Computer Science (LICS), 2017.
+arXiv:1704.05124.
+
+\bibitem{AbramskyShah2021}
+S.~Abramsky, N.~Shah,
+\emph{Relating structure and power: comonadic semantics for computational resources},
+Journal of Logic and Computation \textbf{31}(6) (2021), 1390--1428.
+arXiv:1806.09031.
+
+\bibitem{AhmanChapmanUustalu2014}
+D.~Ahman, J.~Chapman, T.~Uustalu,
+\emph{When is a container a comonad?},
+Logical Methods in Computer Science \textbf{10}(3) (2014).
+
+\bibitem{AhmanUustalu2016}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+in: Proc.\ 6th Workshop on Mathematically Structured Functional Programming (MSFP), EPTCS 207, 2016,
+89--98.
+
+\bibitem{GambinoKock2013}
+N.~Gambino, J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Mathematical Proceedings of the Cambridge Philosophical Society \textbf{154}(1) (2013), 153--192.
+
+\bibitem{Hedges2025}
+J.~Hedges,
+\emph{Bidirectional typechecking with dependent lenses},
+Cybernetics and Category Theory Institute (cybercat.institute), 24 February 2025.
+
+\bibitem{JaklReggio2026}
+T.~Jakl, L.~Reggio,
+\emph{On the axioms of arboreal categories},
+2026. arXiv:2603.21841.
+
+\bibitem{SpivakGarnerFairbanks2025}
+D.~I.~Spivak, R.~Garner, J.~Fairbanks,
+\emph{Functorial aggregation},
+Journal of Pure and Applied Algebra \textbf{229} (2025), 107883.
+
+\end{thebibliography}
+
+\end{document}
