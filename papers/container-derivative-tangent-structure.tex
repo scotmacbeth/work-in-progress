@@ -1,0 +1,593 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{problem}[theorem]{Problem}
+
+\newcommand{\SPoly}{\mathsf{SPoly}}
+\newcommand{\PolyN}{\mathsf{Poly}_{\mathbb{N}}}
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\DCont}{\mathsf{DCont}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Fam}{\mathsf{Fam}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\DD}{\mathbb{D}}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Out}{\operatorname{Out}}
+\newcommand{\cod}{\operatorname{cod}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Diff}{\mathrm{Diff}}
+\DeclareMathOperator{\dom}{dom}
+
+\title{The container derivative is a tangent structure:\\
+\large a fibrational positioning}
+\author{MacBeth\\ \small Kodamai}
+\date{3 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The derivative of a container is usually sold as a pun: $\partial(y^n)=n\cdot y^{n-1}$ is the
+type of one-hole contexts, and the resemblance to calculus is left as a wink. We remove the
+wink. We show that the category $\SPoly$ of (finitary, multivariable) polynomial functors is a
+Cartesian differential category whose differential combinator is exactly the
+Abbott--Altenkirch--Ghani--McBride one-hole-context derivative $\partial$; consequently
+$\partial$ is the vertical part of a genuine Cartesian tangent structure, realised on the nose
+by the dual-number substitution $T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$. The proof is a
+reflection along the faithful counting functor into the classical Cartesian differential
+category of $\mathbb{N}$-polynomials, so every differential axiom is inherited rather than
+re-checked. We isolate the one place this picture is routinely misread: the non-trivial content
+lives at the level of \emph{maps}, not objects --- a map $1\to1$ is differential-linear iff it is
+a linear container $S\cdot y$, so $y^2$ is not linear and the tangent functor is \emph{not} the
+trivial $T(p)=p\times p$. We then position the result against the fibrational theory of
+first-order differential structures, flag the orientation hazard that the container bifibration
+lives on the \emph{reverse}, lens side of that theory, and record a first restriction result:
+$T$ is a strict $\lhd$-monoidal base-change functor from directed containers over $k$ to directed
+containers over the dual numbers, so the tangent bundle of a small category lives over
+$k[\varepsilon]/\varepsilon^2$.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{The pun, and what is under it.}
+In the theory of containers one learns early that data types have derivatives. If a container's
+extension is the polynomial functor $y^n$ --- ``$n$-tuples'' --- then its one-hole contexts form
+the functor $n\cdot y^{n-1}$: choose which of the $n$ slots is the hole, and the remaining $n-1$
+slots still carry data. Abbott, Altenkirch, Ghani and McBride made this precise for all
+containers \cite{AAGM2003}: the one-hole-context construction $\partial$ acts on a container
+$S\lhd P$ by, for each shape, replacing one position by a hole, and it satisfies the sum,
+product and chain rules of elementary calculus. The notation $\partial$ is suggestive, and the
+suggestion is usually left as exactly that --- a mnemonic that the Leibniz rule
+$\partial(F\times G)=\partial F\times G + F\times\partial G$ happens to hold for data types.
+
+This note argues that the mnemonic is a theorem. The resemblance to calculus is not a
+coincidence of low-degree arithmetic; it is the shadow of a \emph{Cartesian differential
+category} structure \cite{BCS2009} in which $\partial$ is literally the differential combinator.
+Once that is established, a second structure comes for free: every Cartesian differential category
+is a Cartesian tangent category \cite{CockettCruttwell2014}, so $\partial$ is the vertical
+(fibre-direction) part of a genuine tangent bundle functor $T$, and $T$ is computed by the
+oldest trick in differential algebra --- substitute a dual number and read off the
+$\varepsilon$-coefficient.
+
+\paragraph{The gap.}
+Two bodies of work sit on either side of this statement without quite touching. On one side,
+$\partial$ itself: defined and shown to obey the calculus rules \cite{AAGM2003}, with a chain
+rule under composition of containers proved explicitly \cite{MacBethChainRule}, but never (to our
+knowledge) organised into the axioms of a differential category. On the other side, the
+fibrational theory of first-order differential structures of
+Capucci--Cruttwell--Ghani--Zanasi \cite{CCGZ2024}, which packages Cartesian differential
+categories, tangent categories and their reverse variants uniformly as sections of a fibration ---
+but whose running examples are manifolds and lenses, not containers, even though it cites the
+containers literature. The missing sentence is the one that says: here is a differential category
+whose combinator is the container derivative, and here is where it sits in the fibrational
+picture.
+
+\paragraph{The result.}
+Let $\SPoly$ be the category of finitary multivariable polynomial functors up to isomorphism,
+with substitution as composition (Definition~\ref{def:spoly}). Our main theorem is the following.
+
+\begin{theorem}[Main theorem]\label{thm:main-intro}
+$\SPoly$ is a Cartesian differential category whose differential combinator is the AAGM one-hole
+derivative $\partial$. Consequently $(\SPoly,\partial)$ is a Cartesian tangent category with
+tangent functor $T(n)=2n$, $T(f)=\langle f\circ\pi_1,\ \partial[f]\rangle$, realised by the
+dual-number substitution $T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$.
+\end{theorem}
+
+The reader meets the precise statement again, with all terms defined, as
+Theorem~\ref{thm:main} on page~\pageref{thm:main}.
+
+\paragraph{The method.}
+We do not verify the seven differential-category axioms by hand on containers. Instead we exhibit
+a \emph{counting functor} $N\colon\SPoly\to\PolyN$ into the classical Cartesian differential
+category of polynomials over the rig $\N$, sending a container to the polynomial that counts its
+elements (Definition~\ref{def:counting}). We show $N$ preserves all the differential-category
+structure --- crucially $N(\partial_iF)=\partial N(F)/\partial m_i$ --- and that $N$ is
+\emph{faithful} on isomorphism classes. A faithful functor reflects equalities of parallel maps,
+so each axiom, true in $\PolyN$ because polynomials over a rig form a Cartesian differential
+category \cite{BCS2009}, descends to $\SPoly$. The whole proof is three short lemmas
+(\S\ref{sec:proof}). Reflection is the right tool precisely because the axioms are equations
+between parallel morphisms, and that is exactly what faithful functors see.
+
+\paragraph{The correction that makes it non-trivial.}
+There is a tempting but vacuous reading of ``differential structure on containers'' at the level of
+objects. In a Cartesian differential category one can ask which objects $B$ are \emph{linear},
+meaning $TB\cong B\times B$; but $\SPoly$ is a \emph{full} Cartesian differential category, so
+every object is linear and the question says nothing. The content is one level down, at
+\emph{maps}. We prove (Proposition~\ref{prop:linear}) that a map $1\to1$ is differential-linear
+--- equivalently additive, equivalently $\partial[f]=f\circ\pi_2$ --- if and only if it is a linear
+container $S\cdot y$. So $y$ is linear but $y^2,y^3,\dots$ are not. This is the certificate that
+the tangent functor is genuinely differential and \emph{not} the trivial
+$T(p)=p\times p$ (under which every map would be linear). We state the discriminator as a table
+(Table~\ref{tab:linear}) because it is the single most useful thing to carry away.
+
+\paragraph{Where it sits, and one hazard.}
+The fibrational theory \cite{CCGZ2024} presents a first-order tangent structure as a section of
+the \emph{additive codomain fibration}, with reindexing by \emph{pullback}. We record in
+\S\ref{sec:orientation} that our dual-number $T$ realises exactly this forward picture --- and we
+flag, because the programme it belongs to has been bitten by this three times, that the container
+bifibration $\Cont(\cod)=\Fam(\cod^{\mathrm{op}})$ lives on the \emph{opposite}, lens side of the
+same theory (the reverse-derivative side, \cite[Ex.~32, Def.~57]{CCGZ2024}). The naive hope ``the
+container bifibration \emph{is} the forward tangent fibration'' is therefore false, and false for a
+precise reason: the difference between pullback reindexing $\rho^*$ and $(\Sigma_\rho)^{\mathrm{op}}$.
+The role of \cite{CCGZ2024} here is a packaging remark that re-delivers the differential category we
+have already built; nothing in the proof rests on it.
+
+\paragraph{Does it see categories?}
+A directed container is the same thing as a small category \cite{AhmanUustalu2016}; in polynomial
+terms, a small category is a $\lhd$-comonoid. So the natural follow-up is whether $T$ respects this
+comonoid structure. In \S\ref{sec:directed} we record that it does, in a precise and slightly
+surprising sense: $T$ is a \emph{strict $\lhd$-monoidal base-change functor}
+$\DCont(k)\to\DCont(\DD)$, where $\DD=k[\varepsilon]/\varepsilon^2$; the monoidal comparison is the
+container chain rule, holding on the nose. Hence $T$ sends a small category to a small category ---
+but over the dual numbers, not over the original base. This is not a defect of the construction; we
+show the obstruction to keeping it over $\Set$ is exactly the second-order term that $\varepsilon^2=0$
+sends to the zero morphism. The headline is clean: \emph{the tangent bundle of a category lives over
+the dual numbers, a tangent vector at an object $a$ is a morphism out of $a$, and the zero vector is
+the identity.}
+
+\paragraph{Outline.}
+\S\ref{sec:prelim} fixes containers, the category $\SPoly$, the differential-category axioms we
+use, and the counting functor. \S\ref{sec:proof} proves the main theorem by reflection and
+unpacks the combinatorial content of the three non-trivial axioms. \S\ref{sec:linear} proves the
+map-level linearity discriminator. \S\ref{sec:orientation} positions the result in the fibrational
+theory and states the orientation hazard. \S\ref{sec:directed} records the restriction to directed
+containers and its honest caveat. \S\ref{sec:conclusion} states novelty honestly and lists the open
+edges.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We recall only what the proof uses.
+
+\paragraph{Containers and polynomial functors.}
+A \emph{container in $n$ variables} is a set $S$ of \emph{shapes} together with, for each shape
+$s\in S$ and each $i\in\{1,\dots,n\}$, a \emph{position set} $P^i_s$. Its extension is the
+polynomial functor
+\[
+  \sem{S\lhd P}\colon\Set^n\to\Set,\qquad
+  \vec X\ \longmapsto\ \sum_{s\in S}\ \prod_{i=1}^{n} X_i^{\,P^i_s}.
+\]
+We work with finitary containers (all $P^i_s$ finite), so only the cardinalities $|P^i_s|$ matter up
+to isomorphism. Composition of containers is substitution of one extension into another, written
+$G\lhd F$; it corresponds to functor composition \cite{AAGM2003}.
+
+\paragraph{The base category.}
+\begin{definition}[$\SPoly$]\label{def:spoly}
+Let $\SPoly$ be the category with objects the natural numbers $n\in\N$ (read $n$ as ``$n$
+variables'', i.e.\ $\Set^n$); morphisms $n\to m$ the isomorphism classes of $m$-tuples of finitary
+containers in $n$ variables (equivalently, the finitary polynomial functors $\Set^n\to\Set^m$);
+composition substitution; identities the variable tuples $(y_1,\dots,y_n)$.
+\end{definition}
+
+Passing to isomorphism classes makes substitution strictly associative and unital, so $\SPoly$ is a
+genuine $1$-category. Finite products are $n\times n'=n+n'$ with the variable-projection tuples as
+projections and $0$ terminal. Each hom-set $\SPoly(n,m)$ is a commutative monoid under coproduct of
+containers $+$ (unit the empty container $0$), and composition is left-additive,
+$(f+g)\circ h=f\circ h+g\circ h$ and $0\circ h=0$, because an outer coproduct distributes over any
+substitution on the right. With products and $(+,0)$ computed componentwise and compatibly, $\SPoly$
+is a \emph{Cartesian left-additive category} in the sense of \cite[Def.~1.2.1]{BCS2009}.
+
+\paragraph{The differential combinator.}
+For $f\colon n\to m$ define $\partial[f]\colon 2n\to m$ by the directional one-hole derivative
+\[
+  \partial[f](\vec x\,;\vec v)\ :=\ \sum_{i=1}^{n} v_i\cdot\partial_i f,
+\]
+where $\partial_i f$ is the AAGM one-hole derivative in the $i$-th variable: a shape $s$ with
+$k=|P^i_s|$ positions in variable $i$ contributes $k$ shapes, each replacing one of those positions
+by a \emph{new} tangent variable $v_i$ and leaving the other $k-1$ as $x_i$. Thus $\partial[f]$ is
+the $2n$-variable container that is degree $1$ in the tangent variables. The AAGM endofunctor
+$\partial$ is the $v$-linear part of $\partial[-]$, i.e.\ $\partial[-]$ on $\SPoly(1,1)$.
+
+\paragraph{The differential-category axioms we need.}
+A \emph{Cartesian differential category} \cite{BCS2009} is a Cartesian left-additive category with a
+combinator $D$ taking $f\colon A\to B$ to $D[f]\colon A\times A\to B$ (thought of as $f$'s directional
+derivative, linear in the second argument), subject to seven axioms CD.1--CD.7. We will invoke, by
+name, only the three with combinatorial content:
+\begin{itemize}
+  \item \textbf{CD.5 (chain rule)} $D[g\circ f]=D[g]\circ\langle f\circ\pi_1,\ D[f]\rangle$;
+  \item \textbf{CD.6} $D[D[f]]\circ\langle\langle a,b\rangle,\langle 0,d\rangle\rangle
+        =D[f]\circ\langle a,d\rangle$;
+  \item \textbf{CD.7 (symmetry of mixed partials)}
+        $D[D[f]]\circ\langle\langle a,b\rangle,\langle c,0\rangle\rangle
+        =D[D[f]]\circ\langle\langle a,c\rangle,\langle b,0\rangle\rangle$.
+\end{itemize}
+A map $f$ is \emph{linear} when $D[f]=f\circ\pi_2$ (its derivative is itself, independent of the
+base point); the linear maps are the morphisms along which the differential is additive. Every
+Cartesian differential category is a Cartesian tangent category, with tangent functor $T(A)=A\times
+A$, $T(f)=\langle f\circ\pi_1, D[f]\rangle$, projection $p=\pi_1$ and zero section $\langle
+1,0\rangle$ \cite[Prop.~4.7]{CockettCruttwell2014}.
+
+\paragraph{The counting functor.}
+\begin{definition}[$\PolyN$ and the counting functor $N$]\label{def:counting}
+Let $\PolyN$ be the Cartesian differential category of polynomials over the rig $\N$: objects $n\in
+\N$, morphisms $n\to m$ the $m$-tuples of polynomial functions $\N^n\to\N$ with $\N$-coefficients,
+composition substitution, differential the Jacobian directional derivative
+$D[p](\vec x;\vec v)=\sum_i v_i\,\partial p/\partial x_i$. (Polynomials over any commutative rig form
+a Cartesian differential category --- the motivating example of \cite{BCS2009} --- the axioms using
+only $+$, $\times$, $d/dx$ and never subtraction.) Define $N\colon\SPoly\to\PolyN$ on objects by
+$N(n)=n$ and on a container $F=S\lhd P$ by its \emph{counting polynomial}
+\[
+  N(F)(m_1,\dots,m_n)\ =\ \sum_{s\in S}\ \prod_{i=1}^{n} m_i^{\,|P^i_s|}\ \in\ \N[m_1,\dots,m_n].
+\]
+\end{definition}
+
+\paragraph{Dual numbers and directed containers.}
+Write $\DD=k[\varepsilon]/\varepsilon^2$ for the dual numbers over a base rig/ring $k$; these appear
+only in \S\ref{sec:directed}. A \emph{directed container} is, by the theorem of
+\cite{AhmanUustalu2016}, exactly a small category $C$, presented as the polynomial comonad
+\[
+  c(y)=\sum_{a\in\Ob C} y^{\Out(a)},\qquad \Out(a)=\{\text{morphisms with domain }a\},
+\]
+with counit picking $\id_a$ and comultiplication encoding codomain and composition; the comonoids in
+$(\Poly,\lhd,y)$ are precisely the small categories.
+
+\section{The theorem and its proof}\label{sec:proof}
+
+\begin{theorem}\label{thm:main}
+$\SPoly$ is a Cartesian differential category with differential combinator $D=\partial$. Hence
+$(\SPoly,\partial)$ is a Cartesian tangent category with $T(n)=2n$, $T(f)=\langle
+f\circ\pi_1,\partial[f]\rangle$, realised by the dual-number substitution $T(p)=p(y+\varepsilon
+v)\bmod\varepsilon^2$.
+\end{theorem}
+
+The proof is three lemmas: $N$ preserves the structure, $N$ is faithful, faithful functors reflect
+the axioms.
+
+\begin{lemma}[$N$ preserves the differential-category data]\label{lem:preserve}
+$N$ is a product-preserving, left-additive functor commuting with the differential combinators:
+$N(\partial_iF)=\partial N(F)/\partial m_i$, and hence $N(\partial[f])=D[N(f)]$.
+\end{lemma}
+
+\begin{proof}
+Each clause is a counting identity.
+\emph{Composition:} for set-valued polynomial functors the cardinality of a composite is the composite
+of cardinalities, $|\sem{G\lhd F}(\vec X)|=|\sem{G}(\sem{F}(\vec X))|$, and $|\sem{G}(-)|$ depends only
+on the cardinality of its argument; so $N(g\circ f)=N(g)\circ N(f)$.
+\emph{Products, projections, identities:} $\sem{-}$ sends $n\times n'=n+n'$ to the product of counting
+rings and variable-projections to coordinate projections.
+\emph{Left-additivity:} coproduct of containers $\mapsto$ sum of counting polynomials, $0\mapsto0$.
+\emph{Products of functors:} $|F\times G|=|F|\cdot|G|$, so $\times\mapsto\times$.
+\emph{Derivative:} $\partial_iF$ replaces one of the $|P^i_s|$ positions in variable $i$ by a tangent
+copy, with counting
+\[
+  \sum_{s}|P^i_s|\,m_i^{\,|P^i_s|-1}\prod_{j\neq i}m_j^{\,|P^j_s|}
+  =\frac{\partial}{\partial m_i}N(F);
+\]
+summing $v_i\cdot(-)$ over $i$ gives $N(\partial[f])=D[N(f)]$.
+\end{proof}
+
+\begin{lemma}[$N$ is faithful on isomorphism classes]\label{lem:faithful}
+For parallel $f,g\colon n\to m$ in $\SPoly$, $N(f)=N(g)$ implies $f=g$.
+\end{lemma}
+
+\begin{proof}
+It suffices to treat $m=1$. The monomials of $N(F)=\sum_s\prod_i m_i^{|P^i_s|}$ are $\prod_i
+m_i^{k_i}$, and the coefficient of $\prod_i m_i^{k_i}$ counts the shapes $s$ with exponent vector
+$(|P^1_s|,\dots,|P^n_s|)=(k_1,\dots,k_n)$. So the formal polynomial $N(F)$ determines the multiset of
+exponent vectors, which \emph{is} the isomorphism class of $F$ (shapes up to bijection, positions up
+to cardinality). Over the infinite rig $\N$ a polynomial function determines its formal polynomial, so
+$N$ is injective on isomorphism classes.
+\end{proof}
+
+\begin{lemma}[Reflection]\label{lem:reflect}
+Each differential-category axiom holds in $\SPoly$.
+\end{lemma}
+
+\begin{proof}
+Fix an axiom: an equation $L=R$ of parallel morphisms built from a map $f$ together with
+projections, tupling, $+$, $0$, $\times$, $\circ$ and $\partial[-]$. By Lemma~\ref{lem:preserve} $N$
+preserves every one of these operations, so $N(L)$ and $N(R)$ are the two sides of the \emph{same}
+axiom instantiated in $\PolyN$ at $N(f)$. Since $\PolyN$ is a Cartesian differential category
+(Definition~\ref{def:counting}), $N(L)=N(R)$. By Lemma~\ref{lem:faithful} $N$ is faithful, and a
+faithful functor reflects equalities of parallel morphisms; hence $L=R$ in $\SPoly$.
+\end{proof}
+
+This proves the differential-category claim of Theorem~\ref{thm:main}. The tangent structure is the
+canonical one attached to any Cartesian differential category \cite[Prop.~4.7]{CockettCruttwell2014};
+under $N$ it reads $N(f)(x+\varepsilon v)=N(f)(x)+\varepsilon\sum_i v_i\partial_i N(f)\bmod\varepsilon^2$,
+i.e.\ the dual-number substitution, which Lemmas~\ref{lem:preserve}--\ref{lem:reflect} show computes
+$T$ on the nose in $\SPoly$.
+
+\begin{example}[The worked monomial]\label{ex:yn}
+For $p=y^n$ the dual-number substitution gives
+$(y+\varepsilon v)^n=y^n+\varepsilon\,n v\,y^{n-1}\bmod\varepsilon^2$, so the $\varepsilon$-coefficient
+is $n\cdot y^{n-1}=\partial(y^n)$: the one-hole contexts of an $n$-tuple, recovered as a tangent vector.
+The base part $y^n$ is the projection $p\circ\pi_1$. For $n=1,2,3$ this is, respectively, $v$;
+$2vy$; $3vy^2$ --- the $n$ ways to be a one-hole context.
+\end{example}
+
+\paragraph{What reflection hides.}
+Lemma~\ref{lem:reflect} certifies every axiom but suppresses the bijections. The three with content
+are worth stating as container isomorphisms, both because they are the mathematics and because they
+are the parts a referee will want to see by hand.
+
+\emph{CD.5, the chain rule.} At container level this is
+$\partial(G\lhd F)\cong(\partial G\lhd F)\times\partial F$, proved directly as an explicit bijection in
+\cite[Thm.~1]{MacBethChainRule}: a hole in the composite is a choice of outer $G$-index together with
+a hole in the chosen inner block; the leftover splits as ``some other inner block'' ($\partial G\lhd
+F$) and ``this inner block'' ($\partial F$). Lemma~\ref{lem:reflect} re-derives it as a corollary of
+the classical chain rule plus faithfulness --- a consistency check on that bijection.
+
+\emph{CD.6.} Write $f=S\lhd P$ in one variable. $D[D[f]]$ has two shape families: \emph{Case B}, where
+the second derivative pokes a base position (two distinct holes, carrying both tangent directions),
+and \emph{Case T}, where it pokes the existing tangent position (one hole). Setting the second base
+slot to $0$ annihilates every Case-B shape, leaving Case T, whose container is exactly $D[f]$ with the
+surviving tangent direction; this is the required identity.
+
+\emph{CD.7, Clairaut for containers.} Setting the second tangent slot to $0$ leaves only Case B:
+shapes $(s,h_1,h_2)$ with distinct holes $h_1\neq h_2\in P_s$ carrying tangent directions $b,c$. The
+swap involution $(s,h_1,h_2)\mapsto(s,h_2,h_1)$ is a bijection of ordered distinct hole-pairs
+exchanging the two directions, witnessing symmetry of the mixed second derivative. In several variables
+a hole is a pair (variable $i$, position in $P^i_s$) and the same swap applies.
+
+\paragraph{Corroboration.}
+The single-variable axioms CD.1--CD.7 were checked symbolically with an \emph{abstract} $f$ (hence for
+all single-variable containers, $N$ being faithful), and $N(\partial_iF)=\partial_iN(F)$, the chain
+rule, and the CD.7 swap on several thousand random multivariable finite containers. A minimal
+Mathlib-free Lean~4 development certifies the core computable facts --- the $\varepsilon$-coefficient
+identity of Example~\ref{ex:yn} for $n\le5$, the monomial Leibniz and chain-rule shadows, and the
+map-level linearity discriminator of \S\ref{sec:linear} --- with no axioms and no appeal to
+\texttt{native\_decide}. These are finite oracles corroborating the reflection, not the reflection
+itself.
+
+\section{Linearity: the corrected discriminator}\label{sec:linear}
+
+There is a reading of ``differential structure on containers'' at the level of \emph{objects} that is
+tempting and vacuous. One can ask which objects $B$ are linear in the sense $TB\cong B\times B$; but
+$\SPoly$ is a \emph{full} Cartesian differential category, so every object is linear and the question
+is empty (in the language of \cite[Thm.~69]{CCGZ2024}, $\Diff(T)$ is everything). The non-vacuous
+statement is one level down.
+
+\begin{proposition}[Linear maps]\label{prop:linear}
+A morphism $f\colon1\to1$ is a linear map of the Cartesian differential category --- equivalently an
+additive container, equivalently $\partial[f](x,v)=f(v)$ --- if and only if $f=S\cdot y$ for a set $S$
+(a linear container). In particular $y^2,y^3,\dots$ and nonzero constants are \emph{not} linear.
+\end{proposition}
+
+\begin{proof}
+$f$ is linear iff $D[f]=f\circ\pi_2$. Apply $N$: $v\cdot f'(x)=f(v)$ for all $x,v$ as
+$\N$-polynomials. Writing $N(f)=\sum_k a_k x^k$, the left side is $\sum_k a_k k\,v x^{k-1}$ and the
+right $\sum_k a_k v^k$; equality forces $a_k=0$ for $k\neq1$, i.e.\ $N(f)=a_1 x$. By
+Lemma~\ref{lem:faithful}, $f\cong a_1\cdot y=S\cdot y$ with $|S|=a_1$. Conversely
+$D[S\cdot y]=S\cdot v=(S\cdot y)(v)$.
+\end{proof}
+
+This is the honest non-vacuity certificate. Under the trivial candidate $T(p)=p\times p$ every map is
+linear; Proposition~\ref{prop:linear} shows the actual tangent functor is not that --- $y$ is linear
+and $y^2$ is not. Table~\ref{tab:linear} is the summary to carry away.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llll}
+\toprule
+container $f$ & $N(f)$ & $\partial[f](x,v)$ & linear? \\
+\midrule
+$y$        & $x$     & $v$          & yes \\
+$S\cdot y$ & $|S|\,x$ & $|S|\,v$     & yes \\
+$y^2$      & $x^2$   & $2vx$        & no \\
+$y^3$      & $x^3$   & $3vx^2$      & no \\
+constant $c$ & $|c|$ & $0$          & no (unless $c=0$) \\
+affine $c+ S\cdot y$ & $|c|+|S|x$ & $|S|v$ & no (unless $c=0$) \\
+\bottomrule
+\end{tabular}
+\caption{The map-level linearity discriminator. Linear $\iff$ $\partial[f](x,v)=f(v)$ $\iff$
+$f=S\cdot y$. Machine-checked, zero axioms, in the Lean development.}
+\label{tab:linear}
+\end{table}
+
+\section{The orientation split: a fibrational positioning}\label{sec:orientation}
+
+The fibrational theory of first-order differential structures \cite{CCGZ2024} gives a common home to
+differential categories, tangent categories and their reverse variants. Its master notion: a
+first-order differential structure on an object $B$ (of a suitable $2$-category) is a fibration with
+fibred biproducts together with a \emph{section} of it; the tangent-category instance
+\cite[Thm.~56]{CCGZ2024} takes the fibration to be the \emph{additive codomain fibration} --- the
+codomain fibration $\cod\colon B^\to\to B$, whose Cartesian maps are pullbacks, refined so each fibre
+object is a commutative monoid in the slice --- and a section $T$ sends each object to a bundle over
+it. Their Theorem~74 then shows a first-order Cartesian tangent structure of this kind induces a
+first-order Cartesian differential category, with combinator $D_T=t^{-1}\circ Tf\circ t$.
+
+Our dual-number $T$ realises exactly this forward picture: it is a section of the additive codomain
+fibration, and the induced combinator $D_T$ is $\partial$. In this sense Theorem~74 \emph{re-delivers}
+the differential category of \S\ref{sec:proof}. We stress that this is a packaging remark: nothing in
+the proof of Theorem~\ref{thm:main} depends on \cite{CCGZ2024}, and the citation is here to locate the
+result in its natural taxonomy, not to carry it.
+
+\paragraph{The hazard.}
+There is a seductive stronger claim --- that the container bifibration itself \emph{is} the forward
+tangent fibration of \cite{CCGZ2024} --- and it is false. The container logic
+$\Cont(\cod)=\Fam(\cod^{\mathrm{op}})$ is built on $\cod^{\mathrm{op}}$, and
+\cite[Ex.~32]{CCGZ2024} identifies $\cod^{\mathrm{op}}$ of $\Set$ with dependent lenses, i.e.\
+polynomial functors, i.e.\ containers; the \emph{reverse} differential side of that theory uses the
+dual of the additive-bundle fibration \cite[Def.~57]{CCGZ2024}. So $\Fam(\cod^{\mathrm{op}})$ sits on
+the reverse/lens side, not the forward Thm-56/74 side. The distinction is the difference between
+pullback reindexing $\rho^*$ and the opposite direct-image $(\Sigma_\rho)^{\mathrm{op}}$ --- a sign
+error at the level of fibrations. We name it explicitly because it is the same orientation hazard that
+has mis-oriented adjacent results in this programme more than once; the safe statement is the forward
+one, on $\cod$ with $\rho^*$, which is what Theorem~\ref{thm:main} uses.
+
+\begin{remark}
+The reverse/lens reading --- ``is $\partial$ a reverse-derivative tangent structure on
+$\Fam(\cod^{\mathrm{op}})$?'' --- is a genuine and, as far as we know, open question. We do not
+address it here; see \S\ref{sec:conclusion}.
+\end{remark}
+
+\section{Does the tangent structure see categories?}\label{sec:directed}
+
+A directed container is a small category, i.e.\ a $\lhd$-comonoid \cite{AhmanUustalu2016}. If $T$
+respects that comonoid structure it transports small categories to small categories. It does, with one
+twist that is the whole point.
+
+\begin{theorem}[Restriction to directed containers]\label{thm:directed}
+$T$ is a strict $\lhd$-monoidal functor
+\[
+  T\colon(\Poly/k,\ \lhd,\ y)\ \longrightarrow\ (\Poly/\DD,\ \lhd_\DD,\ y+\varepsilon v),
+  \qquad \DD=k[\varepsilon]/\varepsilon^2,
+\]
+where $\lhd_\DD$ is substitution after base change along $k\to\DD$. The monoidal comparison is the
+container chain rule $\partial(G\lhd F)\cong(\partial G\lhd F)\times\partial F$, which holds on the
+nose (laxator the identity). Granting the standard base-change $2$-functoriality of polynomial
+composition \cite{GambinoKock2013}, $T$ therefore preserves $\lhd$-comonoids, i.e.\ sends a small
+category internal to $k$ to a small category internal to $\DD$: a base-change functor
+$\DCont(k)\to\DCont(\DD)$.
+\end{theorem}
+
+The content is a single identity. Writing $T(c)(y,v)=c(y)+\varepsilon v\,c'(y)$, define $\lhd_\DD$ by
+substituting the dual-number output of $T(d)$ into $c$; then $T(c\lhd d)$ has tangent part
+$v\,(c\circ d)'(y)$, and the ordinary chain rule $(c\circ d)'=c'(d)\cdot d'$ is exactly the
+$\lhd_\DD$ tangent part. So $T$ is strict $\lhd$-monoidal, and the AAGM container chain rule
+(\S\ref{sec:proof}) is this identity read off in the (shape $\lhd$ position) presentation. Comonoid
+preservation then follows because strict monoidal functors preserve comonoids --- the one step we do
+not re-derive on container morphisms, borrowing instead the base-change $2$-functoriality of
+\cite{GambinoKock2013}.
+
+\begin{remark}[Why the base is $\DD$ and not $k$ --- the honest caveat]\label{rem:caveat}
+$T$ is \emph{not} an endofunctor of $\DCont(k)$. Over $\Set$ the polynomial $T(c)=c+\varepsilon v\,
+\partial c$ carries no comonad structure restricting to $C$: composition is not even total. Present
+$T(c)$ as a would-be two-sorted directed container, with base objects $B(a)$ (a faithful copy of $C$)
+and tangent objects $Tn(a,f)$ indexed by the morphisms $f$ of $C$, the derivative $\partial c$ giving
+each $Tn(a,f)$ the out-positions $\{\star\}\cup(\Out(a)\setminus\{f\})$. The counit forces
+$\id_{Tn(a,f)}=\star$, and the sort constraints force $\cod$ and composition --- except that the
+composite $\mathrm{comp}_C(g,r)$ of a surviving position $g\in\Out(a)\setminus\{f\}$ with a base
+position $r$ can equal the \emph{removed} position $f$, in which case the required composite has no
+target among $Tn(a,f)$'s positions. For any category with a non-identity morphism $f\neq\id_a$ the
+pair $g=\id_a,r=f$ exhibits this, so the $\Set$ reading fails universally outside the
+discrete/terminal cases (verified by complete enumeration on the walking arrow, $\mathbb{Z}/2$, and an
+idempotent monoid). The resolution is the dual numbers: that missing composite re-enters the
+differentiated direction, producing an $\varepsilon^2$ term, which $\varepsilon^2=0$ sends to the
+\emph{zero morphism} --- not a position any $\Set$-container can carry, but a legitimate morphism of a
+$\DD$-module-enriched category. This is exactly why $\lhd_\DD$ (base change), and not free
+two-variable substitution, is the correct composition.
+\end{remark}
+
+The geometric payoff survives the caveat and is clean. The projection $p\colon T(C)\to C$ (base change
+$\DD\to k$, $\varepsilon\mapsto0$) has fibre over $a$ the out-morphisms $\Out_C(a)$, and the zero
+section $0\colon C\to T(C)$ lands on the identity direction. So:
+
+\begin{quote}
+\emph{A tangent vector of a category at an object $a$ is a morphism out of $a$; the zero tangent
+vector is the identity $\id_a$; and the tangent bundle lives over the dual numbers.}
+\end{quote}
+
+\begin{problem}[open]\label{prob:closed-form}
+Give the closed-form multiplication of $T(C)$ as a $\DD$-linear category, via
+$\delta_{T(c)}=\mu^{-1}\circ T(\delta_c)$ with $T$ defined on container \emph{morphisms} over $\DD$ (so
+the $\varepsilon$-zero morphism is representable), and identify it with a named construction --- a
+tangent algebroid / first-order jet category, or $C$ glued to its arrow-bimodule by the
+$\varepsilon$-action. The object counts already exclude the obvious $\Set$ candidates (for the walking
+arrow, the arrow category has $3$ objects, $C\otimes\DD$ has $4$, and $T(C)$ has $5$).
+\end{problem}
+
+\section{Honest novelty, and the open edges}\label{sec:conclusion}
+
+\paragraph{What is and is not new.}
+The derivative $\partial$ is \cite{AAGM2003}; the chain rule under $\lhd$ is \cite{MacBethChainRule}.
+That set-valued polynomial functors assemble into a Cartesian differential category with $\partial$ as
+combinator is, to our knowledge, not recorded in exactly this form, but it is close to folklore: it is
+the $\Set$-coefficient instance of ``polynomials over a rig form a Cartesian differential category''
+\cite{BCS2009}, and it is adjacent to the differential structure of Joyal's species and analytic
+functors. We do not claim the differential category as deep. The contribution is the clean statement,
+the reflection proof (which makes the seven axioms inherited rather than re-checked), the resolution of
+the object-versus-map confusion (Proposition~\ref{prop:linear}), the fibrational positioning with its
+named orientation hazard (\S\ref{sec:orientation}), and the restriction to directed containers with the
+dual-number caveat made precise (\S\ref{sec:directed}).
+
+\paragraph{Open edges, stated honestly.}
+\emph{(i) First order only.} Both $\partial$ and the forward theory of \cite{CCGZ2024} are first order;
+$\varepsilon^2=0$ truncates the Fa\`a di Bruno tower. Higher and iterated derivatives are out of scope.
+\emph{(ii) The reverse/lens reading is unaddressed.} Whether $\partial$ is a reverse-derivative tangent
+structure on $\Fam(\cod^{\mathrm{op}})$ --- the side on which the container logic actually lives --- is
+open; \S\ref{sec:orientation} only explains why it is a different question.
+\emph{(iii) The closed form of $T(C)$} is Problem~\ref{prob:closed-form}: we have the underlying object,
+the projection, the zero section and the geometry, but not the named multiplication.
+\emph{(iv) An endofunctor tangent structure ``on $\DCont$''} would come, if at all, from the
+Weil-algebra-indexed family $W\mapsto\DCont(W)$ with base-change functors (Leung's presentation of
+tangent structure as an action of Weil algebras), of which $\DD$ is the first infinitesimal; this is
+sketched, not proved.
+
+\paragraph{Why it matters.}
+For the differential- and tangent-category reader, the result supplies a concrete, combinatorial model
+whose differential combinator is a construction from programming-language theory, with a one-line
+discriminator (Table~\ref{tab:linear}) separating it from the trivial tangent functor. For the
+container and \texttt{Poly} reader, it upgrades the derivative from mnemonic to structure and shows
+precisely how far that structure reaches into the directed (categorical) world --- as far as the dual
+numbers, and no further over $\Set$. The headline is portable: \emph{the tangent bundle of a category
+lives over the dual numbers, the one-hole derivative is its vertical part, and the obstruction to
+keeping it over $\Set$ is the $\varepsilon^2=0$ zero morphism.}
+
+\begin{thebibliography}{9}
+
+\bibitem{AAGM2003}
+M.~Abbott, T.~Altenkirch, N.~Ghani, C.~McBride,
+\emph{Derivatives of containers},
+Typed Lambda Calculi and Applications (TLCA 2003), LNCS 2701, Springer, 2003, 16--30.
+
+\bibitem{AhmanUustalu2016}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98.
+
+\bibitem{BCS2009}
+R.~F.~Blute, J.~R.~B.~Cockett, R.~A.~G.~Seely,
+\emph{Cartesian differential categories},
+Theory and Applications of Categories \textbf{22} (2009), no.~23, 622--672.
+
+\bibitem{CCGZ2024}
+M.~Capucci, G.~Cruttwell, N.~Ghani, F.~Zanasi,
+\emph{A fibrational theory of first order differential structures},
+preprint, arXiv:2409.05763 (2024).
+
+\bibitem{CockettCruttwell2014}
+J.~R.~B.~Cockett, G.~S.~H.~Cruttwell,
+\emph{Differential structure, tangent structure, and SDG},
+Applied Categorical Structures \textbf{22} (2014), no.~2, 331--417.
+
+\bibitem{GambinoKock2013}
+N.~Gambino, J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), no.~1, 153--192.
+
+\bibitem{MacBethChainRule}
+MacBeth,
+\emph{The chain rule for the container derivative} (Kodamai internal note, 2026);
+the isomorphism $\partial(G\lhd F)\cong(\partial G\lhd F)\times\partial F$.
+
+\end{thebibliography}
+
+\end{document}
