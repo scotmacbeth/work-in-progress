@@ -1,0 +1,119 @@
+{
+  "conjecture": "UNIQUENESS upgrade of the container-derivative tangent structure: among REPRESENTABLE first-order tangent structures T=(−)◁D on FINITE-support polynomial functors, there are exactly two — the trivial one (D=y, T=Id) and the AAGM dual-number one (D=y+εv, T(p)=p(y+εv) mod ε², combinator ∂). Port of Lanfranchi–Lemay PID rigidity (arXiv:2505.09080, Thm 4.17/Cor 4.18) to SPoly. The finite-support qualifier is load-bearing: at infinite support M=ℕ·y is a solid (idempotent) third structure (ℕ×ℕ≅ℕ), so unqualified uniqueness over all Poly is FALSE.",
+  "status": "proved",
+  "date_opened": "2026-10-03",
+  "date_closed": "2026-10-04",
+  "tree": {
+    "id": "root",
+    "approach": "Three legs. (0) representability of AAGM ∂ as right-◁-tensoring by the dual-number infinitesimal object [proved, via the base-change result]. (1) rank rigidity: finite solid infinitesimal parts = {0,y} [proved, mine, airtight; cleaner than L–L — freeness automatic over the rig ℕ, no PID]. (2) correspondence 'representable 1st-order tangent structure ⟺ solid infinitesimal part' — the converse (structure⟹solid) is now PROVED rig-internally (2026-10-04, proofs/2026-10-04-solid-correspondence-converse.md): universality of the vertical lift ⟹ T₂≅V (vertical bundle) ⟹ (eval at y) D₂≅P' ⟹ 1+2n=1+n+n² ⟹ n²=n ⟹ n∈{0,1}; subtraction-free (vertical bundle P' is a DIRECT COPRODUCT y⊕ε_out⊕M◁M by extensivity, rank adds; ℕ cancellative, no zero divisors). Full theorem = Theorem 1 ∘ correspondence — now PROVED.",
+    "trust": "proved",
+    "file": "2026-10-04-solid-correspondence-converse.md",
+    "sources": [
+      "2505.09080"
+    ],
+    "children": [
+      {
+        "id": "tensor-coincidence-linear",
+        "role": "premise",
+        "approach": "Lemma 0: on linear containers substitution and Dirichlet agree — (S·y)◁(T·y)=(S×T)·y=(S·y)⊗_Dir(T·y). One-line functor identity S×(T×X)=(S×T)×X; checked as functors on |S|,|T|≤4,|X|≤5. Dissolves Risk 2 (the ◁-vs-Dirichlet orientation hazard): the BUNDLE tensor ◁ already multiplies rank on the module layer, so the solid condition M◁M≅M reads |S|²=|S| in the bundle's own tensor.",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": []
+      },
+      {
+        "id": "spoly-freeness-automatic",
+        "role": "premise",
+        "approach": "Lemma 1: every linear polynomial S·y IS a free ℕ-module on S (|S|-fold copower of y); linear containers iso ⟺ shape sets equinumerous ⟹ rank |S| is a complete iso-invariant. This is the SPoly analogue of L–L 'projective⟹free⟹rank complete' (their Lemma 4.16=Rotman 9.8, which NEEDS R a PID) — here AUTOMATIC: linear functors ARE the free ℕ-modules by definition of polynomial. Rigidity therefore holds over the rig ℕ, strictly outside L–L hypotheses.",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": []
+      },
+      {
+        "id": "spoly-solid-finite-idempotent",
+        "role": "premise",
+        "approach": "Lemma 2 + Theorem 1 (the decisive rank computation): M=S·y solid (μ:M◁M≅M iso) ⟹ (Lemma 0,1) |S×S|=|S| ⟹ |S|²=|S|; for finite n, n²=n ⟺ n∈{0,1} (ℕ no zero divisors). So exactly two finite solid infinitesimal parts: M=0 (rank 0) and M=y (rank 1). Enumerated: only solutions in 0..49 are {0,1}. Ports L–L n²=n⟹{0,1} verbatim with the cardinality rank. scratch/spoly_solid_idempotent.py (A,D).",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": [
+          {
+            "id": "lean-spoly-solid-idempotent",
+            "role": "attempt",
+            "approach": "Finite decide ORACLE (Mathlib-free, 2026-10-03 pattern) for the arithmetic collapse + infinite-support non-example. Certifies: (1) solid_rank_eq — n²=n ↔ n∈{0,1} on ℕ, proved in general (omega-free); finite_solid_ranks — solid ranks in 0..12 are exactly [0,1] (decide). (2) survivors — the finite solid ranks map through structureOfRank to exactly [trivial, dualNumber]={Id,∂}, D-arities 1,2; whitney_not_solid — every rank r≥2 (Whitney sum) is non-solid (decide). (3) cantor_window_injective — Cantor pairing ℕ×ℕ→ℕ injective on 12×12 window, witnessing |ℕ×ℕ|=|ℕ| ⟹ M=ℕ·y a third solid object ⟹ finiteness load-bearing. Packaged in spoly_solid_idempotent_oracle. #print axioms = [propext] only (no sorryAx, no Quot.sound, no Classical.choice); the three decide claims are individually axiom-free. SCOPE: certifies the arithmetic collapse ONLY, NOT the structural representability converse (solid-correspondence-converse stays computed).",
+            "trust": "lean-verified",
+            "lean": "lean/2026-10-03-spoly-solid-idempotent.lean: SPolySolidIdempotent.spoly_solid_idempotent_oracle (+ solid_rank_eq, finite_solid_ranks, whitney_not_solid, survivors, cantor_window_injective, trivial_DRank, dualNumber_DRank). #print axioms = [propext] (decide claims individually axiom-free).",
+            "file": "2026-10-03-tangent-uniqueness-spoly.md",
+            "sources": [
+              "2505.09080"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "spoly-representability",
+        "role": "premise",
+        "approach": "Stage 0: the AAGM bundle T(p)=p(y+εv) mod ε² IS representable — right-◁-tensoring (base change) by the dual-number infinitesimal object D=y+εv, infinitesimal part M=⟨εv⟩=1·y rank 1; trivial = D=y, M=0. T(p)=p+εv·p' verified on 6 polynomials. The precise 'T=(−)◁_D D = base change along ℕ→ℕ[ε]/ε²' sense is the proved base-change result (shared premise below).",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": [
+          {
+            "id": "base-change-representability",
+            "role": "premise",
+            "approach": "T = strict ◁-monoidal base change along ℕ→D=ℕ[ε]/ε² (laxator = AAGM chain rule). Supplies the precise sense of 'T=(−)◁D'.",
+            "trust": "proved",
+            "file": "2026-10-03-tangent-restricts-to-dcont.md",
+            "children": []
+          },
+          {
+            "id": "builds-on-tangent-cdc",
+            "role": "premise",
+            "approach": "The existence result: ∂ IS the differential combinator of the CDC SPoly, dual-number tangent structure. The structure whose uniqueness this establishes.",
+            "trust": "proved",
+            "file": "2026-10-02-tangent-container-cdc.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "spoly-infinite-obstruction",
+        "role": "premise",
+        "approach": "Proposition 2 (sharpness): M=ℕ·y is solid — M◁M=(ℕ×ℕ)·y≅ℕ·y via Cantor pairing (|ℕ×ℕ|=|ℕ|; injective on 40×40 window). A third, infinite-support solid infinitesimal part ≠0,y. Every infinite cardinal κ²=κ gives one. Exact analogue of L–L non-PID (Ex 4.21)/non-f.g. (Ex 4.20) extras ⟹ FINITENESS is load-bearing; unqualified uniqueness over all Poly is FALSE.",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": []
+      },
+      {
+        "id": "solid-correspondence-converse",
+        "role": "premise",
+        "approach": "(★) converse: a representable first-order tangent structure T=(−)◁D (D=y⊕M, M=S·y linear, |S|=n finite) FORCES n²=n (solidity). PROVED rig-internally 2026-10-04 via universality of the vertical lift. Steps: (A) ◁ preserves pullbacks both sides [(−)◁D pointwise; D◁(−) by Gambino–Kock connected-limit preservation] ⟹ T₂=(−)◁D₂, Tp=(−)◁(p̂◁D), V(vertical bundle=pullback of Tp along 0)=(−)◁P'. (B) counts as DIRECT COPRODUCTS (extensivity, no subtraction): D₂=D×_yD=(1+2n)·y; P'=ĝ⁻¹(im ẑ)=y⊕ε_out⊕M◁M=(1+n+n²)·y. (C) CC2014 universality ⟹ T₂≅V ⟹ eval at y ⟹ D₂≅P' ⟹ (Lemma 1) 1+2n=1+n+n² ⟹ (ℕ additively+multiplicatively cancellative) n²=n ⟹ n∈{0,1}. Rig-internal upgrade over L–L: their vertical-bundle fibre rank uses an SES (subtraction); ours is a coproduct (addition). Cited standard: CC vertical-lift-universality axiom, Gambino–Kock. Cross-checked vs Weil ground truth (n=1 iso, n=2 fails) + verify_universality_counts.py (n=0..5).",
+        "trust": "proved",
+        "file": "2026-10-04-solid-correspondence-converse.md",
+        "sources": [
+          "2505.09080"
+        ],
+        "children": [
+          {
+            "id": "lean-universality-rank-rigidity",
+            "role": "attempt",
+            "approach": "Finite / rig-internal decide+cancellation ORACLE (Mathlib-free, 2026-10-03 pattern) for the arithmetic heart of the converse. Models the three vertical-lift objects by their coproduct ranks: rankDcompD n = 1+n+n+n² = (1+n)², rankD2 n = 1+n+n (fibre product, no mixed term), rankPprime n = 1+n+n² (surviving coproduct y⊕ε_out⊕M◁M). Certifies: (1) EXTENSIVITY (ranks add, no subtraction) — rankDcompD_eq_sq (=(1+n)²), rankDcompD_eq_rankPprime_add (D◁D=P'+n), rankDcompD_eq_rankD2_add (D◁D=D₂+n²); the honesty certificate for the 'ranks add, never subtract' claim (proof note §2,§4). (2) UNIVERSALITY RIGIDITY — universality_forces_idempotent: rankD2 n = rankPprime n ↔ n∈{0,1}, forward by Nat.add_left_cancel reducing 1+2n=1+n+n² to n²=n (NO omega on the cancellation step — literally exhibits rig cancellation, proof note §3), then solid_rank_eq (n²=n↔n∈{0,1}). (3) ENUMERATION+witnesses — finite survivors [0,1]; dual-number n=1 holds (3=3); square-zero n=2 excluded (5≠7). Packaged in universality_rank_rigidity_oracle. #print axioms = [propext] only (no sorryAx, no Quot.sound, no Classical.choice); the decide/witness claims are individually axiom-free. SCOPE: certifies the rank ARITHMETIC + coproduct-count identities of the vertical-lift collapse ONLY, NOT the cited framework inputs (CC2014 vertical-lift-universality axiom, ◁-preserves-pullbacks / Gambino–Kock, M-linearity from the additive-bundle axiom). Cross-checked vs scratch/verify_universality_counts.py (n=0..5, identical).",
+            "trust": "lean-verified",
+            "lean": "lean/2026-10-04-universality-rank-rigidity.lean: UniversalityRankRigidity.universality_rank_rigidity_oracle (+ rankDcompD_eq_sq, rankDcompD_eq_rankPprime_add, rankDcompD_eq_rankD2_add, universality_forces_idempotent, solid_rank_eq, finite_universality_survivors, dualNumber_universality, rank2_excluded). #print axioms = [propext] (decide/witness claims individually axiom-free).",
+            "file": "2026-10-04-solid-correspondence-converse.md",
+            "sources": [
+              "2505.09080"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "rank2-whitney-not-solid",
+        "role": "attempt",
+        "approach": "Corroboration of the converse: the non-solid finite candidates are the rank-r square-zero objects D=y+Σεᵢvᵢ (εᵢεⱼ=0, r≥2) = the Whitney sums T_r=T×_X···×_X T. These are auxiliary bundles in the tangent axioms, NOT standalone tangent structures; and M=ℕ^r has M◁M=ℕ^{r²}, rank r²≠r — not solid. So solidity = indecomposability: non-solid finite candidates are exactly the non-primitive ones. scratch/spoly_solid_idempotent.py (D).",
+        "trust": "computed",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": []
+      }
+    ]
+  }
+}
