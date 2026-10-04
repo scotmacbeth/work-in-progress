@@ -1,0 +1,518 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{modelclaim}[theorem]{Modelling claim}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\K}{\mathcal{K}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Sup}{\mathsf{S}}
+\newcommand{\Wk}{\mathsf{W}}
+\newcommand{\Rt}{\mathsf{R}}
+\newcommand{\dir}{\mathcal{D}}
+\newcommand{\FF}{\mathbb{F}_2}
+
+\title[State-divergence bugs are failed distributive laws]{State-divergence bugs are failed
+distributive laws\\ \normalsize re-entrancy, state desynchronisation, and the degree-two
+obstruction to composing contracts}
+\author{MacBeth}
+\address{Kodamai}
+\email{neil@kodamai.com}
+\date{2026-10-04}
+
+\begin{document}
+
+\begin{abstract}
+A recurring and expensive class of smart-contract exploit arises not from a faulty component but
+from the \emph{unsound composition} of two individually-correct ones. Security auditors catalogue
+these under loose, overlapping headings --- ``re-entrancy'', ``state desynchronisation'',
+``callback-ordering'' --- with no common invariant. We argue that they share a precise
+mathematical shape. An on-chain effect that issues calls and receives replies is a container
+(polynomial functor); a handoff discipline on such effects is a directed container, equivalently a
+small category; and interleaving two shared-state effects is their Zappa--Sz\'ep product
+$\C\bowtie\D$, which exists exactly when a distributive law of directed containers does. Its
+non-existence is a degree-two cohomology class $[\omega]\in H^2$. Our anchor is a theorem, with a
+machine-checked core: on the minimal faithful supervisor--worker model, unprotected re-entrancy is
+the nonzero class $[\omega]=\varepsilon$ in $H^2\cong\FF$, and the joint contract exists if and
+only if $\varepsilon=0$. We then advance, explicitly as a \emph{modelling claim rather than a
+theorem}, that the state-desynchronisation family --- illustrated by the 2026 Provenance
+Blockchain marker/bank bug and three of Trail of Bits' Uniswap-v4 hook failure patterns --- is the
+same obstruction for different effects, and we set out the programme required to turn that claim
+into a theorem.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{A bug that belongs to no single component}
+The most costly smart-contract failures are often not bugs \emph{in} a component but bugs
+\emph{between} components. The 2016 DAO exploit drained roughly a third of the Ethereum DAO by
+re-entrancy: a contract called an external party before updating its own ledger, and the callee
+re-entered the open call and spent against stale state. Each line of the contract was locally
+defensible; the failure lived in the interaction. The same signature recurs across unrelated
+systems. In August 2026 Trail of Bits disclosed a Provenance Blockchain vulnerability in which a
+token's \emph{marker} module and \emph{bank} module each maintained a representation of circulating
+supply; the two were individually sound, but their divergence let an authorization check degenerate
+to $0=0$ and granted an attacker free mint and withdraw rights \cite{tob-statediv}. In July 2026
+the same auditors catalogued seven recurring failure modes for Uniswap-v4 hooks --- user callbacks
+spliced into the core swap lifecycle --- several of which are, in our reading, two locally-correct
+pieces of accounting that disagree once composed, including the \$8.4M Bunni exploit
+\cite{tob-uniswap}.
+
+Auditors group these under headings that overlap and shade into one another: re-entrancy, state
+desynchronisation, check-then-act races, callback-ordering. The practical question this note takes
+up is whether the grouping reflects a \emph{mathematical} commonality --- an invariant that is zero
+exactly when the composition is safe and nonzero exactly when it is not, and which can be
+\emph{computed} rather than argued by analogy.
+
+\subsection*{The proved anchor}
+For one member of the family the answer is yes, and it is a theorem. We recall it in
+Section~\ref{sec:anchor}; here is the shape. An on-chain effect that may issue queries from a set
+$S$ and, for each query $s$, receive a reply from $P(s)$, is the container $p=(S,P)$, i.e.\ the
+polynomial functor $\sum_{s\in S} y^{P(s)}$ \cite{NiuSpivak}. A discipline governing who may hand
+off to whom is a \emph{directed container}, which by Ahman--Uustalu is exactly a small category
+\cite{AhmanUustalu}. Running two effects that share a resource is not composition along one fixed
+discipline --- a functor already models that, and a functor cannot fail --- but the
+\emph{interleaving} of two, and the interleaving of two directed containers is their
+\emph{Zappa--Sz\'ep product} $\K=\C\bowtie\D$, assembled from a distributive law of directed
+containers \cite{AhmanUustaluDL}. Such a product can fail to exist, and (under mild hypotheses) its
+existence is governed by a single degree-two class,
+\[
+  \C\bowtie\D \text{ exists}
+  \quad\Longleftrightarrow\quad
+  [\omega]=0 \in H^2(\Sk_\C;\dir),
+\]
+the Baues--Wirsching cohomology of the handoff category's skeleton with coefficients in the reply
+functor \cite{gobstr,pairwise,baueswirsching}. On the minimal faithful supervisor--worker model
+$\K_\varepsilon$, parametrised by a one-bit turn token whose mutation bit $\varepsilon$ records
+whether a worker writes to the supervisor's shared state during a pending call, the class is the
+bit on the nose: $[\omega]=\varepsilon$ in $H^2\cong\FF$, so the joint contract exists if and only
+if $\varepsilon=0$ \cite{analytic}. The finite-field core of this identity is machine-checked in
+Lean~4, sorry-free and with no external library \cite{leanfile}.
+
+\subsection*{The thesis of this note}
+Our contribution here is not a new theorem but a \emph{frame}, advanced honestly as such. We
+propose that the state-desynchronisation family is the \emph{same obstruction for different
+effects}: two on-chain effects that each maintain a representation of a shared logical value compose
+soundly iff a distributive law forces their representations to agree, and the catalogued bugs are
+exactly the cases where no such law exists --- where the defect cocycle of every transversal is
+nonzero. We make this precise enough to be falsifiable, we work it through on the Provenance and
+Uniswap-v4 examples, and --- crucially --- we mark the boundary between what is proved and what is
+modelled. \emph{The re-entrancy anchor is a theorem with a machine-checked core. The extension to
+state desynchronisation is a modelling claim: a dictionary and a worked mapping, graded as such,
+together with the explicit list of what one would have to prove to upgrade it.}
+
+\subsection*{Why this matters for impact}
+Compositional correctness here has a direct economic denominator: the failures above cost real
+funds, and they are failures of composition, not of components. A framework that \emph{predicts}
+the bug class from the absence of a distributive law --- that says ``these two effects cannot be
+safely interleaved, and here is the class that certifies it'' --- turns an open-ended audit for
+``smells'' into the computation of a specific invariant. That is the promise this note stakes out;
+Section~\ref{sec:impact} is candid about how much of it is currently cashed.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes the container / directed-container / Zappa--Sz\'ep vocabulary and
+the two-level existence criterion. Section~\ref{sec:anchor} states the re-entrancy theorem and draws
+its verification boundary honestly. Section~\ref{sec:shape} isolates the structural signature ---
+two lawful factors, unsound composite --- as the failure of condition (G). Section~\ref{sec:statediv}
+presents the state-desynchronisation family as a second instance, explicitly as a modelling claim,
+and enumerates the obligations a theorem would discharge. Section~\ref{sec:impact} states the grant
+impact and the research programme. Section~\ref{sec:concl} closes.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We include only what the statement and the modelling dictionary use. Containers, the
+directed-container / small-category identification, and the Zappa--Sz\'ep construction are prior
+art and are cited as such.
+
+\subsection*{Containers and directed containers}
+A \emph{container} $p=(S,P)$ is a set $S$ of \emph{shapes} together with, for each $s\in S$, a set
+$P(s)$ of \emph{positions}; it presents the polynomial functor $\sum_{s\in S} y^{P(s)}$
+\cite{NiuSpivak,SpivakRef}. Read as an interactive effect, a shape is a query the effect may issue
+and a position is a reply it may receive. A \emph{directed container} equips $(S,P)$ with a root, a
+sub-position operation, and a position concatenation; Ahman--Uustalu's theorem is that directed
+containers are \emph{exactly} small categories --- objects are shapes, morphisms out of $s$ are the
+positions $P(s)$, identities are roots, composition is concatenation \cite{AhmanUustalu}. We use the
+category picture throughout and call it the \emph{handoff category}: its morphisms are the legal
+ways control and state pass between effects.
+
+\subsection*{Zappa--Sz\'ep products and distributive laws}
+Let $\K$ be a small category and $\D\subseteq\K$ a \emph{wide} subcategory (all objects, some
+morphisms). A \emph{Zappa--Sz\'ep product} $\K=\C\bowtie\D$ is a second wide subcategory $\C$ such
+that every morphism of $\K$ factors \emph{uniquely} as a $\C$-morphism followed by a $\D$-morphism:
+a strict factorization system, equivalently a distributive law $\lambda:\D\C\Rightarrow\C\D$
+satisfying the matched-pair axioms \cite{RosebrughWood}. For directed containers this is the
+composition construction of Ahman--Uustalu \cite{AhmanUustaluDL}: it generalises the Zappa--Sz\'ep
+product of two monoids, and its data is a matched pair of mutual actions --- the two factors acting
+on one another. The point for us is that, given $\D$, the complementary factor $\C$ \emph{may or may
+not exist}; that existence is what an obstruction measures.
+
+Two effects that each operate correctly in isolation are the two \emph{factors}. Interleaving them
+on shared state is asking for the product $\C\bowtie\D$. A distributive law is exactly a coherent
+rule for commuting one factor past the other --- for saying how the state left by one is seen by the
+other. Its absence is not a malfunction of either factor; it is the absence of a law relating them.
+
+\subsection*{The two-level existence criterion}
+The product's existence splits into two conditions \cite{pairwise}. Write $\Hom_\K(-,b)$ for the
+contravariant hom-presheaf of $\K$.
+\begin{itemize}[leftmargin=2em]
+\item[\textbf{(L)}] (\emph{freeness}) each $\Hom_\K(-,b)$ is a free right $\D$-set, i.e.\ a
+  coproduct of representables;
+\item[\textbf{(G)}] (\emph{global closure}) the free bases close into a wide subcategory $\C$.
+\end{itemize}
+
+\begin{theorem}[pairwise Zappa--Sz\'ep criterion \cite{pairwise,RosebrughWood}]\label{thm:pairwise}
+For a small category $\K$ and a wide subcategory $\D\subseteq\K$, a strict factorization
+$\K=\C\bowtie\D$ exists if and only if \textnormal{(L)} and \textnormal{(G)} both hold.
+\end{theorem}
+
+Condition (L) is local: each hom-presheaf, considered alone, is free. Condition (G) is global: the
+chosen bases must assemble consistently. The split is exactly the signature we will exploit --- (L)
+is the two factors being individually well-behaved; (G) is their interleaving being coherent.
+
+\begin{theorem}[the global obstruction is cohomological \cite{gobstr,baueswirsching}]\label{thm:gobstr}
+Assume \textnormal{(L)}, and the hypothesis \textnormal{(H)} that the reply (direction) functor
+$\dir$ is a disjoint union of \emph{abelian} vertex groups with trivial left action. Then the free
+$\D$-orbits form the \emph{skeleton category} $\Sk_\C$, the vertex groups form a presheaf
+$\dir:\Sk_\C^{\mathrm{op}}\to\mathbf{Ab}$, and for any transversal $T$ the \emph{defect $2$-cochain}
+$\omega_T$, defined by $c_2\circ c_1=\lfloor c_2c_1\rfloor_T\circ\,\omega_T(c_2,c_1)$, is a
+normalized $2$-cocycle whose class $[\omega]\in H^2(\Sk_\C;\dir)$ is transversal-independent, with
+\[
+  \textnormal{(G)}\iff [\omega]=0 .
+\]
+\end{theorem}
+
+The obstruction is the \emph{class} $[\omega]$, not the cochain $\omega$: a transversal may have
+$\omega_T\neq 0$ while $[\omega]=0$, in which case closure still exists. This is the categorical form
+of ``a flat bundle is trivial iff its holonomy vanishes'': each partial handoff completes, but the
+completions may fail to glue into a single global system by a monodromy around a loop.
+
+\section{The proved anchor: re-entrancy is a failed distributive law}\label{sec:anchor}
+
+This section restates a shipped result \cite{analytic,leanfile}; we do not re-prove it. We state it
+precisely because it is the one rung of the ladder that is a theorem, and because its verification
+boundary is the template for grading everything that follows.
+
+\subsection*{The minimal faithful model}
+Fix three roles: $\Sup$ (supervisor), $\Wk$ (a worker running), $\Rt$ (a return point). The
+supervisor carries a one-bit \emph{turn token}; toggling it is an involution $\tau$, so
+$\End(\Sup)=\{\id_\Sup,\tau\}\cong\mathbb Z/2$. The generating handoffs are dispatches
+$p,p\tau:\Sup\to\Wk$ and two worker outcomes $s,s_2:\Wk\to\Rt$, with composites $q,q\tau:\Sup\to\Rt$.
+The prescribed right factor is the supervisor-internal (token) part
+$\D=\{\id_\Sup,\tau,\id_\Wk,\id_\Rt\}$; the left factor $\C$ --- the genuine dispatch/return part ---
+is what a Zappa--Sz\'ep product must supply.
+
+\begin{definition}[the family $\K_\varepsilon$ \cite{analytic}]\label{def:family}
+For $\varepsilon\in\mathbb Z/2$ let $\K_\varepsilon$ be the above category with the single
+length-two composite fixed by
+\[
+  s\circ p = q, \qquad s_2\circ p = q\cdot\tau^{\varepsilon},
+\]
+where $s$ is ``the worker returns normally'' and $s_2$ is ``the worker re-enters'' --- calls back
+into the supervisor before returning. Thus $\varepsilon=[\,s_2\circ p=q\tau\,]$ records whether the
+re-entrant outcome \emph{mutates} the shared token ($\varepsilon=1$, unprotected re-entry) or
+\emph{fixes} it ($\varepsilon=0$, a lock).
+\end{definition}
+
+\subsection*{The theorem}
+The reduction of \cite{analytic} verifies (L) and (H) for $\K_\varepsilon$, identifies the skeleton
+$\Sk_\C$ as the branch $\Sup\to\Wk\rightrightarrows\Rt$ with $[s][p]=[s_2][p]=[q]$, and computes the
+Baues--Wirsching complex to be $C^1\cong\FF^2$, $C^2\cong\FF^2$, $C^3=0$, with coboundary
+$\delta^1h=(h[p]-h[q],h[p]-h[q])$ --- so $B^2=\langle(1,1)\rangle$ is the diagonal and
+$H^2=\FF^2/B^2\cong\FF$ --- and defect cocycle $\omega_T(\varepsilon)=(0,\varepsilon)$.
+
+\begin{theorem}[re-entrancy obstruction \cite{analytic}]\label{thm:anchor}
+On the minimal faithful model, the obstruction class equals the token-mutation bit,
+\[
+  [\omega(\K_\varepsilon)]=\varepsilon \in H^2(\Sk_\C;\dir)\cong\FF,
+\]
+and hence the joint contract $\C\bowtie\D$ exists if and only if $\varepsilon=0$. Unprotected
+re-entrancy ($\varepsilon=1$) is the nonzero generator of $H^2\cong\mathbb Z/2$.
+\end{theorem}
+
+\subsection*{The verification boundary, drawn honestly}
+The finite-field core of Theorem~\ref{thm:anchor} is machine-checked in Lean~4
+(\texttt{Containers/Reentrancy.lean}, sorry-free, no external library \cite{leanfile}). Modelling
+$\FF$ as \texttt{Bool} with \texttt{xor} as addition, the class map $\varphi(a,b)=a\oplus b$, the
+coboundary $\texttt{d1}\,t=(t,t)$, and the defect $\texttt{omega}\,\varepsilon=(0,\varepsilon)$, the
+file certifies $\ker\varphi=B^2$ and $\varphi$ surjective (so $H^2\cong\FF$ via $\varphi$),
+$\varphi(\omega_\varepsilon)=\varepsilon$ (the class form of $[\omega]=\varepsilon$), and
+$\omega_\varepsilon\in B^2\iff\varepsilon=0$ (the membership form of the dichotomy). What Lean checks
+is the \emph{last mile}: from the cochain complex to $[\omega]=\varepsilon$. What it does \emph{not}
+check is the \emph{first mile}: that $\K_\varepsilon$ satisfies (L) and (H), that $\Sk_\C$ is the
+stated branch, and that the transversal defect is $(0,\varepsilon)$. Those are established by hand in
+\cite{analytic} and imported here as a cited, pen-and-paper input. We state this boundary now because
+it is exactly the kind of boundary the next two sections must respect: the honest unit of currency is
+``theorem with machine-checked core'', and anything short of it is graded down.
+
+\section{The structural signature: two lawful factors, an unsound composite}\label{sec:shape}
+
+Strip Theorem~\ref{thm:anchor} to its shape. Re-entrancy is dangerous not because dispatch is wrong
+or because the token logic is wrong --- each factor is a perfectly good wide subcategory --- but
+because, when $\varepsilon=1$, the two \emph{cannot be interleaved into one consistent contract}. In
+the language of Theorem~\ref{thm:pairwise}: condition (L) holds (the factors are individually free),
+and condition (G) fails (they do not close). The obstruction $[\omega]$ lives entirely in the gap
+between (L) and (G).
+
+This gives a precise reading of the situation auditors describe when two components are each correct
+in isolation yet fail once composed:
+
+\begin{quote}
+\emph{(L) holds} --- each component, as an effect on its own state, is a lawful directed container;
+and \emph{(G) fails} --- there is no distributive law interleaving them, so the composite is not a
+single consistent contract. The exploit is a witness that $[\omega]\neq 0$.
+\end{quote}
+
+Two points make this more than a slogan. First, it is \emph{falsifiable}: a bug claimed to be of
+this family must exhibit two factors each satisfying (L), a shared resource over which they are to be
+interleaved, and a nonzero class obstructing the interleave; if any component is simply wrong in
+isolation --- (L) fails --- it is an ordinary bug, not a composition bug, and the framework makes no
+claim about it. Second, it is \emph{computational}: when the handoff category and reply functor are
+pinned down and (H) holds, $[\omega]$ is a finite linear-algebra computation of the kind Lean already
+discharges for the anchor. The content of the sections below is the claim that the
+state-desynchronisation family fills in this template --- and an honest accounting of how much of the
+template is currently filled.
+
+\section{State desynchronisation as a second instance}\label{sec:statediv}
+
+We now present the state-desynchronisation family as a second instance of the signature of
+Section~\ref{sec:shape}. We stress at the outset:
+
+\begin{modelclaim}\label{mc:main}
+The following is a \emph{modelling claim, not a theorem.} We assert that the state-desynchronisation
+bug family admits a faithful directed-container model in which the two divergent representations of a
+shared value are the two factors, condition (L) holds, and the bug is the non-vanishing of the
+global-closure class $[\omega]$ of Theorem~\ref{thm:gobstr}. We support it with a dictionary and two
+worked mappings, and in Section~\ref{sec:impact} we list the obligations required to make it a
+theorem. No step below is claimed proved.
+\end{modelclaim}
+
+\subsection*{The dictionary}
+The mapping from audit vocabulary to the categorical invariant is as follows.
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Audit notion & Container model & Status \\
+\midrule
+effect maintaining a value & directed container (handoff category) & established \cite{AhmanUustalu} \\
+two reps.\ of one logical value & two factors $\C,\D$ over a shared object & modelling \\
+each component correct alone & condition (L) & modelling \\
+``they diverge when composed'' & defect cocycle $\omega_T\neq 0$ & modelling \\
+no safe interleaving exists & condition (G) fails, $[\omega]\neq 0$ & modelling \\
+the exploit transaction & a witness that $[\omega]\neq 0$ & modelling \\
+a consistency invariant that forbids it & a distributive law $\lambda:\D\C\Rightarrow\C\D$ & modelling \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The conceptual content of the middle rows is a single idea: a distributive law between two
+representations is exactly a natural, coherent rule forcing them to agree. ``State
+desynchronisation'' is the \emph{absence} of such a rule --- nothing in the system's type structure
+compels the two representations to track one another, so the composite of two agreeing-in-isolation
+components can disagree, and an authorization predicate can silently factor through the wrong one.
+
+\subsection*{First mapping: the Provenance marker/bank divergence}
+Trail of Bits' August 2026 disclosure is the cleanest small example \cite{tob-statediv}. On the
+Provenance Blockchain, two modules each represent a token's circulating supply: the \emph{marker}
+module's stored \texttt{supply} field, and the \emph{bank} module's live supply. For a class of
+markers the marker field is never updated and stays at its default $0$, while the bank value is the
+true supply. The vulnerable check \texttt{accountControlsAllSupply} compared an attacker's balance
+to the marker field; with both equal to $0$, the comparison $0=0$ returned true and granted control
+of the entire supply --- free mint and withdraw. Trail of Bits name the root cause precisely:
+``\emph{The root cause of this issue was state desynchronisation. The marker struct and the bank
+module both represent the token supply, but only the bank module is kept current for non-fixed
+markers}'' \cite{tob-statediv}.
+
+The modelling reading: the marker-module effect and the bank-module effect are the two factors, each
+sound on its own state. ``Supply'' is the shared logical value. A distributive law would be a
+coherent rule making every marker-side read of supply agree with the bank-side value; no such law is
+present, so the two representations are free to diverge, and the authorization predicate composes
+with the stale factor rather than the live one. The exploit transaction is a witness that the two
+representations cannot be interleaved into one consistent notion of supply --- the (G)-failure. Note
+how the auditors' own remediation principle --- ``\emph{an authorization predicate must never be
+satisfiable from the attacker's default state}'' \cite{tob-statediv} --- is, in this reading, the
+demand that the predicate factor through a representation on which the distributive law holds.
+
+\begin{remark}[what is and is not asserted here]
+We do \emph{not} compute an $H^2$ class for the Provenance system, and we do not claim one is nonzero;
+Modelling Claim~\ref{mc:main} asserts that a faithful model \emph{exists} in which the bug is such a
+class, and the computation is exactly the obligation listed in Section~\ref{sec:impact}. The value of
+the example is that the source's own language --- two modules representing one value, kept in sync by
+nothing --- is the failed-distributive-law picture stated in security-audit prose, with the
+categorical content supplied entirely by us.
+\end{remark}
+
+\subsection*{Second mapping: Uniswap-v4 hook patterns}
+Trail of Bits' July 2026 catalogue of seven Uniswap-v4 hook failure modes \cite{tob-uniswap}
+supplies richer, higher-stakes instances. User hooks are callbacks spliced into the pool's swap
+lifecycle; the pool and the hook each maintain accounting state, and three of the seven patterns are
+composition failures of the signature of Section~\ref{sec:shape}.
+\begin{itemize}[leftmargin=2em]
+\item \textbf{Pattern 3 (custom accounting leaks value).} The \$8.4M Bunni exploit of September
+  2025 was, in the auditors' words, ``\emph{a rounding bug in BunniHook's idle-balance
+  accounting}'', in which ``\emph{each transaction satisfied the PoolManager's settlement invariant
+  because the bug was in BunniHook's internal accounting}'' \cite{tob-uniswap}. Two
+  representations of the same balances --- the PoolManager's settled deltas and the hook's internal
+  ledger --- each locally invariant, diverge: a textbook two-factor divergence.
+\item \textbf{Pattern 4 (right logic, wrong hook).} ``\emph{The \texttt{beforeSwap} hook executes
+  with pre-swap state, but the \texttt{afterSwap} hook sees post-swap state}'' \cite{tob-uniswap}.
+  The two callbacks are two factors reading a shared pool state at different points; code correct in
+  one is unsafe in the other. The temporal misalignment is exactly a failure of the two factors to
+  commute --- the absence of a law relating pre- and post-swap representations.
+\item \textbf{Pattern 7 (state changes during a callback sequence).} ``\emph{Values cached between
+  [\texttt{beforeSwap} and \texttt{afterSwap}] are not automatically safe \dots\ Nested actions can
+  therefore change shared hook storage, pool state, balances, or oracle data before the outer
+  callback sequence finishes}'' \cite{tob-uniswap}. This is re-entrancy on shared hook state ---
+  structurally the anchor of Section~\ref{sec:anchor} with the hook storage in the role of the
+  supervisor token.
+\end{itemize}
+
+Pattern 7 is the closest to a genuine instance of the proved anchor; patterns 3 and 4 are the
+state-desynchronisation reading. In all three the auditors' diagnosis --- individually-correct
+accounting that disagrees once composed --- is the (L)-holds-(G)-fails split, stated without category
+theory.
+
+\begin{remark}[honest scope of the two mappings]
+These are illustrative mappings, not models verified against formal semantics of the EVM or the
+Cosmos SDK. The directed-container structure of each effect, the verification of (L), and the
+computation of $[\omega]$ are not carried out here; the claim is that the shape matches and that the
+computation is well-posed. Treating either mapping as a proved theorem would be an overclaim of
+exactly the kind Section~\ref{sec:anchor}'s boundary is designed to prevent.
+\end{remark}
+
+\section{Impact and the research programme}\label{sec:impact}
+
+\subsection*{Why the framing has economic value}
+The failures above --- the DAO, Provenance, Bunni --- cost real funds, and they are failures of
+composition rather than of components. Current practice detects them by pattern-matching against a
+catalogue of smells; the catalogue is open-ended precisely because the smells have no common
+definition. The container framing offers a single invariant in their place: two effects over a
+shared resource compose soundly iff a distributive law exists, and the obstruction to that law is a
+computable cohomology class. For the one member of the family that has been worked through
+completely, that class is not only computable but \emph{machine-checked}
+(Theorem~\ref{thm:anchor}). The impact claim for the grant is therefore sharp and bounded: the
+framework \emph{predicts a bug class from the absence of a distributive law}, and it has delivered a
+sorry-free certificate for the canonical member. What it has not yet delivered --- and this note is
+careful to say so --- is the same treatment for the state-desynchronisation members.
+
+\subsection*{What a theorem would require}
+To upgrade Modelling Claim~\ref{mc:main} from a dictionary to a theorem, for either mapping, one must:
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Build the directed containers.} Give the two effects (marker/bank; pool/hook) as
+  explicit directed containers --- handoff categories whose shapes are the operations and whose
+  positions are the replies --- faithful to the system's actual control and state flow.
+\item \textbf{Identify the shared object and the prescribed factor $\D$.} Pin down the shared value
+  (supply; balances) as an object acted on by both, and the wide subcategory $\D$ against which the
+  product is taken.
+\item \textbf{Verify (L) and (H).} Check that each hom-presheaf is a free right $\D$-set and that
+  the reply functor is a disjoint union of abelian vertex groups with trivial left action --- or,
+  where (H) fails, descend to the nonabelian matched-pair obstruction (open; see below).
+\item \textbf{Compute $[\omega]$ and match the exploit.} Compute the Baues--Wirsching class and show
+  it is nonzero exactly in the vulnerable configuration, with the exploit transaction as its witness.
+\item \textbf{Formalise the finite core.} As with the anchor, machine-check the finite class
+  computation, leaving the category-to-complex reduction as a clearly-marked pen-and-paper input.
+\end{enumerate}
+Step 3 carries the main theoretical risk: the anchor's hypothesis (H) --- abelian vertex groups,
+trivial left action --- need not hold for richer effects, and when it fails the obstruction becomes a
+nonabelian matched-pair $H^2$ of the Rosebrugh--Wood distributive law \cite{RosebrughWood}, which is
+not yet developed in this programme \cite{gobstr}. The honest status is thus: the \emph{frame} is in
+place and proved on one example; the \emph{extension} is a well-posed research programme with one
+identified hard step.
+
+\subsection*{Relation to neighbouring methods}
+Sheaf-theoretic multi-agent work places obstructions of degree $H^0$ (consensus) and $H^1$
+(identifiability) on the agents' \emph{communication} graph, asking whether agents currently agree
+\cite{sheafMAS}. The container obstruction sits one degree up, in $H^2$, on the \emph{handoff}
+category, and asks the prior question: can the effects be fused into one consistent contract at all?
+Re-entrancy and state desynchronisation are, in this reading, the smallest places where the answer
+is no.
+
+\section{Conclusion}\label{sec:concl}
+
+A smart-contract exploit that belongs to no single component is a failure of composition, and the
+natural home for failures of composition is the obstruction to a distributive law. For re-entrancy
+this is a theorem with a machine-checked core: the DAO-class bug is the nonzero degree-two class
+$[\omega]=\varepsilon$, and the joint contract exists iff the worker fixes the shared token. We have
+argued --- as a modelling claim, with the proof obligations itemised --- that the
+state-desynchronisation family catalogued by auditors is the same obstruction for different effects:
+two representations of a shared value that no distributive law forces to agree. The next step is not
+rhetorical but computational: build the directed containers for the Provenance marker/bank divergence
+or a Uniswap-v4 hook pair, verify freeness, and compute the class. If it is nonzero exactly in the
+vulnerable configuration, a second rung of the ladder becomes a theorem; if the nonabelian case
+intrudes first, that is itself the sharp open problem the frame has surfaced. Either way the economic
+reading is the same: compositional correctness is a cohomology class, and it has a price.
+
+\section*{Acknowledgements}
+The agent/contract-as-container and orchestration readings are due to Neil Ghani and the Kodamai
+programme, building on Niu--Spivak's polynomial-functor framework; the Zappa--Sz\'ep-from-distributive-laws
+construction is Ahman--Uustalu's. The security disclosures are Trail of Bits'. The author thanks Neil
+Ghani and Robin Langer.
+
+\begin{thebibliography}{99}
+
+\bibitem{NiuSpivak} N.~Niu, D.~I.~Spivak. \emph{Polynomial Functors: A Mathematical Theory of
+Interaction}. arXiv:2312.00990, 2023.
+
+\bibitem{SpivakRef} D.~I.~Spivak. \emph{A Reference for Categorical Structures on \textup{Poly}}.
+arXiv:2202.00534, 2022.
+
+\bibitem{AhmanUustalu} D.~Ahman, T.~Uustalu. \emph{Directed Containers as Categories}.
+arXiv:1604.01187, 2016.
+
+\bibitem{AhmanUustaluDL} D.~Ahman, T.~Uustalu. \emph{Distributive laws of directed containers}.
+Progress in Informatics, No.~10 (2013), pp.~3--18, DOI 10.2201/NIIPI.2013.10.2.
+
+\bibitem{RosebrughWood} R.~Rosebrugh, R.~J.~Wood. \emph{Distributive laws and factorization}.
+J. Pure Appl. Algebra 175 (2002), 327--353.
+
+\bibitem{baueswirsching} H.-J.~Baues, G.~Wirsching. \emph{Cohomology of small categories}. J. Pure
+Appl. Algebra 38 (1985), 187--211.
+
+\bibitem{pairwise} MacBeth. \emph{The pairwise Zappa--Sz\'ep criterion}. Kodamai note, 10 June 2026.
+
+\bibitem{gobstr} MacBeth. \emph{The global-closure obstruction \textnormal{(G)} is a cohomology
+class: the Zappa--Sz\'ep holonomy as $H^2(\Sk_\C;\dir)$}. Kodamai note, 11 June 2026.
+
+\bibitem{analytic} MacBeth. \emph{The re-entrancy obstruction is the token-mutation bit: an analytic
+proof for orchestration Zappa--Sz\'ep products}. Kodamai note, 20 July 2026.
+
+\bibitem{leanfile} MacBeth. \emph{A machine-checked re-entrancy obstruction: the composition class
+$[\omega]=\varepsilon$ in Lean}, with artifact \texttt{Containers/Reentrancy.lean}. Kodamai note,
+3 September 2026.
+
+\bibitem{tob-statediv} P.~P\l atek, D.~Pakizh. \emph{State divergence enables unauthorized access}.
+Trail of Bits blog, 25 August 2026.
+\url{https://blog.trailofbits.com/2026/08/25/state-divergence-enables-unauthorized-access/}
+
+\bibitem{tob-uniswap} N.~Donboly. \emph{Building secure Uniswap v4 hooks}. Trail of Bits blog,
+30 July 2026. \url{https://blog.trailofbits.com/2026/07/30/building-secure-uniswap-v4-hooks/}
+
+\bibitem{sheafMAS} M.~Hern\'andez, E.~S\'anchez-Soto. \emph{A Sheaf Framework for Strategic
+Multi-Agent Systems: From Consensus to Nash Equilibria}. arXiv:2606.01663, 2026.
+
+\end{thebibliography}
+
+\end{document}
