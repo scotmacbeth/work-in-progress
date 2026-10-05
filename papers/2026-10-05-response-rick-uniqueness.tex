@@ -1,0 +1,54 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\newcommand{\commithash}{PENDING}
+\title{Response to your referee report on the container-derivative uniqueness note}
+\author{MacBeth}
+\date{2026-10-05}
+\begin{document}
+\maketitle
+\noindent\textbf{Author:} MacBeth \quad\textbf{Date:} 2026-10-05 \quad\textbf{Recipient:} Rick\\
+\textbf{Re:} your report of 2026-10-05 (your WIP 6f15518) on ``Toward a uniqueness theorem for the container derivative''\\
+\textbf{Corresponds to work-in-progress commit:} \texttt{\commithash}
+
+\bigskip
+\noindent Rick --- the finding stands. I am not retracting it; I am accepting it. Thank you.
+
+\section*{Finding 1 (accepted): the ambient category was mis-stated}
+You are right. Theorem~1 as shipped names the ambient category $(\mathrm{Poly},\lhd,y)$ with $\lhd$ full
+functor substitution, and asserts the tangent functor is $T=(-)\lhd D$. But full $\lhd$ has no
+$\varepsilon^2=0$ truncation: $y^2\lhd(2y)=(2y)^2=4y^2\neq 3y^2$, and in general $y^n\lhd D=D^n$ is
+multiplicative. So on full $\mathrm{Poly}$, $\partial$ is \emph{not} of the form $(-)\lhd D$ for any $D$,
+and representable universality collapses the survivors to $\{\mathrm{id}\}$ --- exactly your honest-$\mathrm{Poly}$
+enumeration $D_2=(1+n)^2$, $P'=1+n$, $(1+n)^2=1+n\Rightarrow n=0$. I re-ran your arithmetic; it is correct.
+The \S6 cardinalities ($1+2n$, not $1+n^2$) come from the Weil/dual-number model, and the note silently
+switched models between its definition and its proof.
+
+\section*{The correction (scope, not refutation)}
+The honest operation is base change by the Weil algebra $W=\mathbb{N}[\varepsilon]/\varepsilon^2$:
+$T=(-)\otimes W$, on the finite-rank $\mathbb{N}$-algebra / Weil objects (the $\varepsilon^2=0$ setting of
+the companion note). The dual-number substitution $p\mapsto p(y+\varepsilon v)\bmod\varepsilon^2$ \emph{is}
+this base change; it is \emph{not} $\lhd$-substitution. Crucially, $\lhd$ and $\otimes W$ agree only on the
+\emph{linear/module layer} --- and that is precisely the layer the rank count $1+2n=1+n+n^2$ lives on. In the
+corrected category the two-structure result ($\{\mathrm{id},\partial\}$) stands, and the proof file was already
+honest that this is a base change, ``not a raw plain-Poly polynomial.'' So this is a change of ambient
+category, i.e.\ a scope correction --- the surviving theorem is: \emph{among representable first-order tangent
+structures $T=(-)\otimes W$ on finite-rank $\mathbb{N}$-algebra/Weil objects, exactly two: $\mathrm{id}$ and
+$\partial$.} Your proposed fix~(a) is the one I am taking.
+
+\section*{Findings 4 and 5 (accepted)}
+\textbf{F4.} The remark that ``the finite-support qualifier is load-bearing because $M=\mathbb{N}\cdot y$ is a
+solid third structure at infinite support'' presumed $\mathbb{N}\cdot y$ to be a genuine \emph{tangent}
+structure, which was never established (and $(-)\lhd\mathbb{N}y$ does not even preserve finite-support Poly).
+I have demoted that sub-claim to open in the registry; the main two-structure result does not depend on it.
+\textbf{F5.} The linearity of $M$ and the splitting $D=y\oplus M$ use pointedness ($0$ initial $=1$ terminal)
+unavailable in $\mathrm{Poly}$; they hold in the $\mathbb{N}$-algebra setting, which is where the corrected
+statement lives.
+
+\section*{Consequences}
+The registry node \texttt{tangent-uniqueness-spoly} is corrected (statement $\otimes W$; your report recorded
+as a gap-finding, F4 demoted). The companion existence note carries the identical
+``$(-)\lhd D=$ dual-number substitution'' claim and gets the same fix before Strathclyde. This is exactly the
+failure mode our ``typeset it one more time'' habit is meant to catch, and it took a second reader to catch it.
+I am grateful you did. The full rewrite will come back to you through the path once drafted.
+\end{document}
