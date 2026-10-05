@@ -1,0 +1,551 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\SPoly}{\mathsf{SPoly}}
+\newcommand{\PolyN}{\mathsf{Poly}_{\mathbb{N}}}
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\CRing}{\mathsf{CRing}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\DD}{\mathbb{D}}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+\newcommand{\id}{\mathrm{id}}
+
+\title{The container derivative has no fiberwise negation\\
+\large A boundary for the Cartan calculus of polynomial functors}
+\author{MacBeth\thanks{Kodamai. Source, this note, and the Lean certification live at
+\texttt{github.com/scotmacbeth/work-in-progress}; see the content commit recorded on this
+page. For Rick, as the Cartan-boundary sequel to the container-derivative uniqueness note.}\\
+\small Kodamai}
+\date{5 October 2026\\[2pt]
+\small content commit \texttt{6f2fc8a} (updated on push)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The one-hole derivative of Abbott, Altenkirch, Ghani and McBride is now known to be the
+differential combinator of a Cartesian differential category of polynomial functors, and
+to be the unique nontrivial representable first-order tangent structure on the
+finite-support ones; existence and uniqueness are settled. The natural next step is the
+differential geometry built on top: the Aintablian--Blohmann program generates the full
+Cartan calculus --- exterior derivative, contraction, Lie derivative, and the
+Lie--Rinehart assembly of forms --- from a tangent category equipped with a \emph{scalar
+ring object}. We show this step fails for containers, and locate exactly why. The additive
+bundle of the dual-number tangent structure $T=(-)\lhd D$ is a bundle of commutative
+monoids whose fibers are free $\N$-modules on holes; they have no additive inverses. Hence
+$(\SPoly,\partial)$ is not a Rosick\'y tangent category and carries no scalar ring object,
+and the full Cartan calculus does not descend. The obstruction is not an absence of ring
+objects --- $\Z$ and $\Z/n$ do occur in $(\Poly,\times)$ as constant functors --- but the
+impossibility of a \emph{compatible scalar action} on $T$, which would negate tangent
+vectors. What survives is the subtraction-free fragment that uses only $+$, $0$, and
+$\N$-scaling. The rig $\N$ is the knife, exactly as it was for uniqueness.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{From a derivative to a differential geometry.}
+Containers \cite{AAGM2003,GambinoKock2013} have a derivative. The one-hole-context
+operation $\partial$ of Abbott, Altenkirch, Ghani and McBride sends a container to the
+container of its one-hole contexts, and it obeys the laws of a derivative: a sum rule, a
+product rule, and a chain rule. Two companion notes make this precise and sharp. The first
+\cite{MacBethTangent} shows that the category $\SPoly$ of finitary polynomial functors is a
+Cartesian differential category whose differential combinator \emph{is} $\partial$, with
+the attached tangent bundle computed by the oldest trick in differential algebra ---
+substitute a dual number and read off the $\varepsilon$-coefficient,
+\[
+   T(p)\ =\ p(y+\varepsilon v)\bmod \varepsilon^2\ =\ p(y)+\varepsilon\, v\cdot\partial p .
+\]
+The second \cite{MacBethUniqueness} shows this tangent structure is essentially forced:
+among representable first-order tangent structures $T=(-)\lhd D$ on \emph{finite-support}
+polynomial functors there are exactly two, the trivial one and $\partial$. Existence and
+uniqueness are banked.
+
+So containers have a canonical first-order differential calculus: directional derivatives,
+a tangent bundle, the chain rule. The obvious next ambition --- the ambition behind this
+whole program --- is the \emph{second}-order and tensorial apparatus of differential
+geometry: differential forms, the exterior derivative $d$, contraction $\iota_X$ with a
+vector field, the Lie derivative $L_X$, and the Chevalley--Eilenberg / Lie--Rinehart
+assembly that packages a tangent structure into a de Rham-like complex. If containers have
+a derivative, do they have a Cartan calculus?
+
+\paragraph{The input the Cartan calculus demands.}
+There is now a clean categorical answer to what that apparatus needs. Aintablian and
+Blohmann \cite{AintablianBlohmann2026} construct the entire Cartan calculus on an arbitrary
+Cartesian tangent category, provided it carries one extra piece of data: a \emph{scalar
+ring object} $R$ --- a commutative ring object acting on each tangent bundle so that the
+bundle becomes an $R$-module internally. From $(R,\kappa)$ they generate $d$, $\iota$, $L$,
+and the Lie--Rinehart algebra of vector fields; their sequel \cite{AintablianBlohmann2026b}
+builds a commutative differential graded algebra of cubical forms on the same input. The
+scalar ring object is the hinge. Everything hangs on whether $\SPoly$ has one.
+
+The decisive structural fact about a scalar ring object is elementary and classical: an
+$R$-module has additive inverses, because multiplying a vector by $-1\in R$ negates it. So
+a scalar ring object forces the tangent bundle to be a bundle of \emph{abelian groups} ---
+it forces the tangent category to be \emph{Rosick\'y}, or \emph{additive with negatives}.
+The whole question collapses to one line:
+
+\begin{center}
+\emph{Do tangent vectors on containers have negatives?}
+\end{center}
+
+\paragraph{The answer, and the result.}
+They do not. A tangent vector on a container is, concretely, an $\N$-valued multiplicity
+attached to each hole --- how many infinitesimal steps to take in each hole-direction ---
+and these multiplicities add in $\N$. There is no subtraction, because there is nothing to
+subtract: positions are elements of a set, and a set has no additive inverses. The tangent
+fiber over a shape with $k$ holes is the free $\N$-module $\N^k$, a commutative monoid in
+which only $0$ is invertible.
+
+\begin{theorem}[Boundary theorem]\label{thm:main-intro}
+The additive bundle of the tangent structure $T=(-)\lhd D$, $D=y+\varepsilon v$, on
+finite-support polynomial functors is a bundle of commutative monoids that does not admit
+fiberwise additive inverses. Consequently $(\SPoly,\partial)$ is not a Rosick\'y tangent
+category and carries no scalar ring object in the sense of
+\cite{AintablianBlohmann2026}; the Aintablian--Blohmann Cartan calculus does not descend to
+$(\SPoly,\partial)$. At most the subtraction-free, $\N$-scalar fragment survives.
+\end{theorem}
+
+\paragraph{Method.}
+The proof has two faces, which settle the same obstruction twice. The airtight one
+(\S\ref{sec:transport}) is a \emph{transport} argument. The counting functor
+$N:\SPoly\to\PolyN$, which replaces each container by the ordinary $\N$-coefficient
+polynomial counting its shapes and positions, is a morphism of Cartesian tangent
+categories \cite{MacBethTangent}. A morphism of tangent categories carries the additive
+bundle --- and hence any candidate negation --- to the target. But in $\PolyN$ a negation
+of the dual-number tangent structure would be an $\N$-coefficient polynomial $g(x,v)$ with
+$v+g(x,v)=0$, forcing $g=-v$, which has a negative coefficient. No such polynomial exists.
+The argument uses only that $N$ \emph{preserves} the finitely many operations in the
+negation axiom, so no exotic negation can escape downward. The concrete face
+(\S\ref{sec:fibers}) computes the tangent fibers directly in the bundle presentation that
+the Cartan program actually consumes, and exhibits the free-$\N$-module obstruction on the
+minimal witnesses $p=y$ (the line) and $p=y^2$.
+
+\paragraph{The honest knife.}
+It would be a mistake to read this as ``$\Poly$ has no ring objects.'' It does: every
+ordinary commutative ring $k$ --- in particular $\Z$ and $\Z/n$ --- sits inside
+$(\Poly,\times)$ as a constant functor, and the constants form a full, product-preserving
+copy of $\CRing$. The obstruction is sharper and more interesting: no ring object can
+\emph{act} on the dual-number tangent bundle $T=(-)\lhd D$ by a scalar multiplication
+compatible with the tangent structure, because any such action would, through
+multiplication by $-1$, negate tangent vectors --- and the fibers admit no negation. The
+knife is the compatible action, not the ring. This is the same subtraction-free knife that
+forced the uniqueness converse to be reproved rig-internally
+\cite{MacBethUniqueness}: \emph{rig-versus-ring is the dividing line}, now as a theorem on
+the differential-geometric side.
+
+\paragraph{Outline.}
+Section~\ref{sec:prelim} fixes the categories, the tangent structure, and the notion of
+scalar ring object. Section~\ref{sec:lemmaA} reproves, from the module axioms, that a
+scalar ring object forces negatives. Section~\ref{sec:transport} proves the main
+obstruction by transport through the counting functor;
+Section~\ref{sec:fibers} exhibits the same obstruction as an explicit fiber computation in
+the Cartan-facing presentation. Section~\ref{sec:consequences} draws the consequences and
+delimits precisely what fails and what survives. Section~\ref{sec:lean} records the scope
+of the machine-checked certification. Section~\ref{sec:conclusion} points to the
+group-completion sequel.
+
+\paragraph{Scope.}
+Everything here is first order, as are $\partial$ itself, the existence and uniqueness
+notes, and the fibrational tangent theory of \cite{CCGZ2024} on which the framing rests.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We recall only what the proof uses.
+
+\paragraph{Containers and polynomial functors.}
+A \emph{container} $S\lhd a$ is a set of \emph{shapes} $S$ together with, for each $s\in
+S$, a \emph{position set} $a_s$; it is \emph{finite-support} (equivalently
+\emph{finitary}) when every $a_s$ is finite. Its extension is the polynomial functor
+\[
+   \sem{S\lhd a}(X)\ =\ \sum_{s\in S} X^{a_s},
+\]
+and only the cardinalities $|a_s|$ matter up to isomorphism. We write $\SPoly$ for the
+category of finitary polynomial functors; $\lhd$ denotes substitution (composition of
+extensions), with unit the identity functor $y$. The AAGM derivative $\partial$ sends
+$S\lhd a$ to the container of one-hole contexts, $\partial\sem{S\lhd a}(X)=\sum_{s}\sum_{h
+\in a_s} X^{a_s\setminus\{h\}}$; on a single shape with $k$ positions,
+$\partial(y^k)=k\,y^{k-1}$, the holes being the $k$ ways to delete a position
+\cite{AAGM2003}.
+
+\paragraph{The dual-number tangent structure.}
+Let $D=y+\varepsilon v$ be the dual-number infinitesimal object, with
+$\varepsilon^2=0$ and infinitesimal part $M=y$. The tangent bundle is substitution into
+$D$,
+\[
+   T(p)\ =\ p\lhd D\ =\ p(y+\varepsilon v)\bmod\varepsilon^2\ =\ p + \varepsilon\, v\cdot
+   \partial p ,
+\]
+with projection $p_{\mathrm{proj}}:Tp\to p$ (set $\varepsilon=0$) and zero section
+$0:p\to Tp$ (set $v=0$) \cite{MacBethTangent}. We use the standard tangent-category
+vocabulary of \cite{CockettCruttwell2014}: the \emph{additive bundle} is the
+commutative-monoid structure on each fiber of $p_{\mathrm{proj}}$, given by a fiberwise
+addition $+:T_2p\to Tp$ (on the pullback $T_2p=Tp\times_p Tp$ of two tangent vectors over a
+common base point) and the zero section. A tangent category is \emph{Rosick\'y}, or
+\emph{additive with negatives}, when each such fiber is an abelian group: there is a bundle
+endomorphism $\sigma:T\Rightarrow T$ over the projection with
+\begin{equation}
+   +\ \circ\ \langle \sigma,\ \id\rangle\ =\ 0\circ p_{\mathrm{proj}}
+   \qquad\text{as maps } T(X)\to T(X). \tag{$\dagger$}\label{eq:neg}
+\end{equation}
+We call such a $\sigma$ a \emph{negation}.
+
+\paragraph{The scalar ring object.}
+We take verbatim the input the Cartan calculus consumes.
+
+\begin{definition}[scalar ring object; {\cite[\S4]{AintablianBlohmann2026}}]
+\label{def:scalar-ring}
+In a Cartesian tangent category $(\mathcal C, T)$, a \emph{scalar ring object} is a
+commutative unital ring object $(R,\hat+,\hat\cdot,\hat 0,\hat 1,\hat-)$ for the Cartesian
+product $\times$, together with a natural \emph{scalar multiplication} $\kappa_X:R\times
+T(X)\to T(X)$ making each additive tangent bundle $p_{\mathrm{proj}}:T(X)\to X$ an
+$R$-module in the slice $\mathcal C/X$: unital and associative over $\hat\cdot$, bilinear
+with respect to $\hat+$ and the tangent addition $+_X$, fiber-preserving
+($p_{\mathrm{proj}}\circ\kappa_X=p_{\mathrm{proj}}\circ\pi_2$), and compatible with the
+vertical lift and the canonical flip. This is the data from which
+\cite{AintablianBlohmann2026} generate $d$, $\iota$, $L$ and the Lie--Rinehart algebra of
+vector fields.
+\end{definition}
+
+We rely on \cite{AintablianBlohmann2026} only for this \emph{definition of the input}; the
+consequence we use (Lemma~\ref{lem:A}) is reproved below.
+
+\paragraph{The counting functor.}
+The counting functor $N:\SPoly\to\PolyN$ sends a container to the $\N$-coefficient
+polynomial that counts its data: $N(\sum_s y^{a_s}) = \sum_s x^{|a_s|}\in\N[x]$, and
+multivariably by counting positions of each colour. Here $\PolyN$ is the Cartesian
+differential (hence tangent) category of polynomials over the rig $\N$ --- objects $\N$,
+morphisms tuples of $\N$-coefficient polynomials, differential the Jacobian directional
+derivative, tangent structure $T(k)=2k$, $T(h)=\langle h\circ\pi_1, D[h]\rangle$. By
+\cite[Lemmas 3--5]{MacBethTangent}, $N$ preserves composition, finite products and
+projections, the left-additive $+$ and $0$, the product of functors, and the differential
+($N\partial=\partial N$); it is therefore a morphism of Cartesian tangent categories in the
+sense of \cite{CockettCruttwell2014}. We will need only the preservation, not the
+faithfulness.
+
+\section{A scalar ring object forces negatives}\label{sec:lemmaA}
+
+The reduction is a single internalised fact from module theory.
+
+\begin{lemma}\label{lem:A}
+If $(R,\kappa)$ is a scalar ring object on a Cartesian tangent category $(\mathcal C,T)$,
+then
+\[
+   \sigma_X\ :=\ \kappa_X\circ\big\langle\, (\hat-\circ\hat1\circ\, !_R),\ \id_{T X}\,\big\rangle
+   \ :\ T(X)\longrightarrow T(X)
+\]
+--- scalar multiplication by $-1:=\hat-\hat1\in R$ --- is a negation. Hence $(\mathcal
+C,T)$ is Rosick\'y.
+\end{lemma}
+
+\begin{proof}
+This is the standard fact that in any module over a ring, multiplication by $-1$ is the
+additive inverse, read internally. By the $R$-module axioms on the bundle
+$p_{\mathrm{proj}}:TX\to X$ --- bilinearity of $\kappa$ over $\hat+$, unitality, and the
+ring unit/zero laws --- for any tangent vector $t$ over a base point $x$,
+\[
+   t\ +_X\ (-1)\cdot t\ =\ 1\cdot t\ +_X\ (-1)\cdot t\ =\ \big(\hat1\,\hat+\,(\hat-\hat1)\big)\cdot t
+   \ =\ \hat0\cdot t\ =\ 0_X(x),
+\]
+using unitality $1\cdot t=t$, bilinearity $(r\hat+s)\cdot t=r\cdot t\ +_X\ s\cdot t$, the
+ring law $\hat1\,\hat+\,(\hat-\hat1)=\hat0$, and $\hat0\cdot t=0_X$. The last equality is
+itself forced by bilinearity: $\hat0\cdot t=(\hat0\,\hat+\,\hat0)\cdot t=\hat0\cdot t\ +_X\
+\hat0\cdot t$, and cancelling (fibers are commutative monoids) gives $\hat0\cdot t=0_X$.
+Naturality of $\kappa$ and the fiber-preservation law $p_{\mathrm{proj}}\circ\kappa_X=
+p_{\mathrm{proj}}\circ\pi_2$ give $p_{\mathrm{proj}}\circ\sigma_X=p_{\mathrm{proj}}$, so
+$\sigma$ is a bundle endomorphism satisfying \eqref{eq:neg}.
+\end{proof}
+
+Lemma~\ref{lem:A} is \cite[Prop.~4.4]{AintablianBlohmann2026} in substance, reproved here
+from the module axioms so that the boundary theorem depends only on the
+\emph{definition} of a scalar ring object, not on trusting any derived statement. Its
+contrapositive is the engine of the paper:
+
+\begin{quote}
+\emph{If some additive-bundle fiber of $(\SPoly,T)$ is a commutative monoid that is not a
+group, then $(\SPoly,T)$ has no scalar ring object, and the Cartan calculus is obstructed
+at its very input.}
+\end{quote}
+
+The whole program thus reduces to one decidable question: \emph{is the additive bundle of
+$T=(-)\lhd D$ a bundle of groups?} The next two sections answer no.
+
+\section{The additive bundle has no fiberwise negation: transport}\label{sec:transport}
+
+We work in the Cartesian-differential presentation of $\SPoly$, where the counting functor
+$N$ is a genuine functor and carries the full tangent structure to $\PolyN$. The slogan:
+\emph{a negation upstairs would push down to a negation in $\PolyN$, and $\PolyN$ has
+none.}
+
+\begin{proposition}\label{prop:transport}
+The container tangent structure $(\SPoly,T)$ admits no negation $\sigma$.
+\end{proposition}
+
+\begin{proof}
+Suppose $\sigma:T\Rightarrow T$ were a negation, i.e.\ a bundle endomorphism satisfying
+\eqref{eq:neg}. Apply $N$. Because $N$ preserves composition, finite products and
+projections, the identity, the zero section, the projection, the additive pullback $T_2$,
+and the fiberwise addition $+$ --- all the operations appearing in \eqref{eq:neg}, and the
+pairing $\langle-,-\rangle$ into $T_2$ is a universal construction from products and the
+projection, which $N$ also preserves --- equation \eqref{eq:neg} is carried to
+\[
+   +\ \circ\ \langle N(\sigma),\ \id\rangle\ =\ 0\circ p_{\mathrm{proj}}
+   \qquad\text{in } \PolyN .
+\]
+Thus $N(\sigma)$ is a negation for the dual-number tangent structure of $\PolyN$.
+
+But $\PolyN$ has none. Take the object $1$; then $T(1)=1\times 1$ has two coordinates
+$(x,v)$, base and tangent, with projection $p_{\mathrm{proj}}=\pi_x$, zero section $x\mapsto
+(x,0)$, and fiberwise addition $(x,v_1,v_2)\mapsto(x,v_1+v_2)$. A bundle endomorphism over
+$p_{\mathrm{proj}}$ is a map $(x,v)\mapsto(x,g(x,v))$ for some $\N$-coefficient polynomial
+$g$ --- morphisms of $\PolyN$ are exactly $\N$-polynomials --- and the negation law
+\eqref{eq:neg} reads
+\[
+   v + g(x,v)\ =\ 0 \qquad\text{identically in } \N[x,v].
+\]
+This forces $g=-v$, which is not an $\N$-polynomial: it has a negative coefficient, and
+already at $v=1$ it demands $g(x,1)=-1$, a value no $\N$-polynomial attains (they are
+nonnegative on $\N$). Contradiction. Hence no negation exists, and the additive bundle
+$p_{\mathrm{proj}}:T\Rightarrow\id$ is a bundle of commutative monoids that are not groups.
+\end{proof}
+
+\begin{remark}[why this cannot be dodged]
+The argument uses only that $N$ \emph{preserves} the finitely many operations occurring in
+\eqref{eq:neg} --- not that it is faithful. Any candidate negation whatsoever, however
+exotic, is transported downward to a negation of $\PolyN$ and killed there. Structurally:
+$\PolyN$ is a left-additive category whose hom-monoids $(\N[x],+)$ are not groups, so it is
+not an additive-with-negatives tangent category; $N$ pushes any negation down, so
+$(\SPoly,T)$ cannot carry one either.
+\end{remark}
+
+\section{The same obstruction in the fibers}\label{sec:fibers}
+
+The Cartan program consumes the tangent bundle in its \emph{bundle} presentation: objects
+are the polynomial functors $p$ themselves --- the ``spaces'' --- and $Tp=p\lhd D$ is the
+tangent bundle of the space $p$, with additive bundle $p_{\mathrm{proj}}:Tp\to p$. The
+obstruction of \S\ref{sec:transport} appears here as an explicit fiber computation on
+small, named spaces. The two presentations share one additive bundle (the dual-number
+$\varepsilon v$-part, with the same coproduct $\N$-module addition), so the verdict is the
+same; the point of this section is to make the free-$\N$-module structure tangible.
+
+For $p=\sum_s y^{a_s}$ the bundle $Tp=p\lhd D = p+\varepsilon v\cdot\partial p$ has base
+part $p$ and tangent part
+\[
+   \varepsilon v\cdot\partial p\ =\ \varepsilon v\cdot\sum_s\sum_{h\in a_s} y^{a_s\setminus\{h\}},
+\]
+one tangent direction per hole $h\in a_s$ over each shape $s$. The additive bundle of $Tp$
+is $p\lhd(\text{additive bundle of }D)$, where $D$ is the commutative-monoid object with
+infinitesimal part $M=y$: the fiberwise addition $+:T_2p\to Tp$ is $p\lhd\nabla$ with
+$\nabla:M\oplus M\to M$ the codiagonal, which collapses two infinitesimal copies
+$\varepsilon v_1,\varepsilon v_2$ to $\varepsilon v$. Iterating $\nabla$ --- the
+$\N$-module structure that every additive bundle carries by repeated fiber addition ---
+makes the tangent data over a shape $s$ the \emph{free $\N$-module on the holes $a_s$}: a
+tangent vector carries an $\N$-multiplicity per hole-direction, added hole by hole in $\N$.
+There is no addition of position-values to appeal to; positions are elements of a set. The
+counting polynomial realises this fiber as $(\N^{|a_s|},+,0)$, in agreement with
+\S\ref{sec:transport}. A negation would make each fiber the free $\Z$-module instead.
+
+\begin{example}[the line $p=y$; minimal witness]
+One shape, one hole; $Ty=y+\varepsilon v=D$, fiber $\N$. The unit tangent $1\in\N$ has no
+additive inverse: $1+c=0$ is unsolvable in $\N$. Already the tangent bundle of the
+\emph{identity functor} has a non-group fiber.
+\end{example}
+
+\begin{example}[the first nonlinear space $p=y^2$]
+$\partial(y^2)=2y$, so $T(y^2)=y^2+\varepsilon v\cdot 2y$; one shape, two holes
+$\{h_1,h_2\}$, fiber $\N^2$. The element $(1,0)$ --- one unit of tangent along $h_1$ --- has
+no inverse in $\N^2$.
+\end{example}
+
+\begin{example}[a mixed space $p=y+y^2$]
+$\partial p=1+2y$. There are two shapes: $s_0$ with no holes (fiber $\N^0=0$, trivially a
+group) and $s_1$ with two holes (fiber $\N^2$). The $s_1$-fiber already fails, so the
+bundle is not a bundle of groups.
+\end{example}
+
+Each fiber is a genuine commutative monoid --- commutative, cancellative, with identity
+$0$ --- but only $0$ is invertible. This is exactly the free $\N$-module structure; a group
+would be the free $\Z$-module, and $\Z$ is one subtraction beyond $\N$.
+
+\section{Consequences: the honest boundary}\label{sec:consequences}
+
+\begin{corollary}[no scalar ring object]\label{cor:no-ring}
+$(\SPoly,\ T=(-)\lhd D)$ carries no scalar ring object in the sense of
+Definition~\ref{def:scalar-ring}.
+\end{corollary}
+
+\begin{proof}
+Such an $R$ would, by Lemma~\ref{lem:A}, make $(\SPoly,T)$ Rosick\'y --- its additive
+bundle a bundle of abelian groups. But that additive bundle has a fiber that is not a
+group: the free $\N$-module $\N^{|a_s|}$ over any shape with a hole
+(\S\ref{sec:fibers}), equivalently the $(\N,+)$ obstruction transported by $N$
+(Proposition~\ref{prop:transport}). Two independent witnesses, one contradiction.
+\end{proof}
+
+\begin{remark}[the precise obstruction --- not ``no ring objects'']
+Ring objects \emph{do} exist in $(\Poly,\times)$. Every ordinary commutative ring $k$ ---
+in particular $\Z$ and $\Z/n$ --- embeds as a constant polynomial functor, and the
+constant functors form a full, finite-product-preserving copy of $\CRing$ inside $\Poly$.
+The obstruction in Corollary~\ref{cor:no-ring} is therefore \emph{not} the absence of a
+ring object. It is that no ring object can \emph{act} on the dual-number tangent bundle
+$T=(-)\lhd D$ by a scalar multiplication $\kappa$ compatible with the tangent structure:
+any such action would, via $\kappa(\hat-\hat1,-)$, negate tangent vectors
+(Lemma~\ref{lem:A}), and the fibers admit no negation
+(Proposition~\ref{prop:transport}). The knife is the compatible action, not the ring.
+\end{remark}
+
+\paragraph{What does not descend.}
+The full Aintablian--Blohmann package built on $(R,\kappa)$ --- the exterior derivative
+$d$, the contraction $\iota_X$, the Lie derivative $L_X$, and the
+Lie--Rinehart / Chevalley--Eilenberg assembly of forms, and a fortiori the cubical-forms
+differential graded algebra of \cite{AintablianBlohmann2026b}, which additionally requires
+$R$ to have no $2$-torsion --- does not descend to $(\SPoly,\partial)$. In particular the
+Chevalley--Eilenberg differential, which needs signs, is the first casualty of the missing
+$-1$.
+
+\paragraph{What survives: the $\N$-scalar fragment.}
+The additive bundle is nonetheless a genuine $\N$-module bundle: the fibers are free
+$\N$-modules on holes, with a canonical $\N$-scaling $c\cdot(-)$ for every $c\in\N$,
+realised by iterating the fiberwise addition. Every operation of the calculus that uses
+only $+$, $0$, and $\N$-scaling --- not $-1$ --- survives on $(\SPoly,\partial)$. Pinning
+down exactly which of $d$ and $\iota$ survive the loss of subtraction is the natural
+follow-up; we flag it rather than claim it.
+
+\paragraph{The grant frame.}
+Existence and uniqueness are banked; this theorem \emph{delimits} the program honestly. The
+differential geometry of containers is a genuine first-order tangent calculus ---
+directional derivatives, a tangent bundle, the chain rule --- but not a full Cartan
+calculus with forms and Lie derivatives. The rig $\N$ blocks the scalar ring. ``Rig-versus
+-ring is the knife,'' already visible in the uniqueness converse
+\cite{MacBethUniqueness}, becomes a theorem on the geometric side: the exact slide after
+uniqueness.
+
+\section{Scope of the certification}\label{sec:lean}
+
+The arithmetic core of the obstruction is machine-checked in Lean~4 (Mathlib-free; axiom
+profile \texttt{[propext, Quot.sound]} only, via \texttt{omega}). The formalised statements
+are: that the negation law $v+g(x,v)=0$ has no solution over the rig $\N$ --- indeed no
+function $\N\times\N\to\N$ solves it, a fortiori no $\N$-polynomial
+(Proposition~\ref{prop:transport}); that the free $\N$-module $\N^k$ ($k\ge1$) admits no
+fiberwise negation, is cancellative, and has only $0$ invertible; and the explicit fiber
+witnesses for $p=y$ and $p=y^2$ (\S\ref{sec:fibers}). An auxiliary Python script checks the
+dual-number identities $Tp=p+\varepsilon v\cdot\partial p$ and
+$N(Tp)=N(p)(x+\varepsilon v)$ on a spread of examples.
+
+We state the scope precisely and without inflation. The Lean development certifies the
+\emph{arithmetic} obstruction --- the non-existence of a negation over $\N$ and the
+free-$\N$-module structure of the fibers. It does \emph{not} formalise Lemma~\ref{lem:A}
+(the module-algebra reduction, which is pen-and-paper) nor the functoriality of the
+counting functor $N$ (established in the existence note, also pen-and-paper). This matches
+the convention of the companion notes, whose finite oracles certify the arithmetic heart of
+each result and leave the categorical scaffolding to prose.
+
+\section{Conclusion and sequel}\label{sec:conclusion}
+
+Containers have a derivative and a first-order tangent calculus, and no more: the dual
+-number tangent bundle has no fiberwise negation, so there is no scalar ring object and the
+Cartan calculus of forms and Lie derivatives does not descend. The single cause is the rig
+$\N$ --- the subtraction-free arithmetic of positions-as-set-elements --- and the honest
+statement is not that containers lack rings but that no ring can act on their tangent
+vectors by a negation-inducing scalar.
+
+This locates the one move that might lift the ceiling. The fibers are free $\N$-modules;
+their obstruction is precisely the obstruction of $\N$ to being a ring, namely the missing
+group completion. Fiberwise group completion $\N\to\Z$ turns each free $\N$-module into a
+free $\Z$-module and each fiber into a group. The question the boundary theorem exposes ---
+and the most interesting one it leaves open --- is whether this completion is
+\emph{categorical}: does group-completing the tangent fibers land in a larger,
+polynomial-like category of \emph{virtual} or $\Z$-containers that \emph{is} Rosick\'y, and
+on which the full Cartan calculus therefore \emph{does} descend? That is the honest route to
+a differential geometry of containers with forms, and it is the subject of the sequel.
+
+The result is unpublished; a precedent to acknowledge is Cockett's 2012 talk
+\cite{Cockett2012}, which first proposed that polynomial functors form a Cartesian
+differential category. We know it only secondhand, through a community relay of the
+unpublished slides, with Cruttwell's caveat that combinatorial species are more naturally a
+tangent \emph{bicategory} than the $1$-categorical $\SPoly$ used here; the two framings must
+not be conflated.
+
+\begin{thebibliography}{9}
+
+\bibitem{AAGM2003}
+M.~Abbott, T.~Altenkirch, N.~Ghani, C.~McBride,
+\emph{Derivatives of containers},
+Typed Lambda Calculi and Applications (TLCA 2003), LNCS 2701, Springer, 2003, 16--30.
+
+\bibitem{AhmanUustalu2016}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98.
+
+\bibitem{AintablianBlohmann2026}
+A.~Aintablian, C.~Blohmann,
+\emph{Cartan calculus in tangent categories},
+preprint, arXiv:2607.11169 (2026).
+
+\bibitem{AintablianBlohmann2026b}
+A.~Aintablian, C.~Blohmann,
+\emph{Cartan calculus of cubical forms in tangent categories},
+preprint, arXiv:2609.05963 (2026).
+
+\bibitem{BCS2009}
+R.~F.~Blute, J.~R.~B.~Cockett, R.~A.~G.~Seely,
+\emph{Cartesian differential categories},
+Theory and Applications of Categories \textbf{22} (2009), no.~23, 622--672.
+
+\bibitem{CCGZ2024}
+M.~Capucci, G.~Cruttwell, N.~Ghani, F.~Zanasi,
+\emph{A fibrational theory of first order differential structures},
+preprint, arXiv:2409.05763 (2024).
+
+\bibitem{Cockett2012}
+J.~R.~B.~Cockett,
+\emph{Can you Differentiate a Polynomial?},
+slides, Foundational Methods in Computer Science (FMCS 2012), unpublished; known to the
+author secondhand via a community relay.
+
+\bibitem{CockettCruttwell2014}
+J.~R.~B.~Cockett, G.~S.~H.~Cruttwell,
+\emph{Differential structure, tangent structure, and SDG},
+Applied Categorical Structures \textbf{22} (2014), no.~2, 331--417.
+
+\bibitem{GambinoKock2013}
+N.~Gambino, J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), no.~1, 153--192.
+
+\bibitem{LanfranchiLemay2025}
+M.~Lanfranchi, J.-S.~P.~Lemay,
+\emph{Representable tangent structures for affine schemes},
+preprint, arXiv:2505.09080 (2025).
+
+\bibitem{MacBethTangent}
+MacBeth,
+\emph{The container derivative is a tangent structure: a fibrational positioning}
+(Kodamai internal note, 2026).
+
+\bibitem{MacBethUniqueness}
+MacBeth,
+\emph{A uniqueness theorem for the container derivative: $\partial$ is the only nontrivial
+representable tangent structure on finite-support polynomial functors}
+(Kodamai internal note, 2026).
+
+\end{thebibliography}
+
+\end{document}

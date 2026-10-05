@@ -1,0 +1,77 @@
+{
+  "conjecture": "The additive bundle of the tangent structure T=(−)◁D (D=y+εv) on FINITE-support polynomial functors is a bundle of commutative MONOIDS that does NOT admit fiberwise additive inverses. Hence SPoly/∂ is NOT a Rosický tangent category and carries NO scalar ring object R in the sense of Aintablian–Blohmann (arXiv:2607.11169): the full Cartan calculus (exterior d, inner derivative ι, Lie derivative L, Lie–Rinehart/Chevalley–Eilenberg assembly) does NOT descend to SPoly/∂; at most a rig-scalar (ℕ-module) fragment survives. Obstruction = the rig ℕ (no subtraction); the SAME subtraction-free knife as the uniqueness converse. This is the forward DELIMITATION unlocked by the (proved) existence+uniqueness of ∂.",
+  "status": "proved",
+  "date_opened": "2026-10-04",
+  "date_closed": "2026-10-04",
+  "tree": {
+    "id": "spoly-no-scalar-ring-object",
+    "approach": "Reduce (Lemma A) 'scalar ring object ⟹ Rosický (fiberwise negation)'; then PROVE no negation on (SPoly,T) by transporting any candidate negation through the structure-preserving counting functor N:SPoly→Poly_ℕ to a negation of the dual-number tangent of Poly_ℕ, which cannot exist (v+g(x,v)=0 has no ℕ-polynomial solution; g=−v has a negative coefficient). Corollary: no scalar ring object; precise delimitation = no ring object can ACT compatibly (ring objects ℤ,ℤ/n DO exist in (Poly,×) as constant functors), the knife is the compatible κ-action, not the ring. Only uses that N PRESERVES the ops in the negation axiom (NOT faithfulness).",
+    "trust": "proved",
+    "file": "2026-10-05-spoly-negation-obstruction.md",
+    "sources": [
+      "2607.11169",
+      "2609.05963"
+    ],
+    "children": [
+      {
+        "id": "scalar-ring-forces-negation",
+        "role": "premise",
+        "approach": "Lemma A: a scalar ring object (R,κ) forces a Rosický negation σ_X = κ(−̂1̂,−): in any R-module, mult by −1 is the additive inverse — t + (−1)·t = (1̂+̂(−̂1̂))·t = 0̂·t = 0, using unitality, bilinearity of κ over +̂, and 0̂·t=0. Internalised in the tangent category. This is AB Prop ~4.4 REPROVED here from the module axioms, so the result does NOT depend on trusting their statement — only on their DEFINITION of the scalar-ring-object input.",
+        "trust": "proved",
+        "file": "2026-10-05-spoly-negation-obstruction.md",
+        "sources": [
+          "2607.11169"
+        ],
+        "children": []
+      },
+      {
+        "id": "no-negation-counting-transport",
+        "role": "premise",
+        "approach": "Proposition 1 (proved in the CDC presentation C1, objects ℕ, T(n)=2n, where the counting functor N:SPoly→Poly_ℕ is a GENUINE functor): no negation σ exists. N is a morphism of Cartesian tangent categories (existence-note Lemmas 3–5: preserves composition/products/+/0/×/∂), so it carries p,0,T₂,+ and any negation to Poly_ℕ. A negation σ satisfying +∘⟨σ,id⟩=0∘p maps under N to a negation N(σ) of the tangent structure of Poly_ℕ; but on object 1, T(1)=1×1 vars (x,v), a bundle endo (x,v)↦(x,g(x,v)) has negation-axiom v+g=0 forcing g=−v, not an ℕ-polynomial (negative coeff; value −1 at v=1 unreachable). Contradiction. Uses ONLY preservation of the finitely many ops in the axiom, NOT faithfulness. [The Cartan-relevant tangent-bundle presentation C2 (objects=poly functors, Tp=p◁D) shares the SAME additive bundle (dual-number εv-part, ℕ-module/coproduct addition), so the verdict transfers; §2.2 confirms it C2-natively.]",
+        "trust": "proved",
+        "file": "2026-10-05-spoly-negation-obstruction.md",
+        "children": [
+          {
+            "id": "counting-preserves-tangent",
+            "role": "premise",
+            "approach": "N:SPoly→Poly_ℕ preserves the full CDC/tangent structure (composition, products/projections, left-additive +/0, products of functors ·, derivative N∂=∂N) and is faithful — established and proved in the existence note (Lemmas 3–5). A CDC/tangent functor sends the additive bundle (p,0,+,T₂) and hence any negation to the corresponding data. Here we need only PRESERVATION.",
+            "trust": "proved",
+            "file": "2026-10-02-tangent-container-cdc.md",
+            "children": []
+          },
+          {
+            "id": "polyN-no-negation-rig",
+            "role": "premise",
+            "approach": "The dual-number tangent structure on Poly_ℕ has no negation: a bundle endo over p=π_x on object 1 is an ℕ-polynomial g(x,v), and the negation law v+g=0 is unsolvable over the rig ℕ (g=−v has a negative coefficient; g(x,1)=−1 unreachable by ℕ-polynomials, which are ≥0 on ℕ). Poly_ℕ is a left-additive category whose hom-monoids (ℕ[x],+) are not groups ⟹ not an additive-with-negatives (Rosický) tangent category. Verified scratch/cartan_negation_verify.py (c).",
+            "trust": "lean-verified",
+            "file": "2026-10-05-spoly-negation-obstruction.md",
+            "children": [],
+            "lean": "lean/2026-10-05-spoly-negation-obstruction.lean :: SPolyNegationObstruction.no_poly_negation (+ no_function_negation) — the negation law v+g(x,v)=0 is unsolvable over the rig ℕ: no bivariate ℕ-polynomial (indeed no function ℕ×ℕ→ℕ) satisfies it. ARITHMETIC core only; the N-transport/functoriality is not formalised. [propext, Quot.sound] via omega."
+          },
+          {
+            "id": "explicit-fiber-witnesses",
+            "role": "attempt",
+            "approach": "C2-native fiber computation (PROVE.md witnesses) — INDEPENDENTLY settles the Cartan case: in the tangent-bundle presentation C2 the additive bundle of Tp=p◁D is p◁(additive bundle of D); fiber addition = p◁∇ (∇:M⊕M→M codiagonal on the infinitesimal part M=y); iterating ∇ makes the fiber over a shape s the FREE ℕ-module on holes a_s (ℕ-multiplicity per hole, added in ℕ — NO addition of Set-values). MINIMAL witness p=y (line): Ty=D, fiber ℕ, unit 1 has no inverse. p=y²: ∂(y²)=2y, fiber ℕ², element (1,0) no inverse. p=y+y²: s₁-fiber ℕ² fails. Each fiber commutative + cancellative, only 0 invertible = free ℕ-module (a group would be the free ℤ-module). This alone gives the Corollary for C2 (Lemma A + non-group fiber); §2.1/N is the second independent witness. scratch/cartan_negation_verify.py (a),(b),(d).",
+            "trust": "lean-verified",
+            "file": "2026-10-05-spoly-negation-obstruction.md",
+            "children": [],
+            "lean": "lean/2026-10-05-spoly-negation-obstruction.lean :: SPolyNegationObstruction.no_negation_free_module (Fin k→ℕ, k≥1), fiber_line_not_group (p=y, fiber ℕ), fiber_y2_not_group (p=y², fiber ℕ²), fiber_line_cancellative, fiber_line_only_zero_invertible — the additive-bundle fibers are free ℕ-modules: cancellative commutative monoids, only 0 invertible, so not groups. ARITHMETIC core only. [propext, Quot.sound] via omega."
+          }
+        ]
+      },
+      {
+        "id": "no-compatible-action-delimitation",
+        "role": "premise",
+        "approach": "Corollary + honest delimitation: no scalar ring object on (SPoly,T) (else Lemma A ⟹ Rosický ⟹ contra Prop 1). The obstruction is NOT absence of ring objects — constant functors give genuine commutative ring objects ℤ,ℤ/n in (Poly,×) — but the impossibility of a COMPATIBLE κ-action on T=(−)◁D, which would negate tangent vectors. Hence full Cartan calculus (d,ι,L, Lie–Rinehart/CE; cubical CDGA 2609.05963 also needs no 2-torsion) does NOT descend; the rig-scalar (ℕ-module) fragment DOES: fibers are free ℕ-modules with ℕ-scaling c·(−) for all c∈ℕ.",
+        "trust": "proved",
+        "file": "2026-10-05-spoly-negation-obstruction.md",
+        "sources": [
+          "2607.11169",
+          "2609.05963"
+        ],
+        "children": []
+      }
+    ]
+  },
+  "lean_note": "Arithmetic core lean-verified in lean/2026-10-05-spoly-negation-obstruction.lean (packaged: SPolyNegationObstruction.spoly_negation_obstruction). Covers leaves polyN-no-negation-rig and explicit-fiber-witnesses. Root stays 'proved': Lemma A (scalar ring object ⟹ negation, module algebra) and N-structure-preservation are NOT formalised — this oracle certifies the rig obstruction, not the functorial descent, matching the sibling finite oracles."
+}
