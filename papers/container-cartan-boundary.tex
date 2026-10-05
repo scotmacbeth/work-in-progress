@@ -48,7 +48,7 @@ differential geometry built on top: the Aintablian--Blohmann program generates t
 Cartan calculus --- exterior derivative, contraction, Lie derivative, and the
 Lie--Rinehart assembly of forms --- from a tangent category equipped with a \emph{scalar
 ring object}. We show this step fails for containers, and locate exactly why. The additive
-bundle of the dual-number tangent structure $T=(-)\lhd D$ is a bundle of commutative
+bundle of the dual-number tangent structure $T=(-)\otimes W$ is a bundle of commutative
 monoids whose fibers are free $\N$-modules on holes; they have no additive inverses. Hence
 $(\SPoly,\partial)$ is not a Rosick\'y tangent category and carries no scalar ring object,
 and the full Cartan calculus does not descend. The obstruction is not an absence of ring
@@ -73,7 +73,7 @@ substitute a dual number and read off the $\varepsilon$-coefficient,
    T(p)\ =\ p(y+\varepsilon v)\bmod \varepsilon^2\ =\ p(y)+\varepsilon\, v\cdot\partial p .
 \]
 The second \cite{MacBethUniqueness} shows this tangent structure is essentially forced:
-among representable first-order tangent structures $T=(-)\lhd D$ on \emph{finite-support}
+among representable first-order tangent structures $T=(-)\otimes W$ on \emph{finite-support}
 polynomial functors there are exactly two, the trivial one and $\partial$. Existence and
 uniqueness are banked.
 
@@ -114,7 +114,7 @@ fiber over a shape with $k$ holes is the free $\N$-module $\N^k$, a commutative 
 which only $0$ is invertible.
 
 \begin{theorem}[Boundary theorem]\label{thm:main-intro}
-The additive bundle of the tangent structure $T=(-)\lhd D$, $D=y+\varepsilon v$, on
+The additive bundle of the tangent structure $T=(-)\otimes W$, $W=\N[\varepsilon]/\varepsilon^2$, on
 finite-support polynomial functors is a bundle of commutative monoids that does not admit
 fiberwise additive inverses. Consequently $(\SPoly,\partial)$ is not a Rosick\'y tangent
 category and carries no scalar ring object in the sense of
@@ -142,7 +142,7 @@ It would be a mistake to read this as ``$\Poly$ has no ring objects.'' It does: 
 ordinary commutative ring $k$ --- in particular $\Z$ and $\Z/n$ --- sits inside
 $(\Poly,\times)$ as a constant functor, and the constants form a full, product-preserving
 copy of $\CRing$. The obstruction is sharper and more interesting: no ring object can
-\emph{act} on the dual-number tangent bundle $T=(-)\lhd D$ by a scalar multiplication
+\emph{act} on the dual-number tangent bundle $T=(-)\otimes W$ by a scalar multiplication
 compatible with the tangent structure, because any such action would, through
 multiplication by $-1$, negate tangent vectors --- and the fibers admit no negation. The
 knife is the compatible action, not the ring. This is the same subtraction-free knife that
@@ -185,14 +185,17 @@ $\partial(y^k)=k\,y^{k-1}$, the holes being the $k$ ways to delete a position
 \cite{AAGM2003}.
 
 \paragraph{The dual-number tangent structure.}
-Let $D=y+\varepsilon v$ be the dual-number infinitesimal object, with
-$\varepsilon^2=0$ and infinitesimal part $M=y$. The tangent bundle is substitution into
-$D$,
+Let $W=\N[\varepsilon]/\varepsilon^2=y\oplus\langle\varepsilon v\rangle$ be the dual-number Weil
+algebra, with $\varepsilon^2=0$ and infinitesimal part $M=y$. The tangent bundle is \emph{base
+change} by $W$,
 \[
-   T(p)\ =\ p\lhd D\ =\ p(y+\varepsilon v)\bmod\varepsilon^2\ =\ p + \varepsilon\, v\cdot
+   T(p)\ =\ p\otimes W\ =\ p(y+\varepsilon v)\bmod\varepsilon^2\ =\ p + \varepsilon\, v\cdot
    \partial p ,
 \]
-with projection $p_{\mathrm{proj}}:Tp\to p$ (set $\varepsilon=0$) and zero section
+the $\varepsilon^2=0$ truncation being carried by $W$, not by substitution: on a non-linear $p$ this
+is \emph{not} $p\lhd W$ (already $y^2\lhd W=(2y)^2=4y^2\neq 3y^2$), the two agreeing only on the
+linear layer where the additive bundle below lives \cite{MacBethUniqueness}. With
+projection $p_{\mathrm{proj}}:Tp\to p$ (set $\varepsilon=0$) and zero section
 $0:p\to Tp$ (set $v=0$) \cite{MacBethTangent}. We use the standard tangent-category
 vocabulary of \cite{CockettCruttwell2014}: the \emph{additive bundle} is the
 commutative-monoid structure on each fiber of $p_{\mathrm{proj}}$, given by a fiberwise
@@ -284,7 +287,7 @@ at its very input.}
 \end{quote}
 
 The whole program thus reduces to one decidable question: \emph{is the additive bundle of
-$T=(-)\lhd D$ a bundle of groups?} The next two sections answer no.
+$T=(-)\otimes W$ a bundle of groups?} The next two sections answer no.
 
 \section{The additive bundle has no fiberwise negation: transport}\label{sec:transport}
 
@@ -337,14 +340,14 @@ $(\SPoly,T)$ cannot carry one either.
 \section{The same obstruction in the fibers}\label{sec:fibers}
 
 The Cartan program consumes the tangent bundle in its \emph{bundle} presentation: objects
-are the polynomial functors $p$ themselves --- the ``spaces'' --- and $Tp=p\lhd D$ is the
+are the polynomial functors $p$ themselves --- the ``spaces'' --- and $Tp=p\otimes W$ is the
 tangent bundle of the space $p$, with additive bundle $p_{\mathrm{proj}}:Tp\to p$. The
 obstruction of \S\ref{sec:transport} appears here as an explicit fiber computation on
 small, named spaces. The two presentations share one additive bundle (the dual-number
 $\varepsilon v$-part, with the same coproduct $\N$-module addition), so the verdict is the
 same; the point of this section is to make the free-$\N$-module structure tangible.
 
-For $p=\sum_s y^{a_s}$ the bundle $Tp=p\lhd D = p+\varepsilon v\cdot\partial p$ has base
+For $p=\sum_s y^{a_s}$ the bundle $Tp=p\otimes W = p+\varepsilon v\cdot\partial p$ has base
 part $p$ and tangent part
 \[
    \varepsilon v\cdot\partial p\ =\ \varepsilon v\cdot\sum_s\sum_{h\in a_s} y^{a_s\setminus\{h\}},
@@ -386,7 +389,7 @@ would be the free $\Z$-module, and $\Z$ is one subtraction beyond $\N$.
 \section{Consequences: the honest boundary}\label{sec:consequences}
 
 \begin{corollary}[no scalar ring object]\label{cor:no-ring}
-$(\SPoly,\ T=(-)\lhd D)$ carries no scalar ring object in the sense of
+$(\SPoly,\ T=(-)\otimes W)$ carries no scalar ring object in the sense of
 Definition~\ref{def:scalar-ring}.
 \end{corollary}
 
@@ -404,7 +407,7 @@ in particular $\Z$ and $\Z/n$ --- embeds as a constant polynomial functor, and t
 constant functors form a full, finite-product-preserving copy of $\CRing$ inside $\Poly$.
 The obstruction in Corollary~\ref{cor:no-ring} is therefore \emph{not} the absence of a
 ring object. It is that no ring object can \emph{act} on the dual-number tangent bundle
-$T=(-)\lhd D$ by a scalar multiplication $\kappa$ compatible with the tangent structure:
+$T=(-)\otimes W$ by a scalar multiplication $\kappa$ compatible with the tangent structure:
 any such action would, via $\kappa(\hat-\hat1,-)$, negate tangent vectors
 (Lemma~\ref{lem:A}), and the fibers admit no negation
 (Proposition~\ref{prop:transport}). The knife is the compatible action, not the ring.
