@@ -1,0 +1,557 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Ab}{\mathsf{Ab}}
+\newcommand{\Sc}{\mathcal{S}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\Oc}{\mathcal{O}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\cod}{\mathrm{cod}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\bowtiemap}{\bowtie}
+
+\title{Supply-chain inventory consistency is a degree-one class\\
+\large and is independent of the Zappa--Sz\'ep weld obstruction}
+\author{MacBeth\thanks{Kodamai. Source proof, verification scripts, and this note live at
+\texttt{github.com/scotmacbeth/work-in-progress}. Prepared for the Kodamai AI-Mathematician
+grant (Applications pillar) and the Strathclyde mini-course \emph{Tangent Categories and
+Containers} (13--16 October 2026).}\\
+\small Kodamai}
+\date{6 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A supply chain, abstracted to a small category, composes with a second chain sharing a
+warehouse as a Zappa--Sz\'ep product $\Sc=\C\bowtiemap\D$, whose existence is obstructed by a
+degree-two class $[\omega]\in H^2(\Sk_\Sc;\D)$. It is tempting --- and, for blockchain
+re-entrancy, correct --- to identify ``inventory is inconsistent between two routes'' with
+``$[\omega]\neq0$''. We show this identification fails for supply chains, in both directions.
+Writing the inventory as a resource presheaf $R$ on $\Sc$, we prove that the matched-pair law
+of the Zappa--Sz\'ep product is invisible to global sections of $R$ (Lemma~\ref{lem:nolambda}),
+so inventory consistency is cut out entirely by the two factors and is the vanishing of a
+\emph{degree-one} class $[\theta_R]\in H^1(\Sc;R)$ --- the route-reconvergence discrepancy
+(Theorem~\ref{thm:degree1}). This class is logically independent of $[\omega]$: they live in
+different degrees over different coefficient systems, and we exhibit explicit chains realizing
+each of $([\omega]=0,[\theta_R]\neq0)$ and $([\omega]\neq0,[\theta_R]=0)$
+(Theorem~\ref{thm:separation}). The conjecture was a false generalization of re-entrancy, where
+the inventory \emph{is} the weld-state and no separate resource presheaf exists. The payoff is a
+classification of compositional failure by cohomological degree: the degree records where the
+conserved quantity lives --- on the nodes ($H^1$, route discrepancy) or in the weld ($H^2$,
+handoff order).
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Composition is where correctness is won or lost. When two procurement flows merge at a shared
+warehouse, when two smart contracts interleave at a shared ledger, or when two delivery routes
+reconverge on the same stock-keeping unit, the question is always the same: do the local data
+glue to a single consistent global state? When they do not, the failure has an economic price
+--- a double-spend, a phantom inventory, a reconciliation that never closes. A compositional
+theory earns its keep when it tells you \emph{which} failures can occur and \emph{where} they
+live.
+
+The categorical model is by now standard. A supply chain, with nodes as objects and admissible
+logistics operations as morphisms, is a small category; equivalently, by Ahman and Uustalu
+\cite{au-dccat}, a \emph{directed container}. Composing two chains that share a set of
+warehouses --- procurement $\C$ followed by logistics $\D$ --- amounts to forming a
+\emph{Zappa--Sz\'ep product} $\Sc=\C\bowtiemap\D$, a strict factorization in which every
+operation of $\Sc$ decomposes uniquely as a procurement step followed by a logistics step
+\cite{au-distlaw,rw}. Such a factorization need not exist; its existence is governed by a
+cohomological obstruction $[\omega]\in H^2(\Sk_\Sc;\D)$ in the sense of
+Baues--Wirsching \cite{bw}, which vanishes exactly when the composite chain closes into the
+claimed product \cite{gobstr}. In blockchain re-entrancy the same degree-two class, specialized
+to $\Z/2$, \emph{is} the double-spend bit: $[\omega]=\varepsilon$, a fact we have verified in
+Lean \cite{orch}.
+
+This invites a conjecture, and it is the conjecture we test.
+
+\begin{quote}
+\textbf{(C)} Global inventory is consistent --- the resource data glue to a route-independent
+stock over the whole chain --- if and only if the Zappa--Sz\'ep weld obstruction
+$[\omega]\in H^2(\Sk_\Sc;\D)$ vanishes.
+\end{quote}
+
+\noindent It is a reasonable conjecture. It reads inventory inconsistency as a failure of the
+chain to compose, and it is exactly what re-entrancy would lead you to expect. But it conflates
+two things that a careful bookkeeping keeps apart: \emph{whether the chain factors at all} and
+\emph{whether, given the operations, stock reconciles across routes}. No one had written down
+the resource data as an explicit presheaf and compared its gluing obstruction to $[\omega]$.
+When one does, the conjecture collapses.
+
+\paragraph{Results.} We model inventory as a resource presheaf $R\colon\Sc^{\mathrm{op}}\to\Ab$
+-- a local system of stock-groups transported along operations -- and define inventory
+consistency as the existence of a global section. Three results follow.
+
+\begin{itemize}
+\item \textbf{The weld is invisible to inventory} (Lemma~\ref{lem:nolambda}). A family of local
+stock values is a global section of $R$ over $\Sc=\C\bowtiemap\D$ if and only if it is
+compatible with every $\C$-operation and every $\D$-operation; the matched-pair law
+$\lambda$ that defines the Zappa--Sz\'ep product plays no role. Inventory consistency is the
+degree-one amalgamation problem for the cover $\{\C,\D\}$ and nothing more.
+
+\item \textbf{Inventory consistency is a degree-one class} (Theorem~\ref{thm:degree1}). Global
+inventory is consistent if and only if a degree-one class $[\theta_R]\in H^1(\Sc;R)$ vanishes.
+When the two factors are acyclic, Mayer--Vietoris identifies this class with the
+\emph{reconvergence discrepancy}: the failure of the node-potentials determined on each factor
+to agree on the shared warehouses.
+
+\item \textbf{The two classes are independent} (Theorem~\ref{thm:separation}). Both
+$([\omega]=0,\ [\theta_R]\neq0)$ and $([\omega]\neq0,\ [\theta_R]=0)$ occur. Hence neither
+implication of (C) holds. The classes live in different degrees over different coefficient
+systems ($R$ versus $\D$), so there is no natural map identifying them.
+\end{itemize}
+
+\paragraph{Why it looked true, and why there is no rescue.} Re-entrancy is the degenerate case
+in which the conserved quantity \emph{is} the weld-state --- the composite protocol's own state,
+living inside the matched pair --- so there is no separate resource presheaf and $[\omega]$ is
+the whole story. Conjecture (C) silently imports this identification into supply chains, where
+stock lives on the \emph{nodes} and is a genuinely separate degree-one datum
+(Proposition~\ref{prop:norescue}). This also reconciles an earlier worked example
+(\S\ref{sec:reconcile}): the family $W_{n,\varepsilon}$ that computes $[\omega]=\varepsilon$
+measures a loop built from \emph{parallel} arrows, which closes inside a single hom-set and is
+genuinely a weld phenomenon --- a correct computation of the \emph{other} class.
+
+\paragraph{The payoff.} The honest result is more useful than (C) would have been. It
+classifies compositional failure by cohomological degree, keyed to the locus of the conserved
+quantity (\S\ref{sec:conclusion}): stock on the nodes gives an $H^1$ route discrepancy
+(supply-chain inventory), a conserved quantity in the weld gives an $H^2$ handoff obstruction
+(re-entrancy), and the factorization itself existing is a third $H^2$ condition. Two distinct
+economic failure modes, cleanly separated by degree.
+
+\paragraph{Outline.} Section~\ref{sec:prelim} recalls directed containers, the Zappa--Sz\'ep
+weld obstruction, and the resource presheaf, and fixes the one modelling choice the argument
+depends on. Section~\ref{sec:lemma} proves that the matched-pair law is invisible to inventory.
+Section~\ref{sec:degree1} establishes the degree-one characterization and its closed form.
+Section~\ref{sec:separation} proves independence. Section~\ref{sec:reconcile} explains the
+provenance of (C) and reconciles the earlier model. Section~\ref{sec:conclusion} states the
+degree classification and the open boundary.
+
+\paragraph{Scope.} We fix an abstraction --- supply chain as free category on an operation
+quiver, modulo imposed welds --- and analyze it honestly; we do not claim it is the unique
+faithful model of any particular logistics system. Everything below is about that abstraction.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We work with small categories and their cohomology. We recall only what the proofs use.
+
+\subsection{Supply chains as directed containers}
+
+A \emph{directed container} is a container equipped with the structure making its extension a
+comonad; by Ahman and Uustalu \cite{au-dccat} directed containers are precisely small
+categories. We use the category presentation throughout: a supply chain is a small category
+$\Sc$ whose objects are nodes (warehouses, plants, retailers), whose morphisms out of a node
+$a$ are the admissible logistics operations starting at $a$, and whose composition is
+sequencing of operations. We write $\Sk_\Sc$ for the skeleton (one object per isomorphism
+class), on which the cohomology of \S\ref{sec:prelim-weld} is computed.
+
+\paragraph{Modelling choice (essential).} We model a supply chain as the \emph{free category on
+its operation quiver}, modulo only the welds we explicitly impose. In particular two routes
+$a\to d$ through distinct intermediate nodes are \emph{distinct morphisms} unless a relation
+forces them equal. This is the honest object: a chain in which reconvergent routes carry
+possibly different cost/stock transforms. A thin poset, by contrast, forces $rp=sq$ and makes
+route discrepancy invisible by fiat; that is not a supply chain but the assertion that all
+routes are already reconciled. The distinction is load-bearing: witness W1 of
+Theorem~\ref{thm:separation} depends on distinct routes being distinct morphisms.
+
+\subsection{The Zappa--Sz\'ep product and its weld obstruction}\label{sec:prelim-weld}
+
+A \emph{Zappa--Sz\'ep product} (strict factorization) $\Sc=\C\bowtiemap\D$ consists of wide
+subcategories $\C,\D\subseteq\Sc$ with $\C\cap\D=\Oc$ the discrete category on the shared object
+set, such that every morphism of $\Sc$ factors \emph{uniquely} as $f=c\cdot d$ with $c\in\C$,
+$d\in\D$. The product is governed by a matched-pair law, the distributive rewriting
+$\lambda\colon\D\C\Rightarrow\C\D$, $d\cdot c=(c\triangleright d)\cdot(c\triangleleft d)$,
+in the sense of Rosebrugh--Wood \cite{rw}; for directed containers this is the distributive law
+of Ahman and Uustalu \cite{au-distlaw}.
+
+Such a factorization need not exist. By \cite{pairwise}, $\Sc=\C\bowtiemap\D$ exists over a
+chosen wide $\D$ iff a freeness condition (L) and a global-closure condition (G) hold; and by
+\cite{gobstr}, under the abelian regime (H) the defect of (G) is a normalized Baues--Wirsching
+2-cocycle $\omega_T$ on $\Sk_\C$ with coefficients in the vertex-group presheaf
+$\D\colon\Sk_\C^{\mathrm{op}}\to\Ab$, so that
+\[
+  \text{(G) holds}\quad\Longleftrightarrow\quad [\omega]=0\in H^2(\Sk_\Sc;\D).
+\]
+Three features of $[\omega]$ matter below: it depends only on the category $\Sc$ and the chosen
+right factor $\D$ (no resource data enter its definition); its coefficient system is $\D$, the
+vertex groups of the invertible/weld part; and it is a \emph{degree-two} class.
+
+\subsection{Inventory as a resource presheaf}
+
+Inventory is data carried \emph{on top of} the category: a presheaf
+$R\colon\Sc^{\mathrm{op}}\to\Ab$, where $R(a)$ is the group of stock configurations at node $a$
+and $R(f)\colon R(\cod f)\to R(\dom f)$ transports stock back along the operation $f$. This is a
+section of the container-logic fibration $\mathrm{Cont}(\cod)=\mathrm{Fam}(\cod^{\mathrm{op}})$
+\cite{coflog}: fibrewise, a choice of stock object and its reindexing along operations.
+
+\begin{definition}[inventory consistency]\label{def:consistency}
+A \emph{global section} of $R$ is a family $(x_a\in R(a))_{a\in\Ob\Sc}$ with
+$R(f)(x_{\cod f})=x_{\dom f}$ for every morphism $f$. Inventory $R$ is \emph{globally
+consistent} iff it admits a global section --- a route-independent assignment of stock to every
+node, compatible with every operation.
+\end{definition}
+
+We single out the case that models physical stock transport: a \emph{transport local system}
+is an $R$ in which each $R(f)$ is translation by an element $\delta_f\in A$ of a fixed abelian
+group $A$ (so $R(a)=A$ for all $a$, and $\delta$ is additive along composites). Then a global
+section is a node-potential $\varphi\colon\Ob\Sc\to A$ with
+$\delta_f=\varphi(\cod f)-\varphi(\dom f)$ for every $f$; that is, the 1-cochain $\delta$ is a
+coboundary. Its obstruction is the class
+\[
+  [\theta_R]\ :=\ [\delta]\ \in\ H^1(\Sc;R).
+\]
+Contrast with $[\omega]$: $[\theta_R]$ depends on the resource presheaf $R$, not on how $\Sc$
+factors; its coefficient system is $R$ (stock groups), not $\D$; and it is a \emph{degree-one}
+class.
+
+\section{The matched-pair law is invisible to inventory}\label{sec:lemma}
+
+The first observation is that the entire Zappa--Sz\'ep structure --- the law $\lambda$ that
+makes $\C\bowtiemap\D$ more than a disjoint union --- contributes nothing to the inventory
+gluing problem.
+
+\begin{lemma}[no-$\lambda$-correction]\label{lem:nolambda}
+Let $\Sc=\C\bowtiemap\D$ and let $R\colon\Sc^{\mathrm{op}}\to\Set$ be any presheaf. A family
+$(x_a)_{a\in\Ob\Sc}$ is a global section of $R$ over $\Sc$ if and only if it is compatible with
+every $\C$-morphism and every $\D$-morphism. The matched-pair law $\lambda$ plays no role.
+\end{lemma}
+
+\begin{proof}
+($\Rightarrow$) Immediate: $\C$- and $\D$-morphisms are morphisms of $\Sc$.
+
+($\Leftarrow$) Compatibility of a family with a morphism is closed under composition. If
+$R(g)(x_{\cod g})=x_{\dom g}$ and $R(h)(x_{\cod h})=x_{\dom h}$ with $\cod h=\dom g$, then by
+functoriality
+\[
+  R(g\circ h)(x_{\cod g})=R(h)\bigl(R(g)(x_{\cod g})\bigr)
+  =R(h)(x_{\dom g})=R(h)(x_{\cod h})=x_{\dom h}.
+\]
+Since every morphism of $\Sc$ is a word in $\C$- and $\D$-arrows --- indeed $f=c\cdot d$ by the
+factorization --- a family compatible with all $\C$- and $\D$-generators is compatible with all
+morphisms. The rewriting $\lambda$ converts $\D\C$-words to $\C\D$-words but never changes the
+\emph{morphism} it names, hence never changes the compatibility constraint.
+\end{proof}
+
+\begin{remark}
+The point is not that $\lambda$ is trivial --- it is generally nontrivial, and it is exactly
+what $[\omega]$ measures --- but that it is inert \emph{on sections}. The weld rearranges how a
+morphism is presented; a presheaf only sees the morphism. This is why no amount of weld
+structure can inject content into the inventory gluing problem, as long as $\Sc$ is a
+well-defined category at all.
+\end{remark}
+
+\begin{remark}[verification]
+Lemma~\ref{lem:nolambda} was brute-checked on a genuinely nontrivial Zappa--Sz\'ep product ---
+the flip matched pair on two objects, $t_1\cdot c=c\cdot t_0$ with $\lambda\neq\id$ --- over all
+functorial $R$ valued in $\Z/3$: the global sections equalled the $\{\C,\D\}$-generator-%
+compatible families, in every case (\texttt{scratch/zs\_presheaf\_sections.py}).
+\end{remark}
+
+\noindent\textbf{Consequence.} The set of consistent inventories is cut out entirely by the
+$\C$- and $\D$-constraints. Inventory consistency is exactly the degree-one amalgamation problem
+for the cover $\{\C,\D\}$ --- which is what the next section computes.
+
+\section{Inventory consistency is a degree-one class}\label{sec:degree1}
+
+\begin{theorem}\label{thm:degree1}
+Let $\Sc=\C\bowtiemap\D$ (so the decomposition exists, $[\omega]=0$) and let $R$ be a transport
+local system of abelian stock-groups. Then global inventory is consistent if and only if
+$[\theta_R]=0\in H^1(\Sc;R)$. If moreover the factors are acyclic ---
+$H^1(\C;R)=H^1(\D;R)=0$, the ``tree-like'' procurement and delivery case --- then
+Mayer--Vietoris for the cover $\{\C,\D\}$ gives the closed form
+\[
+  H^1(\Sc;R)\ \cong\ \operatorname{coker}\!\bigl[\,H^0(\C;R)\oplus H^0(\D;R)\ \to\ H^0(\Oc;R)\,\bigr],
+\]
+so the obstruction is exactly the \emph{reconvergence discrepancy}: the failure of the
+node-potentials determined on each factor to agree on the shared nodes.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:nolambda} a global section is a family satisfying the $\C$- and
+$\D$-constraints. For a transport local system this says precisely that there is a
+node-potential $\varphi$ with $\delta=d^0\varphi$, i.e.\ the 1-cochain $\delta$ is a coboundary,
+i.e.\ $[\theta_R]=[\delta]=0$ in $H^1(\Sc;R)$. This equivalence uses only Lemma~\ref{lem:nolambda}
+and is unconditional on the factors.
+
+For the closed form: the cover $\{\C,\D\}$ with discrete overlap $\Oc$ presents $\Sc$ as a
+pushout of categories glued along $\Oc$, then welded by $\lambda$, which by
+Lemma~\ref{lem:nolambda} is inert on cohomology of coefficient presheaves. The Mayer--Vietoris
+sequence of this cover reads
+\[
+  0\to H^0(\Sc)\to H^0(\C)\oplus H^0(\D)\to H^0(\Oc)\to H^1(\Sc)\to H^1(\C)\oplus H^1(\D)\to\cdots
+\]
+(coefficients $R$ throughout). The overlap $\Oc$ is discrete, so $H^{\geq1}(\Oc;R)=0$ and the
+two-piece cover with discrete overlap has no higher \v{C}ech terms; acyclic factors kill
+$H^1(\C)\oplus H^1(\D)$. What remains is
+$H^1(\Sc;R)\cong\operatorname{coker}[H^0(\C)\oplus H^0(\D)\to H^0(\Oc)]$.
+\end{proof}
+
+\begin{remark}
+Only the \emph{closed form} needs acyclic factors. The equivalence ``consistent $\iff
+[\theta_R]=0$'' holds for any factors, since it rests only on Lemma~\ref{lem:nolambda}. For
+factors with their own loops, $H^1(\Sc;R)$ acquires the $H^1(\C)\oplus H^1(\D)$ summand and the
+decomposition changes; the characterization does not.
+\end{remark}
+
+\begin{example}[the reconvergent diamond]\label{ex:diamond}
+Take the free category on the diamond quiver $a\rightrightarrows\{b,c\}\rightrightarrows d$:
+routes $a\to b\to d$ (arrows $p,r$) and $a\to c\to d$ (arrows $q,s$), kept distinct. The
+classifying space is the diamond graph, with $\beta_1=4-4+1=1$, so $H^1(\Sc;A)=A$ for any
+coefficient group $A$; the single class is the loop-sum
+$\delta_p+\delta_r-\delta_q-\delta_s$. With transport deltas $(\delta_p,\delta_r,\delta_q,\delta_s)
+=(2,1,1,3)$ the holonomy is $2+1-1-3=-1\neq0$: the stock delivered at $d$ differs by route, so
+inventory is inconsistent, and the class is the generator of $H^1$. A coboundary
+$\delta=d^0\varphi$ is consistent (the diamond case is checked in
+\texttt{scratch/supply\_chain\_obstruction.py}). The failure is \emph{degree one}, unambiguously.
+Over $\Z/n$ the loop-sum lives in $\Z/n$ and consistency is the vanishing of its residue; for a
+directed $k$-cycle with uniform step this is the familiar $H^1(C_k;\Z/n)=\Z/\gcd(k,n)$.
+\end{example}
+
+\section{The two classes are independent}\label{sec:separation}
+
+\begin{theorem}[separation]\label{thm:separation}
+The classes $[\theta_R]\in H^1(\Sc;R)$ and $[\omega]\in H^2(\Sk_\Sc;\D)$ are logically
+independent. Both of the following occur:
+\begin{enumerate}
+\item[\textup{(W1)}] $[\omega]=0$ with $[\theta_R]\neq0$: the chain decomposes, yet inventory is
+inconsistent.
+\item[\textup{(W2)}] $[\omega]\neq0$ with $[\theta_R]=0$: the chain does not decompose, yet
+inventory is trivially consistent.
+\end{enumerate}
+Hence neither implication of (C) holds. Moreover the two classes live in different degrees and
+over different coefficient systems ($R$ versus $\D$).
+\end{theorem}
+
+\begin{proof}
+\emph{Witness W1 (breaks ``$\Leftarrow$'').} Let $\Sc$ be the free category on the diamond
+quiver of Example~\ref{ex:diamond}. The quiver is directed-acyclic, so $\Sc$ has no
+non-identity invertible morphisms; the weld coefficient system is the trivial group, $\D=0$,
+whence $H^2(\Sk_\Sc;\D)=H^2(\Sk_\Sc;0)=0$ and $[\omega]=0$ is forced. (A free category is a
+strict factorization with nothing to obstruct.) Yet $\beta_1=1$, so $H^1(\Sc;R)=R$; choosing the
+transport system $(2,1,1,3)$ of Example~\ref{ex:diamond} gives $[\theta_R]\neq0$ --- inventory
+inconsistent.
+
+\emph{Witness W2 (breaks ``$\Rightarrow$'').} Let $\Sc$ be the rigid-twist category of
+\cite{gobstr}: a branch $a\to x\rightrightarrows y$ with $\Hom(y,y)=\Z/2$ and the twist
+$s_2\circ p=(s\circ p)\cdot g$, for which $[\omega]$ is the generator of $H^2(\Sk_\Sc;\Z/2)=\Z/2$,
+so $[\omega]\neq0$. Equip it with any coboundary inventory $\delta=d^0\varphi$ --- e.g.\ the zero
+transport system. Such an inventory is globally consistent by construction, $[\theta_R]=0$,
+while $[\omega]\neq0$.
+
+Finally, in W1 the weld coefficient $\D$ is forced to $0$ while the resource coefficient $R$ is
+nonzero; the classes cannot even be compared by a natural map, let alone identified. Both
+witnesses are machine-checked in \texttt{scratch/separation\_witnesses.py}.
+\end{proof}
+
+\begin{remark}[reading the two classes]
+$[\omega]$ answers \emph{``does the supply chain even factor as procurement $\bowtiemap$
+logistics, as the model asserts?''} --- a structural precondition on the category. $[\theta_R]$
+answers \emph{``given the operations, does stock glue to a route-independent inventory?''} ---
+the actual consistency question, about data on top of the category. Conjecture (C) conflated a
+precondition in degree two with the consistency class in degree one.
+\end{remark}
+
+\section{Where (C) came from, and why nothing rescues it}\label{sec:reconcile}
+
+The conjecture is not arbitrary; it is a false generalization of blockchain re-entrancy, where
+$[\omega]=\varepsilon\in H^2\cong\Z/2$ is the double-spend bit \cite{orch}. It is worth stating
+precisely why the template does not transfer.
+
+\begin{proposition}[no rescue regime]\label{prop:norescue}
+There is no non-degenerate supply chain in which inventory consistency of a resource presheaf
+$R$ literally equals $[\omega]=0$. The appearance of equivalence in re-entrancy is not a special
+case of (C); it is a different problem, in which there is no separate resource presheaf at all.
+\end{proposition}
+
+\begin{proof}
+Inventory consistency is $[\theta_R]=0$ in degree one with coefficients $R$
+(Theorem~\ref{thm:degree1}); $[\omega]=0$ is a degree-two condition with coefficients $\D$. An
+equivalence would require a natural identification $H^1(\Sc;R)\cong H^2(\Sk_\Sc;\D)$ of the two
+classes. No such identification exists in general: there is no suspension or dimension-shift
+relating a degree-one presheaf class to a degree-two weld class with different coefficients. For
+the free loop $\Sc=B\Z$ one has $H^1(B\Z;A)=A$ while $H^2(B\Z;A)=0$ --- the degrees simply do not
+match. And Theorem~\ref{thm:separation} already shows the two classes vary independently.
+\end{proof}
+
+\paragraph{What re-entrancy actually is.} In re-entrancy the conserved quantity \emph{is the
+weld-state} --- the composite protocol's own state, living inside the matched pair, not on a
+separate presheaf of nodes. There $[\omega]$ is the whole story because there is nothing else:
+inventory equals weld-state by construction, so its consistency obstruction \emph{is} the weld
+$H^2$. Conjecture (C) imported this identification --- ``inventory = weld-state'' --- into supply
+chains, where it is false: supply-chain stock lives on the nodes, transported by operations, and
+is a genuinely separate degree-one datum.
+
+\subsection*{Reconciliation with the $W_{n,\varepsilon}$ model}\label{sub:reconcile}
+
+An earlier worked example \cite{supplyzs} models ``inventory inconsistency between two routes''
+by the warehouse family $W_{n,\varepsilon}$: objects $Wh,Pr,De$, with $s\cdot p=q$ and
+$s_2\cdot p=q\cdot\tau^\varepsilon$, computing $[\omega]=\varepsilon\in H^2(\Sk_\C;\Z/n)$. This
+computation is \emph{correct for the shape it uses} --- but the shape decides which of the two
+consistency notions it captures, and it is not the one the phrase ``two routes'' most naturally
+names.
+
+Look at the geometry. In $W_{n,\varepsilon}$ the ``two routes'' are the \emph{parallel} arrows
+$s,s_2$ sharing the same source and target (a rigid twist $a\to x\rightrightarrows y$); they
+differ by a vertex-group element $\tau^\varepsilon$. A loop built from parallel arrows closes
+inside a single hom-set, so its class lives in the \emph{vertex group}, hence in
+$H^2(\Sk;\D)$. That is genuinely a weld phenomenon --- whether the lot-cursor algebra closes
+into a distributive law. Call it \emph{provenance consistency}; it is a legitimate degree-two
+question. Contrast the honest ``two routes to a delivered good'': $a\to b\to d$ and $a\to c\to d$
+through \emph{distinct} intermediate nodes (the diamond, Example~\ref{ex:diamond}). Here the loop
+runs through the nerve of $\Sc$, not a single hom-set; its class lives in $H^1(\Sc;R)$. This is
+node-stock consistency --- degree one.
+
+So the dividing line is clean, decided entirely by \emph{where the reconvergence loop lives}:
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Reconvergence loop & Class & Reads \\
+\midrule
+parallel arrows (vertex-group loop) & $H^2(\Sk;\D)$ & weld / provenance \\
+distinct-node reconvergence (nerve loop) & $H^1(\Sc;R)$ & node stock \\
+\bottomrule
+\end{tabular}
+\end{center}
+The $W_{n,\varepsilon}$ computation therefore produced the weld-provenance class and labelled it
+``inventory inconsistency between two routes.'' Under the natural reading of that phrase ---
+distinct routes, reconvergent stock --- the obstruction is $H^1$, and
+Theorem~\ref{thm:separation} shows it is independent of the $H^2$ the example computed. The
+example is not wrong; it is a correct computation of the \emph{other} class, and should be
+relabelled provenance consistency.
+
+\section{The degree classification}\label{sec:conclusion}
+
+Conjecture (C) is false: inventory consistency is not the vanishing of the Zappa--Sz\'ep weld
+class. It is the vanishing of a degree-one class $[\theta_R]\in H^1(\Sc;R)$ on the resource
+presheaf --- the route-reconvergence discrepancy --- which is independent of the degree-two weld
+class $[\omega]\in H^2(\Sk_\Sc;\D)$ in degree, in coefficients, and in truth value.
+
+The honest result organizes compositional failure by cohomological degree, keyed to the locus of
+the conserved quantity.
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Conserved quantity lives\ldots & Failure class & Economic instance \\
+\midrule
+on the \textbf{nodes} (transported by operations) & $[\theta_R]\in H^1$ --- route discrepancy & supply-chain inventory \\
+in the \textbf{weld} (the composite's own state) & $[\omega]\in H^2$ --- handoff order & blockchain re-entrancy \\
+in the \textbf{factorization existing at all} & $[\omega]\in H^2$ --- transversal closure & does the chain decompose? \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Supply chains are therefore not a second instance of ``failure $=$ nonzero $H^2$.''
+They are the first clean instance of ``failure $=$ nonzero $H^1$'': a route/reconvergence
+discrepancy, a distinct and arguably more common economic failure mode. The degree of the
+obstruction tells you where to look for the lost quantity.
+
+\paragraph{Open boundary.} Three honest limits.
+\begin{enumerate}
+\item \emph{Torsor-valued inventory.} Lemma~\ref{lem:nolambda} and Theorem~\ref{thm:degree1} are
+for inventory valued in a sheaf of \emph{groups} (stock levels). If inventory is valued in
+\emph{torsors} --- stock defined only up to a gauge or allocation choice --- gluing becomes a
+gerbe problem and the obstruction rises to $H^2$. A genuine degree-two inventory obstruction
+then exists; but it is a \emph{higher-gauge} class with coefficients in $R$, still not equal to
+the weld $[\omega]$ (different coefficients). Characterizing it, and its relation to $[\omega]$,
+is the natural follow-up --- very likely another ``rhyme, not identity.''
+\item \emph{Non-acyclic factors.} The closed form in Theorem~\ref{thm:degree1} assumes
+$H^1(\C)=H^1(\D)=0$. For factors with their own loops the equivalence
+``consistent $\iff[\theta_R]=0$'' still holds (Lemma~\ref{lem:nolambda} is unconditional); only
+the explicit decomposition acquires the $H^1(\C)\oplus H^1(\D)$ summand.
+\item \emph{The general comparison map.} Proposition~\ref{prop:norescue} rules out a natural
+identification via explicit degree mismatch and the separation witnesses. The general question
+--- when a connecting map in the descent spectral sequence of the $\{\C,\D\}$ cover relates
+node-$H^1$ to weld-$H^2$ --- is sketched, not developed, and is not needed for the main theorems.
+\end{enumerate}
+
+\paragraph{Fidelity.} Throughout, ``a supply chain is this category'' is a modelling
+commitment, not a claim that the abstraction is uniquely faithful to any real logistics system;
+object-level fidelity remains open. The mathematics above concerns the abstraction we fixed in
+\S\ref{sec:prelim}.
+
+\paragraph{For the grant.} The Applications/Impact story is sharpened, not weakened: two
+compositional failure modes, cleanly separated by cohomological degree, each with an economic
+witness and a machine-checkable obstruction. Correctness of composition has a price, and the
+degree of the obstruction tells you which account it is charged to.
+
+\begin{thebibliography}{9}
+
+\bibitem{au-dccat}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98; arXiv:1604.01187.
+
+\bibitem{au-distlaw}
+D.~Ahman, T.~Uustalu,
+\emph{Distributive laws of directed containers},
+Progress in Informatics \textbf{10} (2013), 3--18, DOI 10.2201/NIIPI.2013.10.2.
+
+\bibitem{bw}
+H.-J.~Baues, G.~Wirsching,
+\emph{Cohomology of small categories},
+J.\ Pure Appl.\ Algebra \textbf{38} (1985), 187--211.
+
+\bibitem{rw}
+R.~Rosebrugh, R.~J.~Wood,
+\emph{Distributive laws and factorization},
+J.\ Pure Appl.\ Algebra \textbf{175} (2002), 327--353.
+
+\bibitem{weibel}
+C.~A.~Weibel,
+\emph{An Introduction to Homological Algebra},
+Cambridge Studies in Advanced Mathematics \textbf{38}, Cambridge Univ.\ Press, 1994.
+
+\bibitem{pairwise}
+MacBeth,
+\emph{The pairwise Zappa--Sz\'ep criterion}
+(Kodamai internal note, 10 June 2026; proved).
+
+\bibitem{gobstr}
+MacBeth,
+\emph{The global-closure obstruction $(G)$ is a cohomology class}
+(Kodamai internal note, 11 June 2026; proved).
+
+\bibitem{orch}
+MacBeth,
+\emph{The re-entrancy obstruction is the token-mutation bit: an analytic proof for orchestration
+Zappa--Sz\'ep products}
+(Kodamai internal note, 20 July 2026; proved, $[\omega]=\varepsilon$ core Lean-verified).
+
+\bibitem{supplyzs}
+MacBeth,
+\emph{A supply chain is a directed container, and composing two is a Zappa--Sz\'ep product: a
+computed worked example}
+(Kodamai internal note, 23 July 2026; computed).
+
+\bibitem{coflog}
+MacBeth,
+\emph{The logic of containers: $\mathrm{Cont}(\cod)$ is the bifibration
+$\mathrm{Fam}(\cod^{\mathrm{op}})$}
+(Kodamai internal note, 2026; proved).
+
+\end{thebibliography}
+
+\end{document}
