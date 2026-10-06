@@ -1,0 +1,487 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\PolyZ}{\mathsf{Poly}_{\mathbb{Z}}}
+\newcommand{\SPoly}{\mathsf{SPoly}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Comon}{\mathsf{Comon}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\id}{\mathrm{id}}
+\DeclareMathOperator{\rank}{rank}
+
+\title{Parallelizability does not port to directed containers\\
+\large A tangent dividing line, and the out-degree invariant blind to composition}
+\author{MacBeth\thanks{Kodamai. Source, this note, and the Lean certification live at
+\texttt{github.com/scotmacbeth/work-in-progress}; see the content commit recorded on this page.
+Prepared for the Strathclyde mini-course \emph{Tangent Categories and Containers}
+(13--16 October 2026) as the cautionary companion to the derivative-uniqueness arc.}\\
+\small Kodamai}
+\date{6 October 2026\\[2pt]
+\small content commit \texttt{TBD}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Lanfranchi proves that an object of a Cartesian tangent category is \emph{parallelizable} exactly
+when it carries the structure of a Lie group object. Directed containers are small categories, and
+the one-hole derivative $\partial$ of Abbott, Altenkirch, Ghani and McBride is a tangent structure
+on polynomial functors, so it is tempting to conjecture that a container is parallelizable
+precisely when it is a groupoid. We show this port is ill-posed, and isolate why. Lanfranchi's
+group objects live in a \emph{Cartesian} tangent category, whereas the derivative's tangent
+structure is the Weil base change $T=(-)\otimes W$, which is representable/monoidal and not
+Cartesian: $T$ fails to preserve the categorical product by an explicit second-order term, and
+with the product as trivial bundle only the constant functors are parallelizable; the genuine
+Cartesian home of $\partial$ is a generalized Cartesian differential category, where every object
+is parallelizable and a container is a morphism, not an object. What survives is one sharp
+invariant: the tangent bundle $Tp$ has, over a point of shape $a$, a fibre of rank equal to the
+out-degree $|E_a|$, so all fibres agree iff the category is out-degree homogeneous. This
+``tangent-regularity'' depends only on the underlying polynomial functor, hence is provably blind
+to composition, and it refutes the groupoid conjecture in both directions. Connected groupoids are
+tangent-regular --- the faithful shadow of ``Lie group $\Rightarrow$ parallelizable'' --- but
+strictly more categories are. The tangent geometry of containers reads the shape of a category,
+not its composition.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{A derivative, a tangent structure, and a tempting analogy.}
+Containers \cite{AAGM2003,GambinoKock2013} have a derivative. The one-hole-context operation
+$\partial$ of Abbott, Altenkirch, Ghani and McBride sends a container to the container of its
+one-hole contexts and obeys the laws of a derivative. Two companion notes make this sharp: the
+category $\SPoly$ of finitary polynomial functors is a Cartesian differential category whose
+differential combinator \emph{is} $\partial$ \cite{MacBethTangent}, and the attached first-order
+tangent structure --- substitute a dual number and read off the $\varepsilon$-coefficient,
+$Tp = p(y+\varepsilon v)\bmod\varepsilon^2 = p + \varepsilon v\cdot\partial p$ --- is essentially
+forced \cite{MacBethUniqueness}. Directed containers, moreover, are not just functors: by
+Ahman and Uustalu they are \emph{exactly small categories}, the comonoids for the composition
+monoidal product $\lhd$ on polynomial functors \cite{AhmanUustalu2016}.
+
+So containers carry two geometries at once --- a tangent structure and a category structure ---
+and a recent theorem invites us to relate them. Lanfranchi \cite{Lanfranchi2026} proves, for an
+object $G$ of a \emph{Cartesian} tangent category, a Lie-theoretic correspondence whose fourth
+equivalent clause is that $G$ is \emph{parallelizable}: its tangent bundle trivializes,
+$TG \cong G\times m$ over $G$, for a differential object $m$ (Definition~4.18, Theorem~4.20). In
+smooth manifolds parallelizability is a rare and structured condition --- Lie groups are
+parallelizable, generic manifolds are not. The analogy writes itself: a directed container is a
+small category; which categories are parallelizable, and is the answer ``the groupoids''? A
+groupoid is the categorical avatar of a group, and ``Lie group $\Rightarrow$ parallelizable'' is
+the classical half of Lanfranchi's theorem.
+
+\paragraph{The caveat, and the result.}
+There is a structural mismatch to clear first. Lanfranchi's group objects are internal groups for
+the \emph{Cartesian} product; directed containers are comonoids for \emph{composition} $\lhd$.
+These are different monoidal structures on $\Poly$, and the derivative's tangent functor is
+Cartesian for neither. This note shows the mismatch is fatal to the literal port, and extracts
+what remains. We prove two things, stated here and made precise in
+Sections~\ref{sec:fibre}--\ref{sec:survivor}.
+
+\begin{theorem}[The Cartesian port is ill-posed]\label{thm:I-intro}
+There is no Cartesian tangent category on polynomial functors in which the derivative $\partial$
+is the tangent bundle and Lanfranchi's parallelizability is a nontrivial condition.
+\begin{itemize}
+\item On $(\Poly,\times)$ the tangent functor $T=(-)\otimes W$ does not preserve the categorical
+product --- it leaves a nonzero second-order ($\varepsilon^2$) term --- so $(\Poly,\times,T)$ is
+not a Cartesian tangent category; and with $\times$ as the trivial bundle the \emph{only}
+parallelizable objects are the constants (even the terminal object $y$ fails).
+\item The tangent structure of $\partial$ is genuinely the \emph{representable/monoidal} base
+change $(-)\otimes W$, not a Cartesian one.
+\item The honest Cartesian home of $\partial$ is the arity generalized Cartesian differential
+category $\SPoly$, where every object is parallelizable (vacuous) and a container is a
+\emph{morphism}, not an object.
+\end{itemize}
+\end{theorem}
+
+\begin{theorem}[The surviving invariant, and the groupoid refutation]\label{thm:II-intro}
+The tangent bundle $Tp$ of a container $p=\sum_{a\in\Ob}y^{E_a}$ has, over a point of shape $a$,
+a fibre that is the free module on the direction set $E_a$, of rank $|E_a|$. Hence the fibres are
+all isomorphic to one module iff the out-degree $a\mapsto|E_a|$ is constant. This condition ---
+``tangent-regularity'' --- depends only on the underlying polynomial functor, hence cannot be
+equivalent to ``groupoid'': the monoid $\{1,e\}$ with $e^2=e$ is tangent-regular but is not a
+groupoid, and the groupoid $\Z/2\sqcup\Z/3$ is not tangent-regular. Connected groupoids are
+tangent-regular, the faithful shadow of Lanfranchi's theorem, but tangent-regularity is strictly
+weaker.
+\end{theorem}
+
+\paragraph{Method and moral.}
+The whole analysis turns on one calculation (\S\ref{sec:fibre}): the fibre of the tangent bundle
+over a point of shape $a$ is the free module on $E_a$. From this single fact both theorems follow
+by elementary means --- the Cartesian obstruction is a cardinality mismatch, and the surviving
+invariant is a rank. The moral is a dividing line we have met before in this program, here in its
+cautionary form: results about $\partial$ are results about the \emph{shape} of a container --- its
+out-degree sequence --- and are blind to the composition $\delta\colon p\to p\lhd p$ that makes it
+a category. ``Groupoid'', ``connected'', ``invertible'' are properties of $\delta$; no invariant
+of the shape alone can see them. The Lie-theoretic content of parallelizability, if it survives at
+all, lives in a strictly finer, composition-sensitive layer that we can describe but not yet
+characterize (\S\ref{sec:conclusion}).
+
+None of this is a defect in \cite{Lanfranchi2026}: the theorem there is about Cartesian tangent
+categories, and the port fails precisely because the derivative's tangent structure is not one.
+The arithmetic core of Theorem~\ref{thm:II-intro} and its composition-blindness are
+machine-checked in Lean~4 \cite{MacBethLean}.
+
+\paragraph{Outline.} Section~\ref{sec:prelim} fixes the container, the derivative, the tangent
+structure, and Lanfranchi's definition. Section~\ref{sec:fibre} computes the tangent fibre.
+Section~\ref{sec:refutation} proves Theorem~\ref{thm:I-intro}. Section~\ref{sec:survivor} proves
+Theorem~\ref{thm:II-intro}. Section~\ref{sec:conclusion} states the moral and the one open
+refinement.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We work with polynomial functors in one variable and finite support; everything is first order.
+
+\paragraph{Containers as categories.}
+A \emph{container} in one variable is a polynomial functor
+\[
+   p \;=\; \sum_{a\in\Ob} y^{E_a},
+\]
+with a set $\Ob$ of \emph{shapes} and, for each shape $a$, a set $E_a$ of \emph{directions}; its
+extension sends a set $X$ to $\sum_{a}X^{E_a}$, so a point of $p$ over $X$ is a pair
+$(a, f\colon E_a\to X)$ \cite{AAGM2003,GambinoKock2013}. The composition product $\lhd$ has unit
+$y$ and realizes substitution of functors. By Ahman and Uustalu \cite{AhmanUustalu2016}, the
+comonoids in $(\Poly,\lhd,y)$ are exactly small categories: a comonoid structure
+$\delta\colon p\to p\lhd p$ on $p$ is a choice of identities and a composition, $\Ob$ is the
+object set, and $E_a$ is the set of morphisms out of $a$ --- so $|E_a|$ is the \emph{out-degree}
+of the object $a$. We write $\Comon(\Poly,\lhd)\simeq\Cat$ for this equivalence and
+$U\colon\Cat\to\Poly$ for the forgetful functor that discards $\delta$ and keeps only the
+underlying functor $\sum_a y^{E_a}$.
+
+\paragraph{The derivative and its tangent structure.}
+The one-hole derivative \cite{AAGM2003} is
+\[
+   \partial p \;=\; \sum_{a}\ \sum_{e\in E_a} y^{E_a\setminus\{e\}}
+             \;=\; \sum_a |E_a|\cdot y^{\,|E_a|-1}.
+\]
+Let $W=\Z[\varepsilon]/(\varepsilon^2)$ be the dual-number Weil algebra. The tangent functor is the
+Weil base change $T=(-)\otimes W$ \cite{MacBethCartan}; on the first-order (species) layer it is
+computed by substituting the infinitesimal and truncating,
+\begin{equation}\label{eq:T}
+   Tp \;=\; p(y+\varepsilon v)\bmod\varepsilon^2 \;=\; p + \varepsilon v\cdot\partial p,
+\end{equation}
+where $v$ is the tangent coordinate and $\varepsilon^2=0$. Reading the two sorts --- base $X$ and
+tangent $v$ --- explicitly,
+\begin{equation}\label{eq:Ttwosort}
+   Tp(X,v) \;=\; p(X) + \varepsilon v\cdot\partial p(X)
+            \;=\; \sum_a X^{E_a} + \varepsilon v\sum_a\sum_{e\in E_a} X^{E_a\setminus\{e\}} .
+\end{equation}
+We write $(-)\otimes W$, not ``$(-)\lhd D$'': substituting $D=y+\varepsilon v$ and truncating is
+only the first-order shadow of the base change, and right $\lhd$-tensoring by $D$ as an
+endofunctor of all of $\Poly$ does not give a tangent structure. On the first-order layer the two
+descriptions agree, which is all we use.
+
+\paragraph{Cartesian tangent categories and parallelizability.}
+Recall \cite{CockettCruttwell2014} that a tangent category is \emph{Cartesian} when it has finite
+products and the tangent functor preserves them, $T(A\times B)\cong TA\times TB$, so that the
+trivial bundle $A\times m$ and the fibrewise addition make sense. A \emph{differential object} is
+an object $m$ whose tangent bundle is trivial and linear. Lanfranchi's definition specializes to
+this setting.
+
+\begin{definition}[Lanfranchi \cite{Lanfranchi2026}, Def.~4.18]\label{def:par}
+In a Cartesian tangent category, an object $M$ is \emph{parallelizable} if there is a linear
+isomorphism of additive bundles over $M$,
+\[
+   \nu\colon TM \;\xrightarrow{\ \cong\ }\; M\times m \qquad\text{over } M,
+\]
+for a differential object $m$, compatible with the zero sections and the vertical lift.
+\end{definition}
+
+Theorem~4.20 of \cite{Lanfranchi2026} proves that, for a group object $G$ of a Cartesian tangent
+category, being parallelizable is equivalent to the Lie-theoretic data (tangential/differential
+representability of the Lie functor); and Corollary~4.22 records that in a \emph{generalized}
+Cartesian differential category every object is parallelizable. Both facts are used below only to
+diagnose the port; we quote and do not reprove them.
+
+\section{The tangent fibre is the free module on the directions}\label{sec:fibre}
+
+Everything rests on one computation.
+
+\begin{lemma}\label{lem:fibre}
+For $T=(-)\otimes W$ and $p=\sum_a y^{E_a}$, the fibre of the tangent bundle
+$\pi\colon Tp\to p$ over a point of shape $a$ is the free module on the direction set $E_a$, of
+rank $|E_a|$.
+\end{lemma}
+
+\begin{proof}
+A point of $p$ over $X$ is a pair $(a, f\colon E_a\to X)$. By \eqref{eq:Ttwosort} a point of $Tp$
+over it consists of the same base point together with the data recorded by the
+$\varepsilon v$-summand
+$\partial p(X)=\sum_a\sum_{e\in E_a}X^{E_a\setminus\{e\}}$: a choice of a direction $e\in E_a$ to
+make infinitesimal, carrying a tangent value. The zero section is the point with all tangent
+values $0$, and fibrewise addition adds tangent values slot by slot. Hence the fibre over
+$(a,f)$ is the free module on $E_a$ --- one generator per direction --- of rank $|E_a|$.
+\end{proof}
+
+This is a statement about the \emph{fibres} of $Tp$; it needs no Cartesian apparatus and is the
+robust kernel of the whole analysis. The verification script
+\texttt{scratch/lie\_parallelizable\_verify.py} confirms, across ten categories, that the fibre
+rank over a shape-$a$ point equals $|E_a|$.
+
+\section{The Cartesian port is ill-posed}\label{sec:refutation}
+
+Definition~\ref{def:par} requires a Cartesian tangent category. We show that no way of making
+$\partial$ a tangent structure provides one in which parallelizability is both defined and
+nontrivial. This proves Theorem~\ref{thm:I-intro}.
+
+Throughout we use the species (counting) shadow in which a polynomial functor is tracked by its
+counting polynomial in $X$, and the categorical product of polynomial functors is the product of
+counting polynomials: a point of $p\times q$ over $X$ is a pair of points, so
+$y^A\times y^B = y^{A\sqcup B}$ and the counting polynomials multiply, $X^{|A|}\cdot X^{|B|}$.
+
+\subsection*{(a) $T$ does not preserve the categorical product}
+
+Write $p'=\partial p$. By \eqref{eq:T}, $Tp = p + \varepsilon v\,p'$. For the categorical product,
+\[
+   T(p\times q) \;=\; pq + \varepsilon v\,(p'q + pq'),
+\]
+since $\partial$ is a derivation, while the product of the two tangent bundles is
+\[
+   Tp\times Tq \;=\; (p+\varepsilon v\,p')(q+\varepsilon v\,q')
+   \;=\; pq + \varepsilon v\,(p'q+pq') + \varepsilon^2 v^2\, p'q'.
+\]
+These differ by the second-order term $\varepsilon^2 v^2\,p'q'$, which is nonzero: for $p=q=y$ it
+is $\varepsilon^2 v^2$ (coefficient $1$), and for $p=q=y^2$ it is $4X^2\varepsilon^2v^2$
+(coefficient $4X^2$); see \texttt{scratch/lie\_product\_compat.py}. The base change
+$T(p\times q)=(p\times q)\otimes W$ tensors by a \emph{single} copy of $W$, in which
+$\varepsilon^2=0$; the product bundle $Tp\times Tq$ carries two independent infinitesimal
+directions --- morally it lives over $W\otimes W$, where the product of the two nilpotents does
+not vanish --- and the categorical product supplies no map collapsing them. Hence $T$ does not
+preserve $\times$, and $(\Poly,\times,T)$ is not a Cartesian tangent category. (The product rule
+of \eqref{eq:T} holds only modulo $\varepsilon^2$, i.e.\ in the base-change setting itself, which
+is monoidal and not Cartesian; see (c).)
+
+\subsection*{(b) With the categorical product, only constants are parallelizable}
+
+Suppose nonetheless that $Tp\cong p\times m$ over $p$, with $\times$ the categorical product. In
+the counting shadow $p\times m$ is the product $p\cdot m$, so a necessary condition is that the
+``quotient'' $m = Tp/p$ be itself a polynomial functor:
+\[
+   m \;=\; \frac{Tp}{p} \;=\; \frac{p+\varepsilon v\,p'}{p} \;=\; 1 + \varepsilon v\,\frac{p'}{p}.
+\]
+This is a polynomial functor iff $p \mid p'$ in $\Z[X]$. For a non-constant container
+$\deg p' = \deg p - 1 < \deg p$, so $p\nmid p'$ unless $p'=0$, i.e.\ unless $p$ is constant. Hence
+the \emph{only} parallelizable objects for the categorical product are the constant functors.
+Even the terminal object $y$ fails: $Ty = X + \varepsilon v$, while $y\times m = X\cdot m$ can
+never equal $X+\varepsilon v$. The port returns a degenerate answer with no dependence on the
+category $p$ at all.
+
+\subsection*{(c) The genuine tangent structure is monoidal, not Cartesian}
+
+By \cite{MacBethUniqueness,LanfranchiLemay2025}, $\partial$ becomes a genuine (non-degenerate)
+tangent bundle precisely as the Weil base change $(-)\otimes W$ --- equivalently, on the first
+order, right-tensoring by the infinitesimal object in the \emph{monoidal} category $(\Poly,\lhd,y)$.
+This is a representable/monoidal tangent setting. The composition product $\lhd$ is not Cartesian:
+it has no diagonal $p\to p\lhd p$ natural in $p$ (the maps $p\to p\lhd p$ are extra structure ---
+precisely the categories). Definition~\ref{def:par} lives only in Cartesian tangent categories, so
+it does not apply to $(-)\otimes W$ as it stands.
+
+\subsection*{(d) The Cartesian home is a GCDC --- vacuous and mistyped}
+
+The honest Cartesian tangent category of containers is the arity (generalized) Cartesian
+differential category $\SPoly$, and its ring completion $\PolyZ$: objects are arities $n$,
+morphisms are polynomial maps, $T(n)=2n=n\times n$, and $\partial$ is the differential
+\emph{combinator} on morphisms \cite{MacBethTangent,MacBethCartan}. A Cartesian differential
+category is in particular a generalized Cartesian differential category, so by
+Lanfranchi's Corollary~4.22 \cite{Lanfranchi2026} \emph{every} object is parallelizable: the
+notion carries no information. Worse for the conjecture, here a container $p=\sum_a y^{E_a}$ is a
+\emph{morphism} $1\to1$, not an object, so ``$p$ is parallelizable'' does not even typecheck.
+
+\medskip
+\noindent In every realization, parallelizability for $\partial$ is undefined (not Cartesian,
+(a),(c)), degenerate (nothing non-constant, (b)), or vacuous and mistyped (GCDC, (d)). The literal
+port of Theorem~4.20 to container comonoids is ill-posed. $\qed$
+
+\section{The surviving invariant, and the groupoid refutation}\label{sec:survivor}
+
+What \emph{is} well-posed and nontrivial is the fibre-rank condition of Lemma~\ref{lem:fibre},
+intrinsic to the base-change bundle. This proves Theorem~\ref{thm:II-intro}.
+
+\begin{definition}\label{def:treg}
+A container $p=\sum_a y^{E_a}$ is \emph{tangent-regular} if the fibres of $Tp$ are all isomorphic
+to a single module $m$.
+\end{definition}
+
+This is the honest residue of parallelizability available in the representable setting: not a
+global trivialization (which (b) forbids), but the weaker demand that the bundle have a
+\emph{constant fibre type}.
+
+\begin{theorem}\label{thm:treg}
+$p$ is tangent-regular iff the out-degree $a\mapsto|E_a|$ is constant on $\Ob$.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:fibre} the fibre over a shape-$a$ point is the free module of rank $|E_a|$. Two
+free modules are isomorphic iff their ranks are equal, and a common $m$ exists for all shapes iff
+all $|E_a|$ are equal.
+\end{proof}
+
+\begin{theorem}[blindness to composition]\label{thm:blind}
+Tangent-regularity depends only on the underlying polynomial functor $U(p)$ --- equivalently, only
+on the out-degree multiset $\{|E_a|\}$ --- hence factors through the forgetful functor
+$U\colon\Cat\simeq\Comon(\Poly,\lhd)\to\Poly$. Consequently ``tangent-regular $\Leftrightarrow$
+groupoid'' is false in both directions.
+\end{theorem}
+
+\begin{proof}
+Tangent-regularity is defined from the fibres of $Tp$, and by Lemma~\ref{lem:fibre} those depend
+only on the direction sets $E_a$, i.e.\ on $U(p)$, never on the comultiplication $\delta$. We
+exhibit the two failures.
+\begin{itemize}
+\item \emph{(Tangent-regular $\not\Rightarrow$ groupoid.)} The idempotent monoid $\{1,e\}$ with
+$e^2=e$ has one object and underlying functor $y^2$, identical to that of the group $\Z/2$. The two
+have the \emph{same} tangent bundle; both are tangent-regular (one object, so out-degree is
+trivially constant); but $\Z/2$ is a groupoid and $\{1,e\}$ is not. Tangent-regularity cannot tell
+them apart.
+\item \emph{(Groupoid $\not\Rightarrow$ tangent-regular.)} The disjoint groupoid
+$\Z/2\sqcup\Z/3$ has objects of out-degrees $2$ and $3$, so $U=y^2+y^3$ is not tangent-regular by
+Theorem~\ref{thm:treg}, although it is a groupoid. This direction is airtight from
+Lemma~\ref{lem:fibre} alone.
+\end{itemize}
+\end{proof}
+
+Why was the conjecture doomed? Because $\partial$ reads only the directions $E_a$ --- how many
+morphisms leave each object --- and never the composition $\delta\colon p\to p\lhd p$. ``Groupoid'',
+``connected'', ``invertible'' are properties of $\delta$, invisible to any invariant that factors
+through $U$. No such invariant can be equivalent to ``groupoid''. The groupoid half of the
+conjecture was unprovable in principle, not merely unproved.
+
+\begin{corollary}[the positive shadow of Lanfranchi]\label{cor:shadow}
+Every out-regular category --- one with $|E_a|$ constant --- is tangent-regular. In particular a
+connected groupoid with object set $\Ob$ and vertex group $G$ (so $\Hom(a,b)\cong G$ for all
+$a,b$) has $|E_a|=\sum_b|\Hom(a,b)|=|\Ob|\cdot|G|$, constant, hence is tangent-regular; so is any
+one-object category (a monoid) and any codiscrete category.
+\end{corollary}
+
+This is the faithful remnant of ``Lie group $\Rightarrow$ parallelizable''. Homogeneity is exactly
+the left-translation regularity --- composing with a connecting isomorphism $b\to a$ bijects
+$\Hom(a,-)\cong\Hom(b,-)$ --- that a connected groupoid supplies. But by Theorem~\ref{thm:blind} it
+is strictly weaker than being a groupoid.
+
+\paragraph{Formal certification.}
+The arithmetic core of Theorems~\ref{thm:treg}--\ref{thm:blind} is machine-checked in Lean~4
+\cite{MacBethLean}. For out-degrees $d\colon\mathrm{Fin}\,k\to\N$, the file proves
+$\mathrm{TangentRegular}\,d \leftrightarrow \forall i\,j,\ d_i=d_j$ (a common fibre rank exists iff
+the out-degrees agree), and that the decidable test is \emph{permutation-invariant} --- it factors
+through the multiset $\mathrm{List}/\mathrm{Perm}$ --- which is the formal content of
+composition-blindness, since a comonoid's $\delta$ is not recoverable from the out-degree multiset.
+Both counterexamples ($\{1,e\}$ versus $\Z/2$; $\Z/2\sqcup\Z/3$) are discharged as decidable facts.
+The reduction that the representable fibre is the free module on $E_a$ (Lemma~\ref{lem:fibre}) and
+the functor $U$ are cited, not formalized; \texttt{\#print axioms} reports
+$\{\texttt{propext},\texttt{Quot.sound}\}$.
+
+\section{The moral, and one open refinement}\label{sec:conclusion}
+
+The tangent geometry that the container derivative supports is \emph{fibre-rank geometry over the
+discrete set of objects}. It reads the out-degree sequence --- the shape of a category --- and is
+blind to composition. ``Parallelizable $\Leftrightarrow$ Lie object'' does not survive the move
+from the Cartesian affine world of \cite{Lanfranchi2026} to the representable/monoidal $\lhd$-world
+of containers: the trivialization it demands collapses everything but constants
+(\S\ref{sec:refutation}), and the honest residue --- constant fibre type --- cannot see the
+composition that ``groupoid'' depends on (\S\ref{sec:survivor}). This is the same dividing line
+that governs the fullness and uniqueness theorems of this program --- representability sees the
+underlying functor and not the category structure laid over it --- appearing here in its
+cautionary, boundary-drawing form. It belongs on a slide as a warning: before porting a
+Cartesian-tangent theorem to containers, check that the ambient structure is $\times$ and not
+$\lhd$, and that $T$ is Cartesian.
+
+There is a genuine remaining question, sharper than the one refuted here. Theorem~\ref{thm:I-intro}
+kills \emph{bare} Cartesian parallelizability, but it says nothing about a trivialization built
+from the comonoid structure itself --- one that \emph{does} see composition.
+
+\paragraph{Open problem.} For a $\lhd$-comonoid $p$ (a small category $\mathcal C$), does the
+comultiplication $\delta$ induce a canonical ``left-translation'' trivialization of the vertical
+part of the tangent bundle $Tp$ --- translate every tangent direction to a chosen basepoint by
+composing along a connecting morphism? We conjecture that such a trivialization exists exactly when
+the translations are invertible, so that this is where \emph{groupoids} (and connectedness)
+genuinely enter --- the composition-sensitive layer that tangent-regularity provably cannot see.
+Making this precise requires the differential-bundle/vertical structure of $Tp$ and the comonoid
+maps worked out together; it is the correct home for the groupoid intuition, and we leave it to a
+later study.
+
+\paragraph{Acknowledgement.} This note is the cautionary companion to the derivative-uniqueness arc
+and was prepared for the Strathclyde mini-course \emph{Tangent Categories and Containers}. Nothing
+here is a correction to \cite{Lanfranchi2026}, whose theorem is about Cartesian tangent categories;
+the port fails precisely because the container derivative's tangent structure is not one.
+
+\begin{thebibliography}{9}
+
+\bibitem{AAGM2003}
+M.~Abbott, T.~Altenkirch, N.~Ghani, C.~McBride,
+\emph{Derivatives of containers},
+Typed Lambda Calculi and Applications (TLCA 2003), LNCS 2701, Springer, 2003, 16--30.
+
+\bibitem{AhmanUustalu2016}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98; arXiv:1604.01187.
+
+\bibitem{BCS2009}
+R.~F.~Blute, J.~R.~B.~Cockett, R.~A.~G.~Seely,
+\emph{Cartesian differential categories},
+Theory and Applications of Categories \textbf{22} (2009), no.~23, 622--672.
+
+\bibitem{CockettCruttwell2014}
+J.~R.~B.~Cockett, G.~S.~H.~Cruttwell,
+\emph{Differential structure, tangent structure, and SDG},
+Applied Categorical Structures \textbf{22} (2014), no.~2, 331--417.
+
+\bibitem{GambinoKock2013}
+N.~Gambino, J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), no.~1, 153--192; arXiv:0906.4931.
+
+\bibitem{Lanfranchi2026}
+M.~Lanfranchi,
+\emph{The Lie group--Lie algebra correspondence in tangent categories},
+preprint, arXiv:2609.03449 (2026).
+
+\bibitem{LanfranchiLemay2025}
+M.~Lanfranchi, J.-S.~P.~Lemay,
+\emph{Representable tangent structures for affine schemes},
+preprint, arXiv:2505.09080 (2025).
+
+\bibitem{MacBethTangent}
+MacBeth,
+\emph{The container derivative is a tangent structure: a fibrational positioning}
+(Kodamai internal note, 2026).
+
+\bibitem{MacBethUniqueness}
+MacBeth,
+\emph{A uniqueness theorem for the container derivative: $\partial$ is the only nontrivial
+representable tangent structure on finite-support polynomial functors}
+(Kodamai internal note, 2026).
+
+\bibitem{MacBethCartan}
+MacBeth,
+\emph{The container derivative has no fiberwise negation: a boundary for the Cartan calculus of
+polynomial functors}
+(Kodamai internal note, 2026).
+
+\bibitem{MacBethLean}
+MacBeth,
+\emph{Lean~4 certification: tangent-regularity equals out-degree homogeneity, and its
+composition-blindness}
+(\texttt{2026-10-06-tangent-regular-outdegree.lean}; axioms
+$\{\texttt{propext},\texttt{Quot.sound}\}$), 2026.
+
+\end{thebibliography}
+
+\end{document}
