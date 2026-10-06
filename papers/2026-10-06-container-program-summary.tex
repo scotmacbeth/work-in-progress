@@ -1,0 +1,408 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{result}[theorem]{Result}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% --- notation ---
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\SPoly}{\mathsf{SPoly}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\DCont}{\mathsf{DCont}}
+\newcommand{\Cof}{\mathsf{Cof}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Vect}{\mathsf{Vec}}
+\newcommand{\Fam}{\mathsf{Fam}}
+\newcommand{\Kl}{\mathsf{Kl}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\DD}{\mathbb{D}}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+\newcommand{\W}{\mathsf{W}}
+\newcommand{\onu}{o_{\nu}}
+
+% --- grade tag macro: keeps the honest registry grade attached ---
+\newcommand{\grade}[1]{{\small\textsf{(#1)}}}
+
+\title{\textbf{The Container Program:\\ A Research Summary}}
+\author{MacBeth \\ \small Kodamai}
+\date{2026-10-06}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{\small\itshape
+Internal program summary for N.\ Ghani (PI), Kodamai ``AI Mathematician'' grant.
+Every mathematical claim carries its honest \emph{registry} trust-grade
+(\textsf{speculative} $<$ \textsf{computed} $<$ \textsf{proved} $<$ \textsf{peer-reviewed}
+$<$ \textsf{published} $<$ \textsf{lean-verified}). No MacBeth result is self-published;
+the strongest social grade on our own work is \textsf{peer-reviewed} (by Rick).
+Grades track the registry node, not the surrounding prose. (The projects tree is not under
+version control, so no commit hash is quoted.)}}
+\end{center}
+
+\bigskip
+
+\section{Thesis}
+
+The claim this program defends is that the four-way equivalence
+\[
+  \text{Containers} \;\simeq\; \text{Directed Containers} \;\simeq\;
+  \text{Polynomial Comonoids} \;\simeq\; \text{Small Categories}
+\]
+is the correct \emph{foundation} for formally-verified composition of heterogeneous
+computational systems. A directed container is simultaneously a data shape, a comonad, a
+comonoid in the composition-monoidal structure $(\Cont,\lhd,I)$, and a category; a system
+built from one is therefore a system whose dynamics, data layout, and type discipline are a
+single object that different tools can read differently without translation loss. Composition
+of such systems is then not an engineering convenience but an algebraic question with a
+yes/no answer.
+
+The central technical tool for \emph{when} two such systems compose is the
+\textbf{Zappa--Szép product} (equivalently, a distributive/matched-pair law): given directed
+containers $C,D$, a global product $C \bowtie D$ exists iff two conditions hold---a freeness
+condition $(\mathrm{L})$ and a global-closure condition $(\mathrm{G})$---and the obstruction to
+$(\mathrm{G})$ is a second cohomology class. When that class is nonzero, the composite does
+not exist on the nose, and the failure is observable: in blockchain re-entrancy it is exactly
+the generator of $H^2 \cong \mathbb{F}_2$. This is the program's bridge from category theory to
+economically-consequential correctness.
+
+The work is organised against the three grant pillars.
+\textbf{Theory} (\S\ref{sec:theory}): the equivalence-chain core, the tangent/Cartan arc for
+the container derivative, the Zappa--Szép / $H^2$ obstruction calculus, and the
+fullness/admissibility/change-of-base lane. \textbf{Applications} (\S\ref{sec:apps}): agent
+orchestration, blockchain re-entrancy, supply chains, linear attention, and game comonads, each
+realised as a directed container and each with its composition question answered.
+\textbf{Formalisation} (\S\ref{sec:lean}): roughly $107$ sorry-free Lean~4 declarations,
+including the 1-categorical core of the equivalence chain and the arithmetic oracles of the
+tangent arc.
+
+One honesty statement up front, because it governs the grant narrative. The equivalence chain
+is \textbf{lean-verified only at its 1-categorical core} (milestones M1--M4). The enriched rung
+(M5) is unclassified/open and the $\infty$-rung (M6) is speculative, so the \emph{full} chain
+is honestly \textsf{in-progress}. The pieces that are done are done to machine-checked standard;
+the chain is not yet closed end-to-end.
+
+\section{The spine}
+\label{sec:spine}
+
+Four results carry the program. Stated crisply, with grades.
+
+\begin{result}[Equivalence-chain core, M1--M4]\grade{lean-verified}
+\label{res:chain}
+The container representation functor is fully faithful (M1); comonad laws $\Leftrightarrow$
+directed-container laws with both round-trips (M2); directed containers $=$ comonoids in
+$(\Cont,\lhd,I)$ in both directions (M3); and $\DCont = \Cof$ as an isomorphism of categories
+at the morphism level (M4). All four are sorry-free Lean, axiom footprints in
+$\{\textsf{propext},\textsf{Quot.sound}\}$. The \emph{full} three-way equivalence root is
+\textsf{in-progress}: M5 (enriched $\DCont = \Cof$) is unclassified and M6 (an $\infty$-level
+statement, Kan--Chen Conj.\ 7.2) is speculative.
+\end{result}
+
+\begin{result}[Flagship T1: fullness $\Leftrightarrow$ unit-connectedness]\grade{proved}
+\label{res:t1}
+The container extension $\sem{-}\colon \Fam(C^{\mathrm{op}}) \to [C,C]$ is fully faithful
+\textbf{iff the monoidal unit $I$ is connected} (i.e.\ $C(I,-)$ preserves coproducts). This
+corrects the natural ``extensivity'' conjecture: $\Set \times \Set$ is lextensive yet
+$\sem{-}$ is not full, while $\Set$ is classical precisely because $1$ is connected.
+\end{result}
+
+\begin{result}[Tangent/Cartan arc for $\partial$]\grade{proved; lean-verified arithmetic cores}
+\label{res:tangent}
+The AAGM one-hole container derivative $\partial$ \emph{is} the differential combinator of a
+Cartesian differential category / first-order tangent structure on $\SPoly$, realised by
+dual-number substitution $T(p) = p(y+\varepsilon v) \bmod \varepsilon^2$
+\grade{proved; 0-axiom finite Lean bridge}. Among representable first-order tangent structures
+there are \textbf{exactly two}---the trivial one and the dual-number one \grade{proved}. And
+$\partial$ sits on a sharp \textbf{$\N$-vs-$\Z$ Cartan knife}: over the rig $\N$ there is
+\emph{no} scalar ring object and no fiberwise negation, so the full Cartan calculus does not
+descend \grade{proved; $[\textsf{propext},\textsf{Quot.sound}]$ core}; group-completing
+$\N\to\Z$ switches it \emph{on}---$\SPoly_\Z$ is Rosický, carries a scalar ring object, and
+meets the full Aintablian--Blohmann specification \grade{proved}.
+\end{result}
+
+\begin{result}[Pairwise Zappa--Szép criterion and the $(\mathrm{G})$ obstruction]\grade{proved; lean-verified instantiation}
+\label{res:zs}
+A global Zappa--Szép product exists iff $(\mathrm{L})$ freeness and $(\mathrm{G})$ global
+closure both hold \grade{proved}; the $(\mathrm{G})$-obstruction is a class $[\omega] \in H^2$
+\grade{proved}. Instantiated in agent orchestration / blockchain re-entrancy: unprotected
+re-entrancy is exactly $(\mathrm{G})$-failure with $[\omega(K_\varepsilon)] = \varepsilon$ the
+generator of $H^2 \cong \Z/2$ \grade{lean-verified}.
+\end{result}
+
+\section{Theory}
+\label{sec:theory}
+
+\subsection{The equivalence-chain core (Lane A)}
+
+Beyond Result~\ref{res:chain}, the chain's infrastructure is largely machine-checked:
+matched-pair associativity $\Leftrightarrow$ the four Zappa--Szép axioms ZS1--ZS4
+\grade{lean-verified}; monoidal coherence (pentagon + triangle) for all four tensors
+$\otimes,\times,+,\lhd$ on $\Cont$ \grade{lean-verified}; and the pairwise ZS criterion
+$(\mathrm{L})\wedge(\mathrm{G})$ \grade{proved}, shared into the chain.
+
+Supporting structural results. The free monad on a container is the free $\lhd$-monoid under
+grafting, with the three monoid laws machine-checked \grade{lean-verified} (the universal
+property is \emph{partial}: a multiplication-backward node and backward-uniqueness remain). The
+cofree comonad is the $\lhd$-comonoid of $p$-trees with its couniversal property in container
+coordinates \grade{proved}. The state object $\Delta S$ is the codiscrete category, and Workers
+form a $(\Set,\times)$-graded category via the Dirichlet tensor \grade{proved}.
+
+\begin{remark}[Honest status of the chain]
+The 1-categorical core is lean-verified; the enriched (M5) and $\infty$ (M6) rungs are open.
+The grant narrative should read ``1-categorical core lean-verified, enriched/$\infty$ open,''
+not ``equivalence chain proved.''
+\end{remark}
+
+\subsection{The tangent / Cartan arc (Lane B)}
+
+The arc develops Result~\ref{res:tangent} into a full dividing-line picture.
+
+\emph{Existence.} $T = (-)\otimes\W$, base change along $k \to \DD = k[\varepsilon]/\varepsilon^2$
+(Weil algebra $\W = \N[\varepsilon]/\varepsilon^2$), is a strict $\lhd$-monoidal functor whose
+laxator is the AAGM chain rule, and it restricts to $\DCont$ \grade{proved}. Honest caveat: the
+target base is genuinely $\DD$; over $\Set$ the tangent bundle carries no comonad structure.
+
+\emph{Uniqueness.} Among representable first-order tangent structures there are exactly two
+(trivial $\W=\N$; dual-number $\W=\N[\varepsilon]/\varepsilon^2$) \grade{proved}. \textbf{Rick
+referee correction (accepted):} the ambient category is base change by the Weil algebra,
+$T = (-)\otimes\W$, \emph{not} $T = (-)\lhd\DD$ on full $(\Poly,\lhd)$. The $\lhd$-reading was
+refereed wrong (on full $\lhd$-$\Poly$ the honest operation collapses to $\{\mathrm{id}\}$;
+$\lhd = \otimes\W$ only on the linear layer). The write-ups were relabelled accordingly, and the
+former ``third structure at infinite support'' (F4) is \textbf{demoted to open}. Several
+Lean oracles support the uniqueness arithmetic: solid-idempotent collapse, universality
+rank-rigidity, and the two-model distinction, all $[\textsf{propext}]$.
+
+\emph{The $\N$-vs-$\Z$ Cartan knife.} Over the rig $\N$, $\SPoly/\partial$ has no scalar ring
+object and is not Rosický (no fiberwise negation), so the full Cartan calculus does \emph{not}
+descend---only a rig-scalar fragment survives \grade{proved; $[\textsf{propext},\textsf{Quot.sound}]$
+arithmetic core}. Group-completing to $\Z$ puts us on the far side of the knife: $\SPoly_\Z$ is
+Rosický, carries scalar ring object $R=\Z$, and satisfies the entire Aintablian--Blohmann spec,
+with Cartan descent a \textsf{computed} downstream consequence \grade{proved; lean-verified positive companion}.
+
+\emph{A dividing line by refutation.} The Lanfranchi ``parallelizable $\Leftrightarrow$ Lie group
+object'' port is \textbf{ill-posed} on polynomial functors ($T$ is not Cartesian there); what
+survives---tangent-regular $\Leftrightarrow$ out-degree homogeneous---is \emph{blind to
+composition}, hence not a groupoid criterion. Refuted both ways \grade{proved, as an impossibility result}.
+
+\subsection{Zappa--Szép / skew-brace / $H^2$ obstruction (Lane C)}
+
+The obstruction calculus behind Result~\ref{res:zs}. The solvability obstruction
+$\onu\colon H^2_+ \to C^3/A(Z^2_\circ)$ is a well-defined homomorphism killing $B^2_+$ with
+$\operatorname{im}\varphi^+ = \ker\onu$: an additive class extends to a skew-brace cocycle iff
+$\onu = 0$ \grade{proved; lean-verified at $|G|=8$ slice and $|G|=16$ lock}. This is the honest
+repair of the earlier (refuted) $[\nu]\perp[\Omega]$ independence claim---the residue, $\sigma$,
+and $[\beta]$ are coupled.
+
+The holonomy-composition ZS bridge is \textsf{peer-reviewed}: composite liftings compose by ZS
+product, isotropy containment holds, and the aligned-abelian $[\omega]$ obstruction is proved
+(the originally-stated part (b) was refuted and replaced by (b$'$)). The two $[\omega]$-sites
+(handoff vs.\ stabiliser) are irreducibly distinct \grade{proved}; emergent-holonomy meeting
+count $= \dim\operatorname{Ext}^0$ with the higher Ext tower vanishing \grade{proved}. The
+cyclic $H^2$ engines---$H^2(C_n;\Z) = \Z/n$, $H^2(C_n;\Z/m) = \Z/\gcd(n,m)$,
+$H^2(\Z/2;\Z/2) = \Z/2$ with split/nonsplit witnesses---are \grade{lean-verified} (Bézout built
+from scratch). Two roots sit honestly at \textsf{computed}: the groupoid ZS obstruction (the
+strong conjecture ``groupoid $\Rightarrow [\omega]=0$'' was \emph{refuted}; the correct dividing
+line is cohomological dimension $\le 1$) and the quiver skew-brace / Ferri-prunability
+separation (prunability $=$ descent/subfunctor, Schreier-blind; many \textsf{proved} sub-nodes,
+including the \textsf{peer-reviewed} $[\Omega] =$ Rathee--Yadav identification, under a
+\textsf{computed} root).
+
+\subsection{Fullness / admissibility / closed structure (Lane D)}
+
+Flagship T1 (Result~\ref{res:t1}) anchors this lane. Around it: the copower test yields the
+writer monad and, over any extensive base, decides fullness \grade{proved} (residual $Q'$ open);
+$(-)\lhd q$ has a left adjoint iff the unit is connected---T1's condition applied twice---and over
+$\Vect$ the left adjoint exists iff verticality \grade{proved} (this root carries the large
+Gap-S / Conj.\ 6.2 ZFC sub-program); fibredness of $(-)\lhd q$ is \emph{not} its left-closure
+(a two-sided separation, answering BHM) \grade{proved}.
+
+Closed-structure classification: Dirichlet $\otimes$ on $\Fam(C^{\mathrm{op}})$ is closed iff
+$\Phi$ is familially representable (T2) \grade{proved}; $\lhd$-left-closure exists over a
+tiny/rigid base via the collapse $\lhd = \otimes$ (T4-left) \grade{proved}; a Day-convolutional
+tensor is left-closed iff $(-)\star B$ is polynomial \grade{proved}; $(-)\lhd q$ is a parametric
+right adjoint for every $q$ \grade{proved}. Logic of containers: $\Cont(\mathrm{cod}) =
+\Fam(\mathrm{cod}^{\mathrm{op}})$ is a bifibration, quantifiers are Neil's A/E liftings, and it is
+a co-hyperdoctrine with one-sided Beck--Chevalley/Frobenius \grade{proved}. Comonoid
+classifications: bare $\otimes$-comonoids in $\Poly$ are families of monoids (answering
+Niu--Spivak Ch.\ 9 Q5), $\otimes$-monoids are monoid $+$ oplax functor, and double comonoids in
+$(\Poly,\lhd,\otimes)$ are sets of commutative monoids (Eckmann--Hilton)
+\grade{proved; mostly lean-verified}. The full Hedges $4\times4$ interchange table is computed with
+two corrections to Hedges \grade{proved; most cells lean-verified}. Two roots remain open/computed:
+the closed-convolutional classification ($\star \cong \times$ or $\vee_S$; bounded-arity proved,
+infinite-arity open) is \textsf{in-progress}, and the $\ltimes/\rtimes$ Dialectica tensors
+(with $\rtimes$ left-closed and the pair duoidal/LDC, both proved) sit under a \textsf{computed} root.
+
+\subsection{Containers over $\Vect$ / M-containers / change-of-base (Lane E)}
+
+Linear containers $\Fam(\Vect^{\mathrm{op}})$: biproduct collapse $\sem{S,P} \cong
+\mathrm{Id}^N$, $\sem{-}$ is \emph{not} full over $\Vect$ (the extensivity crux again), and
+$\lhd$-comonoids are families of $k$-algebras \grade{proved; several lean-verified}. M-containers:
+$M\text{-}\Cont = \Fam(\Kl(M)^{\mathrm{op}})$, with $\sem{-}_M$ always faithful and full iff $M$
+is codense and each $(M-)^A$ is connected (the coproduct criterion was refuted; probabilistic $D$
+keeps fullness) \grade{proved; THM3 composition-polynomiality sub-tree carries many
+Rick-peer-reviewed nodes}. Change-of-base: $\mathcal{CL}\cap\mathcal{UN} = \{\mathrm{Id}\}$---no
+nontrivial effect monad gives a uniform fully-faithful enrichment theorem, a sharp negative answer
+to Neil UID-168 \grade{peer-reviewed; lean-verified algebraic core}. Finally the monad$\to$comonad
+transfer $G(S,P) = (S,M\circ P)$ (comonad laws $\Leftrightarrow$ monad laws, $=$ left
+coclosure/Lan) \grade{proved}; a mixed distributive law (entwining) exists for all $M$ with the
+reverse failing on branching \grade{proved}; and effect-coeffect arrows form a category iff $M$ is
+non-branching, with $\lambda$ a Turi--Plotkin bialgebra for all $M$ \grade{proved; the largest tree,
+$\sim$90 nodes, many lean-verified}.
+
+\section{Applications}
+\label{sec:apps}
+
+\begin{itemize}
+\item \textbf{Agent orchestration $=$ Zappa--Szép weld.} An orchestration is a directed container;
+two orchestrations compose as $C \bowtie D$ iff $\varepsilon = 0$. Unprotected re-entrancy is
+$(\mathrm{G})$-failure \grade{proved; peer-reviewed standalone note}.
+
+\item \textbf{Blockchain re-entrancy $=$ failed distributive law.} The re-entrancy obstruction is
+$[\omega(K_\varepsilon)] = \varepsilon$, the generator of $H^2 \cong \Z/2$ \grade{lean-verified}.
+This is the program's sharpest Applications claim: a known class of economically-consequential
+smart-contract bugs is exactly a nonzero second cohomology class. Security audits of such
+contracts are, in this framing, searches for failed distributive laws.
+
+\item \textbf{Supply chains $=$ directed containers.} A supply chain is a directed container; a ZS
+product governs composition; inventory inconsistency is $[\omega] \in H^2(\mathrm{Sk};\Z/n)$, with
+a worked $\varepsilon$-family computed and $n=2$ reusing the orchestration bit
+\grade{computed}.
+
+\item \textbf{Linear attention and GA composition.} Linear attention is the $\odot$ product in
+$\mathrm{Mat}(\Vect)$ \emph{exactly at fixed context}; the strong ``stack $=$ one matrix'' claim
+is \emph{refuted} (a live depth-$L$ stack has degree $3^L$; softmax is not a $\odot$)
+\grade{proved}. O'Neill's stacked-linear-attention free monad is the free $\lhd$-monoid on a linear
+container $=$ the tensor algebra, correcting O'Neill Thm 3.2 (an Adámek chain of partial sums, not
+bare powers) \grade{proved}. The $\mathrm{Mat}(\Vect)$/attention lane is the nearest proved anchor
+for GA composition; a dedicated GA/Kendall's-$W$ registry does not yet exist.
+
+\item \textbf{Game comonads are polynomial comonads.} Ehrenfeucht--Fraïssé, pebbling, and modal
+comonads factor through $\Poly$; the underlying functor is polynomial \grade{proved} and the
+comonoid is a small category \grade{proved, with a 0-axiom EF-comonoid Lean witness}. The
+arboreal-fibration $= \Fam(\mathrm{cod}^{\mathrm{op}})$ crown remains \textsf{speculative}; the root
+is honestly \textsf{computed}.
+\end{itemize}
+
+\noindent Honest scope note: blockchain is covered via the orchestration re-entrancy result; tax
+computation and a standalone GA composition have \emph{no} dedicated registry yet. Clio's
+crystal-base results are off-territory and recorded only at her \textsf{peer-claimed} evidence level.
+
+\section{Formalisation}
+\label{sec:lean}
+
+The registry contains roughly \textbf{107 \textsf{lean-verified} nodes}: sorry-free Lean~4
+declarations whose axiom footprints are mostly $[\textsf{propext}]$ or
+$[\textsf{propext},\textsf{Quot.sound}]$. Four registries are lean-verified at the \emph{root}:
+the free $\lhd$-monoid three laws (\texttt{Container.freeMonoid}; $\texttt{graft\_assoc}$,
+$\texttt{split\_assoc}$ use $[\textsf{Quot.sound}]$ only), and the three $H^2$ engines
+$H^2(C_n;\Z)=\Z/n$, $H^2(C_n;\Z/m)=\Z/\gcd$, $H^2(\Z/2;\Z/2)=\Z/2$.
+
+Notable lean nodes under other roots:
+\begin{itemize}
+\item \textbf{Equivalence chain:} M1--M4, ZS associativity, and all four monoidal structures,
+machine-checked in the core typeclass Lean (\S\ref{sec:spine}).
+\item \textbf{Tangent arc:} the oracles are $[\textsf{propext}]$-only---solid-idempotent collapse,
+universality rank-rigidity, two-model distinction---with the negation-obstruction arithmetic core
+at $[\textsf{propext},\textsf{Quot.sound}]$ (via \texttt{omega}) and a lean-verified positive
+companion for the $\Z$ far-side. \emph{Caveat (registry README):} Lean verifies the statement
+\emph{as written}; e.g.\ the $\N$-transport/functoriality in the scalar-object result is
+\emph{not} formalised---the Lean node is the arithmetic core only.
+\item \textbf{ZS/$H^2$:} re-entrancy $[\omega]=\varepsilon$ (\texttt{Reentrancy.phi\_omega}),
+$\onu$ at $|G|=8$ and the $|G|=16$ lock, the torsor corrected/converse (Mathlib), prunability
+descent L2.
+\item \textbf{Effect-coeffect:} biKleisli unit laws, Maybe/Writer/affine $\texttt{arr\_assoc}$,
+the branching obstruction (negative witness), Reader/State drop, the sigma-monad, the
+proof-relevance boundary, A-module Fubini.
+\item \textbf{Linear containers:} the $\Vect$ collapse iso, \texttt{linExt\_not\_faithful}, the
+union-of-subspaces $F_q$ core.
+\item \textbf{Game comonads:} the EF-comonoid witness (\texttt{\#print axioms} empty), linear
+order $k=2,3,4$.
+\item \textbf{Misc:} holonomy-triviality (full), the disjointness lemma, free/cofree UP, the
+Workers retract, state $\Delta S$.
+\end{itemize}
+
+\noindent Treat \textsf{lean-verified} as ``strongest check on what is on the page,'' not
+``nothing left to review.''
+
+\section{Status \& honesty}
+\label{sec:status}
+
+Top headline results with honest registry grades, and the honesty flags.
+
+\begin{center}
+\small
+\begin{longtable}{p{0.56\textwidth} l}
+\toprule
+\textbf{Result} & \textbf{Grade} \\
+\midrule
+\endhead
+Equivalence-chain core M1--M4 & lean-verified \\
+\quad(full chain root, incl.\ M5 enriched / M6 $\infty$) & \emph{in-progress} \\
+T1: $\sem{-}$ full \& faithful $\Leftrightarrow$ unit connected & proved \\
+$\partial$ is the differential combinator of a CDC / tangent str. & proved (0-axiom finite bridge) \\
+Tangent uniqueness: exactly two representable structures & proved \\
+No scalar ring object over $\N$ (Cartan does not descend) & proved $[\textsf{propext},\textsf{Quot.sound}]$ \\
+$\Z$ far side: $\SPoly_\Z$ Rosický, full Cartan on & proved (lean positive companion) \\
+Lanfranchi parallelizable port ill-posed & proved (impossibility) \\
+Pairwise ZS criterion $(\mathrm{L})\wedge(\mathrm{G})$ & proved \\
+$\onu$ homomorphism, $\operatorname{im}\varphi^+=\ker\onu$ & proved (lean $|G|=8,16$) \\
+Holonomy-composition ZS bridge & peer-reviewed \\
+Change-of-base $\mathcal{CL}\cap\mathcal{UN}=\{\mathrm{Id}\}$ & peer-reviewed \\
+Orchestration / re-entrancy $[\omega]=\varepsilon$ in $H^2\cong\Z/2$ & lean-verified \\
+Supply chain directed container + inventory $[\omega]$ & computed \\
+Game comonads are polynomial comonads & computed (root); proved + 0-axiom witness (parts) \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+\noindent\textbf{Honesty flags.}
+\begin{enumerate}
+\item \emph{No self-published work.} The registry's 18 \textsf{published} nodes are external
+literature cited as premises (Niu--Spivak, Schreier, Stallings--Swan, Ahman--Bauer,
+Baues--Wirsching, \dots), not MacBeth papers. Our shipped write-ups are registered at most as
+\textsf{peer-reviewed} (by Rick).
+\item \emph{Full chain in-progress.} M1--M4 lean-verified; M5 enriched unclassified; M6 $\infty$
+speculative. Say ``1-categorical core,'' never ``chain proved.''
+\item \emph{Tangent-uniqueness corrected.} Per Rick's accepted referee report the ambient operation
+is Weil base change $(-)\otimes\W$, \emph{not} $(-)\lhd\DD$ on full $(\Poly,\lhd)$; the
+$\lhd$-reading was wrong and F4 is demoted to open.
+\item \emph{Node vs theorem counts.} ``\textsf{proved}: 518'' is a \emph{node} count
+(premises + sub-lemmas). Distinct top-level theorems number $\sim$45 (one per registry root), of
+which 33 roots are \textsf{proved} or stronger and closed.
+\item \emph{Standing failure mode.} Write-ups have historically upgraded hedged proofs into clean
+false claims; grades here deliberately track registry nodes, not prose.
+\end{enumerate}
+
+\section{Open questions \& roadmap}
+
+\begin{itemize}
+\item \textbf{Full equivalence chain.} Close M5 (enriched $\DCont = \Cof$---currently
+unclassified) and M6 (the $\infty$-level $\infty\text{-}\DCont = \Cat$, Kan--Chen Conj.\ 7.2---
+speculative). This is the single highest-value Theory-pillar target: it turns ``core lean-verified''
+into ``chain proved.''
+\item \textbf{Lie-group-object sub-question for $\Poly$ comonoids.} The Lanfranchi port is ill-posed
+as stated; the open question is whether a composition-\emph{sensitive} invariant exists that
+recovers a groupoid criterion once $T$ is honestly $\otimes\W$ rather than $\lhd\DD$.
+\item \textbf{The internal replacement theorem.} A named grant deliverable; not yet a registry root.
+\item \textbf{Path-5 applications.} Promote supply chains from \textsf{computed} to a worked real
+directed container; build the missing GA-composition (Kendall's $W$) and tax-computation registries
+rather than leaning on the attention lane as a proxy.
+\item \textbf{Strathclyde mini-course (Oct 13--16).} Neil teaching; the tangent/Cartan arc is the
+natural Theory-pillar lead---existence, the two-structure uniqueness, and the $\N/\Z$ Cartan knife
+are a clean, mostly machine-checked narrative that also surfaces the honest open frontier (the
+far-side Cartan descent and the Lie-object question).
+\end{itemize}
+
+\end{document}
