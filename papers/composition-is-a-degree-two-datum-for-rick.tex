@@ -1,0 +1,576 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{program}{The degree program}
+
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Ab}{\mathsf{Ab}}
+\newcommand{\Comon}{\mathsf{Comon}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Sk}{\mathrm{Sk}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\sS}{\mathcal{S}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\lto}{\!\lhd\!}
+
+\title{Composition is a degree-two datum\\
+\large Locating compositional invariants by cohomological degree ---
+a program, with three proved instances on directed containers}
+\author{MacBeth\thanks{Kodamai. This is a positioning note for the Kodamai
+AI-Mathematician programme; the proofs it organizes are established in the cited companion notes
+and proof files, which live together with this note and the verification scripts at
+\texttt{github.com/scotmacbeth/work-in-progress} (content commit recorded on this page). Prepared
+as a framing appendix for the Strathclyde mini-course \emph{Tangent Categories and Containers}
+(13--16 October 2026).}\\
+\small Kodamai}
+\date{7 October 2026\\[2pt]
+\small content commit \texttt{ae9d67a}\\[2pt]
+\small\itshape For: Rick (Rick, review copy) --- content commit \texttt{ae9d67a}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A directed container is a small category, and a question about such a category can be a question
+about its underlying shape, about a resource transported across it, or about how its morphisms
+compose. We observe that three invariants we have recently settled --- one for each of these ---
+sit at three distinct cohomological altitudes, and that the altitude of an invariant is a faithful
+record of how much of composition it is able to see. Out-degree homogeneity is a degree-zero
+invariant and is provably blind to composition. Supply-chain inventory consistency is a degree-one
+class on a resource presheaf, provably independent of the degree-two weld class that governs
+whether a chain factors at all. Composition itself --- the Zappa--Sz\'ep weld --- is a degree-two
+datum, and the comultiplication that encodes it supports a strictly finer invariant that does see
+composition: the left-translation trivialization of the tangent bundle detects exactly the
+groupoids, and, one notch finer, the thin groupoids, stratifying the degree-two layer by a
+discrete holonomy class. We assemble these as a single ladder and propose, as a program rather than
+a theorem, that cohomological degree classifies compositional invariants by what they can detect.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{One functor, three questions.}
+A directed container is, by the theorem of Ahman and Uustalu \cite{AhmanUustalu2016}, exactly a
+small category: the comonoids for the composition product $\lhd$ on polynomial functors are small
+categories, with objects the shapes and, for each object $a$, the direction set $E_a$ as the set of
+morphisms out of $a$. A single such category carries structure at several levels at once. There is
+its \emph{underlying functor} $p=\sum_a y^{E_a}$, which remembers only the object-indexed family of
+direction sets. There is \emph{data transported across it} --- a presheaf of resources, say stock
+levels at the nodes of a supply chain. And there is its \emph{composition} --- the comultiplication
+$\delta\colon p\to p\lto p$, which records how two morphisms compose, and, for a composite built as
+a Zappa--Sz\'ep product, the weld that glues two factors together.
+
+Questions about a category can interrogate any of these levels, and a recurring experience of this
+programme has been that an invariant designed to answer one kind of question turns out to be
+\emph{structurally unable} to answer another. The derivative of a container is blind to its
+composition. The consistency of a transported resource is independent of whether the composite even
+factors as claimed. These are not accidents of proof technique; they are facts about where the
+relevant datum lives.
+
+\paragraph{The observation.}
+This note makes that experience precise by a single organizing device: grade a compositional
+invariant by the \emph{cohomological degree} of the datum it reads.
+
+\begin{itemize}
+\item \textbf{Degree $0$} is the underlying functor $U(p)$ --- the family of out-degrees $|E_a|$,
+read by the Abbott--Altenkirch--Ghani--McBride derivative $\partial$ and by anything that factors
+through the forgetful $U\colon\Cat\to\Poly$. No composition data is present.
+\item \textbf{Degree $1$} is a class $[\theta_R]\in H^1(\sS;R)$ of a resource presheaf $R$ over the
+nerve of the category --- a route/reconvergence discrepancy.
+\item \textbf{Degree $2$} is composition itself: the comultiplication $\delta$, and the
+Zappa--Sz\'ep weld obstruction $[\omega]\in H^2(\Sk_\sS;\cD)$ measuring whether a composite closes
+into the claimed factorization.
+\end{itemize}
+
+We then observe that three invariants we have proved, independently and for their own sakes, pin
+three points of this ladder, and that two sharp \emph{non-collapse} results --- degree-zero
+blindness, and the logical independence of the degree-one and degree-two classes --- are exactly
+what give the grading teeth. The slogan is:
+
+\begin{quote}
+\emph{The cohomological degree at which a compositional invariant lives records what it can and
+cannot see. Composition --- the Zappa--Sz\'ep weld --- is a degree-two datum, and an invariant
+living below degree two is provably blind to it.}
+\end{quote}
+
+\paragraph{This is a program, not a theorem.}
+We want to be scrupulous about what is and is not claimed. The grading above is a
+\emph{heuristic} --- an organizing principle that fits the proved instances and sharpens the
+grant's theory narrative. The general statement, that \emph{every} compositional invariant is
+classified up to detection power by its degree, is \textbf{open}; we state it in
+\S\ref{sec:conclusion} as a conjecture and research direction, never as a result. What is proved is
+the three instances and the two non-collapse facts, each in a companion note or proof file cited
+below and \emph{not} re-derived here. This is a positioning note: its job is to make the pattern
+visible, not to establish new mathematics.
+
+\paragraph{The three proved pins, and a capstone.}
+In the language of the grading:
+
+\begin{itemize}
+\item \textbf{Degree $0$ (\S\ref{sec:deg0}).} ``Tangent-regularity'' --- all tangent fibres of
+$Tp$ isomorphic --- is equivalent to out-degree homogeneity, factors through $U\colon\Cat\to\Poly$,
+and is therefore \emph{provably blind} to composition: the idempotent monoid $\{1,e\}$ and the
+group $\Z/2$ have the same underlying functor $y^2$ and are indistinguishable to it, though only
+the latter is a groupoid \cite{MacBethParallel}.
+\item \textbf{Degree $1$ (\S\ref{sec:deg1}).} Supply-chain inventory consistency is the vanishing
+of a degree-one class $[\theta_R]\in H^1(\sS;R)$ on the resource presheaf, and it is
+\emph{logically independent} of the degree-two weld class $[\omega]\in H^2(\Sk_\sS;\cD)$: each can
+vanish while the other does not \cite{MacBethSupplyChain}.
+\item \textbf{Degree $2$ (\S\ref{sec:deg2}).} The weld $[\omega]$ is composition's own degree-two
+class. And the comultiplication supports an invariant that \emph{does} see composition: the
+left-translation trivialization of the (vertical layer of the) tangent bundle exists over a
+component exactly when that component is a \emph{groupoid} \cite{MacBethDelta}. This separates
+$\Z/2$ from $\{1,e\}$ --- the very pair degree zero cannot separate.
+\item \textbf{Capstone (\S\ref{sec:tower}).} One notch finer, the same trivialization lands on a
+\emph{constant} presheaf exactly when the component is a \emph{thin} groupoid, so the composition
+layer carries its own internal stratification --- generic $\subsetneq$ groupoid $\subsetneq$ thin
+groupoid --- separated by the vertex group $\Aut(a)$ as a discrete holonomy class
+\cite{MacBethThin}.
+\end{itemize}
+
+\paragraph{Method, and the one honest subtlety.}
+The through-line is a single slogan about two structure maps of the same functor $p$. The
+derivative $\partial$ reads the \emph{directions} $E_a$ and nothing else --- degree-zero shape. The
+comultiplication $\delta\colon p\to p\lto p$ reads the \emph{composition} --- it lands in the
+two-fold composite $p\lto p$, which is exactly why composition is a degree-two datum. The same
+container, viewed through $\partial$ or through $\delta$, sits at two different cohomological
+altitudes, and the proved instances measure the gap between them.
+
+The subtlety to flag at once: \textbf{the degrees do not collapse into one another}. There is no
+suspension isomorphism silently relating a degree-one presheaf class to a degree-two weld class;
+the simplest witness is the free loop $B\Z$, where $H^1(B\Z;A)=A$ but $H^2(B\Z;A)=0$. The content
+of the degree-one/degree-two instance (\S\ref{sec:deg1}) is precisely that these two classes vary
+independently, and the reader should resist the temptation --- which the suggestive word ``ladder''
+invites --- to read the grading as a filtration of a single theory. It is a classification of
+\emph{data}, not of a spectral sequence.
+
+\paragraph{Outline.} Section~\ref{sec:prelim} fixes containers as categories, the two structure
+maps $\partial$ and $\delta$, the resource presheaf and its $H^1$, the weld and its $H^2$, and the
+degree grading. Sections~\ref{sec:deg0}--\ref{sec:deg2} walk the three proved pins, degree by
+degree, stating each result and the discriminating example that carries its intuition and citing
+the companion note for the proof. Section~\ref{sec:tower} adds the capstone monodromy tower.
+Section~\ref{sec:conclusion} states the program as a program, the open classification conjecture,
+and the sharpened applications story.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We work with polynomial functors in one variable and finite support; everything is first order.
+
+\paragraph{Containers as categories.}
+A \emph{container} in one variable is a polynomial functor $p=\sum_{a\in\Ob}y^{E_a}$ with a set
+$\Ob$ of \emph{shapes} and, for each shape $a$, a set $E_a$ of \emph{directions}; its extension
+sends a set $X$ to $\sum_a X^{E_a}$ \cite{AAGM2003,GambinoKock2013}. The composition product $\lhd$
+has unit $y$ and realizes substitution. By Ahman and Uustalu \cite{AhmanUustalu2016} the comonoids
+in $(\Poly,\lhd,y)$ are exactly small categories: a comonoid structure
+$\delta\colon p\to p\lto p$ chooses identities (the counit) and a composition (the
+comultiplication), $\Ob$ is the object set, and $E_a=\coprod_c\Hom(a,c)$ is the set of morphisms
+out of $a$, so $|E_a|$ is the \emph{out-degree} of $a$. Write
+$\Comon(\Poly,\lhd)\simeq\Cat$ for this equivalence and $U\colon\Cat\to\Poly$ for the forgetful
+functor that discards $\delta$ and keeps only the underlying functor $\sum_a y^{E_a}$. We compose
+\emph{diagrammatically}: for $g\colon a\to b$ and $h\colon b\to c$, the composite $g\cdot h\colon
+a\to c$ means ``$g$ then $h$''.
+
+\paragraph{Two structure maps: $\partial$ reads shape, $\delta$ reads composition.}
+The one-hole derivative \cite{AAGM2003} is
+\[
+   \partial p \;=\; \sum_a\ \sum_{e\in E_a} y^{E_a\setminus\{e\}}
+             \;=\; \sum_a |E_a|\cdot y^{\,|E_a|-1}.
+\]
+It depends only on the direction sets, i.e.\ only on $U(p)$: it is a construction on the
+\emph{underlying functor}. With $W=\Z[\varepsilon]/(\varepsilon^2)$ the dual-number Weil algebra,
+the attached tangent functor is the Weil base change $T=(-)\otimes W$, computed on the first-order
+layer by substituting the infinitesimal and truncating,
+\begin{equation}\label{eq:T}
+   Tp \;=\; p(y+\varepsilon v)\bmod\varepsilon^2 \;=\; p+\varepsilon v\cdot\partial p .
+\end{equation}
+We write $(-)\otimes W$ rather than ``$(-)\lhd D$'': substituting $D=y+\varepsilon v$ and
+truncating is only the first-order shadow of the base change, and the two descriptions agree on the
+layer we use \cite{MacBethCartan,MacBethParallel}. By contrast the comultiplication
+$\delta\colon p\to p\lto p$ is \emph{not} a construction on $U(p)$: it is extra structure, and it
+lands in the two-fold composite $p\lto p$. This is the precise sense in which composition is a
+degree-two datum --- it is the structure map valued in the double composite --- and it is the datum
+that $\partial$ cannot see.
+
+\paragraph{The resource presheaf and its degree-one class.}
+Model a supply chain as a small category $\sS$: objects are nodes, morphisms out of $a$ are
+admissible operations, composition is sequencing. \emph{Inventory} is data transported across
+$\sS$: a presheaf $R\colon\sS^{\mathrm{op}}\to\Ab$ of stock-groups, with $R(f)$ the transport along
+an operation $f$. A \emph{global section} is a family $(x_a\in R(a))_a$ with
+$R(f)(x_{\operatorname{cod}f})=x_{\operatorname{dom}f}$ for every $f$; for a transport local
+system, where each $R(f)$ is translation by $\delta_f$, a global section is a node-potential
+$\varphi$ with $\delta_f=\varphi(\operatorname{cod}f)-\varphi(\operatorname{dom}f)$, i.e.\ the
+$1$-cochain $\delta$ is a coboundary. The obstruction is its class
+\[
+   [\theta_R]\;:=\;[\delta]\in H^1(\sS;R).
+\]
+This is a degree-one class, with coefficient system the resource $R$, measuring route discrepancy
+over the nerve of $\sS$.
+
+\paragraph{The weld and its degree-two class.}
+A composite chain is a \emph{Zappa--Sz\'ep product} $\sS=\cC\bowtie\cD$ (procurement $\bowtie$
+logistics): $\cC,\cD$ are wide subcategories, meeting in the discrete category $O$ on the shared
+objects, and every morphism factors uniquely as $f=c\cdot d$ \cite{AhmanUustalu2016,MacBethZS}. The
+matched-pair law $\lambda\colon\cD\cC\Rightarrow\cC\cD$ is the distributive rewriting. Whether the
+transversal closes into such a factorization is governed by the \emph{weld obstruction}
+\[
+   [\omega]\in H^2(\Sk_\sS;\cD),
+\]
+a Baues--Wirsching $2$-cocycle on the orbit category with coefficients the vertex-group presheaf
+$\cD$; the chain decomposes as claimed exactly when $[\omega]=0$ \cite{MacBethZS}. This is a
+degree-two class, with coefficient system $\cD$ (the invertible/weld part), depending only on the
+category and the chosen factorization --- no resource data enters. It is the home, for instance, of
+the blockchain re-entrancy obstruction $[\omega]=\varepsilon\in H^2\cong\Z/2$
+\cite{MacBethReentrancy}.
+
+\paragraph{The degree grading.}
+We rank a compositional invariant by the degree of the datum it reads: degree $0$ for the
+underlying functor $U(p)$ (equivalently the out-degree family), degree $1$ for a class in
+$H^1(\sS;R)$ of a resource presheaf, degree $2$ for the comultiplication $\delta$ and the weld
+$[\omega]\in H^2$. We stress again (\S\ref{sec:intro}) that this is a grading of \emph{data}; the
+degrees are genuinely different cohomological theories with different coefficient systems, and no
+dimension-shift relates them.
+
+\section{Degree zero: the invariant blind to composition}\label{sec:deg0}
+
+The lowest rung reads only the underlying functor, and is for that reason unable to see composition
+at all. The result is proved in full in the companion note \cite{MacBethParallel}; we state it and
+exhibit the discriminating examples.
+
+The tangent bundle \eqref{eq:T} has, over a point of shape $a$, a fibre that is the free module on
+the direction set $E_a$, of rank $|E_a|$. Call $p$ \emph{tangent-regular} if these fibres are all
+isomorphic to a single module --- the honest residue, in the representable/monoidal setting, of
+Lanfranchi's parallelizability \cite{Lanfranchi2026,MacBethParallel}.
+
+\begin{theorem}[\cite{MacBethParallel}]\label{thm:deg0}
+A container $p=\sum_a y^{E_a}$ is tangent-regular iff the out-degree $a\mapsto|E_a|$ is constant on
+$\Ob$. This condition depends only on $U(p)$ --- it factors through $U\colon\Cat\to\Poly$ --- and is
+therefore blind to composition: no property of the comultiplication $\delta$ can be equivalent to
+it.
+\end{theorem}
+
+\begin{example}[the blindness, made concrete]\label{ex:deg0}
+The idempotent monoid $\{1,e\}$ with $e^2=e$ and the group $\Z/2$ both have underlying functor
+$y^2$. They have the \emph{same} tangent bundle and are both tangent-regular (one object, so
+out-degree is trivially constant), yet $\Z/2$ is a groupoid and $\{1,e\}$ is not. Degree zero
+cannot tell them apart. Conversely the groupoid $\Z/2\sqcup\Z/3$ has out-degrees $2$ and $3$, so
+$U=y^2+y^3$ is \emph{not} tangent-regular though it is a groupoid: being a groupoid neither implies
+nor is implied by tangent-regularity.
+\end{example}
+
+The cautionary form of this rung is easy to fall for. A genuine theorem of Lanfranchi
+\cite{Lanfranchi2026} --- an object of a \emph{Cartesian} tangent category is parallelizable iff it
+is a Lie group object --- invites the port ``a container is parallelizable iff it is a groupoid.''
+The port is ill-posed, because the container derivative's tangent structure is the monoidal base
+change $(-)\otimes W$ and not a Cartesian one \cite{MacBethParallel}; what survives of it is
+tangent-regularity, which lives at degree zero and cannot see the groupoid property. This is no
+defect in \cite{Lanfranchi2026} --- that theorem is about Cartesian tangent categories --- but
+exactly the symptom of asking a shape-level invariant a composition-level question. Connected
+groupoids \emph{are} tangent-regular, the faithful shadow of ``Lie group $\Rightarrow$
+parallelizable''; but strictly more categories are, and the gap is the composition content that
+only degree two recovers (\S\ref{sec:deg2}).
+
+\section{Degree one: a class independent of the weld}\label{sec:deg1}
+
+The middle rung reads a resource transported across the category. Its invariant is genuinely
+cohomological --- a class in $H^1$ --- and the central fact is that it is \emph{independent} of the
+degree-two weld class, both as a matter of logic and, more tellingly, because the two live in
+different degrees over different coefficient systems. The results are proved in
+\cite{MacBethSupplyChain}; we state them.
+
+\begin{theorem}[\cite{MacBethSupplyChain}]\label{thm:deg1}
+Let $\sS=\cC\bowtie\cD$ and let $R$ be a resource local system of abelian stock-groups. Global
+inventory is consistent --- $R$ admits a global section over the sub-chain cover $\{\cC,\cD\}$ ---
+iff $[\theta_R]=0\in H^1(\sS;R)$. The matched-pair law $\lambda$ plays no role: a family compatible
+with the $\cC$-morphisms and the $\cD$-morphisms is a global section, because compatibility is
+closed under composition and $\cC\cup\cD$ generates $\sS$.
+\end{theorem}
+
+\begin{theorem}[separation, \cite{MacBethSupplyChain}]\label{thm:sep}
+$[\theta_R]\in H^1(\sS;R)$ and $[\omega]\in H^2(\Sk_\sS;\cD)$ are logically independent: both
+``$[\omega]=0$ with $[\theta_R]\neq 0$'' and ``$[\omega]\neq0$ with $[\theta_R]=0$'' occur. Hence
+inventory consistency is \emph{not} the vanishing of the weld class, in either direction.
+\end{theorem}
+
+\begin{example}[the two witnesses]\label{ex:deg1}
+For the first: let $\sS$ be the free category on the diamond quiver $a\rightrightarrows\{b,c\}
+\rightrightarrows d$ with distinct routes. It is directed-acyclic, so it has no non-identity
+invertibles, the weld coefficient system is trivial, and $[\omega]=0$ is forced; yet $B\sS$ has
+first Betti number $1$, so a transport system with nonzero loop holonomy gives $[\theta_R]\neq0$
+--- the chain decomposes trivially but stock fails to glue across the two routes. For the second:
+the rigid-twist category with $\mathrm{End}(a)=\Z/2$ has $[\omega]$ the generator of
+$H^2(\Sk;\Z/2)$, nonzero, while the zero inventory system is consistent, $[\theta_R]=0$. The two
+classes vary independently; they cannot even be compared by a natural map, since in the first
+witness the weld coefficient $\cD$ is trivial while the resource coefficient $R$ is not.
+\end{example}
+
+\begin{remark}[why there is no bridge]\label{rem:nocollapse}
+It is worth seeing why Theorem~\ref{thm:sep} is not an artifact. A rescue of ``consistent iff
+$[\omega]=0$'' would need a natural isomorphism $H^1(\sS;R)\cong H^2(\Sk_\sS;\cD)$ identifying the
+two classes. No such dimension shift exists in general: for the free loop $\sS=B\Z$ one has
+$H^1(B\Z;A)=A$ while $H^2(B\Z;A)=0$, so the degrees genuinely do not match. This is the same
+``rhyme, not identity'' caution that governs the two $H^2$-sites elsewhere in the programme
+\cite{MacBethZS}, here one degree down: the same cyclic group can appear on both rungs, but the
+site, the coefficients, and now the \emph{degree} differ, and one must check all three before
+identifying two obstructions.
+\end{remark}
+
+The conjecture tested in \cite{MacBethSupplyChain} --- that inventory consistency \emph{equals} the
+weld $[\omega]=0$ --- was a false generalization of blockchain re-entrancy, where the conserved
+quantity \emph{is} the weld-state itself and so no separate resource presheaf exists. In a supply
+chain the stock lives on the nodes, transported by operations, and is a genuinely separate
+degree-one datum. The modelling is not debunked but sharpened: re-entrancy is a degree-two failure
+(handoff order, in the weld), supply-chain inventory inconsistency is a degree-one failure (route
+discrepancy, on the nodes), and they are different economic failure modes at different altitudes.
+
+\section{Degree two: composition, and the invariant that sees it}\label{sec:deg2}
+
+The top rung is composition itself. It appears in two guises. First, the weld $[\omega]\in H^2$ of
+\S\ref{sec:prelim} \emph{is} a degree-two class, measuring whether composition closes into the
+asserted factorization; re-entrancy \cite{MacBethReentrancy} is its economic witness. Second --- and
+this is what promotes ``composition is a degree-two datum'' from a slogan about the weld to a
+statement about every container --- the comultiplication $\delta$ supports a trivialization of the
+tangent bundle that \emph{does} see composition, exactly where the degree-zero invariant of
+\S\ref{sec:deg0} was blind. The result is proved in \cite{MacBethDelta}.
+
+Fix a morphism $g\colon a\to b$ and pin the first slot of $\delta$ to it: this is the
+\emph{$\delta$-translation}
+\[
+   L_g\colon E_b\to E_a,\qquad L_g(h)=g\cdot h ,
+\]
+precomposition by $g$. It is contravariantly functorial, assembling the comultiplication into the
+\emph{arrows-out presheaf} $E_{(-)}\colon\cC^{\mathrm{op}}\to\Set$, $a\mapsto E_a$, $g\mapsto L_g$
+--- a property-free restatement of $\delta$. (The statements below concern this vertical/linear
+layer of the tangent object $T p=p\otimes W$, not the full bundle \cite{MacBethDelta}.) Say $Tp$ is
+\emph{$\delta$-trivializable} over a connected component $[a]$ if $E_{(-)}$ restricted there is a
+\emph{local system} --- every $L_g$ a bijection --- the honest discrete analogue of trivializing a
+tangent bundle by translations, $TG\cong G\times\mathfrak g$.
+
+\begin{theorem}[\cite{MacBethDelta}]\label{thm:deg2}
+$Tp$ is $\delta$-trivializable over $[a]$ iff the full subcategory on $[a]$ is a \emph{groupoid};
+globally, iff $\cC$ is a groupoid. Surjectivity of the translations already forces full
+invertibility --- a surjective $L_g$ hits the identity $\id_a\in E_a$, and a morphism composing to
+an identity is an inverse --- so the dividing line is exactly ``groupoid'', with no weaker
+cancellation condition in between.
+\end{theorem}
+
+\begin{example}[seeing what degree zero could not]\label{ex:deg2}
+Return to the pair of Example~\ref{ex:deg0}. On $\Z/2$ every $L_g$ is a bijection, so $Tp$ is
+$\delta$-trivializable. On $\{1,e\}$ with $e^2=e$ the translation $L_e$ sends $1\mapsto e$ and
+$e\mapsto e$, missing $\id=1$; it is not even injective, and $\{1,e\}$ is not $\delta$-trivializable.
+The degree-two invariant \emph{separates $\Z/2$ from $\{1,e\}$} --- the exact pair that the
+degree-zero invariant, reading only the common underlying functor $y^2$, was structurally unable to
+tell apart (Theorem~\ref{thm:deg0}). This is the content of ``composition is a degree-two datum'' as
+a theorem rather than a slogan: there is a genuine invariant, built from $\delta$, that detects a
+composition property, and it provably could not have been built at degree zero.
+\end{example}
+
+The reason the degree-two invariant succeeds where degree zero fails is now transparent: $L_g$ is
+built from $\delta$, the structure map valued in $p\lto p$, whereas tangent-regularity was built
+from $\partial$, a construction on $U(p)$. ``Groupoid'', ``connected'', ``invertible'' are
+properties of $\delta$; only an invariant that reads $\delta$ can see them, and reading $\delta$ is
+reading degree two.
+
+\section{The capstone: a monodromy tower inside degree two}\label{sec:tower}
+
+Degree two is not a single stratum. The $\delta$-translations can be asked to do more than be
+invertible: they can be asked to trivialize to a \emph{constant} identification, with trivial
+monodromy. This finer demand detects a strictly smaller class of categories, and the obstruction
+between the two is a discrete holonomy class. The result is proved in \cite{MacBethThin}.
+
+Call $E_{(-)}$ \emph{constant-trivializable} over $[a]$ if it is naturally isomorphic to a
+\emph{constant} presheaf $\Delta_V$: bijections $\varphi_b\colon E_b\to V$ with
+$\varphi_x\circ L_g=\varphi_y$ for \emph{every} $g\colon x\to y$ of the component, loops included.
+Read against a loop, this condition is monodromy: it asks the translation cocycle $\{L_g\}$ to be a
+coboundary.
+
+\begin{theorem}[\cite{MacBethThin}]\label{thm:thin}
+$E_{(-)}$ is constant-trivializable over $[a]$ iff $[a]$ is a \emph{thin} (indiscrete) groupoid ---
+a groupoid with trivial vertex groups, equivalently an equivalence-relation component. Globally,
+iff $\cC$ is a thin groupoid. Constant-trivializability implies $\delta$-trivializability, so the
+groupoid hypothesis of Theorem~\ref{thm:deg2} comes for free; applying naturality to a loop
+$g\in\Aut(a)$ forces $L_g=\id$ and hence, because the regular action fixes the basepoint
+$\id_a\in E_a$, forces $g=\id_a$ --- the vertex group vanishes.
+\end{theorem}
+
+\begin{corollary}[the three-level monodromy tower]\label{cor:tower}
+Over a connected component, three successively finer conditions on the vertical layer $E_{(-)}$
+stratify the composition layer:
+\begin{center}
+\begin{tabular}{@{}clll@{}}
+\toprule
+Rung & Condition on $E_{(-)}\big|_{[a]}$ & Equivalent to & Status \\
+\midrule
+$1$ & generic presheaf (each $L_g$ a function) & nothing & trivial \\
+$2$ & local system (every $L_g$ a bijection) & $[a]$ a groupoid & \cite{MacBethDelta} \\
+$3$ & $\cong$ constant presheaf & $[a]$ a thin groupoid & \cite{MacBethThin} \\
+\bottomrule
+\end{tabular}
+\end{center}
+Rungs $2$ and $3$ are distinct, separated by a nontrivial vertex group: $\Z/2$ (one object,
+$\Aut=\Z/2$) is a groupoid but not constant-trivializable, since the regular representation
+$\Z/2\curvearrowright\Z/2$ is free and the loop monodromy is nontrivial; the indiscrete category
+$I_2$ (two objects, trivial vertex group) is both. A two-object groupoid with vertex group $\Z/2$
+is rung $2$ but not rung $3$, confirming that the obstruction is the \emph{vertex group}, not
+one-object-ness.
+\end{corollary}
+
+So the composition datum carries an internal grading of its own. Rung $2$ is the honest discrete
+analogue of parallelizability --- trivialize by translations, as every Lie group admits, including
+those with nontrivial $\pi_1$. Rung $3$ is strictly stronger: parallelizable \emph{with a global
+flat framing}, trivial holonomy, which in the discrete setting forces the vertex group --- the
+discrete holonomy group --- to vanish. The obstruction to upgrading rung $2$ to rung $3$ is exactly
+$\Aut(a)$ as a monodromy class. Thus ``composition is a degree-two datum'' acquires an internal
+stratification: shape (degree zero) $<$ groupoid $<$ thin groupoid, with a single nontrivial vertex
+group marking the step from the second to the third. We are careful not to overclaim: rungs $2$ and
+$3$ are composition-\emph{sensitive} invariants of $\delta$, and $\Aut(a)$ is a genuine holonomy
+class, but these are properties of the comultiplication, not themselves identified with a literal
+$H^2$ cohomology class. The literal cohomological anchors of the ladder remain
+$[\theta_R]\in H^1$ and $[\omega]\in H^2$; the tower refines the \emph{datum} $\delta$ that lives at
+that altitude.
+
+\section{The program, and what it would take to prove}\label{sec:conclusion}
+
+\paragraph{What is assembled here.}
+Three invariants, each proved for its own sake, fall on a single ladder: out-degree homogeneity at
+degree $0$, blind to composition; inventory consistency at degree $1$, independent of the weld; and
+at degree $2$ both the weld $[\omega]$ and the $\delta$-translation invariant that --- with its
+monodromy tower generic $\subsetneq$ groupoid $\subsetneq$ thin groupoid --- sees exactly what
+degree zero could not, separating $\Z/2$ from $\{1,e\}$. The two non-collapse results --- degree-zero
+blindness (Theorem~\ref{thm:deg0}) and $H^1\perp H^2$ independence (Theorem~\ref{thm:sep}) --- are
+what make the grading informative rather than decorative: they show the rungs are genuinely
+different.
+
+\paragraph{The program, stated as a program.}
+\begin{program}
+For a directed container (small category) $\cC$ and a compositional invariant $I$, the cohomological
+degree of the datum $I$ reads determines what $I$ can detect: an invariant that factors through the
+degree-$d$ truncation of $\cC$'s data is blind to every composition phenomenon that is genuinely of
+degree $>d$. In particular composition --- the comultiplication $\delta$ and its weld $[\omega]\in
+H^2$ --- is a degree-two datum, and no invariant below degree two can detect it.
+\end{program}
+This is a \textbf{conjecture and research direction, not a theorem}. We have three instances and
+two non-collapse facts; we do not have a definition of ``the degree-$d$ truncation of a category's
+data'' general enough to make the statement precise and uniform, nor a proof that detection power is
+monotone in degree in general. Making the program a theorem would require: (i) a functorial notion
+of the degree-$d$ data of a directed container --- plausibly the $d$-truncation of its nerve
+together with a coefficient system --- such that $U\colon\Cat\to\Poly$ is the degree-$0$ case; (ii)
+a general ``blindness'' theorem that an invariant factoring through degree $<d$ cannot separate two
+categories agreeing to degree $d-1$; and (iii) a converse realizing every genuine degree-$d$
+distinction by some invariant. Each of (i)--(iii) is open. We flag explicitly that the degrees do
+not collapse (Remark~\ref{rem:nocollapse}), so any such theorem must classify data, not assemble a
+single filtration.
+
+\paragraph{The sharpened applications story.}
+As a grant-narrative frame the ladder is immediately useful, and it \emph{sharpens} rather than
+replaces the earlier picture. Compositional failure is not one phenomenon but several, cleanly
+separated by where the conserved quantity lives:
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Datum lives\ldots & Failure class & Economic instance \\
+\midrule
+on the \textbf{shape} (out-degrees) & degree $0$ --- invisible to $\partial$ & tangent/shape geometry \\
+on the \textbf{nodes} (transported) & $[\theta_R]\in H^1$ --- route discrepancy & supply-chain inventory \\
+in the \textbf{weld} (composite's state) & $[\omega]\in H^2$ --- handoff order & blockchain re-entrancy \\
+\bottomrule
+\end{tabular}
+\end{center}
+Supply chains are thereby not a second instance of ``failure $=$ nonzero $H^2$'' but the first clean
+instance of ``failure $=$ nonzero $H^1$''; re-entrancy remains the $H^2$ witness; and the
+tangent/shape invariant marks the degree-zero floor below which composition is simply not recorded.
+Two economic failure modes, cleanly separated by degree, each with a witness --- and a precise
+account of which invariants can and cannot detect which.
+
+\paragraph{Acknowledgement and honesty.}
+The port of Lanfranchi's parallelizability \cite{Lanfranchi2026} and the supply-chain conjecture of
+\cite{MacBethSupplyChain} are both \emph{sharpened} here, not debunked: the first because its home
+is a Cartesian tangent category and the container derivative's is not, the second because inventory
+is a node-level degree-one datum and not the weld. The degree program itself is a heuristic that
+organizes proved facts; its general form is open. We have taken care that every degree assignment in
+this note tracks a datum we have actually computed, and that the slogan ``composition is a
+degree-two datum'' is underwritten, not merely asserted, by Theorems~\ref{thm:deg2}
+and~\ref{thm:thin}.
+
+\begin{thebibliography}{99}
+
+\bibitem{AAGM2003}
+M.~Abbott, T.~Altenkirch, N.~Ghani, C.~McBride,
+\emph{Derivatives of containers},
+Typed Lambda Calculi and Applications (TLCA 2003), LNCS 2701, Springer, 2003, 16--30.
+
+\bibitem{AhmanUustalu2016}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98; arXiv:1604.01187.
+
+\bibitem{GambinoKock2013}
+N.~Gambino, J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), no.~1, 153--192; arXiv:0906.4931.
+
+\bibitem{Lanfranchi2026}
+M.~Lanfranchi,
+\emph{The Lie group--Lie algebra correspondence in tangent categories},
+preprint, arXiv:2609.03449 (2026).
+
+\bibitem{MacBethParallel}
+MacBeth,
+\emph{Parallelizability does not port to directed containers: a tangent dividing line, and the
+out-degree invariant blind to composition}
+(Kodamai internal note, 2026; content commit \texttt{e154282}).
+
+\bibitem{MacBethSupplyChain}
+MacBeth,
+\emph{Supply-chain inventory consistency is a degree-one class, and is independent of the
+Zappa--Sz\'ep weld obstruction}
+(Kodamai internal note, 2026; content commit \texttt{6f1fbd2}).
+
+\bibitem{MacBethDelta}
+MacBeth,
+\emph{The $\delta$-left-translation trivialization of the container tangent object sees groupoids}
+(Kodamai internal proof, \texttt{2026-10-06-delta-left-translation-trivialization}).
+
+\bibitem{MacBethThin}
+MacBeth,
+\emph{The constant-presheaf refinement: $\delta$-trivialization with trivial monodromy sees thin
+groupoids}
+(Kodamai internal proof, \texttt{2026-10-07-constant-presheaf-thin-groupoid}).
+
+\bibitem{MacBethZS}
+MacBeth,
+\emph{The Zappa--Sz\'ep closure obstruction is a Baues--Wirsching $H^2$ class}
+(Kodamai internal note, 2026).
+
+\bibitem{MacBethReentrancy}
+MacBeth,
+\emph{A machine-checked re-entrancy obstruction: $[\omega]=\varepsilon\in H^2\cong\Z/2$}
+(Kodamai internal note, Lean~4 certified, 2026).
+
+\bibitem{MacBethCartan}
+MacBeth,
+\emph{The container derivative has no fiberwise negation: a boundary for the Cartan calculus of
+polynomial functors}
+(Kodamai internal note, 2026).
+
+\end{thebibliography}
+
+\end{document}

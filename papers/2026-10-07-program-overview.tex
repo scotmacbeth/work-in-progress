@@ -1,0 +1,352 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\DCont}{\mathsf{DCont}}
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Fam}{\mathsf{Fam}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Vecc}{\mathsf{Vec}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\reg}[1]{\texttt{#1}}
+\newcommand{\grade}[1]{\textsf{[#1]}}
+
+\newtheorem*{remark}{Remark}
+
+\title{The Container Program\\[2pt]\large a reference overview}
+\author{MacBeth, Kodamai}
+\date{7 October 2026 \\[4pt] \small prepared for Neil Ghani}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This is a navigable map of the container / directed-container / polynomial-functor
+program as it stands, not a publication. Each headline result is given in one to three
+sentences, tagged with its \emph{honest} trust grade from the proof registry
+(\reg{proofs/registry/*.json}) and its registry id so you can drill in. Grades run
+\grade{speculative} $<$ \grade{computed} $<$ \grade{proved} $<$ \grade{peer-reviewed}
+$<$ \grade{published} $<$ \grade{lean-verified}. Nothing here is upgraded past its
+registry status; where a status is \grade{computed} or \grade{in-progress} I say so,
+and the degree-ladder of \S\ref{sec:ladder} is flagged throughout as a \emph{program},
+not a theorem.
+\end{abstract}
+
+\tableofcontents
+
+\section{Orientation}\label{sec:orient}
+
+The spine of the whole program is a single equivalence, read in four dialects:
+\[
+\Cont \;\simeq\; \DCont \;\simeq\; \text{Polynomial comonoids in }(\Poly,\lhd)\;\simeq\; \Cat\;(\text{small categories}).
+\]
+Containers $(S\lhd P)$ (Abbott--Altenkirch--Ghani) are shapes-and-positions; adding the
+Ahman--Chapman--Uustalu directed structure (D1--D5) makes the extension a comonad; a
+comonad for substitution $\lhd$ is a comonoid in $\Poly$ (Spivak--Garner--Fairbanks); and
+such a comonoid is exactly a small category. $\DCont\simeq\Cat$ is the convergence hub
+where Nottingham, Tallinn and the Topos Institute meet. The central technical tool for
+\emph{composition} is the Zappa--Sz\'ep product $K=C\bowtie D$ / distributive laws: it
+says when two directed containers (categories, update monads, orchestrations) can be
+welded into one, and the obstruction to welding is cohomological. Everything below hangs
+off these two facts: the chain, and the ZS composition tool.
+
+\section{Theory}\label{sec:theory}
+
+\subsection{(a) The equivalence chain and the \texorpdfstring{$\DCont\simeq\Cat$}{DCont=Cat} hub}
+
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{The chain itself} is tracked as an \emph{open umbrella node}, status
+\grade{in-progress} (\reg{equivalence-chain}). The classical equivalences
+($\Cont\simeq\DCont\simeq$ poly-comonoid $\simeq\Cat$) are each established and
+Lean-formalised as milestones M1--M4 (see \S\ref{sec:lean}); the research-level
+milestones M5 (bridge to $\Poly$'s four tensors) and M6 (double category \textsf{Org})
+remain open/conjectural. Treat ``the equivalence chain'' as a \emph{scaffold with proved
+rungs}, not a single closed theorem.
+\item \textbf{$\DCont\cong\mathrm{Cof}(\Poly)$} (directed containers = cofree comonoids /
+small categories) is the hub result reused everywhere; the D1--D5 comonad laws are
+\grade{lean-verified} (\reg{cofree-comonad}, leaf \texttt{dcont-laws-D1-D5}).
+\end{itemize}
+
+\subsection{(b) Monoidal structures on containers / \texorpdfstring{$\Poly$}{Poly}: the four tensors}
+
+$\Cont=\Fam(\Set^{\mathrm{op}})=\Poly$ carries four monoidal products, each answering a
+different compositional question:
+\begin{enumerate}[leftmargin=1.4em]
+\item[$\otimes$] the \textbf{Dirichlet / Day convolution} tensor (parallel, symmetric) --- see \S\ref{sec:day};
+\item[$\lhd$] the \textbf{substitution} product (sequential composition of functors; its comonoids are the small categories);
+\item[$\times$] the categorical product (independent choice);
+\item[$\ltimes/\rtimes$] the two \textbf{Dialectica} tensors (one-sided, non-convolutional).
+\end{enumerate}
+
+\paragraph{Closedness / closed structures.}
+\begin{itemize}[leftmargin=1.2em]
+\item $(\Poly,\times)$ is \emph{cartesian closed}; $\Poly$ has \textbf{three} closed
+structures but is \emph{not} locally cartesian closed. (\reg{closed-day-structures},
+\grade{proved}.)
+\item \textbf{T4 left $\lhd$-closedness}: the non-symmetric $\lhd$ admits a \emph{left}
+internal hom (distinct from the known $\lhd$-coclosure = directed containers) over a
+rigid/tiny base, via the collapse $\lhd=\otimes$ there. \grade{proved}
+(\reg{t4-left-closedness-lhd-famcop}).
+\item \textbf{$\ltimes/\rtimes$ are the Dialectica tensors}: $\ltimes$ restricts on the
+homogeneous subcategory to de Paiva's Dialectica $\otimes$; they are non-convolutional,
+non-closed; non-closure is one-sided. Status \grade{computed}
+(\reg{other-cont-monoidal-tensors}).
+\item \textbf{Bare Dirichlet comonoids} $=\Fam(\mathsf{Mon}^{\mathrm{op}})$: a
+$\otimes$-comonoid in $\Cont$ with no $\lhd$ structure is exactly a family of monoids
+(cocommutative ones: $\Fam(\mathsf{CMon}^{\mathrm{op}})$). \grade{proved} and
+\grade{lean-verified} forward+converse (\reg{bare-dirichlet-comonoid}).
+\end{itemize}
+
+\subsection{(b$'$) Day convolution}\label{sec:day}
+
+The symmetric tensor on $\Fam(C^{\mathrm{op}})$ is a Day convolution: for
+$(S,P)$ and $(T,Q)$,
+\[
+(S,P)\otimes(T,Q) \;=\; \bigl(S\times T,\ (s,t)\mapsto P_s(x)\,Q_t\bigr),
+\]
+convolving shapes by product and positions pointwise. Over $\Set$ this is Dirichlet
+multiplication of species; over a general closed symmetric monoidal base it is the Day
+convolution for the pointwise tensor of $C$.
+
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{T2 (Day-)closedness criterion} (Neil's UID~124, ``do T2 generally''): for a
+closed symmetric monoidal $C$ with small coproducts, $(-)\otimes(T,Q)$ has a right adjoint
+(internal hom) inside $\Fam(C^{\mathrm{op}})$ \emph{iff} the functor
+$\Phi(Z)=\prod_{t\in T}\coprod_{r\in R} C(M_r,\,Z(x)Q_t):C\to\Set$ is
+\emph{familially representable}. Over $\Vecc$ this gives a clean dichotomy. \grade{proved}
+(\reg{t2-day-closedness-famcop}).
+\item The general \textbf{Day-convolutional tensor} $(\Cont,\odot_\star)$ is left closed
+\emph{iff} $(-)\star B$ is polynomial for every set $B$, with a uniform
+$\Pi$-formula internal hom; this and ``poly closed under composition'' are
+\grade{lean-verified} (\reg{closed-day-structures}).
+\item The underlying full/faithfulness of container extension (the reason the Day picture
+is honest at all): \textbf{$\langle\!\langle-\rangle\!\rangle:\Fam(C^{\mathrm{op}})\to[C,C]$
+is fully faithful iff the monoidal unit $I$ is connected} (i.e.\ $C(I,-)$ preserves
+coproducts) --- Neil's flagship T1, \emph{not} an extensivity condition. \grade{proved}
+(\reg{fullness-unit-connectedness}).
+\end{itemize}
+
+\subsection{(c) Zappa--Szép / orchestration}\label{sec:zs}
+
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{Pairwise ZS criterion}: a pairwise-matched structure extends to a global
+Zappa--Szép product $K=C\bowtie D$ \emph{iff} (L) freeness \emph{and} (G) global closure
+hold. \grade{proved} (\reg{pairwise-zs}); the Lean ZS-associativity input is
+\grade{lean-verified}.
+\item \textbf{The (G) obstruction is an $H^2$ class}: $(G)\Leftrightarrow[\omega]=0$. In
+the orchestration model, parametrising supervisor--worker by a token-mutation bit
+$\varepsilon\in\mathbb{Z}/2$, $C\bowtie D$ exists iff $\varepsilon=0$ and
+$[\omega(K_\varepsilon)]=\varepsilon\cdot(\text{gen})$ in $H^2(\mathrm{Sk};\mathbb{Z}/2)\cong\mathbb{Z}/2$.
+An unprotected re-entrancy pattern \emph{is} a $(G)$-failure. \grade{proved}
+(\reg{orchestration-zs}); the leaf $[\omega]=\varepsilon$ is \grade{lean-verified}.
+\item \textbf{Holonomy / composition bridge}: composing two update monads sharing a state
+set is a ZS product welding the state/isotropy-holonomy mode to the directed/re-entrancy
+mode. \grade{peer-reviewed} (\reg{holonomy-composition-zs-bridge}).
+\end{itemize}
+
+\subsection{(d) The tangent / Cartan-calculus arc}\label{sec:tangent}
+
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{$\partial$ is a differential combinator}: the AAGM one-hole container
+derivative is the differential combinator of a Cartesian differential category $\mathsf{SPoly}$
+of polynomial functors --- equivalently the first-order tangent structure realised by
+dual-number substitution $T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$. \grade{proved}
+(\reg{tangent-container-derivative}); arithmetic and the CDC bridge are \grade{lean-verified}.
+\item \textbf{Uniqueness of the representable tangent structure}: among representable
+first-order tangent structures, in the \emph{corrected} ambient category --- base change by
+the Weil algebra $W=\mathbb{N}[\varepsilon]/\varepsilon^2$, $T=(-)\otimes W$, on finite-rank
+Weil/$\mathbb{N}$-algebra objects --- the only nontrivial one is $\partial$. Status
+\grade{proved}, specifically \emph{accept-with-required-revisions} from Rick's 2026-10-07
+referee report, which \emph{supersedes} the earlier clean peer-review stamp; so this is
+\textbf{not} a clean peer-reviewed result (\reg{tangent-uniqueness-spoly}). Note the ambient
+category is $T=(-)\otimes W$, \emph{not} full substitution $(\Poly,\lhd,y)$.
+\item \textbf{Negation obstruction}: on finite-support polynomial functors the additive
+bundle of $T=(-)\lhd D$ is a bundle of commutative \emph{monoids} with no fiberwise
+inverses, so $\mathsf{SPoly}$ carries no scalar ring object and the full Cartan calculus
+($d,\iota,\mathcal{L}$) does \emph{not} descend --- Cartan fails over $\mathbb{N}$.
+\grade{proved}, with \grade{lean-verified} arithmetic (\reg{cartan-scalar-object-spoly}).
+\item \textbf{The $\mathbb{Z}$-completion far side}: completing the rig
+$\mathbb{N}\to\mathbb{Z}$ (virtual containers) switches Cartan back \emph{on}. \grade{proved}
+(\reg{virtual-container-cartan}), $\mathbb{Z}$-mirror \grade{lean-verified}.
+\item \textbf{Parallelizability does not port}: the attempt to port Lanfranchi's
+``parallelizable $\Leftrightarrow$ Lie group object'' is a \emph{refutation with salvage} ---
+the literal port is ill-posed ($T\not\prec\times$); what survives is
+``tangent-regular $\Leftrightarrow$ out-degree homogeneous'', which is
+composition-\emph{blind}. \grade{proved} (\reg{lie-parallelizable-poly-comonoid}), leaf
+\texttt{tangentRegular-outdegree} \grade{lean-verified}.
+\end{itemize}
+
+\subsection{(e) The degree ladder / composition-blindness (a PROGRAM, not a theorem)}\label{sec:ladder}
+
+\begin{remark}
+The following is a \textbf{conjectural organising program}, not a proved theorem. The
+meta-claim ``cohomological degree classifies compositional invariants'' is a conjecture;
+the individual rungs below have their own (varying) grades. It is the ``composition is a
+degree-two datum'' synthesis, shipped 2026-10-07 as a \emph{program}.
+\end{remark}
+
+The slogan: compositional invariants of a directed container stratify by cohomological
+degree.
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{Degree 0}: out-degree / tangent-regularity --- composition-blind, sees only
+local fibre rank (\reg{lie-parallelizable-poly-comonoid}, \grade{proved}).
+\item \textbf{Degree 1}: supply-chain inventory consistency as a class
+$[\theta_R]\in H^1$, \emph{independent} of the degree-2 weld (see \S\ref{sec:apps},
+\reg{supply-chain-zs}, \grade{computed}).
+\item \textbf{Degree 2}: the ZS weld $[\omega]\in H^2$ (\S\ref{sec:zs}); plus the
+observation that $\delta$-left-translation trivializability over a component sees exactly
+the \emph{groupoids}, and the three-level monodromy tower
+(generic $\subsetneq$ groupoid $\subsetneq$ thin), separated by the vertex group. Both are
+registered as \grade{proved}: ``$\delta$-left-translation trivializable over a component
+$\Leftrightarrow$ groupoid'' is node \reg{delta-left-translation-trivialization}
+(\grade{proved}), with crux child
+\reg{arrows-out-presheaf-local-system-iff-groupoid} (\grade{proved}); the
+constant-trivializable $\Leftrightarrow$ thin-groupoid refinement (the monodromy tower) is
+node \reg{arrows-out-presheaf-constant-iff-thin-groupoid} (\grade{proved}). Both live under
+the \grade{proved} root \reg{lie-parallelizable-poly-comonoid.json}.
+\end{itemize}
+
+\subsection{(f) The $H^2$-cluster and the skew-brace obstruction}\label{sec:h2}
+
+Three genuinely different $H^2$ obstruction theories live on $\DCont\simeq\Cat$:
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{ZS holonomy} $[\omega]$ (\S\ref{sec:zs}, \reg{orchestration-zs}).
+\item \textbf{Ferri prunability} --- shown to be a degree-1 descent/subfunctor condition,
+orthogonal to $[\omega]$ (memory \texttt{prunability-is-descent-not-schreier};
+\texttt{ferri-prunability-separates-from-zs-holonomy}). The groupoid case: when the base is
+a connected groupoid the merge class is a Schreier extension class $H^2(\Gamma;M)$, which
+need \emph{not} vanish --- the seed ``groupoid $\Rightarrow$ contractible $\Rightarrow$
+$H^2=0$'' conjecture is \textbf{refuted}. Status \grade{computed}
+(\reg{groupoid-zs-obstruction}).
+\item \textbf{$H^2_{\mathrm{CatB}}$} --- the two $[\omega]$ sites are irreducibly distinct:
+the handoff class and the stabiliser class are both $\cong\mathbb{F}_2$ with generator
+$\varepsilon$ but are \emph{not} the same class (isotropy-restriction kills one).
+\grade{proved} (\reg{two-omega-sites}).
+\item \textbf{$o_\nu$ skew-brace solvability obstruction}: a group homomorphism
+$o_\nu:H^2_+\to C^3/A(\mathbb{Z}^2_\circ)$ with
+$\operatorname{im}\varphi^+=\ker o_\nu$ --- an additive class extends to a full skew-brace
+cocycle iff $o_\nu$ kills it. \grade{proved} (\reg{solvability-obstruction-o-nu}); the
+$|G|=16$ lock and torsor slice are \grade{lean-verified} (\reg{quiver-skew-brace-zs}).
+\end{itemize}
+
+\section{Applications}\label{sec:apps}
+
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{GA composition / diversity dynamics}: island-model migration topology
+determines diversity dynamics; categorical composition (ZS / distributive laws, the
+laxator as obstruction) is the invariant. Empirical (Langer--Vega GECCO 2026); the
+categorical model is the orchestration/ZS machinery above.
+\item \textbf{Supply-chain inventory consistency}: a supply chain is a directed container;
+composing two flows sharing a warehouse is a ZS product; inventory inconsistency between
+two routes is a class $[\omega]\in H^2(\mathrm{Sk};\mathbb{Z}/n)\cong\mathbb{Z}/n$
+(measuring the discrepancy in \emph{units}). The consistency datum is degree-1
+$[\theta_R]\in H^1$ and is \emph{independent} of the weld $[\omega]\in H^2$. Status
+\grade{computed} (\reg{supply-chain-zs}); $H^1$ arithmetic and the $W_1/W_2$ separation are
+\grade{lean-verified}.
+\item \textbf{Blockchain re-entrancy = failed distributive law}: a smart contract's
+re-entrancy bug is a nonzero $[\omega]=\varepsilon$ in $H^2\cong\mathbb{F}_2$ --- the same
+$(G)$-failure as orchestration. \grade{proved} / $[\omega]=\varepsilon$
+\grade{lean-verified} (\reg{orchestration-zs}).
+\item \textbf{AI agent orchestration / tool-calling protocols as directed containers}:
+agents are containers ($S=$ request types, $P(s)=$ responses); tool-calling protocols are
+directed containers; composing supervisors is a ZS weld. \grade{proved}
+(\reg{orchestration-zs}); write-up ``Tool-calling protocols are directed containers''
+shipped 2026-09-19.
+\item \textbf{M-containers (monad-lifted)}: $M\text{-}\Cont=\Fam(\mathrm{Kl}(M)^{\mathrm{op}})$;
+$\langle\!\langle-\rangle\!\rangle_M$ is always faithful, and full iff $M$ is codense and
+every $(M-)^A$ is connected (affine $\Rightarrow$ connected). \grade{proved}
+(\reg{m-containers}); the composition criterion (M-containers compose iff $M$ is
+polynomial) is \grade{computed}.
+\end{itemize}
+
+\section{Formalisation (Lean 4)}\label{sec:lean}
+
+Nodes whose registry \emph{root} status is \grade{lean-verified}:
+\reg{free-monad-grafting} (free monad = $\lhd$-monoid, three monoid laws as tree-grafting),
+\reg{cyclic-h2-gcd-engine}, \reg{cyclic-h2-norm-engine}, \reg{fibre-h2-z2-engine}
+(the $H^2$ arithmetic/cohomology engines).
+
+Lean-verified \emph{leaves} inside otherwise-\grade{proved} nodes (a representative list):
+\begin{itemize}[leftmargin=1.2em]
+\item Equivalence-chain milestones M1 representation, M2 comonad laws + converse,
+M3 comonoid forward+converse, M4 $\DCont\cong\mathrm{Cof}$, ZS, four-monoidal coherence
+(\reg{equivalence-chain}).
+\item ZS associativity / $[\omega]=\varepsilon$ re-entrancy (\reg{orchestration-zs},
+\reg{pairwise-zs}).
+\item Cofree comonad D1--D5 directed-container laws (\reg{cofree-comonad}); free monad
+grafting laws (\reg{free-monad-grafting}).
+\item Monad$\to$comonad transfer, $T_M$ cartesian boundary, Reader/State drop,
+bikleisli / effect-coeffect unit laws, affine monad=monoid, proof-relevance $\Box$
+(\reg{monad-comonad-transfer}, \reg{effect-coeffect-arrows}).
+\item Tangent: dual-number stage-1 arithmetic + finite tangent bridge
+(\reg{tangent-container-derivative}); no-negation rig + fiber witnesses
+(\reg{cartan-scalar-object-spoly}); solid-idempotent $n^2=n$ + rank-rigidity + two-model
+distinction (\reg{tangent-uniqueness-spoly}); $\mathbb{Z}$-mirror
+(\reg{virtual-container-cartan}); tangent-regular$=$out-degree
+(\reg{lie-parallelizable-poly-comonoid}).
+\item Dirichlet/$\times$ comonoid classification forward+converse
+(\reg{bare-dirichlet-comonoid}, \reg{dirichlet-monoid-classification}); Day
+$\Pi$-form$=$morphism-form + poly closed under composition (\reg{closed-day-structures}).
+\item Game-comonad (EF) comonoid witness (\reg{game-comonad-poly}); QPF abs/repr collapse
+(memory \texttt{lean-qpf-collapse}).
+\item Skew-brace: $o_\nu$ torsor (+ UID200 converse), $|G|=16$ lock, $W_4$ non-injective,
+additive-forgetful descends (\reg{quiver-skew-brace-zs}, \reg{solvability-obstruction-o-nu}).
+\item State-object $\delta$ / $\DCont\simeq\Cat$ hinge, worker composition
+(\reg{state-object-delta}); workers-retract-of-BHM (\reg{workers-retract-of-bhm-grading});
+holonomy-triviality collapse (\reg{holonomy-triviality}).
+\end{itemize}
+
+\section{State of the program (one-page table)}\label{sec:table}
+
+\begingroup
+\small
+\begin{longtable}{p{6.6cm} p{2.0cm} p{2.4cm} p{3.6cm}}
+\textbf{Result} & \textbf{Pillar} & \textbf{Grade} & \textbf{Registry id} \\
+\hline
+\endhead
+Equivalence chain (M1--M6 umbrella) & Theory (a) & in-progress & \reg{equivalence-chain} \\
+$\DCont\cong\mathrm{Cof}(\Poly)$, D1--D5 & Theory (a) & lean-verified (leaf) & \reg{cofree-comonad} \\
+Day/Dirichlet closedness (T2) & Theory (b$'$) & proved & \reg{t2-day-closedness-famcop} \\
+Day-convolution left-closedness formula & Theory (b$'$) & proved & \reg{closed-day-structures} \\
+Extension f\&f $\Leftrightarrow$ unit connected (T1) & Theory (b$'$) & proved & \reg{fullness-unit-connectedness} \\
+T4 left $\lhd$-closedness via collapse & Theory (b) & proved & \reg{t4-left-closedness-lhd-famcop} \\
+$\ltimes/\rtimes$ are Dialectica tensors & Theory (b) & computed & \reg{other-cont-monoidal-tensors} \\
+Bare Dirichlet comonoid $=\Fam(\mathsf{Mon}^{\mathrm{op}})$ & Theory (b) & proved & \reg{bare-dirichlet-comonoid} \\
+Pairwise ZS: $K=C\bowtie D\Leftrightarrow(L)\wedge(G)$ & Theory (c) & proved & \reg{pairwise-zs} \\
+$(G)\Leftrightarrow[\omega]=0$; orchestration dichotomy & Theory (c) & proved & \reg{orchestration-zs} \\
+Holonomy/composition ZS bridge & Theory (c) & peer-reviewed & \reg{holonomy-composition-zs-bridge} \\
+$\partial$ = differential combinator (CDC) & Theory (d) & proved & \reg{tangent-container-derivative} \\
+Uniqueness of representable tangent ($T=(-)\otimes W$) & Theory (d) & proved (accept-w/-revisions) & \reg{tangent-uniqueness-spoly} \\
+Negation obstruction (Cartan fails over $\mathbb{N}$) & Theory (d) & proved & \reg{cartan-scalar-object-spoly} \\
+$\mathbb{Z}$-completion switches Cartan on & Theory (d) & proved & \reg{virtual-container-cartan} \\
+Parallelizability port (refutation+salvage) & Theory (d) & proved & \reg{lie-parallelizable-poly-comonoid} \\
+Degree ladder META-claim (degree classifies composition) & Theory (e) & PROGRAM / conj. & (see \S\ref{sec:ladder}) \\
+\quad deg-2 instance: $\delta$-left-translation $\Leftrightarrow$ groupoid & Theory (e) & proved & \reg{delta-left-translation-trivialization} \\
+\quad deg-2 instance: constant-triv.\ $\Leftrightarrow$ thin groupoid (monodromy tower) & Theory (e) & proved & \reg{arrows-out-presheaf-constant-iff-thin-groupoid} \\
+Two $\omega$-sites irreducibly distinct & Theory (f) & proved & \reg{two-omega-sites} \\
+Groupoid ZS obstruction (seed conj.\ refuted) & Theory (f) & computed & \reg{groupoid-zs-obstruction} \\
+$o_\nu$ solvability obstruction, $\operatorname{im}\varphi^+=\ker o_\nu$ & Theory (f) & proved & \reg{solvability-obstruction-o-nu} \\
+Supply-chain inventory ($[\theta_R]\in H^1\perp[\omega]$) & Applications & computed & \reg{supply-chain-zs} \\
+Blockchain re-entrancy $[\omega]=\varepsilon$ & Applications & proved / lean-verified (leaf) & \reg{orchestration-zs} \\
+Agent orchestration / tool-calling protocols & Applications & proved & \reg{orchestration-zs} \\
+M-containers $=\Fam(\mathrm{Kl}(M)^{\mathrm{op}})$ & Applications & proved & \reg{m-containers} \\
+Free monad = $\lhd$-monoid (grafting laws) & Formalisation & lean-verified & \reg{free-monad-grafting} \\
+$H^2$ arithmetic/cohomology engines & Formalisation & lean-verified & \reg{cyclic-h2-*}, \reg{fibre-h2-z2-engine} \\
+Game comonads factor through $\Poly$ & Theory/App & computed & \reg{game-comonad-poly} \\
+\end{longtable}
+\endgroup
+
+\begin{center}\small
+\emph{Grades are as recorded in \reg{proofs/registry/*.json} on 7 Oct 2026. The degree
+ladder is a program; ``peer-reviewed'' on tangent-uniqueness has been downgraded to
+accept-with-required-revisions by the 2026-10-07 referee report.}
+\end{center}
+
+\end{document}
