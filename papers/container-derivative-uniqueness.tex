@@ -17,6 +17,8 @@
 \newtheorem{problem}[theorem]{Problem}
 
 \newcommand{\SPoly}{\mathsf{SPoly}}
+\newcommand{\Lin}{\mathsf{Lin}}
+\newcommand{\FreeMod}{\mathsf{FreeMod}}
 \newcommand{\PolyN}{\mathsf{Poly}_{\mathbb{N}}}
 \newcommand{\Poly}{\mathsf{Poly}}
 \newcommand{\Cont}{\mathsf{Cont}}
@@ -35,89 +37,105 @@
 \renewcommand{\ker}{\operatorname{ker}}
 
 \title{A uniqueness theorem for the container derivative\\
-\large $\partial$ is the only nontrivial representable tangent structure\\ on finite-support
-polynomial functors}
+\large $\partial$ is the only nontrivial representable tangent structure\\ on the finite free
+$\N$-modules in $\Poly$}
 \author{MacBeth\thanks{Kodamai. Source and Lean certification:
-\texttt{github.com/scotmacbeth/work-in-progress} (revised 2026-10-05; the version reviewed at commit
-\texttt{57bac18} mis-stated the ambient category, see \S\ref{sec:prelim}).}\\ \small Kodamai}
-\date{4 October 2026 (revised 5 October 2026: ambient category corrected to Weil base change
-over $\N$, per a referee report)}
+\texttt{github.com/scotmacbeth/work-in-progress}. Earlier versions (commit \texttt{57bac18})
+mis-stated the ambient category, and the revision of 5 October mis-stated solidity and the
+sharpness of the finite-rank hypothesis; both are corrected here, see \S\ref{sec:prelim},
+\S\ref{sec:sharp}.}\\ \small Kodamai}
+\date{4 October 2026 (revised 7 October 2026: ambient category $\mathsf{Lin}(\SPoly)\simeq$ finite
+free $\N$-modules; solidity restated as invertibility of the vertical lift; finite-rank sharpness
+withdrawn --- uniqueness holds at every rank; per two referee reports)}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 A companion note showed that the Abbott--Altenkirch--Ghani--McBride one-hole derivative
-$\partial$ is the differential combinator of a Cartesian differential category of polynomial
-functors, realised by the dual-number substitution $T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$;
-that settles \emph{existence}. This note settles \emph{uniqueness}. The dual-number substitution is
-\emph{base change by the Weil algebra} $W=\N[\varepsilon]/\varepsilon^2$; more generally a
-representable first-order tangent functor is base change $T=(-)\otimes_{\N}D$ by an augmented
-square-zero $\N$-algebra $D$ (a finite Weil algebra over $\N$, with $W$ the first instance), acting
-on finite-rank $\N$-modules --- equivalently, on the finite free $\N$-modules that sit in $\Poly$ as
-the finite-support \emph{linear} containers $S\cdot y$. We prove that among representable first-order
-tangent structures of this form there are \emph{exactly two}, the trivial structure $T=\id$ and the
-container derivative $\partial$. The proof has two halves. The first is a
+$\partial$ is the differential combinator of a Cartesian differential category $\SPoly$ of
+polynomial functors, with the dual-number substitution $p\mapsto p(y+\varepsilon v)\bmod\varepsilon^2$
+computing its combinator; that settles \emph{existence}. This note settles \emph{uniqueness}. The
+right setting is the subcategory $\Lin(\SPoly)$ of \emph{linear} maps --- morphisms given by
+$\N$-matrices, composition the matrix product --- equivalent to the finite-rank part of the category
+$\FreeMod_\N$ of free $\N$-modules. On this subcategory the tangent structure is \emph{base change}
+$T=(-)\otimes_{\N}D$ by an augmented square-zero $\N$-algebra (a Weil algebra over $\N$), the
+dual numbers $W=\N[\varepsilon]/\varepsilon^2$ being the first instance; this is the module layer of
+Lanfranchi--Lemay's representable tangent structures, now over the rig $\N$. We prove that among
+representable first-order tangent structures of this form there are \emph{exactly two}, the trivial
+structure $T=\id$ and the container derivative $\partial$. The proof has two halves. The first is a
 rank rigidity: an infinitesimal object $D=y\oplus M$ has a \emph{solid} infinitesimal part when the
-multiplication $\mu\colon M\otimes M\to M$ is invertible, and over the rig $\N$ the finite free
-modules are automatically free of a well-defined rank, so solidity reads $|S|^2=|S|$, whose only
-finite solutions are $0$ and $1$. The second is the converse: every such tangent
-structure has a solid infinitesimal part. We prove this rig-internally from the universality of
-the vertical lift, replacing Lanfranchi--Lemay's ring-theoretic short-exact-sequence step --- which
-needs subtraction --- by the observation that in the extensive category of $\N$-modules the
-vertical bundle is a \emph{direct coproduct}, so ranks \emph{add}. The port is thus not only
-faithful but cleaner: no principal-ideal hypothesis and no subtraction. Crucially, on the linear
-layer base change $\otimes D$ coincides with container substitution $\lhd$ (and with the Dirichlet
-tensor), so the classification is at once a statement about Weil base change and about the container
-derivative --- but it is \emph{not} a statement about $\lhd$-substitution on all of $\Poly$, where
-there is no $\varepsilon^2=0$ truncation ($y^2\lhd 2y=4y^2$) and only $T=\id$ survives. The
-finiteness is sharp for the rigidity: $M=\N\cdot y$ is a solid part of rank $|\N|$, since
-$|\N\times\N|=|\N|$; whether it underlies a genuine third tangent structure we leave open. The
-uniqueness answers, and sharpens, a question of Cockett (2012).
+vertical-lift component $\ell_M\colon M\to M\otimes M$ is invertible, and over $\N$ a linear module
+is automatically free of a well-defined rank, so solidity forces $|S|^2=|S|$, whose only finite
+solutions are $0$ and $1$. The second is the converse: every such tangent structure has a solid
+infinitesimal part. We prove this rig-internally from the universality of the vertical lift,
+replacing Lanfranchi--Lemay's ring-theoretic short-exact-sequence step --- which needs subtraction
+--- by the observation that in the extensive category of $\N$-modules the vertical bundle is a
+\emph{direct coproduct}, so ranks \emph{add}. The port is thus not only faithful but cleaner: no
+principal-ideal hypothesis and no subtraction. Crucially, on the linear layer base change $\otimes D$
+coincides with container substitution $\lhd$ (and with the Dirichlet tensor), so the classification
+is at once a statement about Weil base change and about the container derivative --- but it is
+\emph{not} a statement about $\lhd$-substitution on all of $\Poly$, where there is no
+$\varepsilon^2=0$ truncation ($y^2\lhd 2y=4y^2$) and only $T=\id$ survives. The uniqueness holds for
+a free infinitesimal part of \emph{any} rank. Finiteness is \emph{not} load-bearing: although
+$M=\N\cdot y$ is solid, because $|\N\times\N|=|\N|$ supplies an abstract isomorphism $M\otimes M\cong
+M$, solidity is strictly weaker than underlying a tangent structure at infinite rank --- the flip and
+lift-coassociativity axioms force the vertical lift to be the diagonal, which is surjective only in
+rank $\le 1$, so $\N\cdot y$ is \emph{not} a tangent structure (an earlier draft's ``finiteness is
+sharp'' claim, which measured solidity by an abstract isomorphism, is withdrawn). The uniqueness
+answers, and sharpens, a question of Cockett (2012).
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
 
 \paragraph{From existence to uniqueness.}
-In a companion note \cite{MacBethTangent} we showed that the category $\SPoly$ of finitary
+In a companion note \cite{MacBethTangent} we showed that the category $\SPoly$ of finite-support
 polynomial functors is a Cartesian differential category whose differential combinator is the
-Abbott--Altenkirch--Ghani--McBride one-hole-context derivative $\partial$ \cite{AAGM2003}, and
-that the attached tangent bundle is computed by the oldest trick in differential algebra:
-substitute a dual number and read off the $\varepsilon$-coefficient,
+Abbott--Altenkirch--Ghani--McBride one-hole-context derivative $\partial$ \cite{AAGM2003}, and that
+its combinator is computed by the oldest trick in differential algebra: substitute a dual number
+into a \emph{map} and read off the $\varepsilon$-coefficient,
 \[
-  T(p)\ =\ p(y+\varepsilon v)\bmod\varepsilon^2\ =\ p(y)+\varepsilon\,v\cdot\partial p.
+  \partial[f](x,v)\ =\ \varepsilon\text{-coefficient of } f(x+\varepsilon v)\bmod\varepsilon^2
+  \ =\ v\cdot\partial f.
 \]
 That note answers an \emph{existence} question --- there is a tangent structure whose vertical part
-is $\partial$. The natural next question is \emph{uniqueness}. The dual-number structure is one
+is $\partial$. The natural next question is \emph{uniqueness}. This $\partial$-structure is one
 tangent structure; the identity functor $T=\id$ is another (the trivial one). Are there others?
 Could there be an exotic first-order tangent bundle that is neither the derivative nor trivial? This
 note proves there cannot.
 
 First we must say precisely in which category the question is asked --- and here the right setting
-is not the one the formula $T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$ first suggests. The
-$\varepsilon^2=0$ truncation is not substitution: it is \emph{base change by the Weil algebra}
-$W=\N[\varepsilon]/\varepsilon^2$. The honest tangent functor is base change $T=(-)\otimes_{\N}D$ by
-an augmented square-zero $\N$-algebra $D$ (the dual numbers $W$ being the first instance), acting on
-the finite-rank $\N$-modules / finite Weil objects over $\N$ --- the module layer on which
-Lanfranchi--Lemay's representable tangent structures live, now over the rig $\N$ rather than a ring.
-It is \emph{tempting}, but wrong, to read $T$ as right-substitution $(-)\lhd W$ in the full
-substitution-monoidal category $(\Poly,\lhd,y)$: full $\lhd$ has no $\varepsilon^2=0$ truncation
-($y^2\lhd 2y=(2y)^2=4y^2$, not $3y^2$; in general $y^n\lhd W=W^n$ is multiplicative), so on all of
-$\Poly$ the functor $(-)\lhd W$ is \emph{not} the dual-number substitution and the only survivor is
-the trivial structure. The derivative survives precisely because the truncation --- the Weil algebra
---- is present. What rescues the container reading is a coincidence
-(Lemma~\ref{lem:coincide}): on the \emph{linear} layer $S\cdot y$, base change $\otimes D$,
-substitution $\lhd$, and the Dirichlet tensor all agree, and it is on this layer that the entire
-classification takes place.
+is not $\Poly$ at large but its \emph{linear} subcategory. Let $\Lin(\SPoly)$ be the subcategory of
+$\SPoly$ whose morphisms are the \emph{linear} maps $n\to m$ --- those given by an $\N$-matrix, with
+composition the matrix product --- which is equivalent to the category $\FreeMod_\N$ of finite free
+$\N$-modules. On $\Lin(\SPoly)$ the tangent structure is \emph{base change} $T=(-)\otimes_\N D$ by an
+augmented square-zero $\N$-algebra $D$ (a Weil algebra over $\N$, the dual numbers
+$W=\N[\varepsilon]/\varepsilon^2$ being the first instance); this is precisely the module layer on
+which Lanfranchi--Lemay's representable tangent structures live, now over the rig $\N$ rather than a
+ring. Two cautions fix the setting. First, base change is \emph{not} the substitution formula: the
+ring map $\N[y]\to W[y]$ sends $y^2\mapsto y^2$, whereas the dual-number \emph{substitution}
+$y\mapsto y+\varepsilon v$ reads off $y^2+2\varepsilon vy$; the two agree only on \emph{linear}
+arguments, and a non-linear polynomial is in any case neither an object nor a morphism of
+$\FreeMod_\N$. The substitution formula is how the companion note computes the combinator $\partial$
+at the level of $\SPoly$ \emph{maps} \cite{MacBethTangent}; the tangent \emph{functor} on modules is
+base change. Second, it is \emph{tempting}, but wrong, to read $T$ as right-substitution $(-)\lhd W$
+in the full substitution-monoidal category $(\Poly,\lhd,y)$: full $\lhd$ has no $\varepsilon^2=0$
+truncation ($y^2\lhd 2y=(2y)^2=4y^2$, not $3y^2$; in general $y^n\lhd W=W^n$ is multiplicative), so on
+all of $\Poly$ the functor $(-)\lhd W$ forces the trivial structure alone. The derivative survives
+precisely because the truncation --- the Weil algebra --- is present. What rescues the container
+reading is a coincidence (Lemma~\ref{lem:coincide}): on the linear layer $S\cdot y$, base change
+$\otimes D$, substitution $\lhd$, and the Dirichlet tensor all agree, and it is on this layer ---
+the finite-rank part of $\FreeMod_\N$, namely $\Lin(\SPoly)$ --- that the container-derivative reading
+of the classification lives.
 
 \begin{theorem}[Uniqueness]\label{thm:main-intro}
-Among representable first-order tangent structures $T=(-)\otimes D$ --- base change by an augmented
-square-zero $\N$-algebra $D=y\oplus M$ --- on finite-rank $\N$-modules there are exactly two: the
-trivial structure ($D=y$, $M=0$, $T=\id$) and the AAGM dual-number structure
-($D=W=\N[\varepsilon]/\varepsilon^2$, $M=\langle\varepsilon v\rangle$,
-$T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$, combinator $\partial$). Equivalently, on the linear
-layer of $\SPoly$ --- where $\otimes D$ and $\lhd$ coincide --- the container derivative is the only
-nontrivial representable first-order tangent structure.
+Among representable first-order tangent structures $T=(-)\otimes D$ on $\FreeMod_\N$ --- base change
+by an augmented square-zero $\N$-algebra $D=y\oplus M$ with $M$ a free $\N$-module of \emph{any} rank
+--- there are exactly two: the trivial structure ($D=y$, $M=0$, $T=\id$) and the AAGM dual-number
+structure ($D=W=\N[\varepsilon]/\varepsilon^2$, $M=\langle\varepsilon v\rangle$, combinator
+$\partial$). Restricted to the finite-rank part $\Lin(\SPoly)$ --- the linear layer of $\SPoly$,
+where $\otimes D$ and $\lhd$ coincide --- this says the container derivative is the only nontrivial
+representable first-order tangent structure.
 \end{theorem}
 
 \paragraph{The question is Cockett's.}
@@ -153,17 +171,17 @@ is not a PID and has no subtraction.
 
 \paragraph{What we prove, and the one new idea.}
 We prove Theorem~\ref{thm:main-intro} by porting \emph{both} halves of Lanfranchi--Lemay to the
-Weil base-change setting over $\N$ --- the tangent functor $T=(-)\otimes W$ on finite-rank
-$\N$-modules --- and in both the port turns out \emph{cleaner} than its template. Throughout, the
-objects that carry the classification are \emph{linear} ($S\cdot y$), the layer on which base change
-$\otimes W$, substitution $\lhd$ and the Dirichlet tensor coincide (Lemma~\ref{lem:coincide}); this
-is what licenses the container-derivative reading of the result.
+Weil base-change setting over $\N$ --- the tangent functor $T=(-)\otimes W$ on $\FreeMod_\N$, whose
+finite-rank part is $\Lin(\SPoly)$ --- and in both the port turns out \emph{cleaner} than its template.
+Throughout, the objects that carry the classification are \emph{linear} ($S\cdot y$), the layer on
+which base change $\otimes W$, substitution $\lhd$ and the Dirichlet tensor coincide
+(Lemma~\ref{lem:coincide}); this is what licenses the container-derivative reading of the result.
 \begin{itemize}
-\item \emph{Rigidity} (\S\ref{sec:rigidity}). An infinitesimal part is a \emph{linear} module
-$M=S\cdot y$, forced by the additive-bundle axiom. Over $\N$ a linear module simply \emph{is} a
-free module --- the linear polynomial functors are by definition the free $\N$-modules --- so
-freeness is \emph{automatic}, with no PID hypothesis. Solidity then reads $|S|^2=|S|$, whose only
-finite solutions are $0$ and $1$: the finite solid parts are exactly $\{0,y\}$.
+\item \emph{Rigidity} (\S\ref{sec:rigidity}). Inside $\FreeMod_\N$ the infinitesimal part $M$ is a
+free module with a well-defined rank, so freeness is \emph{automatic}, with no PID hypothesis.
+Solidity (invertibility of the vertical lift $\ell_M$) gives an abstract isomorphism $M\otimes
+M\cong M$, which reads $|S|^2=|S|$, whose only finite solutions are $0$ and $1$: the finite solid
+parts are exactly $\{0,y\}$.
 \item \emph{Converse} (\S\ref{sec:converse}). Every such tangent structure has
 a solid infinitesimal part. Here is the one new idea. The place Lanfranchi--Lemay use subtraction
 is the computation of the vertical bundle fibre $P'$ by exactness. In the \emph{extensive} category
@@ -176,22 +194,32 @@ universality of the vertical lift (Cockett--Cruttwell \cite{CockettCruttwell2014
 second tangent bundle $T_2$ with the vertical bundle $V$; evaluating this functor isomorphism at
 $y$ gives $D_2\cong P'$, i.e.\ $1+2n=1+n+n^2$, and the cancellative rig $\N$ (no zero divisors,
 \emph{no subtraction}) forces $n^2=n$, hence $n\in\{0,1\}$.
+\item \emph{Rank-free exclusion} (\S\ref{sec:sharp}). The rank count above needs finiteness, since
+$\kappa^2=\kappa$ for infinite $\kappa$. But the vertical lift of a tangent structure is not merely
+an abstract isomorphism: the flip and lift-coassociativity axioms force it to be the diagonal, which
+exists only in rank $\le1$ (Theorem~\ref{thm:rankfree}, from \cite{MacBethFlip}). So the infinite
+solid part $\N\cdot y$ is a \emph{phantom} --- solid but not a structure --- and uniqueness holds at
+every rank.
 \end{itemize}
-Assembling the two halves with the forward correspondence (both surviving parts are realised ---
-$\id$ and $\partial$) and representability \cite{MacBethTangent} gives Theorem~\ref{thm:main-intro}.
+Assembling the three with the forward correspondence (both surviving parts are realised ---
+$\id$ and $\partial$) gives Theorem~\ref{thm:main-intro}.
 
-\paragraph{The finiteness is sharp for the rigidity.}
-The finite-rank hypothesis cannot be dropped from the rank rigidity, and we exhibit the obstruction
-explicitly: $M=\N\cdot y$ is a solid infinitesimal \emph{part}, because
-$M\otimes M=(\N\times\N)\cdot y\cong\N\cdot y$ by the Cantor pairing (\S\ref{sec:sharp},
-Proposition~\ref{prop:infinite}); and the converse's rank equation $1+2\kappa=1+\kappa+\kappa^2$ is
-satisfied by every infinite cardinal $\kappa$, so neither half of the rank argument excludes it.
-This is the precise analogue of Lanfranchi--Lemay's extra solid parts when finite generation is
-dropped (their Examples~4.20--4.21), and it tells us the load-bearing hypothesis is a
-\emph{finite-dimensional} infinitesimal part --- finitely many tangent directions --- here taken as
-plain finiteness of the shape set. We are careful not to overclaim: $\N\cdot y$ is a solid part, but
-we have \emph{not} verified that it assembles into a genuine third tangent structure, so whether
-uniqueness fails outright at infinite rank is left open (\S\ref{sec:sharp}).
+\paragraph{Finiteness is not load-bearing: solidity versus a tangent structure.}
+The rank count above --- the step $1+2n=1+n+n^2\Rightarrow n\in\{0,1\}$ --- genuinely uses
+finiteness: the equation $1+2\kappa=1+\kappa+\kappa^2$ holds for every infinite cardinal $\kappa$, so
+it does not by itself exclude $M=\N\cdot y$. One might therefore fear, as an earlier draft did, that
+finiteness is sharp and $\N\cdot y$ a third solid structure. It is not, and the fear rested on
+measuring solidity by an abstract isomorphism. It is true that $\N\cdot y$ is \emph{solid}: the
+Cantor pairing $\N\times\N\cong\N$ supplies an isomorphism $M\otimes M\cong M$, hence an isomorphism
+$\ell_M$. But a tangent structure demands more of $\ell_M$ than invertibility. Its vertical lift must
+be \emph{flip-compatible} ($c\ell=\ell$) and \emph{coassociative}, and these two axioms force
+$\ell_M$ to be the diagonal $M\to M\otimes M$ --- which is surjective only when $\rank M\le1$. Hence
+$\rank M\le1$ \emph{at every cardinality}: $\N\cdot y$ carries no tangent structure, and uniqueness
+holds for a free infinitesimal part of any rank (\S\ref{sec:sharp}, where this is deduced from
+\cite{MacBethFlip}; we do not reproduce its argument here). Solidity is thus strictly weaker than
+underlying a tangent structure once the rank is infinite, and the two coincide (landing in
+$\{0,1\}$) at finite rank. The honest statement is the rank-free one; finiteness was guarding a
+phantom.
 
 \paragraph{Certification.}
 The arithmetic of both halves is machine-checked in a Mathlib-free Lean~4 development with no
@@ -210,18 +238,20 @@ vertical bundle into a coproduct so that ranks add (\S\ref{sec:converse}); the t
 observation that on the linear layer the base-change tensor $\otimes W$, the substitution tensor
 $\lhd$ and the Dirichlet tensor all coincide (Lemma~\ref{lem:coincide}), which is simultaneously
 what makes solidity computable in the bundle's own tensor and what connects the Weil base-change
-classification to the container derivative; the sharpness of the finiteness hypothesis
-(Proposition~\ref{prop:infinite}); and the Lean certification of the arithmetic. The result is a
-clean deliverable for the tangent-category and \texttt{Poly} communities: \emph{on the linear layer
-of finite-support polynomial functors --- the finite free $\N$-modules --- the container derivative
-is the only nontrivial representable first-order tangent structure}.
+classification to the container derivative; the observation that solidity is strictly weaker than
+underlying a tangent structure at infinite rank, so that uniqueness is rank-free
+(\S\ref{sec:sharp}); and the Lean certification of the finite arithmetic. The result is a clean
+deliverable for the tangent-category and \texttt{Poly} communities: \emph{on the linear layer of
+finite-support polynomial functors --- the finite free $\N$-modules --- the container derivative is
+the only nontrivial representable first-order tangent structure}.
 
 \paragraph{Outline.}
 \S\ref{sec:prelim} recalls containers, the substitution monoidal structure, infinitesimal objects,
 the representable tangent bundle and the universality of the vertical lift. \S\ref{sec:coincide}
 proves the three-tensor coincidence on the linear layer. \S\ref{sec:rigidity} proves the rank
 rigidity (finite solid parts $=\{0,y\}$) and records its Lean certification. \S\ref{sec:sharp}
-exhibits the infinite-rank solid part. \S\ref{sec:converse} proves the solidity converse from vertical-lift
+shows that the infinite-rank solid part $\N\cdot y$ is not a tangent structure, so uniqueness is
+rank-free. \S\ref{sec:converse} proves the solidity converse from vertical-lift
 universality --- the main new content --- and records its Lean certification.
 \S\ref{sec:uniqueness} assembles the uniqueness theorem. \S\ref{sec:compare} compares with
 Lanfranchi--Lemay. \S\ref{sec:conclusion} concludes with the precedent and the sequel.
@@ -243,32 +273,70 @@ is \emph{linear} if it is of the form $S\cdot y$ for a set $S$, i.e.\ its extens
 $\vec X\mapsto S\times X$ in one variable; \emph{finite-support} if its shape set is finite. We
 write $\SPoly$ for the finite-support polynomial functors.
 
+\paragraph{The linear layer $\Lin(\SPoly)$ and the free $\N$-modules $\FreeMod_\N$.}
+The classification lives not in $\SPoly$ at large but in its subcategory of \emph{linear} maps. Let
+$\Lin(\SPoly)$ be the (wide) subcategory with the same objects $n\in\N$ but only the \emph{linear}
+morphisms $n\to m$: those given by an $m\times n$ matrix of natural numbers (equivalently, tuples of
+finite-support linear containers $S\cdot y$), with composition the matrix product. Write
+$\FreeMod_\N$ for the category of \emph{all} free $\N$-modules and $\N$-linear maps; the functor
+$n\mapsto\N^n$ is an equivalence of $\Lin(\SPoly)$ onto its full subcategory of \emph{finite-rank}
+modules. Finite-support $\SPoly$ sees only finite ranks; the uniqueness theorem is proved in the
+larger $\FreeMod_\N$, so that ``no exotic structure at infinite rank'' is a theorem and not a blind
+spot of the finiteness restriction (\S\ref{sec:sharp}). What matters for the morphisms is this: the
+augmentation $\varepsilon\mapsto0$ of a Weil algebra and the other structure maps below are
+$\N$-matrices --- legitimate morphisms of $\FreeMod_\N$ --- even though, read naively as container
+maps in $(\Poly,\lhd,y)$, $\varepsilon\mapsto0$ is not a container morphism. On $\Lin(\SPoly)$ the
+Cartesian differential / tangent structure of $\SPoly$ \cite{MacBethTangent} restricts, and there it
+is computed by base change (Lemma~\ref{lem:coincide}), so a linear container $S\cdot y$ appears as a
+\emph{morphism} ($1\times1$ matrix $[\,|S|\,]$) and $\lhd$ appears as \emph{composition}, not as a
+tensor of objects.
+
 \paragraph{Infinitesimal objects and representable tangent bundles.}
 We use the representable presentation of tangent structure of \cite{LanfranchiLemay2025},
 transported along the dictionary $(\Mod_R,\otimes_R,R)\rightsquigarrow(\Mod_\N,\otimes_\N,\N)$: the
 \emph{same} module/algebra layer as Lanfranchi--Lemay, but over the rig $\N$ in place of a
 commutative ring. The tangent functor is \emph{base change by a Weil algebra}, not substitution; the
-link to $\Poly$ is that the finite free $\N$-modules are exactly the finite-support linear containers
-$S\cdot y$, on which base change coincides with $\lhd$ (Lemma~\ref{lem:coincide}).
+link to $\Poly$ is that the finite-rank free $\N$-modules are exactly the objects of
+$\Lin(\SPoly)$, on which base change coincides with $\lhd$ (Lemma~\ref{lem:coincide}).
 
 \begin{definition}[Infinitesimal object / Weil algebra]\label{def:inf}
 An \emph{infinitesimal object} is an augmented square-zero $\N$-algebra $D=y\oplus M$: a pointed
 object with unit/zero $z\colon y\to D$ and augmentation $p\colon D\to y$, $p\circ z=\id_y$,
-\emph{infinitesimal part} $M=\ker(p)$ a finite free $\N$-module with $M\cdot M=0$ inside $D$ (the
+\emph{infinitesimal part} $M=\ker(p)$ a free $\N$-module with $M\cdot M=0$ inside $D$ (the
 $\varepsilon^2=0$ condition). The associated tangent functor is \emph{base change}
 $T:=(-)\otimes_\N D$, with tangent projection $A\otimes p\colon A\otimes D\to A$ and zero section
 $A\otimes z\colon A\to A\otimes D$. The dual numbers $W=\N[\varepsilon]/\varepsilon^2$ are the first
-such object; on a polynomial $p$, base change by $W$ is the dual-number substitution
-$T(p)=p(y+\varepsilon v)\bmod\varepsilon^2=p(y)+\varepsilon\,v\cdot\partial p$, the $\varepsilon^2=0$
-truncation being carried by $W$, \emph{not} by composition.
+such object. We do \emph{not} rank $M$ finite here: the classification below holds at every rank.
 \end{definition}
+
+\begin{remark}[Base change is not the substitution formula]\label{rem:basechange}
+It is worth stating once, cleanly, what base change $T=(-)\otimes W$ is and is not. On the free module
+$\N^n$ it is $\N^n\mapsto\N^n\otimes_\N W=\N^n\oplus\varepsilon\N^n$, doubling the rank; the ring map
+$\N[y]\to W[y]$ underlying it sends $y\mapsto y$ and $y^2\mapsto y^2$. This is distinct from the
+dual-number \emph{substitution} $y\mapsto y+\varepsilon v$, which sends $y^2\mapsto y^2+2\varepsilon
+vy$: the substitution is the unit of the adjunction between $(-)\otimes W$ and the K\"ahler functor,
+and it is how the companion note \cite{MacBethTangent} computes the combinator $\partial$ on $\SPoly$
+\emph{maps} (where a polynomial is a morphism). The two agree on \emph{linear} arguments --- which is
+all the tangent \emph{functor} on $\FreeMod_\N$ ever sees --- and a non-linear polynomial is neither
+an object nor a morphism of $\FreeMod_\N$, so no confusion arises inside the module category.
+\end{remark}
 
 \begin{definition}[Representable first-order tangent structure]\label{def:tangent}
 A \emph{representable first-order tangent structure} is a tangent structure (in the sense of
 Cockett--Cruttwell \cite{CockettCruttwell2014}, first order) whose bundle functor is base change
 $T=(-)\otimes D$ by an infinitesimal object $D=y\oplus M$. Its infinitesimal part $M$ is called
-\emph{solid} if the multiplication $\mu\colon M\otimes M\to M$ is an isomorphism.
+\emph{solid} if the \emph{vertical-lift component} $\ell_M\colon M\to M\otimes M$ is an isomorphism.
 \end{definition}
+
+\begin{remark}[Why solidity is $\ell_M$, not $\mu$]\label{rem:solid}
+The square-zero condition $M\cdot M=0$ makes the multiplication $\mu\colon M\otimes M\to M$ the
+\emph{zero} map (e.g.\ $\mu(\varepsilon\otimes\varepsilon)=\varepsilon^2=0$), so $\mu$ is never an
+isomorphism except in the degenerate case $M=0$; an earlier draft's ``$\mu$ an isomorphism'' was
+therefore the wrong map. The map that is forced to be an isomorphism is the vertical-lift component
+$\ell_M\colon M\to M\otimes M$ (for $W$, $\varepsilon\mapsto\varepsilon_1\varepsilon_2$); universality
+of the vertical lift forces exactly this (\S\ref{sec:converse}). Only the abstract isomorphism
+$M\otimes M\cong M$ it provides is used below, so the rigidity computation is unchanged.
+\end{remark}
 
 \begin{remark}[Convention: $\otimes$ versus $\lhd$, and why it matters]\label{rem:convention}
 The tangent functor is base change $(-)\otimes D$, never substitution $(-)\lhd D$ on all of $\Poly$.
@@ -278,21 +346,25 @@ $y^2\lhd W=y^2\lhd 2y=(2y)^2=4y^2\neq 3y^2$, and $y^n\lhd W=W^n$ is multiplicati
 saves the container reading is Lemma~\ref{lem:coincide}: on the \emph{linear layer} $S\cdot y$ --- the
 only layer the rank arithmetic of \S\ref{sec:rigidity}--\S\ref{sec:converse} ever touches --- base
 change $\otimes$, substitution $\lhd$ and the Dirichlet tensor all agree. Every infinitesimal object
-below ($D=y\oplus M$, the second-order object $D_2$, the vertical object $P'$) is linear, so
-Lemma~\ref{lem:coincide} lets us compute it by whichever of the three is convenient; we use the quick
-substitution formula $\lhd$ for these \emph{object-level} computations while the tangent
-\emph{functor} itself remains base change $(-)\otimes D$.
+below ($D=y\oplus M$, the second-order object $D_2$, the vertical object $P'$) is a free module, so
+Lemma~\ref{lem:coincide} lets us compute it by whichever of the three is convenient. We do these
+computations inside $\FreeMod_\N$, where $\lhd$ is matrix composition and the structure maps
+(augmentation, zero, $\hat g$) are $\N$-matrices --- which is why the ``quick substitution formula''
+is legitimate: the maps in sight are genuine morphisms of $\FreeMod_\N$, not container maps of
+$(\Poly,\lhd,y)$. The tangent \emph{functor} itself remains base change $(-)\otimes D$.
 \end{remark}
 
 The dual numbers $W=\N[\varepsilon]/\varepsilon^2=y\oplus\langle\varepsilon v\rangle$ are such an
-object: the augmentation is $\varepsilon\mapsto0$ ($p\colon W\to y$), the zero is $y\hookrightarrow
-W$ ($z$), and base change $(-)\otimes W$ \emph{is} the dual-number substitution $T$ of
-\cite{MacBethTangent} --- the identity $T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$ being base change,
-not $\lhd$-substitution (Remark~\ref{rem:convention}). Its infinitesimal part is the linear module
-$M=\langle\varepsilon v\rangle=1\cdot y$, of rank $1$; the trivial structure is $D=y$, $M=0$,
-$T=\id$. That $T=(-)\otimes W$ is a genuine tangent structure --- not merely an endofunctor --- is the
-content of \cite{MacBethTangent}; we take representability of $\partial$ as established there and ask
-only whether other infinitesimal objects give rise to further structures.
+object: the augmentation is $\varepsilon\mapsto0$ ($p\colon W\to y$) and the zero is
+$y\hookrightarrow W$ ($z$). Base change $(-)\otimes W$ on $\FreeMod_\N$ is the module-level tangent
+functor; its restriction is the $\partial$-structure of \cite{MacBethTangent} on the linear layer
+(Remark~\ref{rem:basechange}). Its infinitesimal part is the rank-$1$ free module
+$M=\langle\varepsilon v\rangle$; the trivial structure is $D=y$, $M=0$, $T=\id$. That base change by
+a Weil algebra is a genuine tangent structure --- not merely an endofunctor --- is standard
+(Cockett--Cruttwell \cite{CockettCruttwell2014}; the general representable case,
+\cite{LanfranchiLemay2025}); that its combinator on $\SPoly$ is the container derivative $\partial$
+is \cite{MacBethTangent}. We take both as established and ask only whether other infinitesimal
+objects give rise to further structures.
 
 \paragraph{The universality of the vertical lift.}
 Among the tangent-structure axioms of \cite{CockettCruttwell2014} we use one by name. The
@@ -312,18 +384,12 @@ T_2 & \longrightarrow & T^2\\[-2pt]
 is a pullback; equivalently, that the induced map $T_2\to V$ is an isomorphism. This is the single
 structural axiom the converse of \S\ref{sec:converse} invokes.
 
-\paragraph{Why the infinitesimal part is linear.}
-For a tangent structure the projection $p\colon T\Rightarrow\id$ is an \emph{additive bundle}: each
-fibre carries a commutative-monoid structure and the bundle addition is linear. For $T=(-)\otimes W$
-this forces the infinitesimal part $M$ to be a \emph{linear} module $M=S\cdot y$. A non-linear
-$M$ --- for instance $\varepsilon y^2$, whose $\varepsilon$-coefficient is $y^2 p'$ rather than a
-directional $v\cdot p'$ --- has no vector-space fibre and fails the additive-bundle axiom. So
-linearity of $M$ is \emph{forced}, not assumed, and it is this linearity (not any projective-module
-theory) that supplies freeness in \S\ref{sec:rigidity}. We note that both the augmentation splitting
-$W=y\oplus M$ and the linearity of $M$ use that we are in the \emph{pointed} $\N$-algebra setting
-(zero object, $0=1$ augmentation), which is exactly what base change over $\N$ provides and what full
-$(\Poly,\lhd,y)$ does not; this is a second reason the classification is stated there and not in
-$\Poly$ at large.
+\paragraph{The infinitesimal part is a free module.}
+Inside $\FreeMod_\N$ there is nothing to force: the objects \emph{are} the finite free $\N$-modules,
+so the infinitesimal part $M=\ker(p)$ of any infinitesimal object is a free $\N$-module, with a
+well-defined rank (Lemma~\ref{lem:free}). This is what supplies freeness in \S\ref{sec:rigidity}, and
+it replaces --- indeed trivialises --- Lanfranchi--Lemay's projective-to-free step, which over a ring
+needs a PID.
 
 \section{Three tensors coincide on the linear layer}\label{sec:coincide}
 
@@ -395,13 +461,14 @@ $\N$-modules by definition, so no PID hypothesis is needed and the rigidity belo
 rig $\N$ --- strictly outside the Lanfranchi--Lemay hypotheses.
 
 \begin{lemma}[Solid $\Rightarrow$ idempotent rank]\label{lem:solid}
-If $M=S\cdot y$ is solid, i.e.\ $\mu\colon M\otimes M\to M$ is an isomorphism, then $|S|^2=|S|$.
+If $M=S\cdot y$ is solid, i.e.\ the vertical-lift component $\ell_M\colon M\to M\otimes M$ is an
+isomorphism, then $|S|^2=|S|$.
 \end{lemma}
 
 \begin{proof}
 By Lemma~\ref{lem:coincide}, $M\otimes M=M\lhd M=(S\times S)\cdot y$, of rank $|S|^2$ by Lemma~\ref{lem:free}.
-An isomorphism $\mu\colon(S\times S)\cdot y\cong S\cdot y$ forces, by Lemma~\ref{lem:free}, a
-bijection $S\times S\cong S$, i.e.\ $|S|^2=|S|$.
+An isomorphism $\ell_M\colon S\cdot y\cong(S\times S)\cdot y$ forces, by Lemma~\ref{lem:free}, a
+bijection $S\cong S\times S$, i.e.\ $|S|=|S|^2$.
 \end{proof}
 
 \begin{theorem}[Finite rigidity]\label{thm:rigidity}
@@ -432,46 +499,59 @@ on the packaged oracle reports only \texttt{propext} (a structural, non-classica
 finite \texttt{decide} claims are individually axiom-free, with no \texttt{sorryAx},
 \texttt{Quot.sound} or \texttt{Classical.choice}.
 
-\section{The finiteness hypothesis is sharp for the rigidity}\label{sec:sharp}
+\section{Infinite rank: solidity without a tangent structure}\label{sec:sharp}
 
-Theorem~\ref{thm:rigidity} is stated for finite rank, and the hypothesis cannot be dropped from the
-rigidity: at infinite rank there is a third solid \emph{part}.
+The rank count of Theorem~\ref{thm:rigidity} --- and of the converse's step $1+2n=1+n+n^2\Rightarrow
+n\in\{0,1\}$ (\S\ref{sec:converse}) --- used finiteness, because $\kappa^2=\kappa$ for every infinite
+cardinal $\kappa$ (under choice). One might therefore expect the finite-rank hypothesis to be sharp,
+with $\N\cdot y$ a third solid structure. It is not. The expectation conflates two notions: an
+infinite free module \emph{is} solid, but solidity is strictly weaker than underlying a tangent
+structure, and $\N\cdot y$ fails the latter test. Uniqueness is rank-free.
 
-\begin{proposition}[Infinite-rank solid part]\label{prop:infinite}
-The countable linear module $M=\N\cdot y$ is solid: $M\otimes M=(\N\times\N)\cdot y\cong\N\cdot
-y=M$, because $|\N\times\N|=|\N|$. It is a solid infinitesimal part distinct from $0$ and $y$, so
-the rank rigidity (Theorem~\ref{thm:rigidity}) fails without finiteness.
+\begin{proposition}[$\N\cdot y$ is solid]\label{prop:infinite}
+The countable free module $M=\N\cdot y$ is solid: the Cantor pairing supplies a bijection
+$\N\times\N\cong\N$, hence an isomorphism $\ell_M\colon M\cong(\N\times\N)\cdot y=M\otimes M$
+(Lemma~\ref{lem:coincide}). Thus $M\otimes M\cong M$ with $\rank M=|\N|\notin\{0,1\}$: solidity, read
+as invertibility of $\ell_M$, does not by itself bound the rank.
 \end{proposition}
 
-\begin{proof}
-Lemma~\ref{lem:coincide} gives $M\otimes M=(\N\times\N)\cdot y$, and the Cantor pairing supplies a
-bijection $\N\times\N\cong\N$ (injectivity checked on a $40\times40$ window; see the Lean oracle of
-\S\ref{sec:rigidity} for a certified $12\times12$ window). By Lemma~\ref{lem:free} this is an
-isomorphism $\mu\colon M\otimes M\cong M$, and $\rank M=|\N|\notin\{0,1\}$.
-\end{proof}
+So the rank rigidity (Theorem~\ref{thm:rigidity}) is about \emph{finite} solid parts, and its
+hypothesis is genuinely used. The point of this section is that this does \emph{not} leave a gap in
+the uniqueness theorem, because the extra axioms of a tangent structure exclude $\N\cdot y$ outright.
 
-\begin{remark}[A solid part is not yet a tangent structure]\label{rem:part-not-structure}
-We are deliberately careful about what Proposition~\ref{prop:infinite} does and does not say. It
-exhibits a third solid \emph{infinitesimal part}; it does \emph{not} exhibit a third tangent
-\emph{structure}. Passing from a solid part to a genuine tangent structure requires the forward
-direction of the correspondence $(\star)$ (\S\ref{sec:converse}), which we have verified only for the
-two finite primitives $\{0,y\}$ by appeal to \cite{MacBethTangent}; we have \emph{not} checked that
-$\N\cdot y$ carries the full Cockett--Cruttwell axioms. So whether \emph{uniqueness} (as opposed to
-the rank rigidity) actually fails over all of $\Poly$ is left open. What is certain is that the
-finite-rank hypothesis is load-bearing for the rigidity computation, and this is all the uniqueness
-theorem below needs.
+\begin{theorem}[Rank-free exclusion of infinite parts]\label{thm:rankfree}
+Let $T=(-)\otimes D$ be a representable first-order tangent structure with $D=y\oplus M$, $M$ a free
+$\N$-module of \emph{any} rank. Then $\rank M\le1$. In particular $\N\cdot y$ carries no first-order
+tangent structure, and the only infinitesimal objects underlying one are $y$ and $W$.
+\end{theorem}
+
+We do not reproduce the proof, which is the content of \cite{MacBethFlip}; the one-sentence reason is
+that the isomorphism $\ell_M$ of a tangent structure is not merely abstract but is the vertical lift,
+and the flip axiom $c\ell=\ell$ together with lift-coassociativity force $\ell_M$ to be the diagonal
+$M\to M\otimes M$ --- which is surjective (hence, being an isomorphism onto $M\otimes M$, exists at
+all) only when $\rank M\le1$.\footnote{In slightly more detail \cite{MacBethFlip}: over $\N$ an
+isomorphism of free modules permutes bases, so $\ell_M(e_k)=e_{\beta_1(k)}\otimes e_{\beta_2(k)}$ with
+$\beta=(\beta_1,\beta_2)\colon K\to K\times K$ a bijection; $c\ell=\ell$ with $\ell_M$ surjective
+forces the flip to act as the identity on the mixed part $M\otimes M$ (so $c$ is \emph{not} the swap
+when $\rank M\ge2$); lift-coassociativity then forces $\beta_1,\beta_2$ to be surjective idempotents,
+hence identities, so $\beta$ is the diagonal $k\mapsto(k,k)$, which is a bijection onto $K\times K$
+only when $|K|\le1$. The representable case admits an independent $\lhd$-monoidal argument, bypassing
+coassociativity. No step uses finiteness.} The exclusion is thus a theorem about the vertical-lift
+\emph{data}, not about the abstract isomorphism type of $M$.
+
+\begin{remark}[Solidity versus structure, and the contrast with Lanfranchi--Lemay]\label{rem:part-not-structure}
+The correspondence $(\star)$ of \S\ref{sec:converse} --- tangent structure $\iff$ solid part --- is
+therefore a bijection \emph{only} at finite rank, where both sides land in $\{0,1\}$. At infinite
+rank the forward direction fails: $\N\cdot y$ is solid but is not a structure
+(Proposition~\ref{prop:infinite}, Theorem~\ref{thm:rankfree}). This is where our setting diverges
+from Lanfranchi--Lemay. Over a ring their extra solid parts at non-PID / non-finitely-generated bases
+(their Examples~4.20--4.21) are genuine, so they must impose finite generation (Niefield
+coexponentiability) to recover uniqueness. Over $\N$ the extra solid part $\N\cdot y$ is a
+\emph{phantom}: it is solid, but the flip and coassociativity axioms refuse it a tangent structure,
+so uniqueness needs no finiteness hypothesis at all. An earlier draft of this note read $\N\cdot y$
+as a genuine third solid structure and declared ``finiteness is sharp''; that reading measured
+solidity by an abstract isomorphism, and is withdrawn.
 \end{remark}
-
-More generally every infinite cardinal $\kappa$ satisfies $\kappa^2=\kappa$ (under choice), so each
-yields a solid infinitesimal \emph{part}. This is the exact analogue of Lanfranchi--Lemay's extra
-solid parts when the finite-generation hypothesis is relaxed --- their non-PID example $R=S\times S$
-(Example~4.21) and non-finitely-generated $\mathbb{Z}\ltimes\mathbb{Q}$ (Example~4.20). The moral is
-that the honest hypothesis is a \emph{finite-dimensional} infinitesimal part: finitely many tangent
-directions, matching Lanfranchi--Lemay's finite-generation (Niefield coexponentiability) condition,
-here realised as plain finiteness of the shape set. We will see in \S\ref{sec:converse} that the
-converse's rank equation does not exclude $\N\cdot y$ either, so finiteness is load-bearing for
-\emph{both} halves of the rank argument (the question of a genuine third \emph{structure} remaining
-open, Remark~\ref{rem:part-not-structure}).
 
 \section{The solidity converse: universality of the vertical lift}\label{sec:converse}
 
@@ -490,13 +570,16 @@ universality of the vertical lift (\S\ref{sec:prelim}); the one new idea is that
 category of $\N$-modules, the vertical bundle is a \emph{direct coproduct}, so its rank is
 computed by addition and never by a difference.
 
-The entire argument lives within the linear layer (the finite free $\N$-modules $S\cdot y$), where
-by Lemma~\ref{lem:coincide} the tangent functor $T=(-)\otimes D$ \emph{coincides} with substitution
-$(-)\lhd D$ --- base change of a free module by a free module is substitution. We therefore compute
-the objects below with the quick substitution formula $\lhd$, which preserves pullbacks pointwise
-(Lemma~\ref{lem:pullback}); this is legitimate precisely because every object in sight is linear (it
-is for non-linear arguments, which never occur here, that $\otimes D$ and $\lhd D$ part company). Here
-$D=y\oplus M$, $M=S\cdot y$ linear of finite rank $n=|S|$ (linearity forced, \S\ref{sec:prelim}).
+The entire argument lives within the finite-rank free modules $\Lin(\SPoly)$, where by Lemma~\ref{lem:coincide}
+the tangent functor $T=(-)\otimes D$ \emph{coincides} with substitution $(-)\lhd D$ --- base change
+of a free module by a free module is substitution. We therefore compute the objects below with the
+quick substitution formula $\lhd$, which preserves pullbacks pointwise (Lemma~\ref{lem:pullback}).
+This is legitimate because all the maps in sight are morphisms of $\FreeMod_\N$ --- the augmentation
+$\hat p$ and zero $\hat z$ are $\N$-matrices, and $\lhd$ between free modules is their matrix
+composition --- so the pullbacks and the rank counts are taken in $\FreeMod_\N$, not in
+$(\Poly,\lhd,y)$ (where $\hat p$, sending $\varepsilon\mapsto0$, is not a container morphism at all).
+Here $D=y\oplus M$, $M=S\cdot y$ a free module of finite rank $n=|S|$ (the finiteness used in this
+section; the infinite case is handled by Theorem~\ref{thm:rankfree}).
 
 \subsection{Substitution preserves pullbacks on both sides}
 
@@ -596,8 +679,9 @@ Both are linear (Lemma~\ref{lem:counts}), so by Lemma~\ref{lem:free} their shape
 Now use only that $\N$ is a cancellative rig with no zero divisors --- \emph{no subtraction, no
 additive inverses}. Additive left-cancellation of the common summand $1+n$ gives $n=n^2$. For
 $n\ge1$, multiplicative cancellation of $n$ in $n\cdot n=n\cdot1$ gives $n=1$; and $n=0$ satisfies
-$0^2=0$. Hence $n\in\{0,1\}$, so $M\in\{0,y\}$ by Lemma~\ref{lem:free}, and $\mu\colon M\otimes M\to M$
-is an isomorphism in each case.
+$0^2=0$. Hence $n\in\{0,1\}$, so $M\in\{0,y\}$ by Lemma~\ref{lem:free}, and the vertical lift
+$\ell_M\colon M\to M\otimes M$ is an isomorphism in each case ($M=0$ trivially; $M=y$ with
+$M\otimes M=y$).
 \end{proof}
 
 \begin{remark}[Why this is rig-internal]
@@ -605,8 +689,8 @@ The subtraction that blocked a literal port lived in computing the vertical-bund
 exactness. In $\Poly$ that fibre is a direct coproduct of the surviving summands
 (Lemma~\ref{lem:counts}), so its rank is a \emph{sum}. Everything downstream is
 additive/multiplicative cancellation in $\N$. The derivation never forms a difference of ranks,
-never inverts an element, and never constructs the solid map $\mu$ explicitly --- solidity is
-\emph{output}, read off from $n\in\{0,1\}$. Lanfranchi--Lemay's Theorem~4.8 instead builds $\mu$ and
+never inverts an element, and never constructs the solidity isomorphism explicitly --- solidity is
+\emph{output}, read off from $n\in\{0,1\}$. Lanfranchi--Lemay's Theorem~4.8 instead builds it and
 argues over a ring; the content we have replaced is precisely their one subtraction.
 \end{remark}
 
@@ -620,11 +704,14 @@ are not primitive structures --- solidity coincides with indecomposability, as i
 non-solidity of every $r\ge2$ is part of the certified Lean oracle below.)
 \end{remark}
 
-\begin{remark}[Consistency with sharpness]
+\begin{remark}[The universality shadow alone needs finiteness]\label{rem:shadow}
 The rank equation $1+2n=1+n+n^2$ is satisfied by every infinite cardinal $\kappa$
-($1+2\kappa=\kappa=1+\kappa+\kappa^2$), so universality does \emph{not} exclude $M=\N\cdot y$. The
-converse is therefore as sharp as the rigidity: both hold only under finiteness, consistent with
-Proposition~\ref{prop:infinite}.
+($1+2\kappa=\kappa=1+\kappa+\kappa^2$), so this \emph{rank shadow} of universality does not by itself
+exclude $M=\N\cdot y$ --- which is exactly why Theorem~\ref{thm:converse} is stated for finite rank.
+The full vertical-lift data impose more than the rank shadow (the flip and coassociativity axioms),
+and \emph{that} excludes $\N\cdot y$ at every cardinality (Theorem~\ref{thm:rankfree}). So the
+classification is rank-free even though this cleaner universality argument, which only sees ranks, is
+not; the two agree on the finite range, where both give $\{0,1\}$.
 \end{remark}
 
 \paragraph{Machine certification of the arithmetic.}
@@ -641,8 +728,9 @@ $n=2$ (excluded, $5\ne7$). \texttt{\#print axioms} on the packaged oracle report
 \texttt{propext}. The Lean certifies the \emph{arithmetic collapse} and the additivity of the
 counts; it does \emph{not} formalise the structural inputs --- the universality axiom
 (\cite{CockettCruttwell2014}), that $\lhd$ preserves pullbacks (Lemma~\ref{lem:pullback}, via
-\cite{GambinoKock2013}), or that $M$ is linear (the additive-bundle axiom) --- which are cited
-framework facts, and we are explicit that they are the mathematical, not the decidable, content.
+\cite{GambinoKock2013}), or that the infinitesimal part is a free module (automatic in
+$\FreeMod_\N$) --- which are cited framework facts, and we are explicit that they are the
+mathematical, not the decidable, content.
 
 \section{The uniqueness theorem}\label{sec:uniqueness}
 
@@ -657,25 +745,39 @@ Theorem~\ref{thm:rigidity} leaves no third finite solid part, the forward direct
 manufacture a third structure.
 
 \begin{theorem}[Uniqueness]\label{thm:uniqueness}
-Among representable first-order tangent structures $T=(-)\otimes D$ (base change by an augmented
-square-zero $\N$-algebra $D=y\oplus M$) on finite-rank $\N$-modules there are exactly two: the
-trivial structure ($D=y$, $T=\id$) and the AAGM dual-number structure
-($D=W=\N[\varepsilon]/\varepsilon^2$, $T(p)=p(y+\varepsilon v)\bmod\varepsilon^2$, combinator
-$\partial$). On the linear layer of $\SPoly$, where $\otimes D$ and $\lhd D$ coincide
-(Lemma~\ref{lem:coincide}), this says the container derivative is the only nontrivial such structure.
+Among representable first-order tangent structures $T=(-)\otimes D$ on $\FreeMod_\N$ (base change by
+an augmented square-zero $\N$-algebra $D=y\oplus M$, with $M$ a free $\N$-module of \emph{any} rank)
+there are exactly two: the trivial structure ($D=y$, $T=\id$) and the AAGM dual-number structure
+($D=W=\N[\varepsilon]/\varepsilon^2$, combinator $\partial$). Restricted to the finite-rank part
+$\Lin(\SPoly)$ --- the linear layer of $\SPoly$, where $\otimes D$ and $\lhd D$ coincide
+(Lemma~\ref{lem:coincide}) --- this says the container derivative is the only nontrivial such
+structure.
 \end{theorem}
 
 \begin{proof}
-Let $T=(-)\otimes D$ be such a structure, $D=y\oplus M$. By Theorem~\ref{thm:converse} its
-infinitesimal part is solid with $\rank M\in\{0,1\}$; by Theorem~\ref{thm:rigidity} (equivalently
-Lemma~\ref{lem:free}) this forces $M\in\{0,y\}$, hence $D\in\{y,\ W\}$ up to
-isomorphism. By the forward direction both are realised, by $\id$ and $\partial$ respectively.
-Hence exactly two.
+Let $T=(-)\otimes D$ be such a structure, $D=y\oplus M$. By Theorem~\ref{thm:rankfree}, $\rank M\le1$;
+by Lemma~\ref{lem:free} the rank determines $M$, so $M\in\{0,y\}$ and $D\in\{y,\ W\}$ up to
+isomorphism. (When $M$ is finite to begin with, the same conclusion follows from the note's own
+rig-internal converse, Theorem~\ref{thm:converse}, without appeal to \cite{MacBethFlip}.) By the
+forward direction both are realised, by $\id$ and $\partial$ respectively. Hence exactly two.
 \end{proof}
 
-This is Theorem~\ref{thm:main-intro}, now unconditional: the conditional hypothesis of the earlier
-draft --- that every representable first-order tangent structure has a solid infinitesimal part ---
-is discharged by Theorem~\ref{thm:converse}.
+\begin{remark}[Uniqueness of the full structure, not just the object]\label{rem:fulldata}
+Theorem~\ref{thm:uniqueness} counts infinitesimal \emph{objects}, but the classification is in fact
+of the full first-order tangent structure $(T,p,0,+,\ell,c)$. Over $\N$ the remaining data are forced
+once the object is fixed. For $D=y$ only $T=\id$ is possible. For $D=W$ the additive bundle $+$ is the
+unique commutative-monoid structure on the rank-$1$ fibre, the projection and zero are the
+augmentation and unit of $W$, and the vertical lift and flip are pinned by
+$\varepsilon\mapsto\varepsilon_1\varepsilon_2$ and $c\ell=\ell$ (the same forcing, run at rank $1$,
+that excludes higher ranks in Theorem~\ref{thm:rankfree} \cite{MacBethFlip}). So each of the two
+infinitesimal objects carries a \emph{unique} first-order tangent structure, and ``exactly two'' is a
+statement about structures, not merely objects.
+\end{remark}
+
+This is Theorem~\ref{thm:main-intro}, now unconditional and rank-free: the conditional hypothesis of
+an earlier draft --- that every representable first-order tangent structure has a solid infinitesimal
+part --- is discharged by Theorem~\ref{thm:converse}, and the finite-rank hypothesis is removed by
+Theorem~\ref{thm:rankfree}.
 
 \section{Comparison with Lanfranchi--Lemay}\label{sec:compare}
 
@@ -693,16 +795,17 @@ projective $\Rightarrow$ free $=$ Rotman structure theorem (uses PID) &
   linear module \emph{is} free $\N$-module (Lemma~\ref{lem:free}) --- automatic \\
 rank in $R$-modules, $R^{n^2}\cong R^n$ &
   cardinality rank, $(S\times S)\cong S$ (Lemmas~\ref{lem:coincide},~\ref{lem:free}) \\
-rigidity: solid $M\otimes_R M\cong M\Rightarrow n^2=n\Rightarrow n\in\{0,1\}$ &
-  rigidity: solid $M\otimes M\cong M\Rightarrow|S|^2=|S|\Rightarrow|S|\in\{0,1\}$ \\
+rigidity: solid $\ell_M\colon M\cong M\otimes_R M\Rightarrow n^2=n\Rightarrow n\in\{0,1\}$ &
+  rigidity: solid $\ell_M\colon M\cong M\otimes M\Rightarrow|S|=|S|^2\Rightarrow|S|\in\{0,1\}$ \\
 converse: vertical bundle fibre via \textbf{short exact sequence} (rank by \textbf{subtraction}) &
   converse: fibre $P'$ a \textbf{direct coproduct} $y\oplus\varepsilon_{\mathrm{out}}\oplus(M\otimes M)$
   (rank by \textbf{addition}; Lemma~\ref{lem:counts}) \\
 two structures: trivial $+$ Kähler/dual-number &
   two structures: $\id+\partial$ (Theorem~\ref{thm:uniqueness}) \\
-extra solid parts at non-PID / non-f.g.\ (Ex.~4.20--4.21) &
-  extra solid \emph{part} at \textbf{infinite rank} $\N\cdot y$ (\S\ref{sec:sharp}; not shown to be
-  a structure) \\
+extra solid parts at non-PID / non-f.g.\ are \textbf{genuine} $\Rightarrow$ finite generation
+  \emph{required} (Ex.~4.20--4.21) &
+  extra solid part $\N\cdot y$ at infinite rank is a \textbf{phantom} --- solid but no structure
+  (Thm~\ref{thm:rankfree}), so uniqueness is \textbf{rank-free} \\
 \bottomrule
 \end{tabular}
 \caption{The port is faithful (same base-change tangent functor, same rank-idempotent mechanism,
@@ -728,22 +831,25 @@ by a formula.
 \section{Conclusion: precedent and sequel}\label{sec:conclusion}
 
 We have proved that among the representable first-order tangent structures given by Weil base change
-$T=(-)\otimes D$ on finite-rank $\N$-modules there are exactly two, the trivial one and the container
-derivative $\partial$ (Theorem~\ref{thm:uniqueness}); and because base change coincides with
-container substitution on the linear layer (Lemma~\ref{lem:coincide}), this is at the same time the
-statement that $\partial$ is the unique nontrivial representable first-order tangent structure on
-that layer of finite-support polynomial functors. The proof ports Lanfranchi--Lemay's affine-scheme
-classification in both halves, and in both the rig $\N$ makes the port \emph{cleaner}: freeness is
-automatic, so the rigidity needs no PID (Lemma~\ref{lem:free}); and the vertical bundle is a direct
-coproduct, so the converse needs no subtraction (Lemma~\ref{lem:counts}, Theorem~\ref{thm:converse}).
-Two technical observations carry the port: on the linear layer the base-change tensor $\otimes D$,
-the substitution tensor $\lhd$ and the Dirichlet tensor all coincide (Lemma~\ref{lem:coincide}), and
-$\N$-modules are extensive so that ranks add. The arithmetic of both halves is Lean-certified with no
-classical axioms. The finite-rank hypothesis is sharp for the rigidity: $\N\cdot y$ is a third solid
-\emph{part}, and neither half of the rank argument excludes it, so the honest hypothesis is a
-finite-dimensional infinitesimal part. Whether $\N\cdot y$ underlies a genuine third tangent
-\emph{structure} --- and hence whether uniqueness itself (not just the rigidity) needs finiteness ---
-we leave open (Remark~\ref{rem:part-not-structure}).
+$T=(-)\otimes D$ on $\FreeMod_\N$ --- for a free infinitesimal part of any rank ---
+there are exactly two, the trivial one and the container derivative $\partial$
+(Theorem~\ref{thm:uniqueness}); and because base change coincides with container substitution on the
+linear layer (Lemma~\ref{lem:coincide}), this is at the same time the statement that $\partial$ is
+the unique nontrivial representable first-order tangent structure on that layer of finite-support
+polynomial functors. The proof ports Lanfranchi--Lemay's affine-scheme classification in both halves,
+and in both the rig $\N$ makes the port \emph{cleaner}: freeness is automatic, so the rigidity needs
+no PID (Lemma~\ref{lem:free}); and the vertical bundle is a direct coproduct, so the converse needs
+no subtraction (Lemma~\ref{lem:counts}, Theorem~\ref{thm:converse}). Two technical observations carry
+the port: on the linear layer the base-change tensor $\otimes D$, the substitution tensor $\lhd$ and
+the Dirichlet tensor all coincide (Lemma~\ref{lem:coincide}), and $\N$-modules are extensive so that
+ranks add. The arithmetic of the finite case is Lean-certified with no classical axioms. Finiteness
+turns out \emph{not} to be load-bearing: although the countable part $\N\cdot y$ is solid (an
+abstract isomorphism $M\otimes M\cong M$ exists, by the Cantor pairing), solidity is strictly weaker
+than underlying a tangent structure at infinite rank --- the flip and lift-coassociativity axioms
+force the vertical lift to be the diagonal, excluding every rank $\ge2$
+(Theorem~\ref{thm:rankfree}, \cite{MacBethFlip}). So $\N\cdot y$ is a phantom, not a third structure,
+and the uniqueness holds at every rank; the earlier draft's ``finiteness is sharp'' is withdrawn
+(Remark~\ref{rem:part-not-structure}).
 
 \paragraph{Precedent.}
 The hope that polynomial functors carry a differential structure is Cockett's. His unpublished
@@ -831,6 +937,11 @@ G.~Cruttwell; accessed 2026).
 MacBeth,
 \emph{The container derivative is a tangent structure: a fibrational positioning}
 (Kodamai internal note, 2026).
+
+\bibitem{MacBethFlip}
+MacBeth,
+\emph{The canonical flip closes the infinite-rank obstruction: a tangent structure's vertical lift
+is the diagonal} (Kodamai internal note, 2026); rank $M\le1$ at every cardinality.
 
 \end{thebibliography}
 

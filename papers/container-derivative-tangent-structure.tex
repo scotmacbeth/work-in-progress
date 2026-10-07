@@ -38,7 +38,8 @@
 \title{The container derivative is a tangent structure:\\
 \large a fibrational positioning}
 \author{MacBeth\\ \small Kodamai}
-\date{3 October 2026}
+\date{3 October 2026 (revised 7 October 2026: scope stated as finite-support; the
+directed-container restriction relabelled a proposition-sketch, per a referee report)}
 
 \begin{document}
 \maketitle
@@ -46,7 +47,7 @@
 \begin{abstract}
 The derivative of a container is usually sold as a pun: $\partial(y^n)=n\cdot y^{n-1}$ is the
 type of one-hole contexts, and the resemblance to calculus is left as a wink. We remove the
-wink. We show that the category $\SPoly$ of (finitary, multivariable) polynomial functors is a
+wink. We show that the category $\SPoly$ of (finite-support, multivariable) polynomial functors is a
 Cartesian differential category whose differential combinator is exactly the
 Abbott--Altenkirch--Ghani--McBride one-hole-context derivative $\partial$; consequently
 $\partial$ is the vertical part of a genuine Cartesian tangent structure, realised on the nose
@@ -100,7 +101,7 @@ whose combinator is the container derivative, and here is where it sits in the f
 picture.
 
 \paragraph{The result.}
-Let $\SPoly$ be the category of finitary multivariable polynomial functors up to isomorphism,
+Let $\SPoly$ be the category of finite-support multivariable polynomial functors up to isomorphism,
 with substitution as composition (Definition~\ref{def:spoly}). Our main theorem is the following.
 
 \begin{theorem}[Main theorem]\label{thm:main-intro}
@@ -183,16 +184,19 @@ polynomial functor
   \sem{S\lhd P}\colon\Set^n\to\Set,\qquad
   \vec X\ \longmapsto\ \sum_{s\in S}\ \prod_{i=1}^{n} X_i^{\,P^i_s}.
 \]
-We work with finitary containers (all $P^i_s$ finite), so only the cardinalities $|P^i_s|$ matter up
-to isomorphism. Composition of containers is substitution of one extension into another, written
-$G\lhd F$; it corresponds to functor composition \cite{AAGM2003}.
+We work with \emph{finite-support} containers: finitely many shapes ($|S|<\infty$), each with
+finitely many positions (all $P^i_s$ finite). Thus only the finite cardinalities $|P^i_s|$ and the
+finite shape set matter up to isomorphism; this is what makes the counting functor $N$
+(Definition~\ref{def:counting}) land in $\N$ --- for an infinite-shape container such as $\N\cdot y$
+the count would be $\aleph_0\cdot m\notin\N$. Composition of containers is substitution of one
+extension into another, written $G\lhd F$; it corresponds to functor composition \cite{AAGM2003}.
 
 \paragraph{The base category.}
 \begin{definition}[$\SPoly$]\label{def:spoly}
 Let $\SPoly$ be the category with objects the natural numbers $n\in\N$ (read $n$ as ``$n$
-variables'', i.e.\ $\Set^n$); morphisms $n\to m$ the isomorphism classes of $m$-tuples of finitary
-containers in $n$ variables (equivalently, the finitary polynomial functors $\Set^n\to\Set^m$);
-composition substitution; identities the variable tuples $(y_1,\dots,y_n)$.
+variables'', i.e.\ $\Set^n$); morphisms $n\to m$ the isomorphism classes of $m$-tuples of
+finite-support containers in $n$ variables (equivalently, the finite-support polynomial functors
+$\Set^n\to\Set^m$); composition substitution; identities the variable tuples $(y_1,\dots,y_n)$.
 \end{definition}
 
 Passing to isomorphism classes makes substitution strictly associative and unital, so $\SPoly$ is a
@@ -451,31 +455,34 @@ address it here; see \S\ref{sec:conclusion}.
 \section{Does the tangent structure see categories?}\label{sec:directed}
 
 A directed container is a small category, i.e.\ a $\lhd$-comonoid \cite{AhmanUustalu2016}. If $T$
-respects that comonoid structure it transports small categories to small categories. It does, with one
-twist that is the whole point.
+respects that comonoid structure it transports small categories to small categories. We record the
+expected statement as a \emph{sketch}: the monoidal comparison is verified, but the final comonoid
+step is only computed, not proved in full, so we state it as a proposition-sketch rather than a
+theorem. The twist in it is the whole point.
 
-\begin{theorem}[Restriction to directed containers]\label{thm:directed}
+\begin{proposition}[Restriction to directed containers --- sketch]\label{thm:directed}
 $T$ is a strict $\lhd$-monoidal functor
 \[
   T\colon(\Poly/k,\ \lhd,\ y)\ \longrightarrow\ (\Poly/\DD,\ \lhd_\DD,\ y+\varepsilon v),
   \qquad \DD=k[\varepsilon]/\varepsilon^2,
 \]
-where $\lhd_\DD$ is substitution after base change along $k\to\DD$. The monoidal comparison is the
-container chain rule $\partial(G\lhd F)\cong(\partial G\lhd F)\times\partial F$, which holds on the
-nose (laxator the identity). Granting the standard base-change $2$-functoriality of polynomial
-composition \cite{GambinoKock2013}, $T$ therefore preserves $\lhd$-comonoids, i.e.\ sends a small
-category internal to $k$ to a small category internal to $\DD$: a base-change functor
-$\DCont(k)\to\DCont(\DD)$.
-\end{theorem}
+where $\lhd_\DD$ is substitution after base change along $k\to\DD$; the monoidal comparison is the
+container chain rule $\partial(G\lhd F)\cong(\partial G\lhd F)\times\partial F$, holding on the nose
+(laxator the identity). \emph{Granting} the standard base-change $2$-functoriality of polynomial
+composition \cite{GambinoKock2013}, $T$ should then preserve $\lhd$-comonoids, sending a small
+category internal to $k$ to one internal to $\DD$: a base-change functor $\DCont(k)\to\DCont(\DD)$.
+We have verified the strict $\lhd$-monoidality; the comonoid-preservation step is computed on
+examples but not proved in general, which is why this is a sketch.
+\end{proposition}
 
-The content is a single identity. Writing $T(c)(y,v)=c(y)+\varepsilon v\,c'(y)$, define $\lhd_\DD$ by
-substituting the dual-number output of $T(d)$ into $c$; then $T(c\lhd d)$ has tangent part
-$v\,(c\circ d)'(y)$, and the ordinary chain rule $(c\circ d)'=c'(d)\cdot d'$ is exactly the
+The verified content is a single identity. Writing $T(c)(y,v)=c(y)+\varepsilon v\,c'(y)$, define
+$\lhd_\DD$ by substituting the dual-number output of $T(d)$ into $c$; then $T(c\lhd d)$ has tangent
+part $v\,(c\circ d)'(y)$, and the ordinary chain rule $(c\circ d)'=c'(d)\cdot d'$ is exactly the
 $\lhd_\DD$ tangent part. So $T$ is strict $\lhd$-monoidal, and the AAGM container chain rule
 (\S\ref{sec:proof}) is this identity read off in the (shape $\lhd$ position) presentation. Comonoid
-preservation then follows because strict monoidal functors preserve comonoids --- the one step we do
-not re-derive on container morphisms, borrowing instead the base-change $2$-functoriality of
-\cite{GambinoKock2013}.
+preservation \emph{would} follow because strict monoidal functors preserve comonoids --- but this is
+the step we do not re-derive on container morphisms, and we flag it as the conjectural part, borrowing
+in the examples the base-change $2$-functoriality of \cite{GambinoKock2013}.
 
 \begin{remark}[Why the base is $\DD$ and not $k$ --- the honest caveat]\label{rem:caveat}
 $T$ is \emph{not} an endofunctor of $\DCont(k)$. Over $\Set$ the polynomial $T(c)=c+\varepsilon v\,
