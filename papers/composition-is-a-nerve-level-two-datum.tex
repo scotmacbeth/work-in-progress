@@ -1,0 +1,718 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{program}{The nerve-level program}
+
+\newcommand{\Poly}{\mathsf{Poly}}
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Ab}{\mathsf{Ab}}
+\newcommand{\Comon}{\mathsf{Comon}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\cod}{\operatorname{cod}}
+\newcommand{\sS}{\mathcal{S}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\lto}{\!\lhd\!}
+\newcommand{\Nerve}{\mathrm{N}}
+
+\title{Composition is a nerve-level-two datum\\
+\large Grading compositional invariants of directed containers by nerve level,
+not cohomological degree --- a program, with proved instances}
+\author{MacBeth\thanks{Kodamai. This is a positioning note for the Kodamai
+AI-Mathematician programme; the proofs it organizes are established in the cited companion notes
+and proof files, which live together with this note and the verification scripts at
+\texttt{github.com/scotmacbeth/work-in-progress} (content commit recorded on this page). It
+\emph{supersedes and corrects} the earlier note \emph{``Composition is a degree-two datum''}
+(content commit \texttt{ae9d67a}), whose headline grading was off by one; see the Introduction.
+Prepared as a framing appendix for the Strathclyde mini-course \emph{Tangent Categories and
+Containers} (13--16 October 2026).}\\
+\small Kodamai}
+\date{8 October 2026\\[2pt]
+\small content commit \texttt{\textbf{[pending]}}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A directed container is a small category, and a question about such a category can be a question
+about its underlying shape, about a resource transported across it, or about how its morphisms
+compose. We ask whether a numerical grade on an invariant records how much of composition the
+invariant can see, and we argue that the right grade is the \emph{nerve level} the invariant reads,
+not --- as an earlier note of ours claimed --- its cohomological degree. The two indices differ by
+one: a datum on composable pairs lives at nerve level two, but its cohomology is first read by a
+degree-\emph{one} cocycle condition. Out-degree homogeneity reads only the reflexive graph (nerve
+level one) and is provably blind to composition. The comultiplication $\delta$ is a nerve-level-two
+datum, and the invariants built from it --- the left-translation trivialization of the tangent
+bundle, detecting groupoids and, one notch finer, thin groupoids --- separate the group $\Z/2$ from
+the idempotent monoid $\{1,e\}$ at cohomological degree \emph{one}, exactly the separation the floor
+cannot make. The Zappa--Sz\'ep weld $[\omega]\in H^2$ is a nerve-level-\emph{three} datum: it reads
+associativity, a condition on composable triples. We prove that the truncation tower collapses at
+level two (a category is its $2$-truncated nerve), so above the floor there is no third
+\emph{detection} rung; the genuine level-two/level-three distinction is the condition-level fact that
+building a category from a composition is an associativity problem. Finally we show the degree-one
+inventory class $[\theta_R]$ and the degree-two weld class $[\omega]$ are two independent anchors in
+the composition-sensitive band, differing in coefficients and condition-level, not in whether they
+see composition. We assemble these as a program --- nerve level grades compositional data --- and
+flag, as an open question with a degree-one counterexample, whether cohomological \emph{degree}
+stratifies \emph{detection} above the floor.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{A correction, stated first.}
+An earlier note of ours carried the headline \emph{``Composition is a degree-two datum,''} and with
+it the claim that \emph{no invariant below cohomological degree two can detect composition}. The
+claim is false, and this note replaces it. The note's own degree-\emph{one} invariant already
+separates the group $\Z/2$ from the idempotent monoid $\{1,e\}$ --- a pair that differs only in how
+its one nontrivial arrow composes with itself. The error was a conflation of two distinct simplicial
+indices attached to a cohomology class, and the fix is to grade by the right one. The underlying
+theorems are unaffected; only the grading, and the slogan that named it, were wrong. We state the
+corrected grading, prove the regrade that forces it, and rebuild the ladder honestly.
+
+\paragraph{One functor, three questions.}
+A directed container is, by the theorem of Ahman and Uustalu \cite{AhmanUustalu2016}, exactly a
+small category: the comonoids for the composition product $\lhd$ on polynomial functors are small
+categories, with objects the shapes and, for each object $a$, the direction set $E_a$ as the set of
+morphisms out of $a$. A single such category carries structure at several levels at once. There is
+its \emph{underlying functor} $p=\sum_a y^{E_a}$, which remembers only the object-indexed family of
+direction sets. There is \emph{data transported across it} --- a presheaf of resources, say stock
+levels at the nodes of a supply chain. And there is its \emph{composition} --- the comultiplication
+$\delta\colon p\to p\lto p$, which records how two morphisms compose, and, for a composite built as a
+Zappa--Sz\'ep product, the weld that glues two factors together. Questions can interrogate any of
+these levels, and a recurring experience of this programme is that an invariant designed for one is
+\emph{structurally unable} to answer another. The derivative is blind to composition; the
+consistency of a transported resource is independent of whether the composite factors as claimed.
+These are facts about where the relevant datum lives.
+
+\paragraph{The two indices, and the regrade.}
+Make that experience precise by grading an invariant by the \emph{simplicial level of the nerve} the
+datum it reads occupies. The nerve $\Nerve(\cC)$ of a category has $\Nerve_0$ the objects,
+$\Nerve_1$ the arrows, and $\Nerve_k$ the composable $k$-tuples; composition is the inner face
+$d_1\colon\Nerve_2\to\Nerve_1$, so the comultiplication $\delta$ is a datum on $\Nerve_2$, the
+composable pairs. This is the ``two'' that the old slogan heard. But the \emph{cohomological degree}
+of a class is a different index, and it is lower by one:
+
+\begin{quote}
+\emph{An $n$-cochain is a function on $\Nerve_n$, but the cocycle condition $d^n c=0$ that defines its
+class is a system of equations indexed by $\Nerve_{n+1}$. The binding simplicial level of an
+$H^n$-class is thus $\Nerve_{n+1}$: cohomological degree $=$ (nerve level of the cocycle condition)
+$-\,1$.}
+\end{quote}
+
+Composable pairs ($\Nerve_2$) are therefore read already by a degree-\emph{one} cocycle condition.
+The old ``degree two'' took the nerve level of $\delta$ and mislabelled it as a cohomological degree.
+We correct this throughout (\S\ref{sec:prelim}, Lemma~\ref{lem:regrade}); the retired slogan becomes:
+
+\begin{quote}
+\emph{Composition --- the datum of composable pairs --- is a nerve-level-two datum, first detectable
+at cohomological degree one. Associativity --- the datum of composable triples --- is the
+nerve-level-three datum, cohomological degree two, and the Zappa--Sz\'ep weld
+$[\omega]\in H^2$ is its obstruction.}
+\end{quote}
+
+\paragraph{The honest ladder.}
+The detection ladder has, above the floor, \emph{two} rungs for the price the old note charged for
+three, and a genuine third rung that is not a detection rung at all.
+\begin{itemize}
+\item \textbf{Nerve level $1$ (the blind floor).} Invariants that factor through the reflexive graph
+$\tr_1\Nerve(\cC)$ --- equivalently through the forgetful $U\colon\Cat\to\Poly$ --- read out-degrees
+and nothing about composition. Tangent-regularity lives here and is provably blind: $\Z/2$ and
+$\{1,e\}$ have the same underlying functor $y^2$ and are indistinguishable to it.
+\item \textbf{Nerve level $2$ (composition).} Invariants that read the composition map
+$d_1\colon\Nerve_2\to\Nerve_1$ can see composition. Two live here. The $\delta$-translation
+trivialization detects groupoids, and one notch finer thin groupoids, and it \emph{separates $\Z/2$
+from $\{1,e\}$ --- at cohomological degree one.} The inventory class $[\theta_R]\in H^1(\sS;A)$ of a
+transported resource is the other.
+\item \textbf{Nerve level $3$ (associativity).} The weld $[\omega]\in H^2$ reads a condition on
+composable triples: whether a composition assembles into an associative category. For a \emph{fixed}
+category this rung is empty of new detection power --- a category is reconstructible from its
+$2$-truncated nerve (Theorem~\ref{thm:coskel}), so the truncation tower collapses at level two.
+The genuine level-two/level-three distinction is in the \emph{assembly} problem, where the object
+varies: composition exists ($\Nerve_2$) versus composition is associative ($\Nerve_3$).
+\end{itemize}
+
+\paragraph{This is a program, not a theorem.}
+What is proved is a regrade lemma, a strict floor separation, a collapse theorem, an assembly
+separation, three invariant instances, and one independence result --- each in a companion note or
+proof file cited below and not re-derived here. What is \emph{not} proved, and what we are careful to
+state as an open question (\S\ref{sec:program}), is that cohomological \emph{degree} stratifies
+\emph{detection} power above the floor. As stated naively (``higher degree detects strictly more'')
+this is \textbf{false}: the degree-one $\delta$-invariant already detects composition, and the
+degree-one and degree-two cohomological anchors are \emph{independent}, not ordered. The grade that
+does the stratifying is \emph{nerve level}; cohomological degree is a coefficient-dependent shadow of
+it (Remark~\ref{rem:coefftest}). This is a positioning note: its job is to make the pattern visible
+and correctly labelled, not to establish new mathematics.
+
+\paragraph{Outline.} Section~\ref{sec:prelim} fixes containers as categories, the nerve and its two
+truncations, the regrade lemma, the two structure maps $\partial$ and $\delta$, the resource torsor
+and its $H^1$, the weld and its $H^2$, and the nerve-level grading.
+Section~\ref{sec:lvl1} is the blind floor; Section~\ref{sec:lvl2} is composition, where the
+$\delta$-translations separate what the floor cannot and the monodromy tower stratifies them;
+Section~\ref{sec:lvl3} is associativity, the weld, and the collapse/assembly facts;
+Section~\ref{sec:indep} shows the degree-one inventory class and the degree-two weld class are
+independent. Section~\ref{sec:program} states the program and the open question.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We work with polynomial functors in one variable and finite support; everything is first order.
+
+\paragraph{Containers as categories.}
+A \emph{container} in one variable is a polynomial functor $p=\sum_{a\in\Ob}y^{E_a}$ with a set
+$\Ob$ of \emph{shapes} and, for each shape $a$, a set $E_a$ of \emph{directions}
+\cite{AAGM2003,GambinoKock2013}. The composition product $\lhd$ has unit $y$ and realizes
+substitution. By Ahman and Uustalu \cite{AhmanUustalu2016} the comonoids in $(\Poly,\lhd,y)$ are
+exactly small categories: a comonoid structure $\delta\colon p\to p\lto p$ chooses identities (the
+counit) and a composition (the comultiplication), $\Ob$ is the object set, and
+$E_a=\coprod_c\Hom(a,c)$ is the set of morphisms out of $a$, so $|E_a|$ is the \emph{out-degree} of
+$a$. Write $\Comon(\Poly,\lhd)\simeq\Cat$ for this equivalence and $U\colon\Cat\to\Poly$ for the
+forgetful functor that discards $\delta$ and keeps only $\sum_a y^{E_a}$. We compose
+\emph{diagrammatically}: for $g\colon a\to b$ and $h\colon b\to c$, the composite $g\cdot h\colon
+a\to c$ means ``$g$ then $h$''.
+
+\paragraph{The nerve and its two truncations.}
+The \emph{nerve} $\Nerve(\cC)$ is the simplicial set with $\Nerve_0=\Ob$, $\Nerve_1$ the arrows, and
+$\Nerve_k$ the composable $k$-tuples $a_0\xrightarrow{f_1}\cdots\xrightarrow{f_k}a_k$. The inner face
+$d_1\colon\Nerve_2\to\Nerve_1$ composes the pair, $(f,g)\mapsto f\cdot g$; the degeneracies insert
+identities. The \emph{$k$-truncation} $\tr_k\Nerve(\cC)$ keeps $\Nerve_0,\dots,\Nerve_k$ with all
+faces and degeneracies among them. Two truncations matter here:
+\[
+   \tr_1\Nerve(\cC)=\text{the reflexive graph of }\cC\ (\text{objects, arrows, source, target,
+   identities})=U(p);
+\]
+$\tr_2\Nerve(\cC)$ adds the composition map $d_1$. For an abelian coefficient system $A$ (a functor
+$\cC\to\Ab$; constant unless noted), $H^n(\cC;A)$ is the cohomology of the classifying space $B\cC$,
+computed by the normalized cochain complex with $C^n=\{$functions on nondegenerate $n$-simplices$\}$
+and the standard bar differential; for a one-object category it is monoid/group cohomology.
+
+\paragraph{The regrade lemma.}
+The grade we use is the nerve level the \emph{binding} datum of an invariant occupies. Cohomological
+degree is a strictly lower index, and the relation is exact.
+
+\begin{lemma}[regrade]\label{lem:regrade}
+For every $n\ge 0$, the cocycle condition $d^n c=0$ defining an $H^n$-class is a system of equations
+indexed by $\Nerve_{n+1}$. Consequently
+\[
+   \text{cohomological degree }n \;=\; (\text{nerve level of the cocycle condition})\;-\;1.
+\]
+In particular a datum on composable pairs ($\Nerve_2$) is read by a degree-\emph{one} cocycle
+condition, and one on composable triples ($\Nerve_3$) by a degree-two cocycle condition.
+\end{lemma}
+
+\begin{proof}[Reason]
+$d^n\colon C^n\to C^{n+1}$ sends a function on $\Nerve_n$ to a function on $\Nerve_{n+1}$: by the bar
+formula $(d^n c)(f_1,\dots,f_{n+1})$ is an alternating sum of $c$ on the $n$-faces of the
+$(n+1)$-simplex $(f_1,\dots,f_{n+1})$, together with the coefficient action along $f_1$. Hence
+$d^n c=0$ is the family $\{(d^n c)(\sigma)=0:\sigma\in\Nerve_{n+1}\}$, indexed by $\Nerve_{n+1}$; the
+coboundary relation reads only $\Nerve_n$, so the highest level entering the definition of the class
+is $\Nerve_{n+1}$. Proved in full in \cite{MacBethNerve}.
+\end{proof}
+
+\begin{remark}[the ``two'' of $p\lto p$]\label{rem:simpvsdeg}
+The comultiplication $\delta\colon p\to p\lto p$ lands in the two-fold composite $p\lto p$: it is data
+on composable \emph{pairs}, i.e.\ on the $2$-simplices of the nerve, and in that \emph{simplicial}
+sense composition is degree-two data. Cohomological degree is the other index: by
+Lemma~\ref{lem:regrade} an $H^1$ cocycle condition already reads $2$-simplices. The earlier note
+named the simplicial level ``degree two'' and thereby read $\delta$ one cohomological degree too high;
+every ``degree two'' of that note that referred to composition itself should read ``nerve level two,
+cohomological degree one''.
+\end{remark}
+
+\paragraph{Two structure maps: $\partial$ reads the graph, $\delta$ reads composition.}
+The one-hole derivative \cite{AAGM2003} is
+\[
+   \partial p \;=\; \sum_a |E_a|\cdot y^{\,|E_a|-1},
+\]
+depending only on the direction sets, i.e.\ only on $U(p)=\tr_1\Nerve(\cC)$: a construction on the
+reflexive graph, nerve level one. With $W=\Z[\varepsilon]/(\varepsilon^2)$ the dual-number Weil
+algebra, the attached tangent functor is the Weil base change $T=(-)\otimes W$; the one-hole
+derivative appears as the $\varepsilon$-coefficient of the substitution $p(y+\varepsilon v)$, and all
+we use downstream is that the vertical fibre over a shape $a$ is free of rank $|E_a|$
+\cite{MacBethCartan,MacBethParallel}. By contrast $\delta\colon p\to p\lto p$ is \emph{not} a
+construction on $U(p)$: it is the composition map $d_1$, a datum on $\Nerve_2$. This is the precise
+sense in which composition is a nerve-level-two datum, and the datum $\partial$ cannot see.
+
+\paragraph{The resource torsor and its degree-one class.}
+Model a supply chain as a small category $\sS$: objects are nodes, morphisms out of $a$ are
+admissible operations, composition is sequencing. \emph{Inventory} is data transported across $\sS$:
+a local system in which each operation $f$ acts on stock by a translation $R(f)(x)=x+\tau_f$ of an
+abelian stock-group $A$. (We write $\tau_f$ for the translation $1$-cochain to avoid any clash with
+the comultiplication $\delta$.) A \emph{global section} is a node-potential $\varphi$ with
+\[
+   \tau_f \;=\; \varphi(\dom f)-\varphi(\cod f)\qquad\text{for every }f,
+\]
+i.e.\ the $1$-cochain $\tau$ is a coboundary. Because the translations are not group homomorphisms,
+the fibrewise data form a \emph{torsor} under the linear local system $A$, not a presheaf of groups;
+the obstruction is accordingly the class
+\[
+   [\theta_R]\;:=\;[\tau]\in H^1(\sS;A).
+\]
+This is a degree-one class, coefficient system the stock-group $A$, measuring route/reconvergence
+discrepancy over the nerve of $\sS$ --- the classical mechanism of Kirchhoff's voltage law
+(\S\ref{sec:indep}).
+
+\paragraph{The weld and its degree-two class.}
+A composite chain is a \emph{Zappa--Sz\'ep product} $\sS=\cC\bowtie\cD$ (procurement $\bowtie$
+logistics): $\cC,\cD$ are wide subcategories meeting in the discrete category on the shared objects,
+and every morphism factors uniquely as $f=c\cdot d$ \cite{AhmanUustalu2016,MacBethZS}. Whether a
+candidate matched pair of actions closes into such a factorization is governed by the \emph{weld
+obstruction}
+\[
+   [\omega]\in H^2(\sS;\cD),
+\]
+a Baues--Wirsching $2$-cocycle on the orbit category with coefficients the vertex-group system $\cD$;
+the chain decomposes as claimed exactly when $[\omega]=0$ \cite{MacBethZS}. By
+Lemma~\ref{lem:regrade} this degree-two class reads $\Nerve_3$: its cocycle condition \emph{is} the
+associativity equation of the assembled composition (\S\ref{sec:lvl3}). It is the home of the
+blockchain re-entrancy obstruction $[\omega]=\varepsilon\in H^2\cong\Z/2$ \cite{MacBethReentrancy}.
+
+\paragraph{The nerve-level grading.}
+We rank a compositional invariant by the nerve level of the binding datum it reads: level $1$ for the
+reflexive graph $U(p)$ (out-degree family); level $2$ for the composition map $d_1$ --- read by the
+comultiplication $\delta$ and by any $H^1(\sS;A)$ of a transported local system; level $3$ for the
+associativity of the assembled composition, whose obstruction is the weld $[\omega]\in H^2$. The grade
+is a grade of \emph{data}; the different cohomological degrees carry different coefficient systems, and
+as Remark~\ref{rem:nocollapse} records, the same cyclic group can surface at different degrees under a
+change of coefficients, so one must not read the grading as a single filtration.
+
+\section{Nerve level one: the invariant blind to composition}\label{sec:lvl1}
+
+The floor reads only the reflexive graph and is for that reason unable to see composition at all. The
+result is proved in \cite{MacBethParallel}; we state it and exhibit the discriminating examples.
+
+The tangent bundle $T p=p\otimes W$ has, over a shape $a$, a fibre free of rank $|E_a|$. Call $p$
+\emph{tangent-regular} if these fibres are all isomorphic --- the honest residue, in the
+representable/monoidal setting, of parallelizability in the sense of Cruttwell, Ikonicoff, Lemay and
+Van Der Linden \cite[Def.~4.18, attributed there]{Lanfranchi2026}.
+
+\begin{theorem}[\cite{MacBethParallel}]\label{thm:lvl1}
+A container $p=\sum_a y^{E_a}$ is tangent-regular iff the out-degree $a\mapsto|E_a|$ is constant on
+$\Ob$. This condition depends only on $U(p)=\tr_1\Nerve(\cC)$ --- it factors through
+$U\colon\Cat\to\Poly$ --- and is therefore blind to composition: it is invariant under changing
+$\delta$ on a fixed underlying functor $p$, and so cannot be equivalent to any property that
+distinguishes two comonoid structures on the same $p$, such as being a groupoid
+(Example~\ref{ex:lvl1}).
+\end{theorem}
+
+\begin{example}[the blindness, made concrete]\label{ex:lvl1}
+The idempotent monoid $\{1,e\}$ with $e^2=e$ and the group $\Z/2$ both have underlying functor $y^2$.
+They have the \emph{same} tangent bundle and are both tangent-regular (one object, so out-degree is
+trivially constant), yet $\Z/2$ is a groupoid and $\{1,e\}$ is not. The floor cannot tell them apart.
+Conversely the groupoid $\Z/2\sqcup\Z/3$ has out-degrees $2$ and $3$, so $U=y^2+y^3$ is \emph{not}
+tangent-regular though it is a groupoid: tangent-regularity neither implies nor is implied by being a
+groupoid.
+\end{example}
+
+The cautionary form of this rung is easy to fall for. A genuine theorem of Lanfranchi
+\cite[Thm.~4.20]{Lanfranchi2026} --- \emph{for a group object $G$ in a Cartesian tangent category, $G$
+is a Lie group object iff $G$ is parallelizable} --- invites the port ``a container is parallelizable
+iff it is a groupoid.'' The hypothesis ``given a group object'' is essential: without it the statement
+is false ($S^7$ is parallelizable with no group structure), and the port drops it. The port is in any
+case ill-posed, because the container derivative's tangent structure is the monoidal base change
+$(-)\otimes W$ and not a Cartesian one \cite{MacBethParallel}; what survives is tangent-regularity,
+which lives at nerve level one and cannot see the groupoid property. This is no defect in
+\cite{Lanfranchi2026} --- that theorem is about group objects in Cartesian tangent categories --- but
+the symptom of asking a graph-level invariant a composition-level question. Connected groupoids
+\emph{are} tangent-regular; but strictly more categories are, and the gap is the composition content
+that only nerve level two recovers (\S\ref{sec:lvl2}).
+
+\section{Nerve level two: composition, and the invariant that sees it --- at degree one}
+\label{sec:lvl2}
+
+The second rung reads the composition map $d_1$. Here composition becomes visible, and --- this is the
+crux of the correction --- it becomes visible already at cohomological degree \emph{one}. We first
+exhibit the $\delta$-translation invariant that separates the pair the floor could not, then verify by
+direct computation that the separation is a degree-one cohomological fact, and finally refine the
+invariant into a monodromy tower.
+
+\paragraph{The $\delta$-translation invariant.}
+Fix a morphism $g\colon a\to b$ and pin the first slot of $\delta$ to it: the
+\emph{$\delta$-translation}
+\[
+   L_g\colon E_b\to E_a,\qquad L_g(h)=g\cdot h,
+\]
+precomposition by $g$. It is contravariantly functorial, assembling $\delta$ into the
+\emph{arrows-out presheaf} $E_{(-)}\colon\cC^{\mathrm{op}}\to\Set$, $a\mapsto E_a$, $g\mapsto L_g$ --- a
+property-free restatement of the composition map $d_1$. (The statement below concerns this
+vertical/linear layer of $T p=p\otimes W$, not the full bundle \cite{MacBethDelta}.) Say $Tp$ is
+\emph{$\delta$-trivializable} over a connected component $[a]$ if $E_{(-)}$ restricted there is a
+\emph{local system} --- every $L_g$ a bijection --- the honest discrete analogue of trivializing a
+tangent bundle by translations, $TG\cong G\times\mathfrak g$.
+
+\begin{theorem}[\cite{MacBethDelta}]\label{thm:lvl2}
+$Tp$ is $\delta$-trivializable over $[a]$ iff the full subcategory on $[a]$ is a \emph{groupoid};
+globally, iff $\cC$ is a groupoid. Surjectivity of the translations already forces full invertibility:
+a surjective $L_g$ hits $\id_a\in E_a$, so some $h$ has $g\cdot h=\id_a$; surjectivity of $L_h$ then
+gives $k$ with $h\cdot k=\id_b$, whence $g=g\cdot(h\cdot k)=(g\cdot h)\cdot k=k$ and so $h\cdot g=\id_b$
+--- $g$ is invertible. The dividing line is exactly ``groupoid'', with no weaker cancellation
+condition between.
+\end{theorem}
+
+\begin{example}[seeing what the floor could not]\label{ex:lvl2}
+Return to the pair of Example~\ref{ex:lvl1}. On $\Z/2$ every $L_g$ is a bijection, so $Tp$ is
+$\delta$-trivializable. On $\{1,e\}$ the translation $L_e$ sends $1\mapsto e$ and $e\mapsto e$, missing
+$\id=1$; it is not even injective, and $\{1,e\}$ is not $\delta$-trivializable. The invariant
+\emph{separates $\Z/2$ from $\{1,e\}$} --- the exact pair the floor, reading only the common underlying
+functor $y^2$, was structurally unable to tell apart (Theorem~\ref{thm:lvl1}). This is the content of
+the slogan we can prove: there is a genuine invariant, built from $\delta$ (the composition map $d_1$),
+that detects a composition property no invariant factoring through $U$ can.
+\end{example}
+
+\paragraph{The separation is a degree-one fact.}
+It remains to pin the cohomological degree at which this separation occurs, and to show it is
+\emph{one}, not two. This is Theorem~2 of \cite{MacBethNerve}; we record the computation because it is
+where the old slogan broke.
+
+\begin{theorem}[\cite{MacBethNerve}]\label{thm:degreeone}
+The categories $\Z/2$ and $\{1,e\}$ have isomorphic $1$-truncated nerves (hence agree on every
+invariant factoring through $U$, in particular on out-degree), but
+$\dim_{\F_2}H^1(-;\F_2)$ distinguishes them: $H^1(\Z/2;\F_2)=\F_2$ while $H^1(\{1,e\};\F_2)=0$. The
+distinction is a function of $\tr_2\Nerve$ and not of $\tr_1\Nerve$. Hence detection of composition
+begins at nerve level two, which by Lemma~\ref{lem:regrade} is cohomological degree \emph{one}.
+\end{theorem}
+
+\begin{proof}[Computation]
+The unique nondegenerate composable pair is $(a,a)$ with $d_1(a,a)=a\cdot a$, which is $1$ in $\Z/2$
+and $a$ in $\{1,e\}$; so no isomorphism of $\tr_2$ nerves exists, while the relabelling of
+$\{1,a\}$ is an isomorphism of $\tr_1$ nerves. Over $\F_2$ a normalized $1$-cochain is a value $c(a)$.
+For $\{1,e\}$: $(d^1 c)(e,e)=c(e)-c(e\cdot e)+c(e)=c(e)$, forcing $c(e)=0$, so $H^1=0$. For $\Z/2$:
+$(d^1 c)(a,a)=2c(a)-c(1)=0$ over $\F_2$, so every value is a cocycle and $H^1=\F_2$. Full details and
+a verifying script in \cite{MacBethNerve}.
+\end{proof}
+
+\begin{remark}[why \emph{nerve level}, not degree, is the grade --- the coefficient test]
+\label{rem:coefftest}
+The degree at which this single $\Nerve_2$ distinction surfaces \emph{depends on the coefficients}.
+The feature $a\cdot a=1$ creates a $1$-cycle, $H_1(\Z/2)=\Z/2$, living at nerve level $\Nerve_2$. Over
+$\F_2$ it is detected by $H^1$ (degree one); over $\Z$ the same torsion is detected by $H^2$ (degree
+two, $H^2(\Z/2;\Z)=\Z/2$), the Bockstein having moved it up a degree. So ``which degree detects
+composition here'' has no coefficient-free answer --- but ``which \emph{nerve level}'' always does:
+$\Nerve_2$. This is the thesis in one example, and it is also why the old ``degree two'' was not even
+stably wrong: over $\F_2$ the detection is degree one.
+\end{remark}
+
+\paragraph{A monodromy tower on the $\delta$-translations.}
+The $\delta$-translations can be asked to do more than be invertible: to trivialize to a
+\emph{constant} identification, with trivial monodromy. Call $E_{(-)}$
+\emph{constant-trivializable} over $[a]$ if it is naturally isomorphic to a constant presheaf
+$\Delta_V$: bijections $\varphi_b\colon E_b\to V$ with $\varphi_x\circ L_g=\varphi_y$ for \emph{every}
+$g\colon x\to y$, loops included. Read against a loop this asks the translation cocycle $\{L_g\}$ to
+be a coboundary.
+
+\begin{theorem}[\cite{MacBethThin}]\label{thm:thin}
+$E_{(-)}$ is constant-trivializable over $[a]$ iff $[a]$ is a \emph{thin} (indiscrete) groupoid ---
+trivial vertex groups, i.e.\ an equivalence-relation component; globally, iff $\cC$ is a thin
+groupoid. Constant-trivializability implies $\delta$-trivializability, so the groupoid hypothesis of
+Theorem~\ref{thm:lvl2} comes for free; applying naturality to a loop $g\in\Aut(a)$ forces $L_g=\id$,
+and since the regular action fixes the basepoint $\id_a\in E_a$, forces $g=\id_a$ --- the vertex group
+vanishes.
+\end{theorem}
+
+\begin{corollary}[the monodromy tower]\label{cor:tower}
+Over a connected component, three successively finer conditions on the $\delta$-translation presheaf
+$E_{(-)}$ stratify the composition datum:
+\begin{center}
+\begin{tabular}{@{}clll@{}}
+\toprule
+Rung & Condition on $E_{(-)}\big|_{[a]}$ & Equivalent to & Status \\
+\midrule
+$1$ & generic presheaf (each $L_g$ a function) & nothing & trivial \\
+$2$ & local system (every $L_g$ a bijection) & $[a]$ a groupoid & \cite{MacBethDelta} \\
+$3$ & $\cong$ constant presheaf & $[a]$ a thin groupoid & \cite{MacBethThin} \\
+\bottomrule
+\end{tabular}
+\end{center}
+Rungs $2$ and $3$ are distinct, separated by a nontrivial vertex group: $\Z/2$ is a groupoid but not
+constant-trivializable (the regular action $\Z/2\curvearrowright\Z/2$ is free, nontrivial loop
+monodromy), while the indiscrete two-object category $I_2$ is both. The obstruction to upgrading rung
+$2$ to rung $3$ is the \emph{class of the regular representation} in the non-abelian
+$H^1\!\big([a];\Sigma_{E_a}\big)$; this class is $\Hom(\Aut(a),\Sigma_{E_a})/\text{conj}$ evaluated at
+the regular representation, which is faithful, so it vanishes iff $\Aut(a)=1$. Thus $\Aut(a)$ is the
+\emph{holonomy group} of the tower, and it is a nontrivial \emph{vertex group} --- not
+one-object-ness --- that marks the step.
+\end{corollary}
+
+So the composition datum carries an internal grading of its own: generic $\subsetneq$ groupoid
+$\subsetneq$ thin groupoid, all three living at nerve level two as refinements of the
+$\delta$-translation presheaf. Rung $3$ has no classical counterpart among positive-dimensional Lie
+groups --- every Lie group already admits a global flat left-invariant framing with trivial holonomy
+--- because in the discrete setting rung $3$ forces the group acting on the fibre to be trivial. We do
+not overclaim: rungs $2$ and $3$ are composition-sensitive invariants of $\delta$, and the literal
+cohomological anchor of rung $3$ is the non-abelian degree-one class above, not a new $H^2$ class. The
+literal abelian anchors of the ladder remain $[\theta_R]\in H^1$ and $[\omega]\in H^2$; the tower
+refines the \emph{datum} $\delta$ at nerve level two.
+
+\section{Nerve level three: associativity is the weld}\label{sec:lvl3}
+
+The weld $[\omega]\in H^2$ reads one level higher. By Lemma~\ref{lem:regrade} its degree-two cocycle
+condition is a system of equations on composable triples $\Nerve_3$, and that system is exactly
+associativity. We make the level-two/level-three distinction precise, and show why it is \emph{not} a
+third detection rung for a fixed category.
+
+\begin{theorem}[2-coskeletal collapse, \cite{MacBethNerve}]\label{thm:coskel}
+A small category is determined up to isomorphism by its $2$-truncated nerve. Consequently, for
+isomorphism-invariants of a fixed category, every invariant factors through $\tr_2\Nerve$: there is no
+invariant that needs $\Nerve_3$, and the truncation tower stops at level two.
+\end{theorem}
+
+\begin{proof}[Reason]
+From $\tr_2\Nerve(\cC)$ one recovers objects, arrows, source, target, identities, and composition
+$d_1\colon\Nerve_2\to\Nerve_1$; these are all the data of a category, and an isomorphism of
+$2$-truncated nerves is exactly an isomorphism of categories. Higher $\Nerve_k$ are forced by the
+Segal condition. See \cite{MacBethNerve}.
+\end{proof}
+
+So the third rung is not a detection separation of \emph{fixed} categories. It is real, but it lives
+in the \emph{assembly} problem, where the object varies: one is handed a composition on composable
+pairs and asks whether it assembles into a category.
+
+\begin{theorem}[associativity is an $\Nerve_3$-predicate, \cite{MacBethNerve}]\label{thm:assembly}
+There is a unital magma whose full composition on composable pairs is defined and unital, yet which is
+not associative --- e.g.\ on $\{1,x,y\}$ with unit $1$ and $x\cdot x=y$, $x\cdot y=x$, $y\cdot x=y$,
+$y\cdot y=y$: the triple $(x,x,x)$ gives $(x\cdot x)\cdot x=y$ but $x\cdot(x\cdot x)=x$. Every pair-level
+($\Nerve_2$) datum is present and unital; the obstruction lives purely at $\Nerve_3$. When the
+composition arises as a Zappa--Sz\'ep weld, this obstruction is the class $[\omega]\in H^2$, vanishing
+iff the weld is associative (a category). The separation of ``composition exists'' ($\Nerve_2$) from
+``composition is associative'' ($\Nerve_3$) is therefore strict, witnessed by the re-entrancy weld
+$[\omega]=\varepsilon\neq 0\in H^2\cong\Z/2$ \cite{MacBethReentrancy}.
+\end{theorem}
+
+This is the honest content of ``nerve level two $\subsetneq$ nerve level three'': not that a finer
+invariant of a fixed category needs triples --- Theorem~\ref{thm:coskel} forbids that --- but that the
+\emph{obstruction to building} a category from a composition is an associativity datum one level above
+the composition itself. It is on this reading, and only this one, that the weld deserves to be called
+the level-three (degree-two) datum of the programme.
+
+\section{The two cohomological anchors are independent}\label{sec:indep}
+
+The ladder has two literal abelian cohomological anchors: the inventory class
+$[\theta_R]\in H^1(\sS;A)$ at nerve level two (a transported-resource datum) and the weld class
+$[\omega]\in H^2(\sS;\cD)$ at nerve level three (an associativity datum). They are not ordered by
+detection power; they are \emph{independent}. The results are proved in \cite{MacBethSupplyChain}.
+
+\begin{theorem}[\cite{MacBethSupplyChain}]\label{thm:consistency}
+Let $\sS=\cC\bowtie\cD$ and let $R$ be a resource local system with abelian stock-group $A$. Global
+inventory is consistent --- $R$ admits a global section over the cover $\{\cC,\cD\}$ --- iff
+$[\theta_R]=0\in H^1(\sS;A)$. The matched-pair law plays no role: a family compatible with the
+$\cC$- and $\cD$-morphisms is a global section, because compatibility is closed under composition and
+$\cC\cup\cD$ generates $\sS$.
+\end{theorem}
+
+\begin{theorem}[independence, \cite{MacBethSupplyChain}]\label{thm:sep}
+$[\theta_R]\in H^1(\sS;A)$ and $[\omega]\in H^2(\sS;\cD)$ are logically independent: both
+``$[\omega]=0$ with $[\theta_R]\neq 0$'' and ``$[\omega]\neq 0$ with $[\theta_R]=0$'' occur. Moreover
+no family of homomorphisms carries either class to the other: by the two witnesses, either direction
+would have to send a zero class to a nonzero class.
+\end{theorem}
+
+\begin{example}[the two witnesses]\label{ex:indep}
+For the first direction, let $\sS$ be the free category on the diamond quiver
+$a\rightrightarrows\{b,c\}\rightrightarrows d$ with distinct routes: directed-acyclic, so no
+non-identity invertibles, the weld coefficient system is trivial and $[\omega]=0$ is forced; yet
+$B\sS$ has first Betti number $1$, so a transport system with nonzero loop holonomy gives
+$[\theta_R]\neq 0$. The second direction is \emph{generic}: for \emph{any} $\sS$ with $[\omega]\neq 0$,
+the zero inventory system has $[\theta_R]=0$. A concrete such $\sS$ is the \emph{rigid-twist category}
+--- one object with endomorphism monoid a copy of $\Z/2$ generated by a self-inverse twist --- whose
+weld class generates $H^2(\sS;\Z/2)$. The substantive direction is thus the first; the second needs
+only the freedom to choose the resource.
+\end{example}
+
+\begin{remark}[different degrees do not by themselves mean independence]\label{rem:nocollapse}
+It would be a mistake to argue independence from the bare fact that the two classes sit in different
+degrees. Standard degree-raising maps exist --- the transgression $d_2\colon H^1\to H^2$ of a
+Lyndon--Hochschild--Serre spectral sequence, and Bockstein homomorphisms $H^1\to H^2$ --- so a priori
+a class could be carried up a degree. Independence here is the \emph{content of the two witnesses}
+(Theorem~\ref{thm:sep}), not a formal consequence of the degree gap. What the degree gap does explain
+is why no \emph{isomorphism} could identify the two classes outright: for the free loop $\sS=B\N$ (one
+loop; $B\sS\simeq S^1$) one has $H^1(B\N;A)=A$ while $H^2(B\N;A)=0$, and for a weld coefficient one
+takes $\cD=\Z$ with $H^2(B\N;\Z)=0$ --- the degrees genuinely do not match. This is the same ``rhyme,
+not identity'' caution that governs the two $H^2$-sites elsewhere in the programme \cite{MacBethZS},
+here across one degree: the same cyclic group can appear on both rungs, but the site, the coefficients,
+and the degree differ, and one must check all three before identifying two obstructions.
+\end{remark}
+
+The conjecture tested in \cite{MacBethSupplyChain} --- that inventory consistency \emph{equals} the
+weld $[\omega]=0$ --- was a false generalization of blockchain re-entrancy, where the conserved
+quantity \emph{is} the weld-state and no separate resource presheaf exists. In a supply chain the
+stock lives on the nodes, transported by operations, and is a genuinely separate degree-one datum. The
+modelling is sharpened, not debunked: re-entrancy is a nerve-level-three failure (handoff order, in
+the weld), inventory inconsistency a nerve-level-two failure (route discrepancy, on the nodes) --- two
+economic failure modes at two levels, each with a witness.
+
+\section{The program, and what it would take to prove}\label{sec:program}
+
+\paragraph{What is assembled here.}
+Three invariant instances fall on a single nerve-level ladder: out-degree homogeneity at level one,
+blind to composition; the $\delta$-translation invariant at level two, which detects groupoids and
+thin groupoids and separates $\Z/2$ from $\{1,e\}$ --- at cohomological degree one; and the weld at
+level three, the associativity obstruction. Two non-collapse facts make the ladder informative rather
+than decorative: level-one blindness (Theorem~\ref{thm:lvl1}), and the independence of the two
+cohomological anchors (Theorem~\ref{thm:sep}). A third, collapse, keeps us honest:
+Theorem~\ref{thm:coskel} shows there is no third \emph{detection} rung for a fixed category.
+
+\paragraph{The program, stated as a program.}
+\begin{program}
+For a directed container (small category) $\cC$ and a compositional invariant $I$, the \emph{nerve
+level} of the binding datum $I$ reads records what $I$ can detect: an invariant factoring through the
+$k$-truncation $\tr_k\Nerve(\cC)$ is blind to every composition phenomenon genuinely of nerve level
+$>k$. In particular composition --- the comultiplication $\delta$, the composition map $d_1$ --- is a
+nerve-level-two datum, first detectable at cohomological degree one; and associativity --- the weld
+$[\omega]\in H^2$ --- is the nerve-level-three datum, cohomological degree two.
+\end{program}
+This is a \textbf{conjecture and research direction, not a theorem}. We have a regrade lemma, a strict
+floor separation, a collapse theorem, an assembly separation, three instances and one independence
+fact; we do not have a uniform ``blindness'' theorem that an invariant factoring through $\tr_k$ cannot
+separate two categories agreeing to level $k$, nor a converse realizing every genuine level-$k$
+distinction. Note Theorem~\ref{thm:coskel}: for \emph{isomorphism}-invariants the truncation grade is
+genuine only up to level two, so any such program must grade \emph{conditions} (or assembly
+obstructions), not fixed-category truncations, above that line.
+
+\paragraph{The open question, honestly.}
+Does cohomological \emph{degree} stratify \emph{detection} power above the floor? \textbf{No, as
+naively stated}, and this is the heart of the correction. Theorem~\ref{thm:degreeone} exhibits a
+degree-one invariant (over $\F_2$) that detects composition, so ``nothing below degree two detects
+composition'' is false; and Theorem~\ref{thm:sep} shows the degree-one and degree-two anchors are
+independent, hence not ordered. What \emph{is} true is the condition-level strictness of
+Theorem~\ref{thm:assembly} (composition exists at $\Nerve_2$, is associative at $\Nerve_3$) and the
+coefficient-test of Remark~\ref{rem:coefftest} (nerve level is coefficient-free; degree is not). The
+grade that stratifies is nerve level; whether degree does anything beyond shadowing it is open.
+
+\paragraph{The sharpened applications story.}
+As a grant-narrative frame the ladder is immediately useful, and it sharpens rather than replaces the
+earlier picture. Compositional failure is not one phenomenon but several, cleanly separated by the
+nerve level of the conserved quantity:
+\begin{center}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Datum lives\ldots & Nerve level & Failure class & Economic instance \\
+\midrule
+on the \textbf{graph} (out-degrees) & $1$ & invisible to $\partial$ & tangent/shape geometry \\
+on the \textbf{nodes} (transported) & $2$ & $[\theta_R]\in H^1$ --- route discrepancy & supply-chain inventory \\
+in the \textbf{assembly} (weld) & $3$ & $[\omega]\in H^2$ --- handoff order & blockchain re-entrancy \\
+\bottomrule
+\end{tabular}
+\end{center}
+In our stylized transport model --- stock carried by translations, not the flow-conservation and
+capacity constraints of operations-research inventory accounting --- supply chains give an instance of
+``failure $=$ nonzero $H^1$''. The mechanism is classical: a route discrepancy is the obstruction to a
+node-potential, exactly Kirchhoff's voltage law, and the same coboundary condition governs
+arbitrage-freeness and the ranking inconsistencies measured by HodgeRank \cite{HodgeRank} and by
+sheaf-theoretic data fusion \cite{Ghrist}. We therefore do \emph{not} claim supply chains as the
+``first'' such instance --- that would need a literature search we have not run --- only as a clean one
+in this programme, standing beside re-entrancy's $H^2$ at a different nerve level.
+
+\paragraph{Acknowledgement and honesty.}
+Our port of Lanfranchi's theorem \cite{Lanfranchi2026} and our supply-chain conjecture tested in
+\cite{MacBethSupplyChain} are both sharpened here, not debunked: the first because its home is a
+Cartesian tangent category and the container derivative's is not, the second because inventory is a
+node-level degree-one datum and not the weld. The parallelizability definition the port leans on is due
+to Cruttwell, Ikonicoff, Lemay and Van Der Linden, as Lanfranchi records; the port itself is ours. The
+nerve-level program is a heuristic organizing proved facts; its general form is open, and the slogan it
+replaces --- ``composition is a degree-two datum'' --- is retired. Every level assignment in this note
+tracks a datum we have computed, and the corrected slogan, ``composition is a nerve-level-two datum,
+first seen at cohomological degree one,'' is underwritten by Lemma~\ref{lem:regrade} and
+Theorems~\ref{thm:lvl2}, \ref{thm:degreeone} and \ref{thm:thin}.
+
+\begin{thebibliography}{99}
+
+\bibitem{AAGM2003}
+M.~Abbott, T.~Altenkirch, N.~Ghani, C.~McBride,
+\emph{Derivatives of containers},
+Typed Lambda Calculi and Applications (TLCA 2003), LNCS 2701, Springer, 2003, 16--30.
+
+\bibitem{AhmanUustalu2016}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98; arXiv:1604.01187.
+
+\bibitem{GambinoKock2013}
+N.~Gambino, J.~Kock,
+\emph{Polynomial functors and polynomial monads},
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), no.~1, 153--192; arXiv:0906.4931.
+
+\bibitem{Lanfranchi2026}
+M.~Lanfranchi,
+\emph{The Lie group--Lie algebra correspondence in tangent categories},
+preprint, arXiv:2609.03449v1 (2026).
+(Parallelizable objects, Def.~4.18, attributed there to
+Cruttwell, Ikonicoff, Lemay and Van Der Linden.)
+
+\bibitem{HodgeRank}
+X.~Jiang, L.-H.~Lim, Y.~Yao, Y.~Ye,
+\emph{Statistical ranking and combinatorial Hodge theory},
+Math.\ Program.\ \textbf{127} (2011), no.~1, 203--244.
+
+\bibitem{Ghrist}
+R.~Ghrist,
+\emph{Elementary Applied Topology},
+Createspace, 2014.
+
+\bibitem{MacBethNerve}
+MacBeth,
+\emph{The nerve-level tower: composition is a nerve-level-two datum (cohomological degree one)}
+(Kodamai internal proof, \texttt{2026-10-08-nerve-level-tower}; registry node
+\texttt{composition-nerve-level}, proved).
+
+\bibitem{MacBethParallel}
+MacBeth,
+\emph{Parallelizability does not port to directed containers: a tangent dividing line, and the
+out-degree invariant blind to composition}
+(Kodamai internal note, 2026; content commit \texttt{e154282}).
+
+\bibitem{MacBethSupplyChain}
+MacBeth,
+\emph{Supply-chain inventory consistency is a degree-one class, and is independent of the
+Zappa--Sz\'ep weld obstruction}
+(Kodamai internal note, 2026; content commit \texttt{6f1fbd2}).
+
+\bibitem{MacBethDelta}
+MacBeth,
+\emph{The $\delta$-left-translation trivialization of the container tangent object sees groupoids}
+(Kodamai internal proof, \texttt{2026-10-06-delta-left-translation-trivialization}).
+
+\bibitem{MacBethThin}
+MacBeth,
+\emph{The constant-presheaf refinement: $\delta$-trivialization with trivial monodromy sees thin
+groupoids}
+(Kodamai internal proof, \texttt{2026-10-07-constant-presheaf-thin-groupoid}).
+
+\bibitem{MacBethZS}
+MacBeth,
+\emph{The Zappa--Sz\'ep closure obstruction is a Baues--Wirsching $H^2$ class}
+(Kodamai internal note, 2026).
+
+\bibitem{MacBethReentrancy}
+MacBeth,
+\emph{A machine-checked re-entrancy obstruction: $[\omega]=\varepsilon\in H^2\cong\Z/2$}
+(Kodamai internal note, Lean~4 certified, 2026).
+
+\bibitem{MacBethCartan}
+MacBeth,
+\emph{The container derivative has no fiberwise negation: a boundary for the Cartan calculus of
+polynomial functors}
+(Kodamai internal note, 2026).
+
+\end{thebibliography}
+
+\end{document}
