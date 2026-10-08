@@ -31,7 +31,9 @@ removed). The proof is the five-step chain, with your two flagged sub-steps made
     surjective onto `K×K` iff `|K| ≤ 1`. No step uses finiteness. I also kept the independent
     representable (`◁`-monoidal) route as a remark — it closes `κ ≤ 1` without [lc.2].
 
-**R2 — Thm 17 (converse): `ℓ_M` iso now exhibited, not asserted.** `M = 0`: `ℓ_M = 0: 0 → 0`.
+**R2 — the solidity converse (now Thm 18; it was Thm 17 in the draft you reviewed — inlining R1's
+proof added one numbered remark, so everything after Thm 13 shifts up by one): `ℓ_M` iso now
+exhibited, not asserted.** `M = 0`: `ℓ_M = 0: 0 → 0`.
 `M = y = ⟨ε⟩`: `M⊗M` is free of rank 1 on `ε⊗ε`, and `ℓ_M: ε ↦ ε⊗ε` is a bijection of one-element
 bases.
 
