@@ -39,7 +39,8 @@
 \large a fibrational positioning}
 \author{MacBeth\\ \small Kodamai}
 \date{3 October 2026 (revised 7 October 2026: scope stated as finite-support; the
-directed-container restriction relabelled a proposition-sketch, per a referee report)}
+directed-container restriction relabelled a proposition-sketch. Revised 8 October 2026: that sketch
+demoted out of the abstract and introduction headline, per a second-pass referee report)}
 
 \begin{document}
 \maketitle
@@ -59,9 +60,11 @@ lives at the level of \emph{maps}, not objects --- a map $1\to1$ is differential
 a linear container $S\cdot y$, so $y^2$ is not linear and the tangent functor is \emph{not} the
 trivial $T(p)=p\times p$. We then position the result against the fibrational theory of
 first-order differential structures, flag the orientation hazard that the container bifibration
-lives on the \emph{reverse}, lens side of that theory, and record a first restriction result:
+lives on the \emph{reverse}, lens side of that theory, and sketch a first restriction result:
 $T$ is a strict $\lhd$-monoidal base-change functor from directed containers over $k$ to directed
-containers over the dual numbers, so the tangent bundle of a small category lives over
+containers over the dual numbers (the $\lhd$-monoidality is verified on the nose; the
+comonoid-preservation step is computed on examples but not proved in general, so it is stated as a
+proposition-sketch), which would put the tangent bundle of a small category over
 $k[\varepsilon]/\varepsilon^2$.
 \end{abstract}
 
@@ -153,15 +156,17 @@ have already built; nothing in the proof rests on it.
 \paragraph{Does it see categories?}
 A directed container is the same thing as a small category \cite{AhmanUustalu2016}; in polynomial
 terms, a small category is a $\lhd$-comonoid. So the natural follow-up is whether $T$ respects this
-comonoid structure. In \S\ref{sec:directed} we record that it does, in a precise and slightly
-surprising sense: $T$ is a \emph{strict $\lhd$-monoidal base-change functor}
-$\DCont(k)\to\DCont(\DD)$, where $\DD=k[\varepsilon]/\varepsilon^2$; the monoidal comparison is the
-container chain rule, holding on the nose. Hence $T$ sends a small category to a small category ---
-but over the dual numbers, not over the original base. This is not a defect of the construction; we
-show the obstruction to keeping it over $\Set$ is exactly the second-order term that $\varepsilon^2=0$
-sends to the zero morphism. The headline is clean: \emph{the tangent bundle of a category lives over
-the dual numbers, a tangent vector at an object $a$ is a morphism out of $a$, and the zero vector is
-the identity.}
+comonoid structure. In \S\ref{sec:directed} we give evidence that it does, stated as a
+proposition-sketch: $T$ is a \emph{strict $\lhd$-monoidal base-change functor}
+$\DCont(k)\to\DCont(\DD)$, where $\DD=k[\varepsilon]/\varepsilon^2$, the monoidal comparison being the
+container chain rule, which holds on the nose. Granting the standard base-change $2$-functoriality of
+polynomial composition this would send a small category to a small category --- but over the dual
+numbers, not the original base; we verify the $\lhd$-monoidality and compute the
+comonoid-preservation step on examples, but do not prove it in general. The obstruction to keeping it
+over $\Set$ is exactly the second-order term that $\varepsilon^2=0$ sends to the zero morphism.
+Modulo that one step the picture is clean: \emph{the tangent bundle of a category would live over the
+dual numbers, a tangent vector at an object $a$ is a morphism out of $a$, and the zero vector is the
+identity.}
 
 \paragraph{Outline.}
 \S\ref{sec:prelim} fixes containers, the category $\SPoly$, the differential-category axioms we

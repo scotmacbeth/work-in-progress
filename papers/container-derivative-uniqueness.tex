@@ -35,10 +35,11 @@
 \newcommand{\Ob}{\operatorname{Ob}}
 \newcommand{\Out}{\operatorname{Out}}
 \renewcommand{\ker}{\operatorname{ker}}
+\newcommand{\commithash}{PENDING}
 
 \title{A uniqueness theorem for the container derivative\\
-\large $\partial$ is the only nontrivial representable tangent structure\\ on the finite free
-$\N$-modules in $\Poly$}
+\large $\partial$ is the only nontrivial representable first-order tangent structure\\ on the linear
+layer $\Lin(\SPoly)$ of finite-support polynomial functors}
 \author{MacBeth\thanks{Kodamai. Source and Lean certification:
 \texttt{github.com/scotmacbeth/work-in-progress}. Earlier versions (commit \texttt{57bac18})
 mis-stated the ambient category, and the revision of 5 October mis-stated solidity and the
@@ -46,10 +47,15 @@ sharpness of the finite-rank hypothesis; both are corrected here, see \S\ref{sec
 \S\ref{sec:sharp}.}\\ \small Kodamai}
 \date{4 October 2026 (revised 7 October 2026: ambient category $\mathsf{Lin}(\SPoly)\simeq$ finite
 free $\N$-modules; solidity restated as invertibility of the vertical lift; finite-rank sharpness
-withdrawn --- uniqueness holds at every rank; per two referee reports)}
+withdrawn --- uniqueness holds at every rank. Revised 8 October 2026 per second-pass referee report:
+the rank-free exclusion (Theorem~\ref{thm:rankfree}) and the solidity of the two surviving parts
+(Theorem~\ref{thm:converse}) are now proved in full within the note; two scope overclaims corrected)}
 
 \begin{document}
 \maketitle
+\begin{center}\small
+Built from commit \texttt{\commithash} of \texttt{github.com/scotmacbeth/work-in-progress}.
+\end{center}
 
 \begin{abstract}
 A companion note showed that the Abbott--Altenkirch--Ghani--McBride one-hole derivative
@@ -70,8 +76,9 @@ is automatically free of a well-defined rank, so solidity forces $|S|^2=|S|$, wh
 solutions are $0$ and $1$. The second is the converse: every such tangent structure has a solid
 infinitesimal part. We prove this rig-internally from the universality of the vertical lift,
 replacing Lanfranchi--Lemay's ring-theoretic short-exact-sequence step --- which needs subtraction
---- by the observation that in the extensive category of $\N$-modules the vertical bundle is a
-\emph{direct coproduct}, so ranks \emph{add}. The port is thus not only faithful but cleaner: no
+--- by the observation that the vertical bundle is a \emph{direct sum} of its surviving summands, so
+its rank is computed by addition: free $\N$-modules are closed under direct sum and rank is additive
+over it ($\rank(A\oplus B)=\rank A+\rank B$), with no subtraction available to undo it. The port is thus not only faithful but cleaner: no
 principal-ideal hypothesis and no subtraction. Crucially, on the linear layer base change $\otimes D$
 coincides with container substitution $\lhd$ (and with the Dirichlet tensor), so the classification
 is at once a statement about Weil base change and about the container derivative --- but it is
@@ -184,8 +191,8 @@ M\cong M$, which reads $|S|^2=|S|$, whose only finite solutions are $0$ and $1$:
 parts are exactly $\{0,y\}$.
 \item \emph{Converse} (\S\ref{sec:converse}). Every such tangent structure has
 a solid infinitesimal part. Here is the one new idea. The place Lanfranchi--Lemay use subtraction
-is the computation of the vertical bundle fibre $P'$ by exactness. In the \emph{extensive} category
-of $\N$-modules that fibre is instead a \emph{direct coproduct} of the surviving summands,
+is the computation of the vertical bundle fibre $P'$ by exactness. Over $\N$ that fibre is instead a
+\emph{direct sum} of the surviving summands,
 \[
   P'\ =\ y\ \oplus\ \varepsilon_{\mathrm{out}}\ \oplus\ (M\lhd M),
 \]
@@ -197,7 +204,7 @@ $y$ gives $D_2\cong P'$, i.e.\ $1+2n=1+n+n^2$, and the cancellative rig $\N$ (no
 \item \emph{Rank-free exclusion} (\S\ref{sec:sharp}). The rank count above needs finiteness, since
 $\kappa^2=\kappa$ for infinite $\kappa$. But the vertical lift of a tangent structure is not merely
 an abstract isomorphism: the flip and lift-coassociativity axioms force it to be the diagonal, which
-exists only in rank $\le1$ (Theorem~\ref{thm:rankfree}, from \cite{MacBethFlip}). So the infinite
+exists only in rank $\le1$ (Theorem~\ref{thm:rankfree}). So the infinite
 solid part $\N\cdot y$ is a \emph{phantom} --- solid but not a structure --- and uniqueness holds at
 every rank.
 \end{itemize}
@@ -215,8 +222,8 @@ $\ell_M$. But a tangent structure demands more of $\ell_M$ than invertibility. I
 be \emph{flip-compatible} ($c\ell=\ell$) and \emph{coassociative}, and these two axioms force
 $\ell_M$ to be the diagonal $M\to M\otimes M$ --- which is surjective only when $\rank M\le1$. Hence
 $\rank M\le1$ \emph{at every cardinality}: $\N\cdot y$ carries no tangent structure, and uniqueness
-holds for a free infinitesimal part of any rank (\S\ref{sec:sharp}, where this is deduced from
-\cite{MacBethFlip}; we do not reproduce its argument here). Solidity is thus strictly weaker than
+holds for a free infinitesimal part of any rank (\S\ref{sec:sharp}, where this is proved in full).
+Solidity is thus strictly weaker than
 underlying a tangent structure once the rank is infinite, and the two coincide (landing in
 $\{0,1\}$) at finite rank. The honest statement is the rank-free one; finiteness was guarding a
 phantom.
@@ -233,8 +240,8 @@ boundary (\S\ref{sec:rigidity},~\S\ref{sec:converse}).
 \paragraph{Contribution.}
 The contributions are: the uniqueness theorem itself (Theorem~\ref{thm:main-intro}), proved over a
 rig with neither a PID hypothesis nor subtraction; the rigidity half (finite solid parts
-$=\{0,y\}$); the rig-internal converse, whose single new idea is that extensivity turns the
-vertical bundle into a coproduct so that ranks add (\S\ref{sec:converse}); the technical
+$=\{0,y\}$); the rig-internal converse, whose single new idea is that the vertical bundle is a direct
+sum of free summands so that ranks add, never subtract (\S\ref{sec:converse}); the technical
 observation that on the linear layer the base-change tensor $\otimes W$, the substitution tensor
 $\lhd$ and the Dirichlet tensor all coincide (Lemma~\ref{lem:coincide}), which is simultaneously
 what makes solidity computable in the bundle's own tensor and what connects the Weil base-change
@@ -525,19 +532,100 @@ $\N$-module of \emph{any} rank. Then $\rank M\le1$. In particular $\N\cdot y$ ca
 tangent structure, and the only infinitesimal objects underlying one are $y$ and $W$.
 \end{theorem}
 
-We do not reproduce the proof, which is the content of \cite{MacBethFlip}; the one-sentence reason is
-that the isomorphism $\ell_M$ of a tangent structure is not merely abstract but is the vertical lift,
-and the flip axiom $c\ell=\ell$ together with lift-coassociativity force $\ell_M$ to be the diagonal
-$M\to M\otimes M$ --- which is surjective (hence, being an isomorphism onto $M\otimes M$, exists at
-all) only when $\rank M\le1$.\footnote{In slightly more detail \cite{MacBethFlip}: over $\N$ an
-isomorphism of free modules permutes bases, so $\ell_M(e_k)=e_{\beta_1(k)}\otimes e_{\beta_2(k)}$ with
-$\beta=(\beta_1,\beta_2)\colon K\to K\times K$ a bijection; $c\ell=\ell$ with $\ell_M$ surjective
-forces the flip to act as the identity on the mixed part $M\otimes M$ (so $c$ is \emph{not} the swap
-when $\rank M\ge2$); lift-coassociativity then forces $\beta_1,\beta_2$ to be surjective idempotents,
-hence identities, so $\beta$ is the diagonal $k\mapsto(k,k)$, which is a bijection onto $K\times K$
-only when $|K|\le1$. The representable case admits an independent $\lhd$-monoidal argument, bypassing
-coassociativity. No step uses finiteness.} The exclusion is thus a theorem about the vertical-lift
-\emph{data}, not about the abstract isomorphism type of $M$.
+The one-sentence reason is that the isomorphism $\ell_M$ of a tangent structure is not merely abstract
+but \emph{is} the vertical lift, and the flip axiom $c\ell=\ell$ together with lift-coassociativity
+force $\ell_M$ to be the diagonal $M\to M\otimes M$ --- which, being an isomorphism onto $M\otimes M$,
+exists only when $\rank M\le1$. We give the argument in full.
+
+\begin{proof}
+Because a natural transformation of base-change functors $(-)\otimes V\Rightarrow(-)\otimes V'$ is,
+by evaluation at the unit $y$, the same datum as an $\N$-module map $V\to V'$, the vertical lift
+$\ell\colon T\Rightarrow T^2$ and the canonical flip $c\colon T^2\Rightarrow T^2$ of the tangent
+structure are
+\[
+  \ell_A=\id_A\otimes\delta,\qquad c_A=\id_A\otimes\gamma
+\]
+for fixed module maps $\delta\colon D\to D\otimes D$ and $\gamma\colon D\otimes D\to D\otimes D$.
+Decompose $D\otimes D=y\oplus M_1\oplus M_2\oplus(M\otimes M)$ with $M_1=M\otimes y$, $M_2=y\otimes M$,
+and $M\otimes M$ the mixed part of rank $(\rank M)^2$. Fix a basis $\{e_k\}_{k\in K}$ of $M$, so
+$\rank M=|K|$. We argue in five steps; none uses finiteness.
+
+\emph{(0) The lift lands in the mixed part: $\delta(M)\subseteq M\otimes M$.} Two of the
+tangent-bundle axioms, $p_T\circ\ell=0\circ p$ and $T(p)\circ\ell=0\circ p$ (with $p\colon D\to y$ the
+augmentation and $0$ the zero section), restrict on $M$ to $(p\otimes\id)\circ\delta=0$ and
+$(\id\otimes p)\circ\delta=0$. Since $\ker(p\otimes\id)\cap\ker(\id\otimes p)=M\otimes M$ inside
+$D\otimes D$, this gives $\delta(M)\subseteq M\otimes M$. Write $\ell_M:=\delta|_M\colon M\to M\otimes
+M$ for the resulting \emph{vertical-lift component}.
+
+\emph{(1) Universality makes $\ell_M$ an isomorphism.} By the universality of the vertical lift
+(\S\ref{sec:prelim}) the comparison $v\colon T_2\to V$ is an isomorphism of functors. Evaluated at $y$
+and written in coordinates, $v(a;u,w)=a+\sum_{k}u_k e_k+\sum_{k}w_k\,\ell_M(e_k)$; as a map of fibres
+$y\oplus M\oplus M\to y\oplus M\oplus(M\otimes M)$ it is the identity on the summand $y\oplus M$ and
+$\ell_M$ on the last summand. Hence $v$ is an isomorphism iff
+$\ell_M\colon M\to M\otimes M$ is: universality \emph{produces} the solidity of
+Definition~\ref{def:tangent}, rather than assuming it, and it refines the rank shadow $T_2\cong V$
+(i.e.\ $1+2n=1+n+n^2$) of \S\ref{sec:converse} to an honest isomorphism of the lift map itself.
+
+\emph{(2) Over $\N$ an isomorphism of free modules permutes bases.} A free $\N$-module is the free
+commutative monoid on its basis, whose irreducible elements (those with $x=a+b\Rightarrow a=0$ or
+$b=0$) are exactly the basis vectors --- no proper multiple $2e_k=e_k+e_k$ is irreducible. A monoid
+isomorphism carries irreducibles to irreducibles bijectively, so $\ell_M$ sends each basis vector to a
+basis vector of $M\otimes M$:
+\[
+  \ell_M(e_k)=e_{\beta_1(k)}\otimes e_{\beta_2(k)},\qquad
+  \beta:=(\beta_1,\beta_2)\colon K\to K\times K\ \text{a bijection.}
+\]
+This holds at every cardinality --- which is why the abstract escape ``$\kappa=\kappa^2$ lets $\ell_M$
+be an isomorphism at $\aleph_0$'' yields nothing structured.
+
+\emph{(3) Flip-compatibility forces $\gamma=\id$ on the mixed part.} The axiom $c\circ\ell=\ell$ gives
+$\gamma\circ\ell_M=\ell_M$; since $\ell_M$ is surjective onto $M\otimes M$ (step 1), this forces
+$\gamma=\id$ on $M\otimes M$ --- \emph{whatever} the flip is. So for $\rank M\ge2$ the flip is
+\emph{not} the swap but is forced to act as the identity on the mixed part; this is the only
+configuration compatible with an invertible $\ell_M$, and there is no exotic non-representable flip to
+escape through.
+
+\emph{(4) Lift-coassociativity makes $\ell_M$ strictly coassociative.} The vertical-lift
+coassociativity coherence of \cite{CockettCruttwell2014} reads $T(\ell)\circ\ell=(c\text{-twist})\circ
+\ell_T\circ\ell$. Both composites land in the fully mixed part $M\otimes M\otimes M$ (each application
+of $\delta$ maps $M$ into $M\otimes M$, step 0). The $c$-twist is a composite of flips on adjacent
+tensor factors; on $M\otimes M\otimes M$ each acts through $\gamma|_{M\otimes M}=\id$ (step 3), so the
+twist is the identity there, and the coherence collapses to
+\[
+  (\ell_M\otimes\id)\circ\ell_M=(\id\otimes\ell_M)\circ\ell_M,
+\]
+strict coassociativity of $\ell_M$. The conclusion is robust to the exact form of the twist: whatever
+composite of flips the axiom places there, each is the identity on the mixed part by step 3.
+
+\emph{(5) A coassociative basis-bijection is the diagonal.} Substituting
+$\ell_M(e_k)=e_{\beta_1(k)}\otimes e_{\beta_2(k)}$ into strict coassociativity and comparing basis
+triples gives
+\[
+  \beta_1\circ\beta_1=\beta_1,\qquad \beta_2\circ\beta_2=\beta_2,\qquad
+  \beta_2\circ\beta_1=\beta_1\circ\beta_2.
+\]
+Since $\beta$ is a bijection onto $K\times K$ its first coordinates exhaust $K$, so $\beta_1$ is
+surjective; a surjective idempotent on a set is the identity, whence $\beta_1=\id$, and likewise
+$\beta_2=\id$. Then $\beta(k)=(k,k)$ is the diagonal, surjective onto $K\times K$ only when $|K|\le1$.
+Hence $\rank M=|K|\le1$. The surviving cases are $\rank M=0$ ($M=0$, $T=\id$) and $\rank M=1$ ($M=y$,
+$T=\partial$), where the diagonal is all of $K\times K$.\footnote{The coassociativity obstruction of
+steps (4)--(5) --- that no coassociative basis-bijection onto $K\times K$ exists for $\rank M\ge2$ ---
+is confirmed by exhaustive search for $2\le\rank M\le4$, alongside the finite rank arithmetic of the
+Lean oracle (\S\ref{sec:rigidity}).} No step used finiteness, so the bound holds at every cardinality.
+\end{proof}
+
+\begin{remark}[An independent route in the representable case]\label{rem:repflip}
+When the flip is $\lhd$-monoidal --- $\gamma$ an algebra automorphism of $D\otimes D$ --- fixing $y$
+and exchanging $M_1\leftrightarrow M_2$ forces
+$\gamma(e_i\otimes e_j)=e_{\psi(j)}\otimes e_{\varphi(i)}$, a swap-type map that equals the identity
+on $M\otimes M$ only when $\rank M\le1$. Combined with step (3) this already gives $\rank M\le1$
+\emph{without} invoking lift-coassociativity. So in the representable setting the exclusion closes by
+two independent routes; lift-coassociativity (steps 4--5) is what additionally rules out the exotic
+non-monoidal flip.
+\end{remark}
+
+The exclusion is thus a theorem about the vertical-lift \emph{data}, not about the abstract
+isomorphism type of $M$.
 
 \begin{remark}[Solidity versus structure, and the contrast with Lanfranchi--Lemay]\label{rem:part-not-structure}
 The correspondence $(\star)$ of \S\ref{sec:converse} --- tangent structure $\iff$ solid part --- is
@@ -566,9 +654,9 @@ The forward direction is immediate once the parts are known (\S\ref{sec:uniquene
 is Lanfranchi--Lemay's Theorem~4.8, proved over a commutative ring, and is the step that did not
 transfer verbatim: their derivation computes a vertical bundle by a short exact sequence, hence by
 subtraction, which the rig $\N$ lacks. We now give a rig-internal proof. The engine is the
-universality of the vertical lift (\S\ref{sec:prelim}); the one new idea is that, in the extensive
-category of $\N$-modules, the vertical bundle is a \emph{direct coproduct}, so its rank is
-computed by addition and never by a difference.
+universality of the vertical lift (\S\ref{sec:prelim}); the one new idea is that the vertical bundle
+is a \emph{direct sum} of its surviving summands, so its rank is computed by addition and never by a
+difference --- rank is additive over direct sums of free $\N$-modules, and $\N$ has no subtraction.
 
 The entire argument lives within the finite-rank free modules $\Lin(\SPoly)$, where by Lemma~\ref{lem:coincide}
 the tangent functor $T=(-)\otimes D$ \emph{coincides} with substitution $(-)\lhd D$ --- base change
@@ -616,9 +704,9 @@ with the mixed term surviving across copies --- the Weil-algebra model
 $\N[\varepsilon_1,\dots]/(\text{within-copy squares})$ that the base-change presentation of $T$
 \cite{MacBethTangent} delivers. This is the content of ``$T=(-)\otimes D$ is base change,'' and it is
 what makes $D_2$ (fibre product, no mixed term) differ from the composite $D\lhd D$ (mixed term
-present): the $\varepsilon^2=0$ truncation lives in $D$, not in the composition. In the extensive
-category of $\N$-modules each object below is a direct coproduct of summands, so its rank is the
-\emph{sum} of the summand ranks.
+present): the $\varepsilon^2=0$ truncation lives in $D$, not in the composition. Each object below is
+a direct sum of free summands, so its rank is the \emph{sum} of the summand ranks (rank is additive
+over $\oplus$, and $\N$ has no subtraction to undo the sum).
 
 \begin{lemma}[Coproduct ranks]\label{lem:counts}
 With $n=\rank M$ and $\rank(M\lhd M)=n^2$ (Lemmas~\ref{lem:coincide},~\ref{lem:free}):
@@ -646,9 +734,10 @@ to the \emph{outer} copy: it kills $\varepsilon_{\mathrm{out}}$ and the mixed te
 carry an outer-$M$ factor) and fixes $y$ and $\varepsilon_{\mathrm{in}}$. The zero $\hat z$ has
 image the $y$-summand. Hence $P'=\hat g^{-1}(\mathrm{im}\,\hat z)$ is the sub-coproduct on which the
 $\varepsilon_{\mathrm{in}}$-component vanishes:
-$P'=y\oplus\varepsilon_{\mathrm{out}}\oplus(M\lhd M)$, rank $1+n+n^2$. In the extensive category
-of $\N$-modules this pullback \emph{is} the sub-coproduct of surviving summands, so its rank is the sum
-$1+n+n^2$ --- not $\rank(D\lhd D)-\rank(\mathrm{im}\,\hat z)$. This is the step where
+$P'=y\oplus\varepsilon_{\mathrm{out}}\oplus(M\lhd M)$, rank $1+n+n^2$. Because $\hat g$ and $\hat z$
+respect the direct-sum decomposition --- $\hat g$ acts summand-wise and $\mathrm{im}\,\hat z$ is the
+$y$-summand --- this pullback \emph{is} the direct sum of the surviving summands, so its rank is the
+sum $1+n+n^2$ --- not $\rank(D\lhd D)-\rank(\mathrm{im}\,\hat z)$. This is the step where
 Lanfranchi--Lemay form a difference of ranks (a short exact sequence over a ring), and where we do
 not.
 \end{proof}
@@ -679,14 +768,19 @@ Both are linear (Lemma~\ref{lem:counts}), so by Lemma~\ref{lem:free} their shape
 Now use only that $\N$ is a cancellative rig with no zero divisors --- \emph{no subtraction, no
 additive inverses}. Additive left-cancellation of the common summand $1+n$ gives $n=n^2$. For
 $n\ge1$, multiplicative cancellation of $n$ in $n\cdot n=n\cdot1$ gives $n=1$; and $n=0$ satisfies
-$0^2=0$. Hence $n\in\{0,1\}$, so $M\in\{0,y\}$ by Lemma~\ref{lem:free}, and the vertical lift
-$\ell_M\colon M\to M\otimes M$ is an isomorphism in each case ($M=0$ trivially; $M=y$ with
-$M\otimes M=y$).
+$0^2=0$. Hence $n\in\{0,1\}$, so $M\in\{0,y\}$ by Lemma~\ref{lem:free}. In each surviving case the
+vertical-lift component $\ell_M\colon M\to M\otimes M$ is an isomorphism, as one exhibits directly.
+For $M=0$ the mixed part $M\otimes M=0$ and $\ell_M=0\colon 0\to 0$ is the identity. For $M=y$, take
+the single basis vector $\varepsilon$ of $M=\langle\varepsilon v\rangle$; then $M\otimes M$ is free of
+rank $1$ on $\varepsilon\otimes\varepsilon$ (Lemmas~\ref{lem:coincide},~\ref{lem:free}), and the
+vertical lift is $\ell_M\colon\varepsilon\mapsto\varepsilon\otimes\varepsilon$ (the
+$\varepsilon\mapsto\varepsilon_1\varepsilon_2$ of $W\otimes W$), a bijection of the two one-element
+bases, hence an isomorphism. So both surviving parts are genuinely solid, as claimed.
 \end{proof}
 
 \begin{remark}[Why this is rig-internal]
 The subtraction that blocked a literal port lived in computing the vertical-bundle fibre $P'$ by
-exactness. In $\Poly$ that fibre is a direct coproduct of the surviving summands
+exactness. In $\Poly$ that fibre is a direct sum of the surviving summands
 (Lemma~\ref{lem:counts}), so its rank is a \emph{sum}. Everything downstream is
 additive/multiplicative cancellation in $\N$. The derivation never forms a difference of ranks,
 never inverts an element, and never constructs the solidity isomorphism explicitly --- solidity is
@@ -758,7 +852,8 @@ structure.
 Let $T=(-)\otimes D$ be such a structure, $D=y\oplus M$. By Theorem~\ref{thm:rankfree}, $\rank M\le1$;
 by Lemma~\ref{lem:free} the rank determines $M$, so $M\in\{0,y\}$ and $D\in\{y,\ W\}$ up to
 isomorphism. (When $M$ is finite to begin with, the same conclusion follows from the note's own
-rig-internal converse, Theorem~\ref{thm:converse}, without appeal to \cite{MacBethFlip}.) By the
+rig-internal converse, Theorem~\ref{thm:converse}, without appeal to the flip argument of
+\S\ref{sec:sharp}.) By the
 forward direction both are realised, by $\id$ and $\partial$ respectively. Hence exactly two.
 \end{proof}
 
@@ -769,7 +864,7 @@ once the object is fixed. For $D=y$ only $T=\id$ is possible. For $D=W$ the addi
 unique commutative-monoid structure on the rank-$1$ fibre, the projection and zero are the
 augmentation and unit of $W$, and the vertical lift and flip are pinned by
 $\varepsilon\mapsto\varepsilon_1\varepsilon_2$ and $c\ell=\ell$ (the same forcing, run at rank $1$,
-that excludes higher ranks in Theorem~\ref{thm:rankfree} \cite{MacBethFlip}). So each of the two
+that excludes higher ranks in Theorem~\ref{thm:rankfree}). So each of the two
 infinitesimal objects carries a \emph{unique} first-order tangent structure, and ``exactly two'' is a
 statement about structures, not merely objects.
 \end{remark}
@@ -798,7 +893,7 @@ rank in $R$-modules, $R^{n^2}\cong R^n$ &
 rigidity: solid $\ell_M\colon M\cong M\otimes_R M\Rightarrow n^2=n\Rightarrow n\in\{0,1\}$ &
   rigidity: solid $\ell_M\colon M\cong M\otimes M\Rightarrow|S|=|S|^2\Rightarrow|S|\in\{0,1\}$ \\
 converse: vertical bundle fibre via \textbf{short exact sequence} (rank by \textbf{subtraction}) &
-  converse: fibre $P'$ a \textbf{direct coproduct} $y\oplus\varepsilon_{\mathrm{out}}\oplus(M\otimes M)$
+  converse: fibre $P'$ a \textbf{direct sum} $y\oplus\varepsilon_{\mathrm{out}}\oplus(M\otimes M)$
   (rank by \textbf{addition}; Lemma~\ref{lem:counts}) \\
 two structures: trivial $+$ Kähler/dual-number &
   two structures: $\id+\partial$ (Theorem~\ref{thm:uniqueness}) \\
@@ -812,8 +907,8 @@ extra solid parts at non-PID / non-f.g.\ are \textbf{genuine} $\Rightarrow$ fini
 same vertical-lift converse) and sharper on two axes: freeness is automatic over $\N$ (rigidity over
 a rig, not a PID), and the vertical bundle is a coproduct (converse by addition, not subtraction).
 The three-tensor coincidence (Lemma~\ref{lem:coincide}), which identifies base change with container
-substitution on the linear layer, and the extensivity of $\N$-modules (Lemma~\ref{lem:counts}) are
-the linchpins specific to this setting.}
+substitution on the linear layer, and the additivity of rank over direct sums of free $\N$-modules
+(Lemma~\ref{lem:counts}) are the linchpins specific to this setting.}
 \label{tab:compare}
 \end{table}
 
@@ -838,16 +933,16 @@ linear layer (Lemma~\ref{lem:coincide}), this is at the same time the statement 
 the unique nontrivial representable first-order tangent structure on that layer of finite-support
 polynomial functors. The proof ports Lanfranchi--Lemay's affine-scheme classification in both halves,
 and in both the rig $\N$ makes the port \emph{cleaner}: freeness is automatic, so the rigidity needs
-no PID (Lemma~\ref{lem:free}); and the vertical bundle is a direct coproduct, so the converse needs
-no subtraction (Lemma~\ref{lem:counts}, Theorem~\ref{thm:converse}). Two technical observations carry
+no PID (Lemma~\ref{lem:free}); and the vertical bundle is a direct sum of free summands, so the
+converse needs no subtraction (Lemma~\ref{lem:counts}, Theorem~\ref{thm:converse}). Two technical observations carry
 the port: on the linear layer the base-change tensor $\otimes D$, the substitution tensor $\lhd$ and
-the Dirichlet tensor all coincide (Lemma~\ref{lem:coincide}), and $\N$-modules are extensive so that
-ranks add. The arithmetic of the finite case is Lean-certified with no classical axioms. Finiteness
+the Dirichlet tensor all coincide (Lemma~\ref{lem:coincide}), and free $\N$-modules are closed under
+direct sum with rank additive over it, so ranks add and never subtract. The arithmetic of the finite case is Lean-certified with no classical axioms. Finiteness
 turns out \emph{not} to be load-bearing: although the countable part $\N\cdot y$ is solid (an
 abstract isomorphism $M\otimes M\cong M$ exists, by the Cantor pairing), solidity is strictly weaker
 than underlying a tangent structure at infinite rank --- the flip and lift-coassociativity axioms
 force the vertical lift to be the diagonal, excluding every rank $\ge2$
-(Theorem~\ref{thm:rankfree}, \cite{MacBethFlip}). So $\N\cdot y$ is a phantom, not a third structure,
+(Theorem~\ref{thm:rankfree}). So $\N\cdot y$ is a phantom, not a third structure,
 and the uniqueness holds at every rank; the earlier draft's ``finiteness is sharp'' is withdrawn
 (Remark~\ref{rem:part-not-structure}).
 
@@ -873,8 +968,8 @@ A rigid tangent structure is the entry condition for the Cartan-calculus / Lie-a
 Aintablian and Blohmann \cite{AintablianBlohmann2026}, which asks when a tangent category supports a
 scalar ``ring object'' $R$ making each $TX$ an $R$-module compatibly with the tangent axioms, and
 thereby upgrades a tangent structure to a Lie-algebroid structure with a full Cartan calculus. That
-$\SPoly$ now has a \emph{unique} nontrivial first-order tangent structure makes the question
-well-posed: is there such an $R$ for $(\SPoly,\partial)$? The negation remark above is a warning
+the linear layer of $\SPoly$ now has a \emph{unique} nontrivial representable first-order tangent
+structure makes the question well-posed: is there such an $R$ for $(\SPoly,\partial)$? The negation remark above is a warning
 sign --- a scalar ring object requires additive inverses, which $\N$ does not have --- and
 determining exactly how much of the Cartan calculus survives over a rig is the natural next problem.
 We leave it, together with higher Weil algebras $\N[\varepsilon]/\varepsilon^k$ ($k\ge3$) and
@@ -937,11 +1032,6 @@ G.~Cruttwell; accessed 2026).
 MacBeth,
 \emph{The container derivative is a tangent structure: a fibrational positioning}
 (Kodamai internal note, 2026).
-
-\bibitem{MacBethFlip}
-MacBeth,
-\emph{The canonical flip closes the infinite-rank obstruction: a tangent structure's vertical lift
-is the diagonal} (Kodamai internal note, 2026); rank $M\le1$ at every cardinality.
 
 \end{thebibliography}
 
