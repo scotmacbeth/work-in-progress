@@ -1,0 +1,589 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\Cont}{\mathsf{Cont}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\newcommand{\Sub}{\mathrm{Sub}}
+\newcommand{\cod}{\mathrm{cod}}
+\newcommand{\nodes}{\mathrm{nodes}}
+\newcommand{\branches}{\mathrm{br}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Tree}{\mathcal{T}}
+\newcommand{\Path}{\mathcal{P}}
+\newcommand{\Arb}{\mathcal{A}}
+\newcommand{\Pfib}{\mathbb{P}}
+\newcommand{\Uf}{\widehat{U}}
+\newcommand{\inpr}{\hookrightarrow}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Psip}{\Psi'}
+
+\title{Branching is not a coproduct of branches:\\
+\large unfolding versus descent in the container bifibration}
+\author{MacBeth \\ \small Kodamai --- internal note}
+\date{9 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The container bifibration $\Cont(\cod)=\Fam(\cod^\op)$ is a candidate categorical home
+for the arboreal / game-comonad analysis of structure and power. In an earlier note we
+matched, over the base of \emph{paths}, the arboreal relational fibration to a
+\emph{one-shape} container functor, up to a fibrewise opposite. The obvious way to
+extend the match from paths to branching trees is to make the branches of a tree into
+the \emph{shapes} of a container. We show this is wrong, and precisely why: the branch
+assignment $\Psi(T)=(\branches(T),\{\mathrm{chain}_b\})$ computes the colourings of the
+\emph{branch-unfolding} of the tree --- the disjoint union of its root-to-leaf paths ---
+and therefore over-counts the colourings of the tree itself by the exact factor
+$2^{\sum_v(\lambda(v)-1)}$, where $\lambda(v)$ is the number of branches through the
+node $v$. The arboreal fibre reappears inside the container fibre as the sub-poset of
+\emph{prefix-consistent} colourings: it is the object of descent data for the cover of
+the tree by its branches, a limit-shaped datum that the shape-coproduct $\Fam=\Sigma$
+cannot impose. The faithful encoding uses instead a single shape whose position set is
+the entire node set; conditionally on a cartesian-lift property of the arboreal cover,
+this reproduces the path-level match over the full tree base. A separate and higher
+obstruction --- invisibility of $k$-ary relations for $k\ge 2$ --- confines the whole
+correspondence to the unary fragment. The reusable principle: shared sub-trajectories in
+a branching process are descent data, not a coproduct over branches.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\subsection*{The bridge, and the natural guess}
+
+Two compositional vocabularies have grown up side by side. On one side, \emph{containers}
+and \emph{directed containers} --- equivalently, small categories \cite{ahman-dcont-cat} ---
+package a system as a set of \emph{shapes} together with, for each shape, a set of
+\emph{positions}; they organise into the bifibration $\Cont(\cod)=\Fam(\cod^\op)$ whose
+fibres are predicates on positions and whose two reindexing legs are direct and inverse
+image \cite{macbeth-contcod}. On the other side, \emph{game comonads} and the
+\emph{arboreal} axiomatics \cite{arboreal-axioms} present model-comparison games (pebble,
+Ehrenfeucht--Fra\"iss\'e, modal) as comonads whose coalgebras are trees of plays, with a
+forgetful fibration $\Pfib\colon\Arb\to\Tree$ from coloured trees to trees.
+
+That these two pictures should be \emph{the same picture} is a natural conjecture: both
+are theories of ``a process together with a predicate on its states, pulled back along
+sub-trajectories''. In an earlier note (Stage~1, \cite{macbeth-stage1}) we tested it at
+the smallest honest scale --- a single unary colour, propositionally truncated, over the
+base $\Path$ of \emph{paths} (chains of plays) --- and found a clean match, up to a
+twist. The arboreal path fibration $\Pfib|_\Path$ is isomorphic to the \emph{fibrewise
+opposite} of the one-shape container functor
+\[
+\Phi\colon \Path\to\Cont(\Set),\qquad [n]\mapsto (1,\{[n]\}),
+\]
+with arboreal relation-reflection matching the \emph{opcartesian} (pullback) leg $\rho^*$
+of $\Cont(\cod)$ --- not, as one might first guess, the cartesian leg $(\Sigma_\rho)^\op$.
+
+Stage~1 reached only paths, because a one-shape container $(1,\{[n]\})$ \emph{is} a single
+chain of positions and a branching tree is not. The registered next step --- Stage~2 ---
+conjectured the obvious repair: to reach the full tree base $\Tree$, make the branches of
+a tree into the shapes of a container,
+\[
+\Psi(T)=\bigl(\branches(T),\{\mathrm{chain}_b\}_{b\in\branches(T)}\bigr),
+\]
+one shape per root-to-leaf path, its positions the nodes along that path. The slogan was
+``the shape-coproduct $\Fam=\Sigma$ recovers the branch bookkeeping''.
+
+\subsection*{The result}
+
+The slogan is backwards, and the way in which it is backwards is the content of this note.
+
+\begin{theorem}[Stage~2, the three-way dividing line]\label{thm:main}
+In the unary, propositionally truncated regime, over the base $\Tree$ of finite rooted
+trees and rooted-subtree embeddings:
+\begin{enumerate}
+\item[\textup{(1)}] \textup{(Positive, one shape --- conditional.)}
+The arboreal relational fibration extends its Stage~1 match to \emph{all} of $\Tree$,
+branching included, via the \emph{one-shape} functor
+$\Psip(T)=(1,\{\nodes(T)\})$: there is a fibration isomorphism
+$\Pfib\cong(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$ over $\Tree$. This holds
+conditionally on the cartesian morphisms of $\Pfib$ being the pathwise embeddings at
+\emph{subtree} \textup{(}non-path\textup{)} embeddings; see \S\ref{sec:conditional}.
+\item[\textup{(2)}] \textup{(Negative, branches-as-shapes --- proved.)}
+The conjectured branch functor $\Psi$ does \emph{not} give the match. Its container fibre
+is the Boolean lattice of colourings of the \emph{branch-unfolding}
+$\Uf(T)=\bigsqcup_b \mathrm{chain}_b$, strictly larger than the arboreal fibre by the
+factor $2^{\sum_v(\lambda(v)-1)}$ with $\lambda(v)$ the number of branches through $v$;
+the arboreal fibre reappears as the proper sub-poset of \emph{prefix-consistent}
+colourings. The excess is nonzero exactly when $T$ branches \textup{(}first at the
+three-node V-tree: $8\subsetneq 16$\textup{)}.
+\item[\textup{(3)}] \textup{(Higher, arity --- proved.)}
+For $k\ge 2$, a $k$-ary relation is a subset of $\nodes(T)^k$, which is not a subobject in
+$\Set/\nodes(T)$; the container functor is blind to it and collapses distinct $k$-ary
+structures \textup{(}on two nodes, all $16$ binary relations onto the same datum, versus
+$4$ unary\textup{)}. This sits strictly above \textup{(1)--(2)} and is untouched by the
+choice of shape functor.
+\end{enumerate}
+\end{theorem}
+
+The three clauses answer three different questions, and conflating them was the error in
+the original conjecture. Clause~(2) is about the \emph{wrong} encoding of branching;
+clause~(1) about the \emph{right} one; clause~(3) about a ceiling that no encoding of
+the unary data can lift.
+
+\subsection*{The mechanism: unfolding versus descent}
+
+The heart is clause~(2), and it has a one-line diagnosis. The shape-coproduct
+$\Fam=\Sigma$ is a \emph{coproduct}: applied to the branches of a tree it forms their
+disjoint union $\Uf(T)$, the universal \emph{unfolding} of the tree by its paths, in which
+every shared prefix is duplicated once per branch that passes through it. Colouring
+$\Uf(T)$ freely lets the duplicated copies of a node disagree. The colourings of the
+\emph{tree} are exactly those that agree across copies --- the \emph{prefix-consistent}
+ones --- and reconstructing the tree from its branch-cover by imposing that agreement is a
+\emph{gluing}: a descent/equalizer datum, limit-shaped, of the wrong variance for a
+coproduct. Thus
+\[
+\Pfib\text{-fibre over }T
+\;=\; \text{descent data for the branch-cover } \Uf(T)\twoheadrightarrow T,
+\qquad
+\Cont(\cod)\circ\Psi\text{-fibre}\;=\;\text{the raw cover colourings};
+\]
+they coincide iff the cover is trivial, i.e.\ $T$ is a path --- which is exactly why
+Stage~1 saw no discrepancy. The honest encoding, clause~(1), sidesteps the unfolding
+altogether: keep \emph{one} shape and put the whole node set in the positions, letting the
+\emph{base} $\Tree$ carry the tree order through its subtree-embedding morphisms. One copy
+of each node, no duplication, nothing to glue.
+
+\subsection*{Why it matters}
+
+The reusable statement is a modelling warning with teeth. Whenever a branching process ---
+a supply chain forking into parallel routes, an agent-orchestration log splitting into
+concurrent sub-dialogues, a provenance DAG --- is to be encoded in the container
+bifibration, the temptation is to let each branch be a shape and take their coproduct. Our
+count shows precisely what that costs: an over-representation by $2^{\sum_v(\lambda(v)-1)}$,
+one spurious bit of freedom for every extra branch through every shared node. The shared
+history that distinguishes a tree from its unfolding is \emph{descent data}, and the
+$\Fam=\Sigma$ coproduct structurally cannot see it. This is the container-side form of our
+running theme that \emph{composition is a degree-two datum}: the sharing lives one level up
+from the branches themselves, and is recovered by an explicit gluing step, never read off a
+product over branches. Clause~(3) locates the ceiling of the whole arboreal--container
+bridge: it is a theorem about the unary fragment, the $k$-ary relational power of game
+comonads lying genuinely beyond $\Cont(\cod)$.
+
+\subsection*{Outline}
+
+Section~\ref{sec:prelim} fixes the two fibrations and recalls the Stage~1 orientation.
+Section~\ref{sec:conditional} gives the positive one-shape extension (clause~1) and states
+precisely the single external input on which it is conditional. Section~\ref{sec:unfolding}
+proves clause~(2): the exact over-count, the V- and Y-tree witnesses, and the descent
+diagnosis. Section~\ref{sec:arity} proves clause~(3). Section~\ref{sec:scope} records scope,
+open problems, and grant placement.
+
+\section{Two fibrations and the Stage~1 match}\label{sec:prelim}
+
+Throughout we work in the \textbf{unary, propositionally truncated} regime: a single
+relation symbol, interpreted as a \emph{subset} (a subobject, not a proof-relevant family).
+This is the fragment in which the two theories have a chance of agreeing; \S\ref{sec:arity}
+shows it is also the ceiling.
+
+\subsection{The container bifibration}
+
+Recall \cite{ahman-dcont-cat,gambino-kock} that a \emph{container} is a pair
+$(S,\{P_s\}_{s\in S})$ of a set $S$ of shapes and a family of position sets, and that
+containers organise into $\Cont(\cod)=\Fam(\cod^\op)$, the bifibration over
+$\Cont(\Set)$ whose fibre over $(S,\{P_s\})$ is $\prod_{s\in S}(\Set/P_s)^\op$. We use only
+its propositional truncation, recorded in \cite{macbeth-contcod}:
+
+\begin{itemize}
+\item \textbf{Fibre.} Over $(S,\{P_s\})$ the truncated fibre is
+$\prod_{s\in S}\Sub(P_s)^\op=\bigl(2^{\bigsqcup_s P_s},\supseteq\bigr)$: predicates on the
+total position set, ordered by \emph{reverse} inclusion.
+\item \textbf{Cartesian leg.} A container morphism carries a \emph{backward} position map
+$\rho$; its cartesian reindexing is $(\Sigma_\rho)^\op$, truncated \emph{direct image}
+$\rho(-)\colon\Sub\to\Sub$.
+\item \textbf{Opcartesian (pullback) leg.} The same $\rho$ has an opcartesian reindexing
+$\rho^*$, truncated \emph{inverse image} $\rho^{-1}$, left adjoint to the cartesian leg.
+\end{itemize}
+
+The two legs are the whole point: ``pull a predicate back along a sub-trajectory'' is
+$\rho^*$, inverse image, \emph{not} the cartesian direction.
+
+\subsection{The tree base and the arboreal relational fibration}
+
+\begin{definition}\label{def:tree}
+$\Tree$ is the category of finite rooted trees of bounded height (a tree is a finite poset
+with least element $\mathrm{root}$ in which every down-set is a chain) and
+\emph{rooted-subtree embeddings}: a morphism $f\colon T\to T'$ is an injection on nodes
+$j=\nodes(f)\colon\nodes(T)\inpr\nodes(T')$ whose image is prefix-closed and contains the
+root. $\Path\subset\Tree$ is the full subcategory of chains (single branches); on $\Path$
+the only morphisms are initial-segment inclusions --- exactly the Stage~1 base.
+\end{definition}
+
+\begin{definition}\label{def:arb}
+$\Arb$ is the category of trees carrying one unary colour $R\subseteq\nodes(T)$ --- the
+unary, truncated relational lift of the arboreal coalgebra category, whose underlying
+coalgebras are the copresheaves of \cite[Lemma~4.1]{macbeth-game}. The functor
+$\Pfib\colon\Arb\to\Tree$ forgets the colour.
+\end{definition}
+
+Two facts about $\Pfib$ are all we use; both are elementary and recorded in Stage~1.
+
+\begin{lemma}[arboreal fibre and reindexing]\label{lem:arbfibre}
+\begin{enumerate}
+\item A vertical map $R\to R'$ over $\id_T$ is a colour-preserving coalgebra homomorphism;
+it exists iff $R\subseteq R'$. Hence the $\Pfib$-fibre over $T$ is the \emph{full} Boolean
+lattice $(2^{\nodes(T)},\subseteq)$ --- every subset is a legal colouring, branching
+imposing no constraint.
+\item Along a subtree embedding $f\colon T\inpr T'$ with node injection $j$, the arboreal
+reindexing restricts the colour: $f^*R'=R'\cap\nodes(T)=j^{-1}(R')$ (relation-reflection).
+Inverse image is strictly functorial, so $\Pfib$ is the subobject/predicate fibration
+$\Sub\to\Tree$ with reindexing $=$ pullback.
+\end{enumerate}
+\end{lemma}
+
+The identification in part~(1) depends on reading a node of $T$ as the unique play from the
+root to it: the shared root is a \emph{single} play, so $\Pfib$ colours $\nodes(T)$ with the
+prefix shared, not the branch-disjoint unfolding. This is the sentence the branch functor
+$\Psi$ will violate.
+
+\subsection{The Stage~1 orientation}
+
+\begin{lemma}[Stage~1, \cite{macbeth-stage1}]\label{lem:stage1}
+Over the path base $\Path$, with $\Phi([n])=(1,\{[n]\})$:
+the $\Pfib$-fibre $(2^{[n]},\subseteq)$ and the truncated container fibre
+$\Sub([n])^\op=(2^{[n]},\supseteq)$ are \emph{opposite} posets; arboreal relation-reflection
+$j^{-1}$ equals the \emph{opcartesian} leg $\rho^*$ of $\Cont(\cod)$ (and differs from the
+cartesian $(\Sigma_\rho)^\op=$ direct image). Hence
+$\Pfib|_\Path\cong(\Phi^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$.
+\end{lemma}
+
+Everything below asks what happens to Lemma~\ref{lem:stage1} off the path base. The fibre-op
+and the $\rho^*$ identification used only that $j$ is an injection of sets and that inverse
+image is functorial --- never that the positions formed a chain. This is why one of the two
+candidate extensions survives verbatim, and the other does not.
+
+\section{The positive extension: one shape, positions the whole tree}\label{sec:conditional}
+
+\begin{definition}\label{def:psiprime}
+$\Psip\colon\Tree\to\Cont(\Set)$ sends $T$ to the \emph{one-shape} container
+$(1,\{\nodes(T)\})$: a single shape, position set the entire node set as a \emph{flat} set,
+the tree order discarded by $\Psip$ and carried by the base $\Tree$. On a subtree embedding
+$f\colon T\inpr T'$, $\Psip(f)=(\id_1,\rho_f)$ with
+$\rho_f\colon\nodes(T')\twoheadrightarrow\nodes(T)$ the nearest-ancestor retraction (each
+node of $T'$ to its closest ancestor lying in $T$; well-defined as $T$ is prefix-closed and
+contains the root). On a chain, $\Psip([n])=(1,\{[n]\})=\Phi([n])$, so $\Psip$ extends
+$\Phi$; and $\Psip$ is functorial, $\rho_{g\circ f}=\rho_f\circ\rho_g$ (nearest ancestor
+composes through an intermediate subtree).
+\end{definition}
+
+\begin{proposition}[fibre and reindexing match, for every tree]\label{prop:psiprime-match}
+For every $T\in\Tree$, branching or not:
+\begin{enumerate}
+\item the truncated container fibre over $\Psip(T)=(1,\{\nodes(T)\})$ is
+$\Sub(\nodes(T))^\op=(2^{\nodes(T)},\supseteq)$, whose fibrewise opposite is the
+$\Pfib$-fibre $(2^{\nodes(T)},\subseteq)$ of Lemma~\ref{lem:arbfibre}(1), on the nose
+\textup{(}one shape, one copy of each node: no over-count\textup{)};
+\item relation-reflection $j^{-1}$ along a subtree embedding is the opcartesian leg $\rho^*$
+of $\Cont(\cod)$ for the arrow carrying $j$ backward, exactly as in Lemma~\ref{lem:stage1},
+the identification being insensitive to any order on the positions.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) is immediate: $\bigsqcup_s P_s=\nodes(T)$ since there is one shape, and the Stage~1
+fibre-op argument (Lemma~\ref{lem:stage1}) referenced only the position \emph{set}. (2) is
+the Stage~1 argument of Lemma~\ref{lem:stage1}, clause by clause, with $[n]$ replaced by the
+flat set $\nodes(T)$: $j^{-1}$ is functorial inverse image, which is the opcartesian leg of
+$\Cont(\cod)$ along the backward map $j$. No step used the chain order.
+\end{proof}
+
+Proposition~\ref{prop:psiprime-match} matches the two fibrations \emph{fibrewise and on
+reindexing}. To promote it to an isomorphism of fibrations one needs that the arboreal
+\emph{cartesian lifts} along subtree embeddings are computed by this same reindexing. This
+is the single external input, and it is where clause~(1) is conditional.
+
+\begin{proposition}[one-shape extension, conditional]\label{prop:clause1}
+Assume \textup{(}$\ast$\textup{)}: the $\Pfib$-cartesian morphisms are the pathwise
+embeddings at \emph{subtree} embeddings as well as at path embeddings, so that the
+$\Pfib$-cartesian lift of $f\colon T\inpr T'$ at a colouring $R'$ is unique and equals
+$R'\cap\nodes(T)$. Then
+\[
+\Pfib\;\cong\;(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}
+\qquad\text{as fibrations over }\Tree,
+\]
+in the unary truncated regime: the branching of $T$ is encoded entirely in the base and its
+subtree-embedding morphisms, while the container functor keeps one flat position set and the
+opcartesian leg performs the reflection.
+\end{proposition}
+
+\begin{proof}
+Given ($\ast$), Proposition~\ref{prop:psiprime-match}(1) gives the fibrewise anti-iso and
+(2) gives agreement of reindexing; ($\ast$) gives agreement of cartesian lifts. The fibrewise
+opposite converts the arboreal cartesian structure into the container's opcartesian leg, as
+in Stage~1. Composing, $\Pfib\cong(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$.
+\end{proof}
+
+\begin{remark}[status of \textup{(}$\ast$\textup{)} --- honest flag]\label{rem:ast}
+At a path embedding, ($\ast$) is the standard pathwise-embedding characterisation of
+cartesian maps in the arboreal cover. At a \emph{subtree} embedding $f$, a pathwise
+embedding of $f$ reflects the colour along \emph{each} path of $T$, and a global $R'$
+restricts consistently because the paths of $T$ overlap only on shared prefixes, on which a
+single $R'$ automatically agrees --- forcing the unique lift $R'\cap\nodes(T)$. I have
+verified this on the V-tree by direct enumeration (every colouring $R'$ has a unique
+pathwise-embedding lift, equal to the preimage; see \S\ref{sec:unfolding}), and the
+derivation is independent of the tree. But the non-path case of the pathwise-embedding
+characterisation is an input I take from the arboreal literature
+\cite{arboreal-axioms} rather than one I have independently verified at the stated
+generality; hence clause~(1) is graded \emph{computed, conditional on~($\ast$)}, not proved.
+The proved content of this note --- clauses (2) and (3) --- does not use ($\ast$).
+\end{remark}
+
+\section{Branches as shapes unfolds the tree}\label{sec:unfolding}
+
+This section proves clause~(2) of Theorem~\ref{thm:main}: the conjectured branch functor
+computes the colourings of the wrong object. Nothing here is conditional.
+
+\begin{definition}\label{def:psi}
+$\Psi\colon\Tree\to\Cont(\Set)$ sends $T$ to $(\branches(T),\{\mathrm{chain}_b\}_b)$: one
+shape per root-to-leaf branch $b$, with position set over $b$ the chain of nodes along $b$.
+On a chain there is one branch and $\Psi=\Phi=\Psip$, so Stage~1 holds; off $\Path$ they
+diverge.
+\end{definition}
+
+\begin{definition}\label{def:unfolding}
+The \emph{branch-unfolding} of $T$ is $\Uf(T)=\bigsqcup_{b\in\branches(T)}\mathrm{chain}_b$,
+the disjoint union of the branch-chains, with \emph{gluing map}
+$\pi\colon\Uf(T)\twoheadrightarrow\nodes(T)$, $(b,v)\mapsto v$. For a node $v$, write
+$\lambda(v)$ for the number of branches through $v$ (equivalently, the number of leaves above
+$v$), so $\pi^{-1}(v)$ has size $\lambda(v)$.
+\end{definition}
+
+\begin{lemma}[the exact over-count]\label{lem:overcount}
+The truncated container fibre over $\Psi(T)$ is
+$\prod_{b}\Sub(\mathrm{chain}_b)^\op=(2^{\Uf(T)},\supseteq)$. Its cardinality is
+$2^{|\Uf(T)|}$ with
+\[
+|\Uf(T)|=\sum_{b}|\mathrm{chain}_b|=\sum_{v\in\nodes(T)}\lambda(v),
+\qquad\text{so}\qquad
+|\Uf(T)|-|\nodes(T)|=\sum_{v}(\lambda(v)-1).
+\]
+The pullback $\pi^*\colon 2^{\nodes(T)}\inpr 2^{\Uf(T)}$ is injective with image the
+\emph{prefix-consistent} colourings --- those constant on each fibre $\pi^{-1}(v)$. Hence the
+$\Pfib$-fibre $(2^{\nodes(T)},\subseteq)$ embeds as the proper sub-poset of prefix-consistent
+colourings inside the $\Cont(\cod)\circ\Psi$-fibre $(2^{\Uf(T)},\supseteq)$, the excess being
+the factor $2^{\sum_v(\lambda(v)-1)}$. The inclusion is proper exactly when some node has
+$\lambda(v)\ge 2$, i.e.\ exactly when $T$ branches.
+\end{lemma}
+
+\begin{proof}
+The fibre formula is the container fibre of \S\ref{sec:prelim} with
+$\bigsqcup_s P_s=\bigsqcup_b\mathrm{chain}_b=\Uf(T)$. Counting positions by the node they
+glue to gives $|\Uf(T)|=\sum_v\lambda(v)$. A subset $A\subseteq\Uf(T)$ equals $\pi^*(B)$ for
+some $B\subseteq\nodes(T)$ iff $A$ is a union of fibres of $\pi$, i.e.\ constant on each
+$\pi^{-1}(v)$; such $B$ is then unique ($B=\{v:\pi^{-1}(v)\subseteq A\}$), so $\pi^*$ is
+injective with the stated image. The complementary degrees of freedom number
+$\prod_v 2^{\lambda(v)-1}=2^{\sum_v(\lambda(v)-1)}$ (for each $v$, a consistent colouring
+fixes all $\lambda(v)$ copies together; a free one chooses them independently). This exponent
+is positive iff some $\lambda(v)\ge 2$.
+\end{proof}
+
+In particular the two fibres have different cardinalities as soon as $T$ branches, so there is
+\emph{no} fibrewise equivalence $\Pfib\cong(\Psi^*\Cont(\cod))^\op$ --- not even onto the image
+of $\Psi$.
+
+\begin{example}[the V-tree]\label{ex:v}
+Let $V$ have root $r$ and two leaves $a,b$. Then $|\nodes|=3$, the two branches are
+$ra$ and $rb$, $|\Uf|=4$, and $\lambda(r)=2$, $\lambda(a)=\lambda(b)=1$, so
+$\sum_v(\lambda(v)-1)=1$. The arboreal fibre has $2^3=8$ colourings; the
+$\Cont(\cod)\circ\Psi$-fibre has $2^4=16$. The $8$ excess colourings are precisely the
+\emph{inconsistent} ones --- those colouring the root in branch $ra$ but not in branch $rb$,
+or vice versa. The map $\pi$ identifies the two copies $(ra,r)$ and $(rb,r)$ of the root;
+consistency is agreement on that single overlap. (Verified by enumeration;
+\texttt{scratch/crown\_stage2\_witness.py}.)
+\end{example}
+
+\begin{example}[the Y-tree: deeper sharing]\label{ex:y}
+Let $Y$ have root $r$, a single child $c$, and $c$ in turn with two children $x,y$. Then
+$|\nodes|=4$, the branches are $rcx$ and $rcy$, $|\Uf|=6$, and
+$\lambda(r)=\lambda(c)=2$, $\lambda(x)=\lambda(y)=1$, so $\sum_v(\lambda(v)-1)=2$: the whole
+shared spine $\{r,c\}$ is double-counted. The arboreal fibre has $2^4=16$ colourings, the
+$\Cont(\cod)\circ\Psi$-fibre $2^6=64$, ratio $2^2=4$. (Verified;
+\texttt{scratch/crown\_stage2\_more.py}.)
+\end{example}
+
+\subsection{The diagnosis: $\Fam=\Sigma$ is unfolding, gluing is descent}
+
+Lemma~\ref{lem:overcount} is a count; here is what it means. The branch family
+$\{\mathrm{chain}_b\inpr T\}_b$ is a \emph{cover} of $T$ by its paths. Its nerve is governed
+by the overlaps $\mathrm{chain}_b\times_T\mathrm{chain}_{b'}=\mathrm{chain}_{b\wedge b'}$, the
+shared prefix down to the meet of $b$ and $b'$. A colouring of the tree is the same as a
+family of colourings of the branches that \emph{agree on overlaps}: a \emph{descent datum}
+for the cover.
+
+\begin{proposition}[descent description of the arboreal fibre]\label{prop:descent}
+For every $T$, the image of $\pi^*$ --- the prefix-consistent colourings --- equals the set of
+colourings of $\Uf(T)$ that agree on all pairwise overlaps of the branch cover; and this
+equals $2^{\nodes(T)}$, the full arboreal fibre. Thus
+\[
+\Pfib\text{-fibre over }T
+\;=\;\text{descent data (equalizer) for } \Uf(T)\twoheadrightarrow T,
+\qquad
+\Cont(\cod)\circ\Psi\text{-fibre}\;=\;\text{the raw, pre-descent cover colourings,}
+\]
+coinciding iff the cover is trivial, i.e.\ $T$ a path.
+\end{proposition}
+
+\begin{proof}
+Two copies $(b,v)$ and $(b',v)$ of the same node $v$ lie in the overlap
+$\mathrm{chain}_{b\wedge b'}$ precisely when $v\preceq b\wedge b'$, i.e.\ when both $b,b'$ pass
+through $v$; as $b,b'$ range over branches through $v$ these copies exhaust $\pi^{-1}(v)$.
+Agreement on all overlaps therefore says exactly that a colouring is constant on each
+$\pi^{-1}(v)$ --- prefix-consistency. By Lemma~\ref{lem:overcount} these are the image of
+$\pi^*$, in bijection with $2^{\nodes(T)}$. (The gluing is exact: the tree carries its
+Alexandrov topology, the branch cover is a cover for it, and a sheaf of colourings glues
+uniquely --- here at the elementary level of a single equalizer, verified in
+\texttt{scratch/crown\_stage2\_witness.py}: \texttt{consistent = agree-on-overlap = }$2^{\nodes}$.)
+\end{proof}
+
+The conceptual point is a mismatch of variance. $\Fam=\Sigma$ is a coproduct over shapes; fed
+the branches it yields the disjoint union $\Uf(T)$, the \'etale unfolding of the tree.
+Reconstructing the tree is the \emph{opposite} operation --- a gluing that \emph{identifies}
+shared prefixes, a coequalizer/descent equalizer, a limit-flavoured datum. A coproduct cannot
+impose it. So $\Psi$ realises $\Pfib$ only as the \emph{descent completion} of
+$\Cont(\cod)\circ\Psi$: an equivalence onto the descent sub-fibration of prefix-consistent
+colourings, never onto the whole thing.
+
+\begin{remark}[reconciliation with clause~(1)]\label{rem:reconcile}
+$\Psi$ and $\Psip$ differ exactly by unfolding versus gluing: $\Psi(T)$ is the branch cover,
+$\Psip(T)$ is the tree. $\Cont(\cod)$ colours whatever flat position set it is handed. Hand it
+the unfolded cover ($\Psi$) and it colours the cover, which descend to the tree only after an
+equalizer $\Fam$ cannot supply; hand it the node set ($\Psip$) and it colours the tree
+directly. \textbf{Branching is not a coproduct of branches}: the faithful multi-shape encoding
+is a single shape whose position set is the branching node set, with the base $\Tree$ carrying
+the order.
+\end{remark}
+
+\section{The arity obstruction is independent and higher}\label{sec:arity}
+
+Everything above is $k=1$: one unary colour. Clause~(3) concerns $k\ge 2$ and is a different,
+strictly higher obstruction --- it survives \emph{either} choice of shape functor.
+
+\begin{proposition}[non-fullness for $k\ge 2$]\label{prop:arity}
+A $k$-ary relation on $T$ is a subset of $\nodes(T)^k$. For $k\ge 2$ this is not a subobject in
+$\Set/\nodes(T)$, and $\Cont(\cod)$ over $\Psip(T)=(1,\{\nodes(T)\})$ has fibre
+$\Sub(\nodes(T))^\op$ --- unary predicates only. Hence the container fibre ($2^{n}$ on $n$
+nodes) cannot surject onto the arboreal $k$-ary fibre ($2^{n^k}$ structures): the functor
+factors through the unary reduct and collapses distinct $k$-ary structures.
+\end{proposition}
+
+\begin{proof}
+$\Set/\nodes(T)$ has as objects maps into $\nodes(T)$; its subobjects are subsets of
+$\nodes(T)$, not of $\nodes(T)^k$. A $k$-ary relation determines at most its unary projections,
+so any two $k$-ary structures with equal unary reducts --- e.g.\ on two nodes $\{0,1\}$ the
+relations $\varnothing$ and $\{(0,1)\}$, among all $2^{4}=16$ binary relations --- map to the
+same container datum, of which there are only $2^{2}=4$. (Verified;
+\texttt{scratch/crown\_stage2\_positive.py}.)
+\end{proof}
+
+This is the same ``the forgetful functor is blind to the higher datum'' mechanism we have met
+as out-degree invisibility, as the nerve-level gap $N_1\subsetneq N_2$, and as
+composition-being-a-degree-two datum. It sits strictly above the $k=1$ unfolding/descent
+discussion of \S\ref{sec:unfolding} and is untouched by replacing $\Psi$ with $\Psip$. The
+arboreal--container bridge, honestly, is a theorem about the \emph{unary} fragment.
+
+\section{Scope, open problems, and placement}\label{sec:scope}
+
+\paragraph{What is proved, and what is conditional.}
+Clauses~(2) and~(3) of Theorem~\ref{thm:main} are \emph{proved}: the exact over-count
+$2^{\Uf}\supsetneq 2^{\nodes}$ with factor $2^{\sum_v(\lambda(v)-1)}$ and its descent reading
+(Lemmas~\ref{lem:overcount}, Prop.~\ref{prop:descent}, Examples~\ref{ex:v},~\ref{ex:y}), and
+the arity collapse $2^{n^k}\supsetneq 2^{n}$ (Prop.~\ref{prop:arity}). Clause~(1) --- the
+positive one-shape extension over $\Tree$ --- is \emph{computed, conditional on}~($\ast$) of
+Remark~\ref{rem:ast}: the pathwise-embedding characterisation of arboreal cartesian maps at
+subtree embeddings, verified on the V-tree with a tree-independent derivation but taken from
+the arboreal literature at the stated generality rather than re-proved here.
+
+\paragraph{Open problems.}
+\begin{enumerate}
+\item \textbf{Discharge~($\ast$).} Verify directly that the $\Pfib$-cartesian lift of a subtree
+embedding is $R'\cap\nodes(T)$, upgrading clause~(1) from \emph{computed} to \emph{proved}. This
+is the one gap between this note and a complete Stage~2.
+\item \textbf{Proof-relevance.} The match is propositional. The full container fibre
+$(\Set/\nodes)^\op$ is strictly richer than $\Sub(\nodes)^\op$; a proof-relevant comparison
+would need an arboreal theory with witness-set colours.
+\item \textbf{The descent completion as a fibration.} Proposition~\ref{prop:descent} is
+elementary (a single equalizer per tree). A clean statement ``$\Pfib$ is the descent completion
+of $\Cont(\cod)\circ\Psi$ as fibrations over $\Tree$'' is sketched, not proved here.
+\item \textbf{Beyond embeddings.} $\Tree$ here has subtree embeddings only; open maps and
+non-monic tree morphisms are untreated, inherited from the Stage~1 conventions.
+\end{enumerate}
+
+\paragraph{Placement.}
+The net correction to the registered Stage~2 conjecture is clean: it is \emph{not} ``$\Psi$
+positive on the unary fragment, failing at $k\ge 2$''. It is that the branch-multishape $\Psi$
+fails already at $k=1$ \emph{branching} (unfolding versus descent); the positive Stage~2 holds
+over the full tree base via the one-shape $\Psip(T)=(1,\{\nodes(T)\})$ under~($\ast$); and
+$k\ge 2$ is a separate, higher obstruction. The reusable principle, and the one worth carrying
+into the applied side of the programme: \emph{when encoding a branching process in the container
+bifibration, do not make the branches into shapes.} That unfolds the process and over-counts
+shared history by one bit per extra branch through each shared node; keep one shape and put the
+whole state set in the positions, because the sharing --- shared provenance, shared
+sub-trajectory, composition itself --- is a descent datum that the $\Fam=\Sigma$ coproduct
+structurally cannot see. This is the container-side statement of ``composition is a degree-two
+datum'', and it applies verbatim to supply-chain provenance models and to agent-orchestration
+logs: shared sub-trajectories must be glued by an explicit descent step, not recovered from a
+product over branches.
+
+\paragraph{Formalisation note.}
+The counts of \S\ref{sec:unfolding}--\ref{sec:arity} are small finite enumerations
+(\texttt{scratch/crown\_stage2\_\{witness,more,positive\}.py}) and are natural candidates for a
+Lean oracle in the style of the nerve-level and gerbe engines; the registry node
+\texttt{crown-stage2-multishape-branch-extension} should be created and graded
+\emph{computed} to match this note. These are lean/registry tasks, flagged here, not done here.
+
+\begin{thebibliography}{9}
+
+\bibitem{ahman-dcont-cat}
+D.~Ahman, J.~Chapman, T.~Uustalu,
+\emph{Directed containers as categories},
+in \emph{Proc.\ MSFP}, EPTCS, 2016.
+
+\bibitem{gambino-kock}
+N.~Gambino, J.~Kock,
+\emph{Polynomial functors and polynomial monads}
+(\emph{Polynomials in categories with pullbacks}),
+Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), 153--192.
+
+\bibitem{arboreal-axioms}
+S.~Abramsky, L.~Reggio et al.,
+\emph{On the axioms of arboreal categories}
+(arboreal categories and game comonads),
+preprint.
+
+\bibitem{macbeth-contcod}
+MacBeth,
+\emph{The logic of containers: $\Cont(\cod)=\Fam(\cod^\op)$ as a bifibration},
+Kodamai internal proof note, 28 Aug 2026.
+
+\bibitem{macbeth-game}
+MacBeth,
+\emph{Game comonads are polynomial comonads} (Lemma~4.1: coalgebras of a forest comonad are
+copresheaves),
+Kodamai internal proof note, 1 Oct 2026.
+
+\bibitem{macbeth-stage1}
+MacBeth,
+\emph{Refined Bridge-3 crown, Stage 1: the orientation gap --- relation-reflection is $\rho^*$,
+not $(\Sigma_\rho)^\op$},
+Kodamai internal proof note, 2 Oct 2026.
+
+\end{thebibliography}
+
+\end{document}
