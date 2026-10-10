@@ -1,0 +1,177 @@
+\documentclass[11pt]{article}
+\input{preamble}
+
+\title{The Kodamai Container Program: A Complete Technical Record\\[4pt]
+\large Part II --- Composition: Welds, Distributive Laws, the Obstruction Cluster}
+\author{MacBeth}
+\date{2026-10-10}
+
+\begin{document}
+\maketitle
+\begin{center}\itshape Prepared for Neil Ghani.\end{center}
+
+\begin{abstract}
+Part~II records the composition theory of the container program. Composing two directed containers
+(= small categories = systems) that share an interface is a \emph{Zappa--Sz\'ep product}
+$C\bowtie D$, equivalently a distributive law; existence is governed by two checkable conditions;
+when the second fails the obstruction is a cohomology class. The invariants are graded by
+\textbf{simplicial nerve level}, not cohomological degree. Every result carries its trust grade
+verbatim and its registry node. A critical $2026\text{-}10\text{-}09$ correction (Rick UID~211) on
+the meaning of the $H^2$ weld class is preserved throughout.
+\end{abstract}
+
+\paragraph{Grade legend.}
+$\grade{peer-reviewed} > \grade{proved} > \grade{lean-verified} / \grade{computed} >
+\grade{peer-claimed}/\grade{in-progress}$. Grades are copied verbatim and never inflated.
+
+\paragraph{Thesis of Part II.}
+Composing two directed containers that share an interface is a Zappa--Sz\'ep product $C\bowtie D$,
+equivalently a distributive law. When it exists is governed by two checkable conditions; when the
+second fails, the obstruction is a cohomology class. The invariants are graded by simplicial nerve
+level, not cohomological degree.
+
+\section{Orchestration = Zappa--Sz\'ep weld}
+\emph{Precis.} Agent orchestration / supervisor--worker composition is a directed container;
+composing two is a ZS product; re-entrancy is an unprotected shared position.
+
+\begin{theorem}[Orchestration is a ZS weld, \grade{proved}]
+Orchestration is a directed container; composition $=$ the ZS product $C\bowtie D$; re-entrancy is a
+failed guard. Node \node{orchestration-zs}.
+\end{theorem}
+
+\begin{theorem}[Pairwise ZS criterion, \grade{proved}]
+A matched pair extends to a global ZS product iff \textbf{(L) freeness} and \textbf{(G) global
+closure} both hold. Node \node{pairwise-zs}.
+\end{theorem}
+
+\begin{theorem}[ZS associativity, \grade{lean-verified}]
+ZS1--ZS4 $\iff$ associativity (\texttt{ZappaSzep.lean}; see Part~V).
+\end{theorem}
+
+\section{The $H^2$ weld obstruction --- with the 2026-10-09 correction}
+\emph{Precis.} Condition (G) is governed by a class $[ω]\in H^2$.
+
+\begin{flag}[CRITICAL CORRECTION, 2026-10-09, Rick UID 211]
+The cocycle \emph{condition} IS associativity; the \emph{class} $[ω]$ measures the
+\textbf{SPLITTING} of an already-associative weld, \textbf{NOT} non-associativity. The honest
+non-associativity separator is a pointwise $N_3$ magma condition (a condition, not a class). State
+$[ω]$ only as a splitting obstruction throughout.
+\end{flag}
+
+\begin{theorem}[(G) $\iff$ ${[ω]=0}$, \grade{proved}]
+$(G)\iff[ω]=0$ with $[ω]\in H^2(\mathrm{Sk}_C;𝒟)$; the class is the splitting obstruction of an
+associative weld. Connections \node{g-obstruction-is-baues-wirsching},
+\node{h2-homes-for-zs-obstruction}.
+\end{theorem}
+
+\begin{theorem}[Groupoid case, \grade{computed}]
+For a connected groupoid ($=K(Γ,1)$) the ZS defect is a Schreier factor set and merge
+$\iff[ω]=0$; moreover $cd\leq1\implies[ω]=0$ (free groupoids always merge). Node
+\node{groupoid-zs-obstruction}.
+\end{theorem}
+
+\begin{theorem}[Two ${[ω]}$ sites, \grade{proved}]
+The two $[ω]$ sites --- handoff $[ω_h]$ and stabiliser $[ω_{st}]$, both $\cong 𝔽_2$ --- are
+irreducibly distinct. Node \node{two-omega-sites}.
+\end{theorem}
+
+\begin{flag}[DEMOTED 2026-10-09]
+The weld-$ω$-as-non-associativity gloss (and the re-entrancy-stub reading) went
+\grade{proved}$\to$\grade{computed}; state $[ω]$ only as a splitting obstruction.
+\end{flag}
+
+\section{Holonomy and the Zappa--Sz\'ep bridge}
+\emph{Precis.} Composing update monads sharing a state set is a ZS product that welds
+state/isotropy holonomy; the emergent-holonomy meeting invariant is cohomological.
+
+\begin{theorem}[Holonomy composition ZS bridge, \grade{peer-reviewed}]
+Composing two update monads sharing $S$ $=$ a ZS product on the position-threading monoid, welding
+holonomy; the aligned-abelian class $[ω]\in H^2(B;A)$ obstructs splitting. Rick-refereed. Node
+\node{holonomy-composition-zs-bridge}.
+\end{theorem}
+
+\begin{theorem}[Holonomy-triviality collapse, \grade{proved}]
+The holonomy-triviality collapse engine: liftings $\cong\mathrm{Cat}$ completeness. Node
+\node{holonomy-triviality}.
+\end{theorem}
+
+\begin{theorem}[Emergent-holonomy Ext tower, \grade{proved}]
+The emergent-holonomy meeting count is $\mathrm{Ext}^n_{kG}(k[G/A],k[G/B])\cong\oplus H^n$ --- the
+Ext tower. Node \node{emergent-holonomy-is-ext-tower}.
+\end{theorem}
+
+\section{The nerve-level grading of compositional invariants}
+\emph{Precis.} Grade an invariant of a small category by the \textbf{simplicial nerve level} it
+reads, not by cohomological degree. Regrade lemma: cohomological degree $n$ $=$ nerve level
+$-1$, so composition (composable pairs $N_2$) is \textbf{degree ONE}, not two. This retires the
+shipped ``composition is a degree-two datum'' slogan.
+
+\begin{theorem}[Nerve-level tower, \grade{proved}]
+Node \node{composition-nerve-level}. (Rung 1) $N_1$ reflexive-graph / $U$-blind invariants
+(out-degree, $H^0$) sit STRICTLY below (rung 2) $N_2$ composition invariants ($H^1$,
+$δ$-translations, inventory $[θ_R]$); (rung 3) $N_3$ associativity. \textbf{Thm 3:} a category is
+$2$-coskeletal, so the truncation tower collapses at level $2$ (no third truncation rung).
+\textbf{Thm 4:} the genuine strict $N_2\subsetneq N_3$ lives in the ASSEMBLY/weld problem, where
+associativity is an $N_3$ predicate not implied by $N_2$ data.
+\end{theorem}
+
+\begin{flag}[Precision, Rick N1, 2026-10-09]
+The shape invariant $U(p)$ is strictly coarser than $\mathrm{tr}_1 N$ (both $[1]$ and
+$B(ℤ/2)+\mathrm{pt}$ give $U=y^2+y$) --- do NOT call $U$ ``the nerve-level-1 invariant.''
+\textbf{Terminology (N3):} ``nerve level'' must be disambiguated (truncation level vs.\
+cocycle-condition level) throughout.
+\end{flag}
+
+\section{Skew-brace / solvability obstruction arc}
+\emph{Precis.} The deeper algebraic home of the ZS obstruction: skew braces, the residue-dependent
+solvability obstruction $o_ν$, and Ferri prunability.
+
+\begin{theorem}[Solvability obstruction $o_ν$, \grade{proved}]
+$o_ν\colon H^2_+\to C^3/A(Z^2_\circ)$ is a group homomorphism with
+$\mathrm{im}\,\varphi^+=\ker o_ν$; nontrivial $\implies$ torsor. Node
+\node{solvability-obstruction-o-nu}. (Several finite slices are \grade{lean-verified} --- Part~V.)
+\end{theorem}
+
+\begin{theorem}[Ferri prunability, \grade{computed}]
+A Ferri ``completely prunable'' quiver skew brace $=$ vanishing of the ZS global obstruction;
+prunability $=$ degree-$1$ descent/subfunctor, NOT Schreier; with a complete-prunability no-go. Node
+\node{quiver-skew-brace-zs}.
+\end{theorem}
+
+\section{Effects / coeffects and the composition of (co)monads}
+\emph{Precis.} One Set-monad $M$ gives two container feeds (effect monad $T_M$, coeffect comonad
+$G_M$); they always entwine, the arrow face needs non-branching, and state lives on $\otimes$ not
+$\triangleleft$.
+
+\begin{theorem}[Monad-to-comonad transfer, \grade{proved}; \grade{lean-verified}]
+A monad on Set transfers to a comonad $G(S,P)=(S,M\circ P)$. Node \node{monad-comonad-transfer}
+(\texttt{MonadComonadTransfer.lean} / \texttt{DualTransfer.lean}).
+\end{theorem}
+
+\begin{theorem}[Effect/coeffect entwining, \grade{proved}]
+The bialgebra face holds for all $M$; the arrow/biKleisli face holds iff non-branching; the
+branching obstruction $=$ Atkey's index. Nodes \node{monad-comonad-entwining},
+\node{effect-coeffect-arrows}.
+\end{theorem}
+
+\begin{theorem}[State object, \grade{proved}]
+The state object $ΔS$ $=$ the codiscrete category, giving the store/costate comonad;
+\textbf{state via $\otimes$, not $\triangleleft$}. Node \node{state-object-delta}.
+\end{theorem}
+
+\begin{theorem}[Workers grading, \grade{proved}; \grade{lean-verified}]
+The Workers $(\mathrm{Set},\times)$-graded category, its type hierarchy, and the retract into the
+BHM $▷$-grading. Nodes \node{workers-type-hierarchy}, \node{workers-retract-of-bhm-grading}
+(\texttt{WorkersRetract.lean}).
+\end{theorem}
+
+\section{Game comonads (adjacent)}
+\emph{Precis.} The finite-model-theory game comonads factor through Poly, connecting the
+composition story to logic/complexity.
+
+\begin{theorem}[Game comonads, \grade{computed}]
+The Ehrenfeucht--Fra\"iss\'e $E_k$, pebbling $P_k$, and modal $M_k$ comonads factor through Poly /
+are polynomial comonoids. Node \node{game-comonad-poly}.
+\end{theorem}
+
+\end{document}

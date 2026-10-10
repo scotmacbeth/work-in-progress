@@ -1,0 +1,109 @@
+\documentclass[11pt]{article}
+\input{preamble}
+
+\title{The Kodamai Container Program: A Complete Technical Record\\[4pt]
+\large Part V --- Formalisation in Lean 4}
+\author{MacBeth}
+\date{2026-10-10}
+
+\begin{document}
+\maketitle
+\begin{center}\itshape Prepared for Neil Ghani.\end{center}
+
+\begin{abstract}
+Part~V records the Lean~4 formalisation. The core equivalence-chain links and the cohomological
+obstruction engines are machine-checked: each oracle certifies a precise, honestly-scoped
+statement; most are Mathlib-free (Lean~4 core) and axiom-minimal (\texttt{propext}/\texttt{Quot.sound}
+only, several axiom-free via \texttt{decide}). Every item is \grade{lean-verified} unless stated
+otherwise.
+\end{abstract}
+
+\paragraph{Thesis of Part V.}
+The theorems are not hand-waving: the core equivalence-chain links and the cohomological obstruction
+engines are machine-checked in Lean~4. Each oracle certifies a precise, honestly-scoped statement;
+the general cohomology theory, where invoked, is cited as a black box (Brown VI.9), with the Lean
+file certifying only a finite/explicit computation.
+
+\section{The equivalence-chain milestones (M1--M4)}
+\emph{Precis.} The container library and the directed-container $\leftrightarrow$ comonad
+$\leftrightarrow$ small-category equivalence, plus the ZS associativity characterisation.
+
+\begin{theorem}[M1/M2/M2b/M4 $+$ ZS assoc, \grade{lean-verified}]
+\texttt{Basic}, \texttt{Directed}, \texttt{ComonadConverse}, \texttt{Cofunctor}, \texttt{DContCat},
+\texttt{ZappaSzep} --- milestones M1/M2/M2b/M4 and ZS associativity (ZS1--ZS4 $\iff$ assoc).
+\end{theorem}
+
+\begin{theorem}[M3, \grade{lean-verified}]
+\texttt{Comonoid.lean} / \texttt{ComonoidConverse.lean} --- directed container $\iff$
+$\triangleleft$-comonoid (both directions).
+\end{theorem}
+
+\begin{theorem}[Cont and the four monoidal structures, \grade{lean-verified}]
+\texttt{Cont.lean}, \texttt{Sequential.lean}, \texttt{Monoidal.lean}, \texttt{Dirichlet.lean},
+\texttt{FourMonoidal.lean} --- Cont as a category, the $\triangleleft$ operator, all four monoidal
+structures $+$ comparison isos.
+\end{theorem}
+
+\section{The free monad}
+\begin{theorem}[Free monad, \grade{lean-verified}]
+The free monad on a container $=$ a $\triangleleft$-monoid; the three monoid laws
+(assoc $=$ \texttt{graft\_assoc}), \texttt{Quot.sound}-only. Node \node{free-monad-grafting}
+(\texttt{Free.lean}); a partial universal property in \texttt{FreeUniversal.lean}. (The cofree
+comonad is NOT core-formalisable --- it needs coinductive \texttt{PFunctor.M}.)
+\end{theorem}
+
+\section{The cohomological obstruction engines ($H^2$)}
+\emph{Precis.} Three standalone, Mathlib-free Lean files compute the group cohomology that homes the
+ZS and inventory obstructions. Honest scope: each certifies a FINITE/explicit computation; the
+general cohomology theory is cited as a black box (Brown VI.9).
+
+\begin{theorem}[Cyclic norm engine, \grade{lean-verified}]
+$H^2(C_n;ℤ)\cong ℤ/n$ via the norm map. Node \node{cyclic-h2-norm-engine}.
+\end{theorem}
+
+\begin{theorem}[Fibre $ℤ/2$ engine, \grade{lean-verified}]
+$H^2(ℤ/2;ℤ/2)\cong ℤ/2$, the fibre edge, with nonsplit-$ℤ/4$ vs.\ split-Klein witnesses. Node
+\node{fibre-h2-z2-engine}.
+\end{theorem}
+
+\begin{theorem}[Unified gcd engine, \grade{lean-verified}]
+$H^2(C_n;ℤ/m)\cong ℤ/\gcd(n,m)$, subsuming both engines above, with a from-scratch B\'ezout. Node
+\node{cyclic-h2-gcd-engine}.
+\end{theorem}
+
+\section{The gerbe / reduced-nerve engine and $o_ν$ slices}
+\emph{Precis.} Machine-checked witnesses for the supply-chain gerbe and the skew-brace solvability
+obstruction.
+
+\begin{theorem}[Reduced-nerve $𝔽_2$ gerbe engine, \grade{lean-verified}]
+$H^2(B(ℤ/2))=1$, diamond $(1,1,0)$, $D_4$ non-split --- the three gerbe witnesses (MEMORY
+\texttt{lean-gerbe-h2-witnesses}; grounds \node{supply-chain-inventory-gerbe-h2}).
+\end{theorem}
+
+\begin{theorem}[Nerve-level separation oracle, \grade{lean-verified}]
+$N_1\subsetneq N_2$ machine-checked, bar complex $𝔽_2$, Betti $(1,1,1)$ vs.\ $(1,0,0)$ (grounds
+\node{composition-nerve-level}).
+\end{theorem}
+
+\begin{theorem}[$o_ν$ finite slices, \grade{lean-verified}]
+The $|G|=8$ additive slice, the $|G|=16$ three-way lock $+$ torsor dichotomy, and the corrected
+$D=ℤ/8$ torsor criterion --- all \texttt{decide}-based, axiom-free or \texttt{propext}-only (nodes
+under \node{solvability-obstruction-o-nu} / \node{quiver-skew-brace-zs}).
+\end{theorem}
+
+\begin{theorem}[Prunability descent cochain, \grade{lean-verified}]
+Prunability $\iff δ\equiv0$ on the $|L|=2$ linearisation (node under \node{quiver-skew-brace-zs}).
+\end{theorem}
+
+\section{Transfer and distributivity cells}
+\begin{theorem}[Transfer, \grade{lean-verified}]
+Monad$\to$comonad transfer and its dual, three laws each (\texttt{MonadComonadTransfer.lean},
+\texttt{DualTransfer.lean}).
+\end{theorem}
+\begin{theorem}[Closed Dirichlet and distributivity cells, \grade{lean-verified}]
+Dirichlet closed / $Π$-form internal hom (axiom-free); the four Hedges distributivity cells
+($\triangleleft/\times$, $\triangleleft/+$, $\otimes/+$, $\times/+$); and the Workers retract
+$ΔS\otimes ΔT$ of $ΔS\triangleleft ΔT$.
+\end{theorem}
+
+\end{document}

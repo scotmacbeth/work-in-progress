@@ -1,0 +1,102 @@
+% Shared preamble for "The Kodamai Container Program: A Complete Technical Record"
+% Self-contained; compiles with pdflatex.
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{stmaryrd}   % \llbracket \rrbracket
+\usepackage{mathrsfs}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{newunicodechar}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ---- Theorem environments -------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{result}[theorem]{Result}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{flag}{Flag}
+
+% ---- Grade / registry helper macros ---------------------------------------
+% Trust grades are copied verbatim from the master outline; never inflated.
+\newcommand{\grade}[1]{\textbf{[#1]}}
+\newcommand{\node}[1]{\texttt{#1}}
+
+% ---- Unicode -> LaTeX mapping (so the outline prose transcribes verbatim) --
+% Superscripts / subscripts
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{³}{\ensuremath{^{3}}}
+\newunicodechar{⁰}{\ensuremath{^{0}}}
+\newunicodechar{⁺}{\ensuremath{^{+}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{₃}{\ensuremath{_{3}}}
+\newunicodechar{₄}{\ensuremath{_{4}}}
+\newunicodechar{₊}{\ensuremath{_{+}}}
+% Greek
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\newunicodechar{Π}{\ensuremath{\Pi}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
+\newunicodechar{Ψ}{\ensuremath{\Psi}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{θ}{\ensuremath{\theta}}
+\newunicodechar{λ}{\ensuremath{\lambda}}
+\newunicodechar{ν}{\ensuremath{\nu}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{ω}{\ensuremath{\omega}}
+% Blackboard / script / fraktur
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℰ}{\ensuremath{\mathcal{E}}}
+\newunicodechar{𝒟}{\ensuremath{\mathcal{D}}}
+\newunicodechar{𝒯}{\ensuremath{\mathcal{T}}}
+\newunicodechar{𝔤}{\ensuremath{\mathfrak{g}}}
+\newunicodechar{𝔽}{\ensuremath{\mathbb{F}}}
+% Arrows and relations
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{⟹}{\ensuremath{\implies}}
+\newunicodechar{⟺}{\ensuremath{\iff}}
+\newunicodechar{≃}{\ensuremath{\simeq}}
+\newunicodechar{≅}{\ensuremath{\cong}}
+\newunicodechar{≠}{\ensuremath{\neq}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{≤}{\ensuremath{\leq}}
+\newunicodechar{≥}{\ensuremath{\geq}}
+\newunicodechar{⊇}{\ensuremath{\supseteq}}
+\newunicodechar{⊊}{\ensuremath{\subsetneq}}
+\newunicodechar{∈}{\ensuremath{\in}}
+% Operators
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{∂}{\ensuremath{\partial}}
+\newunicodechar{−}{\ensuremath{-}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{⊗}{\ensuremath{\otimes}}
+\newunicodechar{⊙}{\ensuremath{\odot}}
+\newunicodechar{⋆}{\ensuremath{\star}}
+\newunicodechar{⋈}{\ensuremath{\bowtie}}
+\newunicodechar{⋉}{\ensuremath{\ltimes}}
+\newunicodechar{⋊}{\ensuremath{\rtimes}}
+\newunicodechar{▷}{\ensuremath{\triangleright}}
+\newunicodechar{◁}{\ensuremath{\triangleleft}}
+\newunicodechar{⟦}{\ensuremath{\llbracket}}
+\newunicodechar{⟧}{\ensuremath{\rrbracket}}
+% Punctuation
+\newunicodechar{–}{--}
+\newunicodechar{—}{---}
+\newunicodechar{§}{\S}

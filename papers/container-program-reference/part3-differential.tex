@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+\input{preamble}
+
+\title{The Kodamai Container Program: A Complete Technical Record\\[4pt]
+\large Part III --- Differential Structure}
+\author{MacBeth}
+\date{2026-10-10}
+
+\begin{document}
+\maketitle
+\begin{center}\itshape Prepared for Neil Ghani.\end{center}
+
+\begin{abstract}
+Part~III records the differential structure of the container program. The AAGM one-hole container
+derivative $∂$ is the differential combinator of a Cartesian differential category, equivalently a
+tangent structure realised by dual-number substitution $T(p)=p(y+εv)\bmod ε^2$. The uniqueness is
+peer-reviewed; the Cartan/negation boundary is the honest limit. Every result carries its trust
+grade verbatim and its registry node.
+\end{abstract}
+
+\paragraph{Grade legend.}
+$\grade{peer-reviewed} > \grade{proved} > \grade{lean-verified} / \grade{computed}$. Grades are
+copied verbatim and never inflated.
+
+\paragraph{Thesis of Part III.}
+The AAGM one-hole container derivative $∂$ is not an ad-hoc operation: it is the differential
+combinator of a Cartesian differential category, equivalently a tangent structure realised by
+dual-number substitution $T(p)=p(y+εv)\bmod ε^2$. The uniqueness is peer-reviewed; the
+Cartan/negation boundary is the honest limit.
+
+\section{The container derivative is a tangent structure}
+\emph{Precis.} $\mathrm{SPoly}$ (finite-support polynomial functors, substitution) is a Cartesian
+differential category with combinator $D=∂$; hence a Cartesian tangent category.
+
+\begin{theorem}[$∂$ is a CDC differential combinator, \grade{proved}]
+$∂$ is the differential combinator of a Cartesian differential category of polynomial functors.
+Node \node{tangent-container-derivative}.
+\end{theorem}
+
+\begin{theorem}[Dual-number tangent, \grade{proved}]
+$T(p)=p(y+εv)\bmod ε^2$ is a strict $\triangleleft$-monoidal base change
+$\mathrm{DCont}(k)\to\mathrm{DCont}(D)$, $D=k[ε]/ε^2$, with the laxator equal to the chain rule on
+the nose. Node \node{tangent-restricts-to-dcont}.
+\end{theorem}
+
+\section{Uniqueness of the container tangent structure}
+\emph{Precis.} On finite-support polynomial functors, $∂$ is the unique nontrivial representable
+tangent structure. This is the strongest-graded differential result.
+
+\begin{theorem}[Uniqueness, \grade{peer-reviewed}]
+On $\mathrm{SPoly}$, $∂$ is the unique nontrivial representable tangent structure, in the
+\textbf{corrected statement} per the Rick referee ($2026\text{-}10\text{-}05$). Node
+\node{tangent-uniqueness-spoly}.
+\end{theorem}
+\begin{flag}
+State the corrected form, not the earlier unconditional slogan.
+\end{flag}
+
+\section{The Cartan / negation boundary}
+\emph{Precis.} The full Cartan calculus requires fiberwise negation, which $\mathrm{SPoly}$ lacks;
+ring-completion $ℕ\to ℤ$ switches it on. This is the precise edge of the differential story.
+
+\begin{theorem}[Negation obstruction, \grade{proved}]
+$\mathrm{SPoly}/∂$ has no fiberwise negation $\implies$ no scalar ring object $\implies$ the Cartan
+calculus fails over $ℕ$. Node \node{cartan-scalar-object-spoly}.
+\end{theorem}
+
+\begin{theorem}[Ring-completion switches Cartan on, \grade{proved}]
+Fiberwise group completion $ℕ\to ℤ$ switches the full Cartan calculus ON ($\mathrm{SPoly}_ℤ$) ---
+the far side of the ``negation knife.'' Node \node{virtual-container-cartan}.
+\end{theorem}
+
+\begin{theorem}[Lie-parallelizability port, \grade{proved}]
+A poly comonoid is tangent-parallelizable $\iff$ an out-degree condition; the Lanfranchi port is
+ill-posed / composition-blind. Node \node{lie-parallelizable-poly-comonoid}.
+\end{theorem}
+
+\end{document}

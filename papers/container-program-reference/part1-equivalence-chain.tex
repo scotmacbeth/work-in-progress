@@ -1,0 +1,294 @@
+\documentclass[11pt]{article}
+\input{preamble}
+
+\title{The Kodamai Container Program: A Complete Technical Record\\[4pt]
+\large Part I --- The Equivalence Chain (Theory)}
+\author{MacBeth}
+\date{2026-10-10}
+
+\begin{document}
+\maketitle
+\begin{center}\itshape Prepared for Neil Ghani.\end{center}
+
+\begin{abstract}
+This is Part~I of the comprehensive, registry-grounded technical record of the Kodamai
+container program. It develops the theory core: the category of containers and its
+representation theorem, the four canonical monoidal structures on $\mathrm{Cont}/\mathrm{Poly}$,
+the closed structures and Day convolution, change of base over a general category, the free
+monad and cofree comonad, and the equivalence chain $\mathrm{Cont}\supseteq\mathrm{DCont}\simeq
+\text{Poly-comonoid}\simeq\mathrm{Cat}$ with honest status on which links are theorems and which
+are conjectural. Every result carries its \textbf{trust grade in brackets}, copied verbatim from
+the proof registry, together with its registry node identifier. Grades are never inflated.
+\end{abstract}
+
+\paragraph{Grade legend.}
+$\grade{peer-reviewed} > \grade{proved} > \grade{lean-verified}$ (machine-checked, scoped) /
+$\grade{computed}$ (finite/example evidence, not a general proof) $>$
+$\grade{peer-claimed} / \grade{in-progress} / \grade{speculative}$. Appendix~A (Part~I) carries
+the full 53-node registry inventory.
+
+\paragraph{Thesis of Part I.}
+A container is a family of sets, $\mathrm{Cont}\cong\mathrm{Fam}(\mathrm{Set}^{op})$; the four
+canonical tensors $(+,\times,\otimes,\triangleleft)$ all have the form ``shapes multiply, the
+base's structure appears only in positions''; and the sequential tensor $\triangleleft$ is the one
+whose comonoids are small categories. This is the convergence hub
+$\mathrm{Cont}\supseteq\mathrm{DCont}\simeq\text{Poly-comonoid}\simeq\mathrm{Cat}$, developed with
+honest status on which links are theorems and which are conjectural.
+
+\section{The category Cont and the representation theorem}
+\emph{Precis.} Containers $(S,P\colon S\to\mathrm{Set})$, extension
+$⟦S,P⟧(X)=Σ_{s}X^{P(s)}$, contravariant position maps, and
+$\mathrm{Cont}\cong\mathrm{Fam}(\mathrm{Set}^{op})$ as the free coproduct completion of
+$\mathrm{Set}^{op}$. Which endofunctors are containers (familial representability / wide-pullback
+preservation); limits and colimits; the Yoneda/representable backdrop. This is the foundation on
+which everything else rests.
+
+\begin{flag}
+There is \textbf{no standalone registry node} certifying the representation theorem itself; it is
+foundational and sourced only to the drafts \texttt{which-functors-are-containers.tex} and
+\texttt{category-of-containers.SEED-COPY.tex}. This is an identified write gap (Appendix~B, item~1):
+the ``which functors are containers'' result is ungraded and needs a proof file to ground it.
+\end{flag}
+
+\section{The four monoidal structures on Cont / Poly}
+\emph{Precis.} The tensors $+/0$, $\times/1$, $\otimes$ (Dirichlet)$/y$, $\triangleleft$
+(sequential)$/y$, their units, and the Day classification; the interchange/distributivity lattice
+among them. $\otimes$ is the Day-ification of $\triangleleft$ via the comparitor coreflection.
+
+\begin{theorem}[Hedges interchange table, \grade{proved}; several cells also \grade{lean-verified}]
+All $16$ cells of the $4\times4$ interchange table are determined, with $\times/\otimes$ corrected
+to non-distributing. Node \node{hedges-interchange-table}
+(\texttt{2026-07-16-hedges-distributive-table.md}); the cells \texttt{SeqProdDistrib},
+\texttt{SeqCoprodDistrib}, \texttt{TensorCoprodDistrib}, \texttt{TimesCoprodDistrib} are
+additionally machine-checked.
+\end{theorem}
+
+\begin{proposition}[Bare $\otimes$-monoids, \grade{proved}]
+Bare $\otimes$-monoids $=$ a shape monoid together with an oplax functor on fibres. Node
+\node{dirichlet-monoid-classification}.
+\end{proposition}
+
+\begin{proposition}[Bare $\otimes$-comonoids, \grade{proved}]
+Bare $\otimes$-comonoids (no $\triangleleft$) $=$ families of monoids. Node
+\node{bare-dirichlet-comonoid}.
+\end{proposition}
+
+\begin{proposition}[Double comonoids, \grade{proved}]
+Double comonoids in the normal duoidal $(\mathrm{Poly},\triangleleft,\otimes)$ $=$ sets of
+commutative monoids (an Eckmann--Hilton collapse). Node \node{comparitor-comonoid-nogo}.
+\end{proposition}
+
+\begin{proposition}[Dialectica tensors, \grade{computed}]
+The two non-convolutional tensors $⋉/⋊$ are the Dialectica tensors; $⋊$ is left-closed. Node
+\node{other-cont-monoidal-tensors}.
+\end{proposition}
+
+\section{Closed structures and Day convolution}
+\emph{Precis.} Which tensors are closed, the internal-hom formulas, and the obstructions.
+$(\mathrm{Poly},\times)$ is cartesian closed; $\mathrm{Cont}$ is CCC but not locally cartesian
+closed. Day convolution and its coend-free degeneration on $\mathrm{Cont}$.
+
+\begin{theorem}[Closed Day structures, \grade{proved}]
+A Day/convolutional tensor $(\mathrm{Cont},⊙_⋆)$ is left-closed iff $(-)⋆B$ is polynomial for
+every $B$, with a uniform $Π$-formula internal hom. Node \node{closed-day-structures}.
+\end{theorem}
+
+\begin{theorem}[Closed-tensor classification, \grade{in-progress}]
+Classification of left-closed convolutional tensors on $\mathrm{Set}$: bounded arity implies
+$\times$ or $∨_S$. The \textbf{infinite-arity boundary is OPEN}. Node
+\node{closed-tensor-classification} --- one of the program's two standing open fronts.
+\end{theorem}
+
+\begin{proposition}[Dirichlet internal hom, \grade{lean-verified}]
+$(\mathrm{Cont},\otimes,y)$ is closed with the Dirichlet internal hom (\texttt{DirichletClosed.lean},
+\texttt{DirichletHomPi.lean}). The mathematics is Niu--Spivak prior art; the proof object is ours.
+\end{proposition}
+
+\section{Change of base --- containers over a general category}
+\emph{Precis.} $\mathrm{Cont}_C=\mathrm{Fam}(C^{op})$; the fullness criterion; closedness criteria
+T2/T4; the fibrational reading; M-containers; containers over $\mathrm{Vec}$.
+
+\begin{theorem}[T1 (flagship), \grade{proved}]
+$⟦-⟧\colon\mathrm{Fam}(C^{op})\to[C,C]$ is full-and-faithful iff the monoidal unit $I$ is
+\emph{connected} (i.e.\ $C(I,-)$ preserves coproducts) --- \emph{not} extensivity. Node
+\node{fullness-unit-connectedness}.
+\end{theorem}
+
+\begin{theorem}[T2, \grade{proved}]
+Dirichlet/Day closedness over a general base $=$ familial representability. Node
+\node{t2-day-closedness-famcop}.
+\end{theorem}
+
+\begin{theorem}[T4-left, \grade{proved}]
+$\triangleleft$ left-closedness on $\mathrm{Fam}(C^{op})$. Node \node{t4-left-closedness-lhd-famcop}.
+\end{theorem}
+
+\begin{theorem}[M-containers, \grade{peer-reviewed}]
+$M\text{-}\mathrm{Cont}=\mathrm{Fam}(\mathrm{Kl}(M)^{op})$; the extension is faithful always, full
+iff $M$ is codense and connected; the three enriched extensions collapse to $\{\mathrm{Id}\}$.
+Rick-refereed. Node \node{change-of-base}.
+\end{theorem}
+
+\begin{theorem}[M-container trilogy, \grade{proved}]
+THM1/THM2/THM3 (composition $\iff$ polynomiality), with a necessity trichotomy. Node
+\node{m-containers}.
+\end{theorem}
+
+\begin{proposition}[Logic of containers, \grade{proved}]
+$\mathrm{Cont}(\mathrm{cod})$ is the bifibration $\mathrm{Fam}(\mathrm{Set}^{op})$, with shape-level
+Fam--Kan quantifiers. Nodes \node{cont-cod-predicate-fibration}, \node{joint-bc-cont-cod}.
+\end{proposition}
+
+\begin{proposition}[Containers over Vec, \grade{proved}]
+$\mathrm{LinCont}=\mathrm{Fam}(\mathrm{Vec}^{op})$, with biproduct collapse; the extension is
+faithful but \textbf{not} full over $\mathrm{Vec}$. Node \node{linear-containers-vec}.
+\end{proposition}
+\begin{flag}
+Correction (MEMORY): the earlier VCont ``faithful'' claim over $\mathrm{Vec}$ was wrong --- use the
+corrected statement (faithful-but-not-full) above.
+\end{flag}
+
+\begin{proposition}[Left-adjoint behaviour over Vec, \grade{proved}]
+$(-)\triangleleft q$ has the predicted left-adjoint behaviour over $\mathrm{Fam}(\mathrm{Vec}^{op})$,
+but summability does \emph{not} gate it as predicted (node \node{left-adjoint-over-vec});
+$L_q=(-)\triangleleft q$ is a parametric right adjoint (node \node{pra-vs-probe-method}); the
+copowers/writer-monad gap (Q) reformulation holds in ZFC (node \node{copowers-gap-writer-monad},
+\grade{proved, ZFC}).
+\end{proposition}
+
+\begin{proposition}[Fibredness vs.\ left-closure, \grade{proved}]
+The BHM $▷$ left-variable fibredness result. Node \node{fibredness-vs-left-closure}.
+\end{proposition}
+
+\section{Free monad and cofree comonad in Poly}
+\emph{Precis.} The free monad $C^{*}$ (well-founded trees, grafting) and cofree comonad $C^{∞}$
+(M-type, node-paths) of a container, and the linear/tensor-algebra instance.
+
+\begin{theorem}[Free monad, \grade{lean-verified}]
+The free monad $=$ the $\triangleleft$-monoid $(S^{*}\triangleleft P^{*},\mathrm{graft},\mathrm{lf})$;
+the three monoid laws are machine-checked (\texttt{Quot.sound}-only). Node
+\node{free-monad-grafting} (\texttt{Free.lean}).
+\end{theorem}
+
+\begin{theorem}[Cofree comonad, \grade{proved}]
+The cofree comonad $C^{∞}$ is the $\triangleleft$-comonoid on the M-type of $p$-trees; counit $=$
+root, comultiplication $=$ subtree-relabel $+$ path-concat. Node \node{cofree-comonad}.
+\end{theorem}
+
+\begin{theorem}[O'Neill linear instance, \grade{proved}]
+O'Neill's free monad on linear self-attention $=$ the free $\triangleleft$-monoid on a one-shape
+linear container $=$ the tensor algebra $T(A)$; with Ad\'amek chain / residual-as-pointing. Node
+\node{oneill-free-monad-linear-container}.
+\end{theorem}
+
+\section{The equivalence chain and its honest status}
+\emph{Precis.} $\mathrm{Cont}\supseteq\mathrm{DCont}\simeq\text{Poly-comonoid}\simeq\mathrm{Cat}$;
+the directed-container laws D1--D5; the Lean milestone ladder M1--M6; what is proved vs.\ conjectural.
+
+\begin{theorem}[Equivalence chain M1--M6, \grade{in-progress}]
+Node \node{equivalence-chain}. \textbf{M1--M4 are done and partly Lean-verified} (container library,
+comonad/directed-container equivalence, ZS characterisation, $\mathrm{DCont}\simeq\mathrm{Cat}$ ---
+see Part~V); \textbf{M5 (bridge to Poly, four monoidal structures) $=$ Clarke--Di~Meglio, and M6
+(double category $\mathrm{Org}$, dynamic categories) are OPEN / conjectural.} M5/M6 must not be
+stated as proved.
+\end{theorem}
+
+\begin{remark}
+$\mathrm{Cat}^{\#}=\mathrm{DCont}\cong\mathrm{Cof}$ in $\mathrm{Poly}$; $\mathrm{DCont}\simeq
+\mathrm{Cat}$ is the convergence hub (source \texttt{convergence-hub.tex}, connection
+\node{dcont-cat-is-the-convergence-hub}).
+\end{remark}
+
+\appendix
+\section{Full registry inventory (53 nodes)}
+Grade legend: PR $=$ peer-reviewed, P $=$ proved, LV $=$ lean-verified, C $=$ computed,
+IP $=$ in-progress, PC $=$ peer-claimed. Grade breakdown: \textbf{3 peer-reviewed, 38 proved,
+4 lean-verified, 5 computed, 2 in-progress, 1 peer-claimed, 0 explicitly speculative.}
+
+{\small
+\begin{center}
+\begin{tabular}{@{}rllp{6.2cm}@{}}
+\hline
+\# & registry file & grade & one-line gist \\
+\hline
+1 & change-of-base & PR & M-container extension f\&f classification; 3 enriched exts collapse to $\{\mathrm{Id}\}$ \\
+2 & holonomy-composition-zs-bridge & PR & update monads sharing $S$ compose as ZS, welding holonomy \\
+3 & tangent-uniqueness-spoly & PR & $∂$ is the unique nontrivial representable tangent on SPoly (corrected stmt) \\
+4 & free-monad-grafting & LV & free monad $=$ $\triangleleft$-monoid; 3 monoid laws machine-checked \\
+5 & cyclic-h2-norm-engine & LV & $H^2(C_n;ℤ)=ℤ/n$ via norm map \\
+6 & cyclic-h2-gcd-engine & LV & $H^2(C_n;ℤ/m)=ℤ/\gcd(n,m)$, unified engine \\
+7 & fibre-h2-z2-engine & LV & $H^2(ℤ/2;ℤ/2)=ℤ/2$, nonsplit-$ℤ/4$ vs Klein witnesses \\
+8 & equivalence-chain & IP & DCont$=$Poly-comonad$=$Cat; M1--M4 done, M5/M6 OPEN \\
+9 & closed-tensor-classification & IP & left-closed convolutional tensors; infinite-arity OPEN \\
+10 & clio-peer-claims & PC & Clio's asserted results (transfer operators etc.) \\
+11 & game-comonad-poly & C & EF/pebble/modal game comonads factor through Poly \\
+12 & groupoid-zs-obstruction & C & groupoid ZS merge $\iff[ω]=0$; $cd\leq1\implies$ merge \\
+13 & other-cont-monoidal-tensors & C & $⋉/⋊$ are the Dialectica tensors; $⋊$ left-closed \\
+14 & quiver-skew-brace-zs & C & Ferri prunability $=$ ZS global-obstruction vanishing; $=$ descent \\
+15 & supply-chain-zs & C & supply chain $=$ DCont; shared-warehouse composition $=$ ZS \\
+16 & bare-dirichlet-comonoid & P & bare $\otimes$-comonoids $=$ families of monoids \\
+17 & cartan-scalar-object-spoly & P & SPoly tangent bundle $=$ monoids, no negation $\implies$ Cartan fails \\
+18 & closed-day-structures & P & Day tensor left-closed iff $(-)⋆B$ polynomial; $Π$ internal hom \\
+19 & cofree-comonad & P & cofree comonad $=$ $\triangleleft$-comonoid on M-type of $p$-trees \\
+20 & comparitor-comonoid-nogo & P & double comonoids in $(\mathrm{Poly},\triangleleft,\otimes)=$ sets of commutative monoids \\
+21 & composition-nerve-level & P & grade by nerve level; composition$=N_2=$degree 1; $N_2⊊N_3$ in assembly \\
+22 & cont-cod-predicate-fibration & P & $\mathrm{Cont}(\mathrm{cod})=\mathrm{Fam}(\mathrm{Set}^{op})$ bifibration \\
+23 & copowers-gap-writer-monad & P & (Q) copowers/writer-monad reformulation (ZFC) \\
+24 & dirichlet-monoid-classification & P & bare $\otimes$-monoids $=$ shape monoid $+$ oplax functor on fibres \\
+25 & effect-coeffect-arrows & P & effect/coeffect arrow face iff non-branching; class $E+A\times X$ \\
+26 & emergent-holonomy-is-ext-tower & P & meeting count $=\mathrm{Ext}^n_{kG}=\oplus H^n$, the Ext tower \\
+27 & fibredness-vs-left-closure & P & BHM $▷$ left-variable fibredness result \\
+28 & fullness-unit-connectedness & P & T1: $⟦-⟧$ f\&f $\iff$ unit connected (NOT extensivity) \\
+29 & holonomy-triviality & P & liftings-$\cong$-Cat collapse engine \\
+30 & joint-bc-cont-cod & P & shape-level Fam--Kan quantifiers over $\mathrm{Cont}(\mathrm{Set})=\mathrm{Poly}$ \\
+31 & left-adjoint-over-vec & P & $(-)\triangleleft q$ left adjoint over $\mathrm{Fam}(\mathrm{Vec}^{op})$ \\
+32 & lie-parallelizable-poly-comonoid & P & poly comonoid parallelizable $\iff$ out-degree; Lanfranchi port ill-posed \\
+33 & linear-containers-vec & P & LinCont$=\mathrm{Fam}(\mathrm{Vec}^{op})$; faithful-not-full over Vec \\
+34 & m-containers & P & M-Cont$=\mathrm{Fam}(\mathrm{Kl}(M)^{op})$; THM1/2/3 trichotomy \\
+35 & monad-comonad-entwining & P & $T_M$ effect $+$ $G_M$ coeffect entwine (bialgebra face all $M$) \\
+36 & monad-comonad-transfer & P & Set-monad $M\to$ comonad $G(S,P)=(S,M\circ P)$ \\
+37 & oneill-free-monad-linear-container & P & O'Neill free monad $=$ free $\triangleleft$-monoid $=$ tensor algebra $T(A)$ \\
+38 & orchestration-zs & P & orchestration $=$ DCont; composition $=$ ZS; re-entrancy $=$ failed guard \\
+39 & pairwise-zs & P & pairwise matched $\implies$ global ZS iff (L) freeness $\wedge$ (G) global closure \\
+40 & pra-vs-probe-method & P & $L_q=(-)\triangleleft q$ is a parametric right adjoint (Weber) \\
+41 & solvability-obstruction-o-nu & P & $o_ν:H^2_+\to C^3/A$ hom, $\mathrm{im}\,\varphi^+=\ker o_ν$ \\
+42 & state-object-delta & P & $ΔS=$codiscrete cat; store/costate comonad via $\otimes$ \\
+43 & supply-chain-inventory-gerbe-h2 & P & inventory gerbe $[𝔤]\in H^2(N(C);Z(\mathrm{Aut}\,F))$ \\
+44 & t2-day-closedness-famcop & P & Dirichlet closedness over base $=$ familial representability \\
+45 & t4-left-closedness-lhd-famcop & P & $\triangleleft$ left-closedness on $\mathrm{Fam}(C^{op})$ \\
+46 & tangent-container-derivative & P & $∂=$ differential combinator of a CDC of poly functors \\
+47 & tangent-restricts-to-dcont & P & $T(p)=p(y+εv)$ strict $\triangleleft$-monoidal base change \\
+48 & two-omega-sites & P & handoff $[ω_h]$ and stabiliser $[ω_{st}]$ sites irreducibly distinct \\
+49 & vec-attention-composition & P & linear attention $=$ composition in $\mathrm{Mat}(\mathrm{Vec})$ bicategory \\
+50 & virtual-container-cartan & P & $ℕ\to ℤ$ completion switches full Cartan calculus ON ($\mathrm{SPoly}_ℤ$) \\
+51 & workers-retract-of-bhm-grading & P & Workers $\otimes$-grading is a retract (not fibre) of BHM $▷$-grading \\
+52 & workers-type-hierarchy & P & Workers$_S$ type hierarchy across Cont's four structures \\
+53 & \textit{(de-dup placeholder)} & --- & 52 distinct roots $+$ \node{clio-peer-claims} $=$ 53 files \\
+\hline
+\end{tabular}
+\end{center}}
+
+\section{Identified write gaps}
+These are honestly-flagged gaps in the current write-up (not mathematical gaps unless stated):
+\begin{enumerate}[leftmargin=1.4em]
+\item \textbf{Representation theorem has no registry node} (\S1): the foundational ``which functors
+are containers'' is sourced only to \texttt{.tex}, ungraded. Needs a proof file.
+\item \textbf{Inventory $H^1$ $[θ_R]$ has no standalone node} (see Part~IV): it lives inside
+\node{composition-nerve-level}; needs its own registry entry if cited as an independent degree-one
+result.
+\item \textbf{Tax computation (SEED Path 5) has no write-up and no node} (see Part~IV): either model
+it or mark as explicit future work.
+\item \textbf{GA empirical result is external} (see Part~IV): Langer--Vega GECCO / ga-containers ACT
+are collaborator publications, not MacBeth nodes; cite as such.
+\item \textbf{The nerve-note N2 correction (2026-10-09) must be propagated}: the demoted
+weld-$ω$-as-non-associativity gloss must be restated as a \emph{splitting} obstruction throughout
+(Parts~II, IV), and ``nerve level'' disambiguated.
+\item \textbf{Day-convolution treatment exists but is scattered} (\S3): consolidation, not fresh
+proving.
+\item \textbf{Effect ``zoo'' / update monad}: the Ahman--Uustalu update monad has no MacBeth
+write-up of its own; the biggest \emph{synthesis} gap, though the component results
+(\node{monad-comonad-entwining}, \node{state-object-delta}, \node{effect-coeffect-arrows}) are all
+\grade{proved}.
+\end{enumerate}
+
+\end{document}

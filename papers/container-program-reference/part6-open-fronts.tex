@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+\input{preamble}
+
+\title{The Kodamai Container Program: A Complete Technical Record\\[4pt]
+\large Part VI --- Open Questions \& Frontier}
+\author{MacBeth}
+\date{2026-10-10}
+
+\begin{document}
+\maketitle
+\begin{center}\itshape Prepared for Neil Ghani.\end{center}
+
+\begin{abstract}
+Part~VI records the honest edge of the program: what is conjectural, what is refuted, and what the
+next moves are. A refutation is a \grade{proved} \emph{negative}, not an open question;
+standing open conjectures are distinguished from results actively refuted. Grades are copied
+verbatim.
+\end{abstract}
+
+\paragraph{Thesis of Part VI.}
+The honest edge of the program. Distinguish standing open conjectures from results we have actively
+refuted (a refutation is a \grade{proved} negative, not an open question).
+
+\section{The two standing open registry fronts}
+
+\begin{result}[Equivalence chain M5/M6, \grade{in-progress}]
+Node \node{equivalence-chain}. M5 (bridge to Poly / four monoidal structures, $=$ Clarke--Di~Meglio)
+and M6 (double category $\mathrm{Org}$, dynamic categories) are OPEN. The internal replacement
+theorem (``internal directed container $\simeq$ internal category $\simeq$ comonad in $C$'' for
+general symmetric monoidal $C$) is conjectural (SEED open Q1).
+\end{result}
+
+\begin{result}[Infinite-arity closed-tensor classification, \grade{in-progress}]
+Node \node{closed-tensor-classification}. Bounded arity is settled ($\times$ or $∨_S$); the
+infinite-arity boundary is an honest open problem.
+\end{result}
+
+\section{SEED open questions (Path-level)}
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Distributive-law decision procedure:} for which pairs of directed containers does a
+distributive law exist? ZS (L)$+$(G) give checkable criteria; the general theory is incomplete
+(SEED Q2; \node{pairwise-zs} is the current best). \emph{OPEN.}
+\item \textbf{$q$-calibration:} what is $q$ (braided structure) for real concurrent systems?
+Empirical, \emph{OPEN} (SEED Q3).
+\item \textbf{Density comonads $=$ polynomial comonads} (Spivak 2025 conjecture) --- ORTHOGONAL to
+the seed per connection \node{density-comonads-orthogonal-seed-q5}; \emph{OPEN} (SEED Q5).
+\item \textbf{Coinductive polynomial trees} (Spivak 2026) vs.\ adaptive GA topologies --- \emph{OPEN}
+(SEED Q6).
+\end{itemize}
+
+\section{Refuted / corrected (negative results --- state as such, not as open)}
+\begin{result}[Crown Stage 2, \grade{proved} (negative)]
+Branch-shape $Ψ$ FAILS (over-counts by $2^{Σ(λ-1)}$); the one-shape $Ψ'$ is positive over $𝒯$;
+$k\geq2$ separate --- sharing $=$ descent, not coproduct of branches. State the refutation, not the
+original crown. Connection \node{crown-stage2-unfolding-vs-descent} (shipped note).
+\end{result}
+
+\begin{result}[Lanfranchi parallelizability port, \grade{proved} (negative)]
+The Lanfranchi parallelizability port is ILL-POSED (node \node{lie-parallelizable-poly-comonoid};
+see Part~III).
+\end{result}
+
+\begin{result}[Crown TFAE, \grade{proved} (negative)]
+Crown TFAE is FALSE $\to$ a strict 4-level chain (MEMORY \texttt{crown-tfae-strict-chain}).
+\end{result}
+
+\begin{result}[The ${[ω]}$-as-non-associativity demotion, 2026-10-09]
+Carried in Part~II; the corrected reading is \emph{splitting}, not non-associativity.
+\end{result}
+
+\section{Independence-flavoured / speculative frontier}
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Conjecture 6.2 / Gap-S} (is $F=\mathrm{Hom}(E,\oplus_ℕ-)$ projective?): reformulated
+$\mathrm{Ext}^1\to\mathrm{Hom}$, one non-liftable $\varphi$ suffices in ZFC; Gap-S is FALSE under CH;
+current bet $ℰ=0$ in ZFC via an automorphism-rigidity analogy --- \emph{OPEN crux}
+(\texttt{vec-admissibility-not-zfc.tex}, MEMORY \texttt{gapS-false-under-CH}).
+\item \textbf{Clio's peer-claimed results} (transfer operators $\leftrightarrow$ container
+derivatives) \grade{peer-claimed} (node \node{clio-peer-claims}) --- register at peer-claimed; do
+NOT promote without an independent check.
+\end{itemize}
+
+\end{document}

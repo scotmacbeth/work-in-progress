@@ -1,0 +1,111 @@
+\documentclass[11pt]{article}
+\input{preamble}
+
+\title{The Kodamai Container Program: A Complete Technical Record\\[4pt]
+\large Part IV --- Applications}
+\author{MacBeth}
+\date{2026-10-10}
+
+\begin{document}
+\maketitle
+\begin{center}\itshape Prepared for Neil Ghani.\end{center}
+
+\begin{abstract}
+Part~IV records the applications of the container program: the same $\mathrm{DCont}\simeq
+\mathrm{Cat}$ $+$ ZS-weld machinery models real compositional systems where correctness has
+economic consequences. Each application is a directed container; composition is a ZS product;
+failure modes are obstruction classes. Every result carries its trust grade verbatim and its
+registry node; external/collaborator work and genuine write gaps are flagged as such.
+\end{abstract}
+
+\paragraph{Grade legend.}
+$\grade{proved} > \grade{lean-verified} / \grade{computed}$. Grades are copied verbatim and never
+inflated.
+
+\paragraph{Thesis of Part IV.}
+The same $\mathrm{DCont}\simeq\mathrm{Cat}$ $+$ ZS-weld machinery models real compositional systems
+where correctness has economic consequences. Each application is a directed container; composition
+is a ZS product; failure modes are obstruction classes.
+
+\section{Supply chains --- inventory at $H^1$ and the gerbe at $H^2$}
+\emph{Precis.} A supply chain is a small category / directed container; composing flows sharing a
+warehouse is a ZS product. Inventory consistency is a \textbf{degree-one} $H^1$ datum, INDEPENDENT
+of the weld class $[ω]\in H^2$. A finer relabelling-group obstruction lives at $H^2$ as a gerbe.
+
+\begin{theorem}[Supply chain as ZS weld, \grade{computed}]
+A supply chain is a directed container; composing two flows $=$ the ZS product $C\bowtie D$; the
+$[ω]\in H^2$ obstruction applies. Node \node{supply-chain-zs}.
+\end{theorem}
+
+\begin{theorem}[Tier-2 inventory gerbe, \grade{proved}]
+When local inventory charts agree only up to an iso of stock-states (relabelling group
+$K=\mathrm{Aut}(F)$), the gluing obstruction is a gerbe class
+$[𝔤]\in H^2(N(C);Z(\mathrm{Aut}\,F))$; it is rectifiable $\iff[𝔤]=0$, independent of the weld, and
+nonvacuous $\iff Z(\mathrm{Aut}\,F)\neq1$. Node \node{supply-chain-inventory-gerbe-h2}.
+\end{theorem}
+
+\begin{theorem}[Inventory ${[θ_R]\in H^1}$, independent of the weld]
+Inventory consistency is a degree-one datum $[θ_R]\in H^1$, INDEPENDENT of the weld
+$[ω]\in H^2$ (proof file \texttt{supply-chain-inventory-degree-one.tex}; appears as the
+$N_2$/$H^1$ rung of the nerve tower, node \node{composition-nerve-level}).
+\end{theorem}
+\begin{flag}
+This $H^1$ result has \textbf{no standalone registry node} of its own --- it is carried inside
+\node{composition-nerve-level}. It must not be cited as an independent \grade{proved} node without
+opening its own registry entry.
+\end{flag}
+
+\section{Blockchain / smart-contract re-entrancy}
+\emph{Precis.} Smart contracts as coalgebras; a re-entrancy bug is a failed distributive law / an
+unprotected shared position in a ZS weld. The obstruction is machine-checkable.
+
+\begin{theorem}[Re-entrancy as failed guard, \grade{proved}; class \grade{lean-verified}]
+Re-entrancy $=$ a failed guard in the orchestration ZS weld (node \node{orchestration-zs}); the
+$H^2$ class $[ω]=ε$ is machine-checked (\texttt{reentrancy-machine-checked-obstruction.tex} /
+node \node{fibre-h2-z2-engine}).
+\end{theorem}
+\begin{flag}
+Per Part~II, state $[ω]$ as a \emph{splitting} obstruction of an associative weld, not as
+``non-associativity.''
+\end{flag}
+
+\begin{remark}[Security-audit framing]
+State-divergence bugs are failed distributive laws (connection
+\node{security-audit-bugs-are-failed-distributive-laws}; paper
+\texttt{state-divergence-distributive-laws.tex}).
+\end{remark}
+
+\section{GA composition / linear attention (adjacent)}
+\emph{Precis.} Island-model GA migration topology and linear-attention composition are instances of
+the same compositional algebra in $\mathrm{Mat}(\mathrm{Vec})$ / Poly.
+
+\begin{theorem}[Linear attention as $\mathrm{Mat}(\mathrm{Vec})$ composition, \grade{proved}]
+Linear attention $=$ composition in the Vec-matrix bicategory $\mathrm{Mat}(\mathrm{Vec})$,
+$(P\oplus Q)(a,c)=\oplus_b P(a,b)\otimes Q(b,c)$. Node \node{vec-attention-composition}. (The
+``stack $=$ one matrix'' reading is REFUTED --- MEMORY.)
+\end{theorem}
+
+\begin{remark}[External / empirical]
+The GA diversity-dynamics empirical result (Langer--Vega, GECCO 2026) and ga-containers (ACT 2026)
+are external/empirical collaborator publications --- cite as published collaborator work, not a
+MacBeth registry node.
+\end{remark}
+
+\section{Agent orchestration and tax computation}
+\emph{Precis.} Tool-calling protocols and meta-agent orchestration are directed containers; tax
+computation (Catala-style) is a scope/supersession DAG with a comonadic event-sourced interface.
+
+\begin{remark}[Tool-calling / harness]
+Tool-calling protocols are directed containers (shipped note
+\texttt{tool-calling-protocols-directed-containers.tex}; grounded in \node{orchestration-zs},
+\grade{proved}). The harness-is-a-worker / MCP formalisation (paper \texttt{harness-is-a-worker.tex};
+connection \node{harness-worker-is-the-unscooped-mcp-formalization}).
+\end{remark}
+
+\begin{flag}[Tax computation --- write gap]
+Named in SEED Path 5 but has \textbf{NO registry node and no MacBeth write-up}. Either produce the
+ontology-DAG / supersession-DAG / event-sourced-comonad model or mark it explicitly as future work.
+It is listed here as explicit future work, not as an existing result.
+\end{flag}
+
+\end{document}
