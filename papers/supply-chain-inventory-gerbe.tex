@@ -24,6 +24,7 @@
 \newcommand{\Oc}{\mathcal{O}}
 \newcommand{\Sk}{\mathrm{Sk}}
 \newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
 \newcommand{\Hom}{\mathrm{Hom}}
 \newcommand{\dom}{\mathrm{dom}}
 \newcommand{\cod}{\mathrm{cod}}
@@ -31,42 +32,50 @@
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Aut}{\mathrm{Aut}}
 \newcommand{\Inn}{\mathrm{Inn}}
+\newcommand{\Out}{\mathrm{Out}}
 \newcommand{\Zc}{Z}
 \newcommand{\gerbe}{\mathfrak{g}}
 \newcommand{\Dfr}{\mathcal{D}}
 \newcommand{\bowtiemap}{\bowtie}
+\newcommand{\GL}{\mathrm{GL}}
 
-\title{A second-tier $H^2$ obstruction for supply-chain inventory:\\
-\large the inventory gerbe}
-\author{MacBeth\thanks{Kodamai. Source proof, verification scripts, and this note live at
+\title{A classical $H^2$ obstruction, read as supply-chain inventory:\\
+\large the inventory gerbe and its band}
+\author{MacBeth\thanks{Kodamai. Source, verification scripts, and this note live at
 \texttt{github.com/scotmacbeth/work-in-progress}. Prepared for the Kodamai AI-Mathematician
 grant (Applications and Theory pillars) and the Strathclyde mini-course \emph{Tangent Categories
 and Containers} (13--16 October 2026).}\\
 \small Kodamai}
-\date{9 October 2026\\[2pt]
+\date{10 October 2026 (corrected revision of the note dated 9 October 2026)\\[2pt]
 \small Circulated to Rick (reviewer) and the Kodamai group; CC Robin Langer.\\[2pt]
-\small content commit \texttt{9eb0941}}
+\small supersedes content commit \texttt{9eb0941}; content commit \texttt{PENDING}}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 A supply chain, abstracted to a small category $\C$, carries inventory as local stock-data
-glued along logistics operations. When charts are compared by \emph{equality} of counts, we
-showed earlier that consistency is a degree-one class $[\theta_R]\in H^1(N(\C);R)$. Here we
+glued along logistics operations. When charts are compared by \emph{equality} of counts,
+consistency is a degree-one class $[\theta_R]\in H^1(N(\C);R)$ (companion note). Here we
 refine the comparison to \emph{isomorphism of stock-states}: lots are fungible, so charts match
-only up to a relabelling group $K=\Aut(F)$. We prove that this refinement turns the gluing data
-into a $K$-gerbe over the nerve $N(\C)$ and raises the obstruction by exactly one categorical
-level. A strict global inventory exists if and only if a single degree-two class
-$[\gerbe]\in H^2(N(\C);Z(\Aut F))$ vanishes (Theorem~A); $[\gerbe]$ is genuinely degree-two ---
-it vanishes on every acyclic (DAG or tree) chain yet is already nonzero on a single reversible
-two-lot loop $B(\Z/2)$ (Theorem~B); and it is logically independent of the Zappa--Sz\'ep weld
-class $[\omega]$, which lives in the \emph{same} degree but over a \emph{different} coefficient
-system (Theorem~C). Finally, $[\gerbe]$ can be nonzero only when $Z(\Aut F)\neq1$, so generic
-$\geq3$-fold fungibility carries no tier-two obstruction while gauge-structured stock does
-(Proposition~D). The result completes inventory consistency into a two-tier theory --- $H^1$
-counts, $H^2$ relabellings --- and exhibits a fourth distinct $H^2$ home on $\mathrm{DCont}
-\simeq\Cat$.
+only up to a relabelling group $K=\Aut(F)$, and the gluing data becomes an $\Aut F$-gerbe over
+the nerve $N(\C)$. The resulting obstruction is \emph{not new mathematics}: it is the classical
+central-extension lifting class on $N(\C)$, read for the first time as an inventory invariant.
+We make this precise and honest. The obstruction is \emph{staged} after Giraud: a global
+inventory exists iff \emph{two} obstructions vanish --- first the \emph{band}
+$\beta\in H^1(N(\C);\Out(\Aut F))$, a genuinely nonabelian datum, and then the \emph{gerbe
+class} $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ (Corollary~\ref{cor:aprime}). The gerbe class vanishes
+on every $1$-dimensional (free / DAG / tree) chain, and is nonzero already on a single reversible
+loop $B(\Z/2)$ --- but only for a \emph{nonabelian} fibre with nontrivial centre; the minimal
+witness is a four-lot ring, $\Aut F=D_4$ (Theorem~\ref{thm:B}). It is logically independent of
+the Zappa--Sz\'ep weld $[\omega]$, not because the two live over different coefficients --- on
+$B(\Z/2)$ they can lie in the \emph{same} group and even coincide --- but because $[\gerbe]$
+depends on the inventory datum and $[\omega]$ does not (Theorem~\ref{thm:C}). Finally, both
+strata are invisible to plain fungibility: $\Aut F=S_n$ is centreless \emph{and} complete for
+$n\ge3,\ n\ne6$, so the two-tier phenomenon is a feature of \emph{gauge/torsor-structured} stock,
+not of interchangeable commodities (Theorem~\ref{thm:D}). The result places inventory consistency
+as a fourth distinct $H^2$ home on $\mathrm{DCont}\simeq\Cat$, distinguished by its \emph{input
+datum}.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -100,54 +109,76 @@ carry no information, so two charts should be regarded as matching when they are
 \emph{isomorphic}, not when they are literally equal. Each inventory fibre $F$ then carries a
 \emph{relabelling group} $K:=\Aut(F)$, and comparison of local charts is canonical only up to
 $K$. Gluing up-to-isomorphism is not a gluing-of-sets problem; it is a gluing-of-\emph{stacks}
-problem --- a gerbe. The companion note anticipated that the obstruction would then rise to
-$H^2$, but neither the coefficient system nor its relationship to the weld was determined. Does
-the obstruction equal $[\omega]$ (which also lives in $H^2$)? What exactly must vanish for a
-strict global inventory to exist? For which fibres is the phenomenon even nonvacuous?
+problem --- a gerbe over $N(\C)$. The companion note anticipated that the obstruction would rise
+to $H^2$, but left three questions open. Does the obstruction equal $[\omega]$, which also lives
+in $H^2$? What exactly must vanish for a global inventory to exist? For which fibres is the
+phenomenon even nonvacuous?
+
+\paragraph{What is new, and what is not.}
+We settle all three. The honest framing matters, and we state it at the outset: the obstruction
+is \emph{classical mathematics}. It is the central-extension lifting class of Schreier and
+Eilenberg--MacLane, specialised to the nerve $N(\C)$ and pulled back along the relabelling
+transport; for small categories this is the extension theory of Ho~\cite{ho} and
+Wells~\cite{wells}, classified cohomologically by Baues--Wirsching~\cite{bw}. An arXiv search
+(October 2026) found no prior reading of it as an inventory invariant, so the \emph{application}
+is new; the \emph{mathematics} is not. We pitch it accordingly --- a classical obstruction,
+newly read as inventory --- and the work of the note is to get the reading exactly right.
 
 \paragraph{The results.}
-We make the refinement precise and settle all three questions. Fix a fibre $F$ with relabelling
-group $K=\Aut(F)$, centre $\Zc:=Z(K)$, and inner group $\Inn K:=K/\Zc$, giving the central
-extension
-\begin{equation}\label{eq:star}
-1 \longrightarrow \Zc \longrightarrow K \xrightarrow{\ \pi\ } \Inn K \longrightarrow 1.
-\tag{$\star$}
-\end{equation}
-Under a scope hypothesis stated below (the gerbe's band is trivialised), the gluing data is a
-$K$-gerbe over $N(\C)$ presented by a normalised $2$-cochain $\omega\in C^2(N(\C);\Zc)$, and its
-class $[\gerbe]\in H^2(N(\C);\Zc)$ is the tier-two obstruction. Our main results are:
+Fix a fibre $F$ with relabelling group $K=\Aut(F)$, centre $\Zc:=Z(K)$, inner group
+$\Inn K=K/\Zc$, and outer group $\Out K$. Two sequences organise everything:
+\begin{align}
+&1 \longrightarrow \Zc \longrightarrow K \xrightarrow{\ \pi\ } \Inn K \longrightarrow 1
+&&\text{(central extension of $K$)}\label{eq:star}\tag{$\star$}\\
+&1\to\Zc\to K\xrightarrow{\ \mathrm{conj}\ }\Aut K\xrightarrow{\ q\ }\Out K\to1,\quad
+\Inn K=\ker q
+&&\text{(inner/outer tower)}\label{eq:tower}\tag{$\star\star$}
+\end{align}
+The gluing datum of fungible inventory is an $\Aut F$-gerbe over $N(\C)$ whose structure group is
+$K$. Classifying it is \emph{staged}, exactly as in Giraud's non-abelian cohomology: the
+\emph{band} $\beta\in H^1(N(\C);\Out K)$ --- the outer part of the relabelling transport --- must
+vanish before the degree-two class is even defined, and then that class
+$[\gerbe]\in H^2(N(\C);\Zc)$ is the lifting obstruction of~\eqref{eq:star}. Our results are:
 
-\begin{theorem}[Rectification $\Leftrightarrow$ vanishing; Theorem~A]\label{thm:A-intro}
-A strict global inventory --- a strict functor $\C\to BK$ realising the up-to-iso gluing ---
-exists if and only if $[\gerbe]=0$ in $H^2(N(\C);\Zc)$.
+\begin{theorem}[Rectification $\Leftrightarrow$ vanishing; Theorem~\ref{thm:A}]
+Once the band is trivial, a global inventory --- a strict functor $\C\to BK$ realising the
+up-to-iso gluing --- exists if and only if $[\gerbe]=0$ in $H^2(N(\C);\Zc)$. This is the Schreier /
+Eilenberg--MacLane central-extension lifting criterion, specialised to $N(\C)$.
 \end{theorem}
 
-\begin{theorem}[Degree-genuineness; Theorem~B]\label{thm:B-intro}
-If $N(\C)$ is homotopy $1$-truncated --- in particular if $\C$ is the free category on a
-directed acyclic quiver (a tree-like or DAG chain) --- then $H^2(N(\C);\Zc)=0$, so $[\gerbe]=0$
-for every fibre. There is a minimal one-node witness, $\C=B(\Z/2)$ with $K=\Z/2$, for which
-$[\gerbe]\neq0$.
+\begin{corollary}[The staged obstruction; Corollary~\ref{cor:aprime}]
+A global inventory exists if and only if \emph{both} strata vanish: \textup{(i)} the band
+$\beta=0\in H^1(N(\C);\Out K)$ and \textup{(ii)} the gerbe class $[\gerbe]=0\in H^2(N(\C);\Zc)$,
+the latter well-defined only once \textup{(i)} holds.
+\end{corollary}
+
+\begin{theorem}[Degree-genuineness; Theorem~\ref{thm:B}]
+If $|N(\C)|$ is homotopy equivalent to a \emph{$1$-dimensional} complex --- in particular if $\C$
+is the free category on a quiver (a tree-like or DAG chain) --- then $H^{\ge2}(N(\C);\Zc)=0$, so
+$[\gerbe]=0$ for every fibre. There is a minimal one-node witness, $\C=B(\Z/2)$ with the fibre a
+four-lot ring ($K=\Aut F=D_4$), for which $[\gerbe]\neq0$.
 \end{theorem}
 
-\begin{theorem}[Independence from the weld; Theorem~C]\label{thm:C-intro}
-$[\gerbe]\in H^2(N(\C);Z(\Aut F))$ and the Zappa--Sz\'ep weld $[\omega]\in H^2(\Sk_\C;\Dfr)$ are
-logically independent: neither vanishing implies the other. They are classes of the \emph{same
-degree} over \emph{different coefficient systems} --- the fibre centre $Z(\Aut F)$ versus the
-weld vertex-group presheaf $\Dfr$ --- and we exhibit chains realising each of
-$([\gerbe]\neq0,[\omega]=0)$ and $([\gerbe]=0,[\omega]\neq0)$.
+\begin{theorem}[Independence from the weld; Theorem~\ref{thm:C}]
+$[\gerbe]\in H^2(N(\C);\Zc)$ and the Zappa--Sz\'ep weld $[\omega]\in H^2(\Sk_\C;\Dfr)$ are
+logically independent: over the family of pairs (inventory datum, weld datum) on a fixed $\C$,
+all four vanishing patterns occur. The mechanism is \emph{not} a difference of coefficients ---
+on $\C=B(\Z/2)$ the two classes can lie in the same group $H^2(\Z/2;\Z/2)$ and even coincide ---
+but a difference of \emph{input data}: $[\gerbe]$ depends on the inventory fibre, $[\omega]$ does
+not.
 \end{theorem}
 
-\begin{proposition}[Sharp nonvacuousness; Proposition~D]\label{prop:D-intro}
-$[\gerbe]$ can be nonzero only if $Z(\Aut F)\neq1$. For $F$ a bare $n$-element set of
-indistinguishable lots, $\Aut(F)=S_n$ has $Z(S_n)=1$ for $n\geq3$; hence generic $\geq3$-fold
-fungibility carries no tier-two obstruction, and the gerbe is a phenomenon of two-fold or
-gauge/torsor-structured ambiguity.
-\end{proposition}
+\begin{theorem}[Nonvacuousness; Theorem~\ref{thm:D}]
+$[\gerbe]$ can be nonzero only if $K$ is \emph{nonabelian with nontrivial centre}
+($\Inn K\ne1$ and $\Zc\ne1$); the minimal such $K$ are $D_4$ and $Q_8$. For $F$ a bare
+$n$-element set of indistinguishable lots, $\Aut F=S_n$ is abelian or centreless for every $n$
+and complete (so $\Out=1$) for $n\ge3,\ n\ne6$: fungible stock carries \emph{neither} obstruction.
+The two-tier phenomenon is a feature of gauge/torsor-structured stock, not of interchangeable
+commodities.
+\end{theorem}
 
-The main result is thus visible by page two, and the picture is a \emph{two-tier} obstruction.
-Tier one compares stock by equality; tier two compares it up to relabelling; the two live in
-consecutive degrees over different coefficients, and the weld is a third, structural
-precondition orthogonal to both:
+The main results are visible by page two. The picture is a \emph{two-tier} obstruction with a
+\emph{staged} degree-two tier:
 
 \begin{center}
 \begin{tabular}{llll}
@@ -155,7 +186,8 @@ precondition orthogonal to both:
 tier & charts compared by & obstruction & coefficients, degree\\
 \midrule
 1 & equality of counts & $[\theta_R]$ & $R$ (resource group), $H^1$\\
-2 & iso of stock-states (relabelling) & $[\gerbe]$ & $Z(\Aut F)$ (fibre centre), $H^2$\\
+2a (band) & iso of states, outer part & $\beta$ & $\Out(\Aut F)$ (nonabelian), $H^1$\\
+2b (gerbe) & iso of states, central part & $[\gerbe]$ & $Z(\Aut F)$ (fibre centre), $H^2$\\
 \midrule
 (precond.) & does $\C$ factor at all & $[\omega]$ & $\Dfr$ (weld vertex groups), $H^2$\\
 \bottomrule
@@ -163,45 +195,59 @@ tier & charts compared by & obstruction & coefficients, degree\\
 \end{center}
 
 \paragraph{The method.}
-Two standard facts, specialised to $N(\C)$, do the work. First, the \emph{band} of a
-band-trivialised $K$-gerbe is the centre $Z(K)$ with trivial $\C$-action (Lemma~\ref{lem:band}):
-inner automorphisms can be undone by re-choosing local trivialisations, so only central
-ambiguity survives global comparison. Second, when $K$ is nonabelian the unambiguous datum is a
-functor $\rho:\C\to B(\Inn K)$, and the gerbe is its \emph{gerbe of lifts} through~\eqref{eq:star};
-choosing set-section lifts $T_f=s(\rho_f)$ exhibits a $Z$-valued $2$-cocycle $\omega$ whose class
-is $[\gerbe]$. Rectification then reads as trivialising $\omega$ by a central $1$-cochain --- an
-elementary coboundary computation (Theorem~A) that is uniform across the abelian and nonabelian
-faces. The remaining theorems are a simplicial computation on the nerve (Theorem~B), a
-coefficient comparison with explicit witnesses (Theorem~C), and the classical centre table
-(Proposition~D).
+One classical fact, specialised to $N(\C)$, does the work. Comparing inventory charts across an
+operation transports the relabelling group $K$ by an automorphism, functorial only up to inner
+automorphism; its outer reduction is the band $\beta$ (Lemma~\ref{lem:band0}), and $\beta=0$ iff
+the transport is inner-valued up to relabelling (Theorem~\ref{thm:band}). When $\beta=0$ the
+transport descends to a functor $\rho:\C\to B(\Inn K)$, and the gerbe is its \emph{gerbe of lifts}
+through~\eqref{eq:star}: choosing set-section lifts $T_f=s(\rho_f)$ exhibits a $\Zc$-valued
+$2$-cocycle $\gamma$ whose class is $[\gerbe]$ (\S\ref{sec:gerbe}). Rectification then reads as
+trivialising $\gamma$ by a central $1$-cochain --- an elementary coboundary computation
+(Theorem~\ref{thm:A}). The remaining theorems are a simplicial computation on the nerve
+(Theorem~\ref{thm:B}), a comparison with explicit witnesses (Theorem~\ref{thm:C}), and the
+classical automorphism arithmetic of $S_n$ (Theorem~\ref{thm:D}).
 
 \paragraph{Consequences and placement.}
-Three points are worth stating up front. (i) The refinement is \emph{exactly} one categorical
-level: equality-gluing is $H^1$, iso-gluing is $H^2$, and nothing in between. (ii) Because
-$[\gerbe]$ and $[\omega]$ share a degree, the temptation to identify ``inventory is inconsistent
-up to relabelling'' with ``the chain fails to weld'' is now a \emph{degree-matched} trap, and the
-only discriminator is the coefficient system; Theorem~C checks it. (iii) The nonvacuousness
-criterion sharpens the applications story: the economically relevant tier-two case is not plain
-fungibility of many interchangeable units (centreless $S_n$) but \emph{gauge-valued} stock ---
-allocation defined up to a group action --- whose automorphism group has a centre. Within the
-Kodamai program, $[\gerbe]$ is the \emph{fourth} distinct $H^2$ home on $\mathrm{DCont}\simeq
-\Cat$, after the Zappa--Sz\'ep holonomy, Ferri prunability, and the Baues--Wirsching class
-$H^2_{\Cat}$; unlike the first three it is distinguished by \emph{coefficients}, not by site.
+Three points up front. (i) The refinement is \emph{exactly} one categorical level: equality-gluing
+is $H^1$, iso-gluing is $H^2$, with a nonabelian $H^1$ band in between that must vanish first.
+(ii) Because $[\gerbe]$ and $[\omega]$ can share a group, the temptation to identify ``inventory
+is inconsistent up to relabelling'' with ``the chain fails to weld'' is a genuine trap ---
+they can even be equal --- and only the \emph{input datum} separates them; Theorem~\ref{thm:C}
+makes this precise. (iii) The nonvacuousness criterion sharpens the applications story: the
+economically relevant tier-two case is not plain fungibility of many interchangeable units
+(centreless, complete $S_n$) but \emph{gauge-valued} stock --- allocation defined up to a group
+action --- whose automorphism group is nonabelian with a centre. Within the Kodamai program,
+$[\gerbe]$ is the \emph{fourth} distinct $H^2$ home on $\mathrm{DCont}\simeq\Cat$, after the
+Zappa--Sz\'ep holonomy, Ferri prunability, and the Baues--Wirsching class $H^2_{\Cat}$;
+it is distinguished from them by its \emph{input datum} (the inventory fibre), not by a
+coefficient-system discriminator.
 
 \paragraph{Outline.}
-Section~\ref{sec:prelim} recalls supply chains as directed containers, the central
-extension~\eqref{eq:star}, and the gerbe vocabulary we use. Section~\ref{sec:gerbe} sets up the
-tier-two datum, proves the band is the centre (Lemma~\ref{lem:band}), and exhibits the cocycle
-in both the abelian and nonabelian faces. Section~\ref{sec:A} proves Theorem~A.
-Section~\ref{sec:B} proves degree-genuineness (Theorem~B). Section~\ref{sec:C} proves
-independence from the weld (Theorem~C). Section~\ref{sec:D} proves the nonvacuousness criterion
-(Proposition~D). Section~\ref{sec:conclusion} states the scope, the honest open problem (a
-nontrivial outer band), and the two-tier bottom line.
+Section~\ref{sec:prelim} recalls supply chains as directed containers, the two
+sequences~\eqref{eq:star}--\eqref{eq:tower}, and the Giraud strata we use.
+Section~\ref{sec:gerbe} defines the object as the gerbe of lifts and exhibits its cocycle.
+Section~\ref{sec:A} proves the rectification criterion (Theorem~A) and identifies it as classical.
+Section~\ref{sec:band} proves the band criterion and the staged corollary (the band boundary).
+Section~\ref{sec:B} proves degree-genuineness (Theorem~B). Section~\ref{sec:C} proves independence
+from the weld (Theorem~C). Section~\ref{sec:D} proves the nonvacuousness criterion and the
+fungibility dichotomy (Theorem~D). Section~\ref{sec:conclusion} states the scope, the honest open
+problem (coupled strata), and the two-tier bottom line.
+
+\paragraph{Note on this revision.}
+This note corrects the version of 9 October 2026 (commit \texttt{9eb0941}) following Rick's
+referee report of 10 October. The corrections are substantive and we state them openly rather
+than paper over them: the earlier degree-genuineness hypothesis (``homotopy $1$-truncated'')
+was false and is replaced by ``homotopy equivalent to a $1$-complex''
+(\S\ref{sec:B}); the earlier minimal witness ($K=\Z/2$) was wrong --- a bare set carries no
+tier-two class --- and is replaced by the four-lot ring $K=D_4$ (\S\ref{sec:B},~\ref{sec:D}); the
+earlier ``different coefficients'' explanation of independence was false and is replaced by the
+input-data mechanism (\S\ref{sec:C}); and the band, previously hypothesised away, is now settled
+(\S\ref{sec:band}). The gerbe cocycle is renamed $\gamma$ to free the symbol $\omega$ for the weld.
 
 \section{Preliminaries}\label{sec:prelim}
 
 The section records only what the proofs use. A reader fluent in directed containers and
-nonabelian $H^2$ can skip to Section~\ref{sec:gerbe}.
+non-abelian cohomology can skim to Section~\ref{sec:gerbe}.
 
 \subsection{Supply chains as directed containers and their nerve}
 
@@ -213,17 +259,20 @@ model lives natively in the container program.
 The \emph{nerve} $N(\C)$ is the simplicial set with $N(\C)_0=\Ob\C$, $N(\C)_1=\Hom\C$, and
 $N(\C)_n$ the set of composable strings $c_0\xrightarrow{f_1}c_1\to\cdots\xrightarrow{f_n}c_n$.
 For an abelian coefficient group $A$ with (here) trivial $\C$-action, $H^\bullet(N(\C);A)$ is the
-cohomology of the normalised cochain complex $C^n(N(\C);A)=\{\,u:N(\C)_n\to A\mid u \text{
-vanishes on degeneracies}\,\}$ with the usual alternating-face differential. Two facts are used
-below:
+cohomology of the normalised cochain complex with the usual alternating-face differential. Two
+facts are used below:
 \begin{itemize}
 \item For a one-object category $\C=BG$ (a group $G$ viewed as a category), $N(BG)$ is the
 standard classifying space and $H^\bullet(N(BG);A)=H^\bullet(G;A)$ is group cohomology.
-\item For the free category $F(Q)$ on a quiver $Q$, the classifying space $|N(F(Q))|$ is homotopy
-equivalent to the geometric realisation $|Q|$, a $1$-complex; hence $H^{\geq2}(N(F(Q));A)=0$.
+\item If $|N(\C)|$ is homotopy equivalent to a $1$-dimensional CW complex then
+$H^{\ge2}(N(\C);A)=0$. This holds for the free category $F(Q)$ on a quiver $Q$, whose classifying
+space is homotopy equivalent to the graph $|Q|$.
 \end{itemize}
+We emphasise the second fact in its correct form: it is \emph{homotopy $1$-dimensionality}, not
+homotopy $1$-truncatedness, that forces $H^{\ge2}=0$. A $K(\pi,1)$ such as $B(\Z/2)$ is
+$1$-truncated yet has $H^{\ge2}\ne0$; see Remark~\ref{rem:truncated}.
 
-\subsection{Inventory fibres and the central extension}\label{sec:prelim-ext}
+\subsection{Inventory fibres and the two sequences}\label{sec:prelim-ext}
 
 An \emph{inventory fibre} $F$ is the local type of a stock-state at a node: a configuration of
 lots. Fungibility means the labels carry no information, so the relevant symmetry is the
@@ -232,330 +281,486 @@ lots. Fungibility means the labels carry no information, so the relevant symmetr
 K:=\Aut(F),\qquad \Zc:=Z(K)\ \text{(centre)},\qquad \Inn K:=K/\Zc\ \text{(inner group)},
 \]
 fitting into the central extension~\eqref{eq:star}. We write $\pi:K\to\Inn K$ for the quotient
-and reserve $s:\Inn K\to K$ for a chosen \emph{set-section} with $s(e)=e$ (not assumed to be a
-homomorphism).
+and reserve $s:\Inn K\to K$ for a chosen \emph{set-section} with $s(e)=e$ (not a homomorphism in
+general). The band lives in the outer group $\Out K$ of the inner/outer
+tower~\eqref{eq:tower}; $\Inn K=\ker q\cong K/\Zc$ is the image of conjugation.
 
-\subsection{Gerbes, bands, and rectification}\label{sec:prelim-gerbe}
+\subsection{The gerbe, its band, and the Giraud strata}\label{sec:prelim-gerbe}
 
-We use the gerbe vocabulary only to \emph{name} the object and import two classical facts; the
-cocycles and all computations are derived in place.
+Comparing two inventory trivialisations of the same fibre across an operation $f$ identifies them
+only up to the relabelling group $K$, i.e.\ transports $K$ by an \emph{automorphism} $\alpha_f\in
+\Aut K$. Re-trivialising a chart conjugates the transport, so $\alpha$ is functorial only up to
+inner automorphisms: $\alpha_{gf}=\iota\cdot\alpha_g\alpha_f$ for some $\iota\in\Inn K$. Collecting
+the local trivialisations into a stack makes the gluing datum an $\Aut F$-gerbe over $N(\C)$: a
+stack of groupoids locally equivalent to $B(\Aut F)$ (Giraud~\cite{giraud}, III; Breen~\cite{breen}
+for the bitorsor/cocycle presentation). A \emph{global inventory} is a global section realised on
+the nose --- a strict functor $\C\to BK$ whose transition data glue strictly.
 
-A \emph{gerbe} over $N(\C)$ (for us: a $K$-gerbe) is a stack of groupoids that is locally
-nonempty and locally connected --- locally equivalent to the trivial gerbe $BK$. Its local
-objects are \emph{inventory trivialisations}; its \emph{band} (lien) is the sheaf of
-automorphisms of those local objects. A gerbe has a \emph{global section} (a global object)
-precisely when it is equivalent to the trivial gerbe. For an abelian band $A$, isomorphism
-classes of $A$-gerbes over $N(\C)$ are classified by $H^2(N(\C);A)$, with the trivial class
-corresponding to the gerbe that admits a global section (Giraud~\cite{giraud}, III; see also
-Breen~\cite{breen} for the bitorsor/cocycle presentation). When the band is nonabelian the
-classification is Giraud's full nonabelian $H^2$; we will not need it, because our scope
-hypothesis trivialises the band to its centre (Lemma~\ref{lem:band}).
+Giraud's classification of a $G$-gerbe over a base $X$ (for us $G=\Aut F=K$, $X=N(\C)$) factors
+into \emph{three strata}:
 
-A \emph{strict global inventory} is a global section realised \emph{on the nose}: a strict
-functor $\C\to BK$ whose transition data satisfy the gluing equations strictly rather than up to
-coherent isomorphism. The passage from a pseudofunctor (coherent, up-to-iso gluing) to a strict
-functor is \emph{rectification}; that a pseudofunctor into a bicategory can be replaced by an
-equivalent strict one, and the obstruction to doing so compatibly with prescribed data, is the
-Bénabou--Street rectification circle of ideas~\cite{benabou,street}. We cite these only to place
-the object; the obstruction class and the rectification algebra are computed in
-Sections~\ref{sec:gerbe}--\ref{sec:A}.
+\begin{center}
+\begin{tabular}{clll}
+\toprule
+stratum & datum & invariant & home\\
+\midrule
+1 (unbanded) & structure $2$-group cocycle & $\pi_0 \cong H^1(X;\mathrm{AUT}\,K)$ & nonabelian $H^1$\\
+\textbf{2 (band)} & outer transport $\rho:=q\circ\alpha$ & $\beta:=[\rho]\in H^1(X;\Out K)$ & nonabelian $H^1$\\
+3 (fixed band) & centre cocycle & $[\gerbe]\in H^2(X;\Zc)_\beta$ & abelian $H^2$\\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\section{The inventory gerbe: setup, band, and cocycle}\label{sec:gerbe}
+We work the classification at strata $2$ and $3$, which is where a \emph{strict global section}
+lives: stratum $1$ concerns which $2$-group presents the gerbe, which for a fixed fibre $F$ and
+constant relabelling group is already pinned. The \textbf{band} $\beta$ must vanish before the
+degree-two coefficients $\Zc$ are untwisted and $[\gerbe]$ is defined; this staging is the content
+of Section~\ref{sec:band}. For stratum $3$ we need only one classical fact, imported rather than
+re-derived: an abelian-band gerbe over $N(\C)$ with band $A$ (trivial $\C$-action) is classified
+by $H^2(N(\C);A)$, the trivial class being the one admitting a global section (Giraud~\cite{giraud},
+III). Everything else --- the cocycle, its class, the rectification algebra, the band criterion ---
+we compute in place.
 
-\subsection{The tier-two datum}
+\paragraph{Conventions for nonabelian $H^1$.}
+For a group $Q$ (constant coefficients) a \emph{cocycle} is a functor $\C\to BQ$, i.e.\ a map
+$\gamma:\Mor\C\to Q$ with $\gamma(gf)=\gamma(g)\gamma(f)$, $\gamma(\id)=e$; two cocycles are
+\emph{cohomologous} iff related by an object-relabelling $\lambda:\Ob\C\to Q$,
+$\gamma'(f:x\to y)=\lambda(y)\gamma(f)\lambda(x)^{-1}$. Then $H^1(N(\C);Q):=Z^1/{\sim}$, pointed
+by $\gamma\equiv e$; $[\gamma]=0$ means $\gamma\sim e$. For $Q$ abelian this is ordinary
+simplicial $H^1$; for $Q$ nonabelian it is a pointed set.
 
-\begin{definition}[Tier-two inventory datum]\label{def:tier2}
-Fix an inventory fibre $F$ with $K=\Aut(F)$. Suppose local inventory charts at the nodes of $\C$
-are comparable only up to relabelling, i.e.\ the transition along an operation $f$ is a
-$K$-torsor of chart-identifications rather than a single one. The gluing data is then a
-\emph{$K$-gerbe over $N(\C)$}: a stack whose local objects are inventory trivialisations and
-whose automorphism band is (a subsheaf of) $K$. A \emph{strict global inventory} is a strict
-global section of this gerbe.
+\section{The inventory gerbe as the gerbe of lifts}\label{sec:gerbe}
+
+We define the object directly as the \emph{gerbe of lifts} of the inner transport through the
+central extension~\eqref{eq:star}. This is the honest construction: it makes transparent that the
+degree-two class is extra lifting data pulled back along the transport, not a number computed from
+the fibre $F$ in isolation.
+
+\begin{definition}[The inventory gerbe]\label{def:gerbe}
+Fix a fibre $F$ with $K=\Aut F$ and suppose the band is trivial ($\beta=0$;
+Section~\ref{sec:band}), so the relabelling transport is inner-valued up to relabelling and
+descends to a functor
+\[
+\rho:\C\longrightarrow B(\Inn K),\qquad \Inn K=K/\Zc.
+\]
+The \emph{inventory gerbe} is the $\Zc$-gerbe of lifts of $\rho$ through $\pi$
+in~\eqref{eq:star}: its local objects are lifts of $\rho_f$ to $K$, and its band is the centre
+$\Zc$ with trivial $\C$-action. A \emph{global inventory} is a global section --- a strict
+functor $\C\to BK$ lifting $\rho$.
 \end{definition}
 
-\begin{definition}[Scope hypothesis: trivial band]\label{def:scope}
-We fix the \emph{same} fibre $F$ and relabelling group $K$ at every node and \emph{trivialise the
-outer action}: the band/lien of the gerbe is the trivial (constant) one. A nontrivial outer band
-twists the coefficients to a local system $\Zc_\rho$ and introduces a prior Giraud band
-obstruction; that genuinely nonabelian case is outside this note and is marked open in
-Section~\ref{sec:conclusion}.
+\begin{remark}[Why the gerbe of lifts, and not a bare $K$-gerbe]\label{rem:lifts}
+It is tempting to call the object a ``$K$-gerbe with trivial band'' and invoke the band formalism
+to reduce its coefficients to $\Zc$. That is imprecise: a $K$-gerbe with trivial band and the
+$\Zc$-gerbe of lifts of $\rho$ are \emph{different} objects --- for $\rho=\id$ the inner form
+$\mathbf{Tors}(\Inn K)$ has a global section while the $\Zc$-gerbe of lifts does not --- so
+``global section $\Leftrightarrow[\gerbe]=0$'' depends on which one is meant. We therefore
+\emph{define} the object as the gerbe of lifts (equivalently, as the $\mathrm{AUT}(F)$-pseudofunctor
+of Remark~\ref{rem:kinvariant}), and no separate band-is-the-centre lemma is needed: the
+coefficients are $\Zc$ by construction.
+\end{remark}
+
+\subsection{The cocycle}
+
+\begin{definition}[Section cocycle]\label{def:cocycle}
+Choose set-section lifts $T_f:=s(\rho_f)\in K$ for each operation $f$, with $T_{\id}=e$. Because
+both $T_gT_f$ and $T_{gf}$ map to $\rho_g\rho_f=\rho_{gf}$ under $\pi$, their ratio lands in
+$\ker\pi=\Zc$:
+\begin{equation}\label{eq:defect}
+T_gT_f=\gamma(g,f)\cdot T_{gf},\qquad \gamma(g,f)\in\Zc.
+\tag{$\dagger$}
+\end{equation}
+Thus $\gamma=\rho^*(\text{extension $2$-cocycle of~\eqref{eq:star}})$ is a normalised
+$2$-cochain on $N(\C)$ valued in $\Zc$.
 \end{definition}
 
-Under Definition~\ref{def:scope} the gerbe is \emph{band-trivialised}, and the next lemma
-identifies the coefficients.
-
-\subsection{The band is the centre}
-
-\begin{lemma}[Band $=$ centre]\label{lem:band}
-The band of a band-trivialised $K$-gerbe is the constant abelian sheaf $Z(K)$, with trivial
-$\C$-action.
+\begin{lemma}[{$\gamma$ is a cocycle and $[\gerbe]$ is well-defined}]\label{lem:cocycle}
+Associativity of multiplication in $K$, together with the centrality of $\Zc$ (so conjugation acts
+trivially on the values of $\gamma$), gives the normalised $2$-cocycle identity
+\[
+\gamma(h,g)\,\gamma(hg,f)=\gamma(g,f)\,\gamma(h,gf),\qquad\text{i.e.\ } \delta\gamma=0,
+\]
+and changing the set-section $s$ replaces $\gamma$ by a cohomologous cochain. Hence
+$[\gerbe]:=\rho^*[\star]=[\gamma]\in H^2(N(\C);\Zc)$ is well-defined.
 \end{lemma}
 
 \begin{proof}
-The band is the sheaf of automorphisms of the gerbe's local objects. Two local trivialisations
-of the same fibre differ by an element of $K$, and an automorphism of a local object is realised
-by an element $z\in K$ acting on every chart; for the action to be independent of the choice of
-trivialisation --- i.e.\ to descend to the band of the band-trivialised gerbe --- $z$ must commute
-with all of $K$, so $z\in Z(K)$. Equivalently, $Z(K)$ is the group of $2$-automorphisms of the
-identity autoequivalence of the fibre (the Eckmann--Hilton centre of the automorphism $2$-group
-of $F$~\cite{bl,js}). Inner automorphisms, which \emph{can} be undone by re-choosing local
-trivialisations, fix $Z(K)$ pointwise, so the $\C$-action on the band is trivial. This is the
-standard gerbe-band formalism (Giraud~\cite{giraud}, III; Breen~\cite{breen}); we import it
-rather than re-derive it.
+Expand $T_h(T_gT_f)=(T_hT_g)T_f$ using~\eqref{eq:defect} three times and cancel the common
+$T_{hgf}$; centrality lets the $\Zc$-values commute past the $T$'s. Replacing $s$ by $s'$ sets
+$T'_f=c_fT_f$ with $c_f\in\Zc$, and~\eqref{eq:defect} gives
+$\gamma'(g,f)=\gamma(g,f)\,(\delta c)(g,f)$.
 \end{proof}
 
-So the coefficients are $Z(K)=Z(\Aut F)$ with trivial action, and the gerbe is classified by
-$H^2(N(\C);Z(\Aut F))$.
+\begin{remark}[{Face 1 is definitional: $[\gerbe]$ is a $k$-invariant, not a number from $F$}]%
+\label{rem:kinvariant}
+When $K$ is abelian, $\Inn K=1$, $\rho$ is trivial, and the gerbe of lifts of
+Definition~\ref{def:gerbe} is \emph{trivial}: $[\gerbe]=0$. So an abelian fibre carries no
+inventory class by this construction. The abelian $K$-gerbes presented by a free $2$-cocycle
+$\gamma\in Z^2(N(\C);K)$ --- the ``abelian face'' of the earlier version --- are therefore
+\emph{not} determined by $F$: a pseudofunctor into the $1$-category $BK$ is just a functor and
+carries no $2$-cell data, so a nonzero class is extra input. Precisely, the datum is a
+pseudofunctor into the automorphism $2$-group $\mathrm{AUT}(F)$ (with $\pi_1=\Out K$, $\pi_2=\Zc$),
+and $[\gerbe]$ is its \emph{$k$-invariant}~\cite{bl,js}. We record this honestly: Face~1 is the
+\emph{definition} of a classification datum, not a computation from the fibre. The constructive,
+inventory-driven class is the gerbe of lifts of Definition~\ref{def:gerbe}, which requires a
+\emph{nonabelian} $K$ (so that $\rho$ can be nontrivial) --- as Theorem~\ref{thm:D} makes precise.
+\end{remark}
 
-\subsection{The cocycle in each face}
-
-There are two faces, according to whether $K=\Aut(F)$ is abelian. Both have band $Z(K)$; both are
-needed, because the minimal witness is abelian while the smallest nonabelian witnesses are
-$D_4$ and $Q_8$.
-
-\paragraph{Face 1 --- abelian relabelling ($K$ abelian, $Z(K)=K$).}
-Here the fibre is a $K$-torsor-stack: stock is defined up to the gauge group $K$, and the torsor
-itself only locally. The gerbe is a genuine abelian $K$-gerbe, presented by a normalised
-$2$-cocycle $\omega\in Z^2(N(\C);K)$ (its transition cocycle), and $[\gerbe]:=[\omega]\in
-H^2(N(\C);K)$. That a global section exists iff $[\omega]=0$ is the defining property of the
-abelian-gerbe classification $H^2(N(\C);K)\cong\{K\text{-gerbes}\}/{\simeq}$, with the trivial
-gerbe the unique one admitting a section (Giraud~\cite{giraud}). The minimal $B(\Z/2)$ witness of
-Section~\ref{sec:B} lives in this face.
-
-\paragraph{Face 2 --- nonabelian relabelling, trivial band (the lifting gerbe).}
-When $K$ is nonabelian the inner part of a relabelling composes strictly: re-trivialising a fibre
-conjugates the transport, so comparison of charts is canonical only up to inner automorphism, and
-the unambiguous datum is a genuine functor
-\[
-\rho:\C\longrightarrow B(\Inn K).
-\]
-The gerbe is the \emph{gerbe of lifts of $\rho$ through $\pi$} in~\eqref{eq:star}. Choose
-set-section lifts $T_f:=s(\rho_f)\in K$ for each operation $f$. Because both $T_gT_f$ and $T_{gf}$
-map to $\rho_g\rho_f=\rho_{gf}$ under $\pi$, their ratio lands in $\ker\pi=\Zc$:
-\begin{equation}\label{eq:defect}
-T_gT_f=\omega(g,f)\cdot T_{gf},\qquad \omega(g,f)\in\Zc.
-\tag{$\dagger$}
-\end{equation}
-Thus $\omega=\rho^*(\text{extension $2$-cocycle of }\eqref{eq:star})$ is a normalised
-$2$-cochain. Associativity of multiplication in $K$, together with the centrality of $\Zc$ (so
-every conjugation acts trivially on the values of $\omega$), gives the normalised $2$-cocycle
-identity
-\[
-\omega(h,g)\,\omega(hg,f)=\omega(g,f)\,\omega(h,gf),\qquad\text{i.e. } \delta\omega=0,
-\]
-whence $[\gerbe]:=\rho^*[\star]=[\omega]\in H^2(N(\C);\Zc)$. Changing the section $s$ replaces
-$\omega$ by a cohomologous cochain, so $[\gerbe]$ is well-defined.
-
-In both faces $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ and the rectification freedom is a $1$-cochain
-valued in $Z(\Aut F)$; the next section treats both uniformly.
-
-\section{\texorpdfstring{Rectification is the vanishing of $[\gerbe]$}{Rectification is the vanishing of the gerbe class}}\label{sec:A}
+\section{Rectification is the vanishing of $[\gerbe]$}\label{sec:A}
 
 \begin{theorem}[Theorem~A]\label{thm:A}
-A strict global inventory --- a strict functor $\C\to BK$ realising the gluing of
-Definition~\ref{def:tier2} --- exists if and only if $[\gerbe]=0$ in $H^2(N(\C);\Zc)$, where
-$\Zc=Z(\Aut F)$.
+With the band trivial, a global inventory --- a strict functor $\C\to BK$ lifting $\rho$ --- exists
+if and only if $[\gerbe]=0$ in $H^2(N(\C);\Zc)$, where $\Zc=Z(\Aut F)$.
 \end{theorem}
 
 \begin{proof}
-Re-choosing the local trivialisation at each operation $f$ multiplies the transition datum $T_f$
-by an element $c_f$ of the band $\Zc=Z(\Aut F)$. (In Face~2, $c_f\in\Zc$ moves the lift $T_f$
-within its $\Zc$-torsor of lifts of $\rho_f$; in Face~1, with $K$ abelian, $c_f\in K=\Zc$ rescales
-the abelian-gerbe transition directly.) A candidate strict inventory is therefore a $1$-cochain
-$c:\mathrm{Mor}\,\C\to\Zc$ producing new transitions $T'_f=c_f\cdot T_f$, and strictness is the
-demand that $T'_{gf}=T'_gT'_f$. Using~\eqref{eq:defect} and the centrality of each $c_f$,
+Re-choosing the lift at each operation $f$ multiplies $T_f$ by an element $c_f\in\Zc$ (it moves
+$T_f$ within its $\Zc$-torsor of lifts of $\rho_f$). A candidate global inventory is a $1$-cochain
+$c:\Mor\C\to\Zc$ producing new transitions $T'_f=c_f T_f$, and strictness is $T'_{gf}=T'_gT'_f$.
+Using~\eqref{eq:defect} and centrality,
 \[
-c_{gf}\,T_{gf}=T'_{gf}\overset{!}{=}T'_gT'_f=c_g c_f\,T_gT_f=c_g c_f\,\omega(g,f)\,T_{gf},
+c_{gf}\,T_{gf}=T'_{gf}\overset{!}{=}T'_gT'_f=c_gc_f\,T_gT_f=c_gc_f\,\gamma(g,f)\,T_{gf},
 \]
-which holds iff
-\[
-\omega(g,f)=c_{gf}\,c_g^{-1}\,c_f^{-1}=(\delta c^{-1})(g,f).
-\]
-Hence a strict global inventory exists iff $\omega$ is the coboundary of a $\Zc$-valued
-$1$-cochain on $N(\C)$, i.e.\ iff $[\gerbe]=[\omega]=0$ in $H^2(N(\C);\Zc)$. The computation uses
-only that each $c_f$ is central, so it is uniform across the two faces.
+which holds iff $\gamma(g,f)=c_{gf}\,c_g^{-1}c_f^{-1}=(\delta c^{-1})(g,f)$. Hence a global
+inventory exists iff $\gamma$ is a $\Zc$-coboundary, i.e.\ iff $[\gerbe]=[\gamma]=0$.
 \end{proof}
 
-This is the central-extension lifting criterion (Face~2) and the abelian-gerbe triviality
-criterion (Face~1), both specialised to $N(\C)$; Giraud and Breen are cited only to name the
-object, while the cocycle, its class, and the rectification algebra are derived above.
-
-\begin{remark}[Concrete check: $D_4$ and $Q_8$]\label{rem:d4q8}
-Take $\C=B((\Z/2)^2)$ and $K\in\{D_4,Q_8\}$, each with $Z(K)=\Z/2$, $\Inn K=(\Z/2)^2$, and
-$\rho=\id$ (the inner transport is the full inner group). A strict lift would be a splitting
-homomorphism $(\Z/2)^2\to K$ of~\eqref{eq:star}; none exists, since $K$ is nonabelian while
-$(\Z/2)^2$ is abelian. Correspondingly the section-cocycle $\omega$ of~\eqref{eq:defect} is not a
-coboundary, so $[\gerbe]\neq0$ and rectification fails --- exactly when the class is nonzero. Both
-the non-splitting and $[\gerbe]\neq0$ are confirmed by brute-force enumeration
-(\texttt{inventory\_gerbe\_h2.py}).
+\begin{remark}[This is the classical lifting criterion]\label{rem:classical}
+Theorem~\ref{thm:A} is \emph{not} new. It is the Schreier / Eilenberg--MacLane criterion for
+lifting a map into a quotient $\Inn K$ through a central extension~\eqref{eq:star}, here pulled back
+along $\rho$ and specialised to the simplicial site $N(\C)$: for small categories this is the
+extension theory of Ho~\cite{ho} and Wells~\cite{wells}, with the cohomological classification of
+Baues--Wirsching~\cite{bw}. We present it as a specialisation so read, not as a theorem of this
+note; the contribution is the \emph{reading} of $\rho$, $\Zc$, and $[\gerbe]$ as inventory transport,
+fibre centre, and rectification obstruction.
 \end{remark}
 
-\section{\texorpdfstring{$[\gerbe]$ is genuinely a degree-two datum}{The gerbe class is genuinely a degree-two datum}}\label{sec:B}
+\begin{remark}[Concrete check: $D_4$ and $Q_8$]\label{rem:d4q8}
+Take $\C=B((\Z/2)^2)$ and $K\in\{D_4,Q_8\}$, each with $\Zc=\Z/2$, $\Inn K=(\Z/2)^2$, and
+$\rho=\id$ (the inner transport is the full inner group). A strict lift would be a splitting
+homomorphism $(\Z/2)^2\to K$ of~\eqref{eq:star}; none exists, since $K$ is nonabelian while
+$(\Z/2)^2$ is abelian. Correspondingly the section-cocycle $\gamma$ of~\eqref{eq:defect} is not a
+coboundary, so $[\gerbe]\neq0$ and rectification fails. The non-splitting and $[\gerbe]\neq0$ are
+confirmed by brute-force enumeration over $\mathbb F_2$ (\texttt{inventory\_gerbe\_h2.py}; the
+reduced-nerve $H^2$ engine of the Lean witness file~\cite{leanwit}).
+\end{remark}
+
+\section{The band, and the staged obstruction}\label{sec:band}
+
+The earlier version hypothesised the band away. We now settle it, following Giraud's three-stage
+factorisation over the simplicial site $N(\C)$. This is the program's first genuinely
+\emph{nonabelian} content: the band lives in $H^1$ with the nonabelian coefficient \emph{group}
+$\Out K$.
+
+\begin{definition}[Band]
+The \emph{band} (lien) of the inventory gerbe is the outer reduction of the relabelling transport,
+\[
+\rho_{\mathrm{out}}:=q\circ\alpha:\Mor\C\longrightarrow\Out K,
+\]
+where $\alpha:\Mor\C\to\Aut K$ is the transport (functorial up to inner) and $q$ is as
+in~\eqref{eq:tower}. Its class is $\beta:=[\rho_{\mathrm{out}}]\in H^1(N(\C);\Out K)$.
+\end{definition}
+
+\begin{lemma}[The band is always a strict cocycle]\label{lem:band0}
+$\rho_{\mathrm{out}}$ is a genuine functor $\C\to B(\Out K)$, so $\beta$ is well-defined
+regardless of the up-to-inner slack in $\alpha$.
+\end{lemma}
+
+\begin{proof}
+Write $\alpha_{gf}=\iota\cdot\alpha_g\alpha_f$ with $\iota\in\Inn K=\ker q$. Apply $q$:
+$\rho_{\mathrm{out}}(gf)=q(\iota)\,q(\alpha_g)q(\alpha_f)=\rho_{\mathrm{out}}(g)\rho_{\mathrm{out}}(f)$,
+since $q(\iota)=e$. Normalisation is immediate; the inner slack dies in $\Out K$.
+\end{proof}
+
+\begin{theorem}[Band-triviality criterion; Theorem~(a)]\label{thm:band}
+$\beta=0\in H^1(N(\C);\Out K)$ if and only if the transport $\alpha$ is, up to an
+$\Out K$-relabelling of objects, inner-valued: iff there is a cocycle
+$\tilde\alpha:\C\to B(\Aut K)$, cohomologous to $\alpha$ via an $\Aut K$-valued object relabelling,
+with $\tilde\alpha(f)\in\Inn K$ for every $f$. In particular, if $\alpha$ already lands in $\Inn K$
+then $\beta=0$; this is the literal ``trivial band'', and the theorem says $\beta=0$ is its
+gauge-invariant closure.
+\end{theorem}
+
+\begin{proof}
+($\Leftarrow$) Let $\tilde\alpha=\mu\cdot\alpha$ with $\mu:\Ob\C\to\Aut K$ and
+$\tilde\alpha(f)\in\Inn K=\ker q$ for all $f$. Set $\lambda:=q\circ\mu:\Ob\C\to\Out K$. For
+$f:x\to y$,
+\[
+\rho_{\mathrm{out}}(f)=q(\alpha(f))=q\big(\mu(y)^{-1}\tilde\alpha(f)\mu(x)\big)
+=\lambda(y)^{-1}\,q(\tilde\alpha(f))\,\lambda(x)=\lambda(y)^{-1}\lambda(x),
+\]
+so $\lambda$ trivialises $\rho_{\mathrm{out}}$ and $\beta=0$.
+
+($\Rightarrow$) If $\beta=0$ there is $\lambda:\Ob\C\to\Out K$ with
+$\rho_{\mathrm{out}}(f)=\lambda(y)^{-1}\lambda(x)$. As $q$ is surjective, choose lifts
+$\mu(x)\in\Aut K$ with $q(\mu(x))=\lambda(x)$, and set $\tilde\alpha(f):=\mu(y)\alpha(f)\mu(x)^{-1}$.
+Then $q(\tilde\alpha(f))=\lambda(y)\rho_{\mathrm{out}}(f)\lambda(x)^{-1}=e$, so
+$\tilde\alpha(f)\in\Inn K$; and $\tilde\alpha$ is a cocycle cohomologous to $\alpha$ via $\mu$.
+\end{proof}
+
+This is Giraud stratum $2$ specialised to $N(\C)$: the band vanishes exactly when the transport is
+inner-valued up to coboundary. The proof is elementary and Schreier-style, using only the
+tower~\eqref{eq:tower} and the nerve's $H^1$. For $K=D_4$ ($\Aut=D_4$ of order $8$,
+$\Inn=(\Z/2)^2$, $\Out=\Z/2$ --- both parts nontrivial) over $\C=B(\Z)$ the criterion holds for all
+$8$ automorphisms (\texttt{scratch/clause\_a\_D4\_check.py}).
+
+\begin{corollary}[The full obstruction is staged; Corollary~(a$'$)]\label{cor:aprime}
+A global inventory exists if and only if \emph{both} \textup{(i)} $\beta=0$ (band trivial,
+Theorem~\ref{thm:band}) and \textup{(ii)} $[\gerbe]=0\in H^2(N(\C);\Zc)$ (the gerbe class, defined
+once (i) holds). The obstruction is genuinely staged: $[\gerbe]$ is defined only after $\beta=0$,
+otherwise the stratum-$3$ coefficients are $\beta$-twisted. Thus Theorem~\ref{thm:A} is exactly the
+band-trivial stratum, and Theorem~\ref{thm:band} supplies the prior stratum.
+\end{corollary}
+
+\begin{proof}
+A global inventory is a relabelling $\mu:\Ob\C\to\Aut K$ trivialising $\alpha$ outright; projecting
+by $q$ it trivialises $\rho_{\mathrm{out}}$, forcing $\beta=0$, so (i) is necessary. Given (i),
+Theorem~\ref{thm:band} makes $\alpha$ inner-valued, $\alpha=\mathrm{conj}\circ\rho$ for
+$\rho:\C\to B(\Inn K)$; the gerbe is then the gerbe of lifts of $\rho$, neutral iff $[\gerbe]=0$ by
+Theorem~\ref{thm:A}. So (i)$\wedge$(ii) is necessary and sufficient.
+\end{proof}
+
+\begin{remark}[The band is where the nonabelian content lives]\label{rem:band-nonabelian}
+The band is the first obstruction in the program with a \emph{nonabelian coefficient group}
+$\Out(\Aut F)$. This is an honest structural statement --- genuinely different in kind from the
+abelian $H^2$ classes --- and it is what the earlier ``distinguished by its coefficient system''
+slogan should have said (that slogan was false for $[\gerbe]$ versus $[\omega]$;
+Theorem~\ref{thm:C}). A nontrivial-band witness, with a clean separation of the two strata:
+\end{remark}
+
+\begin{proposition}[A nonvacuous band; Proposition~(c)]\label{prop:bandwitness}
+Let $K=(\Z/p)^2$ (abelian gauge group of stock) and $\C=B(\Z)$ (one reversible/cyclic operation).
+For abelian $K$, $\Inn K=1$ and $\Out K=\Aut K=\GL_2(\mathbb F_p)$, so the band sees the entire
+transport: $\rho_{\mathrm{out}}=\alpha$. Set $\alpha(t):=A$ for some $A\ne I$. Then
+\[
+H^1(N(B(\Z));\Out K)=\{\text{conjugacy classes of }\GL_2(\mathbb F_p)\},\qquad \beta=[A]\neq0.
+\]
+Moreover the strata separate cleanly: since $N(B(\Z))\simeq S^1$ is $1$-dimensional,
+$H^2(N(\C);\Zc)=0$, so the gerbe class is \emph{forced} to zero while the band is the sole, nonzero
+obstruction --- living in nonabelian $H^1$ with coefficients $\GL_2(\mathbb F_p)$, prior to and
+independent of any $H^2$ story.
+\end{proposition}
+
+\begin{proof}
+$N(B(\Z))\simeq S^1$; a cocycle is determined by $\rho_{\mathrm{out}}(t)=A$ and object-relabelling
+by $g\in\Out K$ sends $A\mapsto gAg^{-1}$, so $H^1=\{\text{conjugacy classes}\}$ and $\beta=0$ iff
+$A=I$. For $p=2$, $\GL_2(\mathbb F_2)\cong S_3$; the transvection
+$A=\left(\begin{smallmatrix}1&1\\0&1\end{smallmatrix}\right)\ne I$ gives $\beta\ne0$. Clean
+separation: $H^2(S^1;-)=0$ for any coefficients
+(\texttt{scratch/band\_boundary\_verify.py}).
+\end{proof}
+
+\paragraph{Interpretation.}
+Stock is defined up to a $(\Z/p)^2$-gauge (say two independent mod-$p$ ledger offsets); a cyclic
+refurbishment process $t$ relabels the gauge by a fixed $\GL_2(\mathbb F_p)$ element $A$. If
+$A\ne I$, no global choice of gauge is consistent around the loop --- a \emph{band} obstruction, an
+outer twist of the structure group, strictly prior to the degree-two gerbe class. Fungibility can
+never produce it (Theorem~\ref{thm:D}); gauge-structured stock does, minimally. Activating both
+strata at once needs a base with $H^2\ne0$ and a nontrivial outer transport (e.g.\ $\C=B(\Z^2)$,
+$N\simeq T^2$); the twisted coupling of band to centre on such a base is the natural follow-up and
+is \emph{not} treated here (Section~\ref{sec:conclusion}).
+
+\section{$[\gerbe]$ is genuinely a degree-two datum}\label{sec:B}
 
 \begin{theorem}[Theorem~B]\label{thm:B}
-\emph{(i)} If $N(\C)$ is homotopy $1$-truncated --- in particular if $\C$ is the free category on
-a directed acyclic quiver (a tree-like or DAG supply chain) --- then $H^2(N(\C);\Zc)=0$, so
-$[\gerbe]=0$ for every fibre $F$. \emph{(ii)} There is a minimal one-node witness, $\C=B(\Z/2)$
-with $K=\Z/2$, for which $[\gerbe]\neq0$.
+\emph{(i)} If $|N(\C)|$ is homotopy equivalent to a $1$-dimensional complex --- in particular if
+$\C$ is the free category on a quiver (a tree-like or DAG supply chain) --- then
+$H^{\ge2}(N(\C);\Zc)=0$, so $[\gerbe]=0$ for every fibre $F$. \emph{(ii)} There is a minimal
+one-node witness, $\C=B(\Z/2)$ with the fibre a four-lot ring ($K=\Aut F=D_4$), for which
+$[\gerbe]\neq0$.
 \end{theorem}
 
 \begin{proof}[Proof of (i)]
-The classifying space of the free category $F(Q)$ on a quiver $Q$ is homotopy equivalent to
-$|Q|$, a $1$-complex (no relations means no higher cells up to homotopy), so
-$H^{\geq2}(N(F(Q));\Zc)=0$. It is worth seeing this directly on the reconvergent \emph{diamond}
-$a\rightrightarrows\{b,c\}\rightrightarrows d$ --- the paradigmatic two-route chain --- because
-its nerve is \emph{not} literally $1$-dimensional: it carries two nondegenerate $2$-simplices,
-the composites $p;r$ and $q;s$ of the two routes. A direct simplicial computation over
-$\mathbb{F}_2$ (\texttt{diamond\_nerve\_H2.py}) gives chain dimensions $(C^0,C^1,C^2)=(4,6,2)$,
-boundary ranks $\mathrm{rk}\,d^0=3$ and $\mathrm{rk}\,d^1=2$, and hence
+If $|N(\C)|\simeq X$ with $X$ a $1$-dimensional CW complex, then $H^{\ge2}(N(\C);\Zc)=H^{\ge2}(X;\Zc)
+=0$. For the free category $F(Q)$ on a quiver $Q$, $|N(F(Q))|\simeq|Q|$, a graph; hence
+$H^{\ge2}=0$. It is worth seeing this directly on the reconvergent \emph{diamond}
+$a\rightrightarrows\{b,c\}\rightrightarrows d$ --- the paradigmatic two-route chain --- whose nerve
+is \emph{not} literally $1$-dimensional: it carries two nondegenerate $2$-simplices, the composites
+$p;r$ and $q;s$ of the two routes, yet $|N|$ is still homotopy equivalent to a graph. A direct
+simplicial computation over $\mathbb F_2$ (\texttt{diamond\_nerve\_H2.py}) gives chain dimensions
+$(C^0,C^1,C^2)=(4,6,2)$, boundary ranks $\mathrm{rk}\,d^0=3$, $\mathrm{rk}\,d^1=2$, and hence
 \[
 H^0=1,\qquad H^1=1,\qquad H^2=0,\qquad \chi=4-6+2=0.
 \]
-The lone $H^1$ is precisely the tier-one reconvergence loop $[\theta_R]$; $H^2=0$ says there is
-\emph{no gerbe on a DAG}, even one with genuine $2$-simplices.
+The lone $H^1$ is the tier-one reconvergence loop $[\theta_R]$; $H^2=0$ says there is no gerbe on a
+DAG, even one with genuine $2$-simplices.
 \end{proof}
 
 \begin{proof}[Proof of (ii)]
-For $G=\Z/2$ and coefficients $\Z/2$ one has $H^n(\Z/2;\Z/2)=\Z/2$ for all $n\geq0$
-(\texttt{inventory\_gerbe\_h2.py}); in particular $H^2(\Z/2;\Z/2)=\Z/2\neq0$. The nonzero class
-is the extension $1\to\Z/2\to\Z/4\to\Z/2\to1$. Concretely, a reversible two-lot swap $g$ (with
-$g^2=\id$ in $\C$) has a relabelling transport $T_g$ that cannot be chosen to satisfy
-$T_g^2=\id$ strictly: rescaling $T_g$ by $a\in\Z/2$ changes $T_g^2$ by $2a=0$, so the
-``square-root ambiguity'' cannot be absorbed --- one would need $\Z/4$ to lift. Hence
+The fibre is four lots arranged in a ring (the $4$-cycle); its relabelling group is the dihedral
+group $K=\Aut F=D_4$ of order $8$, with centre $\Zc=\{1,r^2\}\cong\Z/2$ (the half-turn) and inner
+group $\Inn K=(\Z/2)^2$. Let $\C=B(\Z/2)$, with reversible operation $g$ ($g^2=\id$). Choose the
+inner transport $\rho:B(\Z/2)\to B(\Inn K)$ sending $g$ to $[r]\in\Inn K$ (the class of the
+rotation; $[r]$ has order $2$ since $r^2\in\Zc$). Take the set-section lift $T_g:=r$ and
+$T_{\id}:=e$. Then~\eqref{eq:defect} gives
+\[
+\gamma(g,g)=T_gT_g\,T_{g^2}^{-1}=r^2\,T_{\id}^{-1}=r^2\neq1\in\Zc.
+\]
+Every normalised $1$-cochain $c:\Mor\C\to\Zc$ has $(\delta c)(g,g)=c_{g^2}c_g^{-1}c_g^{-1}=c_g^{-2}
+=1$ (as $\Zc=\Z/2$ and $g^2=\id$), so $\gamma$ is \emph{not} a coboundary and $[\gerbe]$ is the
+generator of $H^2(\Z/2;\Z/2)=\Z/2$. The band is trivial here ($\rho$ is inner-valued, so
+$\beta=0$), and \texttt{inventory\_gerbe\_h2.py} / the Lean witness~\cite{leanwit} confirm
 $[\gerbe]\neq0$.
 \end{proof}
 
+\begin{remark}[Why not $K=\Z/2$ --- homotopy $1$-truncatedness is not enough]\label{rem:truncated}
+The earlier version used the \emph{abelian} fibre $K=\Z/2$ on $B(\Z/2)$ and claimed $[\gerbe]$ was
+the generator of $H^2(\Z/2;\Z/2)$. This is wrong twice over. First, an abelian fibre carries
+$[\gerbe]=0$ by Remark~\ref{rem:kinvariant} ($\Inn K=1$, $\rho$ trivial, no lifting gerbe): the
+group $H^2(\Z/2;\Z/2)=\Z/2$ is nonzero, but the \emph{inventory class} in it is zero. Second, the
+earlier degree-genuineness hypothesis ``$N(\C)$ homotopy $1$-truncated'' is itself refuted by this
+very space: $B(\Z/2)=K(\Z/2,1)$ \emph{is} $1$-truncated, yet $H^2(\Z/2;\Z/2)\ne0$. The correct
+hypothesis in (i) is homotopy \emph{$1$-dimensionality}. The genuine minimal witness is the
+nonabelian $D_4$ of (ii).
+\end{remark}
+
 Thus $[\gerbe]$ lives at cohomological degree $2$ (nerve level $N_3$), vanishing on every
-acyclic chain yet already nonzero on a single reversible two-lot loop. For the record, the
-richer witness $H^2((\Z/2)^2;\Z/2)=\mathbb{F}_2^3$ shows that $(\Z/2)^2$ carries three
-independent $\Z/2$-gerbes --- the $D_4$, $Q_8$, and $\Z/4\times\Z/2$ classes --- of which the
-first two were used in Remark~\ref{rem:d4q8}.
+$1$-dimensional chain yet already nonzero on a single reversible loop carrying a nonabelian fibre.
+For the record, $H^2((\Z/2)^2;\Z/2)=\mathbb F_2^3$: $(\Z/2)^2$ hosts three independent
+$\Z/2$-gerbes --- the $D_4$ and $Q_8$ classes and the $\Z/4\times\Z/2$ class --- of which the first
+were used in Remark~\ref{rem:d4q8}. (As quadratic forms on $(\Z/2)^2$ there is a single $Q_8$ class
+$x^2+xy+y^2$ and three $D_4$ classes; a choice of three representatives spanning $\mathbb F_2^3$ is
+$x^2,\ x^2+xy,\ x^2+xy+y^2$~\cite{leanwit}.)
 
 \section{Independence from the Zappa--Sz\'ep weld}\label{sec:C}
 
 \begin{theorem}[Theorem~C]\label{thm:C}
-$[\gerbe]\in H^2(N(\C);Z(\Aut F))$ and the Zappa--Sz\'ep weld $[\omega]\in H^2(\Sk_\C;\Dfr)$ are
-logically independent: neither vanishing implies the other. They are classes of the same degree
-over different coefficient systems --- the inventory-fibre centre $Z(\Aut F)$ versus the weld
-vertex-group presheaf $\Dfr$ --- so, unlike the tier-one $H^1$ versus $H^2$ separation, the
-distinction is not by degree but by coefficients, and must be checked by witnesses.
+Over the family of pairs (inventory datum, weld datum) on a fixed category $\C$, the gerbe class
+$[\gerbe]\in H^2(N(\C);\Zc)$ and the Zappa--Sz\'ep weld $[\omega]\in H^2(\Sk_\C;\Dfr)$ are logically
+independent: all four vanishing patterns occur, including $[\gerbe]=[\omega]\neq0$. The mechanism is
+a difference of \emph{input data}, not of coefficients: $[\gerbe]$ depends on the inventory fibre
+$F$, which is external to $\C$, while $[\omega]$ depends only on $\C$ and a candidate factorisation.
+\end{theorem}
+
+The quantifier matters, and the earlier ``different coefficient systems'' explanation was false, so
+we state the mechanism carefully before proving it. On \emph{some} categories the two classes live
+in \emph{different} groups (different sites, different coefficients); on others --- notably
+$\C=B(\Z/2)$ --- they live in the \emph{same} group $H^2(\Z/2;\Z/2)=\Z/2$ and can be equal. Equal
+coefficients therefore cannot be what makes them independent. What makes them independent is that
+they are functions of \emph{different arguments}: fixing $\C$ and varying the inventory fibre moves
+$[\gerbe]$ while leaving $[\omega]$ fixed, and varying the factorisation datum moves $[\omega]$ while
+leaving $[\gerbe]$ fixed. We exhibit this on a single $\C$.
+
+\begin{proof}
+Work on $\C=B(\Z/2)$, where both classes can live in $H^2(\Z/2;\Z/2)=\Z/2$. The inventory datum is
+a fibre $F$; take $F\in\{D_4\text{-ring},\ \mathrm{pt}\}$, giving $[\gerbe]\neq0$
+(Theorem~\ref{thm:B}(ii)) resp.\ $[\gerbe]=0$ ($\Aut F=1$). The weld datum is a candidate
+Zappa--Sz\'ep factorisation of $\C$; take the re-entrant weld of~\cite{orch}, whose class
+$[\omega]=\varepsilon$ is the generator of $H^2(\Z/2;\Z/2)$, resp.\ the trivial factorisation
+$\Dfr=0$ with $[\omega]=0$. These two binary choices are independent --- one is a function of $F$,
+the other of the factorisation --- so all four combinations are realised:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+on $\C=B(\Z/2)$ & weld $=$ trivial ($[\omega]=0$) & weld $=$ re-entrant ($[\omega]\neq0$)\\
+\midrule
+fibre $=\mathrm{pt}$ ($[\gerbe]=0$) & $(0,0)$ & $(0,\neq0)$\\
+fibre $=D_4$-ring ($[\gerbe]\neq0$) & $(\neq0,0)$ & $(\neq0,\neq0),\ [\gerbe]=[\omega]$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+In the bottom-right cell the two classes are \emph{equal} (both the generator of the same group),
+yet they remain independent as functions: perturbing the fibre to $\mathrm{pt}$ kills $[\gerbe]$
+without touching $[\omega]$, and vice versa. Hence neither vanishing implies the other.
+\end{proof}
+
+\begin{remark}[Not a coefficient discriminator]\label{rem:no-discriminator}
+The earlier claim that ``the coefficient system is the only discriminator'' and that ``there is no
+natural map comparing $H^2(N(\C);\Zc)$ with $H^2(\Sk_\C;\Dfr)$'' is withdrawn: on $B(\Z/2)$ the two
+\emph{are} the same group, with the same normalised cocycles, and the comparison map is the
+identity. The honest statement is the input-data one above. This is why, within the program, we
+describe $[\gerbe]$ as distinguished by its \emph{input datum} (the inventory fibre) and not by a
+coefficient-system discriminator.
+\end{remark}
+
+\begin{remark}[Relation to tier one needs witnesses, not a degree count]\label{rem:tier1}
+It is tempting to argue that the tier-one class $[\theta_R]\in H^1$ and the tier-two class
+$[\gerbe]\in H^2$ are ``immediately independent because they differ in degree''. That inference is
+invalid: classes of different degree can be functionally dependent (Bocksteins, cup squares, and
+$d_3$-type differentials all link classes across degrees). Independence of $[\theta_R]$ and
+$[\gerbe]$ must be established by witnesses, exactly as for Theorem~\ref{thm:C}. The full inventory
+obstruction is a two-tier filtration with associated graded $H^1(N(\C);R)$ (counts) and
+$H^2(N(\C);\Zc)$ (relabellings); whether the tiers split or form a Postnikov-type extension (a
+$d_3$ coupling $H^1\to H^3$) is not determined here (Section~\ref{sec:conclusion}).
+\end{remark}
+
+\section{When the gerbe is nonvacuous, and fungibility is doubly vacuous}\label{sec:D}
+
+A nonzero gerbe class is a genuine --- and slightly surprising --- constraint on \emph{which}
+fibres carry a tier-two obstruction, and the band adds a parallel constraint. Together they make
+plain fungibility invisible to both.
+
+\begin{theorem}[Theorem~D]\label{thm:D}
+\emph{(i)} $[\gerbe]$ can be nonzero only if $K=\Aut F$ is \emph{nonabelian with nontrivial centre}:
+$\Inn K\neq1$ (so $\rho$ can be nontrivial) and $\Zc\neq1$ (so the coefficients are nonzero). The
+minimal such $K$ are $D_4$ and $Q_8$. \emph{(ii)} For $F$ a bare $n$-element set of indistinguishable
+lots, $\Aut F=S_n$: fungible stock carries \emph{neither} stratum for all $n\ge3,\ n\ne6$, since
+$S_n$ is centreless ($\Zc=1\Rightarrow[\gerbe]=0$) and complete ($\Out S_n=1\Rightarrow\beta=0$).
+The low-order exceptions are disjoint: $n=6$ is the lone band exception ($\Out S_6=\Z/2$) and $n=2$
+the lone centre case ($S_2=\Z/2$) --- but $S_2$ is abelian, so even there $[\gerbe]=0$ by (i).
 \end{theorem}
 
 \begin{proof}
-The weld $[\omega]$ is determined by $\C$ alone: it obstructs the closing of a Zappa--Sz\'ep
-transversal, i.e.\ whether $\C$ factors as procurement $\bowtiemap$ logistics~\cite{gobstr,orch}.
-The gerbe $[\gerbe]$ depends on the inventory fibre $F$, which is data \emph{external} to $\C$.
-For any fixed $\C$: choosing $F=\mathrm{pt}$ (so $\Aut F=1$, strict inventory) forces $[\gerbe]=0$
-whatever $[\omega]$ is; choosing $\C=B(\Z/2)$ with $\Aut F=\Z/2$ forces $[\gerbe]\neq0$
-(Theorem~\ref{thm:B}) regardless of the weld. Since the two classes obstruct different data, no
-implication holds. We make both directions explicit.
-
-\emph{Witness $W_1'$ ($[\gerbe]\neq0,\ [\omega]=0$).} Let $\C=B(\Z/2)$, one reversible operation,
-with the trivial Zappa--Sz\'ep factorisation $\Dfr=0$, forcing $[\omega]\in H^2(\Sk_\C;0)=0$. Take
-inventory relabelling $K=\Z/2$; then $[\gerbe]$ is the generator of $H^2(\Z/2;\Z/2)=\Z/2\neq0$
-(Theorem~\ref{thm:B}). The chain carries a non-rectifiable relabelling gerbe but no weld structure
-at all.
-
-\emph{Witness $W_2'$ ($[\gerbe]=0,\ [\omega]\neq0$).} Let $\Sk_\C=(a\to x\rightrightarrows y)$ be
-the rigid-twist skeleton with $\Dfr=\Z/2$ and $[\omega]$ the generator of
-$H^2(\Sk_\C;\Z/2)=\Z/2\neq0$~\cite{gobstr}, equipped with strict inventory ($F=\mathrm{pt}$,
-$\Aut F=1$), so $[\gerbe]=0$. The chain fails to factor, yet its (trivial-relabelling) inventory
-rectifies vacuously.
+(i) If $K$ is abelian then $\Inn K=1$, $\rho$ is trivial, and the gerbe of lifts is trivial, so
+$[\gerbe]=0$ (Remark~\ref{rem:kinvariant}). If $\Zc=1$ then $H^2(N(\C);\Zc)=0$, so $[\gerbe]=0$. Thus
+a nonzero class requires both $\Inn K\ne1$ and $\Zc\ne1$, i.e.\ $K$ nonabelian with nontrivial
+centre; the smallest are $D_4,Q_8$ (order $8$). (ii) $S_n$ is complete for $n\ne2,6$
+(centreless with all automorphisms inner, so $\Out=1$) and $\Out S_6=\Z/2$ (Rotman~\cite{rotman},
+Thms.\ 7.5--7.7); $\Zc(S_n)=1$ for $n\ge3$, $=\Z/2$ for $n=2$, $=1$ for $n\le1$. Feed these into
+(i) and Theorem~\ref{thm:band}. For $n=2$, $S_2=\Z/2$ is abelian, so although the \emph{group}
+$H^2(\Z/2;\Z/2)$ is the home of a nonzero class, the \emph{inventory} class is $0$ by (i). The
+exceptional values $n\in\{2,6\}$ are distinct and each triggers at most one stratum's coefficient
+group, as tabulated (\texttt{scratch/band\_boundary\_verify.py}, \texttt{out\_s6.py}).
 \end{proof}
 
-The coefficient systems genuinely differ: in $W_1'$ the weld coefficient $\Dfr=0$ while the gerbe
-coefficient $Z(\Aut F)=\Z/2\neq0$. There is no natural map comparing $H^2(N(\C);Z(\Aut F))$ with
-$H^2(\Sk_\C;\Dfr)$, let alone an identification --- the same ``rhyme, not identity'' trap as for
-the two distinct $[\omega]$-sites studied earlier~\cite{twosites}, but now with \emph{matching}
-degree, so the coefficient system is the only discriminator and must be examined.
-
-\begin{remark}[Relation to tier one]\label{rem:tier1}
-The tier-one class $[\theta_R]\in H^1$ and the tier-two class $[\gerbe]\in H^2$ differ in degree,
-hence are immediately independent. The full inventory obstruction is the two-tier filtration with
-associated graded $H^1(N(\C);R)$ (counts) and $H^2(N(\C);Z(\Aut F))$ (relabellings), with
-$[\omega]\in H^2(\Sk_\C;\Dfr)$ a separate structural precondition. Whether the two tiers combine
-as a split sum or a nontrivial extension (a $d_3$-type coupling $H^1\to H^3$) is not determined
-here; see Section~\ref{sec:conclusion}.
-\end{remark}
-
-\section{When the gerbe is nonvacuous}\label{sec:D}
-
-A gerbe needs nonzero centre. This is a genuine --- and slightly surprising --- constraint on
-\emph{which} fibres carry a tier-two obstruction.
-
-\begin{proposition}[Proposition~D]\label{prop:D}
-$[\gerbe]$ can be nonzero only if $Z(\Aut F)\neq1$. In particular, for $F$ a bare $n$-element set
-of indistinguishable lots, $\Aut(F)=S_n$ with
-\[
-Z(S_n)=1\ (n\geq3),\qquad Z(S_2)=\Z/2,\qquad Z(S_n)=1\ (n\leq1),
-\]
-so the tier-two gerbe is vacuous (always $[\gerbe]=0$) for $n\geq3$ fungible lots and nonvacuous
-only for $n=2$.
-\end{proposition}
-
-\begin{proof}
-By Lemma~\ref{lem:band} the coefficients are $Z(\Aut F)$, and $H^2(N(\C);1)=0$, so $[\gerbe]=0$
-whenever $Z(\Aut F)=1$. The centre table for $S_n$ ($n\leq5$) is confirmed by direct computation
-(\texttt{inventory\_gerbe\_h2.py}); $Z(S_n)=1$ for $n\geq3$ is classical.
-\end{proof}
-
-So a nontrivial relabelling gerbe requires either \emph{exactly two} fungible lots, or a
-\emph{structured} fibre whose automorphism group has a centre: e.g.\ $F$ a $K$-\emph{torsor}
-(stock defined up to a gauge group $K$, automorphisms acting by translation, centre $Z(K)$ ---
-this is exactly the torsor-valued inventory the companion note anticipated), or graded/typed lots
-with central symmetries (e.g.\ $\Aut F=\mathrm{GL}_k$, centre the scalars). The interpretation is
-economic: generic fungibility of $\geq3$ interchangeable units creates \emph{no} degree-two
-obstruction --- any relabelling ambiguity is absorbed by inner reparametrisation, because $S_n$
-is centreless --- while two-fold or gauge/torsor-structured ambiguity does. The tier-two case
-that matters for applications is therefore gauge-valued stock (allocation up to a group action),
-not plain fungibility.
+\paragraph{The applications boundary is sharp.}
+The nonabelian inventory phenomenon is \emph{invisible to fungibility}: $\ge3$ interchangeable units
+create no degree-two relabelling obstruction ($S_n$ centreless) and no band obstruction ($S_n$
+complete), except the isolated $S_6$ curiosity. Both nontrivial strata require
+\emph{gauge/torsor-structured} stock --- a fibre whose automorphism group is nonabelian with
+nontrivial centre (tier-2) or nontrivial outer group (band). This is the economically meaningful
+regime: allocation defined up to a gauge group $K$ (so $\Aut F=K$ acts by translation, $\Zc=Z(K)$,
+$\Out$ measuring how the process twists the gauge), not plain interchangeability. The grant headline
+is exactly this: \emph{fungible inventory carries no nonabelian obstruction; the phenomenon needs
+structured assets, not commodities.}
 
 \section{Scope, open problem, and the two-tier bottom line}\label{sec:conclusion}
 
-Refining inventory comparison from \emph{equality of counts} to \emph{isomorphism of
-stock-states} raises the consistency obstruction by exactly one categorical level: from the
-degree-one count-discrepancy class $[\theta_R]\in H^1(N(\C);R)$ to a degree-two gerbe class
-$[\gerbe]\in H^2(N(\C);Z(\Aut F))$. A strict global inventory exists iff $[\gerbe]=0$
-(Theorem~\ref{thm:A}); $[\gerbe]$ is genuinely degree-two, vanishing on every DAG or tree chain
-but nonzero already on a single reversible two-lot loop $B(\Z/2)$ (Theorem~\ref{thm:B}); it is
-independent of the Zappa--Sz\'ep weld $[\omega]$, with which it shares a degree but not a
-coefficient system (Theorem~\ref{thm:C}); and it is nonvacuous exactly when $Z(\Aut F)\neq1$ ---
-two fungible lots or gauge/torsor-structured stock, not generic $\geq3$-fold fungibility
-(Proposition~\ref{prop:D}). Inventory consistency is thus a two-tier theory: \textbf{$H^1$ counts,
-$H^2$ relabellings}, over a structural precondition $[\omega]$. Within the container program this
-is the fourth distinct $H^2$ home on $\mathrm{DCont}\simeq\Cat$, after Zappa--Sz\'ep holonomy,
-Ferri prunability, and the Baues--Wirsching class --- the first to be distinguished by its
-coefficient system rather than its site.
+Refining inventory comparison from \emph{equality of counts} to \emph{isomorphism of stock-states}
+raises the consistency obstruction by exactly one categorical level, through a staged obstruction.
+A global inventory exists iff the band $\beta\in H^1(N(\C);\Out(\Aut F))$ vanishes \emph{and} then
+the gerbe class $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ vanishes (Corollary~\ref{cor:aprime}),
+the latter being the classical Schreier / Eilenberg--MacLane central-extension lifting criterion
+read as inventory rectification (Theorem~\ref{thm:A}, Remark~\ref{rem:classical}). The gerbe class
+is genuinely degree-two, vanishing on every $1$-dimensional chain but nonzero already on a single
+reversible loop $B(\Z/2)$ carrying a nonabelian four-lot ring $D_4$ (Theorem~\ref{thm:B}); it is
+independent of the weld $[\omega]$ by a difference of \emph{input data}, not coefficients --- the
+two can even coincide on $B(\Z/2)$ (Theorem~\ref{thm:C}); and both strata are invisible to plain
+fungibility, requiring gauge/torsor-structured stock (Theorem~\ref{thm:D}). Within the container
+program this is the fourth distinct $H^2$ home on $\mathrm{DCont}\simeq\Cat$, after Zappa--Sz\'ep
+holonomy, Ferri prunability, and the Baues--Wirsching class --- distinguished by its \emph{input
+datum}.
 
-\paragraph{Scope hypotheses (stated honestly).}
-Two hypotheses bound the result.
-\begin{enumerate}
-\item \emph{Trivial band} (Definition~\ref{def:scope}): the same fibre $F$ and relabelling group
-$K$ at every node, with the outer action trivialised. The computations above all live under this
-hypothesis.
-\item $[\gerbe]$ is the \emph{rectification} obstruction --- the existence of a strict global
-section. Classifying all tier-two inventories up to equivalence (not merely their existence) is
-Giraud's full nonabelian $H^2$, a torsor over $H^2(N(\C);\Zc)$ once nonempty; that is not treated
-here.
-\end{enumerate}
-
-\paragraph{The open problem (not claimed).}
-A \emph{nontrivial outer band} --- different fibres or a nontrivial $\C$-action on $K$ --- twists
-the coefficients to a local system $Z_\rho$ and introduces a \emph{prior} Giraud band obstruction,
-a genuinely nonabelian $H^2$ class whose vanishing is necessary before the abelian rectification
-class $[\gerbe]$ is even defined. We do not have this band obstruction; determining it for
-directed-container supply chains with heterogeneous fibres is left open. Relatedly (see
-Remark~\ref{rem:tier1}), the coupling between tiers one and two --- whether they split or form a
-Postnikov-type extension via a $d_3$ map $H^1\to H^3$ --- is stated as a filtration but not
-computed; a bar-complex oracle for the composite nerve $B(\Z/2)$ glued to the diamond is the
-natural next verification.
+\paragraph{The honest open problem.}
+Proposition~\ref{prop:bandwitness} witnesses a nonvacuous band but does \emph{not} classify
+nontrivial-band gerbes; that is Giraud's full nonabelian machinery (the torsor over the twisted
+$H^2(N(\C);\Zc)_\beta$), out of scope here. The natural next target is the \emph{coupled} stratum,
+where band and centre interact: a base with $H^2\ne0$ and a nontrivial outer transport, e.g.\
+$\C=B(\Z^2)$ ($N\simeq T^2$) with $K=(\Z/p)^2$ and a commuting outer pair $(A,B)$, computing the
+twisted differential $d_2$ coupling $\beta$ to the centre class. We do not have this; it is
+recorded as the PROVE/LEAN follow-up (a bar-complex oracle on $T^2$). Relatedly
+(Remark~\ref{rem:tier1}), the coupling between tiers one and two --- split or Postnikov extension ---
+is stated as a filtration but not computed.
 
 \paragraph{For the grant.}
 The worked economic example to develop is the torsor-fibre case $\Aut F=K$ acting on itself, with
-$Z(\Aut F)=Z(K)$ --- gauge-valued allocation, where stock is defined only up to a group action
-and the tier-two obstruction has real content. This is the applications payoff of
-Proposition~\ref{prop:D}: the economically relevant non-rectifiable inventory is not the
-many-interchangeable-units case but the gauge-structured one.
+$\Zc=Z(K)$ --- gauge-valued allocation, where stock is defined only up to a group action and the
+tier-two obstruction has real content. The applications payoff of Theorem~\ref{thm:D} is that the
+economically relevant non-rectifiable inventory is not the many-interchangeable-units case but the
+gauge-structured one; and the band supplies a strictly prior, genuinely nonabelian invariant of the
+same situation.
 
 \begin{thebibliography}{99}
 
@@ -586,6 +791,12 @@ MacBeth,
 \emph{Two $[\omega]$-sites are irreducibly distinct}
 (Kodamai internal note, 14 August 2026; proved).
 
+\bibitem{leanwit}
+MacBeth,
+\emph{Reduced-nerve $H^2$ witness engine} (Lean~4; one engine, three machine-checked witnesses:
+$H^2(B(\Z/2))=\Z/2$, the $(\Z/2)^2$ diamond basis, the $D_4$ non-splitting),
+Kodamai internal Lean note, 9 October 2026.
+
 \bibitem{giraud}
 J.~Giraud,
 \emph{Cohomologie non ab\'elienne},
@@ -597,16 +808,26 @@ L.~Breen,
 in \emph{The Grothendieck Festschrift, Vol.\ I}, Progr.\ Math.\ \textbf{86}, Birkh\"auser, 1990,
 401--476.
 
-\bibitem{benabou}
-J.~B\'enabou,
-\emph{Introduction to bicategories},
-in \emph{Reports of the Midwest Category Seminar}, Lecture Notes in Math.\ \textbf{47}, Springer,
-1967, 1--77.
+\bibitem{ho}
+C.-W.~Ho,
+\emph{A note on the classification of extensions of categories}
+(central-extension lifting for small categories), 1974.
 
-\bibitem{street}
-R.~Street,
-\emph{Categorical structures},
-in \emph{Handbook of Algebra, Vol.\ 1}, North-Holland, 1996, 529--577.
+\bibitem{wells}
+C.~Wells,
+\emph{Extension theories for categories} (preprint, 1979); see also
+D.~Bourn, \emph{The shift functor and the comprehensive factorization for internal groupoids}.
+
+\bibitem{bw}
+H.-J.~Baues, G.~Wirsching,
+\emph{Cohomology of small categories},
+J.\ Pure Appl.\ Algebra \textbf{38} (1985), 187--211.
+
+\bibitem{rotman}
+J.~J.~Rotman,
+\emph{An Introduction to the Theory of Groups}, 4th ed.,
+Graduate Texts in Mathematics \textbf{148}, Springer, 1995 (Thms.\ 7.5--7.7: $S_n$ complete for
+$n\ne2,6$; $\Out S_6=\Z/2$).
 
 \bibitem{bl}
 J.~C.~Baez, A.~D.~Lauda,
@@ -617,11 +838,6 @@ Theory Appl.\ Categ.\ \textbf{12} (2004), 423--491.
 N.~Johnson, D.~Yau,
 \emph{2-Dimensional Categories},
 Oxford University Press, 2021.
-
-\bibitem{bw}
-H.-J.~Baues, G.~Wirsching,
-\emph{Cohomology of small categories},
-J.\ Pure Appl.\ Algebra \textbf{38} (1985), 187--211.
 
 \bibitem{weibel}
 C.~A.~Weibel,
