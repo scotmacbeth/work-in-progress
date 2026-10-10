@@ -119,7 +119,7 @@ $\Psip(T)=(1,\{\nodes(T)\})$: there is a fibration isomorphism
 $\Pfib\cong(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$ over $\Tree$. The one external
 ingredient --- that the arboreal cartesian lift along a branching subtree embedding is
 computed by preimage --- is discharged from the general cartesian-lift construction of
-Jakl--Reggio \cite{jakl-reggio} (Theorem~7.3), which is stated for an arbitrary tree
+Jakl--Reggio \cite{jakl-reggio} (Theorems~23 and~26), which is stated for an arbitrary tree
 base; see \S\ref{sec:conditional}.
 \item[\textup{(2)}] \textup{(Negative, branches-as-shapes --- proved.)}
 The conjectured branch functor $\Psi$ does \emph{not} give the match. Its container fibre
@@ -323,13 +323,12 @@ for \emph{every} $T$, branching included.
 
 \begin{proof}
 This is the specialisation to subtree embeddings of the general cartesian-lift construction of
-\cite{jakl-reggio}, whose Theorem~7.3 is proved for an \emph{arbitrary} tree base, not only
-for paths, and establishes two facts we use. First, it characterises the cartesian morphisms as the
-\emph{pathwise embeddings}: $f$ is cartesian iff $f\circ m$ is an embedding for every path embedding
-$m\colon P\rightarrowtail X$. The adjective ``pathwise'' governs how the test is applied --- one path
-at a time --- and places no linearity hypothesis on the domain; a rooted-subtree embedding, being a
-chain embedding along each branch, is therefore pathwise, hence cartesian. Second, it shows $\Pfib$ is
-a Street fibration, and its proof builds
+\cite{jakl-reggio}, whose Theorems~23 and~26 are proved for an \emph{arbitrary} tree base, not only
+for paths. Theorem~23 characterises the cartesian morphisms as the \emph{pathwise embeddings}: $f$ is
+cartesian iff $f\circ m$ is an embedding for every path embedding $m\colon P\rightarrowtail X$. The
+adjective ``pathwise'' governs how the test is applied --- one path at a time --- and places no
+linearity hypothesis on the domain; a rooted-subtree embedding, being a chain embedding along each
+branch, is therefore pathwise, hence cartesian. Theorem~26 (that $\Pfib$ is a Street fibration) builds
 the lift of a forest morphism $h\colon T\to\Pfib Y$ explicitly as the colimit
 $X=\mathrm{colim}_{i\in T}P_i$ of the representing path embeddings, glued along the order of $T$.
 Specialise to $Y=(T',R')$ and $h=j$: each $i\in T$ is represented by the path
@@ -367,11 +366,11 @@ An earlier version of this note left Proposition~\ref{prop:clause1} conditional 
 \textup{(}$\ast$\textup{)} that the $\Pfib$-cartesian morphisms are the pathwise embeddings at subtree
 as well as at path embeddings, flagging the non-path case as an input taken from the arboreal
 literature rather than verified. Lemma~\ref{lem:cartlift} discharges it: the non-path case is not a
-separate hypothesis but the general content of \cite{jakl-reggio}, Theorem~7.3, whose
+separate hypothesis but the general content of \cite{jakl-reggio}, Theorems~23 and~26, whose
 ``pathwise embedding'' tests the embedding condition path-by-path while ranging over all objects,
 branching trees included. The discharge is confirmed computationally on the branching V- and Y-trees:
 over every subtree embedding and every colouring $R'$, the pathwise-embedding lift and the
-Street-fibration colimit colour both equal $j^{-1}R'$ node by node, consistently on shared prefixes.
+Theorem-26 colimit colour both equal $j^{-1}R'$ node by node, consistently on shared prefixes.
 \end{remark}
 
 \section{Branches as shapes unfolds the tree}\label{sec:unfolding}
@@ -538,7 +537,7 @@ one-shape extension over $\Tree$ --- is now proved outright (Prop.~\ref{prop:cla
 ingredient that an earlier version left conditional, that the arboreal cartesian lift along a
 branching subtree embedding is preimage, is discharged in Lemma~\ref{lem:cartlift} as the
 specialisation to subtree embeddings of the general construction of \cite{jakl-reggio}, whose
-Theorem~7.3 holds over an arbitrary tree base.
+Theorems~23 and~26 hold over an arbitrary tree base.
 
 \paragraph{Open problems.}
 \begin{enumerate}
@@ -597,8 +596,8 @@ Log.\ Methods Comput.\ Sci.\ \textbf{19} (2023).
 T.~Jakl, L.~Reggio,
 \emph{On the axioms of arboreal categories},
 preprint, arXiv:2603.21841 (2026).
-(Theorem~7.3: the path functor $\Pfib\colon\mathcal{A}\to\Tree$ is a Street fibration whose
-Cartesian morphisms are exactly the pathwise embeddings --- over an arbitrary tree base.)
+(Theorem~23: a morphism is Cartesian iff a pathwise embedding; Theorem~26: the path functor
+$\Pfib\colon\mathcal{A}\to\Tree$ is a Street fibration --- both over an arbitrary tree base.)
 
 \bibitem{macbeth-contcod}
 MacBeth,

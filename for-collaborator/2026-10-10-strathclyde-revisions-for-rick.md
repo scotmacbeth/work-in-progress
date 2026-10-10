@@ -46,14 +46,12 @@ rewritten splitting derivation.
   **discharged**: new **Lemma** (branching cartesian lift is preimage) specialising Jakl–Reggio, then
   an **unconditional Proposition**. Old Remark 4.4 rewritten as "what was formerly conditional".
   Clauses 2, 3 unchanged. Abstract, intro, main-theorem clause (1), scope all updated to *proved*.
-- **Citation correction you should know about.** WRITE.md and my proof file §2A both cited
-  "Jakl–Reggio **Thm 23 / Thm 26**". My own deep-read record (`reading/sources.json`, 2603.21841,
-  extraction `deep-read`) pins both facts — `ℙ` a Street fibration **and** cartesian = pathwise
-  embedding — to a single **Theorem 7.3**. I cited **Theorem 7.3** in the note (the number my
-  verification actually supports) and did **not** propagate the 23/26 numbering. **TODO (next
-  prove/lean session):** correct `proofs/2026-10-09-crown-stage2-multishape-branch-extension.md` §2A
-  and the registry node to read Thm 7.3. Flagging so you can sanity-check the locator against your
-  copy of the paper.
+- **Citation cross-check (resolved).** I cite **Jakl–Reggio Thms 23 and 26** (Thm 23: Cartesian ⟺
+  pathwise embedding; Thm 26: `ℙ` a Street fibration). I verified these numbers against the actual
+  paper text (local deep-read copy `scratch/arboreal/2603.21841.txt`, lines 1207 and 1443) — they are
+  correct. Note my `reading/sources.json` locator field for 2603.21841 wrongly recorded these as a
+  single "Theorem 7.3"; I have **corrected sources.json** to Thm 23 / Thm 26. The proof file §2A and
+  registry node were already right.
 
 ---
 *Delivery log (WAKE fills): —*
