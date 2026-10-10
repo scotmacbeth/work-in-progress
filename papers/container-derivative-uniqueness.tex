@@ -49,12 +49,16 @@ sharpness of the finite-rank hypothesis; both are corrected here, see \S\ref{sec
 free $\N$-modules; solidity restated as invertibility of the vertical lift; finite-rank sharpness
 withdrawn --- uniqueness holds at every rank. Revised 8 October 2026 per second-pass referee report:
 the rank-free exclusion (Theorem~\ref{thm:rankfree}) and the solidity of the two surviving parts
-(Theorem~\ref{thm:converse}) are now proved in full within the note; two scope overclaims corrected)}
+(Theorem~\ref{thm:converse}) are now proved in full within the note; two scope overclaims corrected.
+Revised 10 October 2026 per third-pass referee report: scope of ``only nontrivial'' pinned to
+representable Weil base change, footnote~1 reworded, and solidity disambiguated into abstract and
+vertical-lift senses --- all wording only; no statement changed)}
 
 \begin{document}
 \maketitle
 \begin{center}\small
-Built from commit \texttt{\commithash} of \texttt{github.com/scotmacbeth/work-in-progress}.
+Built from commit \texttt{[revision --- pending push]} of \texttt{github.com/scotmacbeth/work-in-progress}.\\[2pt]
+\normalfont Prepared for Rick (referee) and Neil Ghani (PI), Kodamai.
 \end{center}
 
 \begin{abstract}
@@ -85,8 +89,9 @@ is at once a statement about Weil base change and about the container derivative
 \emph{not} a statement about $\lhd$-substitution on all of $\Poly$, where there is no
 $\varepsilon^2=0$ truncation ($y^2\lhd 2y=4y^2$) and only $T=\id$ survives. The uniqueness holds for
 a free infinitesimal part of \emph{any} rank. Finiteness is \emph{not} load-bearing: although
-$M=\N\cdot y$ is solid, because $|\N\times\N|=|\N|$ supplies an abstract isomorphism $M\otimes M\cong
-M$, solidity is strictly weaker than underlying a tangent structure at infinite rank --- the flip and
+$M=\N\cdot y$ is \emph{abstractly} solid, because $|\N\times\N|=|\N|$ supplies an abstract
+isomorphism $M\otimes M\cong M$, abstract solidity is strictly weaker than underlying a tangent
+structure at infinite rank --- the flip and
 lift-coassociativity axioms force the vertical lift to be the diagonal, which is surjective only in
 rank $\le 1$, so $\N\cdot y$ is \emph{not} a tangent structure (an earlier draft's ``finiteness is
 sharp'' claim, which measured solidity by an abstract isomorphism, is withdrawn). The uniqueness
@@ -511,15 +516,23 @@ finite \texttt{decide} claims are individually axiom-free, with no \texttt{sorry
 The rank count of Theorem~\ref{thm:rigidity} --- and of the converse's step $1+2n=1+n+n^2\Rightarrow
 n\in\{0,1\}$ (\S\ref{sec:converse}) --- used finiteness, because $\kappa^2=\kappa$ for every infinite
 cardinal $\kappa$ (under choice). One might therefore expect the finite-rank hypothesis to be sharp,
-with $\N\cdot y$ a third solid structure. It is not. The expectation conflates two notions: an
-infinite free module \emph{is} solid, but solidity is strictly weaker than underlying a tangent
-structure, and $\N\cdot y$ fails the latter test. Uniqueness is rank-free.
+with $\N\cdot y$ a third solid structure. It is not. The expectation conflates two distinct notions of
+solidity, which we name once and keep apart. Call $M$ \emph{abstractly solid} if there merely
+\emph{exists} an $\N$-module isomorphism $M\cong M\otimes M$ (equivalently the cardinality condition
+$|S|^2=|S|$), and \emph{vertical-lift solid} if the structural vertical-lift component
+$\ell_M\colon M\to M\otimes M$ of a tangent structure --- the map of Lemma~\ref{lem:solid} --- is an
+isomorphism. At finite rank the two coincide, both landing in $\{0,1\}$. At infinite rank they part:
+an infinite free module \emph{is} abstractly solid but, as we now show, is never vertical-lift solid,
+because the tangent axioms force $\ell_M$ to be the diagonal. So $\N\cdot y$ passes the abstract test
+and fails the one that matters. Uniqueness is rank-free.
 
-\begin{proposition}[$\N\cdot y$ is solid]\label{prop:infinite}
-The countable free module $M=\N\cdot y$ is solid: the Cantor pairing supplies a bijection
-$\N\times\N\cong\N$, hence an isomorphism $\ell_M\colon M\cong(\N\times\N)\cdot y=M\otimes M$
-(Lemma~\ref{lem:coincide}). Thus $M\otimes M\cong M$ with $\rank M=|\N|\notin\{0,1\}$: solidity, read
-as invertibility of $\ell_M$, does not by itself bound the rank.
+\begin{proposition}[$\N\cdot y$ is abstractly solid]\label{prop:infinite}
+The countable free module $M=\N\cdot y$ is \emph{abstractly} solid: the Cantor pairing supplies a
+bijection $\N\times\N\cong\N$, hence an $\N$-module isomorphism $M\cong(\N\times\N)\cdot y=M\otimes M$
+(Lemma~\ref{lem:coincide}), so $M\otimes M\cong M$ with $\rank M=|\N|\notin\{0,1\}$. This isomorphism
+is \emph{abstract}: it is some module iso, not the vertical-lift component of a tangent structure.
+Abstract solidity therefore does not by itself bound the rank --- and, as Theorem~\ref{thm:rankfree}
+shows, it does not supply a vertical lift either.
 \end{proposition}
 
 So the rank rigidity (Theorem~\ref{thm:rigidity}) is about \emph{finite} solid parts, and its
@@ -590,7 +603,7 @@ coassociativity coherence of \cite{CockettCruttwell2014} reads $T(\ell)\circ\ell
 \ell_T\circ\ell$. Both composites land in the fully mixed part $M\otimes M\otimes M$ (each application
 of $\delta$ maps $M$ into $M\otimes M$, step 0). The $c$-twist is a composite of flips on adjacent
 tensor factors; on $M\otimes M\otimes M$ each acts through $\gamma|_{M\otimes M}=\id$ (step 3), so the
-twist is the identity there, and the coherence collapses to
+$c$-twist term is idle --- it acts as the identity there --- and the coherence collapses to
 \[
   (\ell_M\otimes\id)\circ\ell_M=(\id\otimes\ell_M)\circ\ell_M,
 \]
@@ -608,10 +621,13 @@ Since $\beta$ is a bijection onto $K\times K$ its first coordinates exhaust $K$,
 surjective; a surjective idempotent on a set is the identity, whence $\beta_1=\id$, and likewise
 $\beta_2=\id$. Then $\beta(k)=(k,k)$ is the diagonal, surjective onto $K\times K$ only when $|K|\le1$.
 Hence $\rank M=|K|\le1$. The surviving cases are $\rank M=0$ ($M=0$, $T=\id$) and $\rank M=1$ ($M=y$,
-$T=\partial$), where the diagonal is all of $K\times K$.\footnote{The coassociativity obstruction of
-steps (4)--(5) --- that no coassociative basis-bijection onto $K\times K$ exists for $\rank M\ge2$ ---
-is confirmed by exhaustive search for $2\le\rank M\le4$, alongside the finite rank arithmetic of the
-Lean oracle (\S\ref{sec:rigidity}).} No step used finiteness, so the bound holds at every cardinality.
+$T=\partial$), where the diagonal is all of $K\times K$.\footnote{At finite rank $\ge2$ there is in
+any case no bijection $K\cong K\times K$ at all --- $|K|<|K|^2$ --- so the diagonal cannot be
+surjective and the obstruction is already immediate from cardinality, with nothing to search over. The
+work of steps (4)--(5) is to make the bound hold \emph{uniformly}, in particular at infinite rank,
+where $\kappa=\kappa^2$ and cardinality alone decides nothing. The finite-rank arithmetic
+$1+2n=1+n+n^2\Rightarrow n\in\{0,1\}$ is Lean-certified (\S\ref{sec:rigidity}).} No step used
+finiteness, so the bound holds at every cardinality.
 \end{proof}
 
 \begin{remark}[An independent route in the representable case]\label{rem:repflip}
@@ -630,15 +646,15 @@ isomorphism type of $M$.
 \begin{remark}[Solidity versus structure, and the contrast with Lanfranchi--Lemay]\label{rem:part-not-structure}
 The correspondence $(\star)$ of \S\ref{sec:converse} --- tangent structure $\iff$ solid part --- is
 therefore a bijection \emph{only} at finite rank, where both sides land in $\{0,1\}$. At infinite
-rank the forward direction fails: $\N\cdot y$ is solid but is not a structure
+rank the forward direction fails: $\N\cdot y$ is abstractly solid but is not a structure
 (Proposition~\ref{prop:infinite}, Theorem~\ref{thm:rankfree}). This is where our setting diverges
 from Lanfranchi--Lemay. Over a ring their extra solid parts at non-PID / non-finitely-generated bases
 (their Examples~4.20--4.21) are genuine, so they must impose finite generation (Niefield
 coexponentiability) to recover uniqueness. Over $\N$ the extra solid part $\N\cdot y$ is a
-\emph{phantom}: it is solid, but the flip and coassociativity axioms refuse it a tangent structure,
-so uniqueness needs no finiteness hypothesis at all. An earlier draft of this note read $\N\cdot y$
-as a genuine third solid structure and declared ``finiteness is sharp''; that reading measured
-solidity by an abstract isomorphism, and is withdrawn.
+\emph{phantom}: it is abstractly solid, but the flip and coassociativity axioms refuse it a tangent
+structure, so uniqueness needs no finiteness hypothesis at all. An earlier draft of this note read
+$\N\cdot y$ as a genuine third solid structure and declared ``finiteness is sharp''; that reading
+mistook abstract solidity for vertical-lift solidity, and is withdrawn.
 \end{remark}
 
 \section{The solidity converse: universality of the vertical lift}\label{sec:converse}
@@ -754,8 +770,9 @@ is solid and $M\in\{0,y\}$.
 \end{theorem}
 
 \begin{proof}
-By the universality of the vertical lift (\S\ref{sec:prelim}), the comparison $T_2\to V$ is an
-isomorphism of endofunctors, naturally in the argument. By Lemma~\ref{lem:pullback} and its
+By the universality of the vertical lift (\S\ref{sec:prelim}) --- the same input as step~(1) of
+Theorem~\ref{thm:rankfree} --- the comparison $T_2\to V$ is an isomorphism of endofunctors, naturally
+in the argument. By Lemma~\ref{lem:pullback} and its
 consequence, $T_2=(-)\otimes D_2$ and $V=(-)\otimes P'$. Evaluate the functor isomorphism at the
 unit object $y$ and use $y\otimes E=E$:
 \[
@@ -920,8 +937,8 @@ ring structure in \cite{LanfranchiLemay2025} were essential (none, for finite-di
 infinitesimal parts) and which were incidental (the PID and the short exact sequence, both
 replaced). For the \texttt{Poly} and containers community \cite{AAGM2003,AhmanUustalu2016} it
 upgrades ``the container derivative is \emph{a} tangent structure'' \cite{MacBethTangent} to ``it is
-the \emph{only} nontrivial one,'' a uniqueness theorem for a construction that is otherwise defined
-by a formula.
+the \emph{only} nontrivial one among representable Weil-base-change tangent structures,'' a uniqueness
+theorem for a construction that is otherwise defined by a formula.
 
 \section{Conclusion: precedent and sequel}\label{sec:conclusion}
 
@@ -938,8 +955,8 @@ converse needs no subtraction (Lemma~\ref{lem:counts}, Theorem~\ref{thm:converse
 the port: on the linear layer the base-change tensor $\otimes D$, the substitution tensor $\lhd$ and
 the Dirichlet tensor all coincide (Lemma~\ref{lem:coincide}), and free $\N$-modules are closed under
 direct sum with rank additive over it, so ranks add and never subtract. The arithmetic of the finite case is Lean-certified with no classical axioms. Finiteness
-turns out \emph{not} to be load-bearing: although the countable part $\N\cdot y$ is solid (an
-abstract isomorphism $M\otimes M\cong M$ exists, by the Cantor pairing), solidity is strictly weaker
+turns out \emph{not} to be load-bearing: although the countable part $\N\cdot y$ is abstractly solid
+(an abstract isomorphism $M\otimes M\cong M$ exists, by the Cantor pairing), abstract solidity is strictly weaker
 than underlying a tangent structure at infinite rank --- the flip and lift-coassociativity axioms
 force the vertical lift to be the diagonal, excluding every rank $\ge2$
 (Theorem~\ref{thm:rankfree}). So $\N\cdot y$ is a phantom, not a third structure,
@@ -957,8 +974,9 @@ record, as an aside, that this is ``a differential category in which negation is
 same absence of additive inverses that we have just turned to advantage, since it is exactly what
 makes the vertical-bundle coproduct, rather than a short exact sequence, the right tool.) No
 uniqueness statement appears in 2012. The present note supplies it, and so answers Cockett's
-question in its strongest form: not only \emph{can} you differentiate a polynomial, but
-differentiation is the \emph{only} nontrivial way to do so. We flag one caveat, due to Cruttwell via
+question in its strongest form: not only \emph{can} you differentiate a polynomial, but --- among
+representable Weil-base-change tangent structures --- differentiation is the \emph{only} nontrivial
+way to do so. We flag one caveat, due to Cruttwell via
 \cite{MO341933}: combinatorial species --- the setting closest to Cockett's --- are most naturally a
 tangent \emph{bicategory}, with species as $1$-morphisms, which is structurally different from the
 $\SPoly$ one-category treated here; our uniqueness is a statement about the latter.

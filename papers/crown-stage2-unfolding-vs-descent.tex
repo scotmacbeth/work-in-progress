@@ -36,8 +36,9 @@
 
 \title{Branching is not a coproduct of branches:\\
 \large unfolding versus descent in the container bifibration}
-\author{MacBeth \\ \small Kodamai --- internal note}
-\date{9 October 2026 \\ \small\texttt{content commit 4136ecf}}
+\author{MacBeth \\ \small Kodamai --- internal note (for Rick and Neil Ghani)}
+\date{9 October 2026; revised 10 October 2026 (clause~1 upgraded conditional $\to$ proved)\\
+\small\texttt{content commit [revision --- pending push]}}
 
 \begin{document}
 \maketitle
@@ -57,8 +58,10 @@ node $v$. The arboreal fibre reappears inside the container fibre as the sub-pos
 \emph{prefix-consistent} colourings: it is the object of descent data for the cover of
 the tree by its branches, a limit-shaped datum that the shape-coproduct $\Fam=\Sigma$
 cannot impose. The faithful encoding uses instead a single shape whose position set is
-the entire node set; conditionally on a cartesian-lift property of the arboreal cover,
-this reproduces the path-level match over the full tree base. A separate and higher
+the entire node set; this reproduces the path-level match over the full tree base, the
+one external input --- that the arboreal cartesian lift along a branching subtree embedding
+is computed by preimage --- now discharged from the general cartesian-lift construction of
+Jakl--Reggio. A separate and higher
 obstruction --- invisibility of $k$-ary relations for $k\ge 2$ --- confines the whole
 correspondence to the unary fragment. The reusable principle: shared sub-trajectories in
 a branching process are descent data, not a coproduct over branches.
@@ -109,13 +112,15 @@ The slogan is backwards, and the way in which it is backwards is the content of 
 In the unary, propositionally truncated regime, over the base $\Tree$ of finite rooted
 trees and rooted-subtree embeddings:
 \begin{enumerate}
-\item[\textup{(1)}] \textup{(Positive, one shape --- conditional.)}
+\item[\textup{(1)}] \textup{(Positive, one shape --- proved.)}
 The arboreal relational fibration extends its Stage~1 match to \emph{all} of $\Tree$,
 branching included, via the \emph{one-shape} functor
 $\Psip(T)=(1,\{\nodes(T)\})$: there is a fibration isomorphism
-$\Pfib\cong(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$ over $\Tree$. This holds
-conditionally on the cartesian morphisms of $\Pfib$ being the pathwise embeddings at
-\emph{subtree} \textup{(}non-path\textup{)} embeddings; see \S\ref{sec:conditional}.
+$\Pfib\cong(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$ over $\Tree$. The one external
+ingredient --- that the arboreal cartesian lift along a branching subtree embedding is
+computed by preimage --- is discharged from the general cartesian-lift construction of
+Jakl--Reggio \cite{jakl-reggio} (Theorem~7.3), which is stated for an arbitrary tree
+base; see \S\ref{sec:conditional}.
 \item[\textup{(2)}] \textup{(Negative, branches-as-shapes --- proved.)}
 The conjectured branch functor $\Psi$ does \emph{not} give the match. Its container fibre
 is the Boolean lattice of colourings of the \emph{branch-unfolding}
@@ -171,7 +176,7 @@ count shows precisely what that costs: an over-representation by $2^{\sum_v(\lam
 one spurious bit of freedom for every extra branch through every shared node. The shared
 history that distinguishes a tree from its unfolding is \emph{descent data}, and the
 $\Fam=\Sigma$ coproduct structurally cannot see it. This is the container-side form of our
-running theme that \emph{composition is a degree-two datum}: the sharing lives one level up
+running theme that \emph{composition is a nerve-level-two datum}: the sharing lives one level up
 from the branches themselves, and is recovered by an explicit gluing step, never read off a
 product over branches. Clause~(3) locates the ceiling of the whole arboreal--container
 bridge: it is a theorem about the unary fragment, the $k$-ary relational power of game
@@ -180,8 +185,9 @@ comonads lying genuinely beyond $\Cont(\cod)$.
 \subsection*{Outline}
 
 Section~\ref{sec:prelim} fixes the two fibrations and recalls the Stage~1 orientation.
-Section~\ref{sec:conditional} gives the positive one-shape extension (clause~1) and states
-precisely the single external input on which it is conditional. Section~\ref{sec:unfolding}
+Section~\ref{sec:conditional} gives the positive one-shape extension (clause~1) and discharges
+the single external input --- the arboreal cartesian lift off paths --- from the Jakl--Reggio
+construction. Section~\ref{sec:unfolding}
 proves clause~(2): the exact over-count, the V- and Y-tree witnesses, and the descent
 diagnosis. Section~\ref{sec:arity} proves clause~(3). Section~\ref{sec:scope} records scope,
 open problems, and grant placement.
@@ -307,42 +313,65 @@ $\Cont(\cod)$ along the backward map $j$. No step used the chain order.
 Proposition~\ref{prop:psiprime-match} matches the two fibrations \emph{fibrewise and on
 reindexing}. To promote it to an isomorphism of fibrations one needs that the arboreal
 \emph{cartesian lifts} along subtree embeddings are computed by this same reindexing. This
-is the single external input, and it is where clause~(1) is conditional.
+is the single remaining ingredient, and we now establish it.
 
-\begin{proposition}[one-shape extension, conditional]\label{prop:clause1}
-Assume \textup{(}$\ast$\textup{)}: the $\Pfib$-cartesian morphisms are the pathwise
-embeddings at \emph{subtree} embeddings as well as at path embeddings, so that the
-$\Pfib$-cartesian lift of $f\colon T\inpr T'$ at a colouring $R'$ is unique and equals
-$R'\cap\nodes(T)$. Then
+\begin{lemma}[the branching cartesian lift is preimage]\label{lem:cartlift}
+In the unary truncated arboreal fibration $\Pfib$, the cartesian lift of a subtree embedding
+$f\colon T\inpr T'$ (node-injection $j$) at a colouring $R'$ is $(T,\,j^{-1}R')$ --- preimage ---
+for \emph{every} $T$, branching included.
+\end{lemma}
+
+\begin{proof}
+This is the specialisation to subtree embeddings of the general cartesian-lift construction of
+\cite{jakl-reggio}, whose Theorem~7.3 is proved for an \emph{arbitrary} tree base, not only
+for paths, and establishes two facts we use. First, it characterises the cartesian morphisms as the
+\emph{pathwise embeddings}: $f$ is cartesian iff $f\circ m$ is an embedding for every path embedding
+$m\colon P\rightarrowtail X$. The adjective ``pathwise'' governs how the test is applied --- one path
+at a time --- and places no linearity hypothesis on the domain; a rooted-subtree embedding, being a
+chain embedding along each branch, is therefore pathwise, hence cartesian. Second, it shows $\Pfib$ is
+a Street fibration, and its proof builds
+the lift of a forest morphism $h\colon T\to\Pfib Y$ explicitly as the colimit
+$X=\mathrm{colim}_{i\in T}P_i$ of the representing path embeddings, glued along the order of $T$.
+Specialise to $Y=(T',R')$ and $h=j$: each $i\in T$ is represented by the path
+$P_i=\{\mathrm{root},\dots,j(i)\}$ carrying the colour restricted from $R'$ (the arboreal substructure
+embeddings are the regular monos, so a path embedding carries the \emph{induced} colour), and node $i$
+is coloured in $P_i$ iff $j(i)\in R'$. Because $R'$ is one fixed subset of $T'$ and $j(i)$ one fixed
+node, \emph{every} occurrence of $i$ across the diagram carries the identical truth value
+$[\,j(i)\in R'\,]$; the colimit therefore colours $i$ by exactly this value, i.e.\
+$\mathrm{colour}(X)=\{i:j(i)\in R'\}=j^{-1}R'$, with underlying tree $T$ (a tree is the colimit of its
+own paths). Branching is harmless precisely here: two branches sharing a prefix must agree on the
+colour of a shared node, and they do automatically, since that colour is the single global truth value
+$[\,j(i)\in R'\,]$, read off one fixed $R'$ regardless of the branch approached along. (This is exactly
+the consistency that clause~(2)'s $\Psi$ destroys by splitting the branches into separate shapes;
+\S\ref{sec:unfolding}.)
+\end{proof}
+
+\begin{proposition}[one-shape extension]\label{prop:clause1}
+In the unary truncated regime there is an isomorphism of fibrations over $\Tree$,
 \[
-\Pfib\;\cong\;(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}
-\qquad\text{as fibrations over }\Tree,
+\Pfib\;\cong\;(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}},
 \]
-in the unary truncated regime: the branching of $T$ is encoded entirely in the base and its
-subtree-embedding morphisms, while the container functor keeps one flat position set and the
-opcartesian leg performs the reflection.
+so the branching of $T$ is encoded entirely in the base and its subtree-embedding morphisms, while
+the container functor keeps one flat position set and the opcartesian leg performs the reflection.
 \end{proposition}
 
 \begin{proof}
-Given ($\ast$), Proposition~\ref{prop:psiprime-match}(1) gives the fibrewise anti-iso and
-(2) gives agreement of reindexing; ($\ast$) gives agreement of cartesian lifts. The fibrewise
-opposite converts the arboreal cartesian structure into the container's opcartesian leg, as
-in Stage~1. Composing, $\Pfib\cong(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$.
+Proposition~\ref{prop:psiprime-match}(1) gives the fibrewise anti-isomorphism and (2) the agreement of
+reindexing; Lemma~\ref{lem:cartlift} gives the agreement of cartesian lifts --- the arboreal cartesian
+lift $R'\mapsto j^{-1}R'$ is the preimage that, under the fibrewise opposite, is the opcartesian leg
+$\rho^*$ of $\Cont(\cod)$. Composing the three, $\Pfib\cong(\Psip{}^*\Cont(\cod))^{\mathrm{fib\text{-}op}}$.
 \end{proof}
 
-\begin{remark}[status of \textup{(}$\ast$\textup{)} --- honest flag]\label{rem:ast}
-At a path embedding, ($\ast$) is the standard pathwise-embedding characterisation of
-cartesian maps in the arboreal cover. At a \emph{subtree} embedding $f$, a pathwise
-embedding of $f$ reflects the colour along \emph{each} path of $T$, and a global $R'$
-restricts consistently because the paths of $T$ overlap only on shared prefixes, on which a
-single $R'$ automatically agrees --- forcing the unique lift $R'\cap\nodes(T)$. I have
-verified this on the V-tree by direct enumeration (every colouring $R'$ has a unique
-pathwise-embedding lift, equal to the preimage; see \S\ref{sec:unfolding}), and the
-derivation is independent of the tree. But the non-path case of the pathwise-embedding
-characterisation is an input I take from the arboreal literature
-\cite{arboreal-axioms} rather than one I have independently verified at the stated
-generality; hence clause~(1) is graded \emph{computed, conditional on~($\ast$)}, not proved.
-The proved content of this note --- clauses (2) and (3) --- does not use ($\ast$).
+\begin{remark}[what was formerly conditional]\label{rem:ast}
+An earlier version of this note left Proposition~\ref{prop:clause1} conditional on the property
+\textup{(}$\ast$\textup{)} that the $\Pfib$-cartesian morphisms are the pathwise embeddings at subtree
+as well as at path embeddings, flagging the non-path case as an input taken from the arboreal
+literature rather than verified. Lemma~\ref{lem:cartlift} discharges it: the non-path case is not a
+separate hypothesis but the general content of \cite{jakl-reggio}, Theorem~7.3, whose
+``pathwise embedding'' tests the embedding condition path-by-path while ranging over all objects,
+branching trees included. The discharge is confirmed computationally on the branching V- and Y-trees:
+over every subtree embedding and every colouring $R'$, the pathwise-embedding lift and the
+Street-fibration colimit colour both equal $j^{-1}R'$ node by node, consistently on shared prefixes.
 \end{remark}
 
 \section{Branches as shapes unfolds the tree}\label{sec:unfolding}
@@ -500,21 +529,19 @@ arboreal--container bridge, honestly, is a theorem about the \emph{unary} fragme
 
 \section{Scope, open problems, and placement}\label{sec:scope}
 
-\paragraph{What is proved, and what is conditional.}
-Clauses~(2) and~(3) of Theorem~\ref{thm:main} are \emph{proved}: the exact over-count
-$2^{\Uf}\supsetneq 2^{\nodes}$ with factor $2^{\sum_v(\lambda(v)-1)}$ and its descent reading
-(Lemmas~\ref{lem:overcount}, Prop.~\ref{prop:descent}, Examples~\ref{ex:v},~\ref{ex:y}), and
-the arity collapse $2^{n^k}\supsetneq 2^{n}$ (Prop.~\ref{prop:arity}). Clause~(1) --- the
-positive one-shape extension over $\Tree$ --- is \emph{computed, conditional on}~($\ast$) of
-Remark~\ref{rem:ast}: the pathwise-embedding characterisation of arboreal cartesian maps at
-subtree embeddings, verified on the V-tree with a tree-independent derivation but taken from
-the arboreal literature at the stated generality rather than re-proved here.
+\paragraph{What is proved.}
+All three clauses of Theorem~\ref{thm:main} are \emph{proved}. Clauses~(2) and~(3): the exact
+over-count $2^{\Uf}\supsetneq 2^{\nodes}$ with factor $2^{\sum_v(\lambda(v)-1)}$ and its descent
+reading (Lemmas~\ref{lem:overcount}, Prop.~\ref{prop:descent}, Examples~\ref{ex:v},~\ref{ex:y}), and
+the arity collapse $2^{n^k}\supsetneq 2^{n}$ (Prop.~\ref{prop:arity}). Clause~(1) --- the positive
+one-shape extension over $\Tree$ --- is now proved outright (Prop.~\ref{prop:clause1}): the one
+ingredient that an earlier version left conditional, that the arboreal cartesian lift along a
+branching subtree embedding is preimage, is discharged in Lemma~\ref{lem:cartlift} as the
+specialisation to subtree embeddings of the general construction of \cite{jakl-reggio}, whose
+Theorem~7.3 holds over an arbitrary tree base.
 
 \paragraph{Open problems.}
 \begin{enumerate}
-\item \textbf{Discharge~($\ast$).} Verify directly that the $\Pfib$-cartesian lift of a subtree
-embedding is $R'\cap\nodes(T)$, upgrading clause~(1) from \emph{computed} to \emph{proved}. This
-is the one gap between this note and a complete Stage~2.
 \item \textbf{Proof-relevance.} The match is propositional. The full container fibre
 $(\Set/\nodes)^\op$ is strictly richer than $\Sub(\nodes)^\op$; a proof-relevant comparison
 would need an arboreal theory with witness-set colours.
@@ -529,7 +556,7 @@ non-monic tree morphisms are untreated, inherited from the Stage~1 conventions.
 The net correction to the registered Stage~2 conjecture is clean: it is \emph{not} ``$\Psi$
 positive on the unary fragment, failing at $k\ge 2$''. It is that the branch-multishape $\Psi$
 fails already at $k=1$ \emph{branching} (unfolding versus descent); the positive Stage~2 holds
-over the full tree base via the one-shape $\Psip(T)=(1,\{\nodes(T)\})$ under~($\ast$); and
+over the full tree base via the one-shape $\Psip(T)=(1,\{\nodes(T)\})$; and
 $k\ge 2$ is a separate, higher obstruction. The reusable principle, and the one worth carrying
 into the applied side of the programme: \emph{when encoding a branching process in the container
 bifibration, do not make the branches into shapes.} That unfolds the process and over-counts
@@ -562,10 +589,16 @@ N.~Gambino, J.~Kock,
 Math.\ Proc.\ Cambridge Philos.\ Soc.\ \textbf{154} (2013), 153--192.
 
 \bibitem{arboreal-axioms}
-S.~Abramsky, L.~Reggio et al.,
-\emph{On the axioms of arboreal categories}
-(arboreal categories and game comonads),
-preprint.
+S.~Abramsky, L.~Reggio,
+\emph{Arboreal categories: an axiomatic theory of resources},
+Log.\ Methods Comput.\ Sci.\ \textbf{19} (2023).
+
+\bibitem{jakl-reggio}
+T.~Jakl, L.~Reggio,
+\emph{On the axioms of arboreal categories},
+preprint, arXiv:2603.21841 (2026).
+(Theorem~7.3: the path functor $\Pfib\colon\mathcal{A}\to\Tree$ is a Street fibration whose
+Cartesian morphisms are exactly the pathwise embeddings --- over an arbitrary tree base.)
 
 \bibitem{macbeth-contcod}
 MacBeth,

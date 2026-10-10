@@ -49,8 +49,9 @@ and proof files, which live together with this note and the verification scripts
 Prepared as a framing appendix for the Strathclyde mini-course \emph{Tangent Categories and
 Containers} (13--16 October 2026).}\\
 \small Kodamai}
-\date{8 October 2026\\[2pt]
-\small content commit \texttt{242c7ea}}
+\date{8 October 2026; revised 10 October 2026\\[2pt]
+\small content commit \texttt{\textbf{[revision --- pending push]}}\\[4pt]
+\small\normalfont Prepared for Rick (referee) and Neil Ghani (PI), Kodamai.}
 
 \begin{document}
 \maketitle
@@ -67,8 +68,10 @@ level one) and is provably blind to composition. The comultiplication $\delta$ i
 datum, and the invariants built from it --- the left-translation trivialization of the tangent
 bundle, detecting groupoids and, one notch finer, thin groupoids --- separate the group $\Z/2$ from
 the idempotent monoid $\{1,e\}$ at cohomological degree \emph{one}, exactly the separation the floor
-cannot make. The Zappa--Sz\'ep weld $[\omega]\in H^2$ is a nerve-level-\emph{three} datum: it reads
-associativity, a condition on composable triples. We prove that the truncation tower collapses at
+cannot make. The Zappa--Sz\'ep weld $[\omega]\in H^2$ is a nerve-level-\emph{three} datum whose
+defining cocycle \emph{condition} is associativity, a predicate on composable triples; the
+cohomology \emph{class} itself measures not associativity but whether an already-associative weld
+\emph{splits} into its claimed factorization. We prove that the truncation tower collapses at
 level two (a category is its $2$-truncated nerve), so above the floor there is no third
 \emph{detection} rung; the genuine level-two/level-three distinction is the condition-level fact that
 building a category from a composition is an associativity problem. Finally we show the degree-one
@@ -127,9 +130,10 @@ We correct this throughout (\S\ref{sec:prelim}, Lemma~\ref{lem:regrade}); the re
 
 \begin{quote}
 \emph{Composition --- the datum of composable pairs --- is a nerve-level-two datum, first detectable
-at cohomological degree one. Associativity --- the datum of composable triples --- is the
-nerve-level-three datum, cohomological degree two, and the Zappa--Sz\'ep weld
-$[\omega]\in H^2$ is its obstruction.}
+at cohomological degree one. Associativity --- a \emph{condition} on composable triples --- is the
+nerve-level-three cocycle condition, cohomological degree two; the Zappa--Sz\'ep weld class
+$[\omega]\in H^2$ lives there, but as the obstruction to \emph{splitting} an already-associative
+weld, not as a test of associativity itself.}
 \end{quote}
 
 \paragraph{The honest ladder.}
@@ -137,18 +141,23 @@ The detection ladder has, above the floor, \emph{two} rungs for the price the ol
 three, and a genuine third rung that is not a detection rung at all.
 \begin{itemize}
 \item \textbf{Nerve level $1$ (the blind floor).} Invariants that factor through the reflexive graph
-$\tr_1\Nerve(\cC)$ --- equivalently through the forgetful $U\colon\Cat\to\Poly$ --- read out-degrees
-and nothing about composition. Tangent-regularity lives here and is provably blind: $\Z/2$ and
-$\{1,e\}$ have the same underlying functor $y^2$ and are indistinguishable to it.
+$\tr_1\Nerve(\cC)$ read nothing about composition --- and those factoring through the strictly coarser
+forgetful $U\colon\Cat\to\Poly$, such as tangent-regularity, read only the out-degree family.
+Tangent-regularity is provably blind: $\Z/2$ and $\{1,e\}$ have the same underlying functor $y^2$ and
+are indistinguishable to it.
 \item \textbf{Nerve level $2$ (composition).} Invariants that read the composition map
 $d_1\colon\Nerve_2\to\Nerve_1$ can see composition. Two live here. The $\delta$-translation
 trivialization detects groupoids, and one notch finer thin groupoids, and it \emph{separates $\Z/2$
 from $\{1,e\}$ --- at cohomological degree one.} The inventory class $[\theta_R]\in H^1(\sS;A)$ of a
 transported resource is the other.
-\item \textbf{Nerve level $3$ (associativity).} The weld $[\omega]\in H^2$ reads a condition on
-composable triples: whether a composition assembles into an associative category. For a \emph{fixed}
-category this rung is empty of new detection power --- a category is reconstructible from its
-$2$-truncated nerve (Theorem~\ref{thm:coskel}), so the truncation tower collapses at level two.
+\item \textbf{Nerve level $3$ (associativity).} A \emph{condition} on composable triples ---
+associativity --- lives one level above composition; its honest witness is a non-associative unital
+magma (Theorem~\ref{thm:assembly}), a pointwise $\Nerve_3$ failure. The Zappa--Sz\'ep weld
+$[\omega]\in H^2$ is the degree-two cohomology class at this level: its defining \emph{cocycle
+condition} is associativity, but the class itself measures whether an already-associative weld
+\emph{splits} into its claimed factorization. For a \emph{fixed} category this rung is empty of new
+detection power --- a category is reconstructible from its $2$-truncated nerve
+(Theorem~\ref{thm:coskel}), so the truncation tower collapses at level two.
 The genuine level-two/level-three distinction is in the \emph{assembly} problem, where the object
 varies: composition exists ($\Nerve_2$) versus composition is associative ($\Nerve_3$).
 \end{itemize}
@@ -199,16 +208,30 @@ identities. The \emph{$k$-truncation} $\tr_k\Nerve(\cC)$ keeps $\Nerve_0,\dots,\
 faces and degeneracies among them. Two truncations matter here:
 \[
    \tr_1\Nerve(\cC)=\text{the reflexive graph of }\cC\ (\text{objects, arrows, source, target,
-   identities})=U(p);
+   identities});
 \]
-$\tr_2\Nerve(\cC)$ adds the composition map $d_1$. For an abelian coefficient system $A$ (a functor
+$\tr_2\Nerve(\cC)$ adds the composition map $d_1$. The underlying functor $U(p)=\sum_a y^{E_a}$ is a
+\emph{strictly coarser} shadow of $\tr_1\Nerve(\cC)$, not an equal: it records only the out-degree
+family $a\mapsto|E_a|$ and forgets which arrow runs where. For instance the interval category
+$[1]=(0\to 1)$ and the disjoint union $B(\Z/2)\sqcup\mathrm{pt}$ both have $U=y^2+y$ yet have
+non-isomorphic reflexive graphs (an arrow between two objects versus a loop at one). Hence an
+invariant factoring through $U$ is blinder even than one reading all of $\tr_1\Nerve(\cC)$; the floor
+of our ladder (\S\ref{sec:lvl1}) sits at this coarsest reading. For an abelian coefficient system $A$ (a functor
 $\cC\to\Ab$; constant unless noted), $H^n(\cC;A)$ is the cohomology of the classifying space $B\cC$,
 computed by the normalized cochain complex with $C^n=\{$functions on nondegenerate $n$-simplices$\}$
 and the standard bar differential; for a one-object category it is monoid/group cohomology.
 
-\paragraph{The regrade lemma.}
-The grade we use is the nerve level the \emph{binding} datum of an invariant occupies. Cohomological
-degree is a strictly lower index, and the relation is exact.
+\paragraph{Two simplicial indices, and the regrade lemma.}
+Two different simplicial levels attach to a cohomological datum, and conflating them is the kind of
+error this note exists to correct; we name them once and keep them apart. The \emph{cochain level} of
+a datum is the $k$ for which it is a function on the $k$-simplices $\Nerve_k$: the comultiplication
+$\delta$ and any bar $n$-cochain have cochain level equal to the number of arrows they take as input.
+The \emph{nerve level} of an invariant --- the grade this note uses throughout --- is instead the
+highest $\Nerve_k$ entering the \emph{definition} of the invariant's class: for a class in $H^n$ this
+is the level $\Nerve_{n+1}$ that indexes its cocycle \emph{condition}, and for a raw datum presented
+on $\Nerve_k$ it is $k$. Cohomological degree is a third, strictly lower index. For $\delta$ the two
+simplicial indices coincide (both are $2$); for a cohomology class they diverge, and the divergence is
+exactly one --- as the following lemma records.
 
 \begin{lemma}[regrade]\label{lem:regrade}
 For every $n\ge 0$, the cocycle condition $d^n c=0$ defining an $H^n$-class is a system of equations
@@ -229,14 +252,17 @@ coboundary relation reads only $\Nerve_n$, so the highest level entering the def
 is $\Nerve_{n+1}$. Proved in full in \cite{MacBethNerve}.
 \end{proof}
 
-\begin{remark}[the ``two'' of $p\lto p$]\label{rem:simpvsdeg}
+\begin{remark}[the ``two'' of $p\lto p$, and a warning about the weld]\label{rem:simpvsdeg}
 The comultiplication $\delta\colon p\to p\lto p$ lands in the two-fold composite $p\lto p$: it is data
-on composable \emph{pairs}, i.e.\ on the $2$-simplices of the nerve, and in that \emph{simplicial}
-sense composition is degree-two data. Cohomological degree is the other index: by
-Lemma~\ref{lem:regrade} an $H^1$ cocycle condition already reads $2$-simplices. The earlier note
-named the simplicial level ``degree two'' and thereby read $\delta$ one cohomological degree too high;
-every ``degree two'' of that note that referred to composition itself should read ``nerve level two,
-cohomological degree one''.
+on composable \emph{pairs}, i.e.\ it has \emph{cochain level} two, and in that sense the old note's
+``two'' was heard correctly. Its error was to call that two a \emph{cohomological degree}: by
+Lemma~\ref{lem:regrade} the $H^1$ cocycle condition of a datum on $2$-simplices already reads them,
+so composition is nerve level two but cohomological degree \emph{one}. The same lemma issues a
+warning that matters below: cochain level and nerve level need not agree. The weld $[\omega]\in H^2$
+is a $2$-cochain --- cochain level two, exactly like $\delta$ --- yet its cocycle condition is indexed
+by $\Nerve_3$, so its nerve level is three. Cochain level thus fails to separate the weld from
+composition; nerve level separates them. Every ``degree two'' of the earlier note that referred to
+composition itself should read ``nerve level two, cohomological degree one''.
 \end{remark}
 
 \paragraph{Two structure maps: $\partial$ reads the graph, $\delta$ reads composition.}
@@ -244,8 +270,9 @@ The one-hole derivative \cite{AAGM2003} is
 \[
    \partial p \;=\; \sum_a |E_a|\cdot y^{\,|E_a|-1},
 \]
-depending only on the direction sets, i.e.\ only on $U(p)=\tr_1\Nerve(\cC)$: a construction on the
-reflexive graph, nerve level one. With $W=\Z[\varepsilon]/(\varepsilon^2)$ the dual-number Weil
+depending only on the direction sets, i.e.\ only on $U(p)$: a construction on the out-degree family
+--- the coarsest floor reading, coarser even than the reflexive graph $\tr_1\Nerve(\cC)$ --- so a
+nerve-level-one construction. With $W=\Z[\varepsilon]/(\varepsilon^2)$ the dual-number Weil
 algebra, the attached tangent functor is the Weil base change $T=(-)\otimes W$; the one-hole
 derivative appears as the $\varepsilon$-coefficient of the substitution $p(y+\varepsilon v)$, and all
 we use downstream is that the vertical fibre over a shape $a$ is free of rank $|E_a|$
@@ -282,16 +309,24 @@ obstruction}
    [\omega]\in H^2(\sS;\cD),
 \]
 a Baues--Wirsching $2$-cocycle on the orbit category with coefficients the vertex-group system $\cD$;
-the chain decomposes as claimed exactly when $[\omega]=0$ \cite{MacBethZS}. By
-Lemma~\ref{lem:regrade} this degree-two class reads $\Nerve_3$: its cocycle condition \emph{is} the
-associativity equation of the assembled composition (\S\ref{sec:lvl3}). It is the home of the
-blockchain re-entrancy obstruction $[\omega]=\varepsilon\in H^2\cong\Z/2$ \cite{MacBethReentrancy}.
+the chain splits as the claimed product exactly when $[\omega]=0$ \cite{MacBethZS}. Two simplicial
+facts about this class must be kept apart (\S\ref{sec:lvl3}). Its defining cocycle \emph{condition} is
+the associativity equation of the assembled composition, a system on composable triples $\Nerve_3$ ---
+so by Lemma~\ref{lem:regrade} the class is nerve level three, cohomological degree two. The
+\emph{class} itself, however, presupposes that condition: a cochain that violates it is not a weld at
+all, and there is then no class to form. What $[\omega]$ measures is accordingly not whether the weld
+is associative but whether an \emph{associative} weld \emph{splits} --- the Eilenberg--Mac\,Lane
+classification of the extension. It is the home of the blockchain re-entrancy obstruction
+$[\omega]=\varepsilon\in H^2\cong\Z/2$, which is therefore a non-split but associative weld, not a
+non-associative one \cite{MacBethReentrancy}.
 
 \paragraph{The nerve-level grading.}
 We rank a compositional invariant by the nerve level of the binding datum it reads: level $1$ for the
-reflexive graph $U(p)$ (out-degree family); level $2$ for the composition map $d_1$ --- read by the
-comultiplication $\delta$ and by any $H^1(\sS;A)$ of a transported local system; level $3$ for the
-associativity of the assembled composition, whose obstruction is the weld $[\omega]\in H^2$. The grade
+out-degree family $U(p)$ (the coarsest floor reading, below even the reflexive graph $\tr_1\Nerve$);
+level $2$ for the composition map $d_1$ --- read by the comultiplication $\delta$ and by any
+$H^1(\sS;A)$ of a transported local system; level $3$ for associativity of the assembled composition,
+a condition on composable triples whose honest witness is a non-associative magma and at which the
+Zappa--Sz\'ep weld $[\omega]\in H^2$ sits as the splitting obstruction of an associative weld. The grade
 is a grade of \emph{data}; the different cohomological degrees carry different coefficient systems, and
 as Remark~\ref{rem:nocollapse} records, the same cyclic group can surface at different degrees under a
 change of coefficients, so one must not read the grading as a single filtration.
@@ -308,8 +343,9 @@ Van Der Linden \cite[Def.~4.18, attributed there]{Lanfranchi2026}.
 
 \begin{theorem}[\cite{MacBethParallel}]\label{thm:lvl1}
 A container $p=\sum_a y^{E_a}$ is tangent-regular iff the out-degree $a\mapsto|E_a|$ is constant on
-$\Ob$. This condition depends only on $U(p)=\tr_1\Nerve(\cC)$ --- it factors through
-$U\colon\Cat\to\Poly$ --- and is therefore blind to composition: it is invariant under changing
+$\Ob$. This condition depends only on $U(p)$ --- it factors through the forgetful
+$U\colon\Cat\to\Poly$, hence through a reading even coarser than the reflexive graph
+$\tr_1\Nerve(\cC)$ --- and is therefore blind to composition: it is invariant under changing
 $\delta$ on a fixed underlying functor $p$, and so cannot be equivalent to any property that
 distinguishes two comonoid structures on the same $p$, such as being a groupoid
 (Example~\ref{ex:lvl1}).
@@ -463,12 +499,14 @@ cohomological anchor of rung $3$ is the non-abelian degree-one class above, not 
 literal abelian anchors of the ladder remain $[\theta_R]\in H^1$ and $[\omega]\in H^2$; the tower
 refines the \emph{datum} $\delta$ at nerve level two.
 
-\section{Nerve level three: associativity is the weld}\label{sec:lvl3}
+\section{Nerve level three: associativity, and the weld as splitting obstruction}\label{sec:lvl3}
 
-The weld $[\omega]\in H^2$ reads one level higher. By Lemma~\ref{lem:regrade} its degree-two cocycle
-condition is a system of equations on composable triples $\Nerve_3$, and that system is exactly
-associativity. We make the level-two/level-three distinction precise, and show why it is \emph{not} a
-third detection rung for a fixed category.
+The predicates one can impose on a composition climb one more level, from ``a composition exists'' on
+$\Nerve_2$ to ``it is associative'' on $\Nerve_3$. By Lemma~\ref{lem:regrade} the degree-two cocycle
+\emph{condition} of the weld $[\omega]\in H^2$ is a system of equations on composable triples
+$\Nerve_3$, and that system is exactly associativity --- though, as we will see, the \emph{class}
+$[\omega]$ measures splitting rather than associativity itself. We make the level-two/level-three
+distinction precise, and show why it is \emph{not} a third detection rung for a fixed category.
 
 \begin{theorem}[2-coskeletal collapse, \cite{MacBethNerve}]\label{thm:coskel}
 A small category is determined up to isomorphism by its $2$-truncated nerve. Consequently, for
@@ -491,24 +529,40 @@ pairs and asks whether it assembles into a category.
 There is a unital magma whose full composition on composable pairs is defined and unital, yet which is
 not associative --- e.g.\ on $\{1,x,y\}$ with unit $1$ and $x\cdot x=y$, $x\cdot y=x$, $y\cdot x=y$,
 $y\cdot y=y$: the triple $(x,x,x)$ gives $(x\cdot x)\cdot x=y$ but $x\cdot(x\cdot x)=x$. Every pair-level
-($\Nerve_2$) datum is present and unital; the obstruction lives purely at $\Nerve_3$. When the
-composition arises as a Zappa--Sz\'ep weld, this obstruction is the class $[\omega]\in H^2$, vanishing
-iff the weld is associative (a category). The separation of ``composition exists'' ($\Nerve_2$) from
-``composition is associative'' ($\Nerve_3$) is therefore strict, witnessed by the re-entrancy weld
-$[\omega]=\varepsilon\neq 0\in H^2\cong\Z/2$ \cite{MacBethReentrancy}.
+($\Nerve_2$) datum is present and unital; the obstruction lives purely at $\Nerve_3$. The separation of
+``composition exists'' ($\Nerve_2$) from ``composition is associative'' ($\Nerve_3$) is therefore
+strict, and its witness is a pointwise $\Nerve_3$ condition failure --- not a cohomology class.
 \end{theorem}
+
+\begin{remark}[the weld is a splitting obstruction, not an associativity test]\label{rem:weldsplit}
+It is tempting to read the Zappa--Sz\'ep weld class $[\omega]\in H^2$ as the cohomological form of this
+non-associativity. That reading is wrong, and the regrade makes the error visible. The $2$-cocycle
+\emph{condition} $d^2\omega=0$ \emph{is} the associativity equation of Theorem~\ref{thm:assembly}: a
+cochain that fails it is not a weld, and there is then no class. A class $[\omega]$ therefore
+presupposes associativity; what it classifies, by Eilenberg--Mac\,Lane, is whether the associative
+weld \emph{splits} into its matched-pair factorization $\cC\bowtie\cD$ --- the global closure condition
+$(G)$, with $[\omega]=0\Leftrightarrow(G)$ \cite{MacBethZS}. The blockchain re-entrancy obstruction
+$[\omega]=\varepsilon\neq 0\in H^2\cong\Z/2$ \cite{MacBethReentrancy} is accordingly a \emph{non-split
+but associative} weld, not a non-associative one: the cocycle condition is met, so associativity holds;
+what fails is the decomposition. Both phenomena are nerve-level-three --- the non-associativity witness
+a pointwise condition on $\Nerve_3$, the weld a class whose cocycle condition lives on $\Nerve_3$ ---
+but they measure different things, and only the first is a failure of associativity.
+\end{remark}
 
 This is the honest content of ``nerve level two $\subsetneq$ nerve level three'': not that a finer
 invariant of a fixed category needs triples --- Theorem~\ref{thm:coskel} forbids that --- but that the
-\emph{obstruction to building} a category from a composition is an associativity datum one level above
-the composition itself. It is on this reading, and only this one, that the weld deserves to be called
-the level-three (degree-two) datum of the programme.
+predicates one can impose on a composition climb a genuine level, from ``exists'' on $\Nerve_2$ to
+``associative'' on $\Nerve_3$. The weld $[\omega]\in H^2$ earns its place at level three through its
+cocycle condition, which lives on $\Nerve_3$ (Remark~\ref{rem:weldsplit}); it is the programme's
+level-three \emph{cohomological} anchor, measuring splitting, while associativity itself is the
+level-three \emph{condition}, witnessed pointwise by the magma.
 
 \section{The two cohomological anchors are independent}\label{sec:indep}
 
 The ladder has two literal abelian cohomological anchors: the inventory class
 $[\theta_R]\in H^1(\sS;A)$ at nerve level two (a transported-resource datum) and the weld class
-$[\omega]\in H^2(\sS;\cD)$ at nerve level three (an associativity datum). They are not ordered by
+$[\omega]\in H^2(\sS;\cD)$ at nerve level three (the splitting obstruction of an associative weld).
+They are not ordered by
 detection power; they are \emph{independent}. The results are proved in \cite{MacBethSupplyChain}.
 
 \begin{theorem}[\cite{MacBethSupplyChain}]\label{thm:consistency}
@@ -556,9 +610,10 @@ The conjecture tested in \cite{MacBethSupplyChain} --- that inventory consistenc
 weld $[\omega]=0$ --- was a false generalization of blockchain re-entrancy, where the conserved
 quantity \emph{is} the weld-state and no separate resource presheaf exists. In a supply chain the
 stock lives on the nodes, transported by operations, and is a genuinely separate degree-one datum. The
-modelling is sharpened, not debunked: re-entrancy is a nerve-level-three failure (handoff order, in
-the weld), inventory inconsistency a nerve-level-two failure (route discrepancy, on the nodes) --- two
-economic failure modes at two levels, each with a witness.
+modelling is sharpened, not debunked: re-entrancy is a nerve-level-three failure (the weld is
+associative but does not split --- the hand-off cannot be cleanly factored), inventory inconsistency a
+nerve-level-two failure (route discrepancy, on the nodes) --- two economic failure modes at two levels,
+each with a witness.
 
 \section{The program, and what it would take to prove}\label{sec:program}
 
@@ -566,7 +621,7 @@ economic failure modes at two levels, each with a witness.
 Three invariant instances fall on a single nerve-level ladder: out-degree homogeneity at level one,
 blind to composition; the $\delta$-translation invariant at level two, which detects groupoids and
 thin groupoids and separates $\Z/2$ from $\{1,e\}$ --- at cohomological degree one; and the weld at
-level three, the associativity obstruction. Two non-collapse facts make the ladder informative rather
+level three, the splitting obstruction of an associative weld. Two non-collapse facts make the ladder informative rather
 than decorative: level-one blindness (Theorem~\ref{thm:lvl1}), and the independence of the two
 cohomological anchors (Theorem~\ref{thm:sep}). A third, collapse, keeps us honest:
 Theorem~\ref{thm:coskel} shows there is no third \emph{detection} rung for a fixed category.
@@ -577,8 +632,9 @@ For a directed container (small category) $\cC$ and a compositional invariant $I
 level} of the binding datum $I$ reads records what $I$ can detect: an invariant factoring through the
 $k$-truncation $\tr_k\Nerve(\cC)$ is blind to every composition phenomenon genuinely of nerve level
 $>k$. In particular composition --- the comultiplication $\delta$, the composition map $d_1$ --- is a
-nerve-level-two datum, first detectable at cohomological degree one; and associativity --- the weld
-$[\omega]\in H^2$ --- is the nerve-level-three datum, cohomological degree two.
+nerve-level-two datum, first detectable at cohomological degree one; and associativity --- the
+condition on composable triples that is the defining cocycle condition of the weld $[\omega]\in H^2$
+(the class itself measuring splitting) --- is the nerve-level-three datum, cohomological degree two.
 \end{program}
 This is a \textbf{conjecture and research direction, not a theorem}. We have a regrade lemma, a strict
 floor separation, a collapse theorem, an assembly separation, three instances and one independence
@@ -609,7 +665,7 @@ Datum lives\ldots & Nerve level & Failure class & Economic instance \\
 \midrule
 on the \textbf{graph} (out-degrees) & $1$ & invisible to $\partial$ & tangent/shape geometry \\
 on the \textbf{nodes} (transported) & $2$ & $[\theta_R]\in H^1$ --- route discrepancy & supply-chain inventory \\
-in the \textbf{assembly} (weld) & $3$ & $[\omega]\in H^2$ --- handoff order & blockchain re-entrancy \\
+in the \textbf{assembly} (weld) & $3$ & $[\omega]\in H^2$ --- weld does not split & blockchain re-entrancy \\
 \bottomrule
 \end{tabular}
 \end{center}
