@@ -1,0 +1,482 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\Set}{\mathsf{Set}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Inn}{\mathrm{Inn}}
+\newcommand{\Out}{\mathrm{Out}}
+\newcommand{\gerbe}{\mathfrak{g}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\DCont}{\mathrm{DCont}}
+
+\title{The band boundary:\\
+\large the first nonabelian obstruction of the supply-chain inventory gerbe}
+\author{MacBeth\thanks{Kodamai. Source, verification scripts, and this note live at
+\texttt{github.com/scotmacbeth/work-in-progress}. Prepared for the Kodamai AI-Mathematician
+grant (Applications and Theory pillars) and the Strathclyde mini-course \emph{Tangent Categories
+and Containers} (13--16 October 2026). \emph{Status:} the criterion~(a) and vacuity~(b) below are
+proved; the nonvacuous band~(c) is an explicit, machine-checked witness. The note has had one
+referee pass, folded into the parent gerbe note~\cite{gerbenote}, which is under re-review; it is
+\emph{not} yet independently refereed in this standalone form.}\\
+\small Kodamai}
+\date{11 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A supply chain, abstracted to a small category $\C$, carries fungible inventory as local stock-data
+glued along logistics operations only up to a relabelling group $K=\Aut F$ of the stock fibre $F$;
+the gluing data is then a $\Aut F$-gerbe over the nerve $N(\C)$. A companion note showed that a
+global inventory requires an abelian degree-two class $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ to vanish,
+under the standing hypothesis that the comparison maps between charts are inner. We remove that
+hypothesis. Following Giraud, the obstruction is \emph{staged}: beneath the abelian gerbe class
+lies the \emph{band}, the outer-automorphism transport $\rho=q\circ\alpha$ of the relabelling group,
+a genuinely nonabelian datum whose class $\beta=[\rho]\in H^1(N(\C);\Out(\Aut F))$ must vanish before
+$[\gerbe]$ is even defined. We prove that $\beta=0$ exactly when the transport is inner-valued up to
+an outer relabelling, so a strict global inventory exists iff \emph{both} strata vanish. We then show
+the band is invisible to fungibility: for an $n$-element commodity fibre the band and the centre class
+are \emph{both} forced to zero for every $n\ge 3$, $n\neq 6$, with the two low exceptions disjoint;
+the nonabelian phenomenon is a feature of gauge- or torsor-structured stock, not of interchangeable
+units. A single $(\Z/p)^2$-gauge loop realises a nonzero band with no abelian shadow, exhibiting the
+first genuinely nonabelian invariant of the inventory program.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{The problem.} A supply chain is a small category $\C$: objects are nodes (warehouses,
+plants, ledgers), morphisms are logistics operations, composition is sequencing. Inventory is a
+presheaf-like datum glued along the morphisms. In the companion note~\cite{h1note} we treated the
+case where charts are compared by \emph{equality} of counts and found a degree-one class
+$[\theta_R]\in H^1(N(\C);R)$; its sequel~\cite{gerbenote} refined the comparison to \emph{isomorphism}
+of stock-states --- lots are fungible, so two charts agree only up to a relabelling group
+$K=\Aut F$ of the inventory fibre $F$. The gluing data is then an $\Aut F$-\emph{gerbe} over the
+nerve $N(\C)$, and a global inventory exists only if the gerbe is neutral.
+
+\paragraph{The gap.} The gerbe note~\cite{gerbenote} computed the neutrality obstruction as an
+\emph{abelian} degree-two class $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ --- but only under a standing
+hypothesis it stated honestly and hedged: that the comparison automorphisms between charts are
+\emph{inner}. For a nonabelian relabelling group this is a genuine restriction. What lives beneath it?
+When the transport between charts is allowed to apply an \emph{outer} automorphism of $\Aut F$, the
+abelian class $[\gerbe]$ is not even well-defined: its coefficient group $Z(\Aut F)$ is twisted, and
+the whole computation presumes a prior datum has been trivialised. That prior datum is the subject of
+this note.
+
+\paragraph{The result.} The obstruction is \emph{staged}, exactly as Giraud's classification of
+nonabelian gerbes predicts~\cite{giraud}. Beneath the abelian gerbe class sits the \emph{band} (French
+\emph{lien}): the outer transport $\rho:=q\circ\alpha:\C\to B(\Out\Aut F)$, where
+$q:\Aut\,G\twoheadrightarrow\Out\,G$ is the outer-automorphism quotient and $\alpha$ is the
+chart-comparison transport. Its class $\beta:=[\rho]\in H^1(N(\C);\Out(\Aut F))$ is a genuinely
+nonabelian degree-one datum, and it is the floor of the obstruction tower.
+
+\begin{theorem}[Criterion; \S\ref{sec:a}]\label{thm:a-intro}
+The band is always a strict cocycle, so $\beta$ is well-defined \emph{(Lemma~\ref{lem:band})}. It
+vanishes, $\beta=0$, if and only if the transport $\alpha$ is, up to an $\Out(\Aut F)$-relabelling of
+nodes, valued in inner automorphisms. Consequently \emph{(Corollary~\ref{cor:aprime})} a strict global
+inventory exists iff both strata vanish: the band $\beta=0$ \emph{and} the abelian gerbe class
+$[\gerbe]=0$, the latter being defined only once the former holds.
+\end{theorem}
+
+So the hedged hypothesis of~\cite{gerbenote} is now a precise, checkable condition, and the gerbe
+theorem is its \emph{band-trivial stratum}. Two further results map the phenomenon. First, it is
+invisible to plain fungibility:
+
+\begin{theorem}[Vacuity; \S\ref{sec:b}]\label{thm:b-intro}
+For a bare $n$-element commodity fibre, $\Aut F=S_n$, the band \emph{and} the centre class are both
+automatically zero for every $n\ge 3$ with $n\neq 6$. The two low-order exceptions are disjoint:
+$n=6$ carries a possible band ($\Out S_6=\Z/2$) but no centre class, and $n=2$ carries a possible
+centre class but no band. No single commodity fibre exhibits both.
+\end{theorem}
+
+Second, it is nonvacuous in general, and separates cleanly from the abelian story:
+
+\begin{theorem}[Witness; \S\ref{sec:c}]\label{thm:c-intro}
+Over a single reversible loop $\C=B(\Z)$ with gauge-structured stock $\Aut F=(\Z/p)^2$, any
+nonidentity transport has $\beta\neq0$, while the abelian class is forced to zero because
+$N(\C)\simeq S^1$ is one-dimensional. The band is then the sole and nonzero obstruction.
+\end{theorem}
+
+\paragraph{The method.} Everything turns on the inner/outer short exact sequence of the relabelling
+group and the pointed nonabelian $H^1$ of a nerve. The criterion is an elementary Schreier argument;
+the vacuity is the classical arithmetic of $\Aut S_n$ and $Z(S_n)$; the witness is a one-line
+computation on $S^1$. No gerbe-theoretic machinery is invoked --- the point of the note is precisely
+that the first nonabelian stratum of the inventory gerbe can be isolated and decided by hand, and
+every claim is backed by a finite machine check.
+
+\paragraph{Consequences.} The band is a new, prior, genuinely nonabelian invariant of inventory,
+complementary to the centre class: the band needs $\Out(\Aut F)\neq1$, the centre class needs
+$Z(\Aut F)\neq1$. Theorem~\ref{thm:b-intro} turns the applications hedge into a dichotomy ---
+\emph{commodity inventory carries no nonabelian obstruction; the phenomenon requires
+gauge/torsor-structured assets} --- a quotable grant line. And it sharpens the parent program's
+placement of inventory as a distinguished $H^2$ home on $\DCont\simeq\Cat$~\cite{au-dccat} by
+exhibiting the degree-one nonabelian datum that sits underneath.
+
+\paragraph{Outline.} Section~\ref{sec:prelim} fixes the two structure groups, the band, and proves it
+is a cocycle. Section~\ref{sec:a} proves the criterion and its corollary. Section~\ref{sec:b} proves
+the vacuity and exhibits the $S_6$ curiosity. Section~\ref{sec:c} gives the nonvacuous witness.
+Section~\ref{sec:couple} reports, at trust grade \emph{computed}, the first base on which the two
+strata \emph{couple}, and states the one open problem. Section~\ref{sec:prog} summarises what this
+does for the program.
+
+\section{The transport, the band, and the two structure groups}\label{sec:prelim}
+
+Let $\C$ be a small category (a directed container: objects are nodes, morphisms logistics
+operations), $N(\C)$ its nerve, $F$ the inventory fibre, and
+\[
+G:=\Aut F
+\]
+the relabelling group of the stock. Local inventory trivialisations are the local objects of a
+$G$-gerbe over $N(\C)$; comparing two charts across a morphism $f:x\to y$ transports the structure
+group by an \emph{automorphism} of $G$. Collecting these comparisons gives the \emph{transport}
+\[
+\alpha:\Mor\,\C\longrightarrow\Aut(G),
+\]
+functorial \emph{up to inner automorphism}: re-trivialising a chart conjugates the transport, so
+$\alpha_{gf}$ and $\alpha_g\alpha_f$ agree only modulo $\Inn(G)$. (The 2-cell coherence data that
+measures this slack is the abelian gerbe datum of~\cite{gerbenote}, valued in $Z(G)$; here we need
+only that the slack is inner.)
+
+Recall the \emph{inner/outer sequence} of $G$:
+\begin{equation}\label{eq:star}
+1\longrightarrow Z(G)\longrightarrow G\xrightarrow{\ \mathrm{conj}\ }\Aut(G)
+\xrightarrow{\ q\ }\Out(G)\longrightarrow 1,
+\qquad \Inn(G)=\operatorname{im}(\mathrm{conj})=\ker q\cong G/Z(G).
+\end{equation}
+
+\begin{definition}[Band]\label{def:band}
+The \emph{band} (lien) of the gerbe is the composite outer transport
+\[
+\rho:=q\circ\alpha:\Mor\,\C\longrightarrow\Out(G).
+\]
+\end{definition}
+
+The band is the sheafified, outer-automorphism-valued shadow of the transport. This is the folklore
+reading of Giraud's \emph{lien}~\cite{giraud}: a band is a structure group well-defined up to
+isomorphism, where the isomorphism is itself well-defined only up to inner automorphism --- so what
+survives globally is exactly the $\Out$-valued data. It rhymes with the ``visible up to inner
+automorphism'' slogan of the monodromy tower in~\cite{h1note}. The point of passing to $\Out$ is that
+it launders away the slack:
+
+\paragraph{Nerve cohomology convention.} For a group $Q$ (constant coefficients), a \emph{cocycle} in
+$H^1(N(\C);Q)$ is a functor $\C\to BQ$, i.e.\ a map $\gamma:\Mor\,\C\to Q$ with $\gamma(gf)=\gamma(g)\gamma(f)$
+and $\gamma(\id)=e$; two cocycles are \emph{cohomologous} iff related by a node-relabelling
+$\lambda:\Ob\,\C\to Q$ via $\gamma'(f\colon x\to y)=\lambda(y)\,\gamma(f)\,\lambda(x)^{-1}$. Then
+$H^1(N(\C);Q)=Z^1/{\sim}$, pointed by $\gamma\equiv e$; ``$[\gamma]=0$'' means $\gamma\sim e$. For $Q$
+abelian this is ordinary simplicial $H^1$; for $Q$ nonabelian it is a pointed set.
+
+\begin{lemma}[The band is always a strict cocycle]\label{lem:band}
+$\rho$ is a genuine functor $\C\to B(\Out G)$: $\rho(gf)=\rho(g)\rho(f)$ and $\rho(\id)=e$. Hence
+$\beta:=[\rho]\in H^1(N(\C);\Out G)$ is well-defined, regardless of the up-to-inner slack in $\alpha$.
+\end{lemma}
+
+\begin{proof}
+By construction $\alpha_{gf}=\iota\cdot\alpha_g\alpha_f$ for some $\iota\in\Inn(G)=\ker q$. Applying
+$q$ kills $\iota$: $\rho(gf)=q(\alpha_{gf})=q(\iota)q(\alpha_g)q(\alpha_f)=\rho(g)\rho(f)$.
+Normalisation $\rho(\id)=e$ is immediate. The inner slack dies in $\Out$, so $\rho$ depends only on
+$\alpha\bmod\Inn$.
+\end{proof}
+
+``Band trivial'' --- the standing hypothesis of~\cite{gerbenote} --- means precisely $\beta=0$.
+
+\section{The band-triviality criterion}\label{sec:a}
+
+\begin{theorem}[Criterion]\label{thm:a}
+$\beta=0\in H^1(N(\C);\Out G)$ if and only if the transport $\alpha$ is, up to an $\Aut\,G$-valued
+node relabelling, inner-valued: that is, iff there is a cocycle $\tilde\alpha:\C\to B(\Aut G)$,
+cohomologous to $\alpha$, with $\tilde\alpha(f)\in\Inn(G)$ for every morphism $f$. In particular, if
+$\alpha$ already lands in $\Inn(G)$ then $\beta=0$; the theorem says $\beta=0$ is exactly the
+gauge-invariant closure of that literal ``trivial band''.
+\end{theorem}
+
+\begin{proof}
+$(\Leftarrow)$ Suppose $\tilde\alpha=\mu\cdot\alpha$ with $\mu:\Ob\,\C\to\Aut\,G$ and
+$\tilde\alpha(f)\in\Inn G=\ker q$ for all $f$. Put $\lambda:=q\circ\mu:\Ob\,\C\to\Out\,G$. For
+$f:x\to y$,
+\[
+\rho(f)=q(\alpha(f))=q\bigl(\mu(y)^{-1}\tilde\alpha(f)\mu(x)\bigr)
+=\lambda(y)^{-1}\,q(\tilde\alpha(f))\,\lambda(x)=\lambda(y)^{-1}\lambda(x),
+\]
+since $q(\tilde\alpha(f))=e$. Then $\lambda(y)\,\rho(f)\,\lambda(x)^{-1}=e$, so $\rho\sim e$, i.e.\
+$\beta=0$.
+
+$(\Rightarrow)$ Suppose $\beta=0$: there is $\lambda:\Ob\,\C\to\Out\,G$ with
+$\rho(f)=\lambda(y)^{-1}\lambda(x)$ for every $f:x\to y$. Since $q$ is surjective by~\eqref{eq:star},
+choose lifts $\mu(x)\in\Aut\,G$ with $q(\mu(x))=\lambda(x)$ at each node, and set
+$\tilde\alpha(f):=\mu(y)\,\alpha(f)\,\mu(x)^{-1}$. Then
+\[
+q(\tilde\alpha(f))=\lambda(y)\,\rho(f)\,\lambda(x)^{-1}
+=\lambda(y)\bigl(\lambda(y)^{-1}\lambda(x)\bigr)\lambda(x)^{-1}=e,
+\]
+so $\tilde\alpha(f)\in\ker q=\Inn(G)$ for every $f$. And $\tilde\alpha$ is a cocycle, cohomologous to
+$\alpha$ via $\mu$: for $f:x\to y$, $g:y\to z$,
+$\tilde\alpha(gf)=\mu(z)\alpha(g)\alpha(f)\mu(x)^{-1}
+=\mu(z)\alpha(g)\mu(y)^{-1}\cdot\mu(y)\alpha(f)\mu(x)^{-1}=\tilde\alpha(g)\tilde\alpha(f)$, with
+$\tilde\alpha(\id)=e$.
+\end{proof}
+
+This is Giraud's stratum~\cite{giraud} read on the simplicial site $N(\C)$: the band is the
+$\Out$-reduction of the structure cocycle, vanishing exactly when the transport is inner up to
+coboundary. The argument uses only~\eqref{eq:star} and the nerve's $H^1$ --- no bitorsor machinery
+(contrast~\cite{breen}).
+
+\paragraph{A worked check on $D_4$.} Take $G=D_4$, the symmetry group of the four-lot ring. Then
+$\Aut(D_4)=D_4$ (order $8$), $\Inn(D_4)=(\Z/2)^2$, and $\Out(D_4)=\Z/2$ --- \emph{both} the inner and
+the outer part are nontrivial, so the criterion has real content. Over the single reversible operation
+$\C=B(\Z)$ (so $\Mor=\Z$, $\alpha(t)=\varphi\in\Aut D_4$), a transport is relabel-reducible into
+$\Inn$ iff $\varphi\in\Inn$, and $[\rho]=[q(\varphi)]=0$ iff $\varphi\in\Inn$; the two sides coincide
+for all eight automorphisms $\varphi$ (script \texttt{clause\_a\_D4\_check.py}).
+
+\begin{corollary}[The staged obstruction]\label{cor:aprime}
+A strict global inventory --- a global relabelling making every transport a strict identity --- exists
+if and only if both strata vanish:
+\[
+\textbf{(i)}\ \ \beta=0\in H^1(N(\C);\Out G)\quad\text{and}\quad
+\textbf{(ii)}\ \ [\gerbe]=0\in H^2(N(\C);Z(G)),
+\]
+where the abelian class $[\gerbe]$ of~\cite{gerbenote} is defined only once \textbf{(i)} holds. The
+obstruction is genuinely staged: $[\gerbe]$ is a secondary invariant, defined in the kernel of the
+primary band. Thus the main theorem of~\cite{gerbenote} is exactly the band-trivial stratum of the
+full obstruction, and Theorem~\ref{thm:a} supplies the prior stratum it had hypothesised away.
+\end{corollary}
+
+\begin{proof}
+A strict global inventory is a relabelling $\mu:\Ob\,\C\to\Aut\,G$ with $\mu\cdot\alpha\equiv e$.
+Projecting by $q$ trivialises $\rho$, so \textbf{(i)} is necessary. Given \textbf{(i)},
+Theorem~\ref{thm:a} lets us take $\alpha$ inner-valued, $\alpha=\mathrm{conj}\circ\bar\rho$ for a
+functor $\bar\rho:\C\to B(\Inn G)$; the gerbe is then the gerbe of lifts of $\bar\rho$ through
+$G\to\Inn G$ in~\eqref{eq:star}, which by~\cite{gerbenote} is neutral iff $[\gerbe]=0$. So
+\textbf{(i)}$\wedge$\textbf{(ii)} is necessary and sufficient.
+\end{proof}
+
+\section{Fungible stock is doubly vacuous}\label{sec:b}
+
+Let $F$ be a bare $n$-element set of indistinguishable lots, so $G=\Aut(F)=S_n$.
+
+\begin{theorem}[Vacuity]\label{thm:b}
+For every $n\ge 3$ with $n\neq 6$, generic fungible inventory carries neither a band obstruction nor a
+centre class:
+\begin{itemize}
+\item \textbf{band:} $\Out(S_n)=1$, so $H^1(N(\C);\Out S_n)=\{*\}$ and $\beta=0$ --- for every $\C$ and
+every transport;
+\item \textbf{centre:} $Z(S_n)=1$, so $H^2(N(\C);Z(S_n))=0$ and $[\gerbe]=0$.
+\end{itemize}
+There are exactly two low-order exceptions, and they are \emph{disjoint}:
+\begin{itemize}
+\item $n=6$ is the lone band exception: $\Out(S_6)=\Z/2$, so a transport using the exotic outer
+automorphism can have $\beta\neq0$ --- but $Z(S_6)=1$ still kills the centre class;
+\item $n=2$ is the lone centre exception: $S_2=\Z/2$, $Z=\Z/2\neq1$, so $[\gerbe]$ can be nonzero (the
+minimal $B(\Z/2)$ witness of~\cite{gerbenote}) --- but $\Out(S_2)=1$ keeps the band trivial.
+\end{itemize}
+No single fungible fibre exhibits both obstructions.
+\end{theorem}
+
+\begin{proof}
+$S_n$ is a \emph{complete} group --- centreless with every automorphism inner, hence $\Out=1$ --- for
+all $n$ except $n=2$ ($S_2=\Z/2$ is abelian, $\Aut=1$, $\Out=1$ anyway) and $n=6$, where
+$|\Out(S_6)|=2$ (Rotman~\cite[Thms.\ 7.5--7.7]{rotman}). And $Z(S_n)=1$ for $n\ge3$, $=\Z/2$ for
+$n=2$. Feeding $\Out=1$ into Theorem~\ref{thm:a} forces $\beta=0$; feeding $Z=1$ into the centre
+coefficient of~\cite{gerbenote} forces $[\gerbe]=0$. The exceptional values $n\in\{2,6\}$ are distinct
+and each triggers exactly one stratum, as tabulated.
+\end{proof}
+
+\paragraph{The $S_6$ exception, explicitly.} $S_6$ is the unique symmetric group with an outer
+automorphism. It sends a transposition (cycle type $2\,1^4$) to a product of three disjoint
+transpositions (cycle type $2^3$) --- a map that cannot be a conjugation, since conjugation preserves
+cycle type. It arises from the exotic transitive embedding $S_5\hookrightarrow S_6$ (the action of
+$S_5$ on its six Sylow-$5$-subgroups). We verified an explicit witness (\texttt{out\_s6.py}): $S_5$
+acting on its six Sylow-$5$-subgroups gives a transitive embedding $\psi:S_5\hookrightarrow S_6$ with
+image $H$ ($|H|=120$, transitive); the action of $S_6$ on the six cosets $S_6/H$ is an automorphism
+$\Phi$ with $\Phi(0\,1\,2\,3\,4\,5)=[1,4,2,5,0,3]$ and $\Phi(0\,1)=(0\,1)(2\,5)(3\,4)$, machine-checked
+to be a homomorphism and bijection sending every transposition to cycle type $2^3$ --- hence outer.
+Exhaustive counts give $|\Aut(S_5)|=120$ ($\Out=1$) and $|\Aut(S_6)|=1440=2\cdot 720$ ($\Out=\Z/2$).
+So for $n=6$ a transport applying $\Phi$ along some operation realises $\beta\neq0$ while $[\gerbe]=0$:
+a band obstruction with no abelian shadow. Honest caveat: this is a curiosity, not an applications
+driver.
+
+\paragraph{The applications boundary.} The nonabelian inventory phenomenon is invisible to
+fungibility. Three or more interchangeable units create no degree-two relabelling obstruction ($S_n$
+centreless) and no band obstruction ($S_n$ complete), bar the isolated $S_6$ curiosity. Both
+nontrivial strata require \emph{gauge/torsor-structured} stock: a fibre whose automorphism group has
+nontrivial centre (for the centre class) or nontrivial outer group (for the band). This is the
+economically meaningful regime --- allocation defined up to a gauge group $K$ acting by translation
+($\Aut F=K$, centre $Z(K)$, outer group measuring how the process twists the gauge) --- not plain
+interchangeability.
+
+\section{A nonvacuous band}\label{sec:c}
+
+\begin{theorem}[Witness]\label{thm:c}
+There is a supply-chain datum $(\C,G,\alpha)$ with band $\beta\neq0$. Take $G=(\Z/p)^2$ (an abelian
+gauge group of stock), $\C=B(\Z)$ (a single reversible operation, the ``weld loop''), and
+$\alpha(t):=A$ for a chosen $A\in\Aut(G)$ with $A\neq I$. Then
+$\beta=[\rho]=[A]\neq0\in H^1(N(\C);\Out G)$. Moreover the strata separate cleanly: the band is the
+sole and nonzero obstruction, while the centre class is forced to zero.
+\end{theorem}
+
+\begin{proof}
+\emph{The groups.} For abelian $G$, conjugation is trivial, so $\Inn(G)=1$ and $\Out(G)=\Aut(G)$. For
+$G=(\Z/p)^2$, $\Aut(G)=\GL_2(\mathbb F_p)$. Hence $q=\id$ and the band sees the \emph{entire}
+transport: $\rho=\alpha$. (This is the opposite extreme from the inner-valued regime
+of~\cite{gerbenote}: here every nonidentity transport is non-inner.)
+
+\emph{The base.} $N(B(\Z))\simeq S^1$. A cocycle $\rho:B(\Z)\to B(\Out G)$ is determined by the single
+value $\rho(t)=A$ (the generator $t$ maps freely). A node-relabelling by $g\in\Out G$ sends
+$A\mapsto gAg^{-1}$, so
+\[
+H^1(N(B(\Z));\Out G)=\{\text{conjugacy classes of }\Out G\},
+\]
+and $[\rho]=0$ iff $A$ is conjugate to $e$, iff $A=I$.
+
+\emph{The witness.} Choose any $A\neq I$; then $\beta=[A]\neq0$. Concretely for $p=2$,
+$\GL_2(\mathbb F_2)\cong S_3$ (order $6$, three classes $\{I\}$, three involutions, two order-$3$
+elements); take the transvection $A=\left(\begin{smallmatrix}1&1\\0&1\end{smallmatrix}\right)$ of
+order $2$, so $[A]\neq[I]$ (script \texttt{band\_boundary\_verify.py}). Thus $\beta\neq0$.
+
+\emph{Clean separation.} On $\C=B(\Z)$ the nerve $N(\C)\simeq S^1$ is one-dimensional, so
+$H^2(N(\C);Z(G))=0$ for \emph{any} coefficients: the centre class is always zero here, no matter how
+rich $Z(G)=G=(\Z/p)^2$ is. Hence the band $\beta\neq0$ is the unique obstruction, and it is genuinely
+nonabelian-flavoured --- it lives in $H^1$ with nonabelian coefficients $\GL_2(\mathbb F_p)$, prior to
+and independent of any $H^2$ story.
+\end{proof}
+
+\paragraph{Interpretation.} Stock is defined up to a $(\Z/p)^2$-gauge (two independent mod-$p$ ledger
+offsets). A cyclic refurbishment process $t$ relabels the gauge by a fixed $\GL_2(\mathbb F_p)$ element
+$A$. If $A\neq I$, no global choice of gauge is consistent around the loop --- and this failure is a
+band obstruction, an outer twist of the structure group, strictly prior to the degree-two
+``how-many-units'' gerbe class. Fungibility can never produce it ($\S\ref{sec:b}$); gauge-structured
+stock does, minimally.
+
+\section{Where the strata couple}\label{sec:couple}
+
+The two strata are \emph{staged} (Corollary~\ref{cor:aprime}) --- the band must vanish before the
+centre class is defined --- but staging is not the same as independence. On a one-dimensional base they
+decouple completely: $H^2(S^1;-)=0$, so in the witness of \S\ref{sec:c} every band is realised by a
+strict transport and the degree-two datum is vacuous. The first base on which the strata can
+genuinely \emph{interact} is the torus $T^2\simeq N(B(\Z^2))$, where $H^2(T^2;-)\neq0$.
+
+Here the relevant connecting map is that of the coefficient
+extension~\eqref{eq:star}. For a band $\rho:\Z^2\to\Out G$ with $G$ of nilpotency class $\le2$ (so
+$M:=\Inn G=G/Z(G)$ is abelian), the pointed exact sequence of~\eqref{eq:star} on $T^2$ gives a
+connecting map
+\[
+\delta:\ H^1(T^2;\Out G)\longrightarrow H^2(T^2;\,\Inn G),
+\]
+and $\delta(\beta)$ is the obstruction to lifting the outer band to a strict $\Aut G$-valued transport.
+A short computation (the single relator of $\Z^2$ evaluated on the fundamental $2$-cell) identifies
+$\delta(\beta)$ with the commutator $[A,B]$ of any lifts $A,B\in\Aut G$ of $\rho(s),\rho(t)$, taken in
+the coinvariants $M/((\sigma-1)M+(\tau-1)M)$; it is zero iff some lift choice makes $A,B$ commute. The
+problem of coupling therefore reduces to a finite search: find a class-$2$ group with two commuting
+outer automorphisms whose lifts never commute.
+
+\begin{remark}[Computed witness; not yet refereed]\label{rem:couple}
+Such a group exists: $G=D_4\times C_2$ (order $16$). With the two outer automorphisms
+$A:r\mapsto r^3,\,s\mapsto s,\,c\mapsto r^2c$ and $B:r\mapsto r^3c,\,s\mapsto s,\,c\mapsto c$ (both
+of order $2$ in $\Out G\cong$ a group of order $16$, generating a $(\Z/2)^2$), the band
+$\rho(s)=[A],\ \rho(t)=[B]$ has $\beta\neq0$, and $\delta(\beta)=[A,B]=[s]\neq0$ in
+$H^2(T^2;\Inn G)=(\Z/2)^2$: an exhaustive check over all $16\times16$ inner adjustments finds no
+commuting lift (scripts \texttt{aut\_engine.py}, \texttt{verify\_final.py}, independently
+re-verified). This is the first base on which a nonzero band \emph{forces} a nonzero degree-two class
+--- the two strata do not merely stack, they talk. \emph{Three honest caveats.} (1)~Trust grade is
+\emph{computed}, not refereed, and not yet Lean-checked. (2)~The coefficient of $\delta$ is the inner
+group $\Inn G$, \emph{not} the centre $Z(\Aut F)$ (for $D_4\times C_2$ the two happen to be abstractly
+isomorphic, but they are different functors of $G$ and sit in different extensions); the
+centre-valued phenomenon is a separate stage, the central extension $1\to Z(G)\to G\to\Inn G\to1$,
+which the same group also witnesses. (3)~Minimality over all groups of order $\le16$ is not claimed.
+\end{remark}
+
+\paragraph{The open problem.} Classifying $K$-\emph{banded} inventory gerbes --- the torsor over the
+$\beta$-twisted $H^2(N(\C);Z(G))$, Giraud's full nonabelian machinery~\cite{giraud,breen} --- is open
+and is the live research lane. Remark~\ref{rem:couple} settles existence of coupling with one explicit
+witness; the structured classification, and a Lean re-run of the finite certificate on the existing
+reduced-nerve $\mathbb F_2$ engine~\cite{leanwit}, remain to be done.
+
+\section{What this does for the program}\label{sec:prog}
+
+\begin{itemize}
+\item The standing ``band-trivial'' hypothesis of~\cite{gerbenote} is now a precise, checkable
+condition: $\beta=[q\circ\alpha]=0\in H^1(N(\C);\Out\Aut F)$ (Theorem~\ref{thm:a}).
+\item The main theorem of~\cite{gerbenote} --- strict global inventory $\iff[\gerbe]=0$ --- is the
+band-trivial stratum of a staged obstruction; the complete statement is $\beta=0$ \emph{and}
+$[\gerbe]=0$ (Corollary~\ref{cor:aprime}).
+\item For fungible stock the hypothesis is automatic for all $n\ge3$, $n\neq6$, and the centre class is
+also vacuous. The applications hedge becomes a theorem: \emph{commodity inventory carries no nonabelian
+obstruction; nontriviality requires gauge- or torsor-structured assets} (Theorem~\ref{thm:b}).
+\item The band is a new, prior, genuinely nonabelian invariant, nonvacuous in general
+(Theorem~\ref{thm:c}) and complementary to the centre class: the band needs $\Out\neq1$, the centre
+class needs $Z\neq1$. It is the first place in the supply-chain program where genuinely nonabelian
+cohomological data appears.
+\end{itemize}
+
+\paragraph{Bottom line.} The inventory gerbe's obstruction is staged, matching Giraud exactly over
+$N(\C)$. First the band $\beta=[q\circ\alpha]\in H^1(N(\C);\Out\Aut F)$ must vanish --- which happens
+iff the transport is inner-valued up to an outer relabelling (Theorem~\ref{thm:a}). Then the abelian
+class $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ must vanish (Corollary~\ref{cor:aprime}). Fungible stock sees
+neither stratum for all $n\ge3$, $n\neq6$, with $n=6$ (band only) and $n=2$ (centre only) the disjoint
+exceptions (Theorem~\ref{thm:b}). And the band is nonvacuous: a single $(\Z/p)^2$-gauge loop with
+transport $A\neq I$ has $\beta=[A]\neq0$ while its centre class is forced to zero
+(Theorem~\ref{thm:c}) --- the first genuinely nonabelian content of the supply-chain program, prior to
+and cleanly separated from the abelian $H^2$ story.
+
+\begin{thebibliography}{99}
+
+\bibitem{au-dccat}
+D.~Ahman, T.~Uustalu,
+\emph{Directed containers as categories},
+Proc.\ MSFP 2016, EPTCS 207, 2016, 89--98; arXiv:1604.01187.
+
+\bibitem{h1note}
+MacBeth,
+\emph{Supply-chain inventory consistency is a degree-one class, and is independent of the
+Zappa--Sz\'ep weld obstruction}
+(Kodamai internal note, 6 October 2026; proved).
+
+\bibitem{gerbenote}
+MacBeth,
+\emph{A classical $H^2$ obstruction, read as supply-chain inventory: the inventory gerbe and its band}
+(Kodamai internal note, 10 October 2026; proved, under re-review).
+
+\bibitem{leanwit}
+MacBeth,
+\emph{Reduced-nerve $H^2$ witness engine} (Lean~4; one engine, three machine-checked witnesses:
+$H^2(B(\Z/2))=\Z/2$, the $(\Z/2)^2$ diamond basis, the $D_4$ non-splitting),
+Kodamai internal Lean note, 9 October 2026.
+
+\bibitem{giraud}
+J.~Giraud,
+\emph{Cohomologie non ab\'elienne},
+Grundlehren der mathematischen Wissenschaften \textbf{179}, Springer, 1971.
+
+\bibitem{breen}
+L.~Breen,
+\emph{Bitorseurs et cohomologie non ab\'elienne},
+in \emph{The Grothendieck Festschrift, Vol.\ I}, Progr.\ Math.\ \textbf{86}, Birkh\"auser, 1990,
+401--476.
+
+\bibitem{rotman}
+J.~J.~Rotman,
+\emph{An Introduction to the Theory of Groups}, 4th ed.,
+Graduate Texts in Mathematics \textbf{148}, Springer, 1995 (Thms.\ 7.5--7.7: $S_n$ complete for
+$n\neq2,6$; $\Out S_6=\Z/2$).
+
+\end{thebibliography}
+
+\end{document}
