@@ -62,7 +62,8 @@ the shape-coproduct $\Fam=\Sigma$ cannot impose. The faithful encoding uses inst
 subtree embedding to its node injection read \emph{backward}, and the match is an isomorphism of
 indexed posets $T\mapsto(2^{\nodes(T)},\subseteq)$. The one fact this needs --- that the arboreal
 cartesian lift along a branching subtree embedding is computed by preimage --- is proved in six
-lines inside our own category, with no arboreal axioms and no external citation. Branches do not
+lines inside our own category, with no arboreal axioms and no appeal to Jakl--Reggio (the six-line
+proof is Rick's, from his referee report). Branches do not
 transform functorially at all: the object assignment $\Psi$ extends to no functor covering the
 embeddings (a no-go, either variance); the relation between the branches of $T$ and of $T'$ is a
 \emph{span}, which is exactly why gluing is descent and not a coproduct. The reusable principle:
@@ -179,10 +180,11 @@ step, never read off a product over branches.
 
 Section~\ref{sec:prelim} fixes the two fibrations and recalls the Stage~1 orientation in its
 contravariant form. Section~\ref{sec:positive} gives the positive one-shape extension (clause~1) and
-the six-line proof of its one ingredient, inside the coloured category, with no external citation.
+the six-line proof of its one ingredient (Rick's; \S\ref{sec:positive}), inside the coloured
+category, with no appeal to Jakl--Reggio.
 Section~\ref{sec:unfolding} proves clause~(2)'s object-level over-count, with the V- and Y-tree
 witnesses and the descent diagnosis. Section~\ref{sec:nogo} proves the no-go: $\Psi$ extends to no
-functor. Section~\ref{sec:arity} treats clause~(3) and corrects the former ``ceiling''.
+functor covering the embeddings, nor any natural on automorphisms. Section~\ref{sec:arity} treats clause~(3) and corrects the former ``ceiling''.
 Section~\ref{sec:scope} records scope, open problems, and placement.
 
 \paragraph{Note on this revision.}
@@ -191,9 +193,18 @@ things were wrong and are now fixed, all traceable to a single mistake --- the e
 made covariant and then patched by hand with a nearest-ancestor retraction $\rho_f$, which does not
 compute preimage. We make $\Psip$ \emph{contravariant} and carry the node injection $j$ backward
 (clause~1 becomes proved and unconditional); we replace the Jakl--Reggio dependence for the
-cartesian-lift fact with a direct six-line proof (that paper is not needed, and is correctly cited
-in \S\ref{sec:scope}); we state the no-go for $\Psi$ on morphisms explicitly; and we withdraw the
-$k\ge2$ ``ceiling'', which is false.
+cartesian-lift fact with a direct six-line proof \emph{supplied by Rick's referee report} (that
+paper is not needed, and is correctly cited in \S\ref{sec:scope}); we state the no-go for $\Psi$ on
+morphisms explicitly; and we withdraw the $k\ge2$ ``ceiling'', which is false.
+
+A second round of edits (11 October 2026) follows Rick's round-2 report. \textbf{M-A:}
+Lemma~\ref{lem:cartlift}, its six-line proof, and the exhaustive $\le4$-node ($3147$-morphism) check
+are explicitly credited to Rick throughout (\S\ref{sec:positive}). \textbf{M-B:} the no-go is stated
+only with its hypothesis --- Theorem~\ref{thm:nogo} quantifies over functors \emph{covering} the
+embeddings; the unrestricted ``no functor at all'' reading is false (constant-branch functors exist,
+Remark~\ref{rem:dropcompat}), so every restatement now carries the hypothesis, and we add Rick's
+variance-symmetric sharpening Theorem~\ref{thm:nogonat} (naturality on automorphisms suffices, with
+no condition on the embeddings).
 
 \section{Two fibrations and the Stage~1 match}\label{sec:prelim}
 
@@ -339,9 +350,11 @@ $R\cap c=j^{-1}R'\cap c$; the root chains cover $T$, so this is $R=j^{-1}R'$.
 \end{proof}
 
 The argument is uniform in $T$: there is no ``non-path case'', so no arboreal machinery is invoked.
-(Exhaustive confirmation: all coloured trees with $\le4$ nodes, $3147$ morphisms, have
-cartesian $\Leftrightarrow$ preimage $\Leftrightarrow$ pathwise in every case; our
-\texttt{scratch/crown\_stage2\_repair\_verify.py} reproduces the V-tree slice.) Equivalently,
+\emph{Attribution.} Lemma~\ref{lem:cartlift} and the six-line proof above are due to Rick's referee
+report of 10 October 2026, as is the exhaustive $\le4$-node enumeration that confirms it (all
+coloured trees with $\le4$ nodes, $3147$ morphisms, have cartesian $\Leftrightarrow$ preimage
+$\Leftrightarrow$ pathwise in every case); our
+\texttt{scratch/crown\_stage2\_repair\_verify.py} reproduces the V-tree slice. Equivalently,
 $\Pfib\cong\nodes^*(\Sub)$: the predicate fibration $\Sub\to\Set$ (fibre $(2^X,\subseteq)$,
 reindexing $=$ preimage) pulled back along $\nodes\colon\Tree\to\Set$, $T\mapsto\nodes(T)$,
 $f\mapsto j$.
@@ -501,7 +514,13 @@ position set is the branching node set, with the base $\Tree$ carrying the order
 Lemma~\ref{lem:overcount} compares fibres over single objects, and that is all the over-count needs.
 But $\Psi$ was never defined on morphisms, and the question whether it \emph{can} be is not
 cosmetic: it is the precise reason the branch picture is descent and not a functor. The answer is
-no, in either variance.
+no in both variances --- for any functor whose action \emph{covers} the subtree embeddings
+(Theorem~\ref{thm:nogo}), and in fact for any functor that merely acts on automorphisms by the
+canonical action on branches, with no condition on the embeddings at all
+(Theorem~\ref{thm:nogonat}). The compatibility hypothesis cannot, however, simply be
+\emph{dropped}: with no condition relating $\Psi(f)$ to $f$ there do exist functors $\Tree\to\Cont$
+and $\Tree^\op\to\Cont$ extending $\Psi$ on objects (Remark~\ref{rem:dropcompat}), and they are
+exactly the ones that act trivially on automorphisms.
 
 \begin{theorem}[no functorial action for $\Psi$]\label{thm:nogo}
 The object assignment $T\mapsto(\branches(T),\{\mathrm{chain}_b\})$ extends to \emph{no} functor
@@ -546,6 +565,34 @@ $\varphi_\sigma\circ\varphi_f=\varphi_f$, i.e.\ $\varphi_f(\beta_a)$ is a fixed 
 $\varphi_\sigma$. The swap has none. Contradiction.
 \end{proof}
 
+The two halves of Theorem~\ref{thm:nogo} use the covering hypothesis in different strengths: the
+covariant half (2) needs only that $\varphi_f(\beta_a)$ land in $\branches(T')$ --- no compatibility
+at all --- while the contravariant half (1) uses the specific compatibility
+$j(\mathrm{chain}_{\varphi(b')})\subseteq\mathrm{chain}_{b'}$ (a definitional choice, stronger than
+restriction $j^{-1}(\mathrm{chain}_{b'})\subseteq\mathrm{chain}_{\varphi(b')}$). The following
+variance-symmetric sharpening, which we owe to Rick's referee report, drops \emph{all} conditions
+on the non-invertible morphisms and asks only naturality on automorphisms.
+
+\begin{theorem}[no action natural on automorphisms; after Rick]\label{thm:nogonat}
+There is no functor $\Tree\to\Cont$ nor $\Tree^\op\to\Cont$ that extends $\Psi$ on objects and acts
+on \emph{automorphisms} by the canonical action on branches --- with no condition imposed on
+non-invertible morphisms.
+\end{theorem}
+
+\begin{proof}
+Covariant: the sibling swap of Theorem~\ref{thm:nogo}(2) applies unchanged, since
+$\varphi_f(\beta_a)\in\branches(T')=\{\beta_c,\beta_d\}$ needs no compatibility --- only
+$\varphi_\sigma=\mathrm{swap}$ (the canonical action of $\sigma$) and $\sigma f=f$ are used, and the
+swap has no fixed point. Contravariant: take the three-leaf star $f\colon V=\{r;a,b\}\inpr
+S_3=\{r;a,b,e\}$, with $\sigma\in\mathrm{Aut}\,V$ swapping $a,b$ and $\tau\in\mathrm{Aut}\,S_3$ swapping $a,b$ and
+fixing $e$, so $\tau f=f\sigma$. The canonical actions give $\varphi_\tau(re)=re$ and
+$\varphi_\sigma=\mathrm{swap}$ on $\{ra,rb\}$, whence naturality forces $\varphi_f(re)\in\{ra,rb\}$
+to be a fixed point of the swap; there is none. Both cases are variance-symmetric and use only
+automorphism naturality (checked-sober; computed, $0$ functors in each variance). The
+constant-branch functors of Remark~\ref{rem:dropcompat} show the hypothesis cannot be dropped
+entirely.
+\end{proof}
+
 Consequently clause~(2) of Theorem~\ref{thm:main} is honestly a statement about the \emph{object}
 assignment $\Psi$. The genuine structure relating the branches of $T$ and of $T'$ is a
 \emph{span} / correspondence
@@ -553,16 +600,29 @@ assignment $\Psi$. The genuine structure relating the branches of $T$ and of $T'
 R_f\subseteq\branches(T)\times\branches(T'),\qquad
 (b,b')\in R_f\iff j(\mathrm{chain}_b)\subseteq\mathrm{chain}_{b'},
 \]
-left-total but neither left- nor right-functional --- which is precisely why $\Fam=\Sigma$ (a
-functor) cannot realise it, and why recovering $\Pfib$ from $\Cont(\cod)\circ\Psi$ needs a
-\emph{descent} step rather than a functorial map. The no-go is the container-side face of
+read backward, $R_f$ is a left-total \emph{injective partial map} $\branches(T')\rightharpoonup
+\branches(T)$ (if $(b,b'),(c,b')\in R_f$ then $j(\mathrm{chain}_b),j(\mathrm{chain}_c)$ are
+comparable maximal chains inside $\mathrm{chain}_{b'}$, hence equal, so it is left-unique), defined
+exactly on those $b'$ whose restriction is a full branch of $T$; read forward it is multivalued (not
+a function). It is thus not a function in \emph{either} direction simultaneously --- which is
+precisely why $\Fam=\Sigma$ (a functor) cannot realise it, and why recovering $\Pfib$ from
+$\Cont(\cod)\circ\Psi$ needs a \emph{descent} step rather than a functorial map. The no-go is the container-side face of
 \emph{composition is a degree-two datum}: sharing of branch-prefixes is a relation, not a map.
 
-\begin{remark}[dropping compatibility does not rescue a functor]\label{rem:dropcompat}
-If one lets the shape map ignore $f$, the only escape in~(2) is $\varphi_\sigma=\id$ --- but then
-$\Psi(\sigma)$ does not cover the nontrivial automorphism $\sigma$ (it would identify the distinct
-subtrees $r\to a\to c$ and $r\to a\to d$), so $\Psi$ is not an encoding of $\Tree$. Any functor that
-distinguishes $\sigma$ from $\id$ on branches runs into the same contradiction.
+\begin{remark}[the compatibility hypothesis is essential, and the escapes act trivially on automorphisms]\label{rem:dropcompat}
+The hypothesis of Theorem~\ref{thm:nogo} cannot be dropped \emph{outright}: if the shape map is
+allowed to ignore $f$ entirely, there \emph{do} exist functors $\Tree\to\Cont$ and
+$\Tree^\op\to\Cont$ extending $\Psi$ on objects. Passing to a skeleton of $\Tree$ (where a finite
+injective endomorphism is bijective, so every endomorphism is an automorphism), send each
+non-isomorphism to the constant map at a fixed branch $c_T\in\branches(T)$, with position maps
+constant at the root, and act on automorphisms as the identity; constant maps absorb composition and
+identities are preserved, so this is a functor in either variance. What all such escapes have in
+common is that they act \emph{trivially} on automorphisms: in~(2) the only escape is
+$\varphi_\sigma=\id$, which fails to cover the nontrivial swap $\sigma$ (it identifies the distinct
+subtrees $r\to a\to c$ and $r\to a\to d$), so it is not an encoding of $\Tree$. This is exactly the
+gap that Theorem~\ref{thm:nogonat} closes with a single hypothesis: any functor distinguishing
+$\sigma$ from $\id$ by the canonical action on branches runs into the contradiction, in both
+variances and with no condition on the embeddings.
 \end{remark}
 
 \section{The arity clause, and why there is no ceiling}\label{sec:arity}
@@ -613,11 +673,12 @@ $\Psip$ cannot see it.
 Clause~(1) --- the positive one-shape extension over $\Tree$, via the \emph{contravariant}
 $\Psip\colon\Tree^\op\to\Cont$ with $j$ carried backward --- is \emph{proved, unconditional}
 (Proposition~\ref{prop:clause1}), its one ingredient discharged by the six-line
-Lemma~\ref{lem:cartlift} with no external citation. Clause~(2)'s over-count $2^{\Uf}\supsetneq
+Lemma~\ref{lem:cartlift} (Rick's; no appeal to Jakl--Reggio). Clause~(2)'s over-count $2^{\Uf}\supsetneq
 2^{\nodes}$ with factor $2^{\sum_v(\lambda(v)-1)}$, and its descent reading, are proved
 (Lemma~\ref{lem:overcount}, Proposition~\ref{prop:descent}, Examples~\ref{ex:v},~\ref{ex:y}), as a
-statement about the \emph{object} assignment $\Psi$; and $\Psi$ extends to no functor
-(Theorem~\ref{thm:nogo}). Of clause~(3), only the trivial statement survives
+statement about the \emph{object} assignment $\Psi$; and $\Psi$ extends to no functor covering the
+subtree embeddings (Theorem~\ref{thm:nogo}), nor any acting canonically on automorphisms
+(Theorem~\ref{thm:nogonat}). Of clause~(3), only the trivial statement survives
 (Proposition~\ref{prop:arity}); the ceiling is withdrawn (Proposition~\ref{prop:power}). The
 objectwise over-count has a machine-checked Lean oracle (the registry node
 \texttt{lean-crown-stage2-overcount-identity}).
@@ -637,8 +698,9 @@ $(\Set/\nodes)^\op$ is strictly richer than $\Sub(\nodes)^\op$; a proof-relevant
 need an arboreal theory with witness-set colours.
 \item \textbf{The descent completion.} Proposition~\ref{prop:descent} is elementary (a single
 equalizer per tree). A statement ``$\Pfib$ is the descent completion of $\Cont(\cod)\circ\Psi$'' can
-\emph{not} be phrased as a comparison of functors, since $\Psi$ is not one
-(Theorem~\ref{thm:nogo}); it must be stated as descent along the \emph{span} $R_f$. That is the
+\emph{not} be phrased as a comparison of functors, since $\Psi$ extends to no functor covering the
+embeddings and none natural on automorphisms (Theorems~\ref{thm:nogo},~\ref{thm:nogonat}); it must
+be stated as descent along the \emph{span} $R_f$. That is the
 honest form of the open problem.
 \item \textbf{Beyond embeddings.} $\Tree$ here has subtree embeddings only; open maps and non-monic
 tree morphisms are untreated, inherited from the Stage~1 conventions.
@@ -647,7 +709,8 @@ tree morphisms are untreated, inherited from the Stage~1 conventions.
 \paragraph{Placement.}
 The net correction to the registered Stage~2 conjecture is clean. It is \emph{not} ``$\Psi$ positive
 on the unary fragment, failing at $k\ge2$''. It is that the branch-multishape $\Psi$ fails already
-at $k=1$ \emph{branching} (unfolding versus descent, and not even a functor); the positive Stage~2
+at $k=1$ \emph{branching} (unfolding versus descent: no functorial action covers the embeddings, nor
+acts canonically on automorphisms); the positive Stage~2
 holds over the full tree base via the contravariant one-shape $\Psip$; and $k\ge2$ is no obstruction
 at all, merely invisible to the \emph{unary} functor. The reusable principle, worth carrying into the
 applied side of the programme: \emph{when encoding a branching process in the container bifibration,

@@ -49,8 +49,8 @@ and proof files, which live together with this note and the verification scripts
 Prepared as a framing appendix for the Strathclyde mini-course \emph{Tangent Categories and
 Containers} (13--16 October 2026).}\\
 \small Kodamai}
-\date{8 October 2026; revised 10 October 2026\\[2pt]
-\small content commit \texttt{\textbf{6089268}}\\[4pt]
+\date{8 October 2026; revised 10 October 2026; corrected 11 October 2026 (Rick round-2: A1, A2, A3)\\[2pt]
+\small supersedes content commit \texttt{6089268}; content commit \texttt{\textbf{PENDING}}\\[4pt]
 \small\normalfont Prepared for Rick (referee) and Neil Ghani (PI), Kodamai.}
 
 \begin{document}
@@ -183,6 +183,20 @@ Section~\ref{sec:lvl3} is associativity, the weld, and the collapse/assembly fac
 Section~\ref{sec:indep} shows the degree-one inventory class and the degree-two weld class are
 independent. Section~\ref{sec:program} states the program and the open question.
 
+\paragraph{Note on this revision (11 October 2026).} Following Rick's round-2 report we sharpen the
+splitting derivation of \S\ref{sec:lvl3} without changing any theorem. \textbf{A1:} the cocycle
+condition $d\omega=0$ is associativity of the \emph{twisted composition over the already-associative
+base} $\sS$, \emph{not} the base-associativity equation of Theorem~\ref{thm:assembly} (a magma, over
+which $d\circ d\neq0$ and no class exists); and, by \cite{MacBethZS}, $[\omega]=0\Leftrightarrow(G)$
+while \emph{splitting} is $(L)\wedge(G)$, so splitting is decided by $[\omega]$ only under the
+standing local condition $(L)$ (Remark~\ref{rem:weldsplit}). \textbf{A2:} $[\omega]\in H^2(\sS;D)$ is
+a class of the \emph{base} $\sS$ classifying an extension $D\rightarrowtail E_\omega\twoheadrightarrow
+\sS$; it is $E_\omega$ that splits, which is why a base presented as $\cC\bowtie\cD$ has $[\omega]=0$
+while the rigid-twist witness ($\sS=B(\Z/2)$, $D=\Z/2$, $E_\omega=B(\Z/4)$) has $[\omega]\neq0$
+(Remark~\ref{rem:whatomega}). \textbf{A3:} under the regrade convention (nerve level $=$ degree
+$+1$), only the binding \emph{datum} $a\cdot a=1$ is coefficient-free at $\Nerve_2$; the detecting
+class sits at $\Nerve_2$ over $\F_2$ and $\Nerve_3$ over $\Z$ (Remark~\ref{rem:coefftest}).
+
 \section{Preliminaries}\label{sec:prelim}
 
 We work with polynomial functors in one variable and finite support; everything is first order.
@@ -302,14 +316,16 @@ discrepancy over the nerve of $\sS$ --- the classical mechanism of Kirchhoff's v
 \paragraph{The weld and its degree-two class.}
 A composite chain is a \emph{Zappa--Sz\'ep product} $\sS=\cC\bowtie\cD$ (procurement $\bowtie$
 logistics): $\cC,\cD$ are wide subcategories meeting in the discrete category on the shared objects,
-and every morphism factors uniquely as $f=c\cdot d$ \cite{AhmanUustalu2016,MacBethZS}. Whether a
-candidate matched pair of actions closes into such a factorization is governed by the \emph{weld
-obstruction}
+and every morphism factors uniquely as $f=c\cdot d$ \cite{AhmanUustalu2016,MacBethZS}. Whether an \emph{associative}
+candidate weld (one satisfying the matched-pair/cocycle condition of \S\ref{sec:lvl3}) \emph{splits}
+into such a factorization is governed by the \emph{weld obstruction}
 \[
-   [\omega]\in H^2(\sS;\cD),
+   [\omega]\in H^2(\sS;D),
 \]
-a Baues--Wirsching $2$-cocycle on the orbit category with coefficients the vertex-group system $\cD$;
-the chain splits as the claimed product exactly when $[\omega]=0$ \cite{MacBethZS}. Two simplicial
+a Baues--Wirsching $2$-cocycle on the orbit category with coefficients the vertex-group natural
+system $D$ (the one determined by the candidate normal factor, not the wide subcategory $\cD$
+itself); the chain satisfies the global-closure condition $(G)$ exactly when $[\omega]=0$, and ---
+given also the local condition $(L)$ --- splits as the claimed product \cite{MacBethZS}. Two simplicial
 facts about this class must be kept apart (\S\ref{sec:lvl3}). Its defining cocycle \emph{condition} is
 the associativity equation of the assembled composition, a system on composable triples $\Nerve_3$ ---
 so by Lemma~\ref{lem:regrade} the class is nerve level three, cohomological degree two. The
@@ -440,12 +456,16 @@ a verifying script in \cite{MacBethNerve}.
 \begin{remark}[why \emph{nerve level}, not degree, is the grade --- the coefficient test]
 \label{rem:coefftest}
 The degree at which this single $\Nerve_2$ distinction surfaces \emph{depends on the coefficients}.
-The feature $a\cdot a=1$ creates a $1$-cycle, $H_1(\Z/2)=\Z/2$, living at nerve level $\Nerve_2$. Over
-$\F_2$ it is detected by $H^1$ (degree one); over $\Z$ the same torsion is detected by $H^2$ (degree
-two, $H^2(\Z/2;\Z)=\Z/2$), the Bockstein having moved it up a degree. So ``which degree detects
-composition here'' has no coefficient-free answer --- but ``which \emph{nerve level}'' always does:
-$\Nerve_2$. This is the thesis in one example, and it is also why the old ``degree two'' was not even
-stably wrong: over $\F_2$ the detection is degree one.
+The feature $a\cdot a=1$ creates a $1$-cycle, $H_1(\Z/2)=\Z/2$, and is a raw \emph{datum} on nerve
+level $\Nerve_2$. Over $\F_2$ it is detected by $H^1$ (degree one); over $\Z$ the same torsion is
+detected by $H^2$ (degree two, $H^2(\Z/2;\Z)=\Z/2$), the Bockstein having moved it up a degree. So
+``which degree detects composition here'' has no coefficient-free answer. What \emph{is}
+coefficient-free is the nerve level of the \emph{binding datum}: $a\cdot a=1$ sits on $\Nerve_2$ for
+\emph{every} coefficient ring. The \emph{detecting class}, by contrast, obeys the regrade convention
+(nerve level $=$ degree $+1$), so it sits at $\Nerve_2$ over $\F_2$ (where it is $H^1$) but at
+$\Nerve_3$ over $\Z$ (where it is $H^2$). The thesis is therefore a statement about the datum, not
+the detecting class --- and it is also why the old ``degree two'' was not even stably wrong: over
+$\F_2$ the detection is degree one.
 \end{remark}
 
 \paragraph{A monodromy tower on the $\delta$-translations.}
@@ -536,12 +556,21 @@ strict, and its witness is a pointwise $\Nerve_3$ condition failure --- not a co
 
 \begin{remark}[the weld is a splitting obstruction, not an associativity test]\label{rem:weldsplit}
 It is tempting to read the Zappa--Sz\'ep weld class $[\omega]\in H^2$ as the cohomological form of this
-non-associativity. That reading is wrong, and the regrade makes the error visible. The $2$-cocycle
-\emph{condition} $d^2\omega=0$ \emph{is} the associativity equation of Theorem~\ref{thm:assembly}: a
-cochain that fails it is not a weld, and there is then no class. A class $[\omega]$ therefore
-presupposes associativity; what it classifies, by Eilenberg--Mac\,Lane, is whether the associative
-weld \emph{splits} into its matched-pair factorization $\cC\bowtie\cD$ --- the global closure condition
-$(G)$, with $[\omega]=0\Leftrightarrow(G)$ \cite{MacBethZS}. The blockchain re-entrancy obstruction
+non-associativity. That reading is wrong, and the regrade makes the error visible. The cocycle
+\emph{condition} $d\omega=0$ \emph{is} associativity of the \emph{twisted composition over the
+already-associative base} $\sS$ --- \emph{not} the associativity equation of
+Theorem~\ref{thm:assembly}. The two are distinct $\Nerve_3$-predicates on \emph{different objects}:
+Theorem~\ref{thm:assembly} is a failure of associativity of a \emph{base} composition (a magma), over
+which there is no cochain complex at all ($d\circ d\neq0$, so there is no $H^2$ for a class to live
+in), whereas $d\omega=0$ is a condition on a cochain over a base that is \emph{already} a category. A
+cochain that fails $d\omega=0$ is not a weld, and there is then no class. A class $[\omega]$ therefore
+presupposes associativity; what it classifies, by Eilenberg--Mac\,Lane and in the general matched-pair
+form of \cite{MacBethZS}, is whether the associative weld satisfies the global closure condition
+$(G)$, with $[\omega]=0\Leftrightarrow(G)$; given also the local condition $(L)$, $(G)$ is exactly the
+splitting of $\sS$ into the matched-pair factorization $\cC\bowtie\cD$, so under the standing $(L)$ the
+class decides splitting \cite{MacBethZS}. (Eilenberg--Mac\,Lane alone covers the \emph{semidirect}
+case $\cD\rtimes\cC$; the general matched-pair statement, where neither factor need be normal, is the
+theorem of \cite{MacBethZS}, classified cohomologically after Baues--Wirsching.) The blockchain re-entrancy obstruction
 $[\omega]=\varepsilon\neq 0\in H^2\cong\Z/2$ \cite{MacBethReentrancy} is accordingly a \emph{non-split
 but associative} weld, not a non-associative one: the cocycle condition is met, so associativity holds;
 what fails is the decomposition. Both phenomena are nerve-level-three --- the non-associativity witness
@@ -591,6 +620,20 @@ the zero inventory system has $[\theta_R]=0$. A concrete such $\sS$ is the \emph
 weld class generates $H^2(\sS;\Z/2)$. The substantive direction is thus the first; the second needs
 only the freedom to choose the resource.
 \end{example}
+
+\begin{remark}[{what $[\omega]$ is a class of}]\label{rem:whatomega}
+Theorem~\ref{thm:consistency} assumes $\sS=\cC\bowtie\cD$ is \emph{given} as a matched-pair product,
+in which case $[\omega]=0$ automatically; yet Theorem~\ref{thm:sep} and Example~\ref{ex:indep} exhibit
+$[\omega]\neq0$. The apparent clash is resolved by saying precisely what $[\omega]$ is a class of
+(Eilenberg--Mac\,Lane / Baues--Wirsching): $[\omega]\in H^2(\sS;D)$ is a class of the \emph{base}
+$\sS$ with coefficient system $D$ --- the vertex-group natural system carried by the candidate normal
+factor, \emph{not} the wide subcategory $\cD$ of a presupposed factorization. It classifies an
+extension $D\rightarrowtail E_\omega\twoheadrightarrow\sS$, and it is $E_\omega$ (equivalently, the
+candidate assembled weld) that splits or not. When $\sS$ is already presented as $\cC\bowtie\cD$ the
+extension is split by construction, so $[\omega]=0$; Example~\ref{ex:indep} takes a base \emph{not} so
+presented. For the rigid-twist witness, $\sS=B(\Z/2)$, $D=\Z/2$, and $E_\omega=B(\Z/4)$: the non-split
+extension of $\Z/2$ by $\Z/2$, whose class generates $H^2(\Z/2;\Z/2)\cong\Z/2$.
+\end{remark}
 
 \begin{remark}[different degrees do not by themselves mean independence]\label{rem:nocollapse}
 It would be a mistake to argue independence from the bare fact that the two classes sit in different
@@ -651,7 +694,8 @@ degree-one invariant (over $\F_2$) that detects composition, so ``nothing below 
 composition'' is false; and Theorem~\ref{thm:sep} shows the degree-one and degree-two anchors are
 independent, hence not ordered. What \emph{is} true is the condition-level strictness of
 Theorem~\ref{thm:assembly} (composition exists at $\Nerve_2$, is associative at $\Nerve_3$) and the
-coefficient-test of Remark~\ref{rem:coefftest} (nerve level is coefficient-free; degree is not). The
+coefficient-test of Remark~\ref{rem:coefftest} (the nerve level of the binding \emph{datum} is
+coefficient-free; the degree, and the nerve level of the detecting class, are not). The
 grade that stratifies is nerve level; whether degree does anything beyond shadowing it is open.
 
 \paragraph{The sharpened applications story.}

@@ -46,9 +46,9 @@
 grant (Applications and Theory pillars) and the Strathclyde mini-course \emph{Tangent Categories
 and Containers} (13--16 October 2026).}\\
 \small Kodamai}
-\date{10 October 2026 (corrected revision of the note dated 9 October 2026)\\[2pt]
+\date{10 October 2026; corrected 11 October 2026 (Rick round-2 report: N1, N2)\\[2pt]
 \small Circulated to Rick (reviewer) and the Kodamai group; CC Robin Langer.\\[2pt]
-\small supersedes content commit \texttt{9eb0941}; content commit \texttt{4e7264d}}
+\small supersedes content commit \texttt{4e7264d}; content commit \texttt{PENDING}}
 
 \begin{document}
 \maketitle
@@ -66,8 +66,9 @@ inventory exists iff \emph{two} obstructions vanish --- first the \emph{band}
 $\beta\in H^1(N(\C);\Out(\Aut F))$, a genuinely nonabelian datum, and then the \emph{gerbe
 class} $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ (Corollary~\ref{cor:aprime}). The gerbe class vanishes
 on every $1$-dimensional (free / DAG / tree) chain, and is nonzero already on a single reversible
-loop $B(\Z/2)$ --- but only for a \emph{nonabelian} fibre with nontrivial centre; the minimal
-witness is a four-lot ring, $\Aut F=D_4$ (Theorem~\ref{thm:B}). It is logically independent of
+loop $B(\Z/2)$ --- but only for a \emph{nonabelian} fibre with nontrivial centre --- and, for the
+$n$-lot ring $\Aut F=D_n$, sharply, exactly when $4\mid n$, the six-lot ring $D_6\cong\Z/2\times S_3$
+being nonabelian with centre yet always rectifiable (Theorems~\ref{thm:B},~\ref{thm:Dsharp}). It is logically independent of
 the Zappa--Sz\'ep weld $[\omega]$, not because the two live over different coefficients --- on
 $B(\Z/2)$ they can lie in the \emph{same} group and even coincide --- but because $[\gerbe]$
 depends on the inventory datum and $[\omega]$ does not (Theorem~\ref{thm:C}). Finally, both
@@ -170,7 +171,11 @@ not.
 
 \begin{theorem}[Nonvacuousness; Theorem~\ref{thm:D}]
 $[\gerbe]$ can be nonzero only if $K$ is \emph{nonabelian with nontrivial centre}
-($\Inn K\ne1$ and $\Zc\ne1$); the minimal such $K$ are $D_4$ and $Q_8$. For $F$ a bare
+($\Inn K\ne1$ and $\Zc\ne1$); the minimal such $K$ are $D_4$ and $Q_8$. This necessary condition is
+\emph{not} sufficient, and for the canonical fibre the sharp criterion is arithmetic: for $n$ lots
+in a ring ($K=\Aut F=D_n$) the gerbe is essentially nonzero iff the central extension~\eqref{eq:star}
+is non-split iff $4\mid n$ --- so the six-lot ring $D_6\cong\Z/2\times S_3$ is nonabelian with
+nontrivial centre yet always rectifiable (Theorem~\ref{thm:Dsharp}). For $F$ a bare
 $n$-element set of indistinguishable lots, $\Aut F=S_n$ is abelian or centreless for every $n$
 and complete (so $\Out=1$) for $n\ge3,\ n\ne6$: fungible stock carries \emph{neither} obstruction.
 The two-tier phenomenon is a feature of gauge/torsor-structured stock, not of interchangeable
@@ -244,6 +249,21 @@ earlier ``different coefficients'' explanation of independence was false and is 
 input-data mechanism (\S\ref{sec:C}); and the band, previously hypothesised away, is now settled
 (\S\ref{sec:band}). The gerbe cocycle is renamed $\gamma$ to free the symbol $\omega$ for the weld.
 
+A second round of corrections (11 October 2026) follows Rick's round-2 report. \textbf{N1:} the
+proof of Corollary~\ref{cor:aprime} had silently used a definition of global inventory
+(a relabelling $\mu$ trivialising $\alpha$ outright) different from the one in
+Definition~\ref{def:gerbe}/Theorem~\ref{thm:A}, and was \emph{false} under it ($\C=B(\Z/2)$,
+$K=D_4$, $\alpha(g)=\mathrm{conj}(s)$: $\beta=0$ and $[\gerbe]=0$, yet no $\mu$ trivialises
+$\alpha$). We now fix a single definition~\eqref{eq:D2}, make explicit the standing strictness /
+$2$-cell hypothesis that the inner reduction $\alpha=\mathrm{conj}\circ\rho$ requires
+(\S\ref{sec:prelim-gerbe}), and reframe the corollary as the classical two-stage crossed-module
+obstruction (Remark~\ref{rem:postnikov}). \textbf{N2:} the biconditional
+``$[\gerbe]\neq0\iff K$ nonabelian with nontrivial centre'' --- which appeared in the registry and
+cover email, though not in the printed Theorem~\ref{thm:D} (whose ``only if'' is correct) --- is
+false; the honest witness is $D_6\cong\Z/2\times S_3$. We retract it and add the sharp criterion
+(Theorem~\ref{thm:Dsharp}, \S\ref{sec:dsharp}): for the $n$-lot ring, $[\gerbe]$ is essentially
+nonzero iff $4\mid n$.
+
 \section{Preliminaries}\label{sec:prelim}
 
 The section records only what the proofs use. A reader fluent in directed containers and
@@ -289,12 +309,22 @@ tower~\eqref{eq:tower}; $\Inn K=\ker q\cong K/\Zc$ is the image of conjugation.
 
 Comparing two inventory trivialisations of the same fibre across an operation $f$ identifies them
 only up to the relabelling group $K$, i.e.\ transports $K$ by an \emph{automorphism} $\alpha_f\in
-\Aut K$. Re-trivialising a chart conjugates the transport, so $\alpha$ is functorial only up to
-inner automorphisms: $\alpha_{gf}=\iota\cdot\alpha_g\alpha_f$ for some $\iota\in\Inn K$. Collecting
-the local trivialisations into a stack makes the gluing datum an $\Aut F$-gerbe over $N(\C)$: a
-stack of groupoids locally equivalent to $B(\Aut F)$ (Giraud~\cite{giraud}, III; Breen~\cite{breen}
-for the bitorsor/cocycle presentation). A \emph{global inventory} is a global section realised on
-the nose --- a strict functor $\C\to BK$ whose transition data glue strictly.
+\Aut K$. Re-trivialising a chart conjugates the transport, so $\alpha$ is a priori functorial only
+up to inner automorphisms, $\alpha_{gf}=\mathrm{conj}(k_{g,f})\cdot\alpha_g\alpha_f$ with witnessing
+\emph{comparison data} $k_{g,f}\in K$. \textbf{We retain this $2$-cell datum throughout}:
+equivalently, we take the transport to be a \emph{strict} functor $\alpha:\C\to B(\Aut K)$ carrying
+the $k_{g,f}$ --- the $\mathrm{AUT}(F)$-pseudofunctor of Remark~\ref{rem:kinvariant}. The strictness
+hypothesis is load-bearing and we flag it now: without the $k_{g,f}$, once $\alpha$ is gauged to be
+inner-valued the up-to-inner slack becomes \emph{empty} and $\alpha$ no longer determines a functor
+to $B(\Inn K)$, so the degree-two class is undefined (this is exactly the gap repaired in the proof
+of Corollary~\ref{cor:aprime}). Collecting the local trivialisations into a stack makes the gluing
+datum an $\Aut F$-gerbe over $N(\C)$: a stack of groupoids locally equivalent to $B(\Aut F)$
+(Giraud~\cite{giraud}, III; Breen~\cite{breen} for the bitorsor/cocycle presentation). A
+\emph{global inventory} realises the up-to-iso gluing by a \emph{strict} relabelling of charts; we
+make this precise, in gauge-invariant form, in Definition~\ref{def:gerbe}. (Following Giraud, the
+band is \emph{part of the data} of the gerbe, not an obstruction to its neutrality; a global
+inventory is the vanishing of the \emph{staged lifting obstruction} of
+Corollary~\ref{cor:aprime}, not a ``section realised on the nose''.)
 
 Giraud's classification of a $G$-gerbe over a base $X$ (for us $G=\Aut F=K$, $X=N(\C)$) factors
 into \emph{three strata}:
@@ -337,16 +367,26 @@ degree-two class is extra lifting data pulled back along the transport, not a nu
 the fibre $F$ in isolation.
 
 \begin{definition}[The inventory gerbe]\label{def:gerbe}
-Fix a fibre $F$ with $K=\Aut F$ and suppose the band is trivial ($\beta=0$;
-Section~\ref{sec:band}), so the relabelling transport is inner-valued up to relabelling and
-descends to a functor
+Fix a fibre $F$ with $K=\Aut F$, let $\alpha:\C\to B(\Aut K)$ be the (strict; \S\ref{sec:prelim-gerbe})
+relabelling transport, and suppose the band is trivial ($\beta=0$; Section~\ref{sec:band}). Then a
+gauge $\mu:\Ob\C\to\Aut K$ reduces $\alpha$ to an inner-valued transport; because $\alpha$ is strict,
+this reduced transport is itself a \emph{genuine functor}
 \[
-\rho:\C\longrightarrow B(\Inn K),\qquad \Inn K=K/\Zc.
+\rho:\C\longrightarrow B(\Inn K),\qquad \Inn K=K/\Zc,
 \]
-The \emph{inventory gerbe} is the $\Zc$-gerbe of lifts of $\rho$ through $\pi$
-in~\eqref{eq:star}: its local objects are lifts of $\rho_f$ to $K$, and its band is the centre
-$\Zc$ with trivial $\C$-action. A \emph{global inventory} is a global section --- a strict
-functor $\C\to BK$ lifting $\rho$.
+with $\mathrm{conj}\circ\rho=\mu\cdot\alpha$. (It is here that strictness is used: without the
+comparison data $k_{g,f}$, an inner-valued $\alpha$ need not be a functor to $B(\Inn K)$, and $\rho$
+--- hence $[\gerbe]$ --- would be undefined.) The \emph{inventory gerbe} is the $\Zc$-gerbe of lifts
+of $\rho$ through $\pi$ in~\eqref{eq:star}: its local objects are lifts of $\rho_f$ to $K$, and its
+band is the centre $\Zc$ with trivial $\C$-action. A \emph{global inventory} is a pair $(\mu,T)$ of
+a gauge $\mu:\Ob\C\to\Aut K$ and a strict functor $T:\C\to BK$ with
+\begin{equation}\label{eq:D2}
+\mu(y)\,\alpha(f)\,\mu(x)^{-1}=\mathrm{conj}(T f)\qquad\text{for every } f:x\to y
+\tag{D2}
+\end{equation}
+--- equivalently, a strict lift $T:\C\to BK$ of the reduced transport $\rho$. This is the single
+notion used throughout; it refines the informal ``strict functor $\C\to BK$'' by making the gauge
+$\mu$ (hence the reduction $\beta=0$) explicit.
 \end{definition}
 
 \begin{remark}[Why the gerbe of lifts, and not a bare $K$-gerbe]\label{rem:lifts}
@@ -383,6 +423,15 @@ trivially on the values of $\gamma$), gives the normalised $2$-cocycle identity
 and changing the set-section $s$ replaces $\gamma$ by a cohomologous cochain. Hence
 $[\gerbe]:=\rho^*[\star]=[\gamma]\in H^2(N(\C);\Zc)$ is well-defined.
 \end{lemma}
+
+\begin{remark}[{Gauge-dependence of $[\gerbe]$}]\label{rem:gauge}
+The reducing gauge $\mu$ of Definition~\ref{def:gerbe} is pinned only up to an outer twist
+($\lambda:=q\circ\mu$ may be any $\Out K$-valued object-relabelling trivialising the band), so
+$\rho$, and with it $\gamma$, are determined only up to the induced $\Aut(\Zc)$-action on the
+coefficients. The \emph{vanishing} $[\gerbe]=0$ is nevertheless gauge-invariant --- it is exactly
+the existence of a strict lift in~\eqref{eq:D2} --- and that is all Theorem~\ref{thm:A} and
+Corollary~\ref{cor:aprime} use.
+\end{remark}
 
 \begin{proof}
 Expand $T_h(T_gT_f)=(T_hT_g)T_f$ using~\eqref{eq:defect} three times and cancel the common
@@ -473,10 +522,12 @@ since $q(\iota)=e$. Normalisation is immediate; the inner slack dies in $\Out K$
 \end{proof}
 
 \begin{theorem}[Band-triviality criterion; Theorem~(a)]\label{thm:band}
-$\beta=0\in H^1(N(\C);\Out K)$ if and only if the transport $\alpha$ is, up to an
-$\Out K$-relabelling of objects, inner-valued: iff there is a cocycle
+$\beta=0\in H^1(N(\C);\Out K)$ if and only if the (strict; \S\ref{sec:prelim-gerbe}) transport
+$\alpha$ is, up to an $\Out K$-relabelling of objects, inner-valued: iff there is a cocycle
 $\tilde\alpha:\C\to B(\Aut K)$, cohomologous to $\alpha$ via an $\Aut K$-valued object relabelling,
-with $\tilde\alpha(f)\in\Inn K$ for every $f$. In particular, if $\alpha$ already lands in $\Inn K$
+with $\tilde\alpha(f)\in\Inn K$ for every $f$. (Strictness makes $\alpha$ a genuine cocycle, so
+``cohomologous'' is literal; absent it, read the criterion as ``$\alpha$ can be gauged to be
+inner-valued''.) In particular, if $\alpha$ already lands in $\Inn K$
 then $\beta=0$; this is the literal ``trivial band'', and the theorem says $\beta=0$ is its
 gauge-invariant closure.
 \end{theorem}
@@ -513,12 +564,32 @@ band-trivial stratum, and Theorem~\ref{thm:band} supplies the prior stratum.
 \end{corollary}
 
 \begin{proof}
-A global inventory is a relabelling $\mu:\Ob\C\to\Aut K$ trivialising $\alpha$ outright; projecting
-by $q$ it trivialises $\rho_{\mathrm{out}}$, forcing $\beta=0$, so (i) is necessary. Given (i),
-Theorem~\ref{thm:band} makes $\alpha$ inner-valued, $\alpha=\mathrm{conj}\circ\rho$ for
-$\rho:\C\to B(\Inn K)$; the gerbe is then the gerbe of lifts of $\rho$, neutral iff $[\gerbe]=0$ by
-Theorem~\ref{thm:A}. So (i)$\wedge$(ii) is necessary and sufficient.
+Unwind Definition~\ref{def:gerbe}: a global inventory is a pair $(\mu,T)$ satisfying~\eqref{eq:D2},
+with $\mu:\Ob\C\to\Aut K$ and $T:\C\to BK$ strict. \emph{Necessity of (i):} applying $q$
+to~\eqref{eq:D2}, the right-hand side $\mathrm{conj}(Tf)$ is inner, so
+$q(\mu(y)\,\alpha(f)\,\mu(x)^{-1})=e$, i.e.\ the gauge $\mu$ trivialises the outer transport
+$\rho_{\mathrm{out}}$; hence $\beta=0$. \emph{Sufficiency given (i):} Theorem~\ref{thm:band} supplies
+a gauge $\mu$ for which $\tilde\alpha:=\mu\cdot\alpha$ is inner-valued. Because $\alpha$ is a
+\emph{strict} functor carrying its comparison data $k_{g,f}$ (\S\ref{sec:prelim-gerbe}),
+$\tilde\alpha$ is a strict functor landing in $\Inn K$, hence $\tilde\alpha=\mathrm{conj}\circ\rho$
+for a \emph{genuine} functor $\rho:\C\to B(\Inn K)$ --- this is the step that needs strictness: once
+$\tilde\alpha$ is inner-valued the a-priori up-to-inner condition on $\alpha$ is empty, and only the
+$k_{g,f}$ exhibit $\rho$ as a functor. The gerbe is then the gerbe of lifts of $\rho$
+through~\eqref{eq:star}, and by Theorem~\ref{thm:A} a strict $T$ with~\eqref{eq:D2} exists iff
+$[\gerbe]=0$. So (i)$\wedge$(ii) is necessary and sufficient.
 \end{proof}
+
+\begin{remark}[Corollary~\ref{cor:aprime} is the classical two-stage obstruction]\label{rem:postnikov}
+Corollary~\ref{cor:aprime} is, stripped of the inventory reading, the obstruction to lifting the
+transport $\alpha$ through the crossed module $K\xrightarrow{\mathrm{conj}}\Aut K$ --- equivalently,
+through the Postnikov tower of the automorphism $2$-group $\mathrm{AUT}(F)$, whose homotopy groups
+are $\pi_1=\Out K$ and $\pi_2=\Zc$. The \emph{primary} obstruction is the band
+$\beta\in H^1(N(\C);\Out K)$; once it vanishes the \emph{secondary} obstruction is the gerbe class
+$[\gerbe]\in H^2(N(\C);\Zc)$. This staging is classical non-abelian obstruction theory ---
+Eilenberg--MacLane's extensions with non-abelian kernel via a map $\psi:Q\to\Out K$, and Giraud's
+and Breen's gerbe-theoretic form (\cite{giraud}, IV; \cite{breen}). Our contribution is the
+inventory reading of $\alpha$, $\beta$ and $[\gerbe]$, not the two-stage structure itself.
+\end{remark}
 
 \begin{remark}[The band is where the nonabelian content lives]\label{rem:band-nonabelian}
 The band is the first obstruction in the program with a \emph{nonabelian coefficient group}
@@ -715,6 +786,77 @@ exceptional values $n\in\{2,6\}$ are distinct and each triggers at most one stra
 group, as tabulated (\texttt{scratch/band\_boundary\_verify.py}, \texttt{out\_s6.py}).
 \end{proof}
 
+\subsection{The sharp criterion for the $n$-lot ring}\label{sec:dsharp}
+
+Theorem~\ref{thm:D}(i) is a \emph{necessary} condition only, and it must not be read as a
+biconditional. An earlier registry entry and cover email did read it as one --- ``$[\gerbe]$ is
+essentially nonzero $\iff K$ is nonabelian with nontrivial centre'' --- and that biconditional is
+\textbf{false}. We retract it and record the sharp replacement, which for the natural inventory
+fibre (``$n$ fungible lots arranged in a ring'') is a clean arithmetic line.
+
+Call the inventory gerbe \emph{essentially nonzero} if $[\gerbe]\ne0$ for \emph{some} base $\C$ and
+inner transport $\rho:\C\to B(\Inn K)$ --- equivalently, if strict global inventory with inner
+comparison is obstructed for some supply chain.
+
+\begin{theorem}[Sharp criterion for the $n$-lot ring]\label{thm:Dsharp}
+Let the fibre be $n$ lots in a ring, so $K=\Aut F=D_n$ is dihedral of order $2n$ \textup{($n\ge3$)}.
+Then
+\[
+[\gerbe]\text{ essentially nonzero}\iff(\star)\text{ non-split}\iff[\star]\ne0\in H^2(\Inn K;\Zc)
+\iff 4\mid n.
+\]
+Equivalently, strict global inventory on the $n$-lot ring is \emph{always} rectifiable unless
+$4\mid n$.
+\end{theorem}
+
+\begin{proof}[Proof]
+The first equivalence is the universal-base argument: $(\Leftarrow)$ take $\C=B(\Inn K)$,
+$\rho=\id$, whence $[\gerbe]=[\star]$; $(\Rightarrow)$ $[\gerbe]=\rho^*[\star]$ vanishes for every
+$(\C,\rho)$ once $[\star]=0$, since pullback is a homomorphism. The second equivalence is the
+classical correspondence between central extensions and $H^2$ already used in
+Lemma~\ref{lem:cocycle} and Theorem~\ref{thm:A}: $[\star]=0$ iff $(\star)$ splits (the coefficients
+are untwisted, as $\Inn K$ acts trivially on $\Zc$). For the arithmetic, $Z(D_n)=1$ for $n$ odd and
+$\{1,r^{n/2}\}\cong\Z/2$ for $n$ even, while $\Inn D_n\cong D_n$ \textup{($n$ odd)} resp.\ $D_{n/2}$
+\textup{($n$ even)}. Writing $n=2m$ in the even case, a complement to the central $\Z/2$ in $D_{2m}$
+would exhibit $D_{2m}\cong\Z/2\times D_m$; a centre count settles this, since
+$|Z(D_{2m})|=2$ whereas $|Z(\Z/2\times D_m)|=2\,|Z(D_m)|$ equals $2$ iff $m$ is odd. Hence $(\star)$
+splits iff $m=n/2$ is odd, i.e.\ iff $4\nmid n$; for $n$ odd, $\Zc=1$ and $(\star)$ splits
+vacuously. The full argument (and an explicit $D_m$ complement when $4\nmid n$) is in the companion
+note~\cite{nlotsharp} (own-verification; the split test is computed for $n=3..16$, with non-split
+occurring exactly at $n\in\{4,8,12,16\}$).
+\end{proof}
+
+\begin{remark}[Why ``nonabelian with centre'' is not sufficient: the six-lot ring]\label{rem:d6}
+The six-lot ring has $K=D_6\cong\Z/2\times S_3$: nonabelian, with centre $\Z/2\neq1$, so it
+\emph{satisfies} Theorem~\ref{thm:D}(i). Yet $6=2\cdot3$ with $n/2=3$ odd, so $(\star)$ splits
+(explicit complement $\langle r^2,s\rangle\cong S_3$), $[\star]=0$, and $[\gerbe]=0$ for
+\emph{every} base $\C$ and transport $\rho$: the six-lot inventory is always rectifiable. Thus $D_6$
+is the honest witness that the \emph{necessary} condition of Theorem~\ref{thm:D}(i) is not
+\emph{sufficient}; non-splitting of $(\star)$ --- the condition $4\mid n$ --- is the sharp line. The
+four-lot witness $K=D_4$ of Theorem~\ref{thm:B}(ii) is the minimal case $4\mid n$.
+\end{remark}
+
+\begin{center}
+\begin{tabular}{cccccc}
+\toprule
+$n$ & $K=D_n$ & $\Zc$ & $\Inn K$ & $(\star)$ & $[\gerbe]$ ess.\ nonzero?\\
+\midrule
+$3$  & $S_3$                 & $1$    & $S_3$        & split (vacuous)     & no\\
+$4$  & $D_4$                 & $\Z/2$ & $(\Z/2)^2$   & \textbf{non-split}  & \textbf{yes}\\
+$5$  & $D_5$                 & $1$    & $D_5$        & split (vacuous)     & no\\
+$6$  & $D_6=\Z/2\times S_3$  & $\Z/2$ & $S_3$        & split               & no\\
+$8$  & $D_8$                 & $\Z/2$ & $D_4$        & \textbf{non-split}  & \textbf{yes}\\
+$10$ & $D_{10}$              & $\Z/2$ & $D_5$        & split               & no\\
+$12$ & $D_{12}$              & $\Z/2$ & $D_6$        & \textbf{non-split}  & \textbf{yes}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The ``yes'' column is exactly $\{n:4\mid n\}$. The criterion sharpens the applications
+story: among gauge-structured stock, whether a fibre carries a tier-two obstruction is decided not
+by the coarse ``nonabelian with centre'' test but by a non-splitting (equivalently, a divisibility)
+condition on its relabelling group.
+
 \paragraph{The applications boundary is sharp.}
 The nonabelian inventory phenomenon is \emph{invisible to fungibility}: $\ge3$ interchangeable units
 create no degree-two relabelling obstruction ($S_n$ centreless) and no band obstruction ($S_n$
@@ -797,6 +939,12 @@ MacBeth,
 $H^2(B(\Z/2))=\Z/2$, the $(\Z/2)^2$ diamond basis, the $D_4$ non-splitting),
 Kodamai internal Lean note, 9 October 2026.
 
+\bibitem{nlotsharp}
+MacBeth,
+\emph{The sharp criterion for strict global inventory on the $n$-lot ring: the gerbe fails exactly
+when $4\mid n$}
+(Kodamai internal note, 11 October 2026; proved, own-verification, computation-corroborated).
+
 \bibitem{giraud}
 J.~Giraud,
 \emph{Cohomologie non ab\'elienne},
@@ -809,14 +957,18 @@ in \emph{The Grothendieck Festschrift, Vol.\ I}, Progr.\ Math.\ \textbf{86}, Bir
 401--476.
 
 \bibitem{ho}
-C.-W.~Ho,
-\emph{A note on the classification of extensions of categories}
-(central-extension lifting for small categories), 1974.
+G.~Hoff,
+\emph{Cohomologies et extensions de cat\'egories},
+Math.\ Scand.\ \textbf{74} (1994), 191--207, doi:10.7146/math.scand.a-12489; see also
+\emph{On the cohomology of categories},
+Comm.\ Fac.\ Sci.\ Univ.\ Ankara S\'er.\ A1 \textbf{22} (1973), 175--197.
 
 \bibitem{wells}
 C.~Wells,
-\emph{Extension theories for categories} (preprint, 1979); see also
-D.~Bourn, \emph{The shift functor and the comprehensive factorization for internal groupoids}.
+\emph{Extension theories for categories} (unpublished preprint, Case Western Reserve University,
+1979); see also
+D.~Bourn, \emph{The shift functor and the comprehensive factorization for internal groupoids},
+Cahiers Topologie G\'eom.\ Diff\'er.\ Cat\'eg.\ \textbf{28} (1987), 197--226.
 
 \bibitem{bw}
 H.-J.~Baues, G.~Wirsching,
