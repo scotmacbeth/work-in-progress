@@ -1,0 +1,222 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\newcommand{\state}{\Delta}
+\newcommand{\id}{\mathrm{id}}
+
+\title{The toy harness is a worker}
+\author{MacBeth, Kodamai}
+\date{11 October 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\emph{Prepared for: Robin Langer. Note 5, continuing Note 4 (harness-is-a-worker).}\\
+\emph{Corresponds to work-in-progress commit \texttt{commit pending}.}
+\end{center}
+
+\begin{abstract}
+Note 3 (workers-state-via-tensor) proved that a worker of state $S$ from an input
+interface $X$ to an output interface $Y$ is exactly a container morphism
+$w : \state S \otimes X \to Y$, where $\state S = S \triangleright (\lambda\_.\,S)$ is the
+state object. Robin asks how his \emph{toy harness} --- the fifteen-line agent loop of
+\texttt{toy-harness.pdf} --- is such a worker. This note is the dictionary. There is no
+new theorem: it is an identification of a concrete system with the proved worker
+construction (the state-object result, \texttt{proofs/registry/state-object-delta.json},
+is \texttt{proved} and Lean-verified).
+\end{abstract}
+
+\section{Recap (Note 3)}
+
+A worker is a container morphism
+\[
+  w : \state S \otimes X \longrightarrow Y,
+  \qquad X = X_0 \triangleright X_1, \quad Y = Y_0 \triangleright Y_1 .
+\]
+By Theorem 1 of Note 3 it unfolds into a forward map and a backward map:
+\[
+  \mathrm{fwd} : S \times X_0 \longrightarrow Y_0,
+  \qquad
+  \mathrm{bwd} : \prod_{(s,x_0)} Y_1\bigl(\mathrm{fwd}(s,x_0)\bigr)
+    \longrightarrow S \times X_1(x_0).
+\]
+By the universal property of $\times$, the backward map $\mathrm{bwd}$ splits into two
+components:
+\begin{align*}
+  \mathrm{bwdS} &: \prod_{(s,x_0)} Y_1\bigl(\mathrm{fwd}(s,x_0)\bigr) \longrightarrow S
+    && \text{(writeback of a new state),}\\
+  \mathrm{bwdX} &: \prod_{(s,x_0)} Y_1\bigl(\mathrm{fwd}(s,x_0)\bigr) \longrightarrow X_1(x_0)
+    && \text{(ordinary backward map on $X$).}
+\end{align*}
+
+\paragraph{Slogan (Note 3).} Control flows down (delegate a shape to $Y$), data flows back
+up (amalgamate $Y$'s returned position into a new state and an $X$-answer). States multiply
+along $\otimes$:
+\[
+  \state S \otimes \state T = \state(S \times T),
+  \qquad
+  \state 1 = y
+  \qquad\text{(Lemma 2 of Note 3).}
+\]
+
+\section{The toy harness, as data}
+
+From \texttt{toy-harness.pdf}.
+
+\begin{itemize}
+  \item The transcript \texttt{messages} is the harness's \emph{only} state. So set
+  \[
+    S := \text{the set of transcripts}
+  \]
+  --- finite lists of messages, each a role $\in \{\texttt{user},\texttt{assistant}\}$ with
+  a list of content blocks $\in \{\texttt{text},\texttt{tool\_use},\texttt{tool\_result},\texttt{thinking}\}$.
+
+  \item The system prompt is a fixed side-channel that ``never grows'' and is resent every
+  call. In worker terms it is \emph{not} part of the state object: it is a constant, i.e. it
+  contributes the tensor unit $\state 1 = y$ (tensoring by it changes nothing).
+\end{itemize}
+
+\begin{remark}
+A non-growing side-channel is $\state 1$.
+\end{remark}
+
+One pass of the \texttt{for}-loop is the fundamental transition. Model it as a worker
+\[
+  \mathrm{step} : \state S \otimes X \longrightarrow Y
+\]
+with the following data.
+
+\begin{itemize}
+  \item $Y$ is the delegated-to service $=$ one model call together with the dispatch of its
+  tool requests.
+  \begin{itemize}
+    \item $Y_0 :=$ the set of API requests actually sent: the triple
+    $(\texttt{system},\texttt{tools},\texttt{messages})$, but \texttt{system} and
+    \texttt{tools} are fixed, so effectively the current transcript to \texttt{POST}.
+    \item $Y_1(y_0) :=$ the set of service replies over that request $=$ a
+    \texttt{response.content} (assistant blocks) together with, for each \texttt{tool\_use}
+    block, the \texttt{tool\_result} returned by dispatch.
+  \end{itemize}
+
+  \item $X$ is the harness's \emph{own} outward interface to its caller:
+  \begin{itemize}
+    \item $X_0 :=$ pending tasks (a task string);
+    \item $X_1(x_0) :=$ answers (the returned text string).
+  \end{itemize}
+\end{itemize}
+
+\paragraph{The maps.}
+\begin{itemize}
+  \item $\mathrm{fwd}(s, x_0)$: if $s$ is empty, seed it with the user message
+  $\{\texttt{role:user},\ \texttt{content}:\texttt{task}=x_0\}$; send the current transcript
+  as the request $y_0$. (That is, $\mathrm{fwd}$ builds the request to \texttt{POST} from
+  state~$+$~task.)
+
+  \item On receiving a reply $r \in Y_1(\mathrm{fwd}(s,x_0))$ --- i.e. the assistant content
+  plus the dispatched \texttt{tool\_result}s ---
+  \begin{align*}
+    \mathrm{bwdS}(r) &= s \mathbin{{+}{+}} [\texttt{assistant: response.content}]
+      \mathbin{{+}{+}} [\texttt{user: tool\_results}]\\
+    \mathrm{bwdX}(r) &= \texttt{"".join(text blocks)} .
+  \end{align*}
+  Here $\mathrm{bwdS}(r)$ is exactly the two \texttt{messages.append(...)} calls of the loop
+  body (the new transcript). The map $\mathrm{bwdX}$ is defined precisely on those replies
+  $r$ whose \texttt{stop\_reason} $\neq$ \texttt{"tool\_use"} (the halt branch
+  \texttt{return}); on \texttt{tool\_use} replies $\mathrm{bwdX}$ is undefined-as-a-final-answer
+  and the loop continues.
+\end{itemize}
+
+\begin{proposition}[the loop body is a worker]
+The body of \texttt{run\_agent} is a container morphism
+$\mathrm{step} : \state S \otimes X \to Y$ with the $\mathrm{fwd}$, $\mathrm{bwdS}$,
+$\mathrm{bwdX}$ above. The two \texttt{messages.append} lines \emph{are} $\mathrm{bwdS}$
+(state writeback); the \texttt{return} line \emph{is} $\mathrm{bwdX}$ (answer up); the
+\texttt{client.messages.create(...)} call followed by \texttt{dispatch} \emph{is} the
+delegation $\mathrm{fwd}$ into $Y$ and the receipt of a $Y_1$-position.
+\end{proposition}
+
+\section{The loop is coKleisli iteration}
+
+The full \texttt{run\_agent} runs \texttt{step} repeatedly, threading the new transcript
+$\mathrm{bwdS}(r)$ back in as the next state, halting the first time a reply has
+\texttt{stop\_reason} $\neq$ \texttt{tool\_use} (then $\mathrm{bwdX}$ fires).
+
+\begin{proposition}
+\texttt{run\_agent} is the coKleisli iteration of the worker \texttt{step} for the graded
+comonad $p \mapsto \state S \otimes p$. Because state multiplies along $\otimes$
+($\state S \otimes \state T = \state(S \times T)$, Lemma 2 of Note 3), the accumulated state
+after $k$ turns is the \emph{concatenated} transcript --- the growth of \texttt{messages} is
+exactly the state-multiplication of composed workers. (The \texttt{MAX\_TURNS} bound is a cap
+on the iteration; it is not part of the worker's type.)
+\end{proposition}
+
+\section{\texorpdfstring{\texttt{spawn\_agent}}{spawn\_agent} is worker composition (nesting)}
+
+\texttt{run\_agent} calls \texttt{dispatch} calls \texttt{run\_agent}: the child is itself a
+worker
+\[
+  \mathrm{child} : \state S_{\mathrm{child}} \otimes (\texttt{task}) \longrightarrow (\texttt{string})
+\]
+whose \emph{entire} state $S_{\mathrm{child}}$ is a fresh transcript seeded with only the task
+string. When the child halts, one string crosses back and becomes \emph{one}
+\texttt{tool\_result} in the parent's transcript.
+
+\begin{remark}
+This is composition/nesting of workers: the child's store $S_{\mathrm{child}}$ is independent
+of and invisible to the parent --- the parent amalgamates only the child's single
+$\mathrm{bwdX}$ answer (one string) as one $Y_1$-position. The child's state is existentially
+hidden, exactly the amalgamation of $\otimes$-composition. ``Control down (delegate the task
+string), data up (one string)'' is the container-morphism slogan read on \texttt{spawn\_agent}.
+\end{remark}
+
+\section{The gate is a smart constructor}
+
+\texttt{check\_permission} sits between the ask and the execution, with
+\texttt{ALLOW}/\texttt{DENY} lists; a denial returns an ordinary \texttt{tool\_result} with an
+error flag, indistinguishable from a broken tool from inside.
+
+\begin{remark}
+The gate is a sub-object inclusion on the delegated shapes $Y_0$ (the \texttt{ALLOW}
+sub-container of possible tool calls) composed into $\mathrm{fwd}$; a denial is still a
+genuine $Y_1$ position (the error \texttt{tool\_result}), so the gate does not change the
+worker's \emph{type}, only its forward map --- ``a denied command and a broken tool look the
+same from inside'' is precisely the statement that both are ordinary positions of $Y_1$. This
+instantiates the seed's ``trust boundary $=$ smart constructor.''
+\end{remark}
+
+\section{What is NOT state (honesty)}
+
+The bash working directory persists across calls but is external world-state, not part of $S$
+(the harness does not carry it in \texttt{messages}); model it as an ambient effect, not the
+state object. The \texttt{depth} and \texttt{turn} counters bound the recursion/iteration and
+are parameters, not state.
+
+\bigskip
+
+\noindent\textbf{Punchline.} The transcript is the store, one turn is fwd-then-writeback, the
+loop is coKleisli iteration, spawn is nesting, and the permission gate is a smart constructor
+--- the fifteen-line harness is a worker on the nose.
+
+\end{document}
