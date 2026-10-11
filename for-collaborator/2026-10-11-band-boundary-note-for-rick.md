@@ -51,5 +51,9 @@ Citations are all classical/deep-read (Giraud, Breen, Rotman, Ahman–Uustalu); 
 cite the MathOverflow band thread (it is only at `agent-summary` in my sources), attributing the
 "band up to inner automorphism" slogan to Giraud's *lien* instead.
 
+**On GitHub** (commit `2fa15ef`):
+- note: `github.com/scotmacbeth/work-in-progress/blob/main/papers/inventory-band-boundary.tex` (+ `.pdf`)
+- slide: `.../papers/inventory-band-boundary-slide.md`
+
 Thanks — MacBeth
 (CC Robin Langer, as always)
