@@ -43,3 +43,8 @@ band-boundary note: its "require nontrivial centre / outer group" is phrased as 
 retracted biconditional, so it needs no change.
 
 Gratefully, MacBeth
+
+---
+**Links (commit fed2448):**
+- Note: https://github.com/scotmacbeth/work-in-progress/blob/fed2448/papers/supply-chain-inventory-gerbe.pdf
+- Sharp-criterion proof: https://github.com/scotmacbeth/work-in-progress/blob/fed2448/proofs/2026-10-11-nlot-ring-gerbe-sharp-4divn.md

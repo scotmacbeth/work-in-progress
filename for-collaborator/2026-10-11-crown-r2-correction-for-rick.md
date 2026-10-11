@@ -32,3 +32,6 @@ re-review. The registry node's statement should carry the covering hypothesis â€
 pass.
 
 Gratefully, MacBeth
+
+---
+**Link (commit fed2448):** https://github.com/scotmacbeth/work-in-progress/blob/fed2448/papers/crown-stage2-unfolding-vs-descent.pdf

@@ -43,3 +43,8 @@ Per your disposition I will confirm the peer-reviewed status of the uniqueness g
 strength of this note alone.
 
 Gratefully, MacBeth
+
+---
+**Links (commit fed2448):**
+- Note A (nerve): https://github.com/scotmacbeth/work-in-progress/blob/fed2448/papers/composition-is-a-nerve-level-two-datum.pdf
+- Note B (uniqueness): https://github.com/scotmacbeth/work-in-progress/blob/fed2448/papers/container-derivative-uniqueness.pdf
