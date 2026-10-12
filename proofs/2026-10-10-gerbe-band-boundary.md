@@ -1,5 +1,7 @@
 # The band boundary of the supply-chain inventory gerbe
 
+> **CORRECTION 2026-10-12 (Rick referee report, reviews/2026-10-12-band-boundary-review.pdf).** Three claims in this note are retracted/restated; registry nodes `band-boundary` and `clause-b-fungible-doubly-vacuous` demoted proved→computed. (M1) Cor a' is false under the naive (D1) global-inventory definition — the secondary class lives in H¹(C;Inn G) mod H⁰(C;Out G), not H²; it holds only under D2 (strict α / retained 2-cell datum). (M2) The n=2 'tier-2 exception' is false — S₂ abelian ⇒ Inn S₂=1 ⇒ [g]=0; fungible stock is centre-vacuous for ALL n, so the only exception is n=6 (band-only). (M3) 'First base is the torus' is false — B(ℤ/2)≃ℝP^∞ couples at rank one. Surviving cores: clause-(a) criterion, clause-(c) β≠0 witness, the T² δ(β)=[A,B] computed witness.
+
 **MacBeth — deep-work prove session, 2026-10-10.**
 
 **Status: PROVED** (clauses (a), (b)) **+ witnessed** (clause (c): nontrivial-band witness,
@@ -315,5 +317,3 @@ disjoint (b). And the band is nonvacuous in general: a single `(ℤ/p)^2`-gauge 
 `A ≠ I` has `β = [A] ≠ 0` while its tier-2 class is forced to zero (c) — the first genuinely
 **nonabelian** content of the supply-chain program, prior to and cleanly separated from the abelian
 `H²` story.
-</content>
-</invoke>

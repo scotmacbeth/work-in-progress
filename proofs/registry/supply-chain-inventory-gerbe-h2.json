@@ -16,8 +16,16 @@
         "approach": "(a) strict global inventory exists iff [g]=0. Uniform proof: candidate strict inventory = 1-cochain c:Mor C->Z(Aut F) adjusting local trivializations; T'_f=c_f T_f strict <=> omega=delta(c^-1) <=> [g]=0. Central-extension lifting (Face 2) / abelian-gerbe triviality (Face 1).",
         "role": "premise",
         "trust": "proved",
-        "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md", "date": "2026-10-11"},
-        "review_2026-10-10": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md", "date": "2026-10-10"},
+        "review": {
+          "reviewer": "Rick",
+          "artifact": "proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md",
+          "date": "2026-10-11"
+        },
+        "review_2026-10-10": {
+          "reviewer": "Rick",
+          "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md",
+          "date": "2026-10-10"
+        },
         "reason": "RE-PROMOTED computed->proved 2026-10-12 (MacBeth re-review adopting Rick's r2 repaired Corollary 17; artifact proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md). N1 FIX LANDED in papers/supply-chain-inventory-gerbe.tex (WRITE commit e4d1785): a SINGLE definition of global inventory is used throughout -- D2 = the pair (mu,T) of a gauge mu:ObC->Aut K and a strict functor T:C->BK with mu(y)alpha(f)mu(x)^-1=conj(Tf) (eq:D2, def:gerbe); the strictness / 2-cell datum k_{g,f} (alpha_{gf}=conj(k_{g,f})alpha_g alpha_f) is RETAINED throughout and flagged load-bearing (lines 313-317), closing the D1-vs-Thm11 equivocation that Rick's R5 D4 counterexample exposed; Corollary 17 is restated as the classical two-stage Postnikov / crossed-module (K->Aut K) obstruction (rem:postnikov). MacBeth's own re-review adopting Rick's repaired statement, so proved is within boundary. --- PRIOR DEMOTION (Rick r2 N1, artifact as above): CORRECTNESS GAP in Corollary 17 (= Cor. 2, the staged / inventory rectification). Cor. 17 uses TWO definitions of 'global inventory' — Def. 6/Thm 11 (strict functor T:C->BK lifting rho) vs the proof's D1 (relabelling mu:ObC->AutK trivialising alpha outright). SUFFICIENCY FAILS under D1 (computed D4 counterexample R5: C=B(Z/2), K=D4, alpha(g)=conj(s) inner so beta=0, lift T(g)=s involution so [g]=0, yet no mu makes mu conj(s) mu^-1=id). Under the Thm 11 notion the step 'beta=0 => alpha=conj o rho with rho a FUNCTOR' needs a strictness / 2-cell hypothesis (the k_{g,f} AUT(K)-pseudofunctor data of Rem. 10) the note does not make; alpha is only functorial up to inner (sec 2.3), a condition that once inner-valued is empty. REPAIR (computed, 0 disagreements on B(Z/2) for K in {D4,Q8,S3,Z/2xS3,Z/4}): assume alpha strict or carry (alpha,k); define global inventory by D2 = (exists strict T:C->BK, exists mu: mu(y) alpha(f) mu(x)^-1 = conj(Tf)). NB the underlying cohomological Thm 11 / Lemma 9 are OK (checked-sober per Rick); the gap is at the inventory-level Corollary 17. Re-promote only after the N1 repair (strictness / 2-cell data, D2 definition) lands and is re-reviewed. --- PRIOR (Rick review 2026-10-10): Survives but is CLASSICAL (E5): Face 2 + (†) are the Schreier / Eilenberg–MacLane central-extension lifting criterion pulled back along ρ (Ho 1974, Wells 1979, Baues–Wirsching classify by H²) — a specialisation, not a new theorem. Face 1 is DEFINITIONAL (E3): [𝔤] is extra gerbe datum (k-invariant of the AUT(F)-pseudofunctor with π1=Out, π2=Z), NOT computed from F. E8: distinguish K-gerbe (trivial band) from the Z-gerbe of lifts (Face 2).",
         "file": "2026-10-08-supply-chain-inventory-gerbe.md",
         "children": [
@@ -45,7 +53,11 @@
         "approach": "(b) [g] in H^2 is a genuine degree-2/N3 datum: zero on 1-truncated nerves (free category on a DAG: BF(Q)~|Q| 1-dim), nonzero on a loop B(G) with H^2(G;Z)!=0.",
         "role": "premise",
         "trust": "computed",
-        "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md", "date": "2026-10-10"},
+        "review": {
+          "reviewer": "Rick",
+          "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md",
+          "date": "2026-10-10"
+        },
         "reason": "DEMOTED proved→computed by Rick review 2026-10-10 (9eb0941). Thm B(i) 'homotopy 1-truncated ⇒ H²=0' is FALSE (E1): B(Z/2)=K(Z/2,1) is 1-truncated yet H²(Z/2;Z/2)=Z/2. Correct hypothesis: |N(C)| homotopy-equivalent to a 1-DIMENSIONAL complex (free categories) — then proved (classical). Thm B(ii) inventory witness with K=Z/2 is WRONG (E2): two-lot gives [𝔤]=0 for all abelian K and for S3,S4; [𝔤]≠0 only for K=D4,Q8 (Rick verified C1: 1/4 and 3/4 of ρ over Z/2; 9/16 and 15/16 over (Z/2)²). Minimal correct witness: K=D4=Aut(4-cycle), ρ(g)=[r] on B(Z/2). Diamond H²=0 computation verified; lean-verified children stand.",
         "file": "2026-10-08-supply-chain-inventory-gerbe.md",
         "children": [
@@ -86,7 +98,11 @@
         "approach": "(c) [g] in H^2(N(C);Z(Aut F)) and [omega] in H^2(Sk_C;D) are logically independent. Conceptual: [omega] depends on C alone, [g] on the external fibre F; fix C, toggle [g] by choosing F. Witnesses W1' ([g]!=0,[omega]=0: B(Z/2),K=Z/2,trivial factorization D=0) and W2' ([g]=0,[omega]!=0: rigid-twist weld, strict inventory F=pt). SAME degree; separation is by COEFFICIENT SYSTEM + witnesses, not by degree.",
         "role": "premise",
         "trust": "proved",
-        "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md", "date": "2026-10-10"},
+        "review": {
+          "reviewer": "Rick",
+          "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md",
+          "date": "2026-10-10"
+        },
         "reason": "Logical independence SURVIVES (Rick review 2026-10-10 confirms, checked-sober) — but NOT via the stated 'different coefficients' mechanism, which is FALSE: on C=B(Z/2) with Z(Aut F)=D=Z/2 the classes lie in the SAME group and [𝔤]=[ω] can occur (all four vanishing patterns incl. [𝔤]=[ω]≠0). Honest mechanism: [𝔤] depends on the inventory/gerbe datum while [ω] does not — different INPUT data, not different coefficients. Write-up fixes owed: state the quantifier (pairs (weld datum, inventory datum) over the same C); fix Remark 12 (E6: different degree does NOT imply independence — Bockstein/cup²/d3 couplings); rename the gerbe cocycle ω→γ (E7, load-bearing — the note literally writes [𝔤]=[ω] then proves independence); W2' doubtful (E4) — specify category/relations/coefficients or replace with a B(Z/2) 2×2 ([𝔤],[ω]) table. 'fourth H² home distinguished by coefficient system' (M4) → distinguished by input datum.",
         "file": "2026-10-08-supply-chain-inventory-gerbe.md",
         "children": [
@@ -115,8 +131,16 @@
         "approach": "SHARP n-lot criterion (MacBeth-proved 2026-10-11, upgrading Rick's r2 peer-claim). For the n-lot ring fibre F(n) = vertex set of the n-cycle C_n, the structure group is K(n) = Aut(C_n) = D_n (dihedral, order 2n). The inventory gerbe [gamma]=rho*[*] is ESSENTIALLY NONZERO (exists (C,rho) obstructing strict global inventory) <=> the central extension (*) 1->Z(K)->K->Inn K->1 is NON-SPLIT <=> [*]!=0 in H^2(Inn K; Z(K)) <=> 4|n. Arithmetic (centre count): Z(D_n)=1 (n odd), Z/2 (n even); Inn(D_n)=D_{n/2} (n even); D_{2m}=Z/2 x D_m iff m odd, proved by |Z(D_{2m})|=2 vs |Z(Z/2 x D_m)|=2|Z(D_m)| (=2 iff m odd), so split <=> n/2 odd <=> 4 nmid n. 'nonabelian with nontrivial centre' is NECESSARY ONLY, not sufficient. D6=Z/2 x S3 (n=6, 4 nmid 6) is the explicit split witness N2 forces.",
         "role": "premise",
         "trust": "proved",
-        "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md", "date": "2026-10-11"},
-        "review_2026-10-10": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md", "date": "2026-10-10"},
+        "review": {
+          "reviewer": "Rick",
+          "artifact": "proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md",
+          "date": "2026-10-11"
+        },
+        "review_2026-10-10": {
+          "reviewer": "Rick",
+          "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md",
+          "date": "2026-10-10"
+        },
         "reason": "PROMOTED computed->proved 2026-10-11 (MacBeth deep-work prove session, independent verification of Rick's r2 sharp replacement). Proof proofs/2026-10-11-nlot-ring-gerbe-sharp-4divn.md: (1) K(n)=D_n with Z/Inn arithmetic (Lemmas 2-3, elementary); (2) split <=> 4 nmid n via centre-count Theorem 4 (D_{2m} iso Z/2 x D_m iff m odd, proved by |Z|: LHS=2, RHS=2|Z(D_m)|) and explicit complement H=<r^2,s> for m odd, Corollary 5; (3) Lemmas 6-7 classical identification essentially-nonzero <=> [*]!=0 <=> non-split (Eilenberg-MacLane / Brown IV.3, cited; untwisted coeffs since Inn fixes Z pointwise; rho=id over B(Inn K) realises [*]); (4) D6=Z/2 x S3 split witness reconciling N2 (nonabelian + Z!=1 but splits => [g]=0 for all C,rho). Computation scratch/dihedral_split_verify.py confirms non-split <=> 4|n for n=3..16 and the D6 complement H iso S3. SCOPE: band-trivial stratum (rho inner-valued, beta=0); step (3) is classical/cited not re-derived -- novelty is placing the note's [gamma] as the dihedral extension class and reading non-split as the 4|n line. General biconditional stays RETRACTED; the PROVED statement is the sharp one. --- PRIOR (Rick r2 N2): general 'Thm D: [gamma]!=0 <=> K nonabelian w/ nontrivial centre' FALSE (D6 counterexample); printed Thm 25(i)/Thm 5 'only if' OK. PRIOR (Rick 2026-10-10 E2): 'nonvacuous only for n=2'/'sharp' FALSE; Z(Aut F)!=1 necessary not sharp.",
         "file": "2026-10-11-nlot-ring-gerbe-sharp-4divn.md",
         "children": [
@@ -137,12 +161,13 @@
             "children": [
               {
                 "id": "dihedral-split-finite-check",
-                "approach": "Brute-force central-complement search over D_n, n=3..16 (concrete (a,k) model): NON-SPLIT exactly at n in {4,8,12,16}={4|n}; D6 complement H=<(0,2),(1,0)> iso S3 with H cap Z={e}. Second confirmation via centre count 2|Z(D_{n/2})| vs 2. Matches Cor 5 for all n.",
+                "approach": "Brute-force central-complement search over D_n, n=3..16 (concrete (a,k) model): NON-SPLIT exactly at n in {4,8,12,16}={4|n}; D6 complement H=<(0,2),(1,0)> iso S3 with H cap Z={e}. Second confirmation via centre count 2|Z(D_{n/2})| vs 2. Matches Cor 5 for all n. Now machine-checked in Lean 4 (decide, axiom-free).",
                 "role": "attempt",
-                "trust": "computed",
+                "trust": "lean-verified",
                 "file": "2026-10-11-nlot-ring-gerbe-sharp-4divn.md",
-                "note": "scratch/dihedral_split_verify.py: non-split <=> 4|n returned True for all n=3..16; associativity spot-checked.",
-                "children": []
+                "note": "scratch/dihedral_split_verify.py: non-split <=> 4|n returned True for all n=3..16; associativity spot-checked. Lean port 2026-10-12 verifies the same over n=3..16 by decide.",
+                "children": [],
+                "lean": "DihedralSplit.sharp_split_iff_4_notdvd (headline Cor 5: splits <=> 4 notdvd n, n=3..16), with group_axioms_rep, centre_table (Lemma 2), prod_centre_is_double (RHS Thm 4), split_side_has_complement (explicit complement <r^2,s> for 4 notdvd n), non_split_centre_obstruction (centre mismatch for 4|n), D6_splits_as_Z2_times_S3 (N2 reconciliation), nlot_ring_sharp_core (headline); file lean/2026-10-12-dihedral-split-4divn.lean. Axiom-free (no propext/sorryAx/native_decide)."
               }
             ]
           },
@@ -169,7 +194,7 @@
         "id": "band-boundary",
         "approach": "Settle Giraud STRATUM 2 (the band) over N(C), removing the 10-08 trivial-band hedge. Band := outer transport rho=q o alpha : C -> B(Out G), class beta=[rho] in H^1(N(C);Out G). (a) beta=0 <=> alpha is Aut G-gauge-equivalent to an Inn-valued cocycle (Giraud step 2 on the nerve; elementary Schreier). Cor a': strict global inventory exists <=> beta=0 AND [g]=0 (staged; [g] only defined once beta=0), so 10-08 Thm A is the band-trivial stratum. (b) fungible G=S_n doubly vacuous for n>=3,n!=6: Out(S_n)=1 (band) and Z(S_n)=1 (tier-2); disjoint exceptions n=6 (band-only, Out=Z/2) and n=2 (tier-2-only, Z=Z/2). (c) nontrivial-band witness G=(Z/p)^2 (Inn=1, Out=Aut=GL_2(F_p)), C=B(Z): beta=[A]!=0 for any A!=I, while H^2(S^1;-)=0 forces tier-2 to zero -- clean separation, first genuinely nonabelian content.",
         "role": "attempt",
-        "trust": "proved",
+        "trust": "computed",
         "file": "2026-10-10-gerbe-band-boundary.md",
         "date_opened": "2026-10-10",
         "date_closed": "2026-10-10",
@@ -205,7 +230,7 @@
             "id": "clause-b-fungible-doubly-vacuous",
             "approach": "G=S_n: Out(S_n)=1 for n!=6 (S_n complete) => band beta=0 automatic; Z(S_n)=1 for n>=3 => tier-2 [g]=0 (10-08 Prop D). Double vacuity for n>=3,n!=6. Disjoint exceptions: n=6 band-only (Out=Z/2, but Z=1), n=2 tier-2-only (Z=Z/2, but Out=1). No single fungible fibre carries both.",
             "role": "premise",
-            "trust": "proved",
+            "trust": "computed",
             "file": "2026-10-10-gerbe-band-boundary.md",
             "children": [
               {
@@ -227,7 +252,8 @@
                 "note": "scratch/band_boundary_verify.py; same fact as 10-08 Prop D centre-Sn-table.",
                 "children": []
               }
-            ]
+            ],
+            "reason": "DEMOTED proved->computed 2026-10-12 (Rick M2). The n=2 'tier-2-only' exception is NOT real: S_2 is abelian => Inn S_2=1 => gerbe-of-lifts trivial => [g]=0 on every base. There is no tier-2 fungible exception; the disjoint dichotomy collapses to the single n=6 band-only exception (Out S_6=Z/2). The band half (Out S_n=1 for n!=6, so beta=0 automatic) survives; child centre-Sn-table-b stays (raw Z(S_n) table correct, only its interpretation was wrong)."
           },
           {
             "id": "clause-c-nontrivial-band-witness",
@@ -249,13 +275,13 @@
           },
           {
             "id": "coupled-T2-d2-witness",
-            "approach": "FIRST T^2 witness where band (stratum 2) and degree-2 lifting obstruction (stratum 3) COUPLE. C=B(Z^2), N(C)~T^2. G=D4xC2 (class 2, Inn=G/Z=(Z/2)^2, Z(G)=(Z/2)^2, |Out G|=16). Band rho:Z^2->Out G, s->[A],t->[B] where A:(r->r^3,s->s,c->r^2c), B:(r->r^3c,s->s,c->c): [A],[B] are commuting outer involutions generating (Z/2)^2, so beta=[rho]!=0. The connecting map delta:H^1(T^2;Out G)->H^2(T^2;Inn G) of 1->Inn G->Aut G->Out G->1 has delta(beta)=[A,B]=[s]!=0 in H^2(T^2;Inn G)=(Z/2)^2 (A,B act trivially on Inn G => trivial coefficients, no coboundaries): the outer band is NOT strictifiable (NO commuting lifts, brute-forced over all 16x16 inner adjustments; lift-independent). On S^1 delta=0 always (H^2(S^1)=0, clause c) -- T^2 is the first base where both strata are nonzero with the band forcing the degree-2 class. Companion: central ext 1->Z(G)->G->Inn G->1 also couples ([r,s]=r^2!=0 in H^2(T^2;Z(G))). CORRECTIONS to the lane brief: (1) coefficient is Inn G, NOT Z(Aut F) (that belongs to the central stage); (2) delta(beta) is INDEPENDENT of band trivialisation (a canonical function of beta), not dependent; (3) no H^3 Giraud existence obstruction on 2-dim T^2 -- strictifiability delta is the only degree-2 coupling.",
+            "approach": "FIRST T^2 witness where band (stratum 2) and degree-2 lifting obstruction (stratum 3) COUPLE. C=B(Z^2), N(C)~T^2. G=D4xC2 (class 2, Inn=G/Z=(Z/2)^2, Z(G)=(Z/2)^2, |Out G|=16). Band rho:Z^2->Out G, s->[A],t->[B] where A:(r->r^3,s->s,c->r^2c), B:(r->r^3c,s->s,c->c): [A],[B] are commuting outer involutions generating (Z/2)^2, so beta=[rho]!=0. The connecting map delta:H^1(T^2;Out G)->H^2(T^2;Inn G) of 1->Inn G->Aut G->Out G->1 has delta(beta)=[A,B]=[s]!=0 in H^2(T^2;Inn G)=(Z/2)^2 (A,B act trivially on Inn G => trivial coefficients, no coboundaries): the outer band is NOT strictifiable (NO commuting lifts, brute-forced over all 16x16 inner adjustments; lift-independent). On S^1 delta=0 always (H^2(S^1)=0, clause c) -- T^2 is the first FREE base (among B(Z^n): N(B(Z))~S^1 has H^2=0) where both strata are nonzero with the band forcing the degree-2 class -- NOT the first base overall: a torsion base e.g. B(Z/2)~RP^inf has H^2!=0 and already couples at rank 1 under an outer involution (Rick 2026-10-12 M3). Companion: central ext 1->Z(G)->G->Inn G->1 also couples ([r,s]=r^2!=0 in H^2(T^2;Z(G))). CORRECTIONS to the lane brief: (1) coefficient is Inn G, NOT Z(Aut F) (that belongs to the central stage); (2) delta(beta) is INDEPENDENT of band trivialisation (a canonical function of beta), not dependent; (3) no H^3 Giraud existence obstruction on 2-dim T^2 -- strictifiability delta is the only degree-2 coupling.",
             "role": "attempt",
             "trust": "computed",
             "file": "2026-10-11-coupled-T2-gerbe-stratum.md",
             "date_opened": "2026-10-11",
             "date_closed": "2026-10-11",
-            "note": "Deep-work prove session 2026-10-11. Proof proofs/2026-10-11-coupled-T2-gerbe-stratum.md. Scripts scratch/aut_engine.py (brute-force Aut/Inn/Out engine + coupling search battery: D4,Q8,Heis(F3),M16,C4rtC4,SD16,D16,D4xC2,Q8xC2,ES32+; only D4xC2 and Q8xC2 couple -- the rest have split Aut->Out hence delta=0), scratch/d4c2_witness.py, scratch/verify_final.py (independent from-scratch re-verification: Z(G), A,B auts, outer, [A,B]=c_s inner, no commuting lift, lift-independence, band structure). Aut orders cross-checked vs known values (|Aut(D4xC2)|=64, |Aut(Q8xC2)|=192, |Aut 2^{1+4}_+|=1152). SCOPE: minimality over ALL order-<=16 groups NOT claimed (only 9 nonabelian ones tried); class-2 hypothesis taken so Inn abelian / delta lands in ordinary H^2. Grade computed (own-computation); promote to proved after referee of the Lemma + arithmetic, Lean re-run optional. Resolves band-boundary open thread #1 (T^2 coupled case) and 10-10 dream open thread #1.",
+            "note": "Deep-work prove session 2026-10-11. Proof proofs/2026-10-11-coupled-T2-gerbe-stratum.md. Scripts scratch/aut_engine.py (brute-force Aut/Inn/Out engine + coupling search battery: D4,Q8,Heis(F3),M16,C4rtC4,SD16,D16,D4xC2,Q8xC2,ES32+; only D4xC2 and Q8xC2 couple -- the rest have split Aut->Out hence delta=0), scratch/d4c2_witness.py, scratch/verify_final.py (independent from-scratch re-verification: Z(G), A,B auts, outer, [A,B]=c_s inner, no commuting lift, lift-independence, band structure). Aut orders cross-checked vs known values (|Aut(D4xC2)|=64, |Aut(Q8xC2)|=192, |Aut 2^{1+4}_+|=1152). SCOPE: minimality over ALL order-<=16 groups NOT claimed (only 9 nonabelian ones tried); class-2 hypothesis taken so Inn abelian / delta lands in ordinary H^2. Grade computed (own-computation); promote to proved after referee of the Lemma + arithmetic, Lean re-run optional. Resolves band-boundary open thread #1 (T^2 coupled case) and 10-10 dream open thread #1. [2026-10-12 Rick review: 'first base' corrected to 'first FREE base (B(Z^n) tower)' -- B(Z/2) couples at rank 1, M3. The delta(beta)=[A,B]=[s]!=0 computation itself independently re-verified by Rick's hand-proof; computed grade confirmed honest/conservative.]",
             "children": [
               {
                 "id": "lifting-delta-commutator-lemma",
@@ -263,8 +289,38 @@
                 "role": "premise",
                 "trust": "computed",
                 "file": "2026-10-11-coupled-T2-gerbe-stratum.md",
-                "note": "Elementary; the single-relator [s,t] obstruction of Z^2 with abelian coefficients. Brute force confirms the three load-bearing consequences (lift-independence, no commuting lift, class value) for D4xC2.",
+                "note": "ORIGINAL ASSERTED FORM (one-paragraph slogan, trivial-action witness only). SUPERSEDED/PROMOTED 2026-10-12 by sibling node coupled-T2-general-delta-lemma (proved): the general route-B proof (explicit bar<->Koszul comparison map phi_2(e_st)=[s|t]-[t|s] => class=f(s,t)-f(t,s)=w; twisted lift-independence verified element-wise incl. nontrivial action). Build on the proved sibling, not on this computed stub. | Elementary; the single-relator [s,t] obstruction of Z^2 with abelian coefficients. Brute force confirms the three load-bearing consequences (lift-independence, no commuting lift, class value) for D4xC2.",
                 "children": []
+              },
+              {
+                "id": "coupled-T2-general-delta-lemma",
+                "approach": "GENERAL route-B (discrete Schreier / extension-class) proof of the delta-commutator lemma AND the coupling criterion, for ALL finite G of nilpotency class <=2 and GENERAL (twisted) coefficient action sigma,tau -- promoting the asserted lifting-delta-commutator-lemma. (STEP A, classical/cited Brown GTM87 IV.3-4, Eilenberg-MacLane 1947): delta(rho):=[E_rho], the pullback extension E_rho=AutG x_{OutG} Z^2; homomorphic lift <=> group splitting of E_rho <=> class 0; [E_rho]=rho*[*]. (STEP B, NEW): explicit comparison chain map K->B of free Z[Z^2]-resolutions with phi_2(e_st)=[s|t]-[t|s] (chain-map identity verified: d2^B([s|t]-[t|s])=(s-1)[t]-(t-1)[s]=phi_1 d2^K e_st, using st=ts), hence the canonical iso H^2(Z^2;M)=M/((sigma-1)M+(tau-1)M) sends [f] to [f(s,t)-f(t,s)]; with section u(s^i t^j)=shat^i that^j one gets f(s,t)=0, f(t,s)=w^-1, so delta(rho)=[w], w=[A,B] in M=Inn G, A,B ANY lifts. Twisted lift-independence w'-w=tau(sigma-1)v-sigma(tau-1)u lands in (sigma-1)M+(tau-1)M; delta(rho)=0 <=> commuting lifts exist. CRITERION: G couples on T^2 <=> some commuting outer pair has NO commuting lifts; split (*) => theta.rho is a homomorphic lift => delta==0 => decouple; hence coupling => (*) non-split (NECESSARY). Non-split is NOT sufficient: M16, C4rtC4 are non-split yet carry no coupled band (rank-1 never couples, H^2(Z;-)=0; need [*] to restrict nontrivially to some commuting Z^2).",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-10-12-general-delta-commutator-lemma.md",
+                "date_opened": "2026-10-12",
+                "date_closed": "2026-10-12",
+                "note": "MacBeth deep-work /prove 2026-10-12. Proof proofs/2026-10-12-general-delta-commutator-lemma.md. PROVED = MacBeth's own route-B derivation; the classical backbone (C1 extensions<->H^2 split<->0, C2 lift<->splitting, C3 pullback=restriction) is CITED (Brown IV.3-4), the NEW content (explicit comparison map => commutator identity; twisted (4.1); criterion + necessary-not-sufficient) is proved in-file. Finite instance = sibling coupled-T2-finite-core-lean (D4xC2, lean-verified [propext]) + the D4xC2/Q8xC2 witnesses. SCOPE: class<=2 essential (Inn abelian => ordinary H^2); base T^2 only (Z^2 two-generator one-relator Koszul); battery enumeration is computed (child nodes), not a full order-<=16 census.",
+                "children": [
+                  {
+                    "id": "delta-lemma-twisted-elementwise-verify",
+                    "approach": "Element-wise verification IN Aut G of the twisted lift-independence identity (4.1) w'-w=tau(sigma-1)v-sigma(tau-1)u AND the equivalence 'exists commuting lift <=> w in (sigma-1)M+(tau-1)M', over EVERY commuting outer pair and ALL u,v, for the whole class-2 battery -- INCLUDING nontrivial-action pairs the trivial-action D4xC2 witness cannot reach. Totals: Heis(F3) 168 nontrivial-action pairs / 13608 checks, Q8xC2 188, D4xC2 44, C4rtC4 10, M16 5, Q8 6, D4 1 -- all pass.",
+                    "role": "attempt",
+                    "trust": "computed",
+                    "file": "2026-10-12-general-delta-commutator-lemma.md",
+                    "note": "scratch/verify_twisted_liftindep.py: ALL CHECKS PASSED (class2=True, EQUIV and TWISTED-FORMULA True for all 7 class-2 groups). Stress-tests the GENERAL (twisted) lemma beyond trivial-action.",
+                    "children": []
+                  },
+                  {
+                    "id": "delta-lemma-coupling-battery",
+                    "approach": "Coupling battery: for each group search ALL commuting outer pairs for one with no commuting lift. Only D4xC2 (30 pairs) and Q8xC2 (54) couple; D4,Q8,Heis(F3),ES32+ split => decouple; M16,C4rtC4 non-split but still decouple (necessary-not-sufficient witnesses). Confirms the criterion's split=>decouple direction and the non-sufficiency of non-split over the enumerated class-2 family.",
+                    "role": "attempt",
+                    "trust": "computed",
+                    "file": "2026-10-12-general-delta-commutator-lemma.md",
+                    "note": "scratch/aut_engine.py, re-run 2026-10-12. Aut orders cross-checked vs known values. Enumerated family only -- NOT a full order-<=16 census (minimality not claimed).",
+                    "children": []
+                  }
+                ]
               },
               {
                 "id": "coupled-T2-finite-core-lean",
@@ -280,7 +336,8 @@
               }
             ]
           }
-        ]
+        ],
+        "reason": "DEMOTED proved->computed 2026-10-12 (Rick band-boundary review, proofs/reviews/2026-10-12-band-boundary-review.pdf). M1: Cor a' FALSE as printed under the naive (D1) definition of global inventory -- the secondary stage is a class in H^1(C;Inn G) mod H^0(C;Out G), NOT [g] in H^2; repair requires D2 (strict alpha / retained 2-cell datum). M2: the claimed n=2 tier-2 exception is FALSE -- S_2 abelian => Inn S_2=1 => [g]=0 on every base; fungible stock is centre-vacuous for ALL n, so the dichotomy collapses to the single n=6 band-only exception. M3: the 'torus-first' framing is false (B(Z/2)~RP^inf couples at rank 1). SURVIVING cores: clause-(a) criterion (proved), clause-(c) beta!=0 witness (proved), the T^2 delta(beta)=[A,B] witness (computed)."
       },
       {
         "id": "lean-gerbe-h2-witnesses",

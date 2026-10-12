@@ -1,0 +1,620 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\Cat}{\mathsf{Cat}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\Mor}{\mathrm{Mor}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Inn}{\mathrm{Inn}}
+\newcommand{\Out}{\mathrm{Out}}
+\newcommand{\gerbe}{\mathfrak{g}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\coker}{\mathrm{coker}}
+\newcommand{\gp}[1]{\langle #1\rangle}
+
+\title{The inventory gerbe couples on the torus}
+\author{MacBeth\thanks{Kodamai. Source material and verification scripts live in the
+author's \texttt{work-in-progress} corpus; this note corresponds to content commit
+\texttt{1c9affb} (the band-boundary, $\delta$-commutator, coupled-$T^2$, and sharp
+$n$-lot proof files together with their two Lean witnesses). Prepared for the Kodamai
+AI-Mathematician grant (Applications and Theory pillars) and for Neil Ghani's
+Strathclyde mini-course \emph{Tangent Categories and Containers}, 13--16 October 2026.}\\
+\small Kodamai}
+\date{12 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\small\emph{Prepared for:} the Strathclyde mini-course; Neil Ghani; cc Robin Langer and
+Rick (as a courtesy).\quad\emph{Content commit} \texttt{1c9affb}.
+\end{center}
+
+\begin{abstract}
+A supply chain, abstracted to a small category $\C$, carries fungible inventory as local
+stock-data glued along logistics operations up to a relabelling group $K=\Aut F$ of the
+stock fibre $F$; the gluing datum is an $\Aut F$-gerbe over the nerve $N(\C)$, and
+following Giraud its obstruction to a strict global inventory is \emph{staged}: a
+nonabelian band $\beta\in H^1(N(\C);\Out K)$ must vanish before an abelian class
+$[\gerbe]\in H^2(N(\C);Z(K))$ is even defined. We ask whether the stages are independent.
+Over a one-dimensional base they are, but over a two-dimensional one they need not be. We
+prove a general \emph{$\delta$-commutator lemma}: for an abelian-kernel extension of
+coefficient groups and a band $\rho\colon\Z^2\to Q$ on the torus, the connecting map is
+given exactly by the commutator of any two lifts, $\delta(\rho)=[[A,B]]$, in the
+coinvariants $H^2(T^2;M)$. Consequently a structure group couples on $T^2$ -- a nonzero
+band forcing a nonzero degree-two class -- if and only if some commuting outer pair admits
+no commuting lift, which forces $\Aut K\to\Out K$ to be non-split. We then locate the
+phenomenon precisely: for the $n$-lot ring $K=D_n$ the inventory class is essentially
+nonzero exactly when $4\mid n$, and across an enumerated family of order-$16$
+nilpotency-class-two groups only $D_4\times C_2$ and $Q_8\times C_2$ couple. Coupling is
+a rare, identifiable feature of gauge-structured stock, not of mere interchangeability.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{The problem.} A supply chain is a small category $\C$: objects are nodes
+(warehouses, plants, ledgers), morphisms are logistics operations, composition is
+sequencing. Inventory is a datum glued along the morphisms. When two local inventory
+charts are comparable only \emph{up to a relabelling} of stock states -- that is, up to
+the automorphism group $K:=\Aut F$ of the stock fibre $F$ -- the gluing datum is no longer
+a presheaf but an $\Aut F$-gerbe over the nerve $N(\C)$. A \emph{strict global inventory}
+is a global section: a single coherent choice of trivialization valid across the whole
+chain. The question with economic teeth is: \emph{when does one exist?} A failure is a
+compositional defect -- stock-keeping that cannot be reconciled globally no matter how the
+local books are kept.
+
+\paragraph{The staged obstruction.} In two companion notes we showed that the obstruction
+is not a single cohomology class but a \emph{tower}, exactly matching Giraud's three-stratum
+classification of nonabelian gerbes \cite{giraud,breen}. The relabelling group $K=\Aut F$
+sits in two abelian-kernel extensions that share their middle term $\Inn K$:
+\begin{equation}\label{eq:two-ext}
+\text{(II)}\quad 1\to Z(K)\to K\to \Inn K\to 1,
+\qquad\qquad
+\text{(I)}\quad 1\to \Inn K\to \Aut K\xrightarrow{\ q\ }\Out K\to 1.
+\end{equation}
+The \emph{band} is the outer transport $\beta=[q\circ\alpha]\in H^1(N(\C);\Out K)$ read off
+extension~(I); it is a genuinely nonabelian datum, and it must vanish before the abelian
+\emph{inventory class} $[\gerbe]\in H^2(N(\C);Z(K))$ -- the stratum-three class of
+extension~(II) -- is even well-defined. A strict global inventory exists iff \emph{both}
+vanish (Corollary~\ref{cor:floor}, the \emph{floor}).
+
+\paragraph{The gap.} The floor leaves a question the companion notes flagged but did not
+answer: are the two stages \emph{independent}, or can one force the other? On a base of
+cohomological dimension one -- e.g.\ a single reversible operation, $\C=B\Z$, $N(\C)\simeq
+S^1$ -- they are forced apart, because $H^2(S^1;-)=0$ annihilates every degree-two class;
+every band is strictifiable and the stages stack freely. Among the \emph{free} bases
+$B(\Z^n)$ the first that can hold a degree-two class is the torus $T^2\simeq N(B\Z^2)$: two
+commuting reversible operations. (Over a \emph{torsion} base, coupling can already occur at
+rank one; see \S\ref{sec:conc}.) There the question is open on its face.
+
+\paragraph{The result.} We close it with a single computation, valid for every abelian-kernel
+extension of coefficient groups. Write the band as a homomorphism $\rho\colon\Z^2\to Q$ into
+the relevant quotient ($Q=\Out K$ or $Q=\Inn K$), and let $M$ be the (abelian) kernel. Because
+$\Z^2$ is abelian, a band is exactly a \emph{commuting pair} of classes $\rho(s),\rho(t)\in Q$.
+
+\begin{theorem}[$\delta$-commutator lemma; see Theorem~\ref{thm:delta}]\label{thm:intro-delta}
+Let $1\to M\to E\xrightarrow{\pi} Q\to 1$ be an extension of groups with $M$ abelian, and let
+$\rho\colon\Z^2\to Q$ be a band with lifts $A,B\in E$ of $\rho(s),\rho(t)$. Then
+$w:=[A,B]=ABA^{-1}B^{-1}$ lies in $M$, and under the canonical identification
+$H^2(T^2;M)=M_{\Z^2}$ with the coinvariants, the connecting map is
+\[
+\delta(\rho)=[\,w\,]\in M_{\Z^2},
+\]
+independently of the lifts. In particular $\delta(\rho)=0$ iff the band admits commuting
+lifts, iff $\rho$ lifts to a homomorphism $\Z^2\to E$.
+\end{theorem}
+
+The method is deliberately elementary -- a Schreier-style computation in the discrete,
+nonabelian register, requiring no gerbe machinery beyond the classical dictionary between
+$H^2$ and extensions \cite{brown,eml}. The one non-classical step is an explicit comparison
+chain map between the Koszul and bar resolutions of $\Z$ over $\Z[\Z^2]$, sending the
+fundamental $2$-cell to the antisymmetric expression $\varphi_2(e_{st})=[s\,|\,t]-[t\,|\,s]$;
+this turns the slogan ``evaluate the obstruction cocycle on the torus relator $sts^{-1}t^{-1}$''
+into the identity $\delta(\rho)=[f(s,t)-f(t,s)]$ and pins the class to the commutator.
+
+\paragraph{Consequences.} Theorem~\ref{thm:intro-delta} gives an immediately checkable
+\emph{coupling criterion} (Corollary~\ref{cor:couple}): a structure group $K$ couples on
+$T^2$ -- a nonzero band forcing a nonzero degree-two class -- iff some commuting pair in the
+quotient admits no commuting lift, and this forces the governing extension to be
+\emph{non-split}. Two sharp locations follow.
+\begin{itemize}
+\item \emph{Sharpness} (Theorem~\ref{thm:sharp}). For the $n$-lot ring $K=\Aut(C_n)=D_n$ the
+inventory class $[\gerbe]$ is essentially nonzero iff the central extension~(II) is non-split
+iff $4\mid n$. The six-lot ring $D_6\cong\Z/2\times S_3$ -- nonabelian with nontrivial centre,
+yet split -- is the witness that ``nonabelian with nontrivial centre'' is necessary but not
+sufficient.
+\item \emph{Rarity} (\S\ref{sec:rarity}). Across an enumerated battery of order-$16$
+nilpotency-class-two groups, only $D_4\times C_2$ and $Q_8\times C_2$ couple. Non-splitting
+alone is genuinely weaker than coupling: $M_{16}$ and $C_4\rtimes C_4$ need not split yet
+carry no coupled band.
+\end{itemize}
+Compositional failure of global stock-keeping is therefore a feature of a thin, identifiable
+slice of structure groups -- gauge-structured stock with non-split automorphism tower -- and
+is invisible to fungibility.
+
+\paragraph{Status and provenance.} This is a consolidation at honest grades, assembled from
+four proof files; the only new theorem is the general $\delta$-commutator lemma. We record
+the grade of each ingredient (``lean-verified'' means a finite core is machine-checked in
+Lean~4/Mathlib).
+\begin{center}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Result & Location & Grade & Lean \\
+\midrule
+Floor: strict $\iff\beta=0\wedge[\gerbe]=0$ & Cor.~\ref{cor:floor} & proved & --- \\
+$\delta$-commutator lemma; coupling criterion & Thm.~\ref{thm:delta}, Cor.~\ref{cor:couple} & proved & --- \\
+Coupling witness $D_4\times C_2$ on $T^2$ & \S\ref{sec:witness} & computed & finite core \\
+Sharp line: $[\gerbe]\neq 0\iff 4\mid n$ & Thm.~\ref{thm:sharp} & proved & finite core \\
+Rarity over the order-$16$ battery & \S\ref{sec:rarity} & computed & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Outline.} Section~\ref{sec:staging} fixes the inventory gerbe, its two extensions,
+and the floor. Section~\ref{sec:lemma} proves the $\delta$-commutator lemma and the coupling
+criterion. Section~\ref{sec:witness} gives the $D_4\times C_2$ witness on $T^2$.
+Section~\ref{sec:sharp} proves the sharp $4\mid n$ line. Section~\ref{sec:rarity} reports the
+rarity enumeration. Section~\ref{sec:conc} draws the consequences for compositional correctness.
+
+\section{The inventory gerbe and its staging}\label{sec:staging}
+
+\paragraph{The gerbe.} Let $\C$ be a small category and $N(\C)$ its nerve. An
+\emph{inventory fibre} $F$ is the local type of a stock-state at a node; its automorphism
+group $K:=\Aut F$ is the \emph{relabelling group} of fungible lots. When local inventory
+charts are comparable only up to $K$, the gluing data form an $\Aut F$-gerbe over $N(\C)$:
+a transport $\alpha\colon\Mor\C\to\Aut K$ (re-trivializing a chart conjugates the next
+transport), functorial \emph{up to inner automorphism} of $K$, together with higher
+coherence valued in $Z(K)$. We use throughout the inner/outer and centre sequences of $K$,
+which are precisely the two extensions~\eqref{eq:two-ext}; note that $\Inn K$ is at once the
+quotient $K/Z(K)$ of~(II) and the kernel of~(I), so the two extensions genuinely stack.
+
+Cohomology over $N(\C)$ is simplicial cohomology of the nerve; for a group $Q$ of constant
+coefficients, a class in nonabelian $H^1(N(\C);Q)$ is a functor $\C\to BQ$ modulo
+object-relabelling, pointed by the trivial functor \cite{giraud}. When $\C=B\Gamma$ for a
+group $\Gamma$, $N(\C)=B\Gamma$ computes ordinary group cohomology of $\Gamma$; the two bases
+we need are $\C=B\Z$ ($N\simeq S^1$) and $\C=B\Z^2$ ($N\simeq T^2$).
+
+\paragraph{The band.} Projecting the transport by $q\colon\Aut K\to\Out K$ kills the
+up-to-inner slack and yields a strict functor $\rho:=q\circ\alpha\colon\C\to B(\Out K)$.
+
+\begin{definition}\label{def:band}
+The \emph{band} of the inventory gerbe is $\rho=q\circ\alpha$, with class
+$\beta:=[\rho]\in H^1(N(\C);\Out K)$ (the Giraud stratum-two invariant). The band is
+\emph{trivial} if $\beta=0$.
+\end{definition}
+
+That $\rho$ is a genuine cocycle regardless of the inner slack is immediate: if
+$\alpha_{gf}=\iota\,\alpha_g\alpha_f$ with $\iota\in\Inn K=\ker q$, then
+$\rho(gf)=q(\alpha_{gf})=\rho(g)\rho(f)$ because $q(\iota)=e$.
+
+\paragraph{The inventory class.} Once the band is trivial, the companion note constructs the
+stratum-three datum. Choose section-lifts $T_f\in K$ of the inner transport
+$\bar\rho\colon\C\to B(\Inn K)$; the defect $T_gT_f=\gerbe(g,f)\cdot T_{gf}$ lands in
+$\ker(K\to\Inn K)=Z(K)$ because both sides agree in $\Inn K$. Associativity in $K$, with
+$Z(K)$ central, makes $\gerbe$ a normalized $2$-cocycle, and changing the section changes it
+by a coboundary.
+
+\begin{definition}\label{def:invclass}
+The \emph{inventory class} is $[\gerbe]\in H^2(N(\C);Z(K))$, the pullback along the inner
+transport of the class of the central extension~(II). Its coefficient group is $Z(K)$, with
+trivial action (inner automorphisms fix the centre pointwise).
+\end{definition}
+
+\paragraph{The floor.} The two strata assemble into a single necessary-and-sufficient
+criterion, proved in the companion band-boundary note. First we fix \emph{what} is to be
+globalized, retaining the gerbe's $2$-cell datum rather than only its outer shadow.
+
+\begin{definition}[global inventory, D2]\label{def:global}
+A \emph{global inventory} is a pair $(\mu,T)$ in which $\mu\colon\Ob\C\to\Aut K$ is a gauge
+and $T\colon\C\to BK$ is a \emph{strict} functor, \emph{retaining} the gerbe's $2$-cell datum
+$k_{g,f}\in K$ (so that $\alpha_{gf}=\mathrm{conj}(k_{g,f})\cdot\alpha_g\alpha_f$), subject to
+\[
+\mu(y)\cdot\alpha(f)\cdot\mu(x)^{-1}=\mathrm{conj}(Tf)\qquad(f\colon x\to y).
+\]
+A \emph{strict global inventory} is such a pair. It is the full stratum-three globalization,
+not merely the bare outer datum.
+\end{definition}
+
+\begin{corollary}[the floor]\label{cor:floor}
+Under Definition~\ref{def:global}, a strict global inventory exists if and only if both strata
+vanish: \textup{(i)} $\beta=0\in H^1(N(\C);\Out K)$, and \textup{(ii)}
+$[\gerbe]=0\in H^2(N(\C);Z(K))$, where \textup{(ii)} is well-defined once \textup{(i)} holds.
+\end{corollary}
+
+\begin{proof}[Proof sketch]
+A strict global inventory $(\mu,T)$ in the sense of Definition~\ref{def:global} has its gauge
+$\mu$ projecting by $q$ to a trivialization of $\rho$, so (i) is necessary. Given (i), one
+may choose $\alpha$ inner-valued (band-triviality is exactly ``inner-valued up to an outer
+relabelling''), whereupon -- using the retained $2$-cell datum $k_{g,f}$ -- the gerbe is the
+honest gerbe of lifts of $\bar\rho$ through~(II), neutral iff $[\gerbe]=0$ by the
+central-extension lifting theorem \cite[IV.3]{brown}. Full details, including the fungibility
+corollary (for an $n$-element commodity fibre $\Out(S_n)=1$ for every $n$ except $n=6$, and
+$Z(S_n)=1$ for $n\ge3$ while $S_2$ is abelian so $[\gerbe]=0$ there as well
+\cite[Thms 7.5--7.7]{rotman}; hence both strata vanish for \emph{all} $n$ and the only
+fungible exception is the band-only $n=6$, $\Out(S_6)=\Z/2$), are in the band-boundary note
+\textup{[commit \texttt{1c9affb}]}.
+\end{proof}
+
+\begin{remark}[D1 versus D2]\label{rem:d1}
+Under the naive definition \textup{(D1)} that drops the retained $2$-cell datum $k_{g,f}$, the
+equivalence \emph{fails}: the secondary stage is then a class in $H^1(\C;\Inn G)$ modulo
+$H^0(\C;\Out G)$, not in $H^2$. Rick's counterexample is $\C=B\Z$ with $G=S_3$ and
+$\alpha=\mathrm{conj}((01))$: there $\beta=0$ and $[\gerbe]=0$, yet no gauge $\mu$ strictifies
+the transport (Rick, band-boundary review, 2026-10-12). Retaining $k_{g,f}$, as in
+Definition~\ref{def:global}, is exactly what restores the clean $H^2$ floor.
+\end{remark}
+
+The floor says the two obstructions \emph{stack}: clear the band, then clear the class. The
+rest of the paper asks whether clearing them is independent -- and finds that on $T^2$ it is
+not.
+
+\section{The \texorpdfstring{$\delta$}{delta}-commutator lemma}\label{sec:lemma}
+
+Fix an extension of groups
+\begin{equation}\label{eq:gen-ext}
+1\longrightarrow M\xrightarrow{\ \iota\ } E\xrightarrow{\ \pi\ } Q\longrightarrow 1
+\end{equation}
+with $M$ \emph{abelian}. Then $M$ is a $Q$-module by conjugation ($\pi$-equivariantly, the
+action descending because $M$ is abelian), and a band $\rho\colon\Z^2\to Q$ makes $M$ a
+$\Z^2$-module: writing $\sigma:=\rho(s)\cdot(-)$, $\tau:=\rho(t)\cdot(-)\in\Aut M$ (commuting,
+as $\Z^2$ is abelian). Because $T^2=B\Z^2$ is a $K(\Z^2,1)$ and $M$ is abelian,
+$H^\bullet(T^2;M)=H^\bullet(\Z^2;M)$ is ordinary group cohomology. We will apply this with
+$(E,Q,M)$ equal to $(\Aut K,\Out K,\Inn K)$ -- the band-strictification extension~(I), which
+needs $K$ of nilpotency class $\le2$ so that $\Inn K$ is abelian -- and to $(K,\Inn K,Z(K))$ --
+the central extension~(II), where $M=Z(K)$ is abelian with trivial action for every $K$.
+
+\subsection{The target group and the comparison map}\label{sub:koszul}
+
+Let $R=\Z[\Z^2]=\Z[s^{\pm1},t^{\pm1}]$. The Koszul resolution of the trivial module $\Z$,
+\[
+0\to R\gp{e_{st}}\xrightarrow{\partial_2^K} R\gp{e_s,e_t}\xrightarrow{\partial_1^K}
+R\gp{1}\to\Z\to0,
+\]
+with $\partial_1^K e_s=s-1$, $\partial_1^K e_t=t-1$, and
+$\partial_2^K e_{st}=(s-1)e_t-(t-1)e_s$,
+computes, after $\Hom_R(-,M)$, the complex $M\xrightarrow{d^1}M^2\xrightarrow{d^2}M$ with
+$d^2(m_1,m_2)=(\sigma-1)m_2-(\tau-1)m_1$, whence
+\begin{equation}\label{eq:coinv}
+H^2(\Z^2;M)=\coker d^2=M\big/\big((\sigma-1)M+(\tau-1)M\big)=M_{\Z^2},
+\end{equation}
+the coinvariants. To read a bar cocycle in these coordinates we need the comparison map to
+the bar resolution $B_\bullet$ (free on normalized tuples $[g_1|\cdots|g_n]$, with
+$\partial_2^B[g|h]=g[h]-[gh]+[g]$).
+
+\begin{lemma}\label{lem:compare}
+The $R$-linear maps $\varphi_0(1)=[\,]$, $\varphi_1(e_s)=[s]$, $\varphi_1(e_t)=[t]$, and
+\[
+\varphi_2(e_{st})=[s\,|\,t]-[t\,|\,s]
+\]
+form a chain map $K_\bullet\to B_\bullet$ lifting $\id_\Z$. Consequently, for any bar
+$2$-cocycle $f\colon(\Z^2)^2\to M$,
+\begin{equation}\label{eq:eval}
+\varphi^*[f]=[\,f(s,t)-f(t,s)\,]\in M_{\Z^2}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Only the top degree needs checking. On one side
+$\varphi_1\partial_2^K e_{st}=(s-1)[t]-(t-1)[s]$. On the other,
+\[
+\partial_2^B\big([s|t]-[t|s]\big)=\big(s[t]-[st]+[s]\big)-\big(t[s]-[ts]+[t]\big)
+= (s-1)[t]-(t-1)[s],
+\]
+the terms $-[st]+[ts]$ cancelling because $st=ts$ in $\Z^2$. As a chain map between free
+resolutions of $\Z$ lifting the identity, $\varphi$ induces the canonical isomorphism
+$\varphi^*\colon H^2_{\mathrm{bar}}(\Z^2;M)\xrightarrow{\sim}M_{\Z^2}$, unique up to homotopy,
+and \eqref{eq:eval} is its value on $[f]=[f\circ\varphi_2]$.
+\end{proof}
+
+Equation~\eqref{eq:eval} is the precise form of ``evaluate the obstruction cocycle on the
+fundamental $2$-cell'': the cell $e_{st}$ maps to the antisymmetric expression
+$[s|t]-[t|s]$, the algebraic shadow of the torus relator $sts^{-1}t^{-1}$.
+
+\subsection{The lemma}\label{sub:delta}
+
+\begin{theorem}[$\delta$-commutator lemma]\label{thm:delta}
+With the extension~\eqref{eq:gen-ext} and band $\rho\colon\Z^2\to Q$ as above, let
+$A,B\in E$ be any lifts of $\rho(s),\rho(t)$. Then $w:=[A,B]=ABA^{-1}B^{-1}\in\ker\pi=M$, and
+\[
+\delta(\rho)=[\,w\,]\in M_{\Z^2}=H^2(T^2;M).
+\]
+The class $[w]$ is independent of the choice of lifts, and
+\[
+\delta(\rho)=0\iff\exists\text{ commuting lifts }A,B\iff\rho\text{ lifts to a homomorphism }\Z^2\to E.
+\]
+\end{theorem}
+
+Here $\delta$ is the connecting map of the pointed sequence
+$H^1(T^2;E)\xrightarrow{\pi_*}H^1(T^2;Q)\xrightarrow{\delta}H^2(T^2;M)$; concretely,
+$\delta(\rho)$ is the class of the pullback extension
+$E_\rho=E\times_Q\Z^2=\{(a,\gamma):\pi(a)=\rho(\gamma)\}$ of $\Z^2$ by $M$, which splits iff
+$\rho$ lifts to a homomorphism \cite[IV.3--4]{brown}. Thus the vanishing criterion is
+classical; the content is the \emph{value} $[w]$.
+
+\begin{proof}
+\emph{(i)} $\pi(w)=[\rho(s),\rho(t)]=1$ because $\rho(s),\rho(t)$ are images of the commuting
+generators $s,t$ under a homomorphism; so $w\in\ker\pi=M$.
+
+\emph{(ii)} Work in $E_\rho$ and choose lifts $\hat s=(A,s)$, $\hat t=(B,t)$; then
+$[\hat s,\hat t]=([A,B],1)=(w,1)$, the commutator of the two lifts inside $\ker p\cong M$,
+where $p(a,\gamma)=\gamma$. Define the set-section $u(s^it^j):=\hat s^{\,i}\hat t^{\,j}$ (every
+element of $\Z^2$ is uniquely $s^it^j$; $u(1)=1$, $p\circ u=\id$). Its factor set
+$f(g,h):=u(g)u(h)u(gh)^{-1}\in M$ is a normalized $2$-cocycle representing $[E_\rho]$
+\cite[IV.3]{brown}. Using $ts=st$, so $u(ts)=u(st)=\hat s\hat t$,
+\[
+f(s,t)=\hat s\hat t(\hat s\hat t)^{-1}=1,\qquad
+f(t,s)=\hat t\hat s(\hat s\hat t)^{-1}=\hat t\hat s\hat t^{-1}\hat s^{-1}=[\hat s,\hat t]^{-1}=w^{-1}.
+\]
+Additively $f(s,t)=0$, $f(t,s)=-w$, so by \eqref{eq:eval},
+$\delta(\rho)=\varphi^*[f]=[0-(-w)]=[w]\in M_{\Z^2}$.
+
+\emph{(iii) Lift-independence.} Any other lifts are $A'=Au$, $B'=Bv$ with $u,v\in M$ (two lifts
+of the same class differ by $\ker\pi=M$). Moving every $M$-letter to the left in
+$[Au,Bv]$ -- each picking up the action of the automorphisms to its left -- gives, additively,
+\begin{equation}\label{eq:liftindep}
+[Au,Bv]-[A,B]=\tau(\sigma-1)v-\sigma(\tau-1)u.
+\end{equation}
+Since $\sigma,\tau$ commute with $\sigma-1$ and $\tau-1$, the right-hand side lies in
+$(\sigma-1)M+(\tau-1)M$; hence $[w]$ is well-defined in the coinvariants~\eqref{eq:coinv}.
+
+\emph{(iv) Vanishing.} By the extension dictionary, $\delta(\rho)=0$ iff $E_\rho$ splits iff
+$\rho$ lifts to a homomorphism; and by~\eqref{eq:liftindep}, commuting lifts exist iff some
+$(u,v)$ makes $[Au,Bv]=0$ iff $[w]=0$ in $M_{\Z^2}$.
+\end{proof}
+
+\begin{remark}[criterion versus slogan]\label{rem:slogan}
+The vanishing criterion is ``no commuting lifts'', i.e.\ $w\notin(\sigma-1)M+(\tau-1)M$ --
+strictly weaker than $w\neq0$ in $M$ when the action is nontrivial. When $\sigma=\tau=\id$
+(trivial action, as for every witness in \S\ref{sec:witness}--\ref{sec:rarity}) the
+coboundaries vanish, $M_{\Z^2}=M$, and the criterion is the clean $w=[A,B]\neq0$. The
+identity~\eqref{eq:liftindep} was additionally verified element-wise in $E$ across a battery of
+class-two groups, including \emph{nontrivial-action} pairs that no single trivial-action witness
+reaches.
+\end{remark}
+
+\subsection{The coupling criterion}\label{sub:couple}
+
+Say $K$ \emph{couples on $T^2$ via}~\eqref{eq:gen-ext} if some band $\rho\colon\Z^2\to Q$ has
+$\delta(\rho)\neq0$ (then automatically $\beta=[\rho]\neq0$, since the trivial band has
+$w=[\id,\id]=0$). Theorem~\ref{thm:delta} converts this into a finite search.
+
+\begin{corollary}[coupling criterion]\label{cor:couple}
+$K$ couples on $T^2$ via~\eqref{eq:gen-ext} iff there exist commuting $\bar A,\bar B\in Q$ whose
+lifts to $E$ never commute. In particular coupling forces~\eqref{eq:gen-ext} to be
+\emph{non-split}; non-splitting is necessary but not sufficient.
+\end{corollary}
+
+\begin{proof}
+The equivalence is Theorem~\ref{thm:delta}(iv). If~\eqref{eq:gen-ext} splits by
+$\theta\colon Q\to E$, then $\theta\circ\rho$ is a homomorphic lift of every band, so
+$\delta\equiv0$; contrapositively coupling forces non-split. Necessity is not sufficiency: a
+band is a \emph{commuting pair} of nontrivial classes, and a rank-one image never couples
+(since $H^2(\Z;-)=0$); one needs the extension class to restrict nontrivially to some commuting
+$\Z^2\to Q$, which can fail even when the class is nonzero -- see \S\ref{sec:rarity}.
+\end{proof}
+
+Because $S^1=B\Z$ has $H^2(S^1;-)=0$, the connecting map vanishes identically there: every band
+over a one-dimensional \emph{free} base is strictifiable, and the two Giraud strata stack freely.
+Among the free bases $B(\Z^n)$ the torus is therefore the first where coupling can occur, and
+Corollary~\ref{cor:couple} says exactly when it does. This ``first'' is relative to the free
+bases only. Over a \emph{torsion} base coupling already appears at rank one: $B(\Z/2)$ has nerve
+$\simeq\mathbb{RP}^\infty$ with $H^2(B(\Z/2);-)\neq0$, and $K=D_4\times C_2$ with the outer
+involution $a\colon(r\mapsto r,\ s\mapsto sc,\ c\mapsto r^2c)$, $a^2=\mathrm{conj}(g)\neq1$,
+admits no strict lift (Rick, band-boundary review, 2026-10-12). So the torus is the first
+\emph{free} base, not the first base overall.
+
+\section{A coupled witness on the torus}\label{sec:witness}
+
+We exhibit a structure group that couples, via both extensions~\eqref{eq:two-ext} at once. The
+following is \emph{computed}: a finite brute-force certificate over the full (machine-verified
+complete) automorphism group, with the arithmetic core independently re-checked in Lean.
+
+\paragraph{The group.} Take $K=D_4\times C_2=\gp{r,s}\times\gp{c}$ with
+$r^4=s^2=c^2=1$, $srs^{-1}=r^{-1}$, $c$ central. Then $K$ has nilpotency class two,
+\[
+Z(K)=\{1,r^2,c,r^2c\}\cong(\Z/2)^2,\quad \Inn K=K/Z(K)\cong(\Z/2)^2=\gp{[r],[s]},\quad|\Out K|=16,
+\]
+and $|\Aut K|=64$ (verified). The second central involution $c$ -- absent from $D_4$ and $Q_8$
+alone -- is what lets automorphisms mix the three central involutions $r^2,c,r^2c$ and so breaks
+the splitting of~(I).
+
+\paragraph{The band (strictification coupling, extension~(I)).} Take
+\[
+A\colon\ r\mapsto r^3,\ s\mapsto s,\ c\mapsto r^2c,
+\qquad
+B\colon\ r\mapsto r^3c,\ s\mapsto s,\ c\mapsto c.
+\]
+Both are automorphisms, both are \emph{outer}, both have order two in $\Out K$ and commute, so
+$\rho\colon\Z^2\twoheadrightarrow\gp{[A],[B]}\cong(\Z/2)^2\hookrightarrow\Out K$,
+$s\mapsto[A]$, $t\mapsto[B]$, is a nontrivial band: $\beta\neq0$. Both act trivially on
+$\Inn K=K/Z(K)$ (e.g.\ $A(r)=r^3\equiv r$, $A(c)=r^2c\equiv c\bmod Z$), so the action is trivial
+and $H^2(T^2;\Inn K)=\Inn K=(\Z/2)^2$. The commutator of lifts is
+\[
+[A,B]=c_s\ (\text{conjugation by }s),\qquad
+\delta(\rho)=[A,B]=[s]\neq0\in H^2(T^2;\Inn K)=(\Z/2)^2.
+\]
+Exhaustively over all $16\times16$ inner adjustments $(Au,Bv)$, none commute, so by
+Corollary~\ref{cor:couple} the band is \emph{not} strictifiable: the stratum-two band forces the
+degree-two strictification class. The strata do not split.
+
+\paragraph{The central coupling (extension~(II)).} The same group couples the inventory class.
+The inner band $s\mapsto[r]$, $t\mapsto[s]$ lifts to $K$ with commutator $[r,s]=r^2\in Z(K)$, so
+$[\gerbe]=[r^2]\neq0\in H^2(T^2;Z(K))=(\Z/2)^2$ (trivial action). Thus $D_4\times C_2$ realizes
+the coupling at both stages of the tower~\eqref{eq:two-ext}: $\Out K\!\leftarrow\!\Aut K$ (coeff
+$\Inn K$) and $\Inn K\!\leftarrow\!K$ (coeff $Z(K)$).
+
+\begin{remark}[grade and scope]\label{rem:witness-grade}
+Both couplings are finite brute-force certificates (\emph{computed}); the arithmetic core -- that
+$A,B$ are commuting outer automorphisms acting trivially on $\Inn K$, that $[A,B]=c_s\neq0$, and
+that no inner adjustment makes the lifts commute -- is machine-checked in Lean (\emph{finite core
+lean-verified}). We do \emph{not} claim $D_4\times C_2$ is minimal over all groups of order $\le16$;
+only that it is the smallest coupler in the enumerated battery of \S\ref{sec:rarity}.
+\end{remark}
+
+\section{The sharp line: the \texorpdfstring{$n$}{n}-lot ring}\label{sec:sharp}
+
+The witness shows coupling \emph{can} occur. The $n$-lot ring pins down \emph{exactly when} the
+inventory class (extension~(II)) is essentially nonzero, as an arithmetic condition on $n$. Here
+the result is \emph{proved}, with the finite split-test core lean-verified.
+
+\paragraph{The structure group.} Let $F(n)$ be $n$ fungible lots arranged in a ring -- the
+vertices of the $n$-cycle $C_n$ with cyclic adjacency, $n\ge3$. Its relabelling group is the
+dihedral group
+\[
+K(n)=\Aut(C_n)=D_n=\gp{r,s\mid r^n=s^2=1,\ srs^{-1}=r^{-1}}\quad(\text{order }2n).
+\]
+Call the inventory class $[\gerbe]$ \emph{essentially nonzero} if some base $(\C,\bar\rho)$ with
+inner transport gives $[\gerbe]\neq0$ -- i.e.\ strict global inventory is obstructed for some
+supply chain on this fibre.
+
+\begin{theorem}[sharp $n$-lot criterion]\label{thm:sharp}
+For $K=D_n$,
+\[
+[\gerbe]\text{ essentially nonzero}\iff\text{the central extension~(II) is non-split}\iff 4\mid n.
+\]
+Equivalently, strict global inventory on the $n$-lot ring is always rectifiable unless $4\mid n$.
+\end{theorem}
+
+\begin{proof}
+\emph{Centre and inner group.} A rotation $r^k$ is central iff $r^{2k}=1$, giving $k=0$ (all $n$)
+and $k=n/2$ ($n$ even); a reflection is never central for $n\ge3$. Hence $Z(D_n)=1$ for $n$ odd
+and $\gp{r^{n/2}}\cong\Z/2$ for $n$ even, and $\Inn D_n=D_n/Z(D_n)$ is $D_n$ ($n$ odd) or
+$D_{n/2}$ ($n$ even). For $n$ odd, $Z=1$, so~(II) is $1\to1\to D_n\to D_n\to1$ and the coefficient
+group $Z(D_n)=1$ makes $[\gerbe]$ \emph{vacuously} zero; the question lives in the even case.
+
+\emph{The split jump.} Fix $n=2m$, $m\ge2$. A splitting of
+$1\to\gp{r^m}\to D_{2m}\to D_m\to1$ is a complement $H$ to the central $Z=\gp{r^m}$; being of
+index two it is normal, so a complement makes $D_{2m}=Z\times H$ an internal direct product with
+$H\cong D_m$. Thus
+\[
+\text{(II) splits}\iff D_{2m}\cong\Z/2\times D_m.
+\]
+Compare centres, an isomorphism invariant: $|Z(D_{2m})|=2$ always, while
+$|Z(\Z/2\times D_m)|=2\,|Z(D_m)|$ equals $2$ iff $|Z(D_m)|=1$ iff $m$ is odd. So for $m$ even the
+two groups are non-isomorphic and~(II) is non-split; for $m$ odd an explicit complement exists,
+namely $H=\gp{r^2,s}\cong D_m$ (since $m$ odd makes $r^2$ of order $m$ and $r^m\notin\gp{r^2}$, so
+$H\cap Z=1$ and $|HZ|=4m=|D_{2m}|$). Hence (II) is non-split iff $n$ even and $n/2$ even, i.e.\
+iff $4\mid n$.
+
+\emph{From splitting to the class.} With trivial coefficients, $[\star]=0$ in
+$H^2(\Inn K;Z(K))$ iff~(II) splits (\cite[IV.3]{brown}; \cite{eml}). Taking $\C=B(\Inn K)$,
+$\bar\rho=\id$ realizes $[\gerbe]=[\star]$, while for any $(\C,\bar\rho)$,
+$[\gerbe]=\bar\rho^*[\star]=0$ whenever $[\star]=0$. So $[\gerbe]$ is essentially nonzero iff
+$[\star]\neq0$ iff~(II) non-split iff $4\mid n$.
+\end{proof}
+
+\begin{remark}[the $D_6$ reconciliation]\label{rem:d6}
+The six-lot ring is the witness that ``nonabelian with nontrivial centre'' is \emph{necessary but
+not sufficient} for $[\gerbe]\neq0$. $D_6$ is nonabelian with $Z(D_6)=\gp{r^3}\cong\Z/2\neq1$, so
+it satisfies the naive hypothesis; but $6=2\cdot3$ with $m=3$ odd, so by the split jump
+$D_6\cong\Z/2\times S_3$ (complement $\gp{r^2,s}\cong S_3$), extension~(II) splits, and
+$[\gerbe]=0$ on every base. The honest dividing line is non-splitting of~(II), which on the
+$n$-lot ring is precisely $4\mid n$ (yes for $n=4,8,12,16,\dots$; no for $n=6,10,14,\dots$ and all
+odd $n$).
+\end{remark}
+
+The split test was run for $n=3,\dots,16$ and the arithmetic core -- the centre table, the
+explicit complement for $4\nmid n$, the centre-mismatch obstruction for $4\mid n$, and the
+$D_6\cong\Z/2\times S_3$ reconciliation -- is machine-checked in Lean, axiom-free (no
+\texttt{propext}, \texttt{sorryAx}, or \texttt{native\_decide}).
+
+\section{Coupling is rare}\label{sec:rarity}
+
+Corollary~\ref{cor:couple} makes coupling a finite search: enumerate the commuting pairs in
+$\Out K$ and test whether any has no commuting lift in $\Aut K$. We ran this over a battery of
+nilpotency-class-two groups built from explicit multiplication tables, computing $\Aut$, $\Inn$,
+$\Out$ by brute force and cross-checking $|\Aut K|$ against known values to confirm the engine
+returns the \emph{complete} automorphism group (a missed automorphism could fake a ``no commuting
+lift''). This is \emph{computed}, and over the listed family only -- not a census of all groups of
+a given order.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+$K$ & $|\Aut K|$ & $|\Inn K|$ & $|\Out K|$ & couples via (I)? \\
+\midrule
+$D_4,\ Q_8$ & $8,\ 24$ & $4$ & $2,\ 6$ & no (split) \\
+$\mathrm{Heis}(\mathbb F_3)$ & $432$ & $9$ & $48$ & no (split) \\
+$M_{16},\ C_4\rtimes C_4$ & $16,\ 32$ & $4$ & $4,\ 8$ & no \\
+$\mathrm{ES}^+_{32}=2^{1+4}_+$ & $1152$ & $16$ & $72$ & no (split) \\
+$\boxed{D_4\times C_2}$ & $64$ & $4$ & $16$ & \textbf{yes ($30$ pairs)} \\
+$Q_8\times C_2$ & $192$ & $4$ & $48$ & yes ($54$ pairs) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Only $D_4\times C_2$ and $Q_8\times C_2$ couple; every group whose extension~(I) splits
+decouples, as Corollary~\ref{cor:couple} demands. The instructive rows are $M_{16}$ and
+$C_4\rtimes C_4$: their extension~(I) need not split, yet they carry \emph{no} coupled band.
+Non-splitting is genuinely weaker than coupling -- exactly the gap flagged in
+Corollary~\ref{cor:couple}: one further needs a \emph{commuting} outer pair whose lifts cannot be
+made to commute. Coupling therefore requires two independent conditions to hold at once: a
+non-split automorphism tower \emph{and} two commuting outer involutions with no commuting lifts.
+The richest composition failures live in this thin slice.
+
+\section{Consequences}\label{sec:conc}
+
+For a torus-shaped supply chain -- two independent, commuting, reversible operations -- the two
+stages of the nonabelian inventory obstruction cease to be independent. The band-to-strictification
+connecting map is given exactly by a commutator of automorphism lifts
+(Theorem~\ref{thm:delta}), so a nonzero band \emph{forces} a nonzero degree-two class. The same
+engine, applied to the central extension, shows the inventory class itself couples; and it
+locates both phenomena sharply (the $n$-lot ring fails exactly when $4\mid n$,
+Theorem~\ref{thm:sharp}) and rarely (a handful of structure groups across an enumerated family,
+\S\ref{sec:rarity}).
+
+For the grant's Applications pillar the reading is concrete. Global stock-keeping on a cyclic,
+reconvergent logistics network can fail \emph{compositionally}, with no local remedy, but only
+when the stock fibre carries genuine gauge structure -- a relabelling group with non-split
+automorphism tower -- and only on a base rich enough to hold a degree-two class. Plain fungibility
+(symmetric-group fibres) never triggers it; the economically meaningful regime is allocation
+defined up to a gauge group. That the dangerous structure groups form a thin, explicitly
+identifiable slice turns a potential liability into a design criterion: one can read off, from the
+automorphism tower of the stock type alone, whether a two-cycle in the network can obstruct
+reconciliation.
+
+\paragraph{Open edges.} Three are worth naming, each a clean next target rather than a gap in what
+is claimed here. \emph{(1) Minimality.} The rarity enumeration covers a listed family, not a
+census; whether $D_4\times C_2$ is the unique minimal coupler over \emph{all} groups of order
+$\le16$ is open. \emph{(2) Higher genus.} The $\delta$-commutator lemma is special to $\Z^2$ only
+through the two-generator one-relator Koszul resolution; a genus-$g$ base would replace the single
+relator by a product of commutators, and the class by a sum of commutators of lifts -- a natural
+extension of \S\ref{sec:lemma}. \emph{(3) Nonabelian kernel.} The class-two hypothesis makes
+$\Inn K$ abelian, so $\delta$ lands in ordinary $H^2$; dropping it replaces the clean connecting
+map by an Eilenberg--Mac\,Lane obstruction valued in a torsor of centres, genuinely harder and not
+needed for the inventory lane.
+
+\begin{thebibliography}{9}
+\bibitem{breen} L.~Breen, \emph{Bitorseurs et cohomologie non abélienne}, in: The Grothendieck
+Festschrift, Vol.~I, Progr. Math.\ 86, Birkhäuser, 1990, pp.~401--476.
+\bibitem{brown} K.~S.~Brown, \emph{Cohomology of Groups}, Graduate Texts in Mathematics 87,
+Springer, 1982 (Chapter IV).
+\bibitem{eml} S.~Eilenberg and S.~Mac\,Lane, \emph{Cohomology theory in abstract groups.~II.
+Group extensions with a non-Abelian kernel}, Ann.\ of Math.\ (2) \textbf{48} (1947), 326--341.
+\bibitem{giraud} J.~Giraud, \emph{Cohomologie non abélienne}, Grundlehren der mathematischen
+Wissenschaften 179, Springer, 1971 (Chapters III--IV).
+\bibitem{rotman} J.~J.~Rotman, \emph{An Introduction to the Theory of Groups}, 4th ed., Graduate
+Texts in Mathematics 148, Springer, 1995 (Theorems 7.5--7.7).
+\end{thebibliography}
+
+\end{document}

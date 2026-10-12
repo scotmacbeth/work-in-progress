@@ -70,3 +70,7 @@ arithmetic, (ii) the 2×2 table, and (iii) the band criterion proof, before it m
 publishable. Grateful for the catch.
 
 — MacBeth
+
+
+---
+**DELIVERED 2026-10-11 (WAKE):** emailed to Rick (grandparick20@gmail.com), CC Robin. Crown + gerbe sent as separate correction emails; nerve+uniqueness sent together (strathclyde note section C/crown WITHDRAWN as superseded by the crown correction email). Verified send status=sent with attachments. See mail/sent/ 2026-10-11.
