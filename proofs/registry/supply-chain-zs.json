@@ -2,7 +2,8 @@
   "conjecture": "A supply chain, abstracted to a small category, is a directed container (Ahman-Uustalu); composing two flows sharing a warehouse is a Zappa-Szep product C|><|D; an inventory inconsistency between two routes to the same delivered good is a nonzero class [omega] in H^2(Sk_C; Z/n) ~= Z/n. COMPUTED worked example: for the lot-cursor family W_{n,eps} (s.p=q, s2.p=q.tau^eps), C|><|D exists iff eps=0 (routes agree on provenance), and [omega(W_{n,eps})]=eps -- the quantitative unit-mismatch. n=2 reproduces the PROVED orchestration re-entrancy bit. Same machine (n=2) = olog merge along a shared type. Staging for the applications turn; commits nothing to the book.",
   "status": "computed",
   "date_opened": "2026-07-23",
-  "date_closed": "2026-07-23",
+  "date_closed": "2026-10-06",
+  "correction_2026_10_06": "DIVIDING-LINE CORRECTION (deep-work prove session, proofs/2026-10-06-supply-chain-inventory-consistency.md). The root conjecture 'inventory inconsistency between two routes = nonzero [omega] in H^2(Sk_C;Z/n)' is REFUTED as a general claim and RELABELLED. The W_{n,eps} family uses PARALLEL arrows s,s2:x=>y differing by a vertex-group element tau^eps (rigid twist a->x=>y): that loop lives in the VERTEX GROUP, so [omega]=eps in H^2 genuinely measures WELD/PROVENANCE (lot-cursor) consistency -- correct computation, but of the WELD class. Genuine 'two routes to a delivered good' through DISTINCT intermediate nodes (diamond a->b->d, a->c->d) is a NERVE loop, obstruction [theta_R] in H^1(S;R) (node-stock, degree 1). PROVED: the two classes are INDEPENDENT (different degree AND coefficient system R vs D); neither implies the other (W1 free diamond [omega]=0,[theta]!=0; W2 rigid-twist [omega]!=0,[theta]=0). Lemma A (no-lambda-correction) proved+brute-checked: the matched-pair law is invisible to presheaf inventory. So this node computed the WELD-PROVENANCE class; the node-stock inventory equivalence the root asserted is FALSE. See new children 'inv-H1-divide', 'separation-W1W2', 'reentrancy-is-weld-state'.",
   "note": "Clones the proved orchestration template (orchestration-zs.json / 2026-07-20 analytic tex) and generalizes the token Z/2 -> Z/n: supply-chain bookkeeping is a cyclic lot-cursor, so the obstruction lands in Z/n and measures the discrepancy in units, not just a parity bit. Contribution is DOMAIN INSTANTIATION + object-level directed-container write-out (S,P,o,+) with D-laws (orchestration stayed category-level) + olog sibling. Grade discipline: general theorems (T1 DCont=Cat lean-verified, T2 pairwise-ZS proved, T3 (G)=H^2 proved, T4 orchestration proved) are CITED as shared stubs, never re-graded; the instantiation is COMPUTED (a sub-agent-free by-hand + Python computation). Object-level 'a real supply chain IS this category' stays OPEN (SEED Q4) -- faithful abstraction, not fidelity claim. Machine-check: scratch/supply_chain_zs.py (8 (n,eps) pairs: category axioms, (L), Sk_C shape eps-independent, B^2=diagonal, H^2~=Z/n, omega_T=(0,eps), [omega]=eps, #SFS=n(eps=0)/0(eps!=0) cross-check; base-chain and olog D-laws). Proof file 2026-07-23-supply-chain-zs.tex (compiles, 5pp).",
   "tree": {
     "id": "root",
@@ -103,6 +104,49 @@
         "role": "attempt",
         "trust": "computed",
         "file": "2026-07-23-supply-chain-zs.tex",
+        "children": []
+      },
+      {
+        "id": "inv-H1-divide",
+        "approach": "DIVIDING LINE (2026-10-06): genuine node-stock inventory consistency for S=C|><|D is [theta_R]=0 in H^1(S;R), R the resource presheaf (local system of stock-groups), NOT the weld [omega]. Lemma A (no-lambda-correction): global sections of R = node-families compatible with C- and D-arrows; matched-pair law lambda inert => inventory is purely degree-1 (route/reconvergence discrepancy). Diamond discriminator: H^1=A=loop-sum (p+r)-(q+s). Where the reconvergence loop lives decides the degree: PARALLEL arrows (vertex-group loop) -> H^2 weld (W_{n,eps}); DISTINCT-node reconvergence (nerve loop) -> H^1 node-stock.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-10-06-supply-chain-inventory-consistency.md",
+        "children": [
+          {
+            "id": "lemma-A-no-lambda",
+            "approach": "Lemma A: for S=C|><|D and any presheaf R, global sections = families compatible with every C-arrow and D-arrow; lambda never enters (compatibility closed under composition; C union D generates S). Brute-checked on non-trivial ZS product (flip matched pair t1.c=c.t0) over Z/3: global sections == {C,D}-generator-compatible families, always.",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-10-06-supply-chain-inventory-consistency.md",
+            "children": []
+          },
+          {
+            "id": "diamond-H1-arith",
+            "approach": "ARITHMETIC CORE, machine-checked (LEAN 2026-10-07): the diamond degree-1 characterization as pure Int linear algebra. A global node-potential (phi_a,phi_b,phi_c,phi_d) with delta_e = phi(cod)-phi(dom) exists IFF the two routes agree (delta_p+delta_r = delta_q+delta_s) IFF the loop holonomy theta := (p+r)-(q+s) = 0; and over Z/5, consistency IFF 5 | theta. Concrete proof numbers reproduced verbatim: inconsistent (2,1,1,3) -> theta=-1 (5 does not divide), coboundary (2,3,2,3) from phi=(0,2,2,5) -> theta=0. The general H^1(S;R)=R and Lemma A generality are CITED (structural), not re-proved; only the diamond arithmetic is certified here.",
+            "role": "premise",
+            "trust": "lean-verified",
+            "lean": "SupplyChainInventoryDegreeOne.diamond_consistent_iff_holonomy_zero (+ diamond_section_iff_routes_agree, diamond_section_mod5_iff_dvd); file lean/2026-10-07-supply-chain-inventory-degree-one.lean",
+            "file": "2026-10-06-supply-chain-inventory-consistency.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "separation-W1W2",
+        "approach": "SEPARATION (2026-10-06, PROVED; arithmetic LEAN-VERIFIED 2026-10-07): [theta_R] in H^1(S;R) and [omega] in H^2(Sk;D) are independent -- different degree AND coefficient system. W1 (breaks <=): free category on diamond quiver has no non-identity invertibles => D=0 => H^2(Sk;D)=0 => [omega]=0 forced (free cat IS an SFS); betti1=1 => H^1=A, nonzero transport holonomy => [theta]!=0 (factors, INCONSISTENT). W2 (breaks =>): rigid-twist category [omega]=gen(Z/2)!=0 (cite t3-g-is-h2) + coboundary inventory => [theta]=0 (no factor, consistent). Neither implication of conjecture (C) holds. The arithmetic DECOUPLING of the two class-values on the two concrete models (W1: omega=0 & theta!=0; W2: omega!=0 & theta=0) is machine-checked via the cyclic-h2-gcd-engine divisibility convention (class zero <=> modulus | value); the STRUCTURAL inputs (free cat => D=0; rigid twist [omega]=gen H^2=Z/2, cite g-obstruction-is-h2-class [proved] + cyclic-h2-gcd-engine [lean-verified]) are cited, not re-proved. Verified separation_witnesses.py + Lean classes_independent.",
+        "role": "attempt",
+        "trust": "lean-verified",
+        "lean": "SupplyChainInventoryDegreeOne.classes_independent (separation_W1, separation_W2); file lean/2026-10-07-supply-chain-inventory-degree-one.lean",
+        "file": "2026-10-06-supply-chain-inventory-consistency.md",
+        "children": []
+      },
+      {
+        "id": "reentrancy-is-weld-state",
+        "approach": "NO RESCUE REGIME (2026-10-06): (C) is a false generalization of re-entrancy, not a special case of it. In re-entrancy the conserved quantity IS the weld-state (no separate resource presheaf), so its consistency obstruction IS the weld H^2. A would-be rescue needs H^1(S;R)=H^2(Sk;D) which fails (e.g. Bbb-Z loop: H^1(BZ;A)=A, H^2(BZ;A)=0 -- degrees do not match). Same 'rhyme not identity' trap as two-omega-sites, one degree down.",
+        "role": "attempt",
+        "trust": "proved",
+        "file": "2026-10-06-supply-chain-inventory-consistency.md",
         "children": []
       },
       {

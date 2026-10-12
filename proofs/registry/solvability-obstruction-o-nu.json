@@ -1,0 +1,56 @@
+{
+ "conjecture": "The residue-dependent solvability obstruction is a well-defined GROUP HOMOMORPHISM o_nu : H^2_+ -> C^3 / A(Z^2_o(sigma)), [beta] |-> [Q beta], that KILLS B^2_+ (additive coboundaries), and whose kernel is exactly the image of the additive forgetful map: im phi^+ = ker o_nu. Equivalently: an additive class [beta] extends to a full skew-brace cocycle inducing the good triplet (nu, mu, sigma) iff o_nu([beta]) = 0. This is the HONEST REPAIR of the refuted [nu] perp [Omega] product (nu-omega-independence-refuted-coupling): the residue nu, the circle twist sigma, and the additive class [beta] are COUPLED through o_nu, not independent. Proved in the trivial-brace-kernel (Rathee-Yadav) regime; the proof is structural, resting on (i) Z-linearity of the coupling operators P,Q, (ii) the linchpin identity P(T d_o theta_1) = Q(d_+ theta) (a formal identity = RY's B^2 subset Z^2 on component (c)), and (iii) RY's cocycle characterisation Z^2_Sb <=> (a)+(b)+(c) (arXiv:2601.12371). The |G|=8 collapse reads o_nu(b)=0 <=> (1+nu)b in 2 D^sigma; the |G|=16 three-way lock 4b = 2(nu sigma - 1) mod 8 and the torsor/basepoint dichotomy are COMPUTED for a non-trivial-brace kernel and lie OUTSIDE RY (flagged open for a general proof).",
+ "status": "proved",
+ "date_opened": "2026-09-29",
+ "date_closed": "2026-09-29",
+ "note": "PROVE session 2026-09-29 (2026-09-29-solvability-obstruction-o-nu.tex, Theorem 1), the honest repair after the 09-29 refutation of [nu] perp [Omega] independence (nu-omega-independence-refuted-coupling; Rick referee + MacBeth reproduction). Rick's Remark 4 seeded the reformulation. Memory: solvability-obstruction-o-nu-proved (main), nontrivial-onu-circ-home-sigmahat-lock-proved (09-30 extension, |G|=16 lock and torsor<=>L subsetneq Aut). Trust grade per the tex trust box: PROVED for the main theorem (o_nu additive hom killing B^2_+, im phi^+ = ker o_nu) in the trivial-brace-kernel (RY) regime, resting on three independently-checked inputs, each cross-validated by machine: Z-linearity of P,Q (manifest); the linchpin diagonal-coboundary identity (2026-09-29-coboundary-identity.py, 12/12, 32/32, 9/9, 192/192); RY's cocycle characterisation (arXiv:2601.12371, cited) with abstract ker o_nu = genuine im phi^+ cross-validated by an INDEPENDENT regular-subgroup-of-holomorph enumeration (2026-09-29-o-nu-kernel-vs-image.py, PASS on H=Z/2 with D=Z/4 and D=(Z/2)^2, and H=Z/3). Operators P,Q transcribe RY (3.10): P tau = Q beta on every genuine trivial-kernel brace, H in {Z/2,Z/3,Z/4} (2026-09-29-o-nu-operator-check.py, 6/6, 8/8, 3/3, 3/3, 16/16). OUT OF THIS NODE'S PROVED SCOPE (flagged, not children here so as not to inflate the boundary): the |G|=16 three-way lock 4b = 2(nu sigma - 1) mod 8 and the torsor/basepoint dichotomy are COMPUTED for a NON-TRIVIAL-brace kernel (D=Z/8, L={1,5}) and lie outside RY -- open for a general proof (see nontrivial-onu-circ-home-sigmahat-lock-proved). LEAN 2026-09-30: the |G|=8 collapsed slice o_nu(b) = (1+nu)b mod 2 D^sigma on the witness (H=Z/2, D=Z/4) is formalised sorry-free in Lean 4 CORE (Mathlib-free), standalone-compiled `lean 2026-09-30-o-nu-slice-additive.lean` under leanprover/lean4:v4.30.0, zero errors, zero warnings, axiom footprint propext only (no sorryAx, no Classical.choice). See child lean-o-nu-slice-additive. LEAN 2026-09-30 (child lean-o-nu-g16-lock): the |G|=16 three-way lock 4b = 2(nu sigmahat - 1) mod 8 and the corrected torsor dichotomy (offset != 0 <=> nu sig = 3 mod 4) are now formalised sorry-free in Lean 4 CORE on the D=Z/8 witness (L={1,5} subsetneq Aut) + D=Z/4 counter (L=Aut, offset=0, im phi^+ based); the lock holds as a NECESSARY condition on all 12 genuine reps / 24 braces (genuineTable vs Python). Depends on no axioms. This certifies the FINITE witness computation (unconditional arithmetic); the GENERAL-H offset remains proved(H=Z/2)/computed(general H) per 2026-09-30-general-nontrivial-onu.tex, unchanged.",
+ "sources": [
+  "2601.12371"
+ ],
+ "tree": {
+  "id": "root",
+  "approach": "o_nu : H^2_+ -> C^3/A(Z^2_o) is a well-defined additive homomorphism killing B^2_+, with im phi^+ = ker o_nu, in the trivial-brace-kernel (RY) regime. Structural proof: linear P,Q + the linchpin coboundary identity + RY's cocycle characterisation. The honest repair of the refuted [nu] perp [Omega] product.",
+  "trust": "proved",
+  "file": "2026-09-29-solvability-obstruction-o-nu.tex",
+  "lean": null,
+  "children": [
+   {
+    "id": "main-theorem-structural",
+    "approach": "Theorem 1: (1) o_nu kills B^2_+ so descends to H^2_+; (2) o_nu is a group homomorphism (Q is Z-linear, A(Z^2_o) a subgroup); (3) im phi^+ = ker o_nu. The whole content is the linchpin formal identity P(T d_o theta_1) = Q(d_+ theta) (= RY's B^2 subset Z^2 on component (c)) plus RY's cocycle characterisation; the (superset) direction CONSTRUCTS the brace cocycle and does not presuppose one, avoiding the circular step of the refuted argument.",
+    "trust": "proved",
+    "file": "2026-09-29-solvability-obstruction-o-nu.tex",
+    "lean": null,
+    "role": "premise",
+    "children": [
+     {
+      "id": "ry-cocycle-characterisation",
+      "approach": "BLACK BOX (cited, not re-proved): the Rathee-Yadav characterisation (beta, tau) in Z^2_Sb <=> (a) beta in Z^2_+, (b) tau in Z^2_o, (c) the coupling P(T tau) = Q beta; and their B^2 subset Z^2 (coboundaries are cocycles) as a formal identity in theta and the triplet. Cross-validated: abstract ker o_nu = genuine im phi^+ from an independent regular-subgroup-of-holomorph enumeration (2026-09-29-o-nu-kernel-vs-image.py, PASS).",
+      "trust": "published",
+      "file": null,
+      "role": "premise",
+      "publication": "M. Rathee and M. K. Yadav, Cohomology and extensions of skew braces, arXiv:2601.12371, Sec. 3 (cochains (beta,tau), Eq. 3.10); also arXiv:2102.12235",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "lean-o-nu-slice-additive",
+    "approach": "LEAN (Mathlib-free, Lean 4 core v4.30.0): the |G|=8 collapsed slice o_nu(b) = (1+nu)b mod 2 D^sigma on the witness (H=Z/2, D=Z/4) is machine-checked as an additive map killing B^2_+ that descends to H^2_+, with kernel decided by the closed form (1+nu)b in 2 D^sigma. Built honestly from the operations (2 D^sigma filtered from Z/4 by the sigma-action and doubled; B^2_+ = image of d_+ = {c+c}; Q = (1+nu)(-)); every claim closed by decide over Z/4 and the two units {1,3}. Declarations: killsCoboundary (B^2-killing, all 4 slices), oNu_additive (additivity mod A), oNu_welldef (descent to H^2_+), oKer_welldef (kernel is a union of classes), ker_sigma_id / ker_nu_inv / ker_nontrivial / nu_forces_beta_zero (per-slice kernel: all of H^2_+ except the sigma=-1, nu=1 slice where it is exactly the [beta]=0 class), packaged as oNu_slice_additive. Per-slice kernel sizes |ker|=2,2,1,2 match the independent im phi^+ enumeration and the fixed-sigma slice tables (2026-09-30-o-nu-fixed-sigma-slices.py: additivity 16/16, B^2-killing 4/4, closed-form kernel MATCHES). Sorry-free; axiom footprint propext only. SCOPE: certifies the ONE |G|=8 finite slice; does NOT re-encode the general RY characterisation, the abstract operators P,Q,T, or the |G|=16 lock.",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "ONuSlice.oNu_slice_additive",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "lean-o-nu-g16-lock",
+    "approach": "LEAN (Mathlib-free, Lean 4 core v4.30.0, standalone ): the |G|=16 three-way lock (lam^D_1 - 1) b = 2 (nu sigmahat - 1) and the corrected torsor dichotomy, certified on the concrete non-trivial-kernel witnesses D=Z/8 (L={1,5} subsetneq Aut(Z/8)) and the counter D=Z/4 (L=Aut(Z/4)). Built honestly from the operations: (D,+)=Z/8 with lam^D_1=.5 (circ_ne_add witnesses D is a NON-trivial brace: 1 o 1 = 6 != 2), units nu,sigmahat in (Z/8)^x acting by mult, lockLHS b = (.5-1)b (= 4b, lockLHS_eq_4b) and offset = 2(nu sigmahat - 1) from sub/mul. Certified by decide: lock (4b = 2(nu sig -1) mod 8  <=>  b odd <=> nu sig = 3 mod 4), lockLHS_descends (LHS well-defined on H^2_+ = D/2D), offset_dichotomy (offset != 0 <=> nu sig = 3 mod 4 = torsor without basepoint), based_iff / torsor_no_basepoint, genuine_satisfies_lock (the lock holds as a NECESSARY condition on all 12 section-invariant reps / 24 braces of the regular-subgroup-of-holomorph enumeration, genuineTable cross-checked vs 2026-09-30-lock-z8-table.py). Counter D=Z/4: offset4_always_zero (offset = 0 for every unit product, L=Aut) and counter_imphi_singleton (lock forces b even, im phi^+ = {[beta]=0}, based, no torsor). Packaged as oNu_g16_lock_and_dichotomy. Numeric cross-check vs Python: lockLHS=[0,4,0,4,...], offsets and Z/4 offsets MATCH. Sorry-free; depends on NO axioms (pure decide). SCOPE: certifies the FINITE lock/dichotomy on the D=Z/8 witness + D=Z/4 counter; genuine subsetneq lock-solutions (residue coset further constrains nu: e.g. (nu,sig)=(1,3) has nu sig=3 mod 4 yet is NOT genuine). sigmahat is a G-level datum (o-conjugation by s(1)), extracted by the Python enumeration, not computed inside D. Does NOT re-encode the general-H offset (proved H=Z/2, computed general H per 2026-09-30-general-nontrivial-onu.tex).",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "ONuG16Lock.oNu_g16_lock_and_dichotomy",
+    "role": "premise",
+    "children": []
+   }
+  ]
+ }
+}

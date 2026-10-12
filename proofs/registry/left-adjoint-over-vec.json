@@ -500,6 +500,365 @@
             "file": "2026-09-04-Q-homological-reduction-and-target-dimension-dichotomy.md",
             "approach": "THEOREM H (2026-09-04). Lemma H0: D(h_N)=Nat(h_N,id)=N (Yoneda) — NO 2^{dim} blow-up, unlike Hom_ℤ(ℤ^{(κ)},ℤ)=ℤ^κ (size 2^κ) which drives ℤ-Baer–Specker. Consequence: under the Cor-C1 free shape ⊕_n h_{N_n}, dim N_n=ℵ_0, every invariant dim F(X), dim Nat(F,M) (M∈{id,A,F_fin}) AGREES on both descriptions (all=𝔠). No cardinal invariant separates F from free: forced rank countable (Thm C) + no dual blow-up ⟹ Baer–Specker size-gap PROVABLY ABSENT. Cor H1: single-target route (Thm A) AND cardinality route (Thm H) are BOTH closed; direction A must go through Ext^1(F,-) at an INFINITE-dim target (Thm F(b)). Converts the independence heuristic into a theorem-backed case. ZFC (hypothesis used only to exhibit a candidate shape for the dim comparison).",
             "children": []
+           },
+           {
+            "id": "liftability-reformulation-2026-09-18",
+            "trust": "proved",
+            "role": "premise",
+            "file": "2026-09-18-liftability-reformulation-of-Q.md",
+            "approach": "LIFTABILITY REFORMULATION (2026-09-18). LEVEL SHIFT from Ext^1 to Hom. Prop 1: Nat(F,F)=∏_r ⊕_n End(A) = ROW-FINITE ℕ×ℕ matrices over End(A) (columns arbitrary), via Thm F(a) on the target A (=⊕_m h_k, coproduct of fin-dim reps; F itself is NOT, so no circularity); Nat(A,F)=∏_r End(A). Thm 2 (LES): Nat(F,Q)/π_*Nat(F,F) ≅ ker(ι_*:Ext^1(F,F_fin)→Ext^1(F,F)); the Hom-level liftability defect IS a subgroup of the Ext^1(F,F_fin) where projectivity lives. Thm 3: F projective ⟹ π_*:Nat(F,F)→Nat(F,Q) SURJECTIVE (every φ:F→Q lifts to F→F). COR 3.1 (the payoff): a SINGLE non-liftable φ∈Nat(F,Q) proves F non-projective ⟹ Conj 6.2, in ZFC (no cardinality, no Whitehead). Thm 4: liftability = coherent row-finite transversal problem (UNIF) on ℕ×ℕ with explicit ambiguity group L=Nat(A,F_fin) (per-source-column finite-r-support) + a residual Nat(Q,Q) term (§4.4, second obstruction layer, newly isolated); diagonal-mod-finite D=(∏_n/⊕_n)End(A)↪Nat(F,Q) all liftable. (Q) now = 'is Nat(F,Q)=π_*Nat(F,F)?'. Direction A reduced to producing ONE exotic (infinite-source-support) φ:F→Q; §5 records two attempts (tail-sums, column-spreads) failing back into (UNIF) — evidence for independence. Finite-truncation mechanics green (scratch/2026-09-18-liftability-mechanics.py: naturality of matrix action, diagonal lift, row-finite necessity; 0 fail).",
+            "children": [
+             {
+              "id": "liftability-mechanics-check-0918",
+              "trust": "computed",
+              "role": "attempt",
+              "file": "../scratch/2026-09-18-liftability-mechanics.py",
+              "approach": "Finite truncation (N=M=5, d:2→3): (1) M×M scalar matrices act naturally in End(A) (residual ~1e-16); (2) ψ(ξ)_r=Σ_n θ_{r,n}ξ_n natural for random block matrix Θ (residual ~1e-15); (3) diagonal ψ=diag(θ_n) natural and descends to the crude quotient Q; (4) row-finite necessity illustrated (dense Θ draws on all N rows = infinite sum in the untruncated case; row-finite draws on 1). 0 fail. Bookkeeping shadow only; says nothing about the infinite/homological statement.",
+              "children": []
+             },
+             {
+              "id": "residual-nat-Q-Q-2026-09-19",
+              "role": "premise",
+              "trust": "proved",
+              "claim": "COMPUTE Nat(Q,Q) (2026-09-19). (Step1) Nat(Q,F_fin)=Nat(Q,F)=0 (Cor A1 + Nat(Q,prod)=prod Nat). (Step2) Nat(Q,Q) ≅ ker(iota_*:Ext^1(Q,F_fin)->Ext^1(Q,F)), iso partial(delta)=delta^*[F]. (Main SES) 0->S->Nat(Q,Q)->E->0: S=R_0/N = LIFTABLE part (R_0={psi in Nat(F,F): psi(F_fin) subset F_fin}, N={psi: psi(F) subset F_fin}), a ring embedding in Nat(Q,Q); E=Nat(Q,Q)/S injects into coker(pi_*) subset Ext^1(F,F_fin) via delta|->[delta o pi]. CORRECTION of 09-18 §4.6: liftable part S ⊋ D=(prod End A)/(oplus End A) — the row-SHIFT S([a_r])=[a_{r-1}] is liftable, non-diagonal. NB: S is NOT the row&column-finite matrix ring — read-coordinate endo preserves F_fin without column-finiteness (A non-compact); matrix normal form REFUTED. S embeds (Prop 3.4) as subgroup of Specker cokernel C_fin=(prod_r/oplus_r)Nat(A,F_fin) = reduced power. Cor 4.1: one non-liftable natural endo delta:Q=>Q ⟹ Ext^1(F,F_fin)!=0 ⟹ F non-projective ⟹ Conj 6.2 in ZFC (sharper witness than Cor 3.1, intrinsic to End(Q)). E = exotic column-spread endos = the SAME (UNIF)/Attempt-(b) wall, not a new independence source. E=0 <=> Nat(Q,Q)=S exactly (OPEN).",
+              "file": "2026-09-19-computing-nat-Q-Q.md",
+              "children": [
+               {
+                "id": "nat-Q-Q-vanishings",
+                "role": "premise",
+                "trust": "proved",
+                "claim": "Lemma 1: Nat(Q,F_fin)=0 (Cor A1) and Nat(Q,F)=0 (Nat(Q,prod_r A)=prod_r Nat(Q,A)=0). Empties left end of Nat(Q,-) LES.",
+                "file": "2026-09-19-computing-nat-Q-Q.md",
+                "approach": "Lemma 1: Nat(Q,F_fin)=0 (Cor A1) and Nat(Q,F)=0 (Nat(Q,prod_r A)=prod_r Nat(Q,A)=0). Empties left end of Nat(Q,-) LES.",
+                "children": []
+               },
+               {
+                "id": "nat-Q-Q-liftable-R0modN",
+                "role": "premise",
+                "trust": "proved",
+                "claim": "Prop 3: N={psi:psi(F) subset F_fin} is a 2-sided ideal of R_0={psi:psi(F_fin) subset F_fin}; S=R_0/N embeds as a RING in Nat(Q,Q) = the liftable part. Cor 3.1: row-shift delta_S in S is not diagonal-mod-finite => D ⊊ S. Prop 3.4: partial(S) subset Specker cokernel C_fin=(prod_r/oplus_r)Nat(A,F_fin). Remark 3.3 (CORRECTION): NO column-finite/finite-row-support matrix normal form for R_0,N — read-coordinate endo counterexample (A non-compact). Verified scratch audit.",
+                "file": "2026-09-19-computing-nat-Q-Q.md",
+                "approach": "Prop 3: N={psi:psi(F) subset F_fin} is a 2-sided ideal of R_0={psi:psi(F_fin) subset F_fin}; S=R_0/N embeds as a RING in Nat(Q,Q) = the liftable part. Cor 3.1: row-shift delta_S in S is not diagonal-mod-finite => D ⊊ S. Prop 3.4: partial(S) subset Specker cokernel C_fin=(prod_r/oplus_r)Nat(A,F_fin). Remark 3.3 (CORRECTION): NO column-finite/finite-row-support matrix normal form for R_0,N — read-coordinate endo counterexample (A non-compact). Verified scratch audit.",
+                "children": []
+               },
+               {
+                "id": "nat-Q-Q-exotic-into-Ext",
+                "role": "premise",
+                "trust": "proved",
+                "claim": "Thm 4: delta|->[delta o pi] has kernel exactly S=B/N, so E=Nat(Q,Q)/S injects into coker(pi_*) ⊆ Ext^1(F,F_fin). SES 0->B/N->Nat(Q,Q)->E->0.",
+                "file": "2026-09-19-computing-nat-Q-Q.md",
+                "approach": "Thm 4: delta|->[delta o pi] has kernel exactly S=B/N, so E=Nat(Q,Q)/S injects into coker(pi_*) ⊆ Ext^1(F,F_fin). SES 0->B/N->Nat(Q,Q)->E->0.",
+                "children": []
+               },
+               {
+                "id": "nat-Q-Q-exotic-is-UNIF",
+                "role": "attempt",
+                "trust": "speculative",
+                "claim": "E=0? i.e. every natural endo of Q is a row-and-column-finite matrix mod finite rows. §5 dichotomy: exotic delta = column-spread (Attempt b) = the (UNIF) wall. OPEN; standing independence bet. No exotic delta constructed, no proof E=0.",
+                "file": "2026-09-19-computing-nat-Q-Q.md",
+                "approach": "E=0? i.e. every natural endo of Q is a row-and-column-finite matrix mod finite rows. §5 dichotomy: exotic delta = column-spread (Attempt b) = the (UNIF) wall. OPEN; standing independence bet. No exotic delta constructed, no proof E=0.",
+                "children": []
+               },
+               {
+                "id": "representability-dichotomy-column-specker-2026-09-19",
+                "role": "attempt",
+                "trust": "proved",
+                "claim": "STRUCTURAL TRIAGE of E (2026-09-19 eve). (Thm1) Scalar case A=id: F~=prod_N id = h_E representable (E=k^(N)) => projective => pi_* onto => E~=0, F~ projective; the row reduced-product is INERT. (Thm2) Any representable coeff A=h_V: F=prod_N h_V = h_{V^(N)} representable => E=0 AND F projective; contrapositive (Cor2.1): E!=0 (or F non-proj) => A NON-representable. (Prop2.2) A=oplus_N h_k non-rep (oplus breaks products via diagonal (e_n)_n); PRODUCT columns A=prod_N id=h_{k^(N)} STAY representable => it is the COPRODUCT oplus_m, not column-cardinality, that carries the obstruction. (Thm3) column truncations A_{<=M}=oplus_{m<=M}h_k=h_{k^{M+1}} are NATURAL RETRACTS; F_{<=M}=h_{W_M} rep/proj; (ii) phi factoring through one truncation P_M LIFTS (sufficient); (iii) exotic phi must act on unbounded-column-growth elements (necessary), since union_M F_{<=M} STRICTLY PROPER in F (diagonal xi_{r,m}=x[m=r]). CAUTION: truncation-factoring is a STRICT subclass of liftable (shift's lift uses all columns), so Thm3 is NOT an iff-localisation. (Prop4/Heuristic H, SPECULATIVE) naturality ~ definability; definable automorphisms of P(omega)/fin are TRIVIAL in ZFC (Velickovic/Shelah) whereas 'all trivial' is independent => correct analogy for E=0 is AUTOMORPHISM RIGIDITY (ZFC), NOT aleph_1-uniformisation; the Whitehead/EM independence lives at LARGE targets M in Ext^1(F,M), not in E subset Ext^1(F,F_fin) (countable). UPDATED BET: E=0 provable in ZFC; residual collapses to (UNIF).",
+                "file": "2026-09-19-representability-dichotomy-and-column-Specker-reformulation-of-E.md",
+                "children": [
+                 {
+                  "id": "scalar-representable-collapse-thm1",
+                  "role": "premise",
+                  "trust": "proved",
+                  "claim": "Thm1: F~=prod_N id = Hom(k^(N),-)=h_E representable => projective => pi_* surjective (=ev_E onto) => coker=0 => E~=0; scalar analogue of Conj 6.2 is TRUE (F~ projective). Yoneda.",
+                  "file": "2026-09-19-representability-dichotomy-and-column-Specker-reformulation-of-E.md",
+                  "children": [],
+                  "approach": "Thm1: F~=prod_N id = Hom(k^(N),-)=h_E representable => projective => pi_* surjective (=ev_E onto) => coker=0 => E~=0; scalar analogue of Conj 6.2 is TRUE (F~ projective). Yoneda."
+                 },
+                 {
+                  "id": "representability-dichotomy-thm2",
+                  "role": "premise",
+                  "trust": "proved",
+                  "claim": "Thm2: A=h_V => F=prod_N h_V = h_{V^(N)} representable => E=0, F projective. Cor2.1 (contrapositive): E!=0 => A non-representable. Prop2.3: prod_r A preserves products iff A does (all factors identical A).",
+                  "file": "2026-09-19-representability-dichotomy-and-column-Specker-reformulation-of-E.md",
+                  "children": [],
+                  "approach": "Thm2: A=h_V => F=prod_N h_V = h_{V^(N)} representable => E=0, F projective. Cor2.1 (contrapositive): E!=0 => A non-representable. Prop2.3: prod_r A preserves products iff A does (all factors identical A)."
+                 },
+                 {
+                  "id": "oplus-is-the-obstruction-prop22",
+                  "role": "premise",
+                  "trust": "proved",
+                  "claim": "Prop2.2: A=oplus_N h_k non-representable (fails to preserve prod_N k; diagonal (e_n)_n not in image). Product columns A=prod_N id=h_{k^(N)} => F=h_{k^(N)} representable/projective. So COPRODUCT oplus_m (not column count) is the obstruction. VERIFIED by subagent 2026-09-19.",
+                  "file": "2026-09-19-representability-dichotomy-and-column-Specker-reformulation-of-E.md",
+                  "children": [],
+                  "approach": "Prop2.2: A=oplus_N h_k non-representable (fails to preserve prod_N k; diagonal (e_n)_n not in image). Product columns A=prod_N id=h_{k^(N)} => F=h_{k^(N)} representable/projective. So COPRODUCT oplus_m (not column count) is the obstruction. VERIFIED by subagent 2026-09-19."
+                 },
+                 {
+                  "id": "column-truncation-retract-thm3",
+                  "role": "premise",
+                  "trust": "proved",
+                  "claim": "Lem3.1: A_{<=M}=oplus_{m<=M}h_k=h_{k^{M+1}} natural retract of A (column projection natural since oplus acts columnwise); F_{<=M}=prod_r A_{<=M}=h_{W_M} rep/proj. Thm3(ii): phi=phi o P_M for one M => phi lifts (sufficient). Thm3(iii): exotic => phi != phi o P_M for all M (necessary). Prop3.2: union_M F_{<=M} PROPER in F (diagonal xi_{r,m}=x[m=r]). NOT an iff (shift counterexample). VERIFIED by subagent.",
+                  "file": "2026-09-19-representability-dichotomy-and-column-Specker-reformulation-of-E.md",
+                  "children": [],
+                  "approach": "Lem3.1: A_{<=M}=oplus_{m<=M}h_k=h_{k^{M+1}} natural retract of A (column projection natural since oplus acts columnwise); F_{<=M}=prod_r A_{<=M}=h_{W_M} rep/proj. Thm3(ii): phi=phi o P_M for one M => phi lifts (sufficient). Thm3(iii): exotic => phi != phi o P_M for all M (necessary). Prop3.2: union_M F_{<=M} PROPER in F (diagonal xi_{r,m}=x[m=r]). NOT an iff (shift counterexample). VERIFIED by subagent."
+                 },
+                 {
+                  "id": "automorphism-rigidity-reframing-heuristic-H",
+                  "role": "attempt",
+                  "trust": "speculative",
+                  "claim": "Prop4/Heuristic H: naturality is uniform-across-Vec definability (>= Borel strength); definable/Borel automorphisms of P(omega)/fin are TRIVIAL in ZFC (Velickovic, Shelah), while 'all trivial' is independent (CH exotic exist / PFA all trivial). Hence expect E=0 in ZFC by automorphism-rigidity, NOT aleph_1-uniformisation. Reframes the standing independence bet; consistent w/ 'E not a new independence source'. HEURISTIC not proof.",
+                  "file": "2026-09-19-representability-dichotomy-and-column-Specker-reformulation-of-E.md",
+                  "children": [],
+                  "approach": "Prop4/Heuristic H: naturality is uniform-across-Vec definability (>= Borel strength); definable/Borel automorphisms of P(omega)/fin are TRIVIAL in ZFC (Velickovic, Shelah), while 'all trivial' is independent (CH exotic exist / PFA all trivial). Hence expect E=0 in ZFC by automorphism-rigidity, NOT aleph_1-uniformisation. Reframes the standing independence bet; consistent w/ 'E not a new independence source'. HEURISTIC not proof."
+                 },
+                 {
+                  "id": "gap-S-column-specker-for-Q",
+                  "role": "attempt",
+                  "trust": "speculative",
+                  "claim": "(Gap-S) THE CRUX, OPEN: is Nat(F,Q)=pi_* Nat(F,F)? Equivalently a column-Specker theorem for the reduced-product TARGET Q: does every natural phi:F->Q reduce (mod pi_*-image) to a finite column truncation? YES => E=0 in ZFC (Conj 6.2 reduces to UNIF, prong-2 win); NO => exotic phi on diagonal elements => F non-projective => Conj 6.2 in ZFC (Cor 4.1). Disjoint-ROW probe proved inert here (property (star) = representative-noise). Believe YES.",
+                  "file": "2026-09-19-representability-dichotomy-and-column-Specker-reformulation-of-E.md",
+                  "children": [],
+                  "approach": "(Gap-S) THE CRUX, OPEN: is Nat(F,Q)=pi_* Nat(F,F)? Equivalently a column-Specker theorem for the reduced-product TARGET Q: does every natural phi:F->Q reduce (mod pi_*-image) to a finite column truncation? YES => E=0 in ZFC (Conj 6.2 reduces to UNIF, prong-2 win); NO => exotic phi on diagonal elements => F non-projective => Conj 6.2 in ZFC (Cor 4.1). Disjoint-ROW probe proved inert here (property (star) = representative-noise). Believe YES.",
+                  "note": "| 2026-09-20: REFRAMED via module reduction (see module-reduction-gap-S-2026-09-20). Gap-S <=> iota_* injective over S=End_k(E); the column-Specker/Baer-Specker route is PROVED VOID (prod_r E=~S free), so the earlier 'column-Specker for Q' framing cannot be attacked by product-vs-sum. Now = countable product of non-f.g. projectives."
+                 }
+                ],
+                "approach": "STRUCTURAL TRIAGE of E (2026-09-19 eve). (Thm1) Scalar case A=id: F~=prod_N id = h_E representable (E=k^(N)) => projective => pi_* onto => E~=0, F~ projective; the row reduced-product is INERT. (Thm2) Any representable coeff A=h_V: F=prod_N h_V = h_{V^(N)} representable => E=0 AND F projective; contrapositive (Cor2.1): E!=0 (or F non-proj) => A NON-representable. (Prop2.2) A=oplus_N h_k non-rep (oplus breaks products via diagonal (e_n)_n); PRODUCT columns A=prod_N id=h_{k^(N)} STAY representable => it is the COPRODUCT oplus_m, not column-cardinality, that carries the obstruction. (Thm3) column truncations A_{<=M}=oplus_{m<=M}h_k=h_{k^{M+1}} are NATURAL RETRACTS; F_{<=M}=h_{W_M} rep/proj; (ii) phi factoring through one truncation P_M LIFTS (sufficient); (iii) exotic phi must act on unbounded-column-growth elements (necessary), since union_M F_{<=M} STRICTLY PROPER in F (diagonal xi_{r,m}=x[m=r]). CAUTION: truncation-factoring is a STRICT subclass of liftable (shift's lift uses all columns), so Thm3 is NOT an iff-localisation. (Prop4/Heuristic H, SPECULATIVE) naturality ~ definability; definable automorphisms of P(omega)/fin are TRIVIAL in ZFC (Velickovic/Shelah) whereas 'all trivial' is independent => correct analogy for E=0 is AUTOMORPHISM RIGIDITY (ZFC), NOT aleph_1-uniformisation; the Whitehead/EM independence lives at LARGE targets M in Ext^1(F,M), not in E subset Ext^1(F,F_fin) (countable). UPDATED BET: E=0 provable in ZFC; residual collapses to (UNIF)."
+               }
+              ],
+              "approach": "COMPUTE Nat(Q,Q) (2026-09-19). (Step1) Nat(Q,F_fin)=Nat(Q,F)=0 (Cor A1 + Nat(Q,prod)=prod Nat). (Step2) Nat(Q,Q) ≅ ker(iota_*:Ext^1(Q,F_fin)->Ext^1(Q,F)), iso partial(delta)=delta^*[F]. (Main SES) 0->S->Nat(Q,Q)->E->0: S=R_0/N = LIFTABLE part (R_0={psi in Nat(F,F): psi(F_fin) subset F_fin}, N={psi: psi(F) subset F_fin}), a ring embedding in Nat(Q,Q); E=Nat(Q,Q)/S injects into coker(pi_*) subset Ext^1(F,F_fin) via delta|->[delta o pi]. CORRECTION of 09-18 §4.6: liftable part S ⊋ D=(prod End A)/(oplus End A) — the row-SHIFT S([a_r])=[a_{r-1}] is liftable, non-diagonal. NB: S is NOT the row&column-finite matrix ring — read-coordinate endo preserves F_fin without column-finiteness (A non-compact); matrix normal form REFUTED. S embeds (Prop 3.4) as subgroup of Specker cokernel C_fin=(prod_r/oplus_r)Nat(A,F_fin) = reduced power. Cor 4.1: one non-liftable natural endo delta:Q=>Q ⟹ Ext^1(F,F_fin)!=0 ⟹ F non-projective ⟹ Conj 6.2 in ZFC (sharper witness than Cor 3.1, intrinsic to End(Q)). E = exotic column-spread endos = the SAME (UNIF)/Attempt-(b) wall, not a new independence source. E=0 <=> Nat(Q,Q)=S exactly (OPEN)."
+             }
+            ]
+           },
+           {
+            "id": "module-reduction-gap-S-2026-09-20",
+            "approach": "Reduce Gap-S and Conj 6.2 to module theory over S=End_k(E) (full linear ring). Nat_Vec(F,-)=Hom_S(F(E),-(E)) with Ext^1 transfer; F(E)=M=prod_r P, P=oplus_m E, F_fin(E)=M_fin, Q(E)=M/M_fin. Key freeness prod_r E =~ S. Gap-S <=> iota_* : Ext^1_S(M,M_fin)->Ext^1_S(M,M) injective; Conj 6.2 <=> M projective. Baer-Specker obstruction proved VOID.",
+            "trust": "proved",
+            "role": "premise",
+            "file": "2026-09-20-module-reduction-of-gap-S.md",
+            "date": "2026-09-20",
+            "note": "Two independent subagent verifications of Thm1 (equivalence Add(C0,Vec)~S-Mod, Ext^1 transfer) and Thm2/Thm3 (freeness, ring facts); third subagent triple-checked E not injective. Recasts the whole absorptive-dichotomy program as classical slender-module theory over the full linear ring. Opens the literature gate (Chase, Goodearl, O'Neill).",
+            "children": [
+             {
+              "id": "thm1-nat-equals-hom-S",
+              "approach": "Nat_Vec(T,T')=Hom_S(T(E),T'(E)) for aleph_1-continuous T,T'; U=aleph_1-continuous functors is abelian, extension-closed, U~S-Mod, so Ext^1 transfers. C0(ctble-dim)~Kar(S), E generator by retracts, E+E=~E.",
+              "trust": "proved",
+              "role": "premise",
+              "file": "2026-09-20-module-reduction-of-gap-S.md",
+              "date": "2026-09-20",
+              "children": []
+             },
+             {
+              "id": "thm2-prod-E-is-S-free",
+              "approach": "prod_r E =~ S free rank 1 via Psi(s)=(s.e_r)_r (col-finite matrix = arbitrary sequence of columns). Hence prod_{r,m}E=~S, prod_N S=~S. Module shadow of Thm1(functor)/Thm H. Free squeeze M_fin<=oplus_m S<=M<=Phi=~S.",
+              "trust": "proved",
+              "role": "premise",
+              "file": "2026-09-20-module-reduction-of-gap-S.md",
+              "date": "2026-09-20",
+              "children": []
+             },
+             {
+              "id": "thm3-S-not-left-selfinjective",
+              "approach": "S=End_k(E) vN regular, RIGHT self-injective, NOT left self-injective; E not injective as left S-module (lifting fails on left ideal L=span{e_ij}, map e_ij->mu_j e_i with infinite-support mu). Self-injectivity route CLOSED.",
+              "trust": "proved",
+              "role": "premise",
+              "file": "2026-09-20-module-reduction-of-gap-S.md",
+              "date": "2026-09-20",
+              "children": []
+             },
+             {
+              "id": "thm4-baer-specker-obstruction-void",
+              "approach": "Specker identity Hom_S(prod_r E,E)=oplus_r Hom_S(E,E) is CONSISTENT with freeness (prod_r E=~S is free), unlike over Z. Hence NO product-vs-coproduct/Specker/column-spread argument can produce an exotic non-lifting map or prove F non-projective. Explains ALL prior failed exotic constructions; reframes rigidity bet with a mechanism.",
+              "trust": "proved",
+              "role": "premise",
+              "file": "2026-09-20-module-reduction-of-gap-S.md",
+              "date": "2026-09-20",
+              "children": []
+             },
+             {
+              "id": "gap-S-is-countable-product-of-nonfg-projectives",
+              "approach": "OPEN CRUX. By Theorem I (sibling gapS-equals-R-projectivity-of-M-2026-09-20, ZFC) this is now EXACTLY: is M R-projective? i.e. does every phi:M->S/I (I left ideal) lift through S->>S/I? Over vN-regular S, S/I=colim_a S/Se_a (projective stages, split projections), so phi factoring through a stage lifts; ONLY possible non-lift = phi with image UNBOUNDED in the omega-filtration of a ctbly-gen I (Whitehead/lim^1 flavour, in crux quotient M/(+)_m S). One non-lift => Conj6.2 FALSE (ZFC); all lift => TRUE (ZFC).",
+              "trust": "speculative",
+              "role": "attempt",
+              "file": "2026-09-20-module-reduction-of-gap-S.md",
+              "date": "2026-09-20",
+              "note": "Resolved in the negative UNDER CH (2026-09-21): M non-projective whenever 2^ℵ0<2^ℵ1; see gapS-false-under-CH-2026-09-21. Full ZFC status open.",
+              "children": []
+             },
+             {
+              "id": "conj62-is-pd-S-mod-l-leq-1",
+              "approach": "(P1) M =~ row-finite left ideal l of S (M<=Phi=prod_{r,m}E=~S free); Ext^1_S(M,N)=~Ext^2_S(S/l,N). So Conj 6.2 (M projective) <=> pd_S(S/l)<=1 — one Ext^2-vanishing about the explicit cyclic S/l. (P3) End_S(M)=row-finite matrices over End(P)=~S; diagonal/row-finite maps all lift, so any Gap-S obstruction is a NON-diagonal 'escaping' map (r-family of E-non-injectivity maps) = reduced-product/P(omega)/fin rigidity. (P2) Kaplansky+counting caps rank at continuum, cannot refute projectivity.",
+              "trust": "proved",
+              "role": "premise",
+              "file": "2026-09-20-module-reduction-of-gap-S.md",
+              "date": "2026-09-20",
+              "children": []
+             },
+             {
+              "id": "gapS-equals-R-projectivity-of-M-2026-09-20",
+              "approach": "THEOREM I (ZFC, verified x2): Conj6.2 <=> M projective <=> M is R-projective (Dual Baer test: every M->S/I lifts through S->>S/I). Powered by: S has a FREE LEFT IDEAL OF RANK c (Baer-Specker: S=~prod_n S; almost-disjoint family {A_i}, |X|=c, w_i=(1_S if n in A_i)) => (Trlifaj Ex 2.6 argument, left version) every R-projective <=c-generated left S-module is projective; |M|<=c. Collapses PROVE.md P1 dichotomy: M R-proj => Conj6.2 TRUE; M not R-proj => Conj6.2 FALSE.",
+              "trust": "proved",
+              "role": "premise",
+              "file": "2026-09-20-gapS-trlifaj-levers-and-cap.md",
+              "date": "2026-09-20",
+              "note": "Two adversarial subagent verification passes (both TRUE). Step (a) submodule-closure of projectivity domain proved via pushout/pullback (safe: SECOND-argument closure, avoids the false direct-sum closure of first argument). R-projective <=> S-projective confirmed. Cardinals: |S|=|M|=c (k countable), free-ideal rank = c matches mu(M)<=c. 2026-09-21 DEEP-READ CROSS-CHECK (proofs/reviews/2026-09-21-gapS-equals-R-projectivity-deepread.md): a full read of Trlifaj arXiv:1901.01442 UPHELD this node (proved) and confirmed (i) the upgrade MECHANISM Lemma 2.2 + Ex 2.6, (ii) the semiartinian correction (child trlifaj-independence-inapplicable). Crucially it showed Trlifaj's OWN Ex 2.6 construction caps at rank dim(V)=aleph0, so Lemma I.1 (my almost-disjoint Baer-Specker free LEFT ideal of rank c, child free-left-ideal-rank-continuum) is genuinely load-bearing and NOT redundant with the paper -- exactly the 'separate ZFC proof of a rank-c free ideal' the deep-read said was needed. CORRECTION to this note's last sentence: the SUP (Lemma 2.7) witness cardinality is NOT given by Trlifaj; 'must be >c-generated' is UNVERIFIED (under CH it could be =c). So the claim does not by itself keep M out of SUP's reach -- see the parent open-crux note, independence is NOT ruled out.",
+              "children": [
+               {
+                "id": "free-left-ideal-rank-continuum",
+                "approach": "Lemma I.1: S contains free left ideal L=~S^(c) via Baer-Specker + almost-disjoint family. Corrects (retracts) the false 'cap at aleph0' (free bases need not be orthogonal idempotents).",
+                "trust": "proved",
+                "role": "premise",
+                "file": "2026-09-20-gapS-trlifaj-levers-and-cap.md",
+                "date": "2026-09-20",
+                "note": "subagent-verified; construction transported through S=~prod_n S.",
+                "children": []
+               },
+               {
+                "id": "DBC-holds-below-continuum",
+                "approach": "Lemma I.2 (left Trlifaj Ex 2.6): R-projective + mu<=c => projective. Uses Pr^-1(N) closed under submodules (A-F 16.12), free ideal L=~S^(c) in Pr^-1(N), split of S^(c)->>N.",
+                "trust": "proved",
+                "role": "premise",
+                "file": "2026-09-20-gapS-trlifaj-levers-and-cap.md",
+                "date": "2026-09-20",
+                "note": "subagent-verified with pushout/pullback proof of submodule-closure.",
+                "children": []
+               },
+               {
+                "id": "S-not-semiartinian",
+                "approach": "Prop C.1: Soc(S)=F (finite-rank); S/F simple with Soc=0; socle sequence stalls 0<F<S. Ideal lattice {0,F,S}.",
+                "trust": "proved",
+                "role": "premise",
+                "file": "2026-09-20-gapS-trlifaj-levers-and-cap.md",
+                "date": "2026-09-20",
+                "note": "subagent-verified.",
+                "children": []
+               },
+               {
+                "id": "trlifaj-independence-inapplicable",
+                "approach": "Cor C.2 (CORRECTION): Trlifaj Thm4.4/Cor4.5 independence needs SMALL SEMIARTINIAN ring; S not semiartinian => the diamond-side ('under diamond, M projective') does NOT exist for S. Trlifaj Ex2.6 IS S but yields only the ZFC positive (=Lemma I.2). Corrects memory overclaim 'wall is ZFC-independent via Trlifaj over exactly this ring'.",
+                "trust": "proved",
+                "role": "premise",
+                "file": "2026-09-20-gapS-trlifaj-levers-and-cap.md",
+                "date": "2026-09-20",
+                "note": "primary-read of arXiv:1901.01442 (full text). Lemma 2.7 (SUP) gives some R-proj-non-proj module over S but >c-generated, not M.",
+                "children": []
+               },
+               {
+                "id": "M-absorbs-free-and-free-squeeze",
+                "approach": "Thm D: M=~S(+)M=~M(+)M (prod commutes w/ finite biproduct); free squeeze (+)_m S < M < Phi=~S both ends free; crux quotient M/(+)_m S = per-r-finite-not-uniformly-finite = P(omega)/fin gadget = locus of any obstruction.",
+                "trust": "proved",
+                "role": "premise",
+                "file": "2026-09-20-gapS-trlifaj-levers-and-cap.md",
+                "date": "2026-09-20",
+                "note": "",
+                "children": []
+               }
+              ]
+             },
+             {
+              "id": "gapS-false-under-CH-2026-09-21",
+              "approach": "Cardinal-counting refutation: M projective => 2^aleph0 = 2^aleph1 (Kaplansky decomposition ⊕_{i∈I}M_i, |I|≥ℵ1 by non-c.g., dim_k Hom_S(M,E)=∏_I(≠0)≥2^{|I|}≥2^{ℵ1}, but Thm F(a) gives dim_k Hom_S(M,E)=2^{ℵ0}). Hence under 2^ℵ0<2^ℵ1 (incl CH) M NOT projective ⟹ Conj 6.2 FALSE / Vec ◁-INADMISSIBLE. So Conj 6.2 is NOT a ZFC theorem. Corrects P2's 'cardinality cannot refute' dismissal. Same schema proves ℤ^ℕ non-free (ZFC) but there dual collapses to ℵ0 (absolute); here Thm4 keeps dual dim 𝔠, so refutation is CH-conditional. Residual (2^ℵ0=2^ℵ1 case: FALSE-in-ZFC vs INDEPENDENT) OPEN.",
+              "role": "attempt",
+              "trust": "proved",
+              "file": "2026-09-21-gapS-false-under-CH.md",
+              "note": "Adversarially verified 2026-09-21. Under CH, Vec ◁-inadmissible; overturns standing 'Gap-S plausibly TRUE in ZFC' hypothesis. Reframes remaining question to full-ZFC-status (FALSE vs independent) in the 2^ℵ0=2^ℵ1 case only.",
+              "children": [
+               {
+                "id": "kaplansky-decomposition-forces-uncountable-I",
+                "approach": "Projective ⟹ ⊕ countably generated (Kaplansky); M non-c.g. ⟹ |I|≥ℵ1",
+                "role": "premise",
+                "trust": "proved",
+                "children": []
+               },
+               {
+                "id": "dual-dim-continuum-thmFa",
+                "approach": "dim_k Hom_S(M,E)=2^{ℵ0} exactly (Thm F(a) slenderness); only upper bound used",
+                "role": "premise",
+                "trust": "proved",
+                "children": []
+               },
+               {
+                "id": "erdos-kaplansky-lower-bound",
+                "approach": "dim_k ∏_I V_i ≥ dim_k k^I = |k|^{|I|} ≥ 2^{|I|} for V_i≠0, I infinite (Erdős–Kaplansky)",
+                "role": "premise",
+                "trust": "proved",
+                "children": []
+               },
+               {
+                "id": "lemma-nonzero-dual-on-projectives",
+                "approach": "Every nonzero c.g. projective N has Hom_S(N,E)≠0 (direct ψ|_N construction; N⊆S^(ℕ), pick n_j≠0, w with n_j(w)≠0)",
+                "role": "premise",
+                "trust": "proved",
+                "children": []
+               },
+               {
+                "id": "M-flat-ML-locally-projective",
+                "approach": "M flat+Mittag-Leffler+locally projective(=ℵ1-projective): pure in Φ=∏E (product of f.p.) over vN-regular; RG/ZH/HT. ⟹ Conj6.2 ⟺ M is ⊕ of countably generated",
+                "role": "premise",
+                "trust": "proved",
+                "file": "2026-09-21-gapS-false-under-CH.md",
+                "children": []
+               },
+               {
+                "id": "correction-P2-cardinality-does-refute",
+                "approach": "P2 derived 2^{|I|}≤2^{ℵ0} but wrongly dismissed; with |I|≥ℵ1 it forces 2^{ℵ0}=2^{ℵ1}, false under CH",
+                "role": "attempt",
+                "trust": "proved",
+                "children": []
+               },
+               {
+                "id": "residual-full-zfc-status",
+                "approach": "Residual 2^ℵ0=2^ℵ1 case reframed via κ-projectivity hierarchy (file 2026-09-21-gapS-kappa-projectivity-reduction.md). Lemma 1.1 (ZFC): M projective ⟹ M κ-projective ∀ reg uncountable κ. Cor 1.2: M not-κ-projective (some κ) ⟹ Conj 6.2 FALSE in ZFC (NOT capped). HT Example 6.8 = OUR ring: flat ML=ℵ1-proj=non-singular. VERDICT: leans INDEPENDENT (both obstructions vanish in window: counting demoted by void Baer–Specker large dual; κ-free pathology needs V=L⟹CH). SHARP TARGET Q₂: is M ℵ2-projective? NO⟹FALSE-in-ZFC.",
+                "role": "attempt",
+                "trust": "in-progress",
+                "children": [
+                 {
+                  "id": "lemma-kappa-projectivity-reduction",
+                  "approach": "Lemma 1.1: M projective ⟹ κ-projective ∀ reg uncountable κ (Kaplansky ⊕_I M_i; C={⊕_{|J|<κ}M_i}; density+chain-closure from κ regular + finite support in I). Cor 1.2 contrapositive ⟹ FALSE-in-ZFC route.",
+                  "role": "attempt",
+                  "trust": "proved",
+                  "file": "2026-09-21-gapS-kappa-projectivity-reduction.md",
+                  "children": []
+                 },
+                 {
+                  "id": "ambient-class-nonsingular-HT-ex68",
+                  "approach": "HT Example 6.8 (our ring S=non-artinian vN-regular right self-injective): flat ML = ℵ1-projective = non-singular modules (ZFC-absolute). Class is Kaplansky (bound 2^𝔠) but NOT deconstructible.",
+                  "role": "premise",
+                  "trust": "proved",
+                  "file": "2026-09-21-gapS-kappa-projectivity-reduction.md",
+                  "sources": [
+                   "0910.4277"
+                  ],
+                  "children": []
+                 },
+                 {
+                  "id": "independence-localization-rmk611",
+                  "approach": "HT Rmk 6.11: κ-free-non-free pathology (κ>ℵ1) needs V=L/non-reflecting stationary sets; V=L⟹CH where counting fires. So both machines cover only 2^ℵ0<2^ℵ1 models ⟹ residual window is complement of both ⟹ evidential lean INDEPENDENT.",
+                  "role": "attempt",
+                  "trust": "speculative",
+                  "file": "2026-09-21-gapS-kappa-projectivity-reduction.md",
+                  "sources": [
+                   "0910.4277"
+                  ],
+                  "children": []
+                 },
+                 {
+                  "id": "Q2-is-M-aleph2-projective",
+                  "approach": "SHARP OPEN TARGET (Q₂): is M ℵ2-projective? = every ℵ1-generated submodule of M≅𝔩⊆S embeds in an ℵ1-generated PROJECTIVE submodule? ZFC NO ⟹ Conj 6.2 FALSE in ZFC. Route: embed HT M_{ω1} ladder purely+cofinally in M/M_fin=∏_r P/⊕_r P.",
+                  "role": "attempt",
+                  "trust": "in-progress",
+                  "file": "2026-09-21-gapS-kappa-projectivity-reduction.md",
+                  "children": []
+                 }
+                ],
+                "file": "2026-09-21-gapS-kappa-projectivity-reduction.md",
+                "sources": [
+                 "0910.4277",
+                 "1007.4977"
+                ]
+               }
+              ]
+             }
+            ]
            }
           ],
           "note": "Reduced (09-02 WAKE) to: is full Vec inadmissible <=> is F=Hom(E,+_N -)=prod_N(+_N -) NOT a coproduct of representables in Add(Vec,Vec) [E=k^(N)]. Session 09-02 proved two rigidity lemmas but did NOT close the dichotomy; leaning direction A (inadmissible) on swapped-variance, unproved."

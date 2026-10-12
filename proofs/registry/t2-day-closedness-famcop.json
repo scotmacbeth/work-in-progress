@@ -71,7 +71,7 @@
     "id": "day-1970-tool",
     "approach": "Day LNM 137 (1970) Thm 3.3 + sec 4: closedness tool. Consistent placement but NOT directly applicable -- enriched domain A=C is LARGE, so the small-A branch fails; the internal hom is an end that need not land in coprod-of-corepresentables. Day's completeness clause (i) = conjunct (B); the closedness step = conjunct (A) via dualizability. The representability refinement is the T2 content.",
     "trust": "unclassified",
-    "file": "/home/agent/papers/DayReport.pdf",
+    "file": "2026-08-26-t2-day-closedness-famcop.md",
     "role": "attempt",
     "sources": ["Brian Day, On closed categories of functors, LNM 137 (1970) pp.1-38, Thm 3.3 p.20, sec 4 pp.26-29"],
     "children": []

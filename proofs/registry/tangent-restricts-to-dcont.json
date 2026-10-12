@@ -1,0 +1,71 @@
+{
+  "conjecture": "The dual-number tangent functor T(p)=p(y+εv) mod ε² is a strict ◁-monoidal functor (Poly/k,◁,y)→(Poly/D,◁_D,y+εv) with D=k[ε]/ε² and ◁_D=substitution after base change along k→D; its monoidal comparison is the AAGM container chain rule ∂(G◁F)≅(∂G◁F)×∂F. Consequently (via standard base change) T preserves ◁-comonoids, base-changing directed containers over k to directed containers over D. Honest caveat: the target base is genuinely D (not Set²/free SPoly(2,2)); over Set the tangent bundle carries no comonad structure (the missing composite is the ε²=0 zero morphism).",
+  "status": "proved",
+  "date_opened": "2026-10-03",
+  "date_closed": "2026-10-03",
+  "tree": {
+    "id": "root",
+    "approach": "MONOIDAL THEOREM (fully proved this session): T = base change along k→D=k[ε]/ε² is strict ◁-monoidal on the nose, laxator = AAGM container chain rule. The comonoid corollary and the Set²-obstruction caveat hang off it.",
+    "trust": "proved",
+    "file": "2026-10-03-tangent-restricts-to-dcont.md",
+    "children": [
+      {
+        "id": "on-the-nose-monoidality",
+        "role": "premise",
+        "approach": "T(c◁c)=T(c)◁_D T(c) exactly (base AND tangent) for c∈{y, y²+y, y², 2y, y³+y²+y}; general reason: tangent part of T(c◁d) is v·(c∘d)'=v·c'(d)·d' = the ◁_D tangent part (ordinary chain rule). Strict (laxator=id) in base-change presentation. Free 2-var self-substitution has V-degree=deg_y(c)>1 (boundary half: free composition is NOT a tangent bundle). Symbolic, exact.",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-restricts-to-dcont.md",
+        "children": []
+      },
+      {
+        "id": "laxator-is-chain-rule",
+        "role": "premise",
+        "approach": "The container-presentation laxator is the proved iso ∂(G◁F)≅(∂G◁F)×∂F (explicit (φ,ψ), natural via the pointed-domain splitting). Identity in the base-change presentation.",
+        "trust": "proved",
+        "file": "2026-06-12-container-chain-rule.tex",
+        "children": []
+      },
+      {
+        "id": "builds-on-tangent-cdc",
+        "role": "premise",
+        "approach": "The SPoly CDC / tangent structure with D=∂ realised by dual numbers (the endofunctor tangent structure this base-changes).",
+        "trust": "proved",
+        "file": "2026-10-02-tangent-container-cdc.md",
+        "children": []
+      },
+      {
+        "id": "set2-obstruction-refutation",
+        "role": "attempt",
+        "approach": "REFUTES the naive Set²/free-SPoly(2,2) reading (confirms the load-bearing caveat): the polynomial T(c)=c+εv∂c carries no comonad structure over Set restricting to C. cod/id forced by sorts; the composite g⊕r with comp_C(g,r)=f (removed position) has no type-correct target — composition not even total. Complete witness enumeration (walking arrow, Z/2, idempotent monoid). General: any non-identity f gives g=id_a,r=f ⟹ comp=f. Resolution: the missing composite is the ε²=0 zero morphism, legitimate only over D.",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-restricts-to-dcont.md",
+        "children": []
+      },
+      {
+        "id": "comonoid-preservation",
+        "role": "attempt",
+        "approach": "Corollary (CONDITIONAL on cited base change): a strong/strict monoidal functor preserves comonoids, so (Tc,Tδ,Tε) is a comonoid in (Poly/D,◁_D,y+εv); hence T:DCont(k)→DCont(D). Strict monoidality verified (on-the-nose node); the categorical lemma is standard; the remaining link is that T is a composition-preserving 2-functor over D. Graded computed because that 2-cell base-change elaboration is cited, not self-contained this session.",
+        "trust": "computed",
+        "file": "2026-10-03-tangent-restricts-to-dcont.md",
+        "children": [
+          {
+            "id": "base-change-2-functoriality",
+            "role": "premise",
+            "approach": "Extension of scalars / base change along k→D lifts to a composition-preserving (strong ◁-monoidal) 2-functor on polynomial functors; preserves comonoids = internal categories (Beck–Chevalley / stability of polynomials under base change, Gambino–Kock 2013). Cited, not deep-read in exactly this ring-map form.",
+            "trust": "unclassified",
+            "file": "2026-10-03-tangent-restricts-to-dcont.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "stage3-characterization-of-TC",
+        "role": "attempt",
+        "approach": "Partial: Ob(TC)=Ob(C)⊔Mor(C); p:TC→C (ε↦0, →dom), 0:C→TC (→id) functors with p∘0=id; tangent vectors at a = Out(a), zero = id_a; T(y)=D. Named closed form (via δ_Tc=μ^{-1}∘T(δ_c) with T on container morphisms over D) OPEN — /prove- or /lean-scale; object counts exclude arrow cat / C⊗D. Candidate: tangent algebroid / first-order jet category.",
+        "trust": "speculative",
+        "file": "2026-10-03-tangent-restricts-to-dcont.md",
+        "children": []
+      }
+    ]
+  }
+}

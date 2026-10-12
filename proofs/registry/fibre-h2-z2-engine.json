@@ -1,0 +1,46 @@
+{
+ "conjecture": "The fibre-edge H^2 engine: for D = Z/2 acting TRIVIALLY on the module M = Z/2, degree-2 group cohomology is H^2(Z/2; Z/2) = Z/2 (the fibre edge E_2^{0,2} = H^2(D;M)^Gamma of the LHS spectral sequence of the ZS extension 1->D->pi->Gamma->1, in the concrete K_{2,3} witness with vertex group D=Z/2, trivial module M=Z/2). It is the ADDITIVE/prunability twin of the base-edge cyclic engine (cyclic-h2-norm-engine, H^2(C_n;Z)=Z/nZ): the coefficient module is Z/2 rather than Z, and the norm map (.2) is identically 0 on Z/2, so H^2 = Z/2 / {0} = Z/2. Two concrete Schreier factor sets: the NONSPLIT central extension 0->{0,2}->Z/4->Z/2->0 has Schreier factor set the carry cocycle f(a,b)=a AND b (value 2 in {0,2} = the generator of Z/2 at (1,1)); it is a genuine 2-cocycle and NOT a 2-coboundary of any 1-cochain => class [pi] is the nonzero generator (prunability defect is REAL). The SPLIT Klein control 0->Z/2->Z/2 x Z/2->Z/2->0 has trivial factor set (constant 0) => class 0 (prunable control is 0). FORMALISED sorry-free in Lean 4 core (Mathlib-free).",
+ "status": "lean-verified",
+ "date_opened": "2026-09-17",
+ "date_closed": "2026-09-17",
+ "note": "LEAN session 2026-09-17. Deliverable of the H^2-cluster front (fibre edge; companion of cyclic-h2-norm-engine which did the base edge). Feeds quiver-skew-brace-zs (additive-schreier-twin / groupoid-zs-multiplicative) and the memory witness prunability-fibre-edge-witness-k23 + h2cluster-lhs-transgression PROVE. Mathlib NOT present in container; per LEAN.md honest-fallback the engine was formalised in Lean 4 CORE (no imports beyond prelude), standalone-compiled with `lean 2026-09-17-fibre-h2-z2.lean` under leanprover/lean4:v4.30.0, zero errors, zero warnings. Axiom footprint: propext + Quot.sound only (fZ4_cocycle needs NO axioms; fZ4_not_coboundary needs only propext). SCOPE/HONESTY: what is machine-checked is (i) the coefficient group Z2 = Z/2 (Bool with xor), with the key collapse 2a = a+a = 0 (Z2.add_self) that makes the norm image trivial; (ii) the honest normalized bar cochain maps d1 (delta^1) and d2 (delta^2) of C_2 with trivial Z/2 coefficients, the identity d2 o d1 = 0 (d2_comp_d1), and that EVERY normalized 2-cochain is a cocycle so Z^2 =~ Z/2 is one-dimensional (twoCocycle_of_normalized); (iii) the two concrete Schreier cocycles fZ4 (carry) and fKlein (constant 0), that both are genuine 2-cocycles (fZ4_cocycle, fKlein_cocycle), that fKlein is a coboundary (fKlein_isCoboundary), and the load-bearing fact that fZ4 is NOT the coboundary of ANY 1-cochain (fZ4_not_coboundary; matching at (0,0) forces g(0)=0, then the coboundary value at (1,1) is g(0)+g(0)=0 != 1); (iv) H^2(Z/2;Z/2) = Z/2 as an explicit Quotient with hand-built Add/Zero/Neg and abelian-group laws (add_comm/add_assoc/zero_add/add_zero/neg_add_cancel), mk a = mk b <-> a = b (H2.mk_eq_iff), mk a = 0 <-> a = 0 (H2.mk_eq_zero_iff), two distinct classes covering Z/2 (H2_two_distinct + H2_two_cover); (v) the decoupling verdict: [Z/4-carry class] != 0 = [Klein class] (classZ4_ne_zero, classKlein_eq_zero, classZ4_ne_classKlein). NOT formalised (BLACK BOX, cited not re-proved): that this bar/reduced complex COMPUTES group cohomology of C_2 and its identification with the abstract LHS fibre edge E_2^{0,2} = H^2(D;M)^Gamma -- Brown, Cohomology of Groups, VI.9 (cyclic periodicity); LHS placement in h2cluster-lhs-transgression. Do NOT claim the general fibre-edge identification (that is the open PROVE node). UNIFIED 2026-09-18: this engine is the n=m=2 case of the single parametrised engine cyclic-h2-gcd-engine (H^2(C_n;Z/m)=Z/gcd(n,m)); see fibre_edge_recovers in projects/lean/2026-09-18-cyclic-h2-gcd.lean. This node remains valid and lean-verified.",
+ "sources": [
+  "2605.11903"
+ ],
+ "tree": {
+  "id": "root",
+  "approach": "Fibre-edge H^2 via trivial-coefficient collapse of the norm map, H^2(Z/2;Z/2)=Z/2, with split (Klein) vs nonsplit (Z/4 carry) Schreier witnesses, formalised sorry-free in Lean 4 core. Additive twin of the base-edge cyclic engine.",
+  "trust": "lean-verified",
+  "file": null,
+  "lean": "FibreH2.classZ4_ne_classKlein",
+  "children": [
+   {
+    "id": "bar-complex-and-cohomology",
+    "approach": "The normalized bar cochain complex of C_2 (trivial Z/2 coeffs): coboundary maps d1, d2, the identity d2 o d1 = 0 (d2_comp_d1), every normalized 2-cochain is a cocycle so Z^2 =~ Z/2 (twoCocycle_of_normalized); H2 := Quotient(cobSetoid) with Add/Zero/Neg and abelian-group laws; mk a = mk b <-> a = b (H2.mk_eq_iff), mk a = 0 <-> a = 0 (H2.mk_eq_zero_iff). Sorry-free; axioms propext + Quot.sound.",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "FibreH2.H2.mk_eq_iff",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "split-nonsplit-witnesses",
+    "approach": "The two concrete Schreier factor sets and their classes: fZ4 = carry cocycle a AND b (nonsplit Z/4), fKlein = constant 0 (split Klein). Both are 2-cocycles (fZ4_cocycle, fKlein_cocycle); fKlein is a coboundary (fKlein_isCoboundary); fZ4 is NOT a coboundary of any 1-cochain (fZ4_not_coboundary). Verdict: [Z/4] != 0 = [Klein] (classZ4_ne_zero, classKlein_eq_zero, classZ4_ne_classKlein). Machine-checked (Bool/decide). These are the concrete prunability defect (nonzero) vs prunable control (zero) inputs to the K_{2,3} decoupling witness.",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "FibreH2.classZ4_ne_classKlein",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "resolution-computes-group-cohomology",
+    "approach": "BLACK BOX (cited, not formalised): that this normalized bar / reduced 2-periodic complex COMPUTES the group cohomology of C_2, and its identification with the abstract LHS fibre edge E_2^{0,2} = H^2(D;M)^Gamma. Cyclic-group periodicity / Tate cohomology; LHS placement in h2cluster-lhs-transgression.",
+    "trust": "published",
+    "file": null,
+    "role": "premise",
+    "publication": "K. S. Brown, Cohomology of Groups, GTM 87, Springer 1982, VI.9 (Tate cohomology of cyclic groups); MacBeth PROVE 2026-09-17 (2026-09-17-h2cluster-lhs-transgression.tex)",
+    "children": []
+   }
+  ]
+ }
+}

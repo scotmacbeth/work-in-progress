@@ -174,7 +174,7 @@
     "approach": "claim K_{2,3}'s non-prunability IS specifically the loop-subgroup failure (loops at S2 not additive subgroup of Z/4)",
     "role": "attempt",
     "trust": "speculative",
-    "reason": "Lemma B is one-directional (necessary not sufficient), so (9)-failure alone does not force non-subgroup. UPDATE 2026-09-17: full K_{2,3} data now IN HAND (arXiv:2410.10717 Ex 4.29/Table 3, source added to index); computed witness prunability-fibre-edge-witness-k23 confirms loops(S2)={0,3}, loops(S3)={0,1} are NOT additive subgroups of (Z/4,+) => the loop-subgroup failure IS present. BUT this rests on reading +_lambda=(Z/4,+) (Ferri Counterexample 5.2 convention; the star \u2022_lambda is quasigroup-only), and the general structural claim is still not proved. Separation (Cor k23) is unconditional; this finer claim stays speculative.",
+    "reason": "Lemma B is one-directional (necessary not sufficient), so (9)-failure alone does not force non-subgroup. UPDATE 2026-09-17: full K_{2,3} data now IN HAND (arXiv:2410.10717 Ex 4.29/Table 3, source added to index); computed witness prunability-fibre-edge-witness-k23 confirms loops(S2)={0,3}, loops(S3)={0,1} are NOT additive subgroups of (Z/4,+) => the loop-subgroup failure IS present. BUT this rests on reading +_lambda=(Z/4,+) (Ferri Counterexample 5.2 convention; the star •_lambda is quasigroup-only), and the general structural claim is still not proved. Separation (Cor k23) is unconditional; this finer claim stays speculative.",
     "file": null,
     "children": []
    },
@@ -190,11 +190,11 @@
     ],
     "file": null,
     "children": [],
-    "note_2026-09-24": "CORRECTED (partial-pruning-bilinear-obstruction): base summand H\u00b2_base=0 for proper-D pruning (coarse-per-component, spanning tree) -- CONFIRMED. But vertex summand is SKEW-BRACE H\u00b2 (bilinear [\u03a9]), NOT group cohomology H\u00b2(\u03c0_\u00b7;M) as guessed, and NOT even H\u00b2(\u03c0_\u00b7)\u00d7H\u00b2(\u03c0_+) (W4 witness). Group-cohomology reading WITHDRAWN. Full K\u00fcnneth iso remains speculative."
+    "note_2026-09-24": "CORRECTED (partial-pruning-bilinear-obstruction): base summand H²_base=0 for proper-D pruning (coarse-per-component, spanning tree) -- CONFIRMED. But vertex summand is SKEW-BRACE H² (bilinear [Ω]), NOT group cohomology H²(π_·;M) as guessed, and NOT even H²(π_·)×H²(π_+) (W4 witness). Group-cohomology reading WITHDRAWN. Full Künneth iso remains speculative."
    },
    {
     "id": "prunability-fibre-edge-witness-k23",
-    "approach": "COMPUTED (2026-09-17): explicit witnesses that Ferri's prunability obstruction and MacBeth's multiplicative ZS holonomy [omega] DECOUPLE onto the two edges of the LHS spectral sequence of the ZS extension 1->D->pi->Gamma->1 (base edge E_2^{2,0}=H^2(Gamma;M^D) hosts [omega]; fibre edge E_2^{0,2}=H^2(D;M)^Gamma hosts the additive/prunability class [pi]). THREE machine-checked witnesses (script scratch/2026-09-17-prunability-fibre-edge.py runs clean): (W1) Ferri's REAL K_{2,3} from arXiv:2410.10717 (JPAA 229 (2025) art.108036, Ex 4.29 / Table 3): additive group (Z/4,+); stars \u2022_lambda are LEFT QUASIGROUPS not groups (machine-checked non-comm/non-assoc); connected degree-2 groupoid; loops(S2)={0,3}, loops(S3)={0,1} are NOT additive subgroups of (Z/4,+) => NON-prunable (Ferri Counterexample 5.2). Base edge H^2(Gamma;M^D)=0 (connected => coarse base ~ point => Gamma~1) so [omega]=0; fibre edge H^2(D;M)^Gamma=H^2(Z/2;{0,2})=Z/2 with [pi]=nonzero generator (extension 0->{0,2}->Z/4->Z/2->0 nonsplit at BOTH stars, cocycle f(1,1)=2 not a coboundary). So [omega]=0 AND [pi]!=0. (W2) synthetic Z/2 x Coarse({0,1}) with stars Z/4: same decoupling [omega]=0, [pi]!=0. (W3) prunable Klein-V4 CONTROL (star extension splits): BOTH edges 0, isolating the fibre edge as the genuine prunability detector. HONEST SCOPE: this is COMPUTED (concrete witnesses), NOT proved, NOT general. The verdict uses +_lambda=(Z/4,+) (Ferri's convention); 'additive subgroup' is meaningful only w.r.t. that genuine group (the quasigroup \u2022_lambda is not a group). The GENERAL structural identification -- that the categorical LHS fibre edge literally hosts the Ferri prunability class for arbitrary (esp. quasigroup-only / non-group / dynamical) stars and general twisted/non-abelian coefficients -- is NOT established here; it remains the open speculative target (node cohomological-home-of-plus-action-obstruction / prunability-is-fibre-edge-class). Upgrades the 09-16 separation ([omega] PERP prunability) from synthetic to Ferri's actual K_{2,3} and instantiates the proved LHS-transgression two-edge picture on concrete numbers.",
+    "approach": "COMPUTED (2026-09-17): explicit witnesses that Ferri's prunability obstruction and MacBeth's multiplicative ZS holonomy [omega] DECOUPLE onto the two edges of the LHS spectral sequence of the ZS extension 1->D->pi->Gamma->1 (base edge E_2^{2,0}=H^2(Gamma;M^D) hosts [omega]; fibre edge E_2^{0,2}=H^2(D;M)^Gamma hosts the additive/prunability class [pi]). THREE machine-checked witnesses (script scratch/2026-09-17-prunability-fibre-edge.py runs clean): (W1) Ferri's REAL K_{2,3} from arXiv:2410.10717 (JPAA 229 (2025) art.108036, Ex 4.29 / Table 3): additive group (Z/4,+); stars •_lambda are LEFT QUASIGROUPS not groups (machine-checked non-comm/non-assoc); connected degree-2 groupoid; loops(S2)={0,3}, loops(S3)={0,1} are NOT additive subgroups of (Z/4,+) => NON-prunable (Ferri Counterexample 5.2). Base edge H^2(Gamma;M^D)=0 (connected => coarse base ~ point => Gamma~1) so [omega]=0; fibre edge H^2(D;M)^Gamma=H^2(Z/2;{0,2})=Z/2 with [pi]=nonzero generator (extension 0->{0,2}->Z/4->Z/2->0 nonsplit at BOTH stars, cocycle f(1,1)=2 not a coboundary). So [omega]=0 AND [pi]!=0. (W2) synthetic Z/2 x Coarse({0,1}) with stars Z/4: same decoupling [omega]=0, [pi]!=0. (W3) prunable Klein-V4 CONTROL (star extension splits): BOTH edges 0, isolating the fibre edge as the genuine prunability detector. HONEST SCOPE: this is COMPUTED (concrete witnesses), NOT proved, NOT general. The verdict uses +_lambda=(Z/4,+) (Ferri's convention); 'additive subgroup' is meaningful only w.r.t. that genuine group (the quasigroup •_lambda is not a group). The GENERAL structural identification -- that the categorical LHS fibre edge literally hosts the Ferri prunability class for arbitrary (esp. quasigroup-only / non-group / dynamical) stars and general twisted/non-abelian coefficients -- is NOT established here; it remains the open speculative target (node cohomological-home-of-plus-action-obstruction / prunability-is-fibre-edge-class). Upgrades the 09-16 separation ([omega] PERP prunability) from synthetic to Ferri's actual K_{2,3} and instantiates the proved LHS-transgression two-edge picture on concrete numbers.",
     "role": "attempt",
     "trust": "computed",
     "review": "Rick, 2026-09-25 (item 283). The COMPUTED facts survive ([omega]=0, [pi]!=0 on W1/W2/W3). But Rick refutes the INTERPRETATION 'fibre edge = genuine prunability detector' (already downgraded to speculative/refuted at node cohomological-home-of-plus-action-obstruction, 2026-09-18): the fibre class [pi] is a property of the ADDITIVE GROUP Z/4 ALONE (extension 0->{0,2}->Z/4->Z/2->0), identical at S2/S3 and for ANY Z/4-additive skew-brace groupoid prunable or not -- it does NOT see the loop sets, so it cannot be the prunability obstruction (which is a condition ON the loop sets). CONFOUNDED CONTROL: Klein-vs-Z/4 changes the additive group, not just prunability; the needed control is 'prunable WITH additive group Z/4', on which the fibre class would still be nonzero. A correct prunability class would be built from loops(x) subset (A,+) (e.g. failure of +-closure) + a map into E_2^{0,2} -- construction open ('something like it may be right', Rick).",
@@ -412,14 +412,14 @@
      },
      {
       "id": "partial-pruning-bilinear-obstruction",
-      "approach": "PROVED+REFUTATION (2026-09-24 deep-work, file 2026-09-24-partial-pruning-bilinear-obstruction.tex). The PROVE.md target -- 'for a PROPER ideal loop sub-bundle D \u228a G^loop, G\u2245(G/D)\u25b6\u25c1D iff the multiplicative vertex Schreier class [\u03c9]\u2208H\u00b2(\u0393;D_ab)=0' -- is FALSE. REFUTED: Klein-four skew brace on additive Z/4 (\u03bb1=\u03bb3=neg \u27f9 mult group V4), D={0,2}: mult extension 1\u2192Z/2\u2192V4\u2192Z/2\u21921 SPLITS ([\u03c9]=0) yet EVERY Ferri bicrossed (B/D)\u25b6\u25c1D has additive group Z/2\u00d7Z/2\u2260Z/4 (order-2 kernel forces \u03b3,\u03c6=id), so no decomposition -- the ADDITIVE Schreier class obstructs. CORRECTED THEOREM (one-object=skew brace, PROVED via Ferri Thm 3.18): G\u2245(G/D)\u25b6\u25c1D \u27fa skew-brace SES 0\u2192D\u2192G\u2192G/D\u21920 splits \u27fa D has a sub-skew-brace complement (subset closed under +,\u00b7, trivial \u2229D, complementary order). The obstruction is a BILINEAR skew-brace 2-class [\u03a9] mapping onto BOTH the additive [\u03c9_+] and multiplicative [\u03c9_\u00b7] group Schreier classes; its vanishing is STRICTLY stronger than the vanishing of both. SEPARATION (4 witnesses hand+machine verified): W2 Z/4//V4 (mult splits, add obstructs); W3 Z2\u00b2//Z4 (add splits, mult obstructs -- dual); W4 Z2\u00d7Z4 (BOTH split, NO common complement -- crown, obstruction finer than the pair). CONNECTED: vertex-skew-brace splitting is NECESSARY (proved: identity-on-objects quotient \u27f9 QSKB section restricts to a skew-brace section of L_\u03b6\u2192\u0393); contrapositive kills every thickening of a non-decomposing vertex. Corrects h2cat-product-decomposition: base summand=0, vertex summand=skew-brace H\u00b2 (NOT group H\u00b2).",
+      "approach": "PROVED+REFUTATION (2026-09-24 deep-work, file 2026-09-24-partial-pruning-bilinear-obstruction.tex). The PROVE.md target -- 'for a PROPER ideal loop sub-bundle D ⊊ G^loop, G≅(G/D)▶◁D iff the multiplicative vertex Schreier class [ω]∈H²(Γ;D_ab)=0' -- is FALSE. REFUTED: Klein-four skew brace on additive Z/4 (λ1=λ3=neg ⟹ mult group V4), D={0,2}: mult extension 1→Z/2→V4→Z/2→1 SPLITS ([ω]=0) yet EVERY Ferri bicrossed (B/D)▶◁D has additive group Z/2×Z/2≠Z/4 (order-2 kernel forces γ,φ=id), so no decomposition -- the ADDITIVE Schreier class obstructs. CORRECTED THEOREM (one-object=skew brace, PROVED via Ferri Thm 3.18): G≅(G/D)▶◁D ⟺ skew-brace SES 0→D→G→G/D→0 splits ⟺ D has a sub-skew-brace complement (subset closed under +,·, trivial ∩D, complementary order). The obstruction is a BILINEAR skew-brace 2-class [Ω] mapping onto BOTH the additive [ω_+] and multiplicative [ω_·] group Schreier classes; its vanishing is STRICTLY stronger than the vanishing of both. SEPARATION (4 witnesses hand+machine verified): W2 Z/4//V4 (mult splits, add obstructs); W3 Z2²//Z4 (add splits, mult obstructs -- dual); W4 Z2×Z4 (BOTH split, NO common complement -- crown, obstruction finer than the pair). CONNECTED: vertex-skew-brace splitting is NECESSARY (proved: identity-on-objects quotient ⟹ QSKB section restricts to a skew-brace section of L_ζ→Γ); contrapositive kills every thickening of a non-decomposing vertex. Corrects h2cat-product-decomposition: base summand=0, vertex summand=skew-brace H² (NOT group H²).",
       "role": "attempt",
       "trust": "proved",
       "file": "2026-09-24-partial-pruning-bilinear-obstruction.tex",
       "children": [
        {
         "id": "ferri-split-lemma-thm318",
-        "approach": "Ferri Thm 3.18 + Prop 3.23 + Cor 3.24: a SPLIT SES of QSKB with kernel N=N^loop \u27f9 G\u2245H\u25b6\u25c1N (unilateral bicrossed product); Rem 3.19-3.20: one object \u27f9 H^0 a point \u27f9 heaps degenerate to ordinary group ops (Facchini-Pompili skew-brace semidirect product). Deep-read (confirmed 2026-09-23).",
+        "approach": "Ferri Thm 3.18 + Prop 3.23 + Cor 3.24: a SPLIT SES of QSKB with kernel N=N^loop ⟹ G≅H▶◁N (unilateral bicrossed product); Rem 3.19-3.20: one object ⟹ H^0 a point ⟹ heaps degenerate to ordinary group ops (Facchini-Pompili skew-brace semidirect product). Deep-read (confirmed 2026-09-23).",
         "role": "premise",
         "trust": "proved",
         "sources": [
@@ -429,28 +429,28 @@
        },
        {
         "id": "refutation-klein-four-Z4",
-        "approach": "Klein-four skew brace on additive Z/4 (\u03bb1=\u03bb3=neg), D={0,2}: [\u03c9_\u00b7]=0 (V4=Z2\u00d7Z2 splits) but B\u2247(B/D)\u25b6\u25c1D since any such product has additive group Z2\u00d7Z2\u2260Z/4 (order-2 kernel \u27f9 \u03b3,\u03c6 forced identity). Elementary; brute-forced over ALL subsets (no closure bug).",
+        "approach": "Klein-four skew brace on additive Z/4 (λ1=λ3=neg), D={0,2}: [ω_·]=0 (V4=Z2×Z2 splits) but B≇(B/D)▶◁D since any such product has additive group Z2×Z2≠Z/4 (order-2 kernel ⟹ γ,φ forced identity). Elementary; brute-forced over ALL subsets (no closure bug).",
         "role": "premise",
         "trust": "proved",
         "children": []
        },
        {
         "id": "corrected-equivalence-1-2-3",
-        "approach": "One-object: (1) G\u2245(G/D)\u25b6\u25c1D \u27fa (2) skew-brace SES splits \u27fa (3) sub-skew-brace complement. (2)\u27fa(3) standard section/complement; (2)\u27f9(1) Ferri Thm 3.18; (1)\u27f9(2) H\u00d7{0} closed under bicrossed +. Any complement is simultaneously additive & multiplicative \u27f9 both group Schreier classes necessary.",
+        "approach": "One-object: (1) G≅(G/D)▶◁D ⟺ (2) skew-brace SES splits ⟺ (3) sub-skew-brace complement. (2)⟺(3) standard section/complement; (2)⟹(1) Ferri Thm 3.18; (1)⟹(2) H×{0} closed under bicrossed +. Any complement is simultaneously additive & multiplicative ⟹ both group Schreier classes necessary.",
         "role": "attempt",
         "trust": "proved",
         "children": []
        },
        {
         "id": "separation-four-witnesses",
-        "approach": "(mult,add,sb)-split triple enumerated over additive groups Z/4,Z2\u00b2,Z/6,Z/8,Z/9,Z2\u00d7Z4 (skew braces via \u03bb-map). All rows compatible with sb\u27f9mult\u2227add occur; sb\u27f9mult\u2227add always holds (no impossible row). W4 on Z2\u00d7Z4 (10 instances): mult complement {(0,0),(1,1)} AND add complement {(0,0),(1,0)} exist but NO common sub-skew-brace complement \u27f9 obstruction strictly finer than ([\u03c9_\u00b7],[\u03c9_+]). Machine-checked + W4 hand-verified.",
+        "approach": "(mult,add,sb)-split triple enumerated over additive groups Z/4,Z2²,Z/6,Z/8,Z/9,Z2×Z4 (skew braces via λ-map). All rows compatible with sb⟹mult∧add occur; sb⟹mult∧add always holds (no impossible row). W4 on Z2×Z4 (10 instances): mult complement {(0,0),(1,1)} AND add complement {(0,0),(1,0)} exist but NO common sub-skew-brace complement ⟹ obstruction strictly finer than ([ω_·],[ω_+]). Machine-checked + W4 hand-verified.",
         "role": "attempt",
         "trust": "computed",
         "children": []
        },
        {
         "id": "connected-vertex-necessity",
-        "approach": "Connected G: G\u2245(G/D)\u25b6\u25c1D \u27f9 vertex skew brace L_\u03b6\u2245(L_\u03b6/D_\u03b6)\u25b6\u25c1D_\u03b6. Pruning by a loop sub-bundle is identity-on-objects, so a QSKB splitting s has s^0=id, fixes \u03b6, maps loops \u0393=(G/D)(\u03b6,\u03b6) into L_\u03b6 additively+multiplicatively \u27f9 skew-brace section of L_\u03b6\u2192\u0393. Contrapositive: a non-decomposing vertex obstructs every connected thickening.",
+        "approach": "Connected G: G≅(G/D)▶◁D ⟹ vertex skew brace L_ζ≅(L_ζ/D_ζ)▶◁D_ζ. Pruning by a loop sub-bundle is identity-on-objects, so a QSKB splitting s has s^0=id, fixes ζ, maps loops Γ=(G/D)(ζ,ζ) into L_ζ additively+multiplicatively ⟹ skew-brace section of L_ζ→Γ. Contrapositive: a non-decomposing vertex obstructs every connected thickening.",
         "role": "attempt",
         "trust": "proved",
         "children": []
@@ -541,6 +541,16 @@
            "2601.12371"
           ],
           "children": []
+         },
+         {
+          "id": "crespo-coprime-omega-orthogonal-residue",
+          "role": "attempt",
+          "trust": "computed",
+          "approach": "COMPUTED witness (skew braces on all additive groups <=24, GV-enumerator, 0 axiom violations): coprime (|D|,|H|) forces splitting/[Omega]=0 with 0/111 failures; non-coprime fails 582/1236. Coprimality forces [Omega]=0 for an order-arithmetic (Schur-Zassenhaus) reason ORTHOGONAL to the residue nu -- nu survives non-trivially in 70/111 coprime splittings (S3: D=A3 H=Z2 inverts; A4: D=V4 H=Z3 3-cycle). SHARPENS (partially refutes) the 'coprimality trivializes nu' hypothesis.",
+          "file": "2026-09-30-crespo-coprime-omega-witness.md",
+          "sources": [],
+          "children": [],
+          "note_2026-09-30": "FINITE-SWEEP CAVEAT: 111/0 is a strong-but-finite sweep over the sixteen listed additive groups of order <=24 (Z4, Z2^2, Z6, S3, Z8, Z2xZ4, Z2^3, D4, Q8, Z12, Z2xZ6, D6, Dic3, A4, Z15, S4), NOT a proof. 'residue trivial' = image of lambda|_D in Aut(D) modulo Inn(D) and modulo the D-action. CONFIRMS the dream hypothesis in its splitting claim, REFUTES it in its causal/residue claim. Scripts scratch/2026-09-30-crespo-omega-splitting.py, scratch/2026-09-30-crespo-omega-output.txt."
          },
          {
           "id": "general-kernel-open",
@@ -736,22 +746,135 @@
                  },
                  {
                   "id": "o-nu-g16-three-way-lock",
-                  "trust": "computed",
+                  "trust": "peer-reviewed",
                   "role": "attempt",
-                  "approach": "NONtrivial kernel L={1,5} (outside RY): 4b=2(nu*sigma-1) mod8 on all 24 genuine |G|=16 braces. Residue+circle enter ONLY through product nu*sigma (mod4), locked to [beta].",
-                  "file": "../scratch/2026-09-29-G16-residue-relation.py",
+                  "approach": "PROVED (H=Z/2, by hand, 112/112). Single skew-brace-axiom instance x o (u+u)=(x o u)-x+(x o u) with x in D, u=s(1), b=2u: LHS=x+lam^D_x(b), RHS=x+2*delta_1(x)+b => (lam^D_x -1)b = 2*delta_1(x) = 2(nu_1 sigmahat_1(x) - x) for ALL x. At x=gen: (lam^D_1 -1)b = 2(nu*sigmahat -1) mod|D|; D=Z/8 gives 4b=2(nu sigmahat -1) mod8. CORRECTION: the twist is sigmahat = o-CONJUGATION s(h)^-1 o x o s(h), NOT additive sigma_+ (104/104 vs 80/104).",
+                  "file": "2026-09-30-general-nontrivial-onu.tex",
                   "note_2026-09-30": "SUBSUMED by the general lock (lambda^D_1-1)*b = 2(nu*sigma-1) mod|D| (see o-nu-affine-torsor). Specializing D=Z/8 (lambda^D_1-1=4) recovers 4b=2(nu*sigma-1) mod8 exactly; D=Z/4-nontriv gives 2b=0 mod4 => [beta]=0. Verified on the non-trivial-kernel families D=Z/8 and D=Z/4 via scratch/2026-09-30-o-nu-{nontrivial-kernel,nontrivial-step2-imker,affine-predictor}.py.",
-                  "children": []
+                  "children": [],
+                  "date": "2026-09-30",
+                  "review": "Rick, 2026-10-02 (UID198; artifact proofs/reviews/2026-10-02-review-macbeth-o-nu-socle.pdf). Independently re-derived the lock (lam^D_x-1)b=2 delta_1(x)=2(nu_1 sigmahat_1(x)-x) and reproduced the 112/112 (and |G|=16 24) counts; 'checked-sober' in his registry, scope abelian (G,+), offset section-dependent/class 0."
                  },
                  {
                   "id": "o-nu-affine-torsor",
-                  "trust": "computed",
+                  "trust": "proved",
                   "role": "attempt",
-                  "approach": "SHARPENED (2026-09-30, 16/16 cross-validated). The general non-trivial-brace-kernel obstruction is AFFINE: o_nu([beta]) = [Q^o beta] - c_{[nu],sigma}, computed in the MULTIPLICATIVE group (D,o) [NOT (D,+); for D=Z/8 the (D,+) version fails d^2=0 on 2/16 triplets]. Here Q^o and A are the (D,o)-valued operators and c_{[nu],sigma} is the class of the ambient defect (lambda^D_d - 1); for H=Z/2, c = class of 2(nu*sigma-1). Then im phi^+ = o_nu^{-1}(0), an AFFINE COSET of H^2_+; it contains the origin iff c_{[nu],sigma}=0. CORRECTED HYPOTHESIS: the 'torsor with no basepoint' feature occurs iff L (subset) Aut(D) PROPERLY and nu*sigma is non-socle -- NOT mere non-triviality of D. WITNESS (torsor): D=Z/8, L={1,5} (proper subgroup of Aut(Z/8)), 4 triplets give im phi^+={[beta]!=0}, no basepoint. COUNTER (NO torsor): the nontrivial brace on Z/4 has L={1,3}=Aut(Z/4), offset c=0, im phi^+={0} ALWAYS based. General lock (H=Z/2): (lambda^D_1-1)*b = 2(nu*sigma-1) mod|D|; D=Z/8 => 4b=2(nu*sigma-1) mod8; D=Z/4-nontriv => 2b=0 mod4 => forces [beta]=0. This is a sharper COMPUTED claim, not a proof; the structural proof needs (D,o)-valued multiplicative cohomology and identification of c as the transgressed defect class. General affine-torsor proof OPEN.",
-                  "file": "2026-09-29-solvability-obstruction-o-nu.tex",
+                  "approach": "PROVED (H=Z/2) = the AFFINE STRUCTURE (Rick-reproduced 2026-10-02). From the lock, o_nu([beta])=(lam^D_1-1)b - 2(nu sigmahat -1) is AFFINE over (D,+): linear part the (D,+)-hom [beta]->(lam^D_1-1)b on H^2_+=D/2D, constant offset 2(nu sigmahat -1). im phi^+ = o_nu^-1(0), a coset of ker(lam^D_1-1). NO-BASEPOINT CRITERION [CORRECTED 2026-10-02, Rick referee UID198]: the earlier biconditional 'offset!=0 <=> L=im(lam^D) proper in Aut(D) AND nu*sigmahat non-socle' is REFUTED (sufficiency fails). COUNTEREXAMPLE D=Z/8, L={1,3} and {1,7}: both PROPER in Aut(Z/8)={1,3,5,7} yet b EVEN on all triples (192/192), so basepoint EXISTS. ROOT CAUSE: the offset c^d=d_+[delta_.(d)] is a SECTION-DEPENDENT cochain (its class is always 0), so neither 'offset!=0' nor 'delta_. not in Hom' is a well-defined per-class predicate; the naive per-section reading also fails here (delta_. not in Hom on 96/192 sections yet b even). CORRECTED INVARIANT CRITERION [DEMOTION-WITH-REFINEMENT, reviewed Rick UID200 2026-10-02]: the proposed biconditional 'basepoint EXISTS <=> EXISTS a section in the triplet class with delta_.(d) in Hom(H,D) for all d (= section-invariant lock-solvability)' is split by Rick's second referee pass (UID200; he reproduced the 24/24,24/24,24/24,32/32 counts exactly). (i) FORWARD (basepoint => EXISTS good section) HOLDS for GENERAL H -- Rick gives a two-line proof; ENDORSED by Rick (reviewer-endorsed; MacBeth has NOT yet read the two-line proof, so NOT self-graded proved). (ii) The UNCONDITIONAL general-H CONVERSE (EXISTS good section => basepoint) is REFUTED by Rick: (a) PER BRACE, the trivial brace on Z/16; (b) PER TRIPLET CLASS, Z/4xZ/4 with D=Z/2xZ/4, |L|=2 -- NO based member among ALL abelian groups of order 16. (iii) SURVIVING BICONDITIONAL [computed, H=Z/2 under the added hypothesis Fix(L) subset-of 2D]: with Fix(L)<=2D, basepoint EXISTS <=> EXISTS a good section; Rick proves the converse under this hypothesis, which covers EVERY case MacBeth checked. MacBeth's own checked-cases claim stays [computed]: verified per-brace 24/24 (L={1,3}), 24/24 (L={1,7}), 24/24 (L={1,5}), 32/32 (L=Aut) -- all satisfy Fix(L)<=2D. CLEAN NO-BASEPOINT FAMILY [proved H=Z/2]: L={1,5} (lam_g=5 => lam_g-1=4 annihilates 2D, so b-parity D/2D is seen) with nu sigmahat=3 mod4; there 4 triplets have no basepoint on D=Z/8 (|G|=16; a prior 'Z/16' here and in the paper Prop.2 was the misprint Rick flagged UID200 -- 4 annihilates 2(Z/8) but NOT 2(Z/16)). D=Z/4 nontriv (L=Aut => offset=0, no torsor, b=0 forced 8/8) stands. Verification: scratch/2026-10-02-verify-rick-z8-torsor.py.",
+                  "file": "2026-09-30-general-nontrivial-onu.tex",
                   "evidence": "scratch/2026-09-30-o-nu-nontrivial-kernel.py, scratch/2026-09-30-o-nu-nontrivial-step2-imker.py, scratch/2026-09-30-o-nu-affine-predictor.py (16/16 cross-validated; D=Z/8 torsor witness, D=Z/4-nontriv non-torsor counter).",
                   "note_2026-09-30": "HONEST CORRECTION (not a demotion). Prior text conflated 'non-trivial kernel' with the torsor phenomenon. Corrected: torsor <=> L (proper subset) Aut(D) AND nu*sigma non-socle; D=Z/4-nontriv has L=Aut(D), offset 0, no torsor. The PROVED trivial-kernel theorem (offset=0, (D,+)=(D,o)) is UNAFFECTED -- no contradiction. Scripts: scratch/2026-09-30-o-nu-{nontrivial-kernel,nontrivial-step2-imker,affine-predictor}.py.",
-                  "children": []
+                  "children": [
+                   {
+                    "id": "lean-o-nu-torsor-corrected",
+                    "trust": "lean-verified",
+                    "role": "attempt",
+                    "date": "2026-10-02",
+                    "approach": "Rick's D=Z/8 torsor COUNTEREXAMPLE + the CORRECTED invariant criterion, machine-checked Mathlib-free Lean 4 core (v4.30.0) decide, sorry-free; file lean/2026-10-02-o-nu-torsor-corrected.lean. Builds (D,+)=Z/8 and the THREE generator actions lam^D_1 = .3 (L={1,3}), .7 (L={1,7}), with the common offset 2(nu*sigmahat-1), from the operations. Certifies by decide: (1) lock3_forces_bEven / lock7_forces_bEven -- for L={1,3} (lockLHS=2b) and L={1,7} (lockLHS=6b), the lock 2b/6b=offset FORCES b EVEN, so a basepoint ALWAYS exists (basepoint_exists3/7 give explicit even solutions b in {0,2}); this REFUTES the shorthand 'L proper in Aut(D) => no basepoint' (same hypothesis as the clean L={1,5} case, opposite conclusion). (2) deltaIsHom_iff_offset_zero -- delta_. in Hom(H,D) <=> 2(nu*sigmahat-1)=0 <=> offset=0 <=> nu*sigmahat !=3 mod4 (the per-section basepoint condition). (3) corrected_criterion_L13/L17/L15base/L15nobase -- the CORRECTED criterion 'basepoint <=> EXISTS a hom section' holds on representative brace orbits (section (nu,sigmahat,b) reps from the holomorph enumeration, b the H^2_+=D/2D class), including the genuine L={1,5} no-basepoint brace on Z/8 (both sides fail). (4) naive_criterion_fails -- on an L={1,3} brace a section with delta_. NOT in Hom (nu*sigmahat=3) still realises [beta]=0, so the naive per-section reading is false; only the existential-over-sections criterion is correct. Axiom footprint: packaged oNu_torsor_corrected reports 'does not depend on any axioms' (ZERO axioms). HONEST SCOPE: a finite D=Z/8 oracle for lam-images {1,3},{1,5},{1,7}; the section orbits and per-brace b-parity are genuine enumeration data (tabulated reps, cross-checked by decide, b-parity also forced by the lock); certifies the corrected criterion ON THE WITNESSES, does NOT upgrade the general-H [computed] invariant criterion. Cross-checked numerically against scratch/2026-10-02-verify-rick-z8-torsor.py (b even 192/192 for L={1,3} and {1,7}; per-brace [exists hom section]==[basepoint] 24/24 each).",
+                    "file": "2026-09-30-general-nontrivial-onu.tex",
+                    "lean": "ONuTorsorCorrected.oNu_torsor_corrected",
+                    "sources": [
+                     "2601.12371"
+                    ],
+                    "children": []
+                   },
+                   {
+                    "id": "lean-o-nu-torsor-converse-uid200",
+                    "trust": "lean-verified",
+                    "role": "attempt",
+                    "date": "2026-10-02",
+                    "approach": "Rick UID200 torsor-CONVERSE counterexample (case a) + the Fix(L)<=2D repairing hypothesis, machine-checked Mathlib-free Lean 4 core (v4.30.0) kernel decide, sorry-free; file lean/2026-10-02-o-nu-torsor-converse-uid200.lean. Certifies CASE (a) of the UID200 refutation FROM FIRST PRINCIPLES (no enumeration oracle): on the TRIVIAL brace on G=Z/16 with ideal D=2Z/16~Z/8, H=Z/2, the circle product is + so lam=nu=id and sigmahat_h(x)=-s(h)+x+s(h)=x (abelian), whence delta=0 identically (delta_trivial_vanishes) => EVERY section is good => a good section EXISTS (hasGoodSection_trivialZ16); but b=beta(1,1)=2*s(1) with s(1) odd runs over {2,6,10,14}, none in 2D=4Z/16={0,4,8,12}, so [beta]!=0 for every section and NO basepoint exists (no_basepoint_trivialZ16; this is the non-split extension Z/8->Z/16->Z/2). Hence converse_fails_trivialZ16: EXISTS good section AND NOT basepoint -- the unconditional converse 'EXISTS good section => basepoint' is FALSE, machine-certified. Also decides the repairing hypothesis Fix(L)<=2D: the trivial brace VIOLATES it (fixL_trivial_not_subset, L={id} so Fix(L)=D, 1 not in 2D) -- exactly where the converse fails -- while the three Z/8 converse-HOLDING lam-images L={1,3},{1,5},{1,7} (lam=3,5,7) all SATISFY it (fixL_Z8_subset). Axiom footprint: packaged oNu_torsor_converse_uid200 = [propext, Quot.sound] (standard List/Decidable pair; no sorryAx, no native_decide). HONEST SCOPE: certifies converse-failure case (a) + the Fix(L)<=2D behaviour on the named witnesses; does NOT formalise case (b) (Z/4xZ/4, D=Z/2xZ/4, |L|=2, 'no based member among abelian order-16 groups' -- needs regular-subgroup enumeration, no oracle this session), nor the general-H forward direction, nor re-prove the conditional-converse biconditional (that is the companion lean-o-nu-torsor-corrected on Z/8). Numerically cross-checked in scratch (trivial-Z16 reproduction: delta all zero, good exists, b in {2,6,10,14}, no basepoint; Fix(L) 1/3/5/7 subset-2D = F/T/T/T).",
+                    "file": "2026-09-30-general-nontrivial-onu.tex",
+                    "lean": "ONuTorsorConverseUID200.oNu_torsor_converse_uid200",
+                    "sources": [
+                     "2601.12371"
+                    ],
+                    "children": []
+                   }
+                  ],
+                  "date": "2026-09-30",
+                  "review": "Rick, 2026-10-02 (UID198; artifact proofs/reviews/2026-10-02-review-macbeth-o-nu-socle.pdf). DUAL finding. ENDORSED: the affine structure and the lock (lam_x-1)b=2 delta_1(x) reproduced, counts 112/24 (scope: abelian (G,+)). REFUTED: the 'L proper in Aut(D) => no basepoint' sufficiency (D=Z/8 L={1,3},{1,7}); corrected to the section-invariant criterion. See approach CORRECTED block. || Rick, 2026-10-02 (UID200; artifact proofs/reviews/2026-10-02-o-nu-torsor-criterion-converse.md; Rick WIP commit 1325606 stamped 1504eff). SECOND PASS on the corrected section-invariant criterion. Reproduced 24/24,24/24,24/24,32/32. FORWARD direction endorsed general H (two-line proof). UNCONDITIONAL general-H CONVERSE REFUTED: trivial brace on Z/16 (per brace), Z/4xZ/4 with D=Z/2xZ/4 |L|=2 (per triplet class, no based member among abelian order-16 groups). Converse PROVED by Rick for H=Z/2 under Fix(L) subset-of 2D (covers all checked cases). Prop.2 misprint D=Z/16 -> Z/8 flagged. See approach CORRECTED block and note_2026-10-02.",
+                  "note_2026-10-02": "HONEST GRADING after Rick UID200. Node top-level trust stays 'proved' = the H=Z/2 AFFINE STRUCTURE only (Rick-reproduced, unaffected). The section-invariant basepoint criterion is DEMOTED-WITH-REFINEMENT: unconditional general-H converse REFUTED; forward direction (general H) and restricted converse (H=Z/2 under Fix(L)<=2D) are Rick-ENDORSED but MacBeth has NOT yet read his two-line proofs, so they are held at reviewer-endorsed / [computed], NOT self-granted proved or peer-reviewed. ACTION TO UPGRADE: read Rick's two-line forward proof and his Fix(L)<=2D converse proof (in WIP commit 1325606); that would upgrade the forward direction and the restricted converse to proved/peer-reviewed.",
+                  "note_2026-10-02b": "LEAN: UID200 converse-failure CASE (a) now MACHINE-CERTIFIED (child lean-o-nu-torsor-converse-uid200, [lean-verified], file lean/2026-10-02-o-nu-torsor-converse-uid200.lean). From first principles: trivial brace on Z/16 => delta=0 => good section EXISTS but no basepoint (b=2*odd never in 2D) => unconditional converse FALSE. Also decides Fix(L)<=2D: VIOLATED by the trivial brace (where converse fails), SATISFIED by the Z/8 witnesses (where converse holds). Case (b) (Z/4xZ/4, D=Z/2xZ/4, |L|=2) NOT formalised (needs enumeration oracle); the forward direction and restricted-converse biconditional remain reviewer-endorsed/[computed] as before."
+                 },
+                 {
+                  "id": "general-nontrivial-onu-2026-09-30",
+                  "trust": "proved",
+                  "role": "attempt",
+                  "date": "2026-09-30",
+                  "file": "2026-09-30-general-nontrivial-onu.tex",
+                  "sources": [
+                   "2601.12371"
+                  ],
+                  "approach": "Non-trivial-brace-kernel o_nu, deep work 2026-09-30. PROVED core: (A) im phi^+ well-defined on H^2_+ via section-change (complex-free); (B) home=(D,o), twist=sigmahat (o-conjugation) [CORRECTS record]; (C) three-way lock by hand 112/112 [see sibling o-nu-g16-three-way-lock, o-nu-affine-torsor now proved]; defect delta_h=nu_h sigmahat_h-id. The im phi^+=o_nu^-1(0) statement rests on a coupling-form hypothesis validated 20/20 but not yet proved term-by-term: see sibling attempt onu-im-equals-ker-mod-coupling.",
+                  "children": [
+                   {
+                    "id": "onu-imphi-welldefined-sectionchange",
+                    "trust": "proved",
+                    "role": "premise",
+                    "approach": "Section change s'=theta+s => beta'=beta+d_+theta, taubar'=taubar o d_o theta1, both cocycles of SAME G => realisability constant on B^2_+-cosets. Rigorous, complex-free, no LV general-kernel cohomology.",
+                    "file": "2026-09-30-general-nontrivial-onu.tex",
+                    "children": []
+                   },
+                   {
+                    "id": "onu-home-circ-and-sigmahat-twist",
+                    "trust": "proved",
+                    "role": "premise",
+                    "approach": "taubar = factor set of (G,o) over (H,o), kernel (D,o), action sigmahat=o-conjugation. (D,+) mult complex fails d^2=0 (2/16). sigmahat beats sigma_+ 104/104 vs 80/104.",
+                    "file": "../scratch/2026-09-30-coupling-circ-fit.py",
+                    "children": []
+                   },
+                   {
+                    "id": "onu-defect-delta-intrinsic",
+                    "trust": "proved",
+                    "role": "premise",
+                    "approach": "delta_h = mu_h^-1 nu_h sigmahat_h - id = lam_x(s(h))-s(h) from RY (3.1) [general, no triviality]. Vanishes iff trivial-kernel collapse.",
+                    "file": "2026-09-30-general-nontrivial-onu.tex",
+                    "children": []
+                   },
+                   {
+                    "id": "lean-o-nu-g16-lock",
+                    "trust": "lean-verified",
+                    "role": "attempt",
+                    "date": "2026-10-01",
+                    "approach": "|G|=16 three-way lock 4b=2(nu*sigmahat-1) mod 8 + torsor dichotomy (L subset-of Aut(D) witness D=Z/8 L={1,5}, plus D=Z/4 L=Aut(Z/4) counter) machine-checked, Mathlib-free Lean 4 core (v4.30.0) decide, sorry-free; file lean/2026-09-30-o-nu-g16-lock.lean. Builds (D,+),(D,o) and lam^D from the operations (lam^D_1=.5 on Z/8, .3 on Z/4), certifies by decide: lock lockEq <=> (b odd <=> nu*sigmahat=3 mod4); offset_dichotomy offset!=0 <=> nu*sigmahat=3 mod4 (torsor without basepoint); genuine_satisfies_lock the lock holds on all 12 reps/24 braces of the Python table (necessary condition); offset4_always_zero + counter_imphi_singleton the Z/4 counter offset vanishes forcing [beta]=0 (based, no torsor). Axiom footprint: ALL headline theorems (packaged oNu_g16_lock_and_dichotomy, lock, offset_dichotomy, genuine_satisfies_lock, offset4_always_zero, counter_imphi_singleton) report 'does not depend on any axioms' (ZERO axioms). HONEST SCOPE: certifies the finite |G|=16 lock/offset/based-vs-torsor split as a NECESSARY condition on every genuine (nu,sigmahat,b) triple; does NOT claim the lock characterises the genuine set (genuine subset-of lock-solutions: e.g. (nu,sigmahat)=(1,3) solves the lock yet is not genuine) nor re-encode the general-H coupling (sibling onu-general-H-kernel-coupling-star, cited). File field is the .tex (per lean-verified convention of lean-w4-noninjective / lean-additive-forgetful-descends); lean file path given in-approach.",
+                    "file": "2026-09-30-general-nontrivial-onu.tex",
+                    "lean": "ONuG16Lock.oNu_g16_lock_and_dichotomy",
+                    "sources": [
+                     "2601.12371"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 },
+                 {
+                  "id": "onu-im-equals-ker-mod-coupling",
+                  "trust": "computed",
+                  "role": "attempt",
+                  "date": "2026-09-30",
+                  "file": "2026-09-30-general-nontrivial-onu.tex",
+                  "approach": "im phi^+ = o_nu^-1(0), o_nu([beta])=[N(beta)] in C^3/A^o(Z^2_o). Follows IF coupling (c) <=> A^o(taubar)=N(beta) with A^o=P^o T o-linear over (D,o) and N affine in beta. Validated at operator level 20/20 by direct-axiom assembly of the brace on DxH. GAP: term-by-term general-H closed form of the offset N-Q^o (reinstating delta into RY (3.10)).",
+                  "note_2026-09-30b": "OFFSET GAP CLOSED (deep-work, file 2026-09-30-general-H-onu-offset.tex). The coupling SPLITS into two independent conditions (proved general-H by hand, machine-exhaustive): (F) SECTION coupling = additivity of lam_{s(h)} = non-trivial-kernel form of RY (3.10); and (STAR) KERNEL coupling = additivity of lam_{iota(d)}, d in D: (lam^D_d - id) beta(k,k') = delta_k(d)+delta_k'(d)-delta_{k+k'}(d) for all d,k,k'. (STAR) is AFFINE in beta with beta-INDEPENDENT offset the additive COBOUNDARY c^d = d_+[delta_.(d)] = d_+[k->delta_k(d)] -- THIS is the closed-form N-Q^o that was open, for ARBITRARY H (recovers the H=Z/2 lock (lam^D_1-1)b=2(nu*sighat-1) as the |H|=2 slice). Decomposition brace <=> add & mult & (F) & (STAR) [homomorphism law automatic] proved H=Z/2 + machine-exhaustive (D=Z/4,Z/8). Torsor dichotomy general-H: 0 in im phi^+ <=> delta_.(d) is a hom (H,+)->(D,+) for all d <=> c^d=0. Cohomology-level (lam^D_d-1)_*[beta]=0 is NECESSARY but STRICTLY WEAKER than (STAR) (offset must be matched at cochain level -- this IS the torsor-no-basepoint, machine-confirmed both classes pass cohomology yet im is one class). REMAINING (isolated, now sharp): (STAR)=>(F)-solvable in taubar for general H [verified 34/34 nu-hom triplets, H=Z/2,Z/3, 86 genuine braces (32 at H=Z/2, 54 at H=Z/3)], and the general-H homomorphism-law bookkeeping [proved H=Z/2, machine-exhaustive]. Node stays computed for the FULL general-H biconditional; the OFFSET/kernel-coupling child is proved. Scripts scratch/2026-09-30-star-{verify,H3,reverse}.py, -axiom-factor.py, -coho-star.py.",
+                  "children": [
+                   {
+                    "id": "onu-general-H-kernel-coupling-star",
+                    "trust": "proved",
+                    "role": "premise",
+                    "date": "2026-09-30",
+                    "approach": "PROVED (general H, deep-work). Lemma STAR: in any skew brace assembled on DxH inducing the triplet, additivity of the kernel translation lam_{iota(d)} (a necessary skew-brace condition) forces (lam^D_d-id)beta(k,k') = delta_k(d)+delta_k'(d)-delta_{k+k'}(d) for ALL d in D, k,k' in H. Equivalently (lam^D_d-id)beta = d_+ psi^d with psi^d_k = delta_k(d). Clean one-instance derivation, no triviality, no RY dependence. COROLLARY (offset closed form): (STAR) is affine in beta; the beta-independent offset is the coboundary c^d=d_+[delta_.(d)] = the answer to node onu-im-equals-ker-mod-coupling's GAP. COROLLARY (torsor, general H) [CORRECTED 2026-10-02 Rick UID198; general-H biconditional REFUTED 2026-10-02 Rick UID200]: since c^d is SECTION-DEPENDENT, the invariant form proposed was 'based <=> EXISTS a section s in the class with delta^s_.(d) in Hom(H,D) for all d' (the naive per-section reading FAILS at D=Z/8 L={1,3},{1,7}: delta_. not in Hom on 96/192 sections yet b even). Rick UID200: the FORWARD arrow (based => EXISTS good section) holds general H (two-line proof, endorsed); the general-H CONVERSE (EXISTS good section => based) is FALSE -- counterexamples trivial brace on Z/16 (per brace) and Z/4xZ/4, D=Z/2xZ/4, |L|=2 (per class; no based member among abelian order-16 groups). The biconditional survives for H=Z/2 ONLY under Fix(L) subset-of 2D [computed]; see node o-nu-affine-torsor. Machine-verified: (STAR) holds on 78/86 genuine braces (32 at H=Z/2, 54 at H=Z/3) (H=Z/2 D=Z/4,Z/8; H=Z/3 D=Z/9), and {[beta]:(STAR) solvable}==genuine im phi^+ on 34/34 nu-hom triplets. File 2026-09-30-general-H-onu-offset.tex.",
+                    "file": "2026-09-30-general-H-onu-offset.tex",
+                    "evidence": "scratch/2026-09-30-star-verify.py (H=Z/2, 16/16 + STAR on 33 braces), scratch/2026-09-30-star-H3.py (H=Z/3 D=Z/9, 54 braces, 18/18 nu-hom triplets), scratch/2026-09-30-axiom-factor.py (brace<=>F&STAR exhaustive), scratch/2026-09-30-coho-star.py (cohomology-STAR strictly weaker).",
+                    "children": [],
+                    "review": "Rick, 2026-10-02 (UID198; artifact proofs/reviews/2026-10-02-review-macbeth-o-nu-socle.pdf). ENDORSED (abelian scope): Lemma STAR coupling identity (lam^D_d-1)beta=d_+psi^d and the offset coboundary c^d=d_+[delta_.(d)] independently reproduced. The torsor corollary phrasing corrected to the section-invariant form (see approach). || Rick, 2026-10-02 (UID200; artifact proofs/reviews/2026-10-02-o-nu-torsor-criterion-converse.md). The general-H torsor BICONDITIONAL is REFUTED in its converse (EXISTS good section => based): trivial brace on Z/16 (per brace), Z/4xZ/4 D=Z/2xZ/4 |L|=2 (per class). Forward arrow endorsed general H; biconditional survives H=Z/2 under Fix(L)<=2D. Lemma STAR / offset coboundary content UNAFFECTED."
+                   },
+                   {
+                    "id": "onu-coupling-affine-form-validated",
+                    "trust": "computed",
+                    "role": "premise",
+                    "approach": "HYPOTHESIS validated 20/20: assemble brace on DxH from (beta,taubar)+triplet (lambda_(a,h) via RY f and defect delta), test skew-brace axioms directly; realisable set = genuine im phi^+, and is a union of B^2_+-cosets. Operator-level, no guessed formula. SUPERSEDED IN PART by onu-general-H-kernel-coupling-star: the 'affine form' is now proved to be the (STAR) kernel coupling with offset d_+[delta_.(d)].",
+                    "file": "../scratch/2026-09-30-assemble-brace-onu.py",
+                    "children": []
+                   }
+                  ]
                  }
                 ]
                }
@@ -782,10 +905,11 @@
   ],
   "note": ""
  },
- "note_2026-09-24": "Added partial-pruning-bilinear-obstruction [proved]: refutes the multiplicative-Schreier framing of the partial-pruning target and proves the corrected bilinear (skew-brace) obstruction theorem for one-object QSKBs, with 4 separating witnesses and connected-necessity. Corrects h2cat-product-decomposition (vertex summand = skew-brace H\u00b2, not group H\u00b2).",
+ "note_2026-09-24": "Added partial-pruning-bilinear-obstruction [proved]: refutes the multiplicative-Schreier framing of the partial-pruning target and proves the corrected bilinear (skew-brace) obstruction theorem for one-object QSKBs, with 4 separating witnesses and connected-necessity. Corrects h2cat-product-decomposition (vertex summand = skew-brace H², not group H²).",
  "note_2026-09-24b": "Option A (heap-transport / connected sufficiency) REFUTED and replaced by proved base-star localization theorem + star-complement criterion. Vertex splitting necessary not sufficient. Obstruction irreducibly bilinear, base-localized to St(zeta). File 2026-09-24-heap-transport-refuted-localization.tex.",
  "note_2026-09-25": "WAKE 2026-09-25: Option B landed for the trivial-brace-kernel one-object case. [Omega] identified with Rathee-Yadav H^2_Sb; NEW additive forgetful map (well-defined, airtight) + product map (non-injective, W4 separation). proof proofs/2026-09-25-bilinear-skew-brace-h2-identification.tex (5pp). Rathee-Yadav 2601.12371 provenance corrected (was agent-summary graded deep-read; now genuine full-PDF read). General non-trivial-kernel case (sb#11/15 on Z2xZ4) flagged OPEN.",
  "note_2026-09-25b": "PROVE 2026-09-25 (deep-work #2): resolved the general-kernel-open node structurally. sb#11/15 non-trivial-brace kernels ((D,+)=Z/4,(D,circ)=Klein): the bilinear-obstruction package survives verbatim; non-triviality of D is ORTHOGONAL to the decomposition obstruction (affects only nu, which touches neither forgetful map nor the defect (lambda_k-id)(k)). Dichotomy: nu section-indep iff D trivial brace. proof proofs/2026-09-25-nontrivial-kernel-orthogonality.tex. FLAGGED GAP: general skew-brace H^2 home (Letourmy-Vendramin) still needs deep-read.",
  "note_2026-09-25c": "PROVE 2026-09-25 (deep-work #2, session 2): UPGRADED the nu-orthogonality OBSERVATION to a structural THEOREM (node nu-variation-direct-factor-split). Key content & honest correction: the naive gauge-orbit PRODUCT split is FALSE (flipping nu forces a compensating coboundary shift, Prop notproduct, proved via 2 theta_1 for |H|=2); orthogonality holds at the INVARIANT level only (coupling confined to coboundaries, invisible to H*). [nu] is a section-indep H^1-type residue in Aut(D)/L, torsor over L. Cross-independence [nu] _|_ [Omega]: [Omega]=0 side proved (bicrossed), full independence computed on Z2xZ4 (all 6 combos). proof proofs/2026-09-25-nu-variation-direct-factor.tex. This is native (no Letourmy-Vendramin dep). Degeneracy L!=1=>L=Aut(D) on |D|=4 flagged as size artifact.",
- "note_2026-09-29": "Added solvability-obstruction-o-nu [proved] under cross-independence-nu-omega: the honest repair. o_nu:H^2_+ -> C^3/A(Z^2_o) group hom, im phi^+=ker o_nu (general H, trivial kernel). Linchpin descent identity machine-exhaustive; ker=im cross-validated vs genuine enumeration; |G|=16 three-way 4b=2(nu*sigma-1) and affine-torsor computed. Credit Rick (Remark 4 reformulation)."
+ "note_2026-09-29": "Added solvability-obstruction-o-nu [proved] under cross-independence-nu-omega: the honest repair. o_nu:H^2_+ -> C^3/A(Z^2_o) group hom, im phi^+=ker o_nu (general H, trivial kernel). Linchpin descent identity machine-exhaustive; ker=im cross-validated vs genuine enumeration; |G|=16 three-way 4b=2(nu*sigma-1) and affine-torsor computed. Credit Rick (Remark 4 reformulation).",
+ "note_2026-09-30": "DEEP WORK: non-trivial-kernel o_nu. im phi^+ well-defined on H^2_+ PROVED (section-change, complex-free). Home=(D,o), twist=sigmahat (o-conjugation) PROVED [CORRECTS record: was ambiguous 'sigma'; sigma_+ FAILS 80/104]. Three-way lock (lam^D_x-1)b=2(nu sigmahat(x)-x) PROVED by hand 112/112 (single axiom instance) => g16-lock & affine-torsor upgraded computed->proved (H=Z/2). im phi^+=o_nu^-1(0) proved modulo operator-validated coupling form (20/20); GAP=general-H offset closed form. File 2026-09-30-general-nontrivial-onu.tex."
 }

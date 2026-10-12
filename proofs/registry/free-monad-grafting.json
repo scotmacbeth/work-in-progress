@@ -81,6 +81,52 @@
         ],
         "children": [
           {
+            "id": "branching-path-confinement-updep",
+            "role": "attempt",
+            "approach": "BRANCHING / answer-dependent free <|-monoid (Videla's Star). Lemma D1 (path-confinement, NEW, proved): the backward pass of grafting mu_sharp_{(t,u)} = split_t is INDEPENDENT of the grafted family u -- it reads only the outer tree and the leaf-path, cutting at the unique t-leaf prefix (induction on t; prefix-freeness = Cor A'). Consequence (No-obstruction / UP-dep, proved = Theorem A + D1): answer-dependence of C's continuations is confined to shape data (trees + per-answer children kappa:P s->S*) and to leaves = complete answer-histories; it never enters the backward component of the monoid multiplication, so the one-directional grafting proof is verbatim the bidirectional (dependent-lens) proof. The feared obstruction is provably absent. D1 is also the engine of Lemma D (assoc-backward = unique 3-fold flat factorization z=l.w.x). Corollary: branching free monoid = indexed generalization of O'Neill's tensor algebra (same list-splitting backward law, run path-by-path). Identification Star(C)=C* at construction level [computed] (line-level re-read of Videla = browse task). UP-dep is NOT a new theorem: it is Theorem A read through the dependent-lens dictionary; the NEW content is D1 + the multi-shape answer-dependent verification (2026-07-24 used single-shape X={x}).",
+            "trust": "proved",
+            "file": "2026-10-01-branching-free-monoid-path-confinement.md",
+            "note": "Honesty: object-level UP already proved for ALL containers in Theorem A (free-monad-universal-property node). This node adds Lemma D1 (genuinely new, isolates WHY no obstruction) + closes the Videla open question UP-dep as a corollary + extends computation to the multi-shape answer-dependent (typechecker) setting. Does NOT re-claim Theorem A. Videla identification graded computed (no browsing in PROVE).",
+            "sources": [
+              "0906.4931"
+            ],
+            "children": [
+              {
+                "id": "theorem-A-cited-updep",
+                "role": "premise",
+                "approach": "Theorem A: C* is the free monoid on C in (Cont,<|,I) for EVERY container C (multi-shape, nontrivial g#, childless nodes). UP-dep is a corollary of this + D1; cited, not re-proved.",
+                "trust": "proved",
+                "file": "2026-07-24-free-monad-universal-property.md",
+                "children": []
+              },
+              {
+                "id": "cor-A-prime-prefixfree",
+                "role": "premise",
+                "approach": "Corollary A' (companion): leaves of a well-founded tree form a prefix code (a leaf is a maximal root->lf path), so the leaf-prefix of a path is unique. This is the uniqueness D1's induction consumes.",
+                "trust": "proved",
+                "file": "2026-07-16-free-monad-grafting-laws.md",
+                "children": []
+              },
+              {
+                "id": "branching-up-computation",
+                "role": "attempt",
+                "approach": "scratch/branching_up_pathconfine.py (reuses free_monad_up_verify.py): D1 split=split_t on 144882 (t,u,z) over typechecker/skew(3,1,0)/binary; <|-monoid laws of C* for multi-shape answer-dependent C; full UP (tri/unit/mult fwd+bwd/uniq) for Writer/Reader(nontrivial bwd)/free m_Y over multi-shape source SRC_A. All PASS, exit 0.",
+                "trust": "computed",
+                "file": null,
+                "children": []
+              },
+              {
+                "id": "lean-dep-graft-assoc-witness",
+                "role": "attempt",
+                "approach": "Lean 4 core (Mathlib-free) finite decide witness on the genuine multi-shape answer-dependent typechecker container C = {infer (P=base/arrow), check (P=ok), done (P=empty)}, path-encoded (leaves = List Step, a faithful transcription of Free.lean's dependent leaves/graft/split line-for-line). Machine-checks by decide (kernel, zero extra axioms -- #print axioms = [propext] only, NO native_decide/ofReduceBool): (i) graft unit both sides; (ii) graft associativity FORWARD (graft_assoc_sample = Lemma C) and BACKWARD (split_assoc_sample: both composite split maps agree on every leaf = unique flat 3-factorization l.w.x, the answer-pass obstruction shown absent); (iii) Lemma D1 path-confinement split_pathConfined_sample: (split t u z).1 = prefixOf t z, the u-free reference, over enumerated trees+answer-dependent labellings; plus the Sec 4 worked example (branch deletion via childless done, split of surviving path unchanged). Independent finite oracle corroborating the companion PROVE note; does NOT re-prove the general dependent theorem (that is Free.lean graft_assoc/split_assoc, already lean-verified) nor the general D1 structural induction (lean=None, remains a clean next target). Closes the multi-shape coverage gap of the 2026-07-24 single-shape (X={x}) verification.",
+                "trust": "lean-verified",
+                "file": "2026-10-01-branching-free-monoid-path-confinement.md",
+                "lean": "BranchingGraftWitness.branching_graft_laws (lean/2026-10-01-branching-graft-witness.lean) -- [propext] only, #print-axioms checked",
+                "children": []
+              }
+            ]
+          },
+          {
             "id": "lemma-A-cited-here",
             "role": "premise",
             "approach": "split_{t,u} is a bijection with inverse cat (path concatenation). Used for MULT-backward and — crucially — to FORCE the backward map in uniqueness (invert split). Same node as lemma-A-leaf-bijection above; cited, not re-proved.",

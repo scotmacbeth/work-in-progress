@@ -1,0 +1,113 @@
+{
+    "conjecture": "Conjecture P (state/PROVE.md 2026-10-05): a polynomial comonoid p=Σ_a y^{E_a} (= small category 𝒞) is PARALLELIZABLE in the tangent category (Poly, T=(−)◁D) iff 𝒞 is out-degree homogeneous (|E_a| constant), conjecturally iff 𝒞 is a groupoid, by porting Lanfranchi Thm 4.20 (2609.03449: parallelizable ⟺ Lie group object). OUTCOME: REFUTATION WITH SALVAGE. (I) The literal port is ILL-POSED: no Cartesian tangent category on polynomial FUNCTORS has ∂ as tangent bundle with nontrivial parallelizability — the representable species structure (Poly,(−)◁D) is not Cartesian (T fails to preserve ×, spurious ε² cross-term) and with the categorical product ONLY constants are parallelizable (even terminal y fails: Ty=X+W≇y×m); the genuine Cartesian home is the arity GCDC SPoly/Poly_ℤ where (Lanfranchi Cor 4.22) EVERY object is parallelizable (vacuous) and p is a morphism not an object. (II) What survives, PROVED: the representable tangent bundle Tp=p◁D has fiber (tangent space) over a shape-a point = free module W^{E_a} of rank |E_a|; so 'tangent-regular' (all fibers ≅ a fixed m) ⟺ out-degree homogeneous. Tangent-regularity depends ONLY on the underlying polynomial functor U(p), hence is BLIND to composition, so it CANNOT equal 'groupoid': {1,e} (y²) is tangent-regular but not a groupoid; ℤ/2⊔ℤ/3 (y²+y³) is a groupoid but not tangent-regular. Groupoid conjecture refuted both ways. Connected groupoids are out-regular (|E_a|=|Ob|·|G|) hence tangent-regular — the positive shadow.",
+    "status": "proved",
+    "date_opened": "2026-10-05",
+    "date_closed": "2026-10-05",
+    "tree": {
+        "id": "lie-parallelizable-poly-comonoid",
+        "approach": "Resolve the ×-vs-◁ caveat first; port Lanfranchi Def 4.18 (parallelizable object) / Thm 4.20 to container comonoids. Result: refutation (port ill-posed) + a surviving out-degree fiber-rank dividing line + refutation of the groupoid half.",
+        "trust": "proved",
+        "file": "2026-10-05-lie-parallelizable-poly-comonoid.md",
+        "sources": [
+            "2609.03449"
+        ],
+        "children": [
+            {
+                "id": "fiber-is-free-module-rank-outdegree",
+                "role": "premise",
+                "approach": "Lemma 1: Tp=p+εv∂p; two-sorted Tp(X,W)=p(X)+W·∂p(X). Tangent space at a shape-a point = {(e∈E_a, w∈W)} ≅ free module W^{E_a}, rank |E_a|. Point-level, coordinate-free; additive-bundle structure = free-module structure. The robust kernel. Verified scratch/lie_parallelizable_verify.py.",
+                "trust": "proved",
+                "file": "2026-10-05-lie-parallelizable-poly-comonoid.md",
+                "children": [
+                    {
+                        "id": "T-is-base-change-weil",
+                        "role": "premise",
+                        "approach": "Tp=p◁D=p+εv∂p is base change along the Weil ℤ-algebra ℤ→ℤ[ε]/ε² (ε-coefficient = directional one-hole derivative v·∂p). Supplies the tangent bundle form. Proved upstream.",
+                        "trust": "proved",
+                        "file": "2026-10-06-virtual-container-cartan.md",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "id": "cartesian-port-ill-posed",
+                "role": "premise",
+                "approach": "Theorem I (refutation). (2a) T=(−)◁D does NOT preserve the categorical product of functors: Tp×Tq − T(p×q) = ε²v²·∂p∂q ≠ 0 (coeff 1 for y×y, 4X² for y²×y²; scratch/lie_product_compat.py) — so (Poly,×,(−)◁D) is NOT a Cartesian tangent category. (2b) With × as trivial bundle, Tp≅p×m forces m=Tp/p=1+W·p'/p polynomial ⟺ p|p' ⟺ p constant: ONLY constants are parallelizable; terminal y fails (Ty=X+W). (2c) The nontrivial ∂-tangent structure is representable/MONOIDAL (◁-tensoring by D), not Cartesian; ◁ has no natural diagonal. (2d) The Cartesian home is the arity GCDC (Lanfranchi Cor 4.22 ⟹ everything parallelizable, vacuous) where p is a MORPHISM not an object. Each clause short+verified.",
+                "trust": "proved",
+                "file": "2026-10-05-lie-parallelizable-poly-comonoid.md",
+                "sources": [
+                    "2609.03449"
+                ],
+                "children": []
+            },
+            {
+                "id": "tangent-regular-iff-outdegree-homogeneous",
+                "role": "premise",
+                "approach": "Theorem 2: 'tangent-regular' (fibers of Tp all ≅ a single m) ⟺ out-degree |E_a| constant. Immediate from Lemma 1 (free modules iso ⟺ equal rank). The well-posed, nontrivial residue of parallelizability in the representable setting.",
+                "trust": "proved",
+                "file": "2026-10-05-lie-parallelizable-poly-comonoid.md",
+                "children": []
+            },
+            {
+                "id": "groupoid-conjecture-refuted-blind-to-composition",
+                "role": "attempt",
+                "approach": "Theorem 3: tangent-regularity factors through the forgetful U:Cat≃Comon(Poly,◁)→Poly, hence BLIND to composition δ, hence cannot equal 'groupoid'. REFUTED both ways: {1,e} (e²=e, functor y²) tangent-regular but NOT a groupoid (shares bundle with ℤ/2); ℤ/2⊔ℤ/3 (functor y²+y³) a groupoid but NOT tangent-regular (airtight from Lemma 1). The groupoid half of Conjecture P was unprovable IN PRINCIPLE. Corollary 4: connected groupoid ⟹ |E_a|=|Ob|·|G| constant ⟹ tangent-regular (positive shadow of Lanfranchi 'Lie group ⟹ parallelizable').",
+                "trust": "proved",
+                "file": "2026-10-05-lie-parallelizable-poly-comonoid.md",
+                "children": []
+            },
+            {
+                "id": "delta-left-translation-trivialization",
+                "role": "attempt",
+                "approach": "RESOLVED (2026-10-06, upgrades the speculative stub canonical-left-translation-trivialization). The composition-sensitive complement to the degree-0 blind invariant. Define the δ-translation L_g:E_b→E_a, h↦g·h (= directed-container δ with first slot pinned; diagrammatic composition ⟹ literal LEFT translation). It is the arrows-out presheaf E_{(−)}:C^op→Set, a↦E_a=∐_c Hom(a,c), g↦L_g (precomposition action). DEF: Tp δ-trivializable over a connected component [a] ⟺ E_{(−)}|_{[a]} is a local system (all L_g bijective) = honest discrete analogue of Lie parallelizability TG≅G×𝔤 (translations invertible). THEOREM (proved): δ-trivializable over [a] ⟺ [a] is a GROUPOID; component-local. Proof: (⇐) L_{g⁻¹} inverts L_g by assoc+inverse laws. (⇒) surjectivity alone: id_a in image of L_g ⟹ g has a right inverse ⟹ (one-sided inverses coincide) groupoid. SHARP LINE: L_g injective ⟺ g epi; L_g surjective ⟺ groupoid; NO intermediate between all-epi and groupoid (onto hits identities = inverses) — settles the Ore-vs-groupoid caveat; dividing line is EXACTLY groupoid. Finite collapse: all-inj = all-bij = group for finite C (finite cancellative monoid is a group); gap is an infinite phenomenon ((ℕ,+)). COROLLARY: strictly refines degree-0 — ℤ/2 (trivializable) vs {1,e} (not), same out-degree 2, separated ⟹ composition is a degree-2 datum (theorem not slogan). REMARK: the finer 'nat-iso to CONSTANT presheaf' reading = groupoid + trivial monodromy (regular rep of nontrivial G not nat-iso to constant); strictly below the groupoid line, not what parallelizability wants. Scope: vertical/linear layer E_{(−)} per Rick correction, NOT full ⊗W object.",
+                "trust": "proved",
+                "file": "2026-10-06-delta-left-translation-trivialization.md",
+                "children": [
+                    {
+                        "id": "arrows-out-presheaf-local-system-iff-groupoid",
+                        "role": "premise",
+                        "approach": "Crux lemma: the arrows-out presheaf E_{(−)} inverts every morphism of a connected component [a] ⟺ [a] is a groupoid. The presheaf is 'tautological' (contains the identities), so surjectivity of every L_g hits id_a, yielding a right inverse of each g; one-sided inverses then coincide. A GENERIC presheaf inverting all morphisms would NOT force a groupoid — this specific one does. Verified exhaustively: all monoids order≤4 (1/2/11/156; 0 mismatches) + multi-object indiscrete/arrow/disjoint-union cases component-local (scratch/delta_trivialization_verify.py).",
+                        "trust": "proved",
+                        "file": "2026-10-06-delta-left-translation-trivialization.md",
+                        "children": []
+                    },
+                    {
+                        "id": "arrows-out-presheaf-constant-iff-thin-groupoid",
+                        "role": "attempt",
+                        "approach": "Refinement (2026-10-07, develops §5 Remark + §7 Gap #2 of the parent — the monodromy reading, previously 'not developed; a natural follow-up'). THEOREM (proved): E_{(−)} is CONSTANT-trivializable over a component [a] — i.e. naturally isomorphic to a constant presheaf Δ_V, equivalently ∃ bijections φ_b:E_b→V with φ_x∘L_g=φ_y for EVERY morphism g:x→y (the coboundary/trivial-monodromy condition (★)) — ⟺ [a] is an INDISCRETE (thin) groupoid = equivalence-relation component. Globally ⟺ C is a thin groupoid (equivalence relation). PROOF: (Step 0) constant-triv ⟹ all L_g=φ_x⁻¹∘φ_y bijective ⟹ (crux lemma, premise) groupoid — so rung 3 presupposes rung 2 FOR FREE. (⇐) thin groupoid: V=Ob[a], φ_b(!_{b→c})=c (bijection by uniqueness of arrows); naturality from thinness. (⇒) apply (★) to a LOOP g:a→a: φ_a bijective ⟹ L_g=id_{E_a} ⟹ g·id_a=g=id_a ⟹ vertex group Aut(a)=1; connected groupoid + one trivial vertex group ⟹ thin. The engine is the FREE left action fixing the basepoint id_a∈E_a (regular rep of G is free ⟹ monodromy trivial ⟺ G=1). COROLLARY (three-level monodromy tower): rung1 generic (nothing) ⊊ rung2 local-system⟺groupoid [prior] ⊊ rung3 ≅constant⟺thin-groupoid [this]; rungs 2,3 separated by a nontrivial vertex group. Discriminators: ℤ/2 & S_3 are groupoids (rung2✓) but NOT constant (rung3✗); 2-objs×vertex-ℤ/2 ✗ (obstruction = vertex group, not one-object-ness); I_2 both ✓; {1,e}, arrow fail at rung2. Rung3 = parallelizable WITH A FLAT FRAMING (trivial discrete holonomy), strictly finer than the parallelizability analogue (rung2). Scope: vertical layer E_{(−)} only (Rick correction), not ⊗W.",
+                        "trust": "proved",
+                        "file": "2026-10-07-constant-presheaf-thin-groupoid.md",
+                        "children": [
+                            {
+                                "id": "arrows-out-presheaf-local-system-iff-groupoid-ref",
+                                "role": "premise",
+                                "approach": "Step 0 cites the crux lemma arrows-out-presheaf-local-system-iff-groupoid (proved, sibling node): constant-triv ⟹ local system ⟹ groupoid, supplying the connected-groupoid hypothesis the rung-3 argument runs on. Not re-proved here.",
+                                "trust": "proved",
+                                "file": "2026-10-06-delta-left-translation-trivialization.md",
+                                "children": []
+                            },
+                            {
+                                "id": "lean-thin-constant-trivializable",
+                                "role": "attempt",
+                                "approach": "Lean 4 oracle (Mathlib-free, #print axioms = [propext]) for the combinatorial heart of the rung-3 thin-groupoid refinement. Encodes finite categories by explicit hom-multiplicity tables (FC: objects/morphisms/dom/cod/identity + partial composition table) and RECOMPUTES both sides of the dividing line in the kernel: (i) FC.constTrivializable = the LITERAL brute force of (★) — search over every family of bijections φ_b:E_b→Fin n (one permutation of range n per object) for one with φ_x∘L_g=φ_y on every morphism (the natural-iso-to-constant definition, NOT the RHS); (ii) FC.isGroupoid, FC.thin = the structural RHS. const_trivializable_iff_* decide constTrivializable = (isGroupoid && thin) on all seven named discriminators, matching every row of scratch/constant_trivialization_verify.py (10 components, 0 mismatches). Monodromy tower rung2⊊rung3 witnessed: ℤ/2, S_3, 2objs×vertex-ℤ/2 are groupoids (rung2✓) but NOT constant-trivializable (rung3✗); I_2, I_3 both✓; arrow, {1,e} fail at rung2. Free-action engine isolated: regular_action_free_Z2 (|G|=2≠1 ⟹ moves basepoint) + loop_monodromy_trivial_iff (constTrivializable ⟺ allVertexGroupsTrivial on every groupoid witness). NOT formalised (cited framework): the C^op→Set functoriality of E_{(−)}, the prior rung-2 theorem, the ⊗W Weil bundle. All witnesses connected so thin ⟺ trivial vertex groups. Verified standalone with `lean` (v4.30.0).",
+                                "trust": "lean-verified",
+                                "file": "2026-10-07-constant-presheaf-thin-groupoid.md",
+                                "lean": "lean/2026-10-07-thin-constant-trivializable.lean: ThinConstantTrivializable.thin_constant_trivializable_oracle (+ const_trivializable_iff_I2/I3/Z2/S3/pairZ2/arrow/idemp, I2_rung3, I3_rung3, Z2_rung2_not_rung3, S3_rung2_not_rung3, pairZ2_rung2_not_rung3, arrow_fails_rung2, idemp_fails_rung2, regular_action_free_Z2, regular_action_free_trivial, loop_monodromy_trivial_iff). #print axioms = [propext].",
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "lean-tangent-regular-outdegree",
+                "role": "premise",
+                "approach": "Lean 4 oracle for the surviving positive (Theorems 2-3). Machine-checks, in core Lean: (Thm 2 arithmetic core) tangentRegular_iff — for out-degrees d:Fin k→Nat, TangentRegular d (∃ common fibre rank m) ↔ ∀ i j, d i = d j (out-degree homogeneous); allPairsEq_ofFn bridges this to the out-degree LIST. (Thm 3 composition-blindness, formalised) tregB_perm — the decidable test tregB:List Nat→Bool is PERMUTATION-INVARIANT, i.e. factors through the multiset Multiset=List/Perm; since a ◁-comonoid's composition δ is not recoverable from the out-degree multiset, tregB cannot see it. Two refuting witnesses as decide-facts on a minimal FinCat (out-degrees + opaque isGroupoid label): treg_blind_to_composition (ℤ/2 vs {1,e}, same [2], same verdict, different isGroupoid ⟹ tangent-regular ⇏ groupoid + blindness) and groupoid_not_tangentRegular (ℤ/2⊔ℤ/3, [2,3], groupoid but not tangent-regular). NOT formalised (cited): that the representable fibre is W^{E_a} of rank |E_a| (Lemma 1, premise fiber-is-free-module-rank-outdegree), the forgetful U:Cat→Poly, and that the labels are realised by genuine categories. Certifies the arithmetic + multiset-factoring content of the dividing line.",
+                "trust": "lean-verified",
+                "file": "2026-10-05-lie-parallelizable-poly-comonoid.md",
+                "lean": "lean/2026-10-06-tangent-regular-outdegree.lean: TangentRegularOutDegree.tangent_regular_outdegree (+ tangentRegular_iff, allPairsEq_ofFn, tregB_true_iff, allPairsEq_perm, tregB_perm, treg_examples, treg_blind_to_composition, groupoid_not_tangentRegular, treg_factors_through_multiset). #print axioms = [propext, Quot.sound] (Quot.sound via List.Perm; decide claims individually axiom-free).",
+                "children": []
+            }
+        ]
+    }
+}

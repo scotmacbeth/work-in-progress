@@ -1,0 +1,118 @@
+{
+  "conjecture": "Grade a compositional invariant of a small category C (= directed container = Poly comonoid) by the SIMPLICIAL NERVE LEVEL it reads, not by cohomological degree. Regrade lemma: cohomological degree n = (nerve level of the cocycle condition) - 1; composition = composable pairs = N_2 = degree ONE (NOT two). Honest tower: (rung 1) N_1 reflexive-graph / U-blind invariants (out-degree, H^0); STRICTLY below (rung 2) N_2 composition invariants (H^1, delta-translations, inventory [theta_R]); and (rung 3) N_3 associativity invariants (H^2 weld [omega], ZS (G)). For a FIXED category the truncation tower COLLAPSES at level 2 (a category IS its tr_2 nerve: 2-coskeletal) so there is NO third truncation rung; the genuine strict N_2 < N_3 lives in the ASSEMBLY/weld problem where associativity is an N_3 predicate not implied by N_2 data. CORRECTS the shipped slogan 'composition is a degree-two datum' (Rick UID 209 E1/W3/W7).",
+  "status": "proved",
+  "date_opened": "2026-10-08",
+  "date_closed": "2026-10-08",
+  "note": "Referee-driven (Rick UID 209) correction of commit ae9d67a. Deep-work prove session, proof file 2026-10-08-nerve-level-tower.md. Machine-check scratch/nerve-level-tower-verify.py (F2 Betti (1,1,1) vs (1,0,0); Z: H^2(Z/2)=Z/2 vs 0; N({1,e}) reduced homology vanishes) + scratch magma check (3-elt unital non-assoc at (x,x,x)). SHARP POINT: which cohomological DEGREE detects the Z/2-vs-{1,e} distinction is coefficient-dependent (deg 1 over F2, deg 2 over Z) while the NERVE LEVEL is always N_2 -- this coefficient-dependence IS the proof that degree is the wrong grade. Honest scope: strict N_2<N_3 is a CONDITION-LEVEL/assembly separation (Thm 4), NOT a detection-power tower of fixed-category invariants (Thm 3 collapse); degree-stratifies-detection-above-0 is OPEN and false as naively stated. Feeds the WRITE re-cut this heartbeat; retires the 'degree-two' slogan for Neil's Strathclyde mini-course. [RE-REVIEW CORRECTION 2026-10-09, Rick UID 211 on commit 242c7ea/f35a37f, artifact proofs/reviews/2026-10-09-nerve-242c7ea-rick.md — 3 must-fixes before the Strathclyde version: (N2, serious) a nonzero [omega] in H^2 does NOT witness non-associativity — the cocycle CONDITION is associativity, the CLASS measures SPLITTING — so weld-omega-refinement + reentrancy-stub DEMOTED proved->computed and their gloss corrected ([omega]=splitting obstruction of an already-associative weld); the honest non-associativity separator is assoc-is-N3's magma (a pointwise N_3 condition, not a class), which stands. The proved regrade/tower core (regrade-lemma, strict-N1-N2, coskeletal-collapse, assoc-is-N3) is UNTOUCHED by N2, so root stays proved. (N1) the shape invariant U(p) is STRICTLY COARSER than tr_1 N — witness [1] and B(Z/2)+pt both give U=y^2+y — so U must not be labelled 'the nerve-level-1 invariant'; the Z/2-vs-{1,e} separation at H^1/N_2 is unaffected (precision fix). (N3) 'nerve level' is used in two incompatible senses (truncation level vs cocycle-condition level) and must be disambiguated throughout (terminology fix). All three fold into the next WRITE (Strathclyde-ready re-cut).]",
+  "tree": {
+    "id": "root",
+    "approach": "nerve-level regrade + three-rung tower with honest 2-coskeletal collapse; degree = nerve level - 1; composition = N_2 = degree 1",
+    "trust": "proved",
+    "file": "2026-10-08-nerve-level-tower.md",
+    "children": [
+      {
+        "id": "regrade-lemma",
+        "approach": "Lemma 1: an H^n cocycle condition d^n c = 0 is indexed by N_{n+1} (alternating sum over the n-faces of an (n+1)-simplex); hence cohomological degree n = cocycle-condition nerve level - 1. Composition = N_2 = degree 1. Standard normalized bar/cochain complex, degree-count is the definition.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-10-08-nerve-level-tower.md",
+        "children": []
+      },
+      {
+        "id": "strict-N1-N2",
+        "approach": "Thm 2: Z/2 (a.a=1) and {1,e} (a.a=a) have ISO tr_1 nerves (same reflexive graph; U(p)=y^2 both; out-degree blind) but non-iso tr_2 (composite a.a: 1 vs a); the nerve-level-2 invariant dim H^1(-;F_2) = 1 vs 0 separates them. Structural: {1,e} has a two-sided zero e => contractible nerve => H^{>=1}=0. Detection of composition begins at nerve level 2 = degree 1.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-10-08-nerve-level-tower.md",
+        "children": [
+          {
+            "id": "betti-verify",
+            "approach": "CORROBORATION (the proof stands on the by-hand H^1 computation + structural contractibility, both at proved level in the proof file; this is the independent numeric cross-check), NOW LEAN-VERIFIED. Unnormalized bar cochain complex C^0->C^1->C^2->C^3 built Mathlib-free from each multiplication table alone (cochains = coordinate vectors over 2^n basis tuples; coboundary = genuine alternating-face xor-sum over F2; ranks by honest F2 Gaussian elimination; betti n = (2^n - rank d^n) - rank d^{n-1}). decide evaluates: underlying (U(p)=y^2) agrees; H*(Z/2;F2)=(1,1,1), H*({1,e};F2)=(1,0,0); so H^1 = 1 vs 0 is the N_1<N_2 separator. (Original cross-check also: sympy Smith for H*(-;Z): H^2(Z/2)=Z/2 vs 0; reduced integer homology of N({1,e}) vanishes.) #print axioms = [propext] only.",
+            "role": "attempt",
+            "trust": "lean-verified",
+            "lean": "lean/2026-10-08-nerve-level-separation.lean :: NerveLevelSeparation.nerve_level_separates_outdegree_blind (+ underlying_agree, betti_Z2, betti_Idem)",
+            "file": "2026-10-08-nerve-level-tower.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "coskeletal-collapse",
+        "approach": "Thm 3: nerve of a category is 2-coskeletal -- objects=N_0, arrows=N_1, src/tgt/id = face/degeneracy, composition = d_1:N_2->N_1 all live in tr_2, and iso of tr_2 nerves = iso of categories. Hence F_2 = F_3 = ... = all iso-invariants: NO strict third TRUNCATION rung for fixed-category invariants. Reconciliation: truncation level of H^n = min(n+1,2) (collapses) vs cocycle-condition level = n+1 (never collapses); old '2' conflated them.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-10-08-nerve-level-tower.md",
+        "children": []
+      },
+      {
+        "id": "assoc-is-N3",
+        "approach": "Thm 4 (elementary): associativity is an N_3 predicate on unital magmoids not expressible on tr_2 data. Witness: unital magma on {1,x,y}, x.x=y, x.y=x, y.x=y, y.y=y; (x.x).x = y.x = y but x.(x.x) = x.y = x, non-assoc at the triple (x,x,x) in N_3 while all N_2 data present and unital. So the genuine strict N_2 < N_3 lives in the assembly problem (vary the composition), where 2-coskeletal collapse does not apply.",
+        "role": "premise",
+        "trust": "proved",
+        "file": "2026-10-08-nerve-level-tower.md",
+        "children": []
+      },
+      {
+        "id": "weld-omega-refinement",
+        "approach": "CORRECTED 2026-10-09 (Rick UID 211 N2). Cohomological refinement of the weld: given an associative ZS weld (the 2-cocycle CONDITION d^2 omega=0 IS associativity), the CLASS [omega] in H^2(Sk;D) measures whether the weld SPLITS (admits a semidirect/section decomposition), [omega]=0 iff split. By regrade-lemma an H^2 class still reads N_3 (triples). This is EILENBERG–MACLANE extension classification, not an associativity test. Prior (WRONG) wording '[omega]=0 iff associative' and 're-entrancy [omega]!=0 = N_3 associativity FAILS' conflated non-split with non-associative and contradicted the note's own section 2 — RETRACTED. The genuine strict N_2<N_3 (non-associativity) separator is assoc-is-N3's unital magma {1,x,y}, a pointwise N_3 CONDITION failure, NOT a cohomology class. The two-level ZS criterion K=C|><|D iff (L) AND (G) stands (shared pairwise-zs); (G) iff [omega]=0 stands (shared g-is-h2); only the gloss of what [omega] WITNESSES is corrected to a SPLITTING obstruction for the already-associative weld.",
+        "role": "attempt",
+        "trust": "computed",
+        "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-11-nerve-uniqueness.md", "date": "2026-10-11"},
+        "review_2026-10-09": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-09-nerve-242c7ea-rick.md", "date": "2026-10-09"},
+        "reason": "A1/A2/A3 TEXT LANDED (WRITE commit e4d1785, papers/composition-is-a-nerve-level-two-datum.tex): A1 -- dw=0 named as associativity of the twisted composition over the ALREADY-associative base (l.188,560-561) with the 'associative candidate splits' framing (l.334,567); A2 -- [omega] named a class of the base classifying extension D>->E_omega->>S (l.193-195,628-631, Eilenberg-MacLane/Baues-Wirsching); A3 -- detecting class at nerve level 2 over F2, 3 over Z (l.198,460-466). NODE STAYS AT computed: 'checked-sober' (Rick's next rung once A1 is in text) is NOT on MacBeth's trust scale, and 'proved' requires ref [12] attached (absent from this positioning note). --- ORIGINAL: KEPT DEMOTED (computed) by Rick review 2026-10-11 r2 (Note A). The N2 rewrite gets the DIRECTION right (a class presupposes the cocycle condition; the class measures splitting -- Rick computed both directions in four cases). Three MUST-FIX remain before 'checked-sober': A1a (Rem. 13 names the WRONG associativity equation -- dw=0 is associativity of the TWISTED composition over the already-associative base S, NOT Thm 12's magma, over which no cochain complex exists, d.d!=0), A1b ((L) missing: by [12], [omega]=0 <=> (G) but splitting <=> (L) AND (G) -- state (L) or replace 'splits' with 'satisfies (G)'), A1c (say what makes the candidate weld associative, i.e. what makes omega a cocycle), and A2 (name the extended category E_omega and the C,D; it is E_omega -- a class of the base S -- that splits; S=B(Z/2),D=Z/2,E_omega=B(Z/4) for the rigid-twist witness). Promotion path: checked-sober once A1 (and A2) land in the text; 'proved' only once ref [12] is attached; Rick will not grade any weld node proved on the strength of this positioning note. --- PRIOR (Rick UID 211 N2, 2026-10-09): a nonzero H^2 class cannot witness non-associativity -- the cocycle condition is associativity, the class measures splitting; corrected interpretation is standard Eilenberg–MacLane. Reclassified role premise->attempt 2026-10-09: the proved regrade/tower core (regrade-lemma, strict-N1-N2, coskeletal-collapse, assoc-is-N3) never rested on this cohomological synthesis, so the root stays proved without it.",
+        "file": "2026-10-08-nerve-level-tower.md",
+        "children": [
+          {
+            "id": "g-is-h2-stub",
+            "approach": "(G) iff [omega]=0 in H^2(Sk;D): the associativity-closing obstruction is a degree-2 cohomology class (Baues-Wirsching / Rosebrugh-Wood)",
+            "role": "premise",
+            "trust": "computed",
+            "shared": "pairwise-zs#g-obstruction-cohomology",
+            "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-11-nerve-uniqueness.md", "date": "2026-10-11"},
+            "reason": "A1/A2/A3 text landed in papers/composition-is-a-nerve-level-two-datum.tex (WRITE commit e4d1785); NODE STAYS AT computed per Rick's weld-node recommendation (proved only once ref [12] attached, not in this positioning note; 'checked-sober' is off MacBeth's trust scale). --- ORIGINAL: DEMOTED proved->computed by Rick review 2026-10-11 r2 (Note A, weld-node recommendation): as presented in THIS nerve note, the identification (G) <=> [omega]=0 stays 'read' until ref [12] is attached; Rick would not grade any weld node 'proved' on the strength of this positioning note. Both directions were computed exhaustively in four cases, hence 'computed'. Gaps A1 (the splitting derivation names the WRONG associativity equation -- cocycle condition dw=0 is associativity of the TWISTED composition over the already-associative base S, not Thm 12's magma; and (L) is missing: by the note's own [12], [omega]=0 <=> (G) but splitting <=> (L) AND (G)) and A2 (what [omega] classifies: the extension E_omega of the base S, which is what splits; Thm 14 as written forces [omega]=0) must land before this re-earns 'checked-sober'; 'proved' only once [12] is attached. (NB the canonical result may stand in its home node shared pairwise-zs#g-obstruction-cohomology; this is the nerve-note instance.)",
+            "file": null,
+            "children": []
+          },
+          {
+            "id": "reentrancy-stub",
+            "approach": "CORRECTED 2026-10-09 (Rick UID 211 N2): re-entrancy weld class [omega]=eps in H^2 ~= Z/2 nonzero is a NON-SPLIT (but associative) weld witness — no semidirect/section decomposition — NOT a non-associativity witness. The class existing and being nonzero is fine (shared orchestration-zs#analytic-obstruction); only the gloss 'N_3 associativity fails' was wrong.",
+            "role": "premise",
+            "trust": "computed",
+            "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-11-nerve-uniqueness.md", "date": "2026-10-11"},
+            "reason": "A1/A2/A3 text landed in papers/composition-is-a-nerve-level-two-datum.tex (WRITE commit e4d1785); NODE STAYS AT computed (no promotion: 'checked-sober' off-scale, 'proved' needs ref [12]/[13] attached). --- ORIGINAL: KEPT DEMOTED (computed) by Rick review 2026-10-11 r2 (Note A): weld node, same promotion path as weld-omega-refinement (checked-sober once A1/A2 land, proved once [12] attached). Rick D7: the re-entrancy witness omega(1,1)=1 on Z/2 gives B(Z/4) -- associative, non-split, not an internal product of two order-2 subgroups -- checked-sober, modulo [13]'s Lean certificate checking dw=0 (please confirm in one clause). --- PRIOR (Rick UID 211 N2): [omega]!=0 = non-split, not non-associative; see weld-omega-refinement.",
+            "shared": "orchestration-zs#analytic-obstruction",
+            "file": null,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "h1-h2-independence",
+        "approach": "The two composition-sensitive anchors are INDEPENDENT (the note's Thm 4): [theta_R] in H^1(S;R) (inventory, N_2/degree 1) and [omega] in H^2(Sk;D) (weld, N_3/degree 2) -- neither determines the other, no natural family of homs carries either class to the other (W1: omega=0, theta!=0; W2: omega!=0, theta=0). They differ in coefficients and condition-level, not in WHETHER they see composition. CITED (proved + arithmetic lean-verified).",
+        "role": "premise",
+        "trust": "proved",
+        "shared": "supply-chain-zs#separation-W1W2",
+        "file": null,
+        "children": []
+      },
+      {
+        "id": "degree-stratifies-detection-OPEN",
+        "approach": "OPEN QUESTION (Rick): does cohomological DEGREE stratify DETECTION POWER above degree 0? Naive form ('higher degree detects strictly more') is FALSE as stated -- the degree-1 invariant of strict-N1-N2 detects composition, and H^1/H^2 are independent (not ordered). The honest strict statement is the CONDITION-LEVEL separation (assoc-is-N3), not a detection-power tower. This is the outward attempt lane; the proved root does not stand on it.",
+        "role": "attempt",
+        "trust": "speculative",
+        "file": "2026-10-08-nerve-level-tower.md",
+        "children": []
+      },
+      {
+        "id": "old-degree-two-slogan",
+        "approach": "DEAD END (the error being corrected): slogan 'composition is a degree-two datum / no invariant below degree two detects composition'. Conflated simplicial level N_2 of p<|p (right object) with cohomological degree 2 (wrong). The underlying theorems (Thms 1,7,9,Cor 10 of the note) survive; only the grading label was off by one.",
+        "role": "attempt",
+        "trust": "dead-end",
+        "reason": "REFUTED by strict-N1-N2: a degree-ONE invariant (dim H^1(-;F_2)) separates Z/2 from {1,e}. Composition is first detectable at nerve level N_2 = cohomological degree 1, not degree 2. Replaced by the regrade (degree = nerve level - 1).",
+        "refutation": "proved",
+        "file": "2026-10-08-nerve-level-tower.md",
+        "children": []
+      }
+    ]
+  }
+}

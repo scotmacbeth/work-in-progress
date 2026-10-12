@@ -1,0 +1,105 @@
+{
+  "conjecture": "Fiberwise group completion ℕ→ℤ of the container tangent structure switches on the full Cartan calculus. Let SPoly_ℤ := Poly_ℤ be the CDC of ℤ-coefficient (virtual) polynomial functors, receiving SPoly via B∘N (N the faithful counting functor, B the coefficient base-change along ι:ℕ↪ℤ). Then (a) the dual-number tangent T=(−)◁D extends to SPoly_ℤ and commutes with completion on the nose (B∘T=T∘B), being base change along the Weil ℤ-algebra ℤ→ℤ[ε]/ε²; (b) SPoly_ℤ is a ROSICKÝ (additive-with-negatives) tangent category — σ=(−)◁φ_{−1} (φ_{−1}:ε↦−ε, i.e. σ(x,v)=(x,−v)) is a negation, the 10-05 killer v+g=0 now solved by g=−v∈ℤ[x,v]; (c) SPoly_ℤ carries a scalar RING object R=ℤ (the line object with its polynomial ring structure) and a compatible action κ_r=(−)◁φ_r (φ_r:ε↦rε, κ(r;(x,v))=(x,rv)) satisfying the ENTIRE Aintablian–Blohmann Definition-1 scalar-ring-object spec (ring-object axioms, κ natural, R-module-in-slice unital/assoc/bilinear-over-+̂-and-+_X/zero, compatibility with the vertical lift λ and canonical flip τ). CONSEQUENTLY, by AB's cited construction (2607.11169), the full Cartan calculus (d, contraction ι_X, Lie derivative L, Lie–Rinehart/Chevalley–Eilenberg assembly; and, ℤ being torsion-free, the cubical CDGA of 2609.05963) DESCENDS to SPoly_ℤ. The obstruction is a single Weil-algebra endomorphism φ_r: the rig ℕ supports it only for r∈ℕ (the surviving rig-scalar fragment of 10-05); the ring ℤ supplies φ_{−1}. Far side of the rig-vs-ring knife.",
+  "status": "proved",
+  "date_opened": "2026-10-05",
+  "date_closed": "2026-10-06",
+  "tree": {
+    "id": "virtual-containers-admit-scalar-ring",
+    "approach": "Pin SPoly_ℤ:=Poly_ℤ (group completion of the additive/fiber structure, which N carries faithfully). Build the completion concretely and show (a) T extends and commutes with B, (b) σ(x,v)=(x,−v) is a negation (Rosický), (c) the scalar ring object R=ℤ + κ satisfy the full AB Def-1 input; descent of d,ι,L then follows from AB's cited construction. Mirror of the 10-05 negative argument run FORWARD over ℤ, using PRESERVATION of structure by ι (never fullness/faithfulness).",
+    "trust": "proved",
+    "file": "2026-10-06-virtual-container-cartan.md",
+    "sources": [
+      "2607.11169",
+      "2609.05963"
+    ],
+    "children": [
+      {
+        "id": "composition-survives-completion",
+        "role": "premise",
+        "approach": "Lemma 1: B:Poly_ℕ→Poly_ℤ is a strict CDC functor. The flagged risk (group completion ⊥ ◁) is REAL as an abstract universal property but RESOLVED concretely. ◁ is LEFT-additive only: (p+p')◁q=p◁q+p'◁q but h◁(q+q')≠h◁q+h◁q'. Outer slot: (−)◁q is a monoid hom, extends uniquely to the group completion ℤ[x⃗]. Inner slot: NOT additive — the universal property does NOT force h◁(q−q'); the naive free-Ab-enriched completion (forcing ◁ biadditive) is WRONG (collapses y²◁(q−q')). The correct inner extension is literal ℤ[x⃗]-substitution (ℤ[x⃗] closed under composition), restricting to ℕ along the rig hom ι. So the left adjoint handles the outer slot, the ambient RING the inner slot; the two agree on the ℕ-part ⟹ B is a functor. All other CDC data (+,0,×,∂) is rig-operation-defined, preserved by ι.",
+        "trust": "proved",
+        "file": "2026-10-06-virtual-container-cartan.md",
+        "children": [
+          {
+            "id": "polyZ-is-cdc-with-negatives",
+            "role": "premise",
+            "approach": "Poly_ℤ is a CDC over the commutative RING ℤ (BCS 2009: polynomials over any commutative ring form a CDC; axioms use only +,×,d/dx) whose hom commutative monoids (ℤ[x⃗],+) are abelian GROUPS. A CDC with negatives is a Rosický tangent category (Cockett–Cruttwell 2014). Classic background, re-used over ℤ exactly as the proved existence node used it over ℕ (cf. tangent-container-derivative#polyN-is-a-cdc).",
+            "trust": "proved",
+            "file": "2026-10-06-virtual-container-cartan.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "tangent-extends-base-change",
+        "role": "premise",
+        "approach": "Proposition 2: T extends to SPoly_ℤ with B∘T=T∘B on the nose. Tp=p◁D=p+εv·∂p uses only +,×,∂ (rig ops preserved by ι), so ι(Tp)=T(ιp) identically; verified symbolically on y,y²,y+y²,y³,3y⁴+y. Weil reading: T is base change along ℤ→ℤ[ε]/ε² (evaluate at dual numbers), D the representing container.",
+        "trust": "proved",
+        "file": "2026-10-06-virtual-container-cartan.md",
+        "children": []
+      },
+      {
+        "id": "rosicky-negation-g-is-minus-v",
+        "role": "premise",
+        "approach": "Proposition 3: SPoly_ℤ is Rosický. σ=(−)◁φ_{−1}, φ_{−1}:ε↦−ε a ℤ-algebra endo (uses −1∈ℤ), i.e. σ(x,v)=(x,−v): a genuine Poly_ℤ morphism, bundle endo over p (base preserved), natural (same computation as κ naturality at r=−1), satisfying (†) +∘⟨σ,id⟩=0∘p fiberwise as (−v)+v=0. The 10-05 killer v+g(x,v)=0 now has the solution g=−v∈ℤ[x,v], available over the ring and impossible over the rig. σ is NOT realized by any genuine container morphism — adding it is what group completion buys.",
+        "trust": "proved",
+        "file": "2026-10-06-virtual-container-cartan.md",
+        "sources": [],
+        "children": []
+      },
+      {
+        "id": "scalar-ring-object-and-kappa",
+        "role": "premise",
+        "approach": "Theorem 4: R=ℤ (line object with polynomial ring structure +̂,m̂,0̂,1̂,−̂, all ℤ-poly maps; ring axioms = ℤ[a,b,c] identities) and κ_r=(−)◁φ_r (φ_r:ε↦rε, κ(r;(x,v))=(x,rv)) satisfy the ENTIRE AB Definition 1. Verified: ring-object axioms; κ natural wrt generic T(f) (r pulls through the linear Df); R-module-in-slice (unital 1·v=v, assoc r(sv)=(rs)v, bilinear over +̂ and +_X, zero 0·v=0). So AB's scalar-ring-object INPUT is fully present. Descent of d,ι_X,L,CE then by AB's cited construction (2607.11169); ℤ torsion-free ⟹ cubical CDGA (2609.05963) too.",
+        "trust": "proved",
+        "file": "2026-10-06-virtual-container-cartan.md",
+        "sources": [
+          "2607.11169",
+          "2609.05963"
+        ],
+        "children": [
+          {
+            "id": "lambda-tau-coherence-induced-action",
+            "role": "premise",
+            "approach": "The delicate AB coherences, verified in coordinates on the double tangent T²X=(a,a_1,a_2,a_{12}) with λ(a,v)=(a,0,0,v), τ swapping a_1,a_2. The relevant scalar action on T²X is the INDUCED Tκ_r(a,a_1,a_2,a_{12})=(a,ra_1,a_2,ra_{12}) (= T applied to κ_r), NOT the uniform scaling ρ_r. Then λ∘κ_r=Tκ_r∘λ (both ↦(a,0,0,rv)) and τ∘Tκ_r=κ^outer_r∘τ. KEY SUBTLETY: uniform ρ_r scales the ε_1ε_2 slot by r² and FAILS λ-compat (r²v≠rv); the law holds precisely for Tκ_r because κ_r is ℤ-LINEAR in the tangent direction — this is where ℤ-linearity does real work. Conceptually (Leung 2017): every structure map p,0,+,λ,τ is induced by a Weil-algebra map and φ_r is a ℤ-algebra endo, so the coherences are commuting Weil-algebra squares.",
+            "trust": "proved",
+            "file": "2026-10-06-virtual-container-cartan.md",
+            "children": []
+          },
+          {
+            "id": "scalar-ring-forces-negation-reused",
+            "role": "premise",
+            "approach": "Lemma A of the 10-05 note (scalar ring object ⟹ Rosický negation σ=κ(−̂1̂,−)), reproved there from the module axioms. Here it gives σ=κ_{−1} and certifies consistency of (b) and (c): t+_X(−1)·t=(1̂+̂(−̂1̂))·t=0̂·t=0. Shared with the sibling registry node.",
+            "trust": "proved",
+            "file": "2026-10-05-spoly-negation-obstruction.md",
+            "sources": [
+              "2607.11169"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "ab-cartan-descent-consequence",
+        "role": "attempt",
+        "approach": "The downstream statement 'the full AB Cartan calculus (d, ι_X, L, Lie–Rinehart/CE; cubical CDGA) descends' is NOT reproved here: it is AB's cited construction (2607.11169, deep-read) applied to the verified input (R,κ) of scalar-ring-object-and-kappa. Recorded as an attempt/consequence (boundary skips it) to mark honestly that the descent rests on AB's theorem, not on a re-derivation. Methodologically identical to how 10-05 cited AB for the Definition only.",
+        "trust": "computed",
+        "file": "2026-10-06-virtual-container-cartan.md",
+        "sources": [
+          "2607.11169",
+          "2609.05963"
+        ],
+        "children": []
+      },
+      {
+        "id": "lean-mirror-positive-companion",
+        "role": "attempt",
+        "approach": "Decidable arithmetic mirror of lean/2026-10-05-spoly-negation-obstruction.lean, ℕ→ℤ: over ℤ the negation law v+g=0 is solved by g=−v (exhibited as the Horner coefficient list [[0,-1]]), and each fiber (free ℤ-module on holes, Fin k→ℤ) is an abelian group (every element invertible, σ t:=fun i=>-(t i)). The two 10-05 witnesses flip: fiber ℤ (p=y) and ℤ² (p=y²) are now groups. Formalised 2026-10-06 in core Lean 4 (Mathlib-free, omega), sorry-free, axioms [propext, Quot.sound] — the exact mirror of the negative 10-05 oracle. SCOPE: certifies the fiber-level ARITHMETIC flip (rig→ring removes the single obstruction), NOT functoriality of B/T, the κ-action coherences, or Cartan descent.",
+        "trust": "lean-verified",
+        "file": "2026-10-06-virtual-container-cartan.md",
+        "lean": "VirtualContainerNegation.virtual_container_negation_exists",
+        "children": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+ "conjecture": "The UNIFIED cyclic H^2 engine: for a finite cyclic group C_n = Z/n acting TRIVIALLY on the module M = Z/m, degree-2 group cohomology is H^2(C_n; Z/m) = coker(.n on Z/m) = Z / gcd(n,m). This is ONE parametrised fact that subsumes both existing H^2-cluster edge engines: the base-edge engine (cyclic-h2-norm-engine, H^2(C_n;Z)=Z/n) is the modulus-free case m=0 (since Z = Z/0, gcd(n,0)=n), and the fibre-edge engine (fibre-h2-z2-engine, H^2(Z/2;Z/2)=Z/2) is the case n=m=2 (gcd(2,2)=2). The reduction: under the trivial action H^2 is the cokernel of the norm map N=.n on M; with M=Z/mZ, coker(.n on Z/mZ) = (Z/mZ)/((nZ+mZ)/mZ) = Z/(nZ+mZ) = Z/gcd(n,m) by Bezout (nZ+mZ = gcd(n,m)Z). FORMALISED sorry-free in Lean 4 core (Mathlib-free).",
+ "status": "lean-verified",
+ "date_opened": "2026-09-18",
+ "date_closed": "2026-09-18",
+ "note": "LEAN session 2026-09-18. Consolidation deliverable of the H^2-cluster front: replaces the two ad-hoc edge engines (cyclic-h2-norm-engine base edge, fibre-h2-z2-engine fibre edge) with a single reusable core so any FUTURE witness (other Ferri examples, other coefficient moduli Z/m) gets its H^2 decided by one lemma. File: projects/lean/2026-09-18-cyclic-h2-gcd.lean, namespace CyclicH2Gcd. Mathlib NOT present in container; per LEAN.md honest-fallback formalised in Lean 4 CORE (no imports beyond prelude), standalone-compiled with `lean 2026-09-18-cyclic-h2-gcd.lean` under leanprover/lean4:v4.30.0, zero errors, zero warnings. Axiom footprint: propext + Quot.sound (+ Classical.choice from omega/decide internals); NO sorryAx. SCOPE/HONESTY: what is machine-checked is (i) Bezout's identity gcd(a,b)=a*s+b*t over Z, proved FROM SCRATCH by Nat.gcd.induction following the Euclidean recursion gcd m n = gcd (n%m) m (bezout) -- this is the only genuinely new content beyond the two engines; (ii) the arithmetic core dvd_iff: (exists s t, x = n*s + m*t) <-> gcd(n,m) | x, i.e. nZ+mZ = gcd(n,m)Z (forward: gcd|n, gcd|m; reverse: Bezout scaled by x/gcd); (iii) H2 n m := Z/(nZ+mZ) as an explicit Quotient with hand-built Add/Zero/Neg and abelian-group laws (add_comm/add_assoc/zero_add/add_zero/neg_add_cancel); (iv) the gcd identification H2.mk_eq_iff_dvd: [a]=[b] <-> gcd(n,m) | (a-b), and H2.mk_eq_zero_iff_dvd: [a]=0 <-> gcd(n,m)|a; (v) UNIFICATION corollaries base_edge_recovers (m=0: [a]=[b] <-> n|(a-b), recovers cyclic-h2-norm-engine) and fibre_edge_recovers (n=m=2: [a]=[b] <-> 2|(a-b), recovers fibre-h2-z2-engine); (vi) K_{2,3}/control cardinality witnesses card_2_0, card_3_0, card_2_2, card_2_4, card_4_2, card_3_3 (exactly gcd(n,m) distinct classes) and cover_2_2 (the two classes cover Z). NOT formalised (BLACK BOX, cited not re-proved): that the reduced 2-periodic complex COMPUTES group cohomology of C_n -- Brown, Cohomology of Groups, VI.9 (Tate cohomology of cyclic groups); this is CITED exactly as in the two engines this file supersedes. Does NOT re-prove the LHS placement (that is h2cluster-lhs-transgression PROVE).",
+ "sources": [
+  "2605.11903"
+ ],
+ "tree": {
+  "id": "root",
+  "approach": "Unified cyclic H^2 engine H^2(C_n; Z/m) = Z/gcd(n,m) via coker(.n on Z/m) = Z/(nZ+mZ) and Bezout (nZ+mZ = gcd(n,m)Z), formalised sorry-free in Lean 4 core. Subsumes the base-edge (m=0) and fibre-edge (n=m=2) engines.",
+  "trust": "lean-verified",
+  "file": null,
+  "lean": "CyclicH2Gcd.H2.mk_eq_iff_dvd",
+  "children": [
+   {
+    "id": "bezout-from-scratch",
+    "approach": "Bezout's identity gcd(a,b)=a*s+b*t over Z, proved from scratch by Nat.gcd.induction (Euclidean recursion). The only new mathematical content beyond the two engines. Sorry-free; axioms propext + Quot.sound.",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "CyclicH2Gcd.bezout",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "arithmetic-core-nZ-plus-mZ",
+    "approach": "dvd_iff: (exists s t, x = n*s + m*t) <-> gcd(n,m) | x, i.e. nZ+mZ = gcd(n,m)Z. Forward from gcd|n, gcd|m; reverse from Bezout scaled by x/gcd. Sorry-free.",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "CyclicH2Gcd.dvd_iff",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "cohomology-quotient-and-unification",
+    "approach": "H2 n m := Z/(nZ+mZ) as explicit Quotient with abelian-group laws; gcd identification H2.mk_eq_iff_dvd ([a]=[b] <-> gcd(n,m)|(a-b)); unification corollaries base_edge_recovers (m=0 -> cyclic-h2-norm-engine) and fibre_edge_recovers (n=m=2 -> fibre-h2-z2-engine); K_{2,3} cardinality witnesses (2,0),(3,0),(2,2),(2,4),(4,2),(3,3). Sorry-free; axioms propext + Quot.sound + Classical.choice.",
+    "trust": "lean-verified",
+    "file": null,
+    "lean": "CyclicH2Gcd.H2.mk_eq_iff_dvd",
+    "role": "premise",
+    "children": []
+   },
+   {
+    "id": "resolution-computes-group-cohomology",
+    "approach": "BLACK BOX (cited, not formalised): that the reduced 2-periodic cyclic complex COMPUTES the group cohomology of C_n. Cyclic-group periodicity / Tate cohomology. Cited exactly as in the two engines this file unifies.",
+    "trust": "published",
+    "file": null,
+    "role": "premise",
+    "publication": "K. S. Brown, Cohomology of Groups, GTM 87, Springer 1982, VI.9 (Tate cohomology of cyclic groups); MacBeth PROVE 2026-09-16/17 (h2catb-connected-groupoid-vertex-group, h2cluster-lhs-transgression)",
+    "children": []
+   }
+  ]
+ }
+}

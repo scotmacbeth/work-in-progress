@@ -1,0 +1,99 @@
+{
+  "conjecture": "The AAGM one-hole container derivative is the differential combinator of a Cartesian differential category SPoly of polynomial functors; equivalently it is the first-order Cartesian tangent structure realised by dual-number substitution T(p)=p(y+εv) mod ε².",
+  "status": "proved",
+  "date_opened": "2026-10-02",
+  "date_closed": "2026-10-02",
+  "tree": {
+    "id": "root",
+    "approach": "Define SPoly (objects ℕ, morphisms iso-classes of polynomial functors, substitution); exhibit ∂ as differential combinator; prove CDC axioms by reflection along the faithful counting functor N into the classical CDC Poly_ℕ. Then CDC ⟹ Cartesian tangent category, realised by dual numbers.",
+    "trust": "proved",
+    "file": "2026-10-02-tangent-container-cdc.md",
+    "children": [
+      {
+        "id": "reflection-along-counting-functor",
+        "role": "premise",
+        "approach": "N: SPoly→Poly_ℕ preserves all CDC data (Lemma 3) and is faithful on iso-classes (Lemma 4); faithful functors reflect equations of parallel maps (Lemma 5), so the CDC axioms descend from Poly_ℕ to SPoly.",
+        "trust": "proved",
+        "file": "2026-10-02-tangent-container-cdc.md",
+        "children": [
+          {
+            "id": "N-preserves-cdc-data",
+            "role": "premise",
+            "approach": "Counting identities: ∘↦∘, +↦+, ×↦×, proj/tuple preserved, and N(∂_iF)=∂N(F)/∂m_i. Verified symbolically + 2000 random multivariable containers.",
+            "trust": "proved",
+            "file": "2026-10-02-tangent-container-cdc.md",
+            "children": []
+          },
+          {
+            "id": "N-faithful-on-iso-classes",
+            "role": "premise",
+            "approach": "N(F)=Σ_s ∏ m_i^{|P^i_s|}; its monomials recover the multiset of exponent-vectors = the container iso-class. Injective within fixed arity (confirmed 4000 trials each n=1,2,3).",
+            "trust": "proved",
+            "file": "2026-10-02-tangent-container-cdc.md",
+            "children": []
+          },
+          {
+            "id": "polyN-is-a-cdc",
+            "role": "premise",
+            "approach": "Polynomials over the rig ℕ with Jacobian form a CDC (BCS 2009, motivating example; axioms use only +,×,d/dx, no subtraction). Nontrivial axioms CD.5/6/7 also symbolic-checked here with abstract f.",
+            "trust": "proved",
+            "file": "2026-10-02-tangent-container-cdc.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "chain-rule-container-level",
+        "role": "premise",
+        "approach": "CD.5 combinatorial content: ∂(G◁F)≅(∂G◁F)×∂F, explicit bijection (indexed-Leibniz hole split). Re-read in full this session; complete bijective proof, brute-forced on 23 containers.",
+        "trust": "proved",
+        "file": "2026-06-12-container-chain-rule.tex",
+        "children": []
+      },
+      {
+        "id": "linear-map-discriminator",
+        "role": "premise",
+        "approach": "Prop 6: a map 1→1 is CDC-linear iff D[f]=f∘π₂ iff f=S·y. Corrects the memo's 'linear OBJECTS=S·y' (vacuous here, SPoly is a full CDC) to 'linear MAPS=S·y'. Non-vacuity certificate: y linear, y² not. Map-level discriminator machine-verified in lean-tangent-bridge-finite (y,5y linear; y²,y³,const,affine not; zero axioms).",
+        "trust": "proved",
+        "lean": "TangentContainerBridge.tangent_container_bridge_finite",
+        "file": "2026-10-02-tangent-container-cdc.md",
+        "children": []
+      },
+      {
+        "id": "cd6-cd7-container-involutions",
+        "role": "premise",
+        "approach": "CD.6: setting b'=0 kills the two-hole (Case B) term, Case T ≅ D[F]. CD.7 (Clairaut): swap involution on ordered distinct hole-pairs (s,h1,h2)↦(s,h2,h1). Container isos; symbolic + 500-trial corroboration.",
+        "trust": "proved",
+        "file": "2026-10-02-tangent-container-cdc.md",
+        "children": []
+      },
+      {
+        "id": "dual-number-stage1-arithmetic",
+        "role": "attempt",
+        "approach": "Stage-1 finite check: ε-coeff of p(y+εv)=v·∂p for p∈{1,y,y²,y³,y⁵,sums,scaled}. Corroborates (subsumed by N-preserves-cdc-data). Decisive first move, non-load-bearing. Now machine-certified: Horner-expanded dual-number T over ℕ[y] gives epsCoeff(T(yⁿ))=∂(yⁿ) for n≤5, sorry-free, zero axioms.",
+        "trust": "lean-verified",
+        "lean": "TangentContainerBridge.tangent_eps_coeff_eq_deriv",
+        "file": "2026-10-02-tangent-container-cdc.md",
+        "children": []
+      },
+      {
+        "id": "lean-tangent-bridge-finite",
+        "role": "attempt",
+        "approach": "Core-Lean-4 (Mathlib-free) decide oracle, 2026-10-03-tangent-container-bridge-finite.lean. Polynomials as List ℕ; dual number T computed by genuine Horner evaluation of p at Y=y+ε over ℕ[y] (not via deriv). Certifies: (1) Stage-1 epsCoeff(T(yⁿ))=∂(yⁿ) + base part=yⁿ, n≤5; (2) Leibniz ∂(yᵐ·yⁿ) and chain rule CD.5 shadow ∂(yᵐ∘yⁿ) on monomials; (3) Prop-6 map-level linearity discriminator (bivariate List(List ℕ)): y,5y linear, y²,y³,const 7,affine 3+7y NOT — non-vacuity vs trivial T(p)=p×p. #print axioms = [] (no axioms). Finite oracle only; NOT the general CDC-axiom descent.",
+        "trust": "lean-verified",
+        "lean": "lean/2026-10-03-tangent-container-bridge-finite.lean: TangentContainerBridge.tangent_container_bridge_finite (+ tangent_eps_coeff_eq_deriv, tangent_base_eq_mono, leibniz_mono, chain_rule_mono, linear_y/linear_5y/linear_zero, nonlinear_y2/y3/const/affine). #print axioms = [] (no axioms, no native_decide).",
+        "file": "2026-10-02-tangent-container-cdc.md",
+        "children": []
+      },
+      {
+        "id": "ccgz-thm74-packaging",
+        "role": "attempt",
+        "approach": "Repackaging remark: the dual-number T is a section of the additive codomain fibration (CCGZ Thm 56) and Thm 74 re-delivers this CDC with combinator ∂. Forward (cod, pullback) side — NOT the reverse Fam(cod^op) lens side (orientation hazard avoided). Not load-bearing for the proof.",
+        "trust": "computed",
+        "file": "2026-10-02-tangent-container-cdc.md",
+        "sources": ["2409.05763"],
+        "children": []
+      }
+    ]
+  }
+}
