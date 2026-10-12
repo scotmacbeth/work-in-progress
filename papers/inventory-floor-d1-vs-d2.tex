@@ -1,0 +1,382 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{stmaryrd}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\Ob}{\mathrm{Ob}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Inn}{\mathrm{Inn}}
+\newcommand{\Out}{\mathrm{Out}}
+\newcommand{\gerbe}{\mathfrak{g}}
+\newcommand{\abar}{\bar{\alpha}}
+\newcommand{\B}{\mathrm{B}}
+\newcommand{\Ad}{\mathrm{Ad}}
+
+\title{The inventory floor needs the 2-cell datum:\\ $D1$ versus $D2$}
+\author{MacBeth\thanks{Kodamai. A follow-up note to the band-boundary review; the companion
+proof file \texttt{2026-10-12-inventory-floor-d1-d2-dichotomy} and the Lean witness
+\texttt{2026-10-12-floor-d1-separation-s3} live in the author's \texttt{work-in-progress}
+corpus. Prepared for Rick (referee) and as a one-page insert for Neil Ghani's Strathclyde
+mini-course \emph{Tangent Categories and Containers}, 13--16 October 2026 (grant Applications
+and Theory pillars).}\\ \small Kodamai}
+\date{12 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Abstracting a supply chain to a small category $\C$ with fungible stock glued up to a
+relabelling group $K=\Aut F$, the obstruction to a \emph{strict global inventory} is a
+$K$-gerbe over the nerve $N(\C)$, staged following Giraud: a nonabelian band
+$\beta\in H^1(N(\C);\Out K)$ must vanish before an abelian class
+$[\gerbe]\in H^2(N(\C);Z(K))$ is defined. The ``floor corollary'' claimed that over the
+band-trivial stratum a strict global inventory exists exactly when $[\gerbe]=0$. This is
+false, and the reason is instructive: the claim silently fixes a notion of ``strict'' that
+is one cohomological degree below $[\gerbe]$. We separate the two honest notions. Retaining
+the coherence (2-cell) datum, a global inventory exists iff $[\gerbe]=0$ in
+$H^2(N(\C);Z(K))$; discarding it, a global inventory exists iff a degree-one class
+$o_{D1}\in H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$ vanishes. The first implies the
+second, strictly: over centreless stock $Z(K)$ is too small to carry $[\gerbe]$ while the
+transport is still a nontrivial inner relabelling. The minimal witness is $\C=\B(\Z)$,
+$K=S_3$, where $\beta=0$ and $[\gerbe]=0$ yet no naive strictification exists; its finite
+core is machine-checked.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+\paragraph{The floor, and a false corollary.} A supply chain is a small category $\C$:
+objects are nodes, morphisms are logistics operations, composition is sequencing. When
+local inventory charts are comparable only \emph{up to a relabelling} of stock states --
+up to the automorphism group $K:=\Aut F$ of the stock fibre $F$ -- the gluing datum is an
+$\Aut F$-gerbe over the nerve $N(\C)$, and the obstruction to a \emph{strict global
+inventory} (a single coherent trivialization across the chain) is staged in the manner of
+Giraud~\cite{giraud}: a nonabelian band $\beta\in H^1(N(\C);\Out K)$ must vanish before an
+abelian gerbe class $[\gerbe]\in H^2(N(\C);Z(K))$ is even defined. On the band-trivial
+stratum $\beta=0$ it is tempting to close the account with a clean biconditional:
+\[
+\text{(floor corollary, \emph{false})}\qquad
+\text{strict global inventory exists}\iff \beta=0\ \wedge\ [\gerbe]=0 .
+\]
+It is false. Rick, refereeing the band-boundary note, recomputed the obstruction for
+$\C=\B(\Z)$ with $K=S_3$ and found $\beta=0$ and $[\gerbe]=0$ yet no strictification: the
+reflection transport cannot be relabelled to the identity. This note explains \emph{why},
+and in doing so turns the corollary into a pair of correct theorems.
+
+\paragraph{The gap: two meanings of ``strict''.} The corollary hides a choice. Once the
+band is trivial, the transport is gauge-equivalent to a strict \emph{inner} functor
+$\abar\colon\C\to\B(\Inn K)$ (Section~\ref{sec:prelim}); the question is what we ask of it.
+Two answers:
+\begin{itemize}
+\item[\textbf{(D1)}] \emph{(naive)} a vertex gauge $\mu\colon\Ob\C\to\Aut K$ relabelling the
+transport away \emph{entirely}: $\mu(y)\,\abar(f)\,\mu(x)^{-1}=\id_K$ for every $f\colon x\to y$.
+No coherence datum is retained.
+\item[\textbf{(D2)}] a gauge $\mu$ \emph{together with} a strict $K$-valued functor
+$T\colon\C\to\B K$ ($T_{gf}=T_g T_f$) realising the transport by honest group elements:
+$\mu(y)\,\abar(f)\,\mu(x)^{-1}=c_{T_f}$, where $c_a=\mathrm{conj}(a)$.
+\end{itemize}
+$D1$ demands that the transport be \emph{trivialised}; $D2$ demands only that it \emph{lift}
+to the group $K$, surviving as a genuine inner relabelling carried by elements of $K$. These
+are different requests, and -- this is the whole point -- they live one cohomological degree
+apart.
+
+\paragraph{The result.} Write $Z=Z(K)$, $\Inn K=K/Z$, $\Out K=\Aut K/\Inn K$, $q\colon\Aut
+K\twoheadrightarrow\Out K$, and let $[\gerbe]:=\abar^{*}[\star]\in H^2(N(\C);Z)$ be the
+pullback along $\abar$ of the class $[\star]$ of the central extension $1\to Z\to K\to\Inn
+K\to 1$ (Section~\ref{sec:prelim}; this is the gerbe class of~\cite{macbeth-capstone}).
+
+\begin{theorem}[Floor dichotomy]\label{thm:main}
+Fix a small category $\C$ with band-trivial transport $\abar\colon\C\to\B(\Inn K)$.
+\begin{enumerate}
+\item \textbf{($D2$ end.)} A $D2$ global inventory exists if and only if
+$[\gerbe]=0\in H^2(N(\C);Z)$.
+\item \textbf{($D1$ end.)} A $D1$ global inventory exists if and only if $o_{D1}=0$, where
+$o_{D1}$ is the class of $\abar$ in the pointed quotient
+$H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$. This is a \emph{degree-one} obstruction; it
+is not $[\gerbe]$.
+\item \textbf{($D1\Rightarrow D2$, strictly.)} $o_{D1}=0\Rightarrow[\gerbe]=0$, and the
+containment is strict: the gap $o_{D1}\neq 0=[\gerbe]$ is realised exactly when $Z$ is too
+small to carry a nonzero class while $\abar$ is still a nontrivial inner transport --- the
+centreless/fungible regime.
+\item \textbf{(Separation.)} For $\C=\B(\Z)$, $K=S_3$, $\alpha=c_{(0\,1)}$: $\beta=0$ and
+$[\gerbe]=0$ (so $D2$ holds -- an explicit lift is $T(n)=\sigma^n$), yet $o_{D1}\neq 0$
+(no naive gauge strictifies the reflection). Hence the floor corollary is false, and the
+honest $D1$ floor lives one degree down.
+\end{enumerate}
+\end{theorem}
+
+\paragraph{The method.} One slogan runs through the proof: \emph{name the extension, and
+its kernel names both the coefficient group and the cohomological degree.} $D2$ asks the
+inner transport to lift through the central extension $(\star)$ with kernel $Z$; the
+lifting obstruction is a degree-two class with coefficients in $Z$ -- exactly $[\gerbe]$
+(Lemma~\ref{lem:lift}, the Eilenberg--Mac\,Lane / Brown criterion~\cite{eml,brown}). $D1$
+asks the transport to be a \emph{coboundary} in the nonabelian $H^1(\C;\Inn K)$ -- a
+degree-one condition with coefficients in $\Inn K$. Discarding the coherence datum costs
+precisely one degree, and shifts the coefficient group from the centre $Z$ up to the inner
+group $\Inn K$. Keeping these two coefficient groups distinct is the entire content of the
+repair.
+
+\paragraph{Consequences.} Over a one-dimensional base the floor is always clear on the
+$D2$ side: $N(\B(\Z))\simeq S^1$ has $H^2=0$, so a $D2$ inventory exists for every $K$
+(Corollary~\ref{cor:bz}). The $D1$ failure for $S_3$ is therefore not a failure of the
+gerbe class at all -- it is the degree-one shadow the corollary could not see. For the
+grant's Applications pillar the moral is operational: whether a supply chain admits a
+coherent global relabelling depends on \emph{which} notion of ``global relabelling'' the
+operator can afford. If the stock is genuinely fungible (centreless relabelling group),
+demanding the strong form $D1$ can fail even when the weak form $D2$ -- carry the
+relabelling as an explicit, composable group-valued correction -- succeeds.
+
+\paragraph{Outline.} Section~\ref{sec:prelim} fixes the extension $(\star)$, the nonabelian
+$H^1$, and the band-trivialised transport. Section~\ref{sec:d2} proves the $D2$ end
+(Theorem~\ref{thm:main}.1). Section~\ref{sec:d1} constructs $o_{D1}$ and proves the $D1$
+end (\ref{thm:main}.2). Section~\ref{sec:degree} records the degree lane and
+$D1\Rightarrow D2$ (\ref{thm:main}.3). Section~\ref{sec:sep} works the $S_3$ separation
+(\ref{thm:main}.4) and cites its machine-checked core.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We recall only what the proof uses. Let $K=\Aut F$ be the relabelling group of the stock
+fibre, $Z=Z(K)$ its centre, $\Inn K=K/Z$ the inner automorphism group, $\Out K=\Aut
+K/\Inn K$ the outer group; $q\colon\Aut K\twoheadrightarrow\Out K$ is the projection and
+$c\colon K\twoheadrightarrow\Inn K\subseteq\Aut K$, $c_a=\mathrm{conj}(a)$, is conjugation.
+
+\paragraph{The central extension.} Conjugation gives a central extension of groups
+\begin{equation}\tag{$\star$}\label{eq:star}
+1\longrightarrow Z\longrightarrow K\xrightarrow{\ c\ }\Inn K\longrightarrow 1,
+\qquad [\star]\in H^2(\Inn K;Z),
+\end{equation}
+central because inner automorphisms fix $Z$ pointwise, so the action is trivial.
+
+\paragraph{The transport and its band.} The inventory datum is an \emph{outer transport}:
+a pseudofunctor $\C\to\B(\Aut K)$ sending $f\colon x\to y$ to $\alpha(f)\in\Aut K$ with
+coherence (2-cell) data $k_{g,f}\in K$, $\alpha(gf)=c_{k_{g,f}}\,\alpha(g)\alpha(f)$. Its
+\emph{band} is the strict functor $\rho=q\circ\alpha\colon\C\to\B(\Out K)$, with class
+$\beta=[\rho]\in H^1(N(\C);\Out K)$ (nonabelian $H^1$).
+
+\paragraph{Standing hypothesis: the band is trivial.} Throughout, $\beta=0$. By the
+band-triviality criterion (clause~(a) of the band-boundary note, computed), $\alpha$ is
+$\Aut K$-gauge-equivalent to a \emph{strict} $\Inn K$-valued functor. Fix such a gauge once
+and write $\abar\colon\C\to\B(\Inn K)$, $\abar(gf)=\abar(g)\abar(f)$, $\abar(\id)=\id$, for
+the band-trivialised transport. This is the object both $D1$ and $D2$ act on.
+
+\paragraph{Nonabelian $H^1$.} For a group $G$ with trivial $\C$-action, let
+$H^1(\C;G)$ be the pointed set of functors $\C\to\B G$ modulo natural isomorphism
+(Serre~\cite[I.5]{serre}). Concretely a functor is a \emph{$1$-cocycle} $f\mapsto g_f\in G$
+with $g_{\id}=e$ and $g_{gf}=g_g g_f$; a natural isomorphism is \emph{vertex data}
+$\nu\colon\Ob\C\to G$ acting by $g_f\mapsto\nu(y)g_f\nu(x)^{-1}$. The basepoint $*$ is the
+trivial cocycle $f\mapsto e$. A cocycle is a \emph{coboundary} (equivalent to $*$) iff
+$g_f=\nu(y)^{-1}\nu(x)$ for some $\nu$. For $G$ nonabelian this is only a pointed set; that
+is all we need. The transport $\abar$ is such a $1$-cocycle valued in $\Inn K$; for
+$\C=\B(\Z)$, $H^1(\B(\Z);G)=G/\mathrm{conj}$ and $[\abar]$ is the conjugacy class of
+$\abar(1)$.
+
+\paragraph{The gerbe class.} Define $[\gerbe]:=\abar^{*}[\star]\in H^2(N(\C);Z)$, the
+pullback of the extension class~\eqref{eq:star} along the strict functor
+$\abar\colon N(\C)\to\B(\Inn K)$. That this is the $\Aut F$-gerbe's obstruction, and is
+independent of the coherence datum, is the content of the capstone's rectification
+theorem~\cite{macbeth-capstone}; we take it as given.
+
+\section{The $D2$ floor: the obstruction is $[\gerbe]\in H^2$}\label{sec:d2}
+
+The key idea is that $D2$ is exactly a \emph{strict lifting problem} through the central
+extension~\eqref{eq:star}, and such problems are governed by a degree-two class with
+coefficients in the kernel $Z$.
+
+\begin{lemma}[Strict lifting through a central extension]\label{lem:lift}
+Let $\varphi\colon\C\to\B(\Inn K)$ be a strict functor. A strict functor $T\colon\C\to\B K$
+with $c\circ T=\varphi$ (that is, $T_f\in K$, $c(T_f)=\varphi_f$, $T_{gf}=T_g T_f$) exists if
+and only if $\varphi^{*}[\star]=0\in H^2(N(\C);Z)$.
+\end{lemma}
+
+\begin{proof}
+Choose a set-section $s\colon\Inn K\to K$ of $c$ with $s(e)=e$ and put $t_f:=s(\varphi_f)$,
+so $c(t_f)=\varphi_f$. The defect $z(g,f):=t_{gf}(t_g t_f)^{-1}$ satisfies $c(z(g,f))=
+\varphi_{gf}(\varphi_g\varphi_f)^{-1}=e$, hence $z(g,f)\in Z$. Associativity of composition
+in $\C$ forces the $2$-cocycle identity $\delta z=0$ on the nerve $N(\C)$ (the standard bar
+computation; $Z$ central, so the action is trivial), and $[z]\in H^2(N(\C);Z)$ is exactly
+$\varphi^{*}[\star]$ -- the pullback of the bar $2$-cocycle of~\eqref{eq:star} along
+$\varphi$~\cite[IV.3]{brown},~\cite{eml}. A strict lift is a choice $T_f=t_f\zeta_f$ with
+$\zeta_f\in Z$ making the defect vanish; since $z'=z\cdot\delta\zeta$, a strict lift exists
+iff $z$ is a $Z$-valued coboundary iff $[z]=0$.
+\end{proof}
+
+\begin{proposition}[$D2$ end]\label{prop:d2}
+A $D2$ global inventory exists if and only if $[\gerbe]=\abar^{*}[\star]=0\in H^2(N(\C);Z)$.
+\end{proposition}
+
+\begin{proof}
+Given $(\mu,T)$, set $\tau(f):=\mu(y)\,\abar(f)\,\mu(x)^{-1}$. Since $\Inn K\trianglelefteq
+\Aut K$ and $\abar(f)\in\Inn K$, $\tau(f)$ is inner, and strictness of $\abar$ gives
+$\tau(gf)=\mu(z)\abar(gf)\mu(x)^{-1}=\tau(g)\tau(f)$, so $\tau\colon\C\to\B(\Inn K)$ is a
+\emph{strict} functor. The $D2$ equation $\tau(f)=c_{T_f}$ with $T$ strict says precisely
+that $T$ is a strict lift of $\tau$ through~\eqref{eq:star}; by Lemma~\ref{lem:lift} such
+$(\mu,T)$ exists iff $\tau^{*}[\star]=0$ for some admissible $\mu$.
+
+It remains to see $\tau^{*}[\star]=0\iff\abar^{*}[\star]=0$. Decompose $\mu(x)=\hat h_c\,j(x)$
+on each component $c$, where $\hat h_c\in\Aut K$ is a fixed lift of the locally constant
+outer part $q\circ\mu$ and $j(x)\in\Inn K$. Then
+$\tau(f)=\Ad(\hat h_c)\big(j(y)\,\abar(f)\,j(x)^{-1}\big)=\Ad(\hat h_c)\circ\abar'(f)$, where
+$\abar'(f):=j(y)\abar(f)j(x)^{-1}$ is naturally isomorphic to $\abar$ (inner vertex data), so
+$\abar'^{*}=\abar^{*}$ on $H^2$. The global automorphism $\hat h_c$ preserves~\eqref{eq:star}
+(it fixes $Z$ setwise, inducing $\hat h_c|_Z\in\Aut Z$, and covers $\Ad(\hat h_c)\in\Aut(\Inn
+K)$), so $\tau^{*}[\star]=(\hat h_c|_Z)_{*}\,\abar^{*}[\star]=(\hat h_c|_Z)_{*}[\gerbe]$, an
+automorphism image of $[\gerbe]$. An automorphism of $H^2(N(\C);Z)$ fixes $0$, so
+$\tau^{*}[\star]=0\iff[\gerbe]=0$.
+\end{proof}
+
+\begin{corollary}\label{cor:bz}
+For $\C=\B(\Z)$, $N(\C)\simeq S^1$, so $H^2(S^1;Z)=0$ and $[\gerbe]=0$ for every $K$: a $D2$
+global inventory always exists over a free one-generator base.
+\end{corollary}
+
+\section{The $D1$ floor: the obstruction drops to $o_{D1}\in H^1$}\label{sec:d1}
+
+The key idea here is dual to the last: $D1$ asks $\abar$ not to \emph{lift} but to
+\emph{vanish} -- to be a coboundary in the nonabelian $H^1(\C;\Inn K)$. This is a
+degree-one condition, and its coefficient group is $\Inn K$, not $Z$.
+
+\paragraph{Band-preservation is forced.} If a $D1$ gauge $\mu$ exists, applying $q$ to
+$\mu(y)\abar(f)\mu(x)^{-1}=\id$ and using $q(\abar(f))=e$ (band trivial) gives
+$q(\mu(y))=q(\mu(x))$ for every $f\colon x\to y$. Hence $q\circ\mu\colon\Ob\C\to\Out K$ is
+locally constant: $D1$ \emph{entails} band-preservation, with no extra hypothesis.
+
+\paragraph{Construction of $o_{D1}$.} $H^0(\C;\Out K)$ is the group of locally constant
+maps $\Ob\C\to\Out K$ ($=\Out K$ per component). It acts on the pointed set
+$H^1(\C;\Inn K)$: given $\theta\in H^0(\C;\Out K)$, choose a locally constant lift $\hat
+h\colon\Ob\C\to\Aut K$ with $q\circ\hat h=\theta$, and send a cocycle $g_f$ to $\hat
+h(y)\,g_f\,\hat h(x)^{-1}\in\Inn K$ (inner, as $\Inn K\trianglelefteq\Aut K$). A different
+lift of $\theta$ differs by an $\Inn K$-valued cochain, changing the result by an $\Inn
+K$-coboundary; so the action descends to $H^1(\C;\Inn K)$ and fixes the basepoint $*$. Set
+\[
+o_{D1}:=[\abar]\ \in\ H^1(\C;\Inn K)\,/\,\mathrm{im}\,H^0(\C;\Out K).
+\]
+
+\begin{proposition}[$D1$ end]\label{prop:d1}
+A $D1$ global inventory exists if and only if $o_{D1}=0$; equivalently, iff $[\abar]=*$ in
+$H^1(\C;\Inn K)$.
+\end{proposition}
+
+\begin{proof}
+We first show $D1\iff[\abar]=*$.
+\begin{itemize}
+\item If $[\abar]=*$, pick $j\colon\Ob\C\to\Inn K$ with $\abar(f)=j(y)^{-1}j(x)$. Set
+$\mu:=j$. Then $\mu(y)\abar(f)\mu(x)^{-1}=j(y)\,j(y)^{-1}j(x)\,j(x)^{-1}=\id$, so $D1$ holds.
+\item Conversely let $\mu\colon\Ob\C\to\Aut K$ solve $D1$. By the forced constraint
+$q\circ\mu=\theta_c$ is constant on each component $c$; choose a lift $\hat h_c\in\Aut K$ of
+$\theta_c$ and write $\mu(x)=\hat h_c\,j(x)$ with $j(x):=\hat h_c^{-1}\mu(x)\in\ker q=\Inn
+K$. For $f\colon x\to y$ in $c$, $\abar(f)=\mu(y)^{-1}\mu(x)=j(y)^{-1}j(x)$, an $\Inn
+K$-coboundary on $c$. Over all components, $[\abar]=*$.
+\end{itemize}
+Now the quotient. The $\Out K$-action fixes $*$, so the fibre of the quotient map over the
+basepoint is exactly the $\Out K$-orbit of $*$, namely $\{*\}$. Hence $o_{D1}=0$ (the
+basepoint of the quotient) iff $[\abar]=*$ iff $D1$ holds.
+\end{proof}
+
+The quotient by $\mathrm{im}\,H^0(\C;\Out K)$ makes $o_{D1}$ independent of the choice of
+fibre coordinates (a global automorphism of $K$ acts by an outer class). The action can be
+genuinely nontrivial -- for $K=D_4$ it swaps the two reflection conjugacy classes, both
+nonzero -- so the quotient is needed for coordinate-freeness, but by the last line of the
+proof it never changes \emph{whether} $o_{D1}=0$: the quotient is vanishing-neutral.
+
+\section{The degree lane, and $D1\Rightarrow D2$}\label{sec:degree}
+
+\begin{remark}[one well-definedness caveat, and the degree drop]\label{rem:degree}
+Both invariants are canonical only up to the residual $\Out K$-action (global fibre
+re-coordinatisation): $[\gerbe]$ up to the $\Out K$-action on $H^2(N(\C);Z)$
+(Proposition~\ref{prop:d2}), $o_{D1}$ by the explicit quotient (Proposition~\ref{prop:d1}).
+In both cases the action is by automorphisms fixing $0$ (resp.\ $*$), so vanishing is
+invariant and both biconditionals are well-posed. $D1$ and $D2$ differ not in their gauge
+symmetry but in their \emph{degree}: $D1$ asks $\abar$ to be a coboundary -- trivialised to
+the identity, a degree-one ($H^1$) condition on $\Inn K$; $D2$ asks $\abar$ only to lift to
+a strict $K$-valued functor, a degree-two ($H^2$, $k$-invariant) condition on $Z$. Dropping
+the coherence datum costs exactly one cohomological degree and raises the coefficient group
+from $Z$ to $\Inn K$.
+\end{remark}
+
+\begin{proposition}[$D1\Rightarrow D2$, strictly]\label{prop:implies}
+$o_{D1}=0\Rightarrow[\gerbe]=0$, and the containment is strict.
+\end{proposition}
+
+\begin{proof}
+If $[\abar]=*$ then $\abar$ is naturally isomorphic to the constant functor at the identity
+object of $\B(\Inn K)$; pullback along a functor isomorphic to a constant kills $H^2$, so
+$[\gerbe]=\abar^{*}[\star]=0$ (equivalently, take $T\equiv e$ in $D2$). The gap
+$o_{D1}\neq 0=[\gerbe]$ is realised whenever $Z$ is too small to carry a nonzero class while
+$\abar$ is still a nontrivial inner transport -- the centreless/fungible regime. $S_3$
+($Z=1$) is the minimal such witness.
+\end{proof}
+
+\section{The separation: $\C=\B(\Z)$, $K=S_3$}\label{sec:sep}
+
+$S_3$ is \emph{complete}: $Z(S_3)=1$, $\Inn S_3=S_3$, $\Out S_3=1$, $\Aut S_3\cong
+S_3$~\cite[Thm 7.5]{rotman}. The transport on $\B(\Z)$ is determined by the generator,
+$\alpha(1)=c_\sigma$ with $\sigma=(0\,1)$, and freely $\alpha(n)=c_{\sigma^n}$; as $\B(\Z)$
+is free on one generator this is already strict with trivial coherence datum, so
+$\abar(n)=c_{\sigma^n}$.
+
+\begin{itemize}
+\item \textbf{Band.} $\Out S_3=1$, so $\beta\in H^1(S^1;1)=0$. \checkmark
+\item \textbf{Gerbe class.} $Z(S_3)=1$, so $H^2(S^1;Z)=0$ and $[\gerbe]=0$; independently,
+$N(\B(\Z))\simeq S^1$ forces $H^2=0$ (Corollary~\ref{cor:bz}). By
+Proposition~\ref{prop:d2} a $D2$ inventory exists, with explicit lift $T(n)=\sigma^n$: a
+homomorphism $\Z\to S_3$ since $\sigma^2=e$, and $\mu=\id$, $c_{T(n)}=c_{\sigma^n}=\abar(n)$.
+\checkmark
+\item \textbf{$o_{D1}$.} $H^1(\B(\Z);\Inn S_3)=S_3/\mathrm{conj}=\{[e],[\text{transposition}],
+[\text{3-cycle}]\}$, and $o_{D1}$ is the class of $\sigma$, a transposition $\neq[e]$; with
+$\Out=1$ it is left unchanged, so $o_{D1}\neq 0$. By Proposition~\ref{prop:d1} no $D1$
+inventory exists. Directly: on one object $\mu\,\abar(1)\,\mu^{-1}=c_{m\sigma m^{-1}}$, and
+$c_{m\sigma m^{-1}}=\id\iff m\sigma m^{-1}=e$ (as $Z(S_3)=1$ makes $c$ injective),
+impossible for $\sigma\neq e$. \checkmark
+\end{itemize}
+
+Hence $\beta=0\wedge[\gerbe]=0$ while $D1$ fails: the floor corollary is false, and the
+honest $D1$ floor lives one degree down in $H^1$. The finite, decidable core of this
+witness -- $Z(S_3)=1$, $\Aut S_3$ of order $6$ (so $\Out S_3=1$), the $D2$ lift $\sigma^2=e$,
+and the exhaustive check that no $m\in S_3$ conjugates $\sigma$ to $e$ -- is machine-checked
+in Lean~4 (\texttt{floor\_separation}, kernel-checked with only \texttt{propext} and
+\texttt{Quot.sound}, no \texttt{native\_decide} and no added axioms). The cohomological
+identifications ($[\gerbe]=\abar^{*}[\star]$, the location of $o_{D1}$, and the forcing of
+vanishing from trivial coefficient groups) are the cited classical bridges, not re-derived
+in Lean.
+
+\section*{Upshot}
+
+Rick's $B(\Z)/S_3$ counterexample is now a theorem. The inventory floor splits cleanly by
+\emph{how much structure one retains}. Keep the coherence (2-cell) datum ($D2$): the
+obstruction is the gerbe class $[\gerbe]\in H^2(N(\C);Z(K))$. Discard it ($D1$): the
+obstruction drops a degree to $o_{D1}\in H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$. They
+agree iff $Z(K)$ is rich enough to carry the class; over fungible (centreless) stock they
+diverge, and $\B(\Z)/S_3$ is the honest witness. The repair isolates the single recurring
+hazard in the program -- confusing the central coefficient $Z(K)$ of the degree-two class
+with the inner coefficient $\Inn K$ of the degree-one one. Whether this re-promotes the
+band-boundary note is a separate registry judgement, deferred; here we have stated only
+what is proved. The scope is the band-trivial stratum $\beta=0$; the nontrivial-band and
+$T^2$-coupled frontiers are treated in the companion capstone~\cite{macbeth-capstone}.
+
+\begin{thebibliography}{9}
+\bibitem{brown} K.~S.~Brown, \emph{Cohomology of Groups}, Graduate Texts in Mathematics 87,
+Springer, 1982 (Chapter IV.3).
+\bibitem{eml} S.~Eilenberg and S.~Mac\,Lane, \emph{Cohomology theory in abstract groups.~II.
+Group extensions with a non-Abelian kernel}, Ann.\ of Math.\ (2) \textbf{48} (1947), 326--341.
+\bibitem{giraud} J.~Giraud, \emph{Cohomologie non abélienne}, Grundlehren der mathematischen
+Wissenschaften 179, Springer, 1971 (Chapters III--IV).
+\bibitem{macbeth-capstone} MacBeth, \emph{The inventory gerbe couples on the torus}, Kodamai
+work-in-progress note, content commit \texttt{e306ae5}, 2026.
+\bibitem{rotman} J.~J.~Rotman, \emph{An Introduction to the Theory of Groups}, 4th ed.,
+Graduate Texts in Mathematics 148, Springer, 1995 (Theorem 7.5).
+\bibitem{serre} J.-P.~Serre, \emph{Galois Cohomology}, Springer Monographs in Mathematics,
+Springer, 1997 (Chapter I.5).
+\end{thebibliography}
+
+\end{document}
