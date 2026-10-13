@@ -1,0 +1,304 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{stmaryrd}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Inn}{\mathrm{Inn}}
+\newcommand{\Out}{\mathrm{Out}}
+\newcommand{\gerbe}{\mathfrak{g}}
+\newcommand{\B}{\mathrm{B}}
+\newcommand{\Ad}{\mathrm{ad}}
+\newcommand{\Heis}{\mathrm{Heis}}
+
+\title{The two $T^2$ gerbe ends are coupled, not independent:\\
+a strict one-way forced correlation $\delta\Rightarrow[\gerbe]$}
+\author{MacBeth\thanks{Kodamai. Prepared for Rick (referee) and as a companion note to the
+torus-coupling arc of the inventory-gerbe program. The proof file
+\texttt{2026-10-13-two-gerbe-ends-forced-correlation} and the cross-tabulation script
+\texttt{2026-10-13-two-ends-crosstab.py} live in the author's \texttt{work-in-progress}
+corpus; work-in-progress content commit \texttt{CONTENTHASH}. Rests on the proved
+$\delta$-commutator lemma (\texttt{coupled-T2-general-delta-lemma}) and feeds the Kodamai
+AI Mathematician grant (Applications and Theory pillars).}\\ \small Kodamai}
+\date{13 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a structure group $K$ of nilpotency class $\le 2$, the nonabelian inventory gerbe on the
+torus $T^2=\B\Z^2$ carries two obstruction classes sharing the hinge $\Inn K$: the
+\emph{strictification} class $\delta(\rho)=[A,B]\in H^2(T^2;\Inn K)$ and the \emph{central}
+class $[\gerbe]\in H^2(T^2;Z(K))$. We prove they are \emph{not} independent. They satisfy a
+forced one-way correlation
+\[
+\delta\text{ couples on }T^2\ \Longrightarrow\ [\gerbe]\text{ couples on }T^2,
+\]
+so the corner $(\delta\neq0,\ [\gerbe]=0)$ is \emph{forced empty}. The cause is a structural
+asymmetry between two abelian-kernel extensions: the central extension
+$1\to Z(K)\to K\to\Inn K\to1$ is non-split for every nonabelian class-$2$ $K$ and carries the
+\emph{trivial} $\Inn K$-action, so $[\gerbe]$ universally couples, while the strictification
+extension $\Aut K\to\Out K$ \emph{can} split, so $\delta$ is selective. The implication is
+\emph{strict}: the converse fails at $K=D_4$ ($[\gerbe]\neq0$ while $\delta\equiv0$), the
+dihedral $4\mid n$ witness at $n=4$. This is the $T^2$-analogue of the $S^1$-floor
+$D1\Rightarrow D2$ dichotomy. A battery cross-tabulation confirms the empty corner.
+\end{abstract}
+
+\section{Verdict}\label{sec:verdict}
+
+Over the base $T^2=\B\Z^2$ we decide, for the two Giraud obstruction stages of the inventory
+gerbe, between
+\begin{itemize}
+\item \textbf{(A)} \emph{independence} --- both off-diagonal corners $(\delta\neq0,[\gerbe]=0)$
+and $(\delta=0,[\gerbe]\neq0)$ realized; and
+\item \textbf{(B)} \emph{forced correlation} --- some implication always holds.
+\end{itemize}
+The answer is \textbf{(B)}. For every finite group $K$ of nilpotency class $\le2$ (the exact
+domain on which both obstructions are abelian-$H^2$-valued),
+\[
+\boxed{\ \delta\text{ couples on }T^2\ \Longrightarrow\ [\gerbe]\text{ couples on }T^2\ }
+\]
+i.e. the corner $(\delta\neq0,\ [\gerbe]=0)$ is \emph{forced empty}. The converse corner
+$(\delta=0,\ [\gerbe]\neq0)$ \emph{is} occupied (e.g.\ $K=D_4$, the dihedral $4\mid n$ witness
+at $n=4$), so the correlation is \emph{strict and one-directional}. There is no logical
+independence.
+
+The group-theoretic cause is a structural asymmetry between the two extensions that the
+symmetric picture --- ``both are commutator obstructions of an abelian-kernel extension through
+the hinge $\Inn K$'' --- hides:
+\begin{itemize}
+\item the \emph{central} extension $1\to Z(K)\to K\to\Inn K\to1$ is \emph{non-split for every
+nonabelian} class-$2$ $K$, and its coefficient $Z(K)$ carries the \emph{trivial}
+$\Inn K$-action, so $[\gerbe]$ is \emph{universally obstructed} --- every nonabelian class-$2$
+group couples at the central end;
+\item the \emph{strictification} extension
+$1\to\Inn K\to\Aut K\to\Out K\to1$ \emph{can split} (it does for
+$D_4,Q_8,\Heis(\F_3),M_{16},C_4\rtimes C_4$), killing $\delta$ \emph{selectively}.
+\end{itemize}
+Strictification coupling is therefore a strictly stronger non-commutativity condition than
+central coupling, and it cannot occur without the weaker one.
+
+\section{Setup: the two ends as one lemma, applied twice}\label{sec:setup}
+
+Let $K$ be finite of nilpotency class $\le 2$, so $[K,K]\subseteq Z(K)$ and
+$M:=\Inn K=K/Z(K)$ is \emph{abelian}. Two abelian-kernel group extensions share the hinge
+$\Inn K$:
+\[
+(\Sigma)\quad 1\to\Inn K\xrightarrow{\ }\Aut K\xrightarrow{\ \pi\ }\Out K\to1,
+\qquad
+(Z)\quad 1\to Z(K)\xrightarrow{\ }K\xrightarrow{\ \Ad\ }\Inn K\to1 .
+\]
+Over the base $T^2=\B\Z^2$ (nerve of $\C=\B\Z^2$), the proved $\delta$-commutator lemma
+(\texttt{coupled-T2-general-delta-lemma}) computes the degree-$2$ connecting/lifting
+obstruction of \emph{any} such extension $1\to A\to E\to Q\to1$ ($A$ abelian) for a band
+$b:\Z^2\to Q$: with lifts $x,y\in E$ of $b(s),b(t)$,
+\[
+\mathrm{obs}(b)=\big[\,[x,y]\,\big]\in H^2(T^2;A)=A\big/\big((\sigma-1)A+(\tau-1)A\big),\qquad
+[x,y]=xyx^{-1}y^{-1}\in\ker(E\to Q)=A,
+\]
+independent of lifts, where $\sigma,\tau$ are the $b$-twisted actions of $s,t$ on $A$. We
+instantiate it on both extensions.
+
+\paragraph{Strictification end $(\Sigma)$.} Band $\rho:\Z^2\to\Out K$, lifts
+$A,B\in\Aut K$:
+\[
+\delta(\rho)=\big[[A,B]\big]\in H^2(T^2;\Inn K).
+\]
+
+\paragraph{Central end $(Z)$.} Here the coefficient is $A=Z(K)$ and the action is
+\emph{trivial}: for $z\in Z(K)$ and any lift $k\in K$ of $\bar k\in\Inn K$,
+$\;\bar k\cdot z=kzk^{-1}=z$ (central). Hence $(\sigma-1)Z(K)+(\tau-1)Z(K)=0$ and
+\[
+H^2(T^2;Z(K))=Z(K)\quad(\text{trivial coefficients, no quotient}).
+\]
+An \emph{inner band} $\beta:\Z^2\to\Inn K$ (automatically valid: $\Inn K$ abelian $\Rightarrow$
+any pair of images commutes) with lifts $k,k'\in K$ gives
+\[
+[\gerbe]=\gamma(\beta)=\big[[k,k']\big]=[k,k']\in Z(K).
+\]
+This is exactly the registry's Face~2 central-extension lifting class
+(\texttt{lift-cocycle-derivation}, proved), now read through the same lemma.
+
+\begin{remark}[What ``independence'' means here]
+$\delta$ and $[\gerbe]$ live in \emph{different} coefficient groups ($\Inn K$ vs $Z(K)$) and
+arise from \emph{different} band targets ($\Out K$ vs $\Inn K$); for a single physical gerbe
+the central stage is only reached \emph{after} strictification succeeds. So the independence
+question is correctly posed at the level of the \emph{group $K$}: does $K$ admit a coupling
+band at each end? --- the four-corner cross-tabulation. We decide that.
+\end{remark}
+
+\section{Two lemmas}\label{sec:lemmas}
+
+\begin{lemma}[central end is universally obstructed]\label{lem:central}
+For $K$ finite of class $\le2$: $\ [\gerbe]\neq0$ for some inner band $\iff K$ is nonabelian.
+\end{lemma}
+
+\begin{proof}
+($\Leftarrow$) $K$ nonabelian $\Rightarrow$ $\exists\,k,k'\in K$ with $[k,k']\neq1$. By class
+$\le2$, $[k,k']\in[K,K]\subseteq Z(K)$, so $[k,k']\in Z(K)\setminus\{1\}$. Their images
+$\bar k,\bar k'\in\Inn K$ commute (abelian), so $\beta:s\mapsto\bar k,\ t\mapsto\bar k'$ is a
+band, and by \S\ref{sec:setup} $\gamma(\beta)=[k,k']\neq0$ in $H^2(T^2;Z(K))=Z(K)$.
+($\Rightarrow$) If $K$ abelian then $[k,k']=1$ for all $k,k'$, so $\gamma(\beta)=0$ for every
+band.
+\end{proof}
+
+\begin{lemma}[strictification end needs a nonabelian group]\label{lem:strict}
+For any finite $K$: $\ \delta(\rho)\neq0$ for some band $\rho\ \Rightarrow\ K$ is nonabelian.
+\end{lemma}
+
+\begin{proof}
+Contrapositive. If $K$ is abelian then $\Inn K=1$, so $(\Sigma)$ reads
+$1\to1\to\Aut K\xrightarrow{=}\Out K\to1$: the kernel is trivial, every band lifts uniquely, and
+$\delta\equiv0$ (the lemma gives $[A,B]\in\Inn K=1$).
+\end{proof}
+
+\section{Theorem: forced correlation}\label{sec:theorem}
+
+\begin{theorem}[forced correlation]\label{thm:main}
+Let $K$ be finite of nilpotency class $\le2$. Then
+\[
+\big[\ \exists\,\rho:\delta(\rho)\neq0\ \big]\ \Longrightarrow\
+\big[\ \exists\,\beta:[\gerbe]=\gamma(\beta)\neq0\ \big].
+\]
+Equivalently, the corner $(\delta\text{ couples},\ [\gerbe]=0\ \text{for all bands})$ is
+\emph{empty}. The implication is \emph{strict}: its converse fails --- $K=D_4$ has
+$[\gerbe]\neq0$ but $\delta\equiv0$.
+\end{theorem}
+
+\begin{proof}
+If $\delta(\rho)\neq0$ for some $\rho$, Lemma~\ref{lem:strict} gives $K$ nonabelian, and then
+Lemma~\ref{lem:central} gives a band $\beta$ with $[\gerbe]=\gamma(\beta)\neq0$. Strictness:
+for $K=D_4$ (dihedral of order $8$, class $2$), $\Inn D_4=(\Z/2)^2$, and the extension
+$(\Sigma)$, $1\to(\Z/2)^2\to\Aut D_4\to\Out D_4\to1$ with $\Aut D_4\cong D_4$,
+$\Out D_4\cong\Z/2$, \emph{splits} --- the order-$2$ automorphism $rs$ (outside the inner Klein
+four-subgroup $\{1,r^2,s,r^2s\}$ of $\Aut D_4$) is a homomorphic section --- so
+$\delta\equiv0$. Yet $D_4$ is nonabelian, so by Lemma~\ref{lem:central}
+$[\gerbe]=[r,s]=r^2\neq0\in Z(D_4)$.
+\end{proof}
+
+\paragraph{The structural cause (the asymmetry).} The two ``split?'' questions underlying the
+four corners are \emph{not} logically free:
+\begin{itemize}
+\item \textbf{$(Z)$ is non-split for every nonabelian class-$2$ $K$.} A splitting
+$\Inn K\to K$ would be a homomorphic section with image a complement $S$ to $Z(K)$; because
+$(Z)$ is central, $K=Z(K)\times S$ with $Z(K)$ and $S\cong\Inn K$ both abelian, forcing $K$
+abelian --- a contradiction. (Coupling is then supplied directly by Lemma~\ref{lem:central},
+using the trivial center-action.)
+\item \textbf{$(\Sigma)$ can split} ($D_4,Q_8,\Heis(\F_3),M_{16},C_4\rtimes C_4$ all do), and
+split $(\Sigma)\Rightarrow\delta\equiv0$ (a homomorphic section
+$\theta:\Out K\to\Aut K$ turns any band $\rho$ into a homomorphic lift $\theta\rho$).
+\end{itemize}
+So the column ``$(Z)$ splits'' of the cross-tabulation contains \emph{only abelian groups};
+the central end is forced on for all nonabelian $K$, while the strictification end is free.
+That collapse of one column \emph{is} the forced correlation.
+
+\section{Computational cross-tabulation (confirmatory)}\label{sec:crosstab}
+
+The script \texttt{2026-10-13-two-ends-crosstab.py} computes, for each battery group:
+$|Z|,|\Aut|,|\Inn|,|\Out|$; whether $\Inn K$ is abelian (class $\le2$); whether $(\Sigma)$
+splits and whether it $\delta$-couples (exhaustive search for a commuting outer pair with no
+commuting lift); whether $(Z)$ splits and whether it $[\gerbe]$-couples.
+
+\begin{center}
+\begin{tabular}{lcccccc}
+\toprule
+$K$ & class $\le2$? & $(\Sigma)$ split & $\delta$ couples & $(Z)$ split & $[\gerbe]$ couples\\
+\midrule
+$D_4$ & yes & \textbf{yes} & no & no & \textbf{yes}\\
+$Q_8$ & yes & yes & no & no & yes\\
+$\Heis(\F_3)$ & yes & yes & no & no & yes\\
+$M_{16}$ & yes & yes & no & no & yes\\
+$C_4\rtimes C_4$ & yes & yes & no & no & yes\\
+$D_4\times C_2$ & yes & no & \textbf{yes (30)} & no & yes\\
+$Q_8\times C_2$ & yes & no & \textbf{yes (54)} & no & yes\\
+$SD_{16},\,D_{16}$ & \textbf{no} ($\Inn$ nonab.) & --- & no & no & (nonab.)\\
+$C_4,\ (\Z/2)^2$ (abelian) & yes & yes & no & \textbf{yes} & no\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Four corners} $(\delta\text{ couples})\times([\gerbe]\text{ couples})$:
+\begin{itemize}
+\item $(\text{yes},\text{yes})$: $D_4\times C_2,\ Q_8\times C_2$.
+\item $(\text{yes},\text{no})$: \textbf{EMPTY} --- the forced-correlation corner.
+\item $(\text{no},\text{yes})$: $D_4,Q_8,\Heis(\F_3),M_{16},C_4\rtimes C_4$ (every
+split-$(\Sigma)$ nonabelian class-$2$ group).
+\item $(\text{no},\text{no})$: abelian $K$ only (vacuous).
+\end{itemize}
+Every nonabelian row has $(Z)$ non-split and $[\gerbe]$ coupling; every abelian row has $(Z)$
+split and no coupling --- exactly Lemmas~\ref{lem:central}--\ref{lem:strict}. The decisive
+$(\text{yes},\text{no})$ corner is empty, confirming the Theorem. ($SD_{16},D_{16}$ are
+included to mark the boundary: $\Inn$ is nonabelian there --- class $3$ --- so the $\delta$-end
+is \emph{outside} the clean ordinary-$H^2$ domain; they still show no violation, but the
+theorem is not claimed for them.)
+
+\section{Verification (hostile-referee pass)}\label{sec:verification}
+
+\begin{itemize}
+\item \textbf{\S\ref{sec:setup} central-end identification.} Trivial center-action is immediate
+($z$ central). The lemma applies verbatim to any abelian-kernel extension; $(Z)$ qualifies with
+$A=Z(K)$. $H^2(T^2;Z(K))=Z(K)$ for trivial coefficients is standard ($T^2=K(\Z^2,1)$,
+$H^2(\Z^2;M)=M$). The class is the bare commutator --- matches
+\texttt{lift-cocycle-derivation} and the $D_4$ arithmetic $[r,s]=r^2$.
+\item \textbf{Lemma~\ref{lem:central}.} Class $\le2$ is used exactly once and essentially: to
+land $[k,k']$ in $Z(K)$. Without it $[k,k']$ need not be central and the inner-band obstruction
+is not defined by this formula --- this is why the domain is class $\le2$, not accidental.
+\item \textbf{Lemma~\ref{lem:strict}.} Elementary; $\Inn K=1\Rightarrow\delta\equiv0$.
+\item \textbf{Theorem~\ref{thm:main}.} Pure composition of the two lemmas; the empty corner is
+their conjunction. The structural-cause paragraph (central extension of a nonabelian class-$2$
+group never splits) is an independent elementary check, and matches $(Z)$-split$=$False on
+every nonabelian computed row.
+\item \textbf{Strictness witness $D_4$.} $\Aut D_4\cong D_4$ splits over the inner Klein four
+via the order-$2$ element $rs$; verified by the engine ($\Sigma$ split$=$True,
+$\delta$-couple$=$False) and by hand. $D_4$ is the dihedral $4\mid n$ instance at $n=4$.
+\item \textbf{Boundary/degenerate cases.} Abelian $K$: both ends trivial (corner
+$(\text{no},\text{no})$). Rank-$1$ base $S^1$: $H^2(S^1;-)=0$, both ends vanish, no content.
+Trivial band: commutator $=0$, both obstructions $0$.
+\item \textbf{Scope honesty.} $SD_{16},D_{16}$ (and dihedral $D_n$, $4\mid n$, $n>4$) have
+$\Inn$ nonabelian: outside the clean domain, explicitly excluded, no claim made.
+\end{itemize}
+
+\section{Scope and (non-)gaps}\label{sec:scope}
+
+\begin{itemize}
+\item \textbf{Domain $=$ class $\le2$, and this is the natural maximal domain.} Both
+obstructions are ordinary abelian $H^2$ precisely when $\Inn K$ is abelian (class $\le2$): then
+$\delta\in H^2(T^2;\Inn K)$ and $(Z)$ is a genuine central extension with $[k,k']\in Z(K)$.
+Outside it the $\delta$-end becomes nonabelian-$H^2$ (Giraud/Eilenberg--MacLane) and the
+central-end formula needs the commuting-in-$\Inn$ caveat; the clean correlation statement is
+not claimed there and is the one honest open edge (the dihedral $D_n$, $4\mid n$, $n\ge8$ family
+lives here --- computed rows show no violation but the framework is only heuristic).
+\item \textbf{Grade.} The Theorem (forced correlation) is \emph{proved} --- it rests only on
+the proved $\delta$-commutator lemma and two elementary lemmas. The battery cross-tabulation is
+\emph{computed} over the enumerated family (not a census of all groups of each order; minimality
+is not claimed).
+\item \textbf{Not inflated.} The claim is a one-directional implication with a strict
+counterexample to its converse, \emph{not} a biconditional and \emph{not} a census theorem. The
+decisive content is the forced-empty corner plus its structural cause (the $(Z)$-split column is
+abelian-only).
+\end{itemize}
+
+\paragraph{One-line summary.} On $T^2$, the strictification obstruction
+$\delta\in H^2(T^2;\Inn K)$ and the central obstruction $[\gerbe]\in H^2(T^2;Z(K))$ of a
+class-$\le2$ inventory gerbe are \emph{not independent}: $\delta$-coupling forces $K$
+nonabelian, and every nonabelian class-$2$ group has $[\gerbe]\neq0$ (central extension
+non-split, trivial center-action), so $\delta\neq0\Rightarrow[\gerbe]\neq0$ --- a strict
+one-way forced correlation \textbf{(B)}; the converse fails at $K=D_4$ ($[\gerbe]\neq0$,
+$\delta\equiv0$, the dihedral $4\mid n$ witness), and the corner $(\delta\neq0,[\gerbe]=0)$ is
+forced empty.
+
+\end{document}
