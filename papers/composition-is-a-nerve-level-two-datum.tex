@@ -49,8 +49,10 @@ and proof files, which live together with this note and the verification scripts
 Prepared as a framing appendix for the Strathclyde mini-course \emph{Tangent Categories and
 Containers} (13--16 October 2026).}\\
 \small Kodamai}
-\date{8 October 2026; revised 10 October 2026; corrected 11 October 2026 (Rick round-2: A1, A2, A3)\\[2pt]
-\small supersedes content commit \texttt{6089268}; content commit \texttt{\textbf{e4d1785}}\\[4pt]
+\date{8 October 2026; revised 10 October 2026; corrected 11 October 2026 (Rick round-2: A1, A2, A3);
+revised 13 October 2026 (Rick 2026-10-13: Sec~2 and Rem~13 reconciled with Rem~17 --- it is $E_\omega$,
+not $\sS$, that splits)\\[2pt]
+\small supersedes content commit \texttt{6089268}; content commit \texttt{\textbf{PENDING}}\\[4pt]
 \small\normalfont Prepared for Rick (referee) and Neil Ghani (PI), Kodamai.}
 
 \begin{document}
@@ -314,18 +316,23 @@ discrepancy over the nerve of $\sS$ --- the classical mechanism of Kirchhoff's v
 (\S\ref{sec:indep}).
 
 \paragraph{The weld and its degree-two class.}
-A composite chain is a \emph{Zappa--Sz\'ep product} $\sS=\cC\bowtie\cD$ (procurement $\bowtie$
-logistics): $\cC,\cD$ are wide subcategories meeting in the discrete category on the shared objects,
-and every morphism factors uniquely as $f=c\cdot d$ \cite{AhmanUustalu2016,MacBethZS}. Whether an \emph{associative}
-candidate weld (one satisfying the matched-pair/cocycle condition of \S\ref{sec:lvl3}) \emph{splits}
-into such a factorization is governed by the \emph{weld obstruction}
+A composite chain is \emph{assembled} from procurement $\cC$ and logistics $\cD$; the target
+structure is a \emph{Zappa--Sz\'ep (matched-pair) product} $\sS=\cC\bowtie\cD$, in which $\cC,\cD$ are
+wide subcategories meeting in the discrete category on the shared objects and every morphism factors
+uniquely as $f=c\cdot d$ \cite{AhmanUustalu2016,MacBethZS}. Whether an \emph{associative} candidate
+weld (one satisfying the matched-pair/cocycle condition of \S\ref{sec:lvl3}) \emph{splits} is governed
+by the \emph{weld obstruction}
 \[
    [\omega]\in H^2(\sS;D),
 \]
 a Baues--Wirsching $2$-cocycle on the orbit category with coefficients the vertex-group natural
 system $D$ (the one determined by the candidate normal factor, not the wide subcategory $\cD$
-itself); the chain satisfies the global-closure condition $(G)$ exactly when $[\omega]=0$, and ---
-given also the local condition $(L)$ --- splits as the claimed product \cite{MacBethZS}. Two simplicial
+itself). Precisely, $[\omega]$ classifies an extension $D\rightarrowtail E_\omega\twoheadrightarrow\sS$
+of the base $\sS$: the chain satisfies the global-closure condition $(G)$ exactly when $[\omega]=0$,
+and then --- given also the local condition $(L)$ --- it is the extension $E_\omega$ (equivalently, the
+candidate weld) that \emph{splits}, realising the matched-pair factorization $\sS=\cC\bowtie\cD$
+\cite{MacBethZS}. It is $E_\omega$, not $\sS$ itself, that splits: a base \emph{presented} as
+$\cC\bowtie\cD$ has $[\omega]=0$ by construction (Remark~\ref{rem:whatomega}). Two simplicial
 facts about this class must be kept apart (\S\ref{sec:lvl3}). Its defining cocycle \emph{condition} is
 the associativity equation of the assembled composition, a system on composable triples $\Nerve_3$ ---
 so by Lemma~\ref{lem:regrade} the class is nerve level three, cohomological degree two. The
@@ -567,8 +574,9 @@ cochain that fails $d\omega=0$ is not a weld, and there is then no class. A clas
 presupposes associativity; what it classifies, by Eilenberg--Mac\,Lane and in the general matched-pair
 form of \cite{MacBethZS}, is whether the associative weld satisfies the global closure condition
 $(G)$, with $[\omega]=0\Leftrightarrow(G)$; given also the local condition $(L)$, $(G)$ is exactly the
-splitting of $\sS$ into the matched-pair factorization $\cC\bowtie\cD$, so under the standing $(L)$ the
-class decides splitting \cite{MacBethZS}. (Eilenberg--Mac\,Lane alone covers the \emph{semidirect}
+splitting of the extension $E_\omega$ --- equivalently, the candidate weld then realises the
+matched-pair factorization $\sS=\cC\bowtie\cD$. It is $E_\omega$, not $\sS$ itself, that splits
+(Remark~\ref{rem:whatomega}); so under the standing $(L)$ the class decides splitting \cite{MacBethZS}. (Eilenberg--Mac\,Lane alone covers the \emph{semidirect}
 case $\cD\rtimes\cC$; the general matched-pair statement, where neither factor need be normal, is the
 theorem of \cite{MacBethZS}, classified cohomologically after Baues--Wirsching.) The blockchain re-entrancy obstruction
 $[\omega]=\varepsilon\neq 0\in H^2\cong\Z/2$ \cite{MacBethReentrancy} is accordingly a \emph{non-split

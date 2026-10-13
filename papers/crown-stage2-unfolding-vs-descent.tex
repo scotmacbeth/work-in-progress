@@ -38,8 +38,10 @@
 \title{Branching is not a coproduct of branches:\\
 \large unfolding versus descent in the container bifibration}
 \author{MacBeth \\ \small Kodamai --- internal note (for Rick and Neil Ghani); CC Robin Langer}
-\date{10 October 2026 (corrected revision)\\
-\small corrects content commit \texttt{8972231}; content commit \texttt{4e7264d}}
+\date{10 October 2026; revised 13 October 2026 (Rick 2026-10-13 referee MUSTs: $\Psi$ ``no functor''
+hypothesis stated; Rem~20 sign-action correction)\\
+\small corrects content commit \texttt{8972231}; content commit \texttt{PENDING}.
+For Rick (referee) and Neil Ghani; CC Robin Langer.}
 
 \begin{document}
 \maketitle
@@ -396,14 +398,16 @@ no appeal to any external cartesian-lift theorem.
 \section{Branches as shapes unfolds the tree}\label{sec:unfolding}
 
 This section proves the object-level half of clause~(2): the branch assignment computes the
-colourings of the wrong object. Nothing here is conditional. (That $\Psi$ is moreover not a functor
-is \S\ref{sec:nogo}.)
+colourings of the wrong object. Nothing here is conditional. (That $\Psi$ moreover extends to no
+functor covering the embeddings --- nor any acting by the canonical action on automorphisms --- is
+\S\ref{sec:nogo}.)
 
 \begin{definition}\label{def:psi}
 $\Psi$ sends a tree $T$ to the container $(\branches(T),\{\mathrm{chain}_b\}_b)$: one shape per
 root-to-leaf branch $b$, with position set over $b$ the chain of nodes along $b$. On a chain there
 is one branch and $\Psi$ agrees with $\Phi=\Psip$, so Stage~1 holds; off $\Path$ they diverge. We
-treat $\Psi$ as an \emph{object assignment} here; \S\ref{sec:nogo} shows it is no functor.
+treat $\Psi$ as an \emph{object assignment} here; \S\ref{sec:nogo} shows it extends to no functor
+covering the embeddings, nor any acting by the canonical action on automorphisms.
 \end{definition}
 
 \begin{definition}\label{def:unfolding}
@@ -519,8 +523,10 @@ no in both variances --- for any functor whose action \emph{covers} the subtree 
 canonical action on branches, with no condition on the embeddings at all
 (Theorem~\ref{thm:nogonat}). The compatibility hypothesis cannot, however, simply be
 \emph{dropped}: with no condition relating $\Psi(f)$ to $f$ there do exist functors $\Tree\to\Cont$
-and $\Tree^\op\to\Cont$ extending $\Psi$ on objects (Remark~\ref{rem:dropcompat}), and they are
-exactly the ones that act trivially on automorphisms.
+and $\Tree^\op\to\Cont$ extending $\Psi$ on objects (Remark~\ref{rem:dropcompat}). What unites them is
+\emph{not} that they act trivially on automorphisms --- a sign action on the three-leaf star is an
+escape that does not --- but that none acts by the \emph{canonical} action on branches, which is the
+single hypothesis Theorem~\ref{thm:nogonat} needs.
 
 \begin{theorem}[no functorial action for $\Psi$]\label{thm:nogo}
 The object assignment $T\mapsto(\branches(T),\{\mathrm{chain}_b\})$ extends to \emph{no} functor
@@ -609,20 +615,25 @@ precisely why $\Fam=\Sigma$ (a functor) cannot realise it, and why recovering $\
 $\Cont(\cod)\circ\Psi$ needs a \emph{descent} step rather than a functorial map. The no-go is the container-side face of
 \emph{composition is a degree-two datum}: sharing of branch-prefixes is a relation, not a map.
 
-\begin{remark}[the compatibility hypothesis is essential, and the escapes act trivially on automorphisms]\label{rem:dropcompat}
+\begin{remark}[the compatibility hypothesis is essential, and what every escape avoids]\label{rem:dropcompat}
 The hypothesis of Theorem~\ref{thm:nogo} cannot be dropped \emph{outright}: if the shape map is
 allowed to ignore $f$ entirely, there \emph{do} exist functors $\Tree\to\Cont$ and
 $\Tree^\op\to\Cont$ extending $\Psi$ on objects. Passing to a skeleton of $\Tree$ (where a finite
 injective endomorphism is bijective, so every endomorphism is an automorphism), send each
 non-isomorphism to the constant map at a fixed branch $c_T\in\branches(T)$, with position maps
 constant at the root, and act on automorphisms as the identity; constant maps absorb composition and
-identities are preserved, so this is a functor in either variance. What all such escapes have in
-common is that they act \emph{trivially} on automorphisms: in~(2) the only escape is
-$\varphi_\sigma=\id$, which fails to cover the nontrivial swap $\sigma$ (it identifies the distinct
-subtrees $r\to a\to c$ and $r\to a\to d$), so it is not an encoding of $\Tree$. This is exactly the
-gap that Theorem~\ref{thm:nogonat} closes with a single hypothesis: any functor distinguishing
-$\sigma$ from $\id$ by the canonical action on branches runs into the contradiction, in both
-variances and with no condition on the embeddings.
+identities are preserved, so this is a functor in either variance. These constant-branch escapes act
+\emph{trivially} on automorphisms --- in~(2) taking $\varphi_\sigma=\id$, which fails to cover the
+nontrivial swap $\sigma$ (it identifies the distinct subtrees $r\to a\to c$ and $r\to a\to d$), so it
+is not an encoding of $\Tree$. They are not, however, the only escapes: Rick's referee computation
+exhibits a further escape on the three-leaf star that acts on the automorphism group
+$\mathrm{Aut}\,S_3\cong S_3$ through its \emph{sign} $S_3\to\{\pm1\}$ --- nontrivially --- yet is
+still not the canonical branch action. So the escapes are \emph{not} exactly those acting trivially on
+automorphisms (an earlier claim of this note, here retracted); what every escape has in common is only
+that \emph{none acts by the canonical action on branches}. This is exactly the gap
+Theorem~\ref{thm:nogonat} closes with a single hypothesis: any functor that does act on automorphisms
+by the canonical action on branches runs into the contradiction, in both variances and with no
+condition on the embeddings.
 \end{remark}
 
 \section{The arity clause, and why there is no ceiling}\label{sec:arity}

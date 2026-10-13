@@ -46,9 +46,12 @@
 grant (Applications and Theory pillars) and the Strathclyde mini-course \emph{Tangent Categories
 and Containers} (13--16 October 2026).}\\
 \small Kodamai}
-\date{10 October 2026; corrected 11 October 2026 (Rick round-2 report: N1, N2)\\[2pt]
+\date{10 October 2026; corrected 11 October 2026 (Rick round-2 report: N1, N2); revised 13 October 2026
+(Rick 2026-10-13 referee MUSTs: Sec~2.3/Rem~11 comparison data $k\equiv e$ with central-$k$/$2\mid n$
+flag; Thm~28 and ``always rectifiable unless $4\mid n$'' scoped to trivial band; banded $n=6$ exception,
+Rem~\ref{rem:d6band})\\[2pt]
 \small Circulated to Rick (reviewer) and the Kodamai group; CC Robin Langer.\\[2pt]
-\small supersedes content commit \texttt{4e7264d}; content commit \texttt{e4d1785}}
+\small supersedes content commit \texttt{4e7264d}; content commit \texttt{PENDING}}
 
 \begin{document}
 \maketitle
@@ -68,7 +71,9 @@ class} $[\gerbe]\in H^2(N(\C);Z(\Aut F))$ (Corollary~\ref{cor:aprime}). The gerb
 on every $1$-dimensional (free / DAG / tree) chain, and is nonzero already on a single reversible
 loop $B(\Z/2)$ --- but only for a \emph{nonabelian} fibre with nontrivial centre --- and, for the
 $n$-lot ring $\Aut F=D_n$, sharply, exactly when $4\mid n$, the six-lot ring $D_6\cong\Z/2\times S_3$
-being nonabelian with centre yet always rectifiable (Theorems~\ref{thm:B},~\ref{thm:Dsharp}). It is logically independent of
+being nonabelian with centre yet always rectifiable over the trivial-band stratum
+(Theorems~\ref{thm:B},~\ref{thm:Dsharp}; a nontrivial band obstructs independently,
+Remark~\ref{rem:d6band}). It is logically independent of
 the Zappa--Sz\'ep weld $[\omega]$, not because the two live over different coefficients --- on
 $B(\Z/2)$ they can lie in the \emph{same} group and even coincide --- but because $[\gerbe]$
 depends on the inventory datum and $[\omega]$ does not (Theorem~\ref{thm:C}). Finally, both
@@ -175,7 +180,8 @@ $[\gerbe]$ can be nonzero only if $K$ is \emph{nonabelian with nontrivial centre
 \emph{not} sufficient, and for the canonical fibre the sharp criterion is arithmetic: for $n$ lots
 in a ring ($K=\Aut F=D_n$) the gerbe is essentially nonzero iff the central extension~\eqref{eq:star}
 is non-split iff $4\mid n$ --- so the six-lot ring $D_6\cong\Z/2\times S_3$ is nonabelian with
-nontrivial centre yet always rectifiable (Theorem~\ref{thm:Dsharp}). For $F$ a bare
+nontrivial centre yet always rectifiable over the trivial-band stratum (Theorem~\ref{thm:Dsharp};
+the banded case is a genuine exception, Remark~\ref{rem:d6band}). For $F$ a bare
 $n$-element set of indistinguishable lots, $\Aut F=S_n$ is abelian or centreless for every $n$
 and complete (so $\Out=1$) for $n\ge3,\ n\ne6$: fungible stock carries \emph{neither} obstruction.
 The two-tier phenomenon is a feature of gauge/torsor-structured stock, not of interchangeable
@@ -311,13 +317,20 @@ Comparing two inventory trivialisations of the same fibre across an operation $f
 only up to the relabelling group $K$, i.e.\ transports $K$ by an \emph{automorphism} $\alpha_f\in
 \Aut K$. Re-trivialising a chart conjugates the transport, so $\alpha$ is a priori functorial only
 up to inner automorphisms, $\alpha_{gf}=\mathrm{conj}(k_{g,f})\cdot\alpha_g\alpha_f$ with witnessing
-\emph{comparison data} $k_{g,f}\in K$. \textbf{We retain this $2$-cell datum throughout}:
-equivalently, we take the transport to be a \emph{strict} functor $\alpha:\C\to B(\Aut K)$ carrying
-the $k_{g,f}$ --- the $\mathrm{AUT}(F)$-pseudofunctor of Remark~\ref{rem:kinvariant}. The strictness
-hypothesis is load-bearing and we flag it now: without the $k_{g,f}$, once $\alpha$ is gauged to be
+\emph{comparison data} $k_{g,f}\in K$. \textbf{We retain this $2$-cell datum throughout}: the transport is a strict functor into the
+automorphism \emph{$2$-group} $\mathrm{AUT}(F)$ carrying the comparison data $k_{g,f}$ ---
+equivalently, a \emph{pseudofunctor} $\alpha:\C\to B(\Aut K)$ (Remark~\ref{rem:kinvariant}). (A genuine
+strict functor into the $1$-category $B(\Aut K)$ is the special case $k_{g,f}\equiv e$.) The $2$-cell
+datum is load-bearing and we flag it now: without the $k_{g,f}$, once $\alpha$ is gauged to be
 inner-valued the up-to-inner slack becomes \emph{empty} and $\alpha$ no longer determines a functor
 to $B(\Inn K)$, so the degree-two class is undefined (this is exactly the gap repaired in the proof
-of Corollary~\ref{cor:aprime}). Collecting the local trivialisations into a stack makes the gluing
+of Corollary~\ref{cor:aprime}). \emph{Scope of the sharp results.} The sharp $n$-lot criterion of
+\S\ref{sec:dsharp} is stated for \emph{trivial} comparison data, $k_{g,f}\equiv e$, so that
+$[\gerbe]=\rho^*[\star]$. A nontrivial \emph{central} comparison datum $k_{g,f}\in\Zc$ is itself a
+$2$-cocycle and contributes a class $[k]\in H^2(N(\C);\Zc)$; the total class becomes
+$[\gerbe]=\rho^*[\star]+[k]$, and the sharp divisibility line then reads $2\mid n$ rather than
+$4\mid n$ (Remark~\ref{rem:kinvariant}, \S\ref{sec:dsharp}). All results below are stated under
+$k_{g,f}\equiv e$. Collecting the local trivialisations into a stack makes the gluing
 datum an $\Aut F$-gerbe over $N(\C)$: a stack of groupoids locally equivalent to $B(\Aut F)$
 (Giraud~\cite{giraud}, III; Breen~\cite{breen} for the bitorsor/cocycle presentation). A
 \emph{global inventory} realises the up-to-iso gluing by a \emph{strict} relabelling of charts; we
@@ -453,6 +466,14 @@ and $[\gerbe]$ is its \emph{$k$-invariant}~\cite{bl,js}. We record this honestly
 \emph{definition} of a classification datum, not a computation from the fibre. The constructive,
 inventory-driven class is the gerbe of lifts of Definition~\ref{def:gerbe}, which requires a
 \emph{nonabelian} $K$ (so that $\rho$ can be nontrivial) --- as Theorem~\ref{thm:D} makes precise.
+
+The sharp arithmetic of \S\ref{sec:dsharp} assumes the comparison data is trivial,
+$k_{g,f}\equiv e$, so that $[\gerbe]=\rho^*[\star]$. If instead $k_{g,f}$ is central and nontrivial
+($k_{g,f}\in\Zc$), it is a $2$-cocycle in its own right and contributes a class
+$[k]\in H^2(N(\C);\Zc)$; the pseudofunctor's class is then $[\gerbe]=\rho^*[\star]+[k]$. A central $k$
+can supply a nonzero class whenever $\Zc\ne1$ --- for the $n$-lot ring, whenever $n$ is even --- so
+with central comparison data allowed the sharp line below reads $2\mid n$ rather than $4\mid n$. The
+results of this paper are stated under $k_{g,f}\equiv e$.
 \end{remark}
 
 \section{Rectification is the vanishing of $[\gerbe]$}\label{sec:A}
@@ -800,13 +821,15 @@ comparison is obstructed for some supply chain.
 
 \begin{theorem}[Sharp criterion for the $n$-lot ring]\label{thm:Dsharp}
 Let the fibre be $n$ lots in a ring, so $K=\Aut F=D_n$ is dihedral of order $2n$ \textup{($n\ge3$)}.
-Then
+Assume trivial comparison data, $k_{g,f}\equiv e$ (\S\ref{sec:prelim-gerbe}). Then, over inner
+transports (the trivial-band stratum $\beta=0$),
 \[
 [\gerbe]\text{ essentially nonzero}\iff(\star)\text{ non-split}\iff[\star]\ne0\in H^2(\Inn K;\Zc)
 \iff 4\mid n.
 \]
-Equivalently, strict global inventory on the $n$-lot ring is \emph{always} rectifiable unless
-$4\mid n$.
+Equivalently, over the trivial-band stratum with $k\equiv e$, strict global inventory on the $n$-lot
+ring is \emph{always} rectifiable unless $4\mid n$. (A nontrivial band can obstruct inventory even
+when $4\nmid n$, and a nontrivial central $k$ moves the line to $2\mid n$: Remark~\ref{rem:d6band}.)
 \end{theorem}
 
 \begin{proof}[Proof]
@@ -830,10 +853,25 @@ occurring exactly at $n\in\{4,8,12,16\}$).
 The six-lot ring has $K=D_6\cong\Z/2\times S_3$: nonabelian, with centre $\Z/2\neq1$, so it
 \emph{satisfies} Theorem~\ref{thm:D}(i). Yet $6=2\cdot3$ with $n/2=3$ odd, so $(\star)$ splits
 (explicit complement $\langle r^2,s\rangle\cong S_3$), $[\star]=0$, and $[\gerbe]=0$ for
-\emph{every} base $\C$ and transport $\rho$: the six-lot inventory is always rectifiable. Thus $D_6$
+\emph{every} base $\C$ and \emph{inner} transport $\rho$: the six-lot inventory is always rectifiable
+over the trivial band (the banded case is a genuine exception, Remark~\ref{rem:d6band}). Thus $D_6$
 is the honest witness that the \emph{necessary} condition of Theorem~\ref{thm:D}(i) is not
 \emph{sufficient}; non-splitting of $(\star)$ --- the condition $4\mid n$ --- is the sharp line. The
 four-lot witness $K=D_4$ of Theorem~\ref{thm:B}(ii) is the minimal case $4\mid n$.
+\end{remark}
+
+\begin{remark}[The sharp line is trivial-band; a nontrivial band obstructs independently]\label{rem:d6band}
+Theorem~\ref{thm:Dsharp} classifies the \emph{trivial-band} stratum ($\beta=0$, inner transports):
+``always rectifiable unless $4\mid n$'' is a statement about that stratum, not about every supply
+chain. A nontrivial band carries its own obstruction, on top of the central one, and can block
+inventory even when $4\nmid n$. The six-lot ring is again the honest witness. Although $4\nmid6$
+makes $(\star)$ split, so that the \emph{central} obstruction vanishes, the base $\C=B(\Z/2)$ with
+the \emph{outer} involution of $D_6$ given by $r\mapsto r^5$, $s\mapsto sr$ (a nontrivial element of
+$\Out D_6\cong\Z/2$) admits \emph{no} global inventory: the band does not even vanish, so the
+degree-two coefficients never untwist. Thus ``always rectifiable unless $4\mid n$'' holds only for
+the trivial band; the banded strata are governed by the forced-correlation analysis of the companion
+note~\cite{gerbetorus}, where the two ends of a $T^2$ base are shown to couple. The applications
+headline below is accordingly stated for the trivial-band, $k\equiv e$ regime.
 \end{remark}
 
 \begin{center}
@@ -944,6 +982,11 @@ MacBeth,
 \emph{The sharp criterion for strict global inventory on the $n$-lot ring: the gerbe fails exactly
 when $4\mid n$}
 (Kodamai internal note, 11 October 2026; proved, own-verification, computation-corroborated).
+
+\bibitem{gerbetorus}
+MacBeth,
+\emph{The inventory gerbe couples on the torus: forced correlation of the two $T^2$ ends}
+(Kodamai work-in-progress note, 2026).
 
 \bibitem{giraud}
 J.~Giraud,

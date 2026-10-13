@@ -31,7 +31,9 @@ proof file \texttt{2026-10-12-inventory-floor-d1-d2-dichotomy} and the Lean witn
 corpus, content commit \texttt{f19cfcb}. Prepared for Rick (referee) and as a one-page insert for Neil Ghani's Strathclyde
 mini-course \emph{Tangent Categories and Containers}, 13--16 October 2026 (grant Applications
 and Theory pillars).}\\ \small Kodamai}
-\date{12 October 2026}
+\date{12 October 2026; revised 13 October 2026 (Rick 2026-10-13 referee MUSTs: $\alpha$-strict standing
+hypothesis; Thm~1.3 ``centre-too-small'' and $D2\Rightarrow D1$ retracted; clause-(a)/Def~(D2) scoped)\\[2pt]
+\small Prepared for Rick (referee) and Neil Ghani (PI); CC Robin Langer. Content commit \texttt{PENDING}.}
 
 \begin{document}
 \maketitle
@@ -44,14 +46,20 @@ $\beta\in H^1(N(\C);\Out K)$ must vanish before an abelian class
 $[\gerbe]\in H^2(N(\C);Z(K))$ is defined. The ``floor corollary'' claimed that over the
 band-trivial stratum a strict global inventory exists exactly when $[\gerbe]=0$. This is
 false, and the reason is instructive: the claim silently fixes a notion of ``strict'' that
-is one cohomological degree below $[\gerbe]$. We separate the two honest notions. Retaining
-the coherence (2-cell) datum, a global inventory exists iff $[\gerbe]=0$ in
-$H^2(N(\C);Z(K))$; discarding it, a global inventory exists iff a degree-one class
-$o_{D1}\in H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$ vanishes. The first implies the
-second, strictly: over centreless stock $Z(K)$ is too small to carry $[\gerbe]$ while the
-transport is still a nontrivial inner relabelling. The minimal witness is $\C=\B(\Z)$,
+is one cohomological degree below $[\gerbe]$. Throughout we take the transport to be a
+\emph{strict} functor (trivial coherence datum $k\equiv e$): this is the regime in which
+the band-triviality criterion applies and the dichotomy is clean. We separate the two
+honest notions. Retaining
+the coherence (2-cell) datum, a $D2$ global inventory exists iff $[\gerbe]=0$ in
+$H^2(N(\C);Z(K))$; discarding it, a $D1$ global inventory exists iff a degree-one class
+$o_{D1}\in H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$ vanishes. The $D1$ condition implies
+the $D2$ condition ($o_{D1}=0\Rightarrow[\gerbe]=0$), and the implication is strict; the
+converse $D2\Rightarrow D1$ is \emph{false}. Already over a one-dimensional base, where
+$H^2(N(\C);Z(K))=0$ forces $[\gerbe]=0$ for every $K$, the class $o_{D1}$ can still detect
+a nontrivial inner transport. The witness is $\C=\B(\Z)$,
 $K=S_3$, where $\beta=0$ and $[\gerbe]=0$ yet no naive strictification exists; its finite
-core is machine-checked.
+core is machine-checked, and an independent sweep of $248$ strict-$\alpha$ cases
+corroborates the dichotomy with the designed controls failing as they must.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
@@ -74,6 +82,17 @@ $\C=\B(\Z)$ with $K=S_3$ and found $\beta=0$ and $[\gerbe]=0$ yet no strictifica
 reflection transport cannot be relabelled to the identity. This note explains \emph{why},
 and in doing so turns the corollary into a pair of correct theorems.
 
+\paragraph{Standing hypothesis (strict transport).} Throughout this note the transport
+$\alpha\colon\C\to\B(\Aut K)$ is a \emph{strict} functor: its coherence datum is trivial,
+$k_{g,f}\equiv e$. This is the regime in which the band-triviality criterion
+(clause~(a), \S\ref{sec:prelim}) applies verbatim, so that $\beta=0$ yields a strict inner
+transport $\abar$, and in which Definition~(D2) below may omit the comparison datum. For a
+genuinely non-strict $\alpha$ (nontrivial $k_{g,f}$) neither holds as printed: the
+band-trivial stratum need not yield a strict $\abar$ even when $\beta=0$ and $[\gerbe]=0$
+(already for $\C=\B(\Z/3)$, or $K=D_4$), and both notions must then carry the $k$-datum.
+That extension is deliberately outside the present scope; everything below is stated under
+$k_{g,f}\equiv e$.
+
 \paragraph{The gap: two meanings of ``strict''.} The corollary hides a choice. Once the
 band is trivial, the transport is gauge-equivalent to a strict \emph{inner} functor
 $\abar\colon\C\to\B(\Inn K)$ (Section~\ref{sec:prelim}); the question is what we ask of it.
@@ -84,7 +103,10 @@ transport away \emph{entirely}: $\mu(y)\,\abar(f)\,\mu(x)^{-1}=\id_K$ for every 
 No coherence datum is retained.
 \item[\textbf{(D2)}] a gauge $\mu$ \emph{together with} a strict $K$-valued functor
 $T\colon\C\to\B K$ ($T_{gf}=T_g T_f$) realising the transport by honest group elements:
-$\mu(y)\,\abar(f)\,\mu(x)^{-1}=c_{T_f}$, where $c_a=\mathrm{conj}(a)$.
+$\mu(y)\,\abar(f)\,\mu(x)^{-1}=c_{T_f}$, where $c_a=\mathrm{conj}(a)$. (Under the standing
+strict-transport hypothesis $\abar$ is strict, so this equation carries no coherence term;
+for non-strict $\alpha$ it must be written with the comparison datum $k_{g,f}$, and then
+$T$ need not be strict --- exactly the extension we exclude.)
 \end{itemize}
 $D1$ demands that the transport be \emph{trivialised}; $D2$ demands only that it \emph{lift}
 to the group $K$, surviving as a genuine inner relabelling carried by elements of $K$. These
@@ -106,9 +128,10 @@ $o_{D1}$ is the class of $\abar$ in the pointed quotient
 $H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$. This is a \emph{degree-one} obstruction; it
 is not $[\gerbe]$.
 \item \textbf{($D1\Rightarrow D2$, strictly.)} $o_{D1}=0\Rightarrow[\gerbe]=0$, and the
-containment is strict: the gap $o_{D1}\neq 0=[\gerbe]$ is realised exactly when $Z$ is too
-small to carry a nonzero class while $\abar$ is still a nontrivial inner transport --- the
-centreless/fungible regime.
+implication is strict. The converse $D2\Rightarrow D1$ fails: already over a one-dimensional
+base, where $H^2(N(\C);Z)=0$ forces $[\gerbe]=0$ for every $K$, the class $o_{D1}$ can be
+nonzero (part~4). Centre size is not the governing parameter --- the gap occurs both over
+centreless stock ($K=S_3$) and over stock with nontrivial centre ($K=D_4$, $Z=\Z/2$).
 \item \textbf{(Separation.)} For $\C=\B(\Z)$, $K=S_3$, $\alpha=c_{(0\,1)}$: $\beta=0$ and
 $[\gerbe]=0$ (so $D2$ holds -- an explicit lift is $T(n)=\sigma^n$), yet $o_{D1}\neq 0$
 (no naive gauge strictifies the reflection). Hence the floor corollary is false, and the
@@ -162,13 +185,18 @@ central because inner automorphisms fix $Z$ pointwise, so the action is trivial.
 a pseudofunctor $\C\to\B(\Aut K)$ sending $f\colon x\to y$ to $\alpha(f)\in\Aut K$ with
 coherence (2-cell) data $k_{g,f}\in K$, $\alpha(gf)=c_{k_{g,f}}\,\alpha(g)\alpha(f)$. Its
 \emph{band} is the strict functor $\rho=q\circ\alpha\colon\C\to\B(\Out K)$, with class
-$\beta=[\rho]\in H^1(N(\C);\Out K)$ (nonabelian $H^1$).
+$\beta=[\rho]\in H^1(N(\C);\Out K)$ (nonabelian $H^1$). Under the standing hypothesis
+(\S\ref{sec:intro}) $\alpha$ is \emph{strict}, $k_{g,f}\equiv e$: an honest functor
+$\C\to\B(\Aut K)$, with $\rho$ its band.
 
 \paragraph{Standing hypothesis: the band is trivial.} Throughout, $\beta=0$. By the
-band-triviality criterion (clause~(a) of the band-boundary note, computed), $\alpha$ is
-$\Aut K$-gauge-equivalent to a \emph{strict} $\Inn K$-valued functor. Fix such a gauge once
-and write $\abar\colon\C\to\B(\Inn K)$, $\abar(gf)=\abar(g)\abar(f)$, $\abar(\id)=\id$, for
-the band-trivialised transport. This is the object both $D1$ and $D2$ act on.
+band-triviality criterion (clause~(a) of the band-boundary note, computed) \emph{for strict
+$\alpha$}, the functor $\alpha$ is $\Aut K$-gauge-equivalent to a \emph{strict} $\Inn
+K$-valued functor. (Clause~(a) is stated and verified for strict $\alpha$; for non-strict
+$\alpha$ it can fail even at $\beta=0$, which is precisely why strictness is a standing
+hypothesis.) Fix such a gauge once and write $\abar\colon\C\to\B(\Inn K)$,
+$\abar(gf)=\abar(g)\abar(f)$, $\abar(\id)=\id$, for the band-trivialised transport. This is
+the object both $D1$ and $D2$ act on.
 
 \paragraph{Nonabelian $H^1$.} For a group $G$ with trivial $\C$-action, let
 $H^1(\C;G)$ be the pointed set of functors $\C\to\B G$ modulo natural isomorphism
@@ -311,11 +339,21 @@ $o_{D1}=0\Rightarrow[\gerbe]=0$, and the containment is strict.
 \begin{proof}
 If $[\abar]=*$ then $\abar$ is naturally isomorphic to the constant functor at the identity
 object of $\B(\Inn K)$; pullback along a functor isomorphic to a constant kills $H^2$, so
-$[\gerbe]=\abar^{*}[\star]=0$ (equivalently, take $T\equiv e$ in $D2$). The gap
-$o_{D1}\neq 0=[\gerbe]$ is realised whenever $Z$ is too small to carry a nonzero class while
-$\abar$ is still a nontrivial inner transport -- the centreless/fungible regime. $S_3$
-($Z=1$) is the minimal such witness.
+$[\gerbe]=\abar^{*}[\star]=0$ (equivalently, take $T\equiv e$ in $D2$). Strictness: the
+converse $D2\Rightarrow D1$ fails already over a one-dimensional base, where
+$H^2(N(\C);Z)=0$ forces $[\gerbe]=0$ for every $K$ while $\abar$ may be a nontrivial inner
+transport. $\C=\B(\Z)$, $K=S_3$ (\S\ref{sec:sep}) is such a witness, with $Z=1$; so is
+$K=D_4$ with $\abar=c_s$ a reflection, where $Z=\Z/2\neq 1$ --- so centre size does not
+govern the gap, and the earlier ``$Z$ too small'' heuristic is not a characterisation.
 \end{proof}
+
+\begin{remark}[what the gap is, and is not]\label{rem:notcentre}
+The gap $o_{D1}\neq 0=[\gerbe]$ is a phenomenon of cohomological \emph{degree}, not of
+centre size. On a base with $H^2=0$ the degree-two class $[\gerbe]$ is forced to vanish for
+\emph{every} coefficient group, so $D2$ holds unconditionally, yet the degree-one class
+$o_{D1}$ still records the inner transport. An exact description of the locus
+$\{\,o_{D1}\neq 0=[\gerbe]\,\}$ over a general base is not attempted here.
+\end{remark}
 
 \section{The separation: $\C=\B(\Z)$, $K=S_3$}\label{sec:sep}
 
@@ -348,16 +386,22 @@ in Lean~4 (\texttt{floor\_separation}, kernel-checked with only \texttt{propext}
 \texttt{Quot.sound}, no \texttt{native\_decide} and no added axioms). The cohomological
 identifications ($[\gerbe]=\abar^{*}[\star]$, the location of $o_{D1}$, and the forcing of
 vanishing from trivial coefficient groups) are the cited classical bridges, not re-derived
-in Lean.
+in Lean. Beyond this witness, an independent recomputation of the dichotomy of
+Theorem~\ref{thm:main} over $248$ strict-$\alpha$ cases (independent referee recomputation;
+\texttt{work-in-progress scripts/day238}) found $0$ violations, with the designed controls
+failing exactly as they must.
 
 \section*{Upshot}
 
 Rick's $B(\Z)/S_3$ counterexample is now a theorem. The inventory floor splits cleanly by
 \emph{how much structure one retains}. Keep the coherence (2-cell) datum ($D2$): the
 obstruction is the gerbe class $[\gerbe]\in H^2(N(\C);Z(K))$. Discard it ($D1$): the
-obstruction drops a degree to $o_{D1}\in H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$. They
-agree iff $Z(K)$ is rich enough to carry the class; over fungible (centreless) stock they
-diverge, and $\B(\Z)/S_3$ is the honest witness. The repair isolates the single recurring
+obstruction drops a degree to $o_{D1}\in H^1(\C;\Inn K)/\mathrm{im}\,H^0(\C;\Out K)$. The
+$D1$ condition implies the $D2$ condition, strictly; the converse fails already over a
+one-dimensional base, where $H^2=0$ makes $[\gerbe]$ vanish for every $K$ while $o_{D1}$
+still sees a nontrivial inner transport. Both $\B(\Z)/S_3$ (centreless) and $\B(\Z)/D_4$
+(centre $\Z/2$) are honest witnesses: the gap is a matter of cohomological degree, not of
+centre size. The repair isolates the single recurring
 hazard in the program -- confusing the central coefficient $Z(K)$ of the degree-two class
 with the inner coefficient $\Inn K$ of the degree-one one. Whether this re-promotes the
 band-boundary note is a separate registry judgement, deferred; here we have stated only
