@@ -1,168 +1,173 @@
 {
- "conjecture": "Game comonads (the finite-model-theory tradition: Ehrenfeucht-Fraisse comonad E_k, pebbling comonad P_k, modal comonad M_k) factor through Poly: their underlying Set-endofunctors are polynomial, hence (since Poly is a full subcategory of [Set,Set] and <| computes composition) their comonad structure is a comonoid in (Poly,<|) = a small category. The relational sigma-structure enters as a LIFT of the polynomial comonad along the topological forgetful U:Struct(sigma)->Set, whose 'forest cut' is the categorical fingerprint of arboreality (Abramsky-Reggio / Jakl-Reggio). Crown corollary (open): the arboreal path-fibration (Jakl-Reggio Thm 7.3, a Street fibration) is an instance of the container bifibration Cont(cod)=Fam(C^op).",
- "status": "computed",
- "date_opened": "2026-10-01",
- "date_closed": null,
- "tree": {
-  "id": "root",
-  "approach": "Probe each game comonad at three levels: (1) is the underlying Set-functor polynomial; (2) is the comonad a comonoid in (Poly,<|), and which small category; (3) does the sigma-structure arise by lifting or by a distributive law. Then (4) test the arboreal-fibration = Fam(C^op) conjecture. Lever: Poly full in [Set,Set] + <|=composition collapses 'polynomial comonad?' to 'polynomial endofunctor?'.",
-  "trust": "computed",
-  "file": "2026-10-01-game-comonads-poly.md",
-  "note": "UPGRADED 2026-10-01 PROVE (MacBeth deep work): Points 1-3 proved at MacBeth level in proofs/2026-10-01-game-comonads-poly.md; comonad+comonoid+category laws verified exhaustively (game_comonad_verify.py) and Lemma 4.1 coalgebra=copresheaf enumerated (coalg_and_forget.py). Root stays 'computed' because the crown Point 4 (only genuinely-new part) remains speculative; its blocker-1 is now CLOSED (Lemma 4.1 proved) and its statement CORRECTED (category Fam(C^op) vs fibration Fam(cod^op) conflation), blocker-2 (arboreal factorisation match) open, needs Jakl-Reggio deep-read (not in seed, no browse). HONESTY/SCOOP GUARD: Points 1-3 are a folklore-ADJACENT bridging identification, NOT a new theorem (cite Abramsky-Shah, Abramsky-Dawar-Wang, Spivak). Builds on [lean-verified] DCont=Cat and [proved] Cont(cod)=Fam(cod^op).",
-  "children": [
-   {
-    "id": "underlying-functor-polynomial",
-    "role": "attempt",
-    "approach": "POINT 1. E_k: U(E_k)A = Sum_{n=1..k} A^n = Sum_n Set([n],-) (coproduct of representables); shapes {1..k}, positions [n] -> polynomial. P_k: U(P_k)A = ([k]xA)^+ ; by Set distributivity ([k]xA)^m = Sum_{w in [k]^m} A^[m], so = Sum_{w in [k]^+} Set([|w|],-); shapes [k]^+, positions [|w|] -> polynomial (infinite shape set OK). M_k: universe = R-paths depends on R^A not |A| (witness |A|=2: |UM_2| = 3 for R={(0,1)} vs 14 for R=AxA, same convention) -> NO Set-functor F has U(M_k)=F.U, so modal does NOT factor through Poly on Set.",
-    "trust": "proved",
+  "conjecture": "Game comonads (the finite-model-theory tradition: Ehrenfeucht-Fraisse comonad E_k, pebbling comonad P_k, modal comonad M_k) factor through Poly: their underlying Set-endofunctors are polynomial, hence (since Poly is a full subcategory of [Set,Set] and <| computes composition) their comonad structure is a comonoid in (Poly,<|) = a small category. The relational sigma-structure enters as a LIFT of the polynomial comonad along the topological forgetful U:Struct(sigma)->Set, whose 'forest cut' is the categorical fingerprint of arboreality (Abramsky-Reggio / Jakl-Reggio). Crown corollary (open): the arboreal path-fibration (Jakl-Reggio Thm 7.3, a Street fibration) is an instance of the container bifibration Cont(cod)=Fam(C^op).",
+  "status": "computed",
+  "date_opened": "2026-10-01",
+  "date_closed": null,
+  "tree": {
+    "id": "root",
+    "approach": "Probe each game comonad at three levels: (1) is the underlying Set-functor polynomial; (2) is the comonad a comonoid in (Poly,<|), and which small category; (3) does the sigma-structure arise by lifting or by a distributive law. Then (4) test the arboreal-fibration = Fam(C^op) conjecture. Lever: Poly full in [Set,Set] + <|=composition collapses 'polynomial comonad?' to 'polynomial endofunctor?'.",
+    "trust": "computed",
     "file": "2026-10-01-game-comonads-poly.md",
-    "note": "Prop 1.1-1.3. Upgraded computed->proved 2026-10-01. Proof = coproduct-of-representables + Set extensivity (pebbling) + cardinality witness (modal). Verified: modal 3 vs 14 (game_comonad_verify.py).",
-    "children": []
-   },
-   {
-    "id": "comonoid-is-small-category",
-    "role": "attempt",
-    "approach": "POINT 2. Lemma 2.1 (CRUX): Poly full+faithful in [Set,Set] (Gambino-Kock) + <|=composition => any Set-comonad with polynomial functor is AUTOMATICALLY a comonoid in (Poly,<|); comonad laws = comonoid laws by faithfulness. Then AU/Spivak dictionary reads off the category. E_k = finite LINEAR ORDER [k] (objects {1..k}, unique arrow n->m iff m<=n; eps=last=id, delta=prefixes => cod(i)=i, comp (i,j)->j). P_k = k-ary prefix TRIE on [k]^+ (arrow w->v iff v prefix w). CORRECTION to probe: E is NOT simply a 'labels-forgotten quotient' of P; correct (Prop 2.3): E_inf = P_1 (iso of comonads, both = line [inf]); forget:P_k=>E_inf is a comonad morphism = COFUNCTOR trie->line by length; E_k = length-<=k truncation of E_inf. By-hand k=2,3 done; category axioms + linear-order/trie identification verified k=2,3,4.",
-    "trust": "proved",
-    "file": "2026-10-01-game-comonads-poly.md",
-    "note": "Prop 2.2-2.3, Lemma 2.1. Upgraded computed->proved 2026-10-01. Exhaustive law checks (game_comonad_verify.py): E_k laws PASS k=2,3; P_k laws PASS k=2,3; E_k==[k] k=2,3,4; P_k==trie k=2,3; E_inf==P_1 and forget a comonad morphism CONFIRMED. Honesty: folklore-adjacent identification, not a new theorem.",
+    "note": "UPGRADED 2026-10-01 PROVE (MacBeth deep work): Points 1-3 proved at MacBeth level in proofs/2026-10-01-game-comonads-poly.md; comonad+comonoid+category laws verified exhaustively (game_comonad_verify.py) and Lemma 4.1 coalgebra=copresheaf enumerated (coalg_and_forget.py). Root stays 'computed' because the crown Point 4 (only genuinely-new part) remains speculative; its blocker-1 is now CLOSED (Lemma 4.1 proved) and its statement CORRECTED (category Fam(C^op) vs fibration Fam(cod^op) conflation), blocker-2 (arboreal factorisation match) open, needs Jakl-Reggio deep-read (not in seed, no browse). HONESTY/SCOOP GUARD: Points 1-3 are a folklore-ADJACENT bridging identification, NOT a new theorem (cite Abramsky-Shah, Abramsky-Dawar-Wang, Spivak). Builds on [lean-verified] DCont=Cat and [proved] Cont(cod)=Fam(cod^op).",
     "children": [
-     {
-      "id": "lean-ef-comonoid-witness",
-      "role": "attempt",
-      "approach": "LEAN finite witness (Mathlib-free, Lean core v4.30.0, decide). Part 1: 𝔼_k A as path-encoded inductive (E2,E3, nonempty seqs len<=k); eps=last, delta=prefixes, map=functorial action; the THREE comonad laws (left/right counit, coassoc) proved POLYMORPHICALLY in A by `cases x <;> rfl` (stronger than a fixed-|A| oracle; zero axioms). Part 2: induced comonoid = directed container (cod i=i, root n=n, comp i j=j); category axioms (id L/R, cod-compat, assoc) and linear-order identification homCount n m = (if m<=n then 1 else 0) i.e. unique arrow n->m iff m<=n, all by `decide` for k=2,3,4. Bridge eps=eval-at-root, delta uses cod/comp is definitional/by-construction (documented; generic ⟦-⟧ needs Fintype, out of core-only scope).",
-      "trust": "lean-verified",
-      "file": "2026-10-01-game-comonads-poly.md",
-      "lean": "lean/2026-10-01-ef-comonoid-witness.lean: EFComonoid.E2.{left_counit,right_counit,coassoc}, EFComonoid.E3.{left_counit,right_counit,coassoc} (comonad laws, polymorphic, 0 axioms); EFComonoid.{linear_order_two,linear_order_three,linear_order_four} (comonoid=linear order [k], k=2,3,4); EFComonoid.{cod_root,left_id,right_id,cod_comp,comp_assoc} (directed-container/category axioms). All sorry-free, #print axioms empty.",
-      "note": "LEAN session 2026-10-01. Finite oracle for small k + polymorphic comonad laws. Does NOT upgrade general [proved/computed] parent beyond its current state; this is the machine-checked attempt-role certificate under comonoid-is-small-category. Compiles standalone (~/.elan/bin/lean), zero errors/warnings/sorry, zero axioms.",
-      "children": []
-     }
-    ]
-   },
-   {
-    "id": "sigma-structure-is-a-lift-not-distributive-law",
-    "role": "attempt",
-    "approach": "POINT 3. U:Struct(sigma)->Set is TOPOLOGICAL (AHS): fibre = complete lattice Prod_R P(A^ar), initial lifts = intersections. Topological + monadic => iso; U not an equivalence => NOT monadic => NO structure monad to Beck-distribute over. So the game comonad is a LIFT of the polynomial comonad along topological U, governed by a relational lifting (lax extension), NOT a Beck distributive law. Lifting is DATA not property (indiscrete/discrete lifts always exist). EF recipe = (pullback of R along counit eps^xr) INTERSECT (prefix-comparability = comonoid category's branch order); comparability cut requires C a FOREST = categorical fingerprint of arboreality. Pebbling needs MORE (pebble-liveness reads shape labels) [this sub-claim: computed].",
-    "trust": "proved",
-    "file": "2026-10-01-game-comonads-poly.md",
-    "note": "Prop 3.1-3.4. Upgraded computed->proved 2026-10-01 for the structural claims (topological => not monadic => lift-not-distributive-law; EF recipe = eps-pullback INTERSECT comparability; comparability = forest order). Rmk 3.5 (pebbling pebble-liveness as extra data) and the general converse stay COMPUTED, listed as gaps.",
-    "children": [
-     {
-      "id": "pebbling-liveness-extra-data",
-      "role": "attempt",
-      "approach": "Pebbling's lift adds pebble-liveness beyond (eps, comparability) -- reads pebble labels in shapes. Precise general formulation not given.",
-      "trust": "computed",
-      "file": "2026-10-01-game-comonads-poly.md",
-      "reason": "Gap 1 (Sec 6): stated as computed, needs precise label-bookkeeping formulation.",
-      "children": []
-     }
-    ]
-   },
-   {
-    "id": "polynomial-comonad-coalgebras-are-copresheaves",
-    "role": "premise",
-    "approach": "LEMMA 4.1 (NEW, the real content). For a polynomial comonad c=C (small category), EM-coalgebras of the Set-comonad [[c]] = copresheaves [C,Set] = discrete opfibrations over C. Proof: a coalgebra gamma:X->[[c]]X unwinds to (labelling s:X->ob C) + (for each x, each arrow f out of s(x) a chosen x.f over cod f) with x.id=x, x.(g o f)=(x.f).g = exactly a discrete opfibration/copresheaf. COROLLARY 4.2: for C=[k], [C,Set] = FORESTS of height <=k = Abramsky-Shah's arboreal coalgebra category. So 'arboreal = C is a forest poset' is a THEOREM, not an analogy. This CLOSES blocker-1 of Point 4.",
-    "trust": "proved",
-    "file": "2026-10-01-game-comonads-poly.md",
-    "note": "Lemma 4.1 + Cor 4.2. Enumerated: E_k-coalgebras on X == forests height<=k: |X|=2,k=2:3=3; |X|=3,k=2:10=10; |X|=3,k=3:16=16; |X|=2,k=3:3=3 (coalg_and_forget.py). Standard-adjacent but proved cleanly from scratch; promotes arboreality identification.",
-    "children": []
-   },
-   {
-    "id": "arboreal-fibration-is-fam-cop-instance",
-    "role": "attempt",
-    "approach": "POINT 4 (CROWN candidate). ORIGINAL probe claim CORRECTED 2026-10-01: Cont(cod)=Fam(cod^op) is a fibration over the WHOLE category of containers Cont(Set) (total Cont(Set^->), fibre Prod_s (Set/P_s)^op); it is NOT 'a fibration over a single category C'. The probe conflated the CATEGORY Fam(C^op) with the FIBRATION Fam(cod^op). CORRECTED open question (Sec 4.2): for c=C a forest polynomial comonad, 𝒜=[C,Set] its coalgebras (Lemma 4.1), 𝒯 the paths subcategory (= representable copresheaves C(n,-)); is the Jakl-Reggio path functor P:𝒜->𝒯 (Street fibration; Jakl-Reggio arXiv:2603.21841 Thm 23+26, NOT the mis-cited 'Thm 7.3') equivalent AS A FIBRATION to a Fam-type fibration built from C (restriction of Cont(cod) along 𝒯->Cont(Set))? BLOCKER-1 CLOSED (coalgebra identification = polynomial-comonad-coalgebras-are-copresheaves). BLOCKER-2 OPEN: match pathwise-embeddings cartesian class with Cont(cod)'s (Sigma_rho)^op on the nose -- needs Jakl-Reggio arboreal factorisation deep-read (NOT in seed; no browse this session).",
-    "trust": "speculative",
-    "file": "2026-10-01-game-comonads-poly.md",
-    "note": "Blocker-1 resolved, statement corrected, blocker-2 reduced to one precise factorisation-system matching. Stays speculative pending arboreal deep-read (dream open-thread #1). Only this node, if closed, is a genuine new cross-domain isomorphism.",
-    "children": [
-     {
-      "id": "arboreal-factorisation-match",
-      "role": "attempt",
-      "approach": "Blocker-2 [RE-STATED 2026-10-02 after arboreal deep-read]: for PURE forest C the pathwise-embedding class is DEGENERATE (every morphism), so 'match pathwise embeddings with (Sigma_rho)^op' is the wrong question at that level (see sibling naive-crown-refuted). The live orientation question ((Sigma_rho)^op vs rho^* under the fibrewise op) belongs to the RELATIONAL-LAYER refined conjecture (sibling crown-refined-relational-layer), in the unary subobject-truncated setting. Jakl-Reggio use (epi, regular mono); in the topos [C,Set] all factorisation systems coincide so Example 28 cannot bite. Reference correction: the results are Thm 23 + Thm 26, not 'Thm 7.3'.",
-      "trust": "speculative",
-      "file": null,
-      "reason": "Gap 3 (Sec 6): needs arboreal deep-read of Jakl-Reggio, not in seed, no browsing in deep-work session.",
-      "children": []
-     },
-     {
-      "id": "naive-crown-refuted",
-      "role": "attempt",
-      "trust": "computed",
-      "approach": "REFUTED (naive form) 2026-10-02, concrete at C=[2] (=Set^->) + structural. The bare forest comonad (Lemma 4.1 coalgebras = [C,Set]) has DISCRETE fibres: for pure forest C every morphism is a pathwise embedding (f o m a mono of a representable is automatic on singleton/branch domains), so P:𝒜->𝒯 is a DEGENERATE Street fibration = equivalence onto its image. Cont(cod) has RICH fibres Prod_s (Set/P_s)^op with cartesian (Sigma_rho)^op a PROPER subclass (witness-preserving/iso-on-total). Different fibres (discrete vs Set/P) => NOT equivalent as fibrations. The whole content of 'pathwise embedding = cartesian' (Thm 23) lives in the RELATIONAL lift, which Lemma 4.1 strips away. Confirmed P IS a genuine Street fibration for forest C (Thm 26; EF/pebble satisfy even old connectedness); Example 28 pathology cannot bite because [C,Set] is a topos (all factorisation systems coincide). This is the proof-relevance/extensivity container boundary again. Sub-agent analysis grade = computed.",
-      "file": "2026-10-01-game-comonads-poly.md",
-      "date": "2026-10-02",
-      "children": []
-     },
-     {
-      "id": "crown-refined-relational-layer",
-      "role": "attempt",
-      "trust": "computed",
-      "approach": "REFINED CONJECTURE (replaces the naive crown) 2026-10-02: Cont(cod) is the PREDICATE/RELATIONAL LAYER over P, not P itself. Match survives only after (1) relational lift, (2) UNARY colours (k>=2-ary relations invisible to Cont(cod) -- a subset [n]x[n] is NOT in Set/[n]), (3) propositional truncation to Sub(Set^->) (fibre Sub([n])^op). STAGE 1 (orientation) NOW COMPUTED, see child orientation-rho-star-not-sigma-rho.",
-      "file": "2026-10-01-game-comonads-poly.md",
-      "date": "2026-10-02",
-      "children": [
-       {
-        "id": "orientation-rho-star-not-sigma-rho",
+      {
+        "id": "underlying-functor-polynomial",
         "role": "attempt",
-        "trust": "computed",
-        "approach": "STAGE 1 RESOLVED by explicit enumeration at C=[2],[3],[4] (k-independent derivation): over the PATH sub-base 𝒫⊂𝒯, unary single-colour, subobject-truncated. (1) FIBRES OPPOSITE: arboreal (2^[n],⊆) [homs grow colour] vs Cont(cod) Sub([n])^op=(2^[n],⊇). (2) arboreal cartesian reindexing along a path-inclusion ι:[m]↪[n] = PREIMAGE j^{-1} (relation-reflection; UNIQUE pathwise-embedding lift, Jakl-Reggio Thm23). (3) Cont(cod) CARTESIAN (Σ_ρ)^op = DIRECT IMAGE, DIFFERS from preimage (first at deepest singleton) -- so the naive guess 'reflection=(Σ_ρ)^op' is REFUTED. (4) PREIMAGE = Cont(cod) OPCARTESIAN leg ρ^* exactly (forward inclusion j carried BACKWARD by Fam(C^op)). VERDICT: orientation FLIPS -- relation-reflection <-> ρ^* (pullback/opcartesian), NOT (Σ_ρ)^op. Hence ℙ|𝒫 ≅ (Φ^*Cont(cod)|trunc)^{fibrewise-op}, equal only after the von Glehn op, NOT on the nose. Script scratch/crown_stage1_orientation.py ALL CONFIRMED. GAPS for Stage 2: path base only (full tree needs MULTI-SHAPE containers, shapes=branches); unary only; truncated only.",
-        "file": "2026-10-02-crown-stage1-orientation.md",
-        "date": "2026-10-02",
+        "approach": "POINT 1. E_k: U(E_k)A = Sum_{n=1..k} A^n = Sum_n Set([n],-) (coproduct of representables); shapes {1..k}, positions [n] -> polynomial. P_k: U(P_k)A = ([k]xA)^+ ; by Set distributivity ([k]xA)^m = Sum_{w in [k]^m} A^[m], so = Sum_{w in [k]^+} Set([|w|],-); shapes [k]^+, positions [|w|] -> polynomial (infinite shape set OK). M_k: universe = R-paths depends on R^A not |A| (witness |A|=2: |UM_2| = 3 for R={(0,1)} vs 14 for R=AxA, same convention) -> NO Set-functor F has U(M_k)=F.U, so modal does NOT factor through Poly on Set.",
+        "trust": "proved",
+        "file": "2026-10-01-game-comonads-poly.md",
+        "note": "Prop 1.1-1.3. Upgraded computed->proved 2026-10-01. Proof = coproduct-of-representables + Set extensivity (pebbling) + cardinality witness (modal). Verified: modal 3 vs 14 (game_comonad_verify.py).",
+        "children": []
+      },
+      {
+        "id": "comonoid-is-small-category",
+        "role": "attempt",
+        "approach": "POINT 2. Lemma 2.1 (CRUX): Poly full+faithful in [Set,Set] (Gambino-Kock) + <|=composition => any Set-comonad with polynomial functor is AUTOMATICALLY a comonoid in (Poly,<|); comonad laws = comonoid laws by faithfulness. Then AU/Spivak dictionary reads off the category. E_k = finite LINEAR ORDER [k] (objects {1..k}, unique arrow n->m iff m<=n; eps=last=id, delta=prefixes => cod(i)=i, comp (i,j)->j). P_k = k-ary prefix TRIE on [k]^+ (arrow w->v iff v prefix w). CORRECTION to probe: E is NOT simply a 'labels-forgotten quotient' of P; correct (Prop 2.3): E_inf = P_1 (iso of comonads, both = line [inf]); forget:P_k=>E_inf is a comonad morphism = COFUNCTOR trie->line by length; E_k = length-<=k truncation of E_inf. By-hand k=2,3 done; category axioms + linear-order/trie identification verified k=2,3,4.",
+        "trust": "proved",
+        "file": "2026-10-01-game-comonads-poly.md",
+        "note": "Prop 2.2-2.3, Lemma 2.1. Upgraded computed->proved 2026-10-01. Exhaustive law checks (game_comonad_verify.py): E_k laws PASS k=2,3; P_k laws PASS k=2,3; E_k==[k] k=2,3,4; P_k==trie k=2,3; E_inf==P_1 and forget a comonad morphism CONFIRMED. Honesty: folklore-adjacent identification, not a new theorem.",
         "children": [
-         {
-          "id": "crown-stage2-multishape-branch-extension",
-          "role": "attempt",
-          "trust": "proved",
-          "review": {
-           "reviewer": "Rick",
-           "artifact": "proofs/reviews/2026-10-10-crown-stage2-rick.md",
-           "date": "2026-10-10"
-          },
-          "reason": "REPAIRED 2026-10-10 (PROVE deep work), re-promoted computed->proved. Rick review (4136ecf) found Clause 1 FALSE as printed (Def 6 nearest-ancestor rho_f neither leg = j^-1); FIX: encode CONTRAVARIANTLY Psi':T^op->Cont, Psi'(f)=(id1,j) with j the BACKWARD position map, so the OPCARTESIAN leg of Cont(cod) = j^-1 = preimage = relation reflection. Clause 1 now PROVED, unconditional (repair note sec2). (*) proved WITHOUT Jakl-Reggio by a 6-line direct argument in category A (repair sec1). Stage-1 CROSS-CHECK (Rick asked): Stage 1 is NOT infected -- its positive match (Lemma 3/sec4) already carries the inclusion j backward; the collapse rho appears only as the leg that FAILS (Lemma 2). M3: Psi (branches as shapes) has NO functorial morphism action in EITHER variance -- new PROVED no-go child crown-stage2-psi-no-functorial-action (contravariant fails on existence; covariant fails functoriality via a sibling-swap automorphism). M4: ceiling FALSE -- Psi'_k(T)=(1,{nodes^k}) with backward map j^k reproduces the k-ary fibre exactly; only 'unary Psi' blind to k-ary' survives (trivial). Clause 2 over-count unchanged (lean-verified child stands).",
-          "approach": "STAGE 2 REPAIRED (2026-10-10). Extend Stage 1 off the PATH base to the FULL tree base T. THREE results after repair: (1) Clause 1 POSITIVE, PROVED: encode CONTRAVARIANTLY Psi':T^op->Cont, Psi'(T)=(1,{nodes T}), Psi'(f)=(id1,j) with j BACKWARD. Opcartesian leg of Cont(cod) along Psi'(f) = j^-1 = preimage; after fibrewise op this is P as an indexed poset T^op->Pos, T|->(2^{nodes T},subset), f|->j^-1. Clean form P ~= nodes*(Sub). The OLD rho_f (nearest-ancestor retraction) was the bug: on V-tree R'={b}, j^-1=empty but Sigma_rho={r}. (2) Clause 2 NEGATIVE, PROVED (objectwise over-count 2^{Sigma(lambda-1)}, V 8<16, Y 16<64; lean-verified) PLUS a NO-GO (M3): the branch assignment Psi is NOT a functor -- contravariant Psi fails to even exist (a branch of T' restricts to a non-branch prefix: V-tree rb|->{r}), covariant Psi fails functoriality (sibling-swap sigma on {r,a,c,d}: sigma.f=f but phi_sigma is forced fixed-point-free swap, so phi_f cannot be swap-fixed -- contradiction). The honest structure is a SPAN R_f on branches, not a map -- why Fam=Sigma (a functor) cannot realize it; recovering P needs DESCENT. (3) k>=2 obstruction FALSE as a ceiling (M4): k-ary fibre lives in Cont(cod) at positions nodes^k with backward j^k; only the trivial 'unary Psi' blind to k-ary' is true. Nugget UNCHANGED: encode branching with ONE shape + whole node set in positions (NOT branches-as-shapes); sharing=composition=degree-2 datum that is a SPAN/descent, provably not a functorial Fam=Sigma coproduct. Verify: crown_stage2_repair_verify.py (reproduces Rick's exact witnesses). Cont-dictionary (preimage=rho* under von-Glehn op) rides on Stage 1 (computed, order-blind, never at risk off paths).",
-          "file": "2026-10-10-crown-stage2-repair.md",
-          "date": "2026-10-09",
-          "sources": [
-           "2603.21841"
-          ],
-          "sources_locators": "2603.21841 (Jakl-Reggio): NO LONGER A DEPENDENCY after repair -- (*) is proved directly in category A (repair note sec1, 6 lines, no arboreal axioms). Citation retained only for the k-ary EF-style remark and historical context; correct attribution T.Jakl,L.Reggio arXiv:2603.21841 CMCS 2026 (shipped ref [3] wrongly listed Abramsky,Reggio, no arXiv id). extraction=deep-read.",
-          "children": [
-           {
-            "id": "crown-stage2-psi-no-functorial-action",
+          {
+            "id": "lean-ef-comonoid-witness",
             "role": "attempt",
-            "trust": "proved",
-            "approach": "NO-GO (M3), covering-restricted version PROVED/computed 2026-10-10; DEMOTED proved->computed 2026-10-11 (Rick r2 M-B, see reason). HYPOTHESIS REQUIRED: 'covering' (or the sharper 'natural on automorphisms', Thm 18'). Under the COVERING hypothesis the object assignment Psi(T)=(branches(T),{chain_b}) extends to NO functor T->Cont nor T^op->Cont covering the tree embeddings. (a) CONTRAVARIANT fails on EXISTENCE: a branch of T' restricts to a prefix that need not be a branch of T. V-tree {r,a}->{r,a,b}: branch rb needs a T-branch b with j(chain_b) subset {r,b}; only chain_{ra}={r,a} is available and {r,a} not-subset {r,b}. (b) COVARIANT fails on FUNCTORIALITY: T={r,a}, T'={r,a,c,d} (c,d both children of a), sigma=automorphism swapping c,d. Compatibility forces phi_f(beta_a) in {beta_c,beta_d} (two choices) and phi_sigma=the swap (fixed-point-free). But sigma.f=f (equal node maps; morphisms of T determined by node map), so functoriality demands phi_sigma . phi_f = phi_f, i.e. phi_f(beta_a) is swap-fixed -- impossible. Equivalently branches:T->Set is not a functor respecting embeddings in either variance. The genuine structure is a SPAN R_f on branches (left-total, neither left- nor right-functional); this is why Fam=Sigma cannot realize it and recovering P is a DESCENT step. Container-side face of 'composition is degree-2'. CORRECTION (Rick r2 M-B): the UNRESTRICTED claim 'Psi extends to no functor in either variance, dropping the covering constraint admits only vacuous functors' is FALSE -- on a skeleton, constant shape maps (phi_f = chosen branch c_T, positions constant at the root; automorphisms act as (id,id)) give genuine functors T->Cont AND T^op->Cont agreeing with Psi on objects (Rick computed: 0 failures on all 17 trees <=5 nodes, 2813 composable pairs, each variance). The no-go holds ONLY with the covering hypothesis (Thm 18 as stated), or with Rick's sharper Thm 18' (natural on automorphisms by the canonical branch action; no condition on non-invertibles). Verify: crown_stage2_repair_verify.py block T2.",
-            "file": "2026-10-10-crown-stage2-repair.md",
-            "date": "2026-10-10",
-            "review": {"reviewer": "Rick", "artifact": "proofs/reviews/2026-10-11-crown-stage2-psi-no-functorial-action.md", "date": "2026-10-11"},
-            "reason": "RE-PROMOTED computed->proved 2026-10-12 (MacBeth re-review adopting Rick's r2 Thm 18/18'; artifact proofs/reviews/2026-10-11-crown-stage2-psi-no-functorial-action.md). M-B FIX LANDED in papers/crown-stage2-unfolding-vs-descent.tex (WRITE commit e4d1785): every statement of the no-go now carries the 'covering' hypothesis -- 'Psi extends to no functor COVERING the embeddings in either variance' (abstract l.67, intro l.127, thm:nogo l.517/527/539, conclusion l.679/701) -- and Rick's sharper variance-symmetric Thm 18' (no functor extending Psi on objects that acts on AUTOMORPHISMS by the canonical branch action; thm:nogonat) is added. The unrestricted overstatement and the proof-file sentence 'the no-go is not an artifact of the compatibility convention' are removed; the constant-shape escapes are acknowledged as genuine functors (rem:dropcompat). M-A (attribution): Lemma 8's six-line proof and the enumeration are credited to Rick throughout (sec:positive; round-2 note l.200-205). MacBeth's re-review adopting Rick's repaired Thm 18/18', so proved is within boundary. --- PRIOR DEMOTION (Rick r2 M-B): The headline no-go must carry the 'covering' hypothesis: Thm 18 as stated (covering functors) is PROVED, but the UNRESTRICTED 'Psi extends to no functor in either variance' is FALSE (constant-shape functors in both variances agree with Psi on objects; Rick computed 0 failures). The proof-file sentence 'the no-go is not an artifact of the compatibility convention' should go. Rick offers a sharper variance-symmetric Thm 18' (no functor extending Psi on objects acting on automorphisms by the canonical branch action; covariant=sibling swap, contravariant=3-leaf star V={r;a,b} into S3={r;a,b,e}). Re-promote to proved only after the PDF/registry statement carries the covering (or 'natural on automorphisms') hypothesis. SEPARATELY (M-A, bookkeeping, no grade change): Lemma 8's six-line proof and the <=4-node/3147-morphism enumeration are Rick's and need explicit credit in the PDF (already credited in the proof file).",
-            "children": []
-           },
-           {
-            "id": "lean-crown-stage2-overcount-identity",
-            "role": "attempt",
+            "approach": "LEAN finite witness (Mathlib-free, Lean core v4.30.0, decide). Part 1: \ud835\udd3c_k A as path-encoded inductive (E2,E3, nonempty seqs len<=k); eps=last, delta=prefixes, map=functorial action; the THREE comonad laws (left/right counit, coassoc) proved POLYMORPHICALLY in A by `cases x <;> rfl` (stronger than a fixed-|A| oracle; zero axioms). Part 2: induced comonoid = directed container (cod i=i, root n=n, comp i j=j); category axioms (id L/R, cod-compat, assoc) and linear-order identification homCount n m = (if m<=n then 1 else 0) i.e. unique arrow n->m iff m<=n, all by `decide` for k=2,3,4. Bridge eps=eval-at-root, delta uses cod/comp is definitional/by-construction (documented; generic \u27e6-\u27e7 needs Fintype, out of core-only scope).",
             "trust": "lean-verified",
-            "approach": "LEAN (2026-10-10): machine-checks the ARITHMETIC of Clause 2 (the branch-unfolding over-count), NOT the fibration content (that rides on the paper proof / Stage 1). Rose tree RTree=node (List RTree) (leaf=node []). Defs: nodes=Sigma_v 1; leaves=lambda(root)=#branches; unfold=|U(T)|=Sigma_b|chain_b|=Sigma_v lambda(v)=leaves T + Sigma_c unfold c; overcount=Sigma_v(lambda(v)-1)=(leaves-1)+Sigma_c overcount c. KEY IDENTITY (hypothesis-free, mutual structural induction): unfold_eq_nodes_add_overcount : unfold T = nodes T + overcount T. Fibre-power corollary pow_unfold_eq : 2^|U| = 2^|nodes| * 2^overcount (Nat.pow_add); pow_nodes_dvd_pow_unfold (2^nodes | 2^U); pow_nodes_lt_pow_unfold (branching => strict). Witnesses by decide: V-tree node[node[],node[]] (nodes=3,unfold=4,overcount=1, 8<16); Y-tree node[node[node[],node[]]] (nodes=4,unfold=6,overcount=2, 16<64). Sorry-free; #print axioms = [propext, Quot.sound] (omega/decide core only; no sorryAx/Classical.choice). Confirmed vs scratch/crown_stage2_witness.py (lambda(r)=2, Sigma(lambda-1)=1, factor 2^1, 8*2=16).",
-            "lean": "lean/2026-10-10-crown-stage2-overcount.lean: CrownStage2Overcount.RTree.unfold_eq_nodes_add_overcount (unfold T = nodes T + overcount T, hypothesis-free, mutual induction); pow_unfold_eq (2^unfold = 2^nodes * 2^overcount); pow_nodes_dvd_pow_unfold; pow_nodes_lt_pow_unfold (strict when 1<=overcount); leaves_pos; V/Ytree decide witnesses (8<16, 16<64). Axioms [propext, Quot.sound].",
-            "date": "2026-10-10",
+            "file": "2026-10-01-game-comonads-poly.md",
+            "lean": "lean/2026-10-01-ef-comonoid-witness.lean: EFComonoid.E2.{left_counit,right_counit,coassoc}, EFComonoid.E3.{left_counit,right_counit,coassoc} (comonad laws, polymorphic, 0 axioms); EFComonoid.{linear_order_two,linear_order_three,linear_order_four} (comonoid=linear order [k], k=2,3,4); EFComonoid.{cod_root,left_id,right_id,cod_comp,comp_assoc} (directed-container/category axioms). All sorry-free, #print axioms empty.",
+            "note": "LEAN session 2026-10-01. Finite oracle for small k + polymorphic comonad laws. Does NOT upgrade general [proved/computed] parent beyond its current state; this is the machine-checked attempt-role certificate under comonoid-is-small-category. Compiles standalone (~/.elan/bin/lean), zero errors/warnings/sorry, zero axioms.",
             "children": []
-           }
-          ],
-          "superseded_file": "2026-10-09-crown-stage2-multishape-branch-extension.md (FALSE as printed in Clause 1 Def 6, Def 10 morphism action, Clause 3 ceiling; see repair note)",
-          "repair": {
-           "file": "2026-10-10-crown-stage2-repair.md",
-           "date": "2026-10-10",
-           "verify": "scratch/crown_stage2_repair_verify.py"
-          },
-          "note_2026-10-09_SUPERSEDED": "The 10-09 Route-A (Jakl-Reggio Thm 23/26) justification of (*) is SUPERSEDED: (*) now proved directly in A (repair sec1); Route B (elementary universal property) was always correct and is the kept proof. The 10-09 Clause-1 functor Psi' used a nearest-ancestor retraction rho_f as the backward map -- that was FALSE (M1); the corrected functor is contravariant with j backward."
-         }
+          }
         ]
-       }
-      ]
-     }
-    ],
-    "note_2026-10-02": "ARBOREAL PAPER DEEP-READ (arXiv:2603.21841, Jakl-Reggio, fetched 2026-10-02 to scratch/arboreal/). Analysis scratch/2026-10-02-crown-blocker2-analysis.md. The NAIVE crown is REFUTED; the correct relationship is the relational-layer refinement below."
-   }
-  ]
- }
+      },
+      {
+        "id": "sigma-structure-is-a-lift-not-distributive-law",
+        "role": "attempt",
+        "approach": "POINT 3. U:Struct(sigma)->Set is TOPOLOGICAL (AHS): fibre = complete lattice Prod_R P(A^ar), initial lifts = intersections. Topological + monadic => iso; U not an equivalence => NOT monadic => NO structure monad to Beck-distribute over. So the game comonad is a LIFT of the polynomial comonad along topological U, governed by a relational lifting (lax extension), NOT a Beck distributive law. Lifting is DATA not property (indiscrete/discrete lifts always exist). EF recipe = (pullback of R along counit eps^xr) INTERSECT (prefix-comparability = comonoid category's branch order); comparability cut requires C a FOREST = categorical fingerprint of arboreality. Pebbling needs MORE (pebble-liveness reads shape labels) [this sub-claim: computed].",
+        "trust": "proved",
+        "file": "2026-10-01-game-comonads-poly.md",
+        "note": "Prop 3.1-3.4. Upgraded computed->proved 2026-10-01 for the structural claims (topological => not monadic => lift-not-distributive-law; EF recipe = eps-pullback INTERSECT comparability; comparability = forest order). Rmk 3.5 (pebbling pebble-liveness as extra data) and the general converse stay COMPUTED, listed as gaps.",
+        "children": [
+          {
+            "id": "pebbling-liveness-extra-data",
+            "role": "attempt",
+            "approach": "Pebbling's lift adds pebble-liveness beyond (eps, comparability) -- reads pebble labels in shapes. Precise general formulation not given.",
+            "trust": "computed",
+            "file": "2026-10-01-game-comonads-poly.md",
+            "reason": "Gap 1 (Sec 6): stated as computed, needs precise label-bookkeeping formulation.",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "polynomial-comonad-coalgebras-are-copresheaves",
+        "role": "premise",
+        "approach": "LEMMA 4.1 (NEW, the real content). For a polynomial comonad c=C (small category), EM-coalgebras of the Set-comonad [[c]] = copresheaves [C,Set] = discrete opfibrations over C. Proof: a coalgebra gamma:X->[[c]]X unwinds to (labelling s:X->ob C) + (for each x, each arrow f out of s(x) a chosen x.f over cod f) with x.id=x, x.(g o f)=(x.f).g = exactly a discrete opfibration/copresheaf. COROLLARY 4.2: for C=[k], [C,Set] = FORESTS of height <=k = Abramsky-Shah's arboreal coalgebra category. So 'arboreal = C is a forest poset' is a THEOREM, not an analogy. This CLOSES blocker-1 of Point 4.",
+        "trust": "proved",
+        "file": "2026-10-01-game-comonads-poly.md",
+        "note": "Lemma 4.1 + Cor 4.2. Enumerated: E_k-coalgebras on X == forests height<=k: |X|=2,k=2:3=3; |X|=3,k=2:10=10; |X|=3,k=3:16=16; |X|=2,k=3:3=3 (coalg_and_forget.py). Standard-adjacent but proved cleanly from scratch; promotes arboreality identification.",
+        "children": []
+      },
+      {
+        "id": "arboreal-fibration-is-fam-cop-instance",
+        "role": "attempt",
+        "approach": "POINT 4 (CROWN candidate). ORIGINAL probe claim CORRECTED 2026-10-01: Cont(cod)=Fam(cod^op) is a fibration over the WHOLE category of containers Cont(Set) (total Cont(Set^->), fibre Prod_s (Set/P_s)^op); it is NOT 'a fibration over a single category C'. The probe conflated the CATEGORY Fam(C^op) with the FIBRATION Fam(cod^op). CORRECTED open question (Sec 4.2): for c=C a forest polynomial comonad, \ud835\udc9c=[C,Set] its coalgebras (Lemma 4.1), \ud835\udcaf the paths subcategory (= representable copresheaves C(n,-)); is the Jakl-Reggio path functor P:\ud835\udc9c->\ud835\udcaf (Street fibration; Jakl-Reggio arXiv:2603.21841 Thm 23+26, NOT the mis-cited 'Thm 7.3') equivalent AS A FIBRATION to a Fam-type fibration built from C (restriction of Cont(cod) along \ud835\udcaf->Cont(Set))? BLOCKER-1 CLOSED (coalgebra identification = polynomial-comonad-coalgebras-are-copresheaves). BLOCKER-2 OPEN: match pathwise-embeddings cartesian class with Cont(cod)'s (Sigma_rho)^op on the nose -- needs Jakl-Reggio arboreal factorisation deep-read (NOT in seed; no browse this session).",
+        "trust": "speculative",
+        "file": "2026-10-01-game-comonads-poly.md",
+        "note": "Blocker-1 resolved, statement corrected, blocker-2 reduced to one precise factorisation-system matching. Stays speculative pending arboreal deep-read (dream open-thread #1). Only this node, if closed, is a genuine new cross-domain isomorphism.",
+        "children": [
+          {
+            "id": "arboreal-factorisation-match",
+            "role": "attempt",
+            "approach": "Blocker-2 [RE-STATED 2026-10-02 after arboreal deep-read]: for PURE forest C the pathwise-embedding class is DEGENERATE (every morphism), so 'match pathwise embeddings with (Sigma_rho)^op' is the wrong question at that level (see sibling naive-crown-refuted). The live orientation question ((Sigma_rho)^op vs rho^* under the fibrewise op) belongs to the RELATIONAL-LAYER refined conjecture (sibling crown-refined-relational-layer), in the unary subobject-truncated setting. Jakl-Reggio use (epi, regular mono); in the topos [C,Set] all factorisation systems coincide so Example 28 cannot bite. Reference correction: the results are Thm 23 + Thm 26, not 'Thm 7.3'.",
+            "trust": "speculative",
+            "file": null,
+            "reason": "Gap 3 (Sec 6): needs arboreal deep-read of Jakl-Reggio, not in seed, no browsing in deep-work session.",
+            "children": []
+          },
+          {
+            "id": "naive-crown-refuted",
+            "role": "attempt",
+            "trust": "computed",
+            "approach": "REFUTED (naive form) 2026-10-02, concrete at C=[2] (=Set^->) + structural. The bare forest comonad (Lemma 4.1 coalgebras = [C,Set]) has DISCRETE fibres: for pure forest C every morphism is a pathwise embedding (f o m a mono of a representable is automatic on singleton/branch domains), so P:\ud835\udc9c->\ud835\udcaf is a DEGENERATE Street fibration = equivalence onto its image. Cont(cod) has RICH fibres Prod_s (Set/P_s)^op with cartesian (Sigma_rho)^op a PROPER subclass (witness-preserving/iso-on-total). Different fibres (discrete vs Set/P) => NOT equivalent as fibrations. The whole content of 'pathwise embedding = cartesian' (Thm 23) lives in the RELATIONAL lift, which Lemma 4.1 strips away. Confirmed P IS a genuine Street fibration for forest C (Thm 26; EF/pebble satisfy even old connectedness); Example 28 pathology cannot bite because [C,Set] is a topos (all factorisation systems coincide). This is the proof-relevance/extensivity container boundary again. Sub-agent analysis grade = computed.",
+            "file": "2026-10-01-game-comonads-poly.md",
+            "date": "2026-10-02",
+            "children": []
+          },
+          {
+            "id": "crown-refined-relational-layer",
+            "role": "attempt",
+            "trust": "computed",
+            "approach": "REFINED CONJECTURE (replaces the naive crown) 2026-10-02: Cont(cod) is the PREDICATE/RELATIONAL LAYER over P, not P itself. Match survives only after (1) relational lift, (2) UNARY colours (k>=2-ary relations invisible to Cont(cod) -- a subset [n]x[n] is NOT in Set/[n]), (3) propositional truncation to Sub(Set^->) (fibre Sub([n])^op). STAGE 1 (orientation) NOW COMPUTED, see child orientation-rho-star-not-sigma-rho.",
+            "file": "2026-10-01-game-comonads-poly.md",
+            "date": "2026-10-02",
+            "children": [
+              {
+                "id": "orientation-rho-star-not-sigma-rho",
+                "role": "attempt",
+                "trust": "computed",
+                "approach": "STAGE 1 RESOLVED by explicit enumeration at C=[2],[3],[4] (k-independent derivation): over the PATH sub-base \ud835\udcab\u2282\ud835\udcaf, unary single-colour, subobject-truncated. (1) FIBRES OPPOSITE: arboreal (2^[n],\u2286) [homs grow colour] vs Cont(cod) Sub([n])^op=(2^[n],\u2287). (2) arboreal cartesian reindexing along a path-inclusion \u03b9:[m]\u21aa[n] = PREIMAGE j^{-1} (relation-reflection; UNIQUE pathwise-embedding lift, Jakl-Reggio Thm23). (3) Cont(cod) CARTESIAN (\u03a3_\u03c1)^op = DIRECT IMAGE, DIFFERS from preimage (first at deepest singleton) -- so the naive guess 'reflection=(\u03a3_\u03c1)^op' is REFUTED. (4) PREIMAGE = Cont(cod) OPCARTESIAN leg \u03c1^* exactly (forward inclusion j carried BACKWARD by Fam(C^op)). VERDICT: orientation FLIPS -- relation-reflection <-> \u03c1^* (pullback/opcartesian), NOT (\u03a3_\u03c1)^op. Hence \u2119|\ud835\udcab \u2245 (\u03a6^*Cont(cod)|trunc)^{fibrewise-op}, equal only after the von Glehn op, NOT on the nose. Script scratch/crown_stage1_orientation.py ALL CONFIRMED. GAPS for Stage 2: path base only (full tree needs MULTI-SHAPE containers, shapes=branches); unary only; truncated only.",
+                "file": "2026-10-02-crown-stage1-orientation.md",
+                "date": "2026-10-02",
+                "children": [
+                  {
+                    "id": "crown-stage2-multishape-branch-extension",
+                    "role": "attempt",
+                    "trust": "proved",
+                    "review": {
+                      "reviewer": "Rick",
+                      "artifact": "proofs/reviews/2026-10-13-nerve-crown-uniqueness.md",
+                      "date": "2026-10-13"
+                    },
+                    "reason": "REPAIRED 2026-10-10 (PROVE deep work), re-promoted computed->proved. Rick review (4136ecf) found Clause 1 FALSE as printed (Def 6 nearest-ancestor rho_f neither leg = j^-1); FIX: encode CONTRAVARIANTLY Psi':T^op->Cont, Psi'(f)=(id1,j) with j the BACKWARD position map, so the OPCARTESIAN leg of Cont(cod) = j^-1 = preimage = relation reflection. Clause 1 now PROVED, unconditional (repair note sec2). (*) proved WITHOUT Jakl-Reggio by a 6-line direct argument in category A (repair sec1). Stage-1 CROSS-CHECK (Rick asked): Stage 1 is NOT infected -- its positive match (Lemma 3/sec4) already carries the inclusion j backward; the collapse rho appears only as the leg that FAILS (Lemma 2). M3: Psi (branches as shapes) has NO functorial morphism action in EITHER variance -- new PROVED no-go child crown-stage2-psi-no-functorial-action (contravariant fails on existence; covariant fails functoriality via a sibling-swap automorphism). M4: ceiling FALSE -- Psi'_k(T)=(1,{nodes^k}) with backward map j^k reproduces the k-ary fibre exactly; only 'unary Psi' blind to k-ary' survives (trivial). Clause 2 over-count unchanged (lean-verified child stands).",
+                    "approach": "STAGE 2 REPAIRED (2026-10-10). Extend Stage 1 off the PATH base to the FULL tree base T. THREE results after repair: (1) Clause 1 POSITIVE, PROVED: encode CONTRAVARIANTLY Psi':T^op->Cont, Psi'(T)=(1,{nodes T}), Psi'(f)=(id1,j) with j BACKWARD. Opcartesian leg of Cont(cod) along Psi'(f) = j^-1 = preimage; after fibrewise op this is P as an indexed poset T^op->Pos, T|->(2^{nodes T},subset), f|->j^-1. Clean form P ~= nodes*(Sub). The OLD rho_f (nearest-ancestor retraction) was the bug: on V-tree R'={b}, j^-1=empty but Sigma_rho={r}. (2) Clause 2 NEGATIVE, PROVED (objectwise over-count 2^{Sigma(lambda-1)}, V 8<16, Y 16<64; lean-verified) PLUS a NO-GO (M3): the branch assignment Psi is NOT a functor -- contravariant Psi fails to even exist (a branch of T' restricts to a non-branch prefix: V-tree rb|->{r}), covariant Psi fails functoriality (sibling-swap sigma on {r,a,c,d}: sigma.f=f but phi_sigma is forced fixed-point-free swap, so phi_f cannot be swap-fixed -- contradiction). The honest structure is a SPAN R_f on branches, not a map -- why Fam=Sigma (a functor) cannot realize it; recovering P needs DESCENT. (3) k>=2 obstruction FALSE as a ceiling (M4): k-ary fibre lives in Cont(cod) at positions nodes^k with backward j^k; only the trivial 'unary Psi' blind to k-ary' is true. Nugget UNCHANGED: encode branching with ONE shape + whole node set in positions (NOT branches-as-shapes); sharing=composition=degree-2 datum that is a SPAN/descent, provably not a functorial Fam=Sigma coproduct. Verify: crown_stage2_repair_verify.py (reproduces Rick's exact witnesses). Cont-dictionary (preimage=rho* under von-Glehn op) rides on Stage 1 (computed, order-blind, never at risk off paths).",
+                    "file": "2026-10-10-crown-stage2-repair.md",
+                    "date": "2026-10-09",
+                    "sources": [
+                      "2603.21841"
+                    ],
+                    "sources_locators": "2603.21841 (Jakl-Reggio): NO LONGER A DEPENDENCY after repair -- (*) is proved directly in category A (repair note sec1, 6 lines, no arboreal axioms). Citation retained only for the k-ary EF-style remark and historical context; correct attribution T.Jakl,L.Reggio arXiv:2603.21841 CMCS 2026 (shipped ref [3] wrongly listed Abramsky,Reggio, no arXiv id). extraction=deep-read.",
+                    "children": [
+                      {
+                        "id": "crown-stage2-psi-no-functorial-action",
+                        "role": "attempt",
+                        "trust": "proved",
+                        "approach": "NO-GO (M3), covering-restricted version PROVED/computed 2026-10-10; DEMOTED proved->computed 2026-10-11 (Rick r2 M-B, see reason). HYPOTHESIS REQUIRED: 'covering' (or the sharper 'natural on automorphisms', Thm 18'). Under the COVERING hypothesis the object assignment Psi(T)=(branches(T),{chain_b}) extends to NO functor T->Cont nor T^op->Cont covering the tree embeddings. (a) CONTRAVARIANT fails on EXISTENCE: a branch of T' restricts to a prefix that need not be a branch of T. V-tree {r,a}->{r,a,b}: branch rb needs a T-branch b with j(chain_b) subset {r,b}; only chain_{ra}={r,a} is available and {r,a} not-subset {r,b}. (b) COVARIANT fails on FUNCTORIALITY: T={r,a}, T'={r,a,c,d} (c,d both children of a), sigma=automorphism swapping c,d. Compatibility forces phi_f(beta_a) in {beta_c,beta_d} (two choices) and phi_sigma=the swap (fixed-point-free). But sigma.f=f (equal node maps; morphisms of T determined by node map), so functoriality demands phi_sigma . phi_f = phi_f, i.e. phi_f(beta_a) is swap-fixed -- impossible. Equivalently branches:T->Set is not a functor respecting embeddings in either variance. The genuine structure is a SPAN R_f on branches (left-total, neither left- nor right-functional); this is why Fam=Sigma cannot realize it and recovering P is a DESCENT step. Container-side face of 'composition is degree-2'. CORRECTION (Rick r2 M-B): the UNRESTRICTED claim 'Psi extends to no functor in either variance, dropping the covering constraint admits only vacuous functors' is FALSE -- on a skeleton, constant shape maps (phi_f = chosen branch c_T, positions constant at the root; automorphisms act as (id,id)) give genuine functors T->Cont AND T^op->Cont agreeing with Psi on objects (Rick computed: 0 failures on all 17 trees <=5 nodes, 2813 composable pairs, each variance). The no-go holds ONLY with the covering hypothesis (Thm 18 as stated), or with Rick's sharper Thm 18' (natural on automorphisms by the canonical branch action; no condition on non-invertibles). Verify: crown_stage2_repair_verify.py block T2.",
+                        "file": "2026-10-10-crown-stage2-repair.md",
+                        "date": "2026-10-10",
+                        "review": {
+                          "reviewer": "Rick",
+                          "artifact": "proofs/reviews/2026-10-13-nerve-crown-uniqueness.md",
+                          "date": "2026-10-13"
+                        },
+                        "reason": "RE-PROMOTED computed->proved 2026-10-12 (MacBeth re-review adopting Rick's r2 Thm 18/18'; artifact proofs/reviews/2026-10-11-crown-stage2-psi-no-functorial-action.md). M-B FIX LANDED in papers/crown-stage2-unfolding-vs-descent.tex (WRITE commit e4d1785): every statement of the no-go now carries the 'covering' hypothesis -- 'Psi extends to no functor COVERING the embeddings in either variance' (abstract l.67, intro l.127, thm:nogo l.517/527/539, conclusion l.679/701) -- and Rick's sharper variance-symmetric Thm 18' (no functor extending Psi on objects that acts on AUTOMORPHISMS by the canonical branch action; thm:nogonat) is added. The unrestricted overstatement and the proof-file sentence 'the no-go is not an artifact of the compatibility convention' are removed; the constant-shape escapes are acknowledged as genuine functors (rem:dropcompat). M-A (attribution): Lemma 8's six-line proof and the enumeration are credited to Rick throughout (sec:positive; round-2 note l.200-205). MacBeth's re-review adopting Rick's repaired Thm 18/18', so proved is within boundary. --- PRIOR DEMOTION (Rick r2 M-B): The headline no-go must carry the 'covering' hypothesis: Thm 18 as stated (covering functors) is PROVED, but the UNRESTRICTED 'Psi extends to no functor in either variance' is FALSE (constant-shape functors in both variances agree with Psi on objects; Rick computed 0 failures). The proof-file sentence 'the no-go is not an artifact of the compatibility convention' should go. Rick offers a sharper variance-symmetric Thm 18' (no functor extending Psi on objects acting on automorphisms by the canonical branch action; covariant=sibling swap, contravariant=3-leaf star V={r;a,b} into S3={r;a,b,e}). Re-promote to proved only after the PDF/registry statement carries the covering (or 'natural on automorphisms') hypothesis. SEPARATELY (M-A, bookkeeping, no grade change): Lemma 8's six-line proof and the <=4-node/3147-morphism enumeration are Rick's and need explicit credit in the PDF (already credited in the proof file).",
+                        "children": [],
+                        "note": "[Rick UID224 2026-10-13] Credit accurate; Thm19 = Rick's 18' verbatim. 2 MUSTs (wording): l.313/317 say Psi is 'no functor' with no hypothesis; Rem20 'exactly those acting trivially on automorphisms' FALSE -- a sign action on the 3-leaf star is a counterexample (computed w/ negative controls). Fixes pending WRITE. No math gap."
+                      },
+                      {
+                        "id": "lean-crown-stage2-overcount-identity",
+                        "role": "attempt",
+                        "trust": "lean-verified",
+                        "approach": "LEAN (2026-10-10): machine-checks the ARITHMETIC of Clause 2 (the branch-unfolding over-count), NOT the fibration content (that rides on the paper proof / Stage 1). Rose tree RTree=node (List RTree) (leaf=node []). Defs: nodes=Sigma_v 1; leaves=lambda(root)=#branches; unfold=|U(T)|=Sigma_b|chain_b|=Sigma_v lambda(v)=leaves T + Sigma_c unfold c; overcount=Sigma_v(lambda(v)-1)=(leaves-1)+Sigma_c overcount c. KEY IDENTITY (hypothesis-free, mutual structural induction): unfold_eq_nodes_add_overcount : unfold T = nodes T + overcount T. Fibre-power corollary pow_unfold_eq : 2^|U| = 2^|nodes| * 2^overcount (Nat.pow_add); pow_nodes_dvd_pow_unfold (2^nodes | 2^U); pow_nodes_lt_pow_unfold (branching => strict). Witnesses by decide: V-tree node[node[],node[]] (nodes=3,unfold=4,overcount=1, 8<16); Y-tree node[node[node[],node[]]] (nodes=4,unfold=6,overcount=2, 16<64). Sorry-free; #print axioms = [propext, Quot.sound] (omega/decide core only; no sorryAx/Classical.choice). Confirmed vs scratch/crown_stage2_witness.py (lambda(r)=2, Sigma(lambda-1)=1, factor 2^1, 8*2=16).",
+                        "lean": "lean/2026-10-10-crown-stage2-overcount.lean: CrownStage2Overcount.RTree.unfold_eq_nodes_add_overcount (unfold T = nodes T + overcount T, hypothesis-free, mutual induction); pow_unfold_eq (2^unfold = 2^nodes * 2^overcount); pow_nodes_dvd_pow_unfold; pow_nodes_lt_pow_unfold (strict when 1<=overcount); leaves_pos; V/Ytree decide witnesses (8<16, 16<64). Axioms [propext, Quot.sound].",
+                        "date": "2026-10-10",
+                        "children": []
+                      }
+                    ],
+                    "superseded_file": "2026-10-09-crown-stage2-multishape-branch-extension.md (FALSE as printed in Clause 1 Def 6, Def 10 morphism action, Clause 3 ceiling; see repair note)",
+                    "repair": {
+                      "file": "2026-10-10-crown-stage2-repair.md",
+                      "date": "2026-10-10",
+                      "verify": "scratch/crown_stage2_repair_verify.py"
+                    },
+                    "note_2026-10-09_SUPERSEDED": "The 10-09 Route-A (Jakl-Reggio Thm 23/26) justification of (*) is SUPERSEDED: (*) now proved directly in A (repair sec1); Route B (elementary universal property) was always correct and is the kept proof. The 10-09 Clause-1 functor Psi' used a nearest-ancestor retraction rho_f as the backward map -- that was FALSE (M1); the corrected functor is contravariant with j backward."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "note_2026-10-02": "ARBOREAL PAPER DEEP-READ (arXiv:2603.21841, Jakl-Reggio, fetched 2026-10-02 to scratch/arboreal/). Analysis scratch/2026-10-02-crown-blocker2-analysis.md. The NAIVE crown is REFUTED; the correct relationship is the relational-layer refinement below."
+      }
+    ]
+  }
 }

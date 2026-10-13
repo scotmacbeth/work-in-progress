@@ -1,156 +1,156 @@
 {
-    "conjecture": "UNIQUENESS upgrade of the container-derivative tangent structure. CORRECTED STATEMENT (2026-10-05, per Rick referee gap-finding, see review_2026-10-05 below): the ambient category is NOT (Poly,◁,y) with full substitution. The tangent functor is base change by the Weil algebra W=ℕ[ε]/ε², T=(−)⊗W, on the ε²=0 ℕ-algebra/Weil objects (finite-rank). In that setting, among REPRESENTABLE first-order tangent structures there are exactly two — trivial (W=ℕ, T=Id) and the AAGM dual-number one (W=ℕ[ε]/ε², T(p)=p(y+εv) mod ε², combinator ∂). The earlier label 'T=(−)◁D in (Poly,◁,y)' was WRONG: full ◁-substitution has no mod-ε² truncation (e.g. y²◁(2y)=4y²≠3y²), so ∂ is not (−)◁D on full Poly, where representable universality collapses to {id}. ◁ and the Weil base change ⊗W coincide ONLY on the linear/module layer, which is where the rank count lives. Port of Lanfranchi–Lemay PID rigidity (arXiv:2505.09080, Thm 4.17/Cor 4.18). [F4 CLOSED NEGATIVELY 2026-10-07 (Rick's U8 decided P; proofs/2026-10-07-u8-flip-closes-f4.md): the 'finite-support load-bearing / ℕ·y a solid third structure' remark is WITHDRAWN. Under the correct solidity (ℓ_M iso), universality + flip axiom cℓ=ℓ + lift-coassociativity force rank M≤1 at EVERY cardinality; ℕ·y is not a tangent structure. Uniqueness is rank-free for representable structures — the finiteness qualifier was never needed. Mechanism (stronger than Rick): cℓ=ℓ FORCES c=id on M⊗M, then coassociativity forces ℓ_M diagonal, impossible for κ≥2.]",
-    "status": "peer-reviewed",
+  "conjecture": "UNIQUENESS upgrade of the container-derivative tangent structure. CORRECTED STATEMENT (2026-10-05, per Rick referee gap-finding, see review_2026-10-05 below): the ambient category is NOT (Poly,\u25c1,y) with full substitution. The tangent functor is base change by the Weil algebra W=\u2115[\u03b5]/\u03b5\u00b2, T=(\u2212)\u2297W, on the \u03b5\u00b2=0 \u2115-algebra/Weil objects (finite-rank). In that setting, among REPRESENTABLE first-order tangent structures there are exactly two \u2014 trivial (W=\u2115, T=Id) and the AAGM dual-number one (W=\u2115[\u03b5]/\u03b5\u00b2, T(p)=p(y+\u03b5v) mod \u03b5\u00b2, combinator \u2202). The earlier label 'T=(\u2212)\u25c1D in (Poly,\u25c1,y)' was WRONG: full \u25c1-substitution has no mod-\u03b5\u00b2 truncation (e.g. y\u00b2\u25c1(2y)=4y\u00b2\u22603y\u00b2), so \u2202 is not (\u2212)\u25c1D on full Poly, where representable universality collapses to {id}. \u25c1 and the Weil base change \u2297W coincide ONLY on the linear/module layer, which is where the rank count lives. Port of Lanfranchi\u2013Lemay PID rigidity (arXiv:2505.09080, Thm 4.17/Cor 4.18). [F4 CLOSED NEGATIVELY 2026-10-07 (Rick's U8 decided P; proofs/2026-10-07-u8-flip-closes-f4.md): the 'finite-support load-bearing / \u2115\u00b7y a solid third structure' remark is WITHDRAWN. Under the correct solidity (\u2113_M iso), universality + flip axiom c\u2113=\u2113 + lift-coassociativity force rank M\u22641 at EVERY cardinality; \u2115\u00b7y is not a tangent structure. Uniqueness is rank-free for representable structures \u2014 the finiteness qualifier was never needed. Mechanism (stronger than Rick): c\u2113=\u2113 FORCES c=id on M\u2297M, then coassociativity forces \u2113_M diagonal, impossible for \u03ba\u22652.]",
+  "status": "peer-reviewed",
+  "review": {
+    "reviewer": "Rick",
+    "artifact": "proofs/reviews/2026-10-11-nerve-uniqueness.md",
+    "date": "2026-10-11"
+  },
+  "review_2026-10-11": "Rick (grandparick20@gmail.com), ROUND-2 re-review (2026-10-11, on content commit 6089268; Note B of the nerve+uniqueness PDF, artifact proofs/reviews/2026-10-11-nerve-uniqueness.md + PDF attachments/219). ENDORSEMENT / ACCEPT after one edit. Rick diffed sentence-normalized pdftotext 75603ad vs 6089268 and confirms the revision is WORDING ONLY -- no theorem/lemma/definition statement changed silently; the only changed statement is Proposition 12 (as requested, old M3). 'YOUR GRADES STAND': Thm 22 (module form, every rank) proved, Thms 11/18 proved, 'N\u00b7y carries no tangent structure' proved. TWO 30-second MUST-FIX edits remain: (B1) old-M3 residue in Sec 1 (p.4 l.172-185) -- change 'N\u00b7y is solid ... hence an isomorphism \u2113_M' to 'abstractly solid ... an abstract isomorphism, not a vertical lift', and add 'abstract' at l.167/183/202; (B2) old-M1 residue (p.2 l.75-76) -- scope 'this note proves there cannot' to '... among representable (Weil base-change) structures on the linear layer'. Also mention the Prop. 12 rename in the p.1 header (the 'no statement changed' parenthesis is inexact). SHOULD (B3): the S1-S5 items of the 75603ad report are still open (S3 now computed: Thm 18 closing / Rem. 23 must cite universality Thm 13 step (1)). STATUS HELD at peer-reviewed; NOT re-upgraded by this registry pass -- MacBeth to confirm the standing peer-reviewed grade after B1/B2 land in the next WRITE.",
+  "review_2026-10-09": "Rick (grandparick20@gmail.com), THIRD-PASS re-review (UID 212, 2026-10-09, on commit 75603ad / content commit f7fcc1a). VERDICT: Thm 13 inline proof confirmed correct; Thm 22 (module form, every rank) GRADED PROVED \u2014 the result gating Neil's Strathclyde mini-course (Oct 13\u201316). R1/R2 of the 10-08 second pass are satisfied (Thm 13 inlined with sub-steps (i) \u2113 lands in M\u2297M, (ii) \u2113_M iso; converse exhibited). REMAINING are WORDING-ONLY must-fixes, NONE touching statements, so all proved grades stand: (w1) unscoped 'only nontrivial' in Sec 1/8/9 must be scoped to representable-over-Weil; (w2) footnote 1's exhaustive search is vacuous (no bijection K\u2192K\u00d7K at finite rank \u22652) \u2014 reword; (w3) 'N\u00b7y is solid' conflates abstract-iso vs vertical-lift solidity \u2014 disambiguate; (w4) add recipient on page 1 (PROTOCOL \u00a72.3). Smaller: CC14 step (3) idle (no c-twist), cite it as such; Thm 18 should cite Thm 13 step (1). Node upgraded proved\u2192PEER-REVIEWED on this pass; wording fixes rolled into the Strathclyde version (next WRITE). Artifact proofs/reviews/2026-10-09-tangent-uniqueness-spoly.md + PDF attachments/212.",
+  "review_2026-10-08": "Rick (grandparick20@gmail.com), SECOND-PASS referee report (UID 210, 2026-10-08, on commit 19e372d) \u2014 artifact proofs/reviews/2026-10-08-container-derivative-uniqueness-rick-secondpass.md + PDF attachments/210. VERDICT: no fatal errors; the rank-free uniqueness via lift-coassociativity is correct and judged better than his earlier flip suggestion. STATUS UNCHANGED (still accept-with-required-revisions, trust stays 'proved' \u2014 the math is sound; the gaps are WRITEUP self-containment + overclaims, NOT a refutation). REQUIRED before publishable/Strathclyde: (R1) Thm 13 (thm:rankfree, writeup line 522) currently defers its proof to the unpushed MacBethFlip note [=spoly-infinite-obstruction node, 2026-10-07-u8-flip-closes-f4.md, itself trust=proved] \u2014 must be INLINED into the note, making explicit the two sub-steps now only stated in a footnote: (i) \u2113 lands in M\u2297M, (ii) \u2113_M is iso. (R2) Thm 17 (thm:converse, line 661) asserts \u2113_M iso in the two surviving cases without exhibiting it \u2014 must be proved. OVERCLAIMS TO DROP: (O1) 'only nontrivial tangent structure on Poly'; (O2) 'extensive category of \u2115-modules' (a zero object kills extensivity); (O3) stop headlining the directed-container sketch in E. PROTOCOL: commit hash on page 1 of each PDF (\u00a72.3); flagged covering-email hash typo 19e272d vs actual 19e372d. Grade 'checked-sober' for module-level theorem + E Thm 4; 'proved' once R1/R2 inlined. Seeded as next WRITE trigger (gates Strathclyde Oct 13\u201316).",
+  "review_2026-10-07": "Rick (grandparick20@gmail.com), DETAILED referee report on the shipped rewrite (commit 5f1531d), UID 206, 2026-10-07. Artifact proofs/reviews/2026-10-07-tangent-uniqueness-spoly.md + PDF attachments/206. This is an ACCEPT-WITH-REQUIRED-REVISIONS (not a clean accept), and it SUPERSEDES the 10-06 clean peer-review stamp (which rested on Rick's acceptance of the PLAN pre-rewrite, review_2026-10-06). Rick's summary: 'the mathematical core of U is now right, in the category you now name.' Core necessity/rigidity classification on finite free \u2115-modules SURVIVES, so no node drops below proved \u2014 but two shipped sentences are LITERALLY FALSE as written, so the clean peer-review grade is demoted peer-reviewed\u2192proved pending the rewrite. Required fixes: (U1) Lemma 5 \u2014 restate the tensor coincidence in Lin(SPoly) [morphisms = \u2115-matrices, \u25c1 = matrix product], NOT as a tensor of Poly objects (the augmentation W\u2192N is not a Poly morphism). (U2=report U3) redefine 'solid' as 'vertical-lift component \u2113_M iso', since Def-3 '\u03bc iso' contradicts the square-zero Def-2 (\u03bc=0); then Lemma 8/Thm 9 unchanged. Write-up-only: delete the false p(y+\u03b5v) 'base change' line (S2); cite Cockett\u2013Cruttwell not E=[11] for existence of T=(\u2212)\u2297W and REVISE the stale 3-Oct E PDF (S3/S6); delete the F5 'linearity forced' paragraph (S7); fix the old-scope subtitle (S1); finitary\u2192finite-support in E (E1); relabel E's 'Theorem 11' as a sketch (E2). OPEN math question U8 (please-check) seeded as next PROVE \u2014 see spoly-infinite-obstruction note.",
+  "review_2026-10-05": "Rick (grandparick20@gmail.com), referee report on shipped uniqueness note, WIP 6f15518 (UID 203, 2026-10-05). GAP-FINDING (not endorsement): Theorem 1 as shipped named ambient (Poly,\u25c1,y) but the proof uses the \u03b5\u00b2=0 Weil truncation \u2014 different theorems. Arithmetic independently re-verified (full \u25c1: y\u00b2\u25c12y=4y\u00b2, honest-Poly universality \u27f9 {id} only; Weil model \u27f9 {id,\u2202}). Finding ACCEPTED as scope correction. Artifact: proofs/reviews/2026-10-05-tangent-uniqueness-spoly.md + PDF (attachments/203). Core result survives in the corrected (Weil/\u2115-algebra) setting (proof file 2026-10-04-solid-correspondence-converse.md is honest about the base change). Write-up fix executed 2026-10-05 (commit 5f1531d). F4 demoted to OPEN; F5 accepted.",
+  "review_2026-10-06": "Rick (grandparick20@gmail.com), acceptance confirmation (UID 205, 2026-10-06, subject 'Re: finding accepted (not retracted)'), on MacBeth's 2-page response WIP c0f0de7. CONFIRMS the base change to W=\u2115[\u03b5]/\u03b5\u00b2 with {id,d} surviving on finite-rank \u2115-algebras is the right scope fix for Finding 1; agrees F4 demoted to open and F5 accepted. Asked for the rewrite (incl. companion existence note) before Strathclyde \u2014 the relabelled uniqueness note (commit 5f1531d) was shipped. Node upgraded proved\u2192peer-reviewed on this confirmation. See proofs/reviews/2026-10-05-tangent-uniqueness-spoly.md.",
+  "date_opened": "2026-10-03",
+  "date_closed": "2026-10-04",
+  "tree": {
+    "id": "root",
+    "approach": "Three legs. (0) representability of AAGM \u2202 as base change by the Weil algebra W=\u2115[\u03b5]/\u03b5\u00b2, T=(\u2212)\u2297W [proved, via the base-change result]. (CORRECTED 2026-10-05: this leg must NOT be read as 'right-\u25c1-tensoring in (Poly,\u25c1,y)' \u2014 full \u25c1 has no \u03b5\u00b2 truncation; \u2297W is the honest operation, agreeing with \u25c1 only on the linear/module layer. See review_2026-10-05.) (FRAMING FIX 2026-10-07 per review_2026-10-07 U1: the coincidence 'leg' lives in Lin(SPoly) \u2014 morphisms = \u2115-matrices, \u25c1 = matrix product \u2014 NOT as a tensor of Poly objects; the augmentation W\u2192\u2115 is not a Poly morphism. Rank-count unchanged.) (1) rank rigidity: finite solid infinitesimal parts = {0,y} [proved, mine, airtight; cleaner than L\u2013L \u2014 freeness automatic over the rig \u2115, no PID]. (2) correspondence 'representable 1st-order tangent structure \u27fa solid infinitesimal part' \u2014 the converse (structure\u27f9solid) is now PROVED rig-internally (2026-10-04, proofs/2026-10-04-solid-correspondence-converse.md): universality of the vertical lift \u27f9 T\u2082\u2245V (vertical bundle) \u27f9 (eval at y) D\u2082\u2245P' \u27f9 1+2n=1+n+n\u00b2 \u27f9 n\u00b2=n \u27f9 n\u2208{0,1}; subtraction-free (vertical bundle P' is a DIRECT COPRODUCT y\u2295\u03b5_out\u2295M\u25c1M by extensivity, rank adds; \u2115 cancellative, no zero divisors). (SOLIDITY FIX 2026-10-07 per review_2026-10-07 U2: 'solid' = 'vertical-lift component \u2113_M iso' (Def-3 '\u03bc iso' contradicts square-zero Def-2 where \u03bc=0); proofs use only the abstract iso M\u2297M\u2245M so go through unchanged.) Full theorem = Theorem 1 \u2218 correspondence \u2014 PROVED (accept-with-required-revisions, Rick 2026-10-07).",
+    "trust": "peer-reviewed",
     "review": {
-        "reviewer": "Rick",
-        "artifact": "proofs/reviews/2026-10-11-nerve-uniqueness.md",
-        "date": "2026-10-11"
+      "reviewer": "Rick",
+      "artifact": "proofs/reviews/2026-10-13-nerve-crown-uniqueness.md",
+      "date": "2026-10-13"
     },
-    "review_2026-10-11": "Rick (grandparick20@gmail.com), ROUND-2 re-review (2026-10-11, on content commit 6089268; Note B of the nerve+uniqueness PDF, artifact proofs/reviews/2026-10-11-nerve-uniqueness.md + PDF attachments/219). ENDORSEMENT / ACCEPT after one edit. Rick diffed sentence-normalized pdftotext 75603ad vs 6089268 and confirms the revision is WORDING ONLY -- no theorem/lemma/definition statement changed silently; the only changed statement is Proposition 12 (as requested, old M3). 'YOUR GRADES STAND': Thm 22 (module form, every rank) proved, Thms 11/18 proved, 'N·y carries no tangent structure' proved. TWO 30-second MUST-FIX edits remain: (B1) old-M3 residue in Sec 1 (p.4 l.172-185) -- change 'N·y is solid ... hence an isomorphism ℓ_M' to 'abstractly solid ... an abstract isomorphism, not a vertical lift', and add 'abstract' at l.167/183/202; (B2) old-M1 residue (p.2 l.75-76) -- scope 'this note proves there cannot' to '... among representable (Weil base-change) structures on the linear layer'. Also mention the Prop. 12 rename in the p.1 header (the 'no statement changed' parenthesis is inexact). SHOULD (B3): the S1-S5 items of the 75603ad report are still open (S3 now computed: Thm 18 closing / Rem. 23 must cite universality Thm 13 step (1)). STATUS HELD at peer-reviewed; NOT re-upgraded by this registry pass -- MacBeth to confirm the standing peer-reviewed grade after B1/B2 land in the next WRITE.",
-    "review_2026-10-09": "Rick (grandparick20@gmail.com), THIRD-PASS re-review (UID 212, 2026-10-09, on commit 75603ad / content commit f7fcc1a). VERDICT: Thm 13 inline proof confirmed correct; Thm 22 (module form, every rank) GRADED PROVED — the result gating Neil's Strathclyde mini-course (Oct 13–16). R1/R2 of the 10-08 second pass are satisfied (Thm 13 inlined with sub-steps (i) ℓ lands in M⊗M, (ii) ℓ_M iso; converse exhibited). REMAINING are WORDING-ONLY must-fixes, NONE touching statements, so all proved grades stand: (w1) unscoped 'only nontrivial' in Sec 1/8/9 must be scoped to representable-over-Weil; (w2) footnote 1's exhaustive search is vacuous (no bijection K→K×K at finite rank ≥2) — reword; (w3) 'N·y is solid' conflates abstract-iso vs vertical-lift solidity — disambiguate; (w4) add recipient on page 1 (PROTOCOL §2.3). Smaller: CC14 step (3) idle (no c-twist), cite it as such; Thm 18 should cite Thm 13 step (1). Node upgraded proved→PEER-REVIEWED on this pass; wording fixes rolled into the Strathclyde version (next WRITE). Artifact proofs/reviews/2026-10-09-tangent-uniqueness-spoly.md + PDF attachments/212.",
-    "review_2026-10-08": "Rick (grandparick20@gmail.com), SECOND-PASS referee report (UID 210, 2026-10-08, on commit 19e372d) — artifact proofs/reviews/2026-10-08-container-derivative-uniqueness-rick-secondpass.md + PDF attachments/210. VERDICT: no fatal errors; the rank-free uniqueness via lift-coassociativity is correct and judged better than his earlier flip suggestion. STATUS UNCHANGED (still accept-with-required-revisions, trust stays 'proved' — the math is sound; the gaps are WRITEUP self-containment + overclaims, NOT a refutation). REQUIRED before publishable/Strathclyde: (R1) Thm 13 (thm:rankfree, writeup line 522) currently defers its proof to the unpushed MacBethFlip note [=spoly-infinite-obstruction node, 2026-10-07-u8-flip-closes-f4.md, itself trust=proved] — must be INLINED into the note, making explicit the two sub-steps now only stated in a footnote: (i) ℓ lands in M⊗M, (ii) ℓ_M is iso. (R2) Thm 17 (thm:converse, line 661) asserts ℓ_M iso in the two surviving cases without exhibiting it — must be proved. OVERCLAIMS TO DROP: (O1) 'only nontrivial tangent structure on Poly'; (O2) 'extensive category of ℕ-modules' (a zero object kills extensivity); (O3) stop headlining the directed-container sketch in E. PROTOCOL: commit hash on page 1 of each PDF (§2.3); flagged covering-email hash typo 19e272d vs actual 19e372d. Grade 'checked-sober' for module-level theorem + E Thm 4; 'proved' once R1/R2 inlined. Seeded as next WRITE trigger (gates Strathclyde Oct 13–16).",
-    "review_2026-10-07": "Rick (grandparick20@gmail.com), DETAILED referee report on the shipped rewrite (commit 5f1531d), UID 206, 2026-10-07. Artifact proofs/reviews/2026-10-07-tangent-uniqueness-spoly.md + PDF attachments/206. This is an ACCEPT-WITH-REQUIRED-REVISIONS (not a clean accept), and it SUPERSEDES the 10-06 clean peer-review stamp (which rested on Rick's acceptance of the PLAN pre-rewrite, review_2026-10-06). Rick's summary: 'the mathematical core of U is now right, in the category you now name.' Core necessity/rigidity classification on finite free ℕ-modules SURVIVES, so no node drops below proved — but two shipped sentences are LITERALLY FALSE as written, so the clean peer-review grade is demoted peer-reviewed→proved pending the rewrite. Required fixes: (U1) Lemma 5 — restate the tensor coincidence in Lin(SPoly) [morphisms = ℕ-matrices, ◁ = matrix product], NOT as a tensor of Poly objects (the augmentation W→N is not a Poly morphism). (U2=report U3) redefine 'solid' as 'vertical-lift component ℓ_M iso', since Def-3 'μ iso' contradicts the square-zero Def-2 (μ=0); then Lemma 8/Thm 9 unchanged. Write-up-only: delete the false p(y+εv) 'base change' line (S2); cite Cockett–Cruttwell not E=[11] for existence of T=(−)⊗W and REVISE the stale 3-Oct E PDF (S3/S6); delete the F5 'linearity forced' paragraph (S7); fix the old-scope subtitle (S1); finitary→finite-support in E (E1); relabel E's 'Theorem 11' as a sketch (E2). OPEN math question U8 (please-check) seeded as next PROVE — see spoly-infinite-obstruction note.",
-    "review_2026-10-05": "Rick (grandparick20@gmail.com), referee report on shipped uniqueness note, WIP 6f15518 (UID 203, 2026-10-05). GAP-FINDING (not endorsement): Theorem 1 as shipped named ambient (Poly,◁,y) but the proof uses the ε²=0 Weil truncation — different theorems. Arithmetic independently re-verified (full ◁: y²◁2y=4y², honest-Poly universality ⟹ {id} only; Weil model ⟹ {id,∂}). Finding ACCEPTED as scope correction. Artifact: proofs/reviews/2026-10-05-tangent-uniqueness-spoly.md + PDF (attachments/203). Core result survives in the corrected (Weil/ℕ-algebra) setting (proof file 2026-10-04-solid-correspondence-converse.md is honest about the base change). Write-up fix executed 2026-10-05 (commit 5f1531d). F4 demoted to OPEN; F5 accepted.",
-    "review_2026-10-06": "Rick (grandparick20@gmail.com), acceptance confirmation (UID 205, 2026-10-06, subject 'Re: finding accepted (not retracted)'), on MacBeth's 2-page response WIP c0f0de7. CONFIRMS the base change to W=ℕ[ε]/ε² with {id,d} surviving on finite-rank ℕ-algebras is the right scope fix for Finding 1; agrees F4 demoted to open and F5 accepted. Asked for the rewrite (incl. companion existence note) before Strathclyde — the relabelled uniqueness note (commit 5f1531d) was shipped. Node upgraded proved→peer-reviewed on this confirmation. See proofs/reviews/2026-10-05-tangent-uniqueness-spoly.md.",
-    "date_opened": "2026-10-03",
-    "date_closed": "2026-10-04",
-    "tree": {
-        "id": "root",
-        "approach": "Three legs. (0) representability of AAGM ∂ as base change by the Weil algebra W=ℕ[ε]/ε², T=(−)⊗W [proved, via the base-change result]. (CORRECTED 2026-10-05: this leg must NOT be read as 'right-◁-tensoring in (Poly,◁,y)' — full ◁ has no ε² truncation; ⊗W is the honest operation, agreeing with ◁ only on the linear/module layer. See review_2026-10-05.) (FRAMING FIX 2026-10-07 per review_2026-10-07 U1: the coincidence 'leg' lives in Lin(SPoly) — morphisms = ℕ-matrices, ◁ = matrix product — NOT as a tensor of Poly objects; the augmentation W→ℕ is not a Poly morphism. Rank-count unchanged.) (1) rank rigidity: finite solid infinitesimal parts = {0,y} [proved, mine, airtight; cleaner than L–L — freeness automatic over the rig ℕ, no PID]. (2) correspondence 'representable 1st-order tangent structure ⟺ solid infinitesimal part' — the converse (structure⟹solid) is now PROVED rig-internally (2026-10-04, proofs/2026-10-04-solid-correspondence-converse.md): universality of the vertical lift ⟹ T₂≅V (vertical bundle) ⟹ (eval at y) D₂≅P' ⟹ 1+2n=1+n+n² ⟹ n²=n ⟹ n∈{0,1}; subtraction-free (vertical bundle P' is a DIRECT COPRODUCT y⊕ε_out⊕M◁M by extensivity, rank adds; ℕ cancellative, no zero divisors). (SOLIDITY FIX 2026-10-07 per review_2026-10-07 U2: 'solid' = 'vertical-lift component ℓ_M iso' (Def-3 'μ iso' contradicts square-zero Def-2 where μ=0); proofs use only the abstract iso M⊗M≅M so go through unchanged.) Full theorem = Theorem 1 ∘ correspondence — PROVED (accept-with-required-revisions, Rick 2026-10-07).",
-        "trust": "peer-reviewed",
-        "review": {
-            "reviewer": "Rick",
-            "artifact": "proofs/reviews/2026-10-11-nerve-uniqueness.md",
-            "date": "2026-10-11",
-            "note": "Round-2 (Note B) endorsement 2026-10-11, CONFIRMED 2026-10-12. Rick's report is an acceptance ('Note B (uniqueness): ACCEPT after one edit'; 'YOUR GRADES STAND': Thm 22 every rank, Thms 11/18, 'N.y carries no tangent structure' all proved) after a sentence-normalized diff showing the revision is wording-only (sole statement change = Prop. 12, as requested). The two accept-conditional edits have now LANDED in papers/container-derivative-uniqueness.tex (WRITE commit e4d1785): B1 -- 'N.y is abstractly solid ... an abstract isomorphism, not a vertical lift ell_M' (l.225-227, l.93; 'abstract' added at l.195/212/214), and B2 -- scoped 'this note proves there cannot, among representable (Weil base-change) structures on the linear layer' (l.118); the Prop. 12 rename is noted in the p.1 header (l.56). Peer-reviewed status is therefore the standing grade (hold cleared); SHOULD items B3 remain open with no grade effect. See top-level review_2026-10-11."
-        },
-        "review_2026-10-09": {
-            "reviewer": "Rick",
-            "artifact": "proofs/reviews/2026-10-09-tangent-uniqueness-spoly.md",
-            "date": "2026-10-09"
-        },
+    "review_2026-10-09": {
+      "reviewer": "Rick",
+      "artifact": "proofs/reviews/2026-10-09-tangent-uniqueness-spoly.md",
+      "date": "2026-10-09"
+    },
+    "file": "2026-10-04-solid-correspondence-converse.md",
+    "sources": [
+      "2505.09080"
+    ],
+    "children": [
+      {
+        "id": "tensor-coincidence-linear",
+        "role": "premise",
+        "approach": "Lemma 0: on linear containers substitution and Dirichlet agree \u2014 (S\u00b7y)\u25c1(T\u00b7y)=(S\u00d7T)\u00b7y=(S\u00b7y)\u2297_Dir(T\u00b7y). One-line functor identity S\u00d7(T\u00d7X)=(S\u00d7T)\u00d7X; checked as functors on |S|,|T|\u22644,|X|\u22645. Dissolves Risk 2 (the \u25c1-vs-Dirichlet orientation hazard): the BUNDLE tensor \u25c1 already multiplies rank on the module layer, so the solid condition M\u25c1M\u2245M reads |S|\u00b2=|S| in the bundle's own tensor.",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": []
+      },
+      {
+        "id": "spoly-freeness-automatic",
+        "role": "premise",
+        "approach": "Lemma 1: every linear polynomial S\u00b7y IS a free \u2115-module on S (|S|-fold copower of y); linear containers iso \u27fa shape sets equinumerous \u27f9 rank |S| is a complete iso-invariant. This is the SPoly analogue of L\u2013L 'projective\u27f9free\u27f9rank complete' (their Lemma 4.16=Rotman 9.8, which NEEDS R a PID) \u2014 here AUTOMATIC: linear functors ARE the free \u2115-modules by definition of polynomial. Rigidity therefore holds over the rig \u2115, strictly outside L\u2013L hypotheses.",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": []
+      },
+      {
+        "id": "spoly-solid-finite-idempotent",
+        "role": "premise",
+        "approach": "Lemma 2 + Theorem 1 (the decisive rank computation): M=S\u00b7y solid (\u03bc:M\u25c1M\u2245M iso) \u27f9 (Lemma 0,1) |S\u00d7S|=|S| \u27f9 |S|\u00b2=|S|; for finite n, n\u00b2=n \u27fa n\u2208{0,1} (\u2115 no zero divisors). So exactly two finite solid infinitesimal parts: M=0 (rank 0) and M=y (rank 1). Enumerated: only solutions in 0..49 are {0,1}. Ports L\u2013L n\u00b2=n\u27f9{0,1} verbatim with the cardinality rank. scratch/spoly_solid_idempotent.py (A,D).",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": [
+          {
+            "id": "lean-spoly-solid-idempotent",
+            "role": "attempt",
+            "approach": "Finite decide ORACLE (Mathlib-free, 2026-10-03 pattern) for the arithmetic collapse + infinite-support non-example. Certifies: (1) solid_rank_eq \u2014 n\u00b2=n \u2194 n\u2208{0,1} on \u2115, proved in general (omega-free); finite_solid_ranks \u2014 solid ranks in 0..12 are exactly [0,1] (decide). (2) survivors \u2014 the finite solid ranks map through structureOfRank to exactly [trivial, dualNumber]={Id,\u2202}, D-arities 1,2; whitney_not_solid \u2014 every rank r\u22652 (Whitney sum) is non-solid (decide). (3) cantor_window_injective \u2014 Cantor pairing \u2115\u00d7\u2115\u2192\u2115 injective on 12\u00d712 window, witnessing |\u2115\u00d7\u2115|=|\u2115| \u27f9 M=\u2115\u00b7y a third solid object \u27f9 finiteness load-bearing. Packaged in spoly_solid_idempotent_oracle. #print axioms = [propext] only (no sorryAx, no Quot.sound, no Classical.choice); the three decide claims are individually axiom-free. SCOPE: certifies the arithmetic collapse ONLY, NOT the structural representability converse (solid-correspondence-converse stays computed).",
+            "trust": "lean-verified",
+            "lean": "lean/2026-10-03-spoly-solid-idempotent.lean: SPolySolidIdempotent.spoly_solid_idempotent_oracle (+ solid_rank_eq, finite_solid_ranks, whitney_not_solid, survivors, cantor_window_injective, trivial_DRank, dualNumber_DRank). #print axioms = [propext] (decide claims individually axiom-free).",
+            "file": "2026-10-03-tangent-uniqueness-spoly.md",
+            "sources": [
+              "2505.09080"
+            ],
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "spoly-representability",
+        "role": "premise",
+        "approach": "Stage 0: the AAGM bundle T(p)=p(y+\u03b5v) mod \u03b5\u00b2 IS representable \u2014 right-\u25c1-tensoring (base change) by the dual-number infinitesimal object D=y+\u03b5v, infinitesimal part M=\u27e8\u03b5v\u27e9=1\u00b7y rank 1; trivial = D=y, M=0. T(p)=p+\u03b5v\u00b7p' verified on 6 polynomials. The precise sense is the Weil base change T=(\u2212)\u2297W, W=\u2115[\u03b5]/\u03b5\u00b2 (the proved base-change result, shared premise below); NOT full right-\u25c1-substitution in (Poly,\u25c1,y), which has no \u03b5\u00b2 truncation \u2014 \u2297W agrees with \u25c1 only on the linear/module layer (per review_2026-10-05 correction).",
+        "trust": "proved",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": [
+          {
+            "id": "base-change-representability",
+            "role": "premise",
+            "approach": "T = strict \u25c1-monoidal base change along \u2115\u2192W=\u2115[\u03b5]/\u03b5\u00b2 (laxator = AAGM chain rule), i.e. T=(\u2212)\u2297W. Supplies the precise sense of the tangent functor; on the linear/module layer \u2297W coincides with \u25c1, but T is NOT full (\u2212)\u25c1D in (Poly,\u25c1,y) (per review_2026-10-05 correction).",
+            "trust": "proved",
+            "file": "2026-10-03-tangent-restricts-to-dcont.md",
+            "children": []
+          },
+          {
+            "id": "builds-on-tangent-cdc",
+            "role": "premise",
+            "approach": "The existence result: \u2202 IS the differential combinator of the CDC SPoly, dual-number tangent structure. The structure whose uniqueness this establishes.",
+            "trust": "proved",
+            "file": "2026-10-02-tangent-container-cdc.md",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "spoly-infinite-obstruction",
+        "role": "attempt",
+        "approach": "Proposition 2 (sharpness) is REFUTED as a sharpness claim (2026-10-07, U8 decided P; proofs/2026-10-07-u8-flip-closes-f4.md). The abstract-iso fact 'M=\u2115\u00b7y has M\u25c1M\u2245M via Cantor pairing' is clean but uses the SUPERSEDED abstract-iso solidity (report U2). Under the correct solidity (\u2113_M iso = universality of the vertical lift) NO infinite-rank M survives: (1) universality \u27fa \u2113_M:M\u2192M\u2297M iso; (2) over \u2115 an iso of free modules permutes bases, so \u2113_M(e_k)=e_{\u03b21(k)}\u2297e_{\u03b22(k)}, \u03b2:K\u2192K\u00d7K a BIJECTION; (3) c\u2113=\u2113 + \u2113_M surjective FORCES c=id on M\u2297M (NOT \u03c3 \u2014 this corrects Rick's step iii: c=\u03c3 is only compatible when \u03ba\u22641); (4) the CC2014 lift-coassociativity [lc.2], with c=id on the fully-mixed M\u2297M\u2297M, collapses to STRICT coassociativity (L\u2297id)L=(id\u2297L)L; (5) a coassociative basis-bijection has \u03b21,\u03b22 surjective idempotents \u27f9 \u03b21=\u03b22=id \u27f9 \u03b2 diagonal \u27f9 surjective onto K\u00d7K iff \u03ba\u22641. Hence rank M\u22641 at EVERY cardinality, for ANY first-order tangent structure T=(\u2212)\u2297W (representable or exotic-flip). Independent representable route (algebra-map flip \u27f9 \u03b3(e_i\u2297e_j)=\u03c8(e_j)\u2297\u03c6(e_i) never id on M\u2297M for \u03ba\u22652) closes the Weil case without [lc.2]. VERDICT: \u2115\u00b7y is NOT a tangent structure; 'finiteness is load-bearing' WITHDRAWN; uniqueness is rank-free for representable structures. The non-representable c=id variant Rick flagged is the FORCED configuration, killed by coassociativity, not an escape. Verified scratch/u8_flip_verify.py (A coordinate identities, B max-image \u03ba<\u03ba\u00b2, C algebra-flip swap, D rank identity). Still role=attempt (sharpness remark, not a premise of the classification).",
+        "trust": "proved",
+        "file": "2026-10-07-u8-flip-closes-f4.md",
+        "sources": [
+          "2505.09080"
+        ],
+        "children": []
+      },
+      {
+        "id": "solid-correspondence-converse",
+        "role": "premise",
+        "approach": "(\u2605) converse: a representable first-order tangent structure T=(\u2212)\u25c1D (D=y\u2295M, M=S\u00b7y linear, |S|=n finite) FORCES n\u00b2=n (solidity). PROVED rig-internally 2026-10-04 via universality of the vertical lift. Steps: (A) \u25c1 preserves pullbacks both sides [(\u2212)\u25c1D pointwise; D\u25c1(\u2212) by Gambino\u2013Kock connected-limit preservation] \u27f9 T\u2082=(\u2212)\u25c1D\u2082, Tp=(\u2212)\u25c1(p\u0302\u25c1D), V(vertical bundle=pullback of Tp along 0)=(\u2212)\u25c1P'. (B) counts as DIRECT COPRODUCTS (extensivity, no subtraction): D\u2082=D\u00d7_yD=(1+2n)\u00b7y; P'=\u011d\u207b\u00b9(im \u1e91)=y\u2295\u03b5_out\u2295M\u25c1M=(1+n+n\u00b2)\u00b7y. (C) CC2014 universality \u27f9 T\u2082\u2245V \u27f9 eval at y \u27f9 D\u2082\u2245P' \u27f9 (Lemma 1) 1+2n=1+n+n\u00b2 \u27f9 (\u2115 additively+multiplicatively cancellative) n\u00b2=n \u27f9 n\u2208{0,1}. Rig-internal upgrade over L\u2013L: their vertical-bundle fibre rank uses an SES (subtraction); ours is a coproduct (addition). Cited standard: CC vertical-lift-universality axiom, Gambino\u2013Kock. Cross-checked vs Weil ground truth (n=1 iso, n=2 fails) + verify_universality_counts.py (n=0..5).",
+        "trust": "proved",
         "file": "2026-10-04-solid-correspondence-converse.md",
         "sources": [
-            "2505.09080"
+          "2505.09080"
         ],
         "children": [
-            {
-                "id": "tensor-coincidence-linear",
-                "role": "premise",
-                "approach": "Lemma 0: on linear containers substitution and Dirichlet agree — (S·y)◁(T·y)=(S×T)·y=(S·y)⊗_Dir(T·y). One-line functor identity S×(T×X)=(S×T)×X; checked as functors on |S|,|T|≤4,|X|≤5. Dissolves Risk 2 (the ◁-vs-Dirichlet orientation hazard): the BUNDLE tensor ◁ already multiplies rank on the module layer, so the solid condition M◁M≅M reads |S|²=|S| in the bundle's own tensor.",
-                "trust": "proved",
-                "file": "2026-10-03-tangent-uniqueness-spoly.md",
-                "children": []
-            },
-            {
-                "id": "spoly-freeness-automatic",
-                "role": "premise",
-                "approach": "Lemma 1: every linear polynomial S·y IS a free ℕ-module on S (|S|-fold copower of y); linear containers iso ⟺ shape sets equinumerous ⟹ rank |S| is a complete iso-invariant. This is the SPoly analogue of L–L 'projective⟹free⟹rank complete' (their Lemma 4.16=Rotman 9.8, which NEEDS R a PID) — here AUTOMATIC: linear functors ARE the free ℕ-modules by definition of polynomial. Rigidity therefore holds over the rig ℕ, strictly outside L–L hypotheses.",
-                "trust": "proved",
-                "file": "2026-10-03-tangent-uniqueness-spoly.md",
-                "children": []
-            },
-            {
-                "id": "spoly-solid-finite-idempotent",
-                "role": "premise",
-                "approach": "Lemma 2 + Theorem 1 (the decisive rank computation): M=S·y solid (μ:M◁M≅M iso) ⟹ (Lemma 0,1) |S×S|=|S| ⟹ |S|²=|S|; for finite n, n²=n ⟺ n∈{0,1} (ℕ no zero divisors). So exactly two finite solid infinitesimal parts: M=0 (rank 0) and M=y (rank 1). Enumerated: only solutions in 0..49 are {0,1}. Ports L–L n²=n⟹{0,1} verbatim with the cardinality rank. scratch/spoly_solid_idempotent.py (A,D).",
-                "trust": "proved",
-                "file": "2026-10-03-tangent-uniqueness-spoly.md",
-                "children": [
-                    {
-                        "id": "lean-spoly-solid-idempotent",
-                        "role": "attempt",
-                        "approach": "Finite decide ORACLE (Mathlib-free, 2026-10-03 pattern) for the arithmetic collapse + infinite-support non-example. Certifies: (1) solid_rank_eq — n²=n ↔ n∈{0,1} on ℕ, proved in general (omega-free); finite_solid_ranks — solid ranks in 0..12 are exactly [0,1] (decide). (2) survivors — the finite solid ranks map through structureOfRank to exactly [trivial, dualNumber]={Id,∂}, D-arities 1,2; whitney_not_solid — every rank r≥2 (Whitney sum) is non-solid (decide). (3) cantor_window_injective — Cantor pairing ℕ×ℕ→ℕ injective on 12×12 window, witnessing |ℕ×ℕ|=|ℕ| ⟹ M=ℕ·y a third solid object ⟹ finiteness load-bearing. Packaged in spoly_solid_idempotent_oracle. #print axioms = [propext] only (no sorryAx, no Quot.sound, no Classical.choice); the three decide claims are individually axiom-free. SCOPE: certifies the arithmetic collapse ONLY, NOT the structural representability converse (solid-correspondence-converse stays computed).",
-                        "trust": "lean-verified",
-                        "lean": "lean/2026-10-03-spoly-solid-idempotent.lean: SPolySolidIdempotent.spoly_solid_idempotent_oracle (+ solid_rank_eq, finite_solid_ranks, whitney_not_solid, survivors, cantor_window_injective, trivial_DRank, dualNumber_DRank). #print axioms = [propext] (decide claims individually axiom-free).",
-                        "file": "2026-10-03-tangent-uniqueness-spoly.md",
-                        "sources": [
-                            "2505.09080"
-                        ],
-                        "children": []
-                    }
-                ]
-            },
-            {
-                "id": "spoly-representability",
-                "role": "premise",
-                "approach": "Stage 0: the AAGM bundle T(p)=p(y+εv) mod ε² IS representable — right-◁-tensoring (base change) by the dual-number infinitesimal object D=y+εv, infinitesimal part M=⟨εv⟩=1·y rank 1; trivial = D=y, M=0. T(p)=p+εv·p' verified on 6 polynomials. The precise sense is the Weil base change T=(−)⊗W, W=ℕ[ε]/ε² (the proved base-change result, shared premise below); NOT full right-◁-substitution in (Poly,◁,y), which has no ε² truncation — ⊗W agrees with ◁ only on the linear/module layer (per review_2026-10-05 correction).",
-                "trust": "proved",
-                "file": "2026-10-03-tangent-uniqueness-spoly.md",
-                "children": [
-                    {
-                        "id": "base-change-representability",
-                        "role": "premise",
-                        "approach": "T = strict ◁-monoidal base change along ℕ→W=ℕ[ε]/ε² (laxator = AAGM chain rule), i.e. T=(−)⊗W. Supplies the precise sense of the tangent functor; on the linear/module layer ⊗W coincides with ◁, but T is NOT full (−)◁D in (Poly,◁,y) (per review_2026-10-05 correction).",
-                        "trust": "proved",
-                        "file": "2026-10-03-tangent-restricts-to-dcont.md",
-                        "children": []
-                    },
-                    {
-                        "id": "builds-on-tangent-cdc",
-                        "role": "premise",
-                        "approach": "The existence result: ∂ IS the differential combinator of the CDC SPoly, dual-number tangent structure. The structure whose uniqueness this establishes.",
-                        "trust": "proved",
-                        "file": "2026-10-02-tangent-container-cdc.md",
-                        "children": []
-                    }
-                ]
-            },
-            {
-                "id": "spoly-infinite-obstruction",
-                "role": "attempt",
-                "approach": "Proposition 2 (sharpness) is REFUTED as a sharpness claim (2026-10-07, U8 decided P; proofs/2026-10-07-u8-flip-closes-f4.md). The abstract-iso fact 'M=ℕ·y has M◁M≅M via Cantor pairing' is clean but uses the SUPERSEDED abstract-iso solidity (report U2). Under the correct solidity (ℓ_M iso = universality of the vertical lift) NO infinite-rank M survives: (1) universality ⟺ ℓ_M:M→M⊗M iso; (2) over ℕ an iso of free modules permutes bases, so ℓ_M(e_k)=e_{β1(k)}⊗e_{β2(k)}, β:K→K×K a BIJECTION; (3) cℓ=ℓ + ℓ_M surjective FORCES c=id on M⊗M (NOT σ — this corrects Rick's step iii: c=σ is only compatible when κ≤1); (4) the CC2014 lift-coassociativity [lc.2], with c=id on the fully-mixed M⊗M⊗M, collapses to STRICT coassociativity (L⊗id)L=(id⊗L)L; (5) a coassociative basis-bijection has β1,β2 surjective idempotents ⟹ β1=β2=id ⟹ β diagonal ⟹ surjective onto K×K iff κ≤1. Hence rank M≤1 at EVERY cardinality, for ANY first-order tangent structure T=(−)⊗W (representable or exotic-flip). Independent representable route (algebra-map flip ⟹ γ(e_i⊗e_j)=ψ(e_j)⊗φ(e_i) never id on M⊗M for κ≥2) closes the Weil case without [lc.2]. VERDICT: ℕ·y is NOT a tangent structure; 'finiteness is load-bearing' WITHDRAWN; uniqueness is rank-free for representable structures. The non-representable c=id variant Rick flagged is the FORCED configuration, killed by coassociativity, not an escape. Verified scratch/u8_flip_verify.py (A coordinate identities, B max-image κ<κ², C algebra-flip swap, D rank identity). Still role=attempt (sharpness remark, not a premise of the classification).",
-                "trust": "proved",
-                "file": "2026-10-07-u8-flip-closes-f4.md",
-                "sources": [
-                    "2505.09080"
-                ],
-                "children": []
-            },
-            {
-                "id": "solid-correspondence-converse",
-                "role": "premise",
-                "approach": "(★) converse: a representable first-order tangent structure T=(−)◁D (D=y⊕M, M=S·y linear, |S|=n finite) FORCES n²=n (solidity). PROVED rig-internally 2026-10-04 via universality of the vertical lift. Steps: (A) ◁ preserves pullbacks both sides [(−)◁D pointwise; D◁(−) by Gambino–Kock connected-limit preservation] ⟹ T₂=(−)◁D₂, Tp=(−)◁(p̂◁D), V(vertical bundle=pullback of Tp along 0)=(−)◁P'. (B) counts as DIRECT COPRODUCTS (extensivity, no subtraction): D₂=D×_yD=(1+2n)·y; P'=ĝ⁻¹(im ẑ)=y⊕ε_out⊕M◁M=(1+n+n²)·y. (C) CC2014 universality ⟹ T₂≅V ⟹ eval at y ⟹ D₂≅P' ⟹ (Lemma 1) 1+2n=1+n+n² ⟹ (ℕ additively+multiplicatively cancellative) n²=n ⟹ n∈{0,1}. Rig-internal upgrade over L–L: their vertical-bundle fibre rank uses an SES (subtraction); ours is a coproduct (addition). Cited standard: CC vertical-lift-universality axiom, Gambino–Kock. Cross-checked vs Weil ground truth (n=1 iso, n=2 fails) + verify_universality_counts.py (n=0..5).",
-                "trust": "proved",
-                "file": "2026-10-04-solid-correspondence-converse.md",
-                "sources": [
-                    "2505.09080"
-                ],
-                "children": [
-                    {
-                        "id": "lean-universality-rank-rigidity",
-                        "role": "attempt",
-                        "approach": "Finite / rig-internal decide+cancellation ORACLE (Mathlib-free, 2026-10-03 pattern) for the arithmetic heart of the converse. Models the three vertical-lift objects by their coproduct ranks: rankDcompD n = 1+n+n+n² = (1+n)², rankD2 n = 1+n+n (fibre product, no mixed term), rankPprime n = 1+n+n² (surviving coproduct y⊕ε_out⊕M◁M). Certifies: (1) EXTENSIVITY (ranks add, no subtraction) — rankDcompD_eq_sq (=(1+n)²), rankDcompD_eq_rankPprime_add (D◁D=P'+n), rankDcompD_eq_rankD2_add (D◁D=D₂+n²); the honesty certificate for the 'ranks add, never subtract' claim (proof note §2,§4). (2) UNIVERSALITY RIGIDITY — universality_forces_idempotent: rankD2 n = rankPprime n ↔ n∈{0,1}, forward by Nat.add_left_cancel reducing 1+2n=1+n+n² to n²=n (NO omega on the cancellation step — literally exhibits rig cancellation, proof note §3), then solid_rank_eq (n²=n↔n∈{0,1}). (3) ENUMERATION+witnesses — finite survivors [0,1]; dual-number n=1 holds (3=3); square-zero n=2 excluded (5≠7). Packaged in universality_rank_rigidity_oracle. #print axioms = [propext] only (no sorryAx, no Quot.sound, no Classical.choice); the decide/witness claims are individually axiom-free. SCOPE: certifies the rank ARITHMETIC + coproduct-count identities of the vertical-lift collapse ONLY, NOT the cited framework inputs (CC2014 vertical-lift-universality axiom, ◁-preserves-pullbacks / Gambino–Kock, M-linearity from the additive-bundle axiom). Cross-checked vs scratch/verify_universality_counts.py (n=0..5, identical).",
-                        "trust": "lean-verified",
-                        "lean": "lean/2026-10-04-universality-rank-rigidity.lean: UniversalityRankRigidity.universality_rank_rigidity_oracle (+ rankDcompD_eq_sq, rankDcompD_eq_rankPprime_add, rankDcompD_eq_rankD2_add, universality_forces_idempotent, solid_rank_eq, finite_universality_survivors, dualNumber_universality, rank2_excluded). #print axioms = [propext] (decide/witness claims individually axiom-free).",
-                        "file": "2026-10-04-solid-correspondence-converse.md",
-                        "sources": [
-                            "2505.09080"
-                        ],
-                        "children": []
-                    }
-                ]
-            },
-            {
-                "id": "rank2-whitney-not-solid",
-                "role": "attempt",
-                "approach": "Corroboration of the converse: the non-solid finite candidates are the rank-r square-zero objects D=y+Σεᵢvᵢ (εᵢεⱼ=0, r≥2) = the Whitney sums T_r=T×_X···×_X T. These are auxiliary bundles in the tangent axioms, NOT standalone tangent structures; and M=ℕ^r has M◁M=ℕ^{r²}, rank r²≠r — not solid. So solidity = indecomposability: non-solid finite candidates are exactly the non-primitive ones. scratch/spoly_solid_idempotent.py (D).",
-                "trust": "computed",
-                "file": "2026-10-03-tangent-uniqueness-spoly.md",
-                "children": []
-            },
-            {
-                "id": "lean-two-model-distinction",
-                "role": "attempt",
-                "approach": "Two-model-distinction ORACLE (Mathlib-free, [propext] only, omega-free) machine-certifying the HEART of the review_2026-10-05 scope correction: the ambient category genuinely changes the uniqueness answer. (1) weil_universality — Weil model D₂=P' rank eq 1+2n=1+n+n² ⟺ n∈{0,1} (via shared solid_rank_eq, additive cancellation, no subtraction). (2) honest_universality — full-◁ model D₂(n)=(1+n)², P'(n)=1+n, universality (1+n)²=1+n ⟺ n=0 ONLY over ℕ (1+n≥1 never zero); honest_universality_pow = same in verbatim (1+n)^2 form. (3) weil_survivors=[0,1], honest_survivors=[0] (decide); partial_exists_in_weil_not_honest — n=1 (∂) satisfies Weil eq but violates honest-◁ eq: ∂ exists as representable tangent structure in Weil model, NOT in full ◁-Poly. Packaged in two_model_distinction. #print axioms = [propext] only. SCOPE: certifies the two rank equations' solution sets differ ({0,1} vs {0}) and the divergence point (∂); does NOT formalise the universality axiom, ◁-preserves-pullbacks, or the rank counts themselves (cited framework facts). Lean certificate that the corrected Theorem 1 (Weil) has content and the mis-stated full-◁ version is genuinely false.",
-                "trust": "lean-verified",
-                "lean": "lean/2026-10-05-two-model-distinction.lean: TwoModelDistinction.two_model_distinction (+ weil_universality, honest_universality, honest_universality_pow, weil_survivors, honest_survivors, partial_exists_in_weil_not_honest, solid_rank_eq). #print axioms = [propext] (decide claims individually axiom-free).",
-                "file": "2026-10-04-solid-correspondence-converse.md",
-                "sources": [
-                    "2505.09080"
-                ],
-                "children": []
-            }
+          {
+            "id": "lean-universality-rank-rigidity",
+            "role": "attempt",
+            "approach": "Finite / rig-internal decide+cancellation ORACLE (Mathlib-free, 2026-10-03 pattern) for the arithmetic heart of the converse. Models the three vertical-lift objects by their coproduct ranks: rankDcompD n = 1+n+n+n\u00b2 = (1+n)\u00b2, rankD2 n = 1+n+n (fibre product, no mixed term), rankPprime n = 1+n+n\u00b2 (surviving coproduct y\u2295\u03b5_out\u2295M\u25c1M). Certifies: (1) EXTENSIVITY (ranks add, no subtraction) \u2014 rankDcompD_eq_sq (=(1+n)\u00b2), rankDcompD_eq_rankPprime_add (D\u25c1D=P'+n), rankDcompD_eq_rankD2_add (D\u25c1D=D\u2082+n\u00b2); the honesty certificate for the 'ranks add, never subtract' claim (proof note \u00a72,\u00a74). (2) UNIVERSALITY RIGIDITY \u2014 universality_forces_idempotent: rankD2 n = rankPprime n \u2194 n\u2208{0,1}, forward by Nat.add_left_cancel reducing 1+2n=1+n+n\u00b2 to n\u00b2=n (NO omega on the cancellation step \u2014 literally exhibits rig cancellation, proof note \u00a73), then solid_rank_eq (n\u00b2=n\u2194n\u2208{0,1}). (3) ENUMERATION+witnesses \u2014 finite survivors [0,1]; dual-number n=1 holds (3=3); square-zero n=2 excluded (5\u22607). Packaged in universality_rank_rigidity_oracle. #print axioms = [propext] only (no sorryAx, no Quot.sound, no Classical.choice); the decide/witness claims are individually axiom-free. SCOPE: certifies the rank ARITHMETIC + coproduct-count identities of the vertical-lift collapse ONLY, NOT the cited framework inputs (CC2014 vertical-lift-universality axiom, \u25c1-preserves-pullbacks / Gambino\u2013Kock, M-linearity from the additive-bundle axiom). Cross-checked vs scratch/verify_universality_counts.py (n=0..5, identical).",
+            "trust": "lean-verified",
+            "lean": "lean/2026-10-04-universality-rank-rigidity.lean: UniversalityRankRigidity.universality_rank_rigidity_oracle (+ rankDcompD_eq_sq, rankDcompD_eq_rankPprime_add, rankDcompD_eq_rankD2_add, universality_forces_idempotent, solid_rank_eq, finite_universality_survivors, dualNumber_universality, rank2_excluded). #print axioms = [propext] (decide/witness claims individually axiom-free).",
+            "file": "2026-10-04-solid-correspondence-converse.md",
+            "sources": [
+              "2505.09080"
+            ],
+            "children": []
+          }
         ]
-    }
+      },
+      {
+        "id": "rank2-whitney-not-solid",
+        "role": "attempt",
+        "approach": "Corroboration of the converse: the non-solid finite candidates are the rank-r square-zero objects D=y+\u03a3\u03b5\u1d62v\u1d62 (\u03b5\u1d62\u03b5\u2c7c=0, r\u22652) = the Whitney sums T_r=T\u00d7_X\u00b7\u00b7\u00b7\u00d7_X T. These are auxiliary bundles in the tangent axioms, NOT standalone tangent structures; and M=\u2115^r has M\u25c1M=\u2115^{r\u00b2}, rank r\u00b2\u2260r \u2014 not solid. So solidity = indecomposability: non-solid finite candidates are exactly the non-primitive ones. scratch/spoly_solid_idempotent.py (D).",
+        "trust": "computed",
+        "file": "2026-10-03-tangent-uniqueness-spoly.md",
+        "children": []
+      },
+      {
+        "id": "lean-two-model-distinction",
+        "role": "attempt",
+        "approach": "Two-model-distinction ORACLE (Mathlib-free, [propext] only, omega-free) machine-certifying the HEART of the review_2026-10-05 scope correction: the ambient category genuinely changes the uniqueness answer. (1) weil_universality \u2014 Weil model D\u2082=P' rank eq 1+2n=1+n+n\u00b2 \u27fa n\u2208{0,1} (via shared solid_rank_eq, additive cancellation, no subtraction). (2) honest_universality \u2014 full-\u25c1 model D\u2082(n)=(1+n)\u00b2, P'(n)=1+n, universality (1+n)\u00b2=1+n \u27fa n=0 ONLY over \u2115 (1+n\u22651 never zero); honest_universality_pow = same in verbatim (1+n)^2 form. (3) weil_survivors=[0,1], honest_survivors=[0] (decide); partial_exists_in_weil_not_honest \u2014 n=1 (\u2202) satisfies Weil eq but violates honest-\u25c1 eq: \u2202 exists as representable tangent structure in Weil model, NOT in full \u25c1-Poly. Packaged in two_model_distinction. #print axioms = [propext] only. SCOPE: certifies the two rank equations' solution sets differ ({0,1} vs {0}) and the divergence point (\u2202); does NOT formalise the universality axiom, \u25c1-preserves-pullbacks, or the rank counts themselves (cited framework facts). Lean certificate that the corrected Theorem 1 (Weil) has content and the mis-stated full-\u25c1 version is genuinely false.",
+        "trust": "lean-verified",
+        "lean": "lean/2026-10-05-two-model-distinction.lean: TwoModelDistinction.two_model_distinction (+ weil_universality, honest_universality, honest_universality_pow, weil_survivors, honest_survivors, partial_exists_in_weil_not_honest, solid_rank_eq). #print axioms = [propext] (decide claims individually axiom-free).",
+        "file": "2026-10-04-solid-correspondence-converse.md",
+        "sources": [
+          "2505.09080"
+        ],
+        "children": []
+      }
+    ],
+    "note": "[Rick UID224 2026-10-13] ACCEPTED: B1/B2 fixed, no statement drift. 2 non-blocking SHOULDs: unqualified 'solidity' at l.206; stale 6089268 stamp."
+  }
 }

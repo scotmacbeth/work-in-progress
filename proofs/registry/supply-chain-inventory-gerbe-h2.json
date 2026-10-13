@@ -26,7 +26,7 @@
           "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md",
           "date": "2026-10-10"
         },
-        "reason": "RE-PROMOTED computed->proved 2026-10-12 (MacBeth re-review adopting Rick's r2 repaired Corollary 17; artifact proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md). N1 FIX LANDED in papers/supply-chain-inventory-gerbe.tex (WRITE commit e4d1785): a SINGLE definition of global inventory is used throughout -- D2 = the pair (mu,T) of a gauge mu:ObC->Aut K and a strict functor T:C->BK with mu(y)alpha(f)mu(x)^-1=conj(Tf) (eq:D2, def:gerbe); the strictness / 2-cell datum k_{g,f} (alpha_{gf}=conj(k_{g,f})alpha_g alpha_f) is RETAINED throughout and flagged load-bearing (lines 313-317), closing the D1-vs-Thm11 equivocation that Rick's R5 D4 counterexample exposed; Corollary 17 is restated as the classical two-stage Postnikov / crossed-module (K->Aut K) obstruction (rem:postnikov). MacBeth's own re-review adopting Rick's repaired statement, so proved is within boundary. --- PRIOR DEMOTION (Rick r2 N1, artifact as above): CORRECTNESS GAP in Corollary 17 (= Cor. 2, the staged / inventory rectification). Cor. 17 uses TWO definitions of 'global inventory' — Def. 6/Thm 11 (strict functor T:C->BK lifting rho) vs the proof's D1 (relabelling mu:ObC->AutK trivialising alpha outright). SUFFICIENCY FAILS under D1 (computed D4 counterexample R5: C=B(Z/2), K=D4, alpha(g)=conj(s) inner so beta=0, lift T(g)=s involution so [g]=0, yet no mu makes mu conj(s) mu^-1=id). Under the Thm 11 notion the step 'beta=0 => alpha=conj o rho with rho a FUNCTOR' needs a strictness / 2-cell hypothesis (the k_{g,f} AUT(K)-pseudofunctor data of Rem. 10) the note does not make; alpha is only functorial up to inner (sec 2.3), a condition that once inner-valued is empty. REPAIR (computed, 0 disagreements on B(Z/2) for K in {D4,Q8,S3,Z/2xS3,Z/4}): assume alpha strict or carry (alpha,k); define global inventory by D2 = (exists strict T:C->BK, exists mu: mu(y) alpha(f) mu(x)^-1 = conj(Tf)). NB the underlying cohomological Thm 11 / Lemma 9 are OK (checked-sober per Rick); the gap is at the inventory-level Corollary 17. Re-promote only after the N1 repair (strictness / 2-cell data, D2 definition) lands and is re-reviewed. --- PRIOR (Rick review 2026-10-10): Survives but is CLASSICAL (E5): Face 2 + (†) are the Schreier / Eilenberg–MacLane central-extension lifting criterion pulled back along ρ (Ho 1974, Wells 1979, Baues–Wirsching classify by H²) — a specialisation, not a new theorem. Face 1 is DEFINITIONAL (E3): [𝔤] is extra gerbe datum (k-invariant of the AUT(F)-pseudofunctor with π1=Out, π2=Z), NOT computed from F. E8: distinguish K-gerbe (trivial band) from the Z-gerbe of lifts (Face 2).",
+        "reason": "RE-PROMOTED computed->proved 2026-10-12 (MacBeth re-review adopting Rick's r2 repaired Corollary 17; artifact proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md). N1 FIX LANDED in papers/supply-chain-inventory-gerbe.tex (WRITE commit e4d1785): a SINGLE definition of global inventory is used throughout -- D2 = the pair (mu,T) of a gauge mu:ObC->Aut K and a strict functor T:C->BK with mu(y)alpha(f)mu(x)^-1=conj(Tf) (eq:D2, def:gerbe); the strictness / 2-cell datum k_{g,f} (alpha_{gf}=conj(k_{g,f})alpha_g alpha_f) is RETAINED throughout and flagged load-bearing (lines 313-317), closing the D1-vs-Thm11 equivocation that Rick's R5 D4 counterexample exposed; Corollary 17 is restated as the classical two-stage Postnikov / crossed-module (K->Aut K) obstruction (rem:postnikov). MacBeth's own re-review adopting Rick's repaired statement, so proved is within boundary. --- PRIOR DEMOTION (Rick r2 N1, artifact as above): CORRECTNESS GAP in Corollary 17 (= Cor. 2, the staged / inventory rectification). Cor. 17 uses TWO definitions of 'global inventory' \u2014 Def. 6/Thm 11 (strict functor T:C->BK lifting rho) vs the proof's D1 (relabelling mu:ObC->AutK trivialising alpha outright). SUFFICIENCY FAILS under D1 (computed D4 counterexample R5: C=B(Z/2), K=D4, alpha(g)=conj(s) inner so beta=0, lift T(g)=s involution so [g]=0, yet no mu makes mu conj(s) mu^-1=id). Under the Thm 11 notion the step 'beta=0 => alpha=conj o rho with rho a FUNCTOR' needs a strictness / 2-cell hypothesis (the k_{g,f} AUT(K)-pseudofunctor data of Rem. 10) the note does not make; alpha is only functorial up to inner (sec 2.3), a condition that once inner-valued is empty. REPAIR (computed, 0 disagreements on B(Z/2) for K in {D4,Q8,S3,Z/2xS3,Z/4}): assume alpha strict or carry (alpha,k); define global inventory by D2 = (exists strict T:C->BK, exists mu: mu(y) alpha(f) mu(x)^-1 = conj(Tf)). NB the underlying cohomological Thm 11 / Lemma 9 are OK (checked-sober per Rick); the gap is at the inventory-level Corollary 17. Re-promote only after the N1 repair (strictness / 2-cell data, D2 definition) lands and is re-reviewed. --- PRIOR (Rick review 2026-10-10): Survives but is CLASSICAL (E5): Face 2 + (\u2020) are the Schreier / Eilenberg\u2013MacLane central-extension lifting criterion pulled back along \u03c1 (Ho 1974, Wells 1979, Baues\u2013Wirsching classify by H\u00b2) \u2014 a specialisation, not a new theorem. Face 1 is DEFINITIONAL (E3): [\ud835\udd24] is extra gerbe datum (k-invariant of the AUT(F)-pseudofunctor with \u03c01=Out, \u03c02=Z), NOT computed from F. E8: distinguish K-gerbe (trivial band) from the Z-gerbe of lifts (Face 2).",
         "file": "2026-10-08-supply-chain-inventory-gerbe.md",
         "children": [
           {
@@ -58,7 +58,7 @@
           "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md",
           "date": "2026-10-10"
         },
-        "reason": "DEMOTED proved→computed by Rick review 2026-10-10 (9eb0941). Thm B(i) 'homotopy 1-truncated ⇒ H²=0' is FALSE (E1): B(Z/2)=K(Z/2,1) is 1-truncated yet H²(Z/2;Z/2)=Z/2. Correct hypothesis: |N(C)| homotopy-equivalent to a 1-DIMENSIONAL complex (free categories) — then proved (classical). Thm B(ii) inventory witness with K=Z/2 is WRONG (E2): two-lot gives [𝔤]=0 for all abelian K and for S3,S4; [𝔤]≠0 only for K=D4,Q8 (Rick verified C1: 1/4 and 3/4 of ρ over Z/2; 9/16 and 15/16 over (Z/2)²). Minimal correct witness: K=D4=Aut(4-cycle), ρ(g)=[r] on B(Z/2). Diamond H²=0 computation verified; lean-verified children stand.",
+        "reason": "DEMOTED proved\u2192computed by Rick review 2026-10-10 (9eb0941). Thm B(i) 'homotopy 1-truncated \u21d2 H\u00b2=0' is FALSE (E1): B(Z/2)=K(Z/2,1) is 1-truncated yet H\u00b2(Z/2;Z/2)=Z/2. Correct hypothesis: |N(C)| homotopy-equivalent to a 1-DIMENSIONAL complex (free categories) \u2014 then proved (classical). Thm B(ii) inventory witness with K=Z/2 is WRONG (E2): two-lot gives [\ud835\udd24]=0 for all abelian K and for S3,S4; [\ud835\udd24]\u22600 only for K=D4,Q8 (Rick verified C1: 1/4 and 3/4 of \u03c1 over Z/2; 9/16 and 15/16 over (Z/2)\u00b2). Minimal correct witness: K=D4=Aut(4-cycle), \u03c1(g)=[r] on B(Z/2). Diamond H\u00b2=0 computation verified; lean-verified children stand.",
         "file": "2026-10-08-supply-chain-inventory-gerbe.md",
         "children": [
           {
@@ -103,7 +103,7 @@
           "artifact": "proofs/reviews/2026-10-10-inventory-gerbe-rick.md",
           "date": "2026-10-10"
         },
-        "reason": "Logical independence SURVIVES (Rick review 2026-10-10 confirms, checked-sober) — but NOT via the stated 'different coefficients' mechanism, which is FALSE: on C=B(Z/2) with Z(Aut F)=D=Z/2 the classes lie in the SAME group and [𝔤]=[ω] can occur (all four vanishing patterns incl. [𝔤]=[ω]≠0). Honest mechanism: [𝔤] depends on the inventory/gerbe datum while [ω] does not — different INPUT data, not different coefficients. Write-up fixes owed: state the quantifier (pairs (weld datum, inventory datum) over the same C); fix Remark 12 (E6: different degree does NOT imply independence — Bockstein/cup²/d3 couplings); rename the gerbe cocycle ω→γ (E7, load-bearing — the note literally writes [𝔤]=[ω] then proves independence); W2' doubtful (E4) — specify category/relations/coefficients or replace with a B(Z/2) 2×2 ([𝔤],[ω]) table. 'fourth H² home distinguished by coefficient system' (M4) → distinguished by input datum.",
+        "reason": "Logical independence SURVIVES (Rick review 2026-10-10 confirms, checked-sober) \u2014 but NOT via the stated 'different coefficients' mechanism, which is FALSE: on C=B(Z/2) with Z(Aut F)=D=Z/2 the classes lie in the SAME group and [\ud835\udd24]=[\u03c9] can occur (all four vanishing patterns incl. [\ud835\udd24]=[\u03c9]\u22600). Honest mechanism: [\ud835\udd24] depends on the inventory/gerbe datum while [\u03c9] does not \u2014 different INPUT data, not different coefficients. Write-up fixes owed: state the quantifier (pairs (weld datum, inventory datum) over the same C); fix Remark 12 (E6: different degree does NOT imply independence \u2014 Bockstein/cup\u00b2/d3 couplings); rename the gerbe cocycle \u03c9\u2192\u03b3 (E7, load-bearing \u2014 the note literally writes [\ud835\udd24]=[\u03c9] then proves independence); W2' doubtful (E4) \u2014 specify category/relations/coefficients or replace with a B(Z/2) 2\u00d72 ([\ud835\udd24],[\u03c9]) table. 'fourth H\u00b2 home distinguished by coefficient system' (M4) \u2192 distinguished by input datum.",
         "file": "2026-10-08-supply-chain-inventory-gerbe.md",
         "children": [
           {
@@ -133,8 +133,8 @@
         "trust": "proved",
         "review": {
           "reviewer": "Rick",
-          "artifact": "proofs/reviews/2026-10-11-supply-chain-inventory-gerbe-h2.md",
-          "date": "2026-10-11"
+          "artifact": "proofs/reviews/2026-10-13-gerbe-thmD.md",
+          "date": "2026-10-13"
         },
         "review_2026-10-10": {
           "reviewer": "Rick",
@@ -188,7 +188,8 @@
             "file": null,
             "children": []
           }
-        ]
+        ],
+        "note": "[Rick UID225 round-3 2026-10-13] N1 FIXED (Cor18 on 918 strict transports); Thm28 chain (ess-nonzero<=>non-split<=>4|n) checked-sober by 3 independent methods n=3..64, controls fail as required -- SCOPED to k==e. 2 MUSTs: (1) Sec2.3/Rem11 'strict functor carrying k_{g,f}' -> k==e (central k => class [g][k], criterion becomes 2|n); (2) 'always rectifiable unless 4|n' ignores band -- n=6 on B(Z/2), outer involution r->r^5,s->sr admits no inventory. MacBeth registry: stays proved/lean-verified (MUSTs are wording/scope, arithmetic sound); Rick's system holds peer-claimed until they land. Corrections pending WRITE."
       },
       {
         "id": "band-boundary",
@@ -333,11 +334,56 @@
                 "date_closed": "2026-10-11",
                 "note": "LEAN session 2026-10-11. Mathlib-free; #print axioms = [propext] (mulG_is_group, centre_eq axiom-free). Arithmetic matches scratch/verify_final.py. Per LEAN.md this is part (1) of the brief -- a complete success on its own terms; part (2) (cup/d2 on the T^2 fundamental 2-cell) is the definitional corollary left to the Lemma. Rick 10-11 N2 refutation targets a DIFFERENT map (Z->K->Inn K splitting), not this delta:H^1(Out)->H^2(Inn) commutator -- not imported here.",
                 "children": []
+              },
+              {
+                "id": "gerbe-two-ends-correlation",
+                "approach": "DECIDE (A) independence vs (B) forced correlation between the two T^2 gerbe ends sharing hinge Inn K: strictification delta(rho) in H^2(T^2;Inn K) [ext (Sigma) 1->Inn K->Aut K->Out K->1] and central [g]=gamma(beta) in H^2(T^2;Z(K)) [ext (Z) 1->Z(K)->K->Inn K->1]. VERDICT (B): for K of class<=2, delta couples => K nonabelian (Lemma 2) => [g] couples (Lemma 1, every nonabelian class-2 group has [k,k']!=0 in Z(K), central ext non-split, trivial centre-action). So corner (delta!=0,[g]=0) FORCED EMPTY; strict (converse fails: D4 has [g]!=0, delta=0, = dihedral 4|n witness at n=4). Both ends are the SAME proved delta-commutator lemma applied to the two extensions; the asymmetry is that (Z) is non-split for ALL nonabelian class-2 K while (Sigma) can split. Cross-tab [computed] over battery confirms empty corner.",
+                "role": "attempt",
+                "trust": "proved",
+                "reason": "PROVED 2026-10-13 (deep-work /prove). Rests only on coupled-T2-general-delta-lemma [proved] + lift-cocycle-derivation [proved] (Face 2 central) + two elementary lemmas (L1 central universal: K nonab class2 => [g]!=0; L2 strictification needs Inn K!=1). Theorem = their composition, domain class<=2 (the maximal domain where both ends are ordinary abelian H^2). NOT a biconditional, NOT a census: one-way implication with strict counterexample D4 to the converse. Battery cross-tabulation is the [computed] child; the implication is proved. Answers the PROVE brief's (A)-vs-(B) as (B).",
+                "file": "2026-10-13-two-gerbe-ends-forced-correlation.md",
+                "children": [
+                  {
+                    "id": "two-ends-battery-crosstab",
+                    "approach": "scratch/2026-10-13-two-ends-crosstab.py: for each battery group compute (Sigma)-split, delta-couple (witness_search: commuting outer pair w/ no commuting lift), (Z)-split, [g]-couple (K nonabelian, trivial centre-action). 4-corner table: (delta,g) couples = {D4xC2(30),Q8xC2(54)}; (delta couples,g=0) = EMPTY; (delta=0,g couples) = {D4,Q8,Heis(F3),M16,C4rtC4}; abelian = (no,no). Every nonabelian row: (Z)-split=False, g-couple=True. SD16/D16 flagged OUT (Inn nonabelian, class 3).",
+                    "role": "attempt",
+                    "trust": "computed",
+                    "file": "2026-10-13-two-gerbe-ends-forced-correlation.md",
+                    "children": []
+                  }
+                ]
               }
             ]
+          },
+          {
+            "id": "floor-d1-d2-dichotomy",
+            "approach": "Repairs Rick M1 as a theorem (band-trivial stratum beta=0; transport = strict functor alphabar:C->B(Inn K)). TWO notions of strict global inventory: (D1) a gauge mu:ObC->Aut K with mu(y)alphabar(f)mu(x)^-1=id (transport relabelled away, NO 2-cell retained); (D2) a pair (mu,T) with T:C->BK a STRICT functor and mu(y)alphabar(f)mu(x)^-1=conj(Tf) (2-cell datum retained, realised by honest Tf in K). THEOREM: (1) D2 exists <=> [g]:=alphabar*[*]=0 in H^2(N(C);Z(K)) (Lemma 1 = central-ext lifting, Brown IV.3; = thm-A content; gauge-invariant up to Out-action on Z); (2) D1 exists <=> o_{D1}:=[alphabar]=* in H^1(C;Inn K)/im(H^0(C;Out K)) -- a DEGREE-1 obstruction, NOT [g]; band-preservation (q.mu loc const) is FORCED by D1, component-wise the Out part cancels so D1<=>[alphabar]=* in H^1(C;Inn K), the Out-quotient is coordinate-independence and is vanishing-neutral (fixes basepoint); (3) D1=>D2 (trivial lift T=e, so o_{D1}=0 => [g]=0), strict containment realised in the centreless/fungible regime. The degree-lane lesson: retain 2-cell => H^2, drop it => H^1.",
+            "role": "premise",
+            "trust": "proved",
+            "file": "2026-10-12-inventory-floor-d1-d2-dichotomy.md",
+            "date_opened": "2026-10-12",
+            "date_closed": "2026-10-12",
+            "note": "MacBeth deep-work /prove 2026-10-12. Proof proofs/2026-10-12-inventory-floor-d1-d2-dichotomy.md. PROVED = MacBeth's own two-definition split, forced band-preservation, o_{D1} construction + D1<=>o_{D1}=0 (Prop 5), D2 gauge-invariance reconciliation (Prop 2), D1=>D2 with centreless gap (Prop 6); classical backbone CITED (Eilenberg-MacLane/Brown IV.3 central-ext lifting = Lemma 1; Serre Galois Cohomology I.5 nonabelian H^1). SCOPE: band-trivial stratum only (exactly the floor corollary being repaired); nontrivial-band / T^2-coupled frontiers untouched. NO gaps. Grounds to RE-PROMOTE band-boundary computed->proved once Rick referees (registry judgement for a later wake, not self-granted). [Rick UID223 2026-10-13] Core D1=>D2 dichotomy (1.1/1.2/Prop7/1.4) CONFIRMED 0 failures/248 cases for STRICT alpha -> 'alpha strict' is now the STANDING HYPOTHESIS. RETRACTED as FALSE: Thm 1.3/abstract/Upshot 'gap exactly when centre too small' + D2=>D1 (D4 on B(Z) with c_s already separates). Def 4 must carry k (as printed fails non-strict alpha: B(Z/3), D4). 'proved' fair only post-correction; band-boundary NOT re-promoted (stays computed). Corrections pending WRITE.",
+            "children": [
+              {
+                "id": "s3-separation-d1-neq-d2",
+                "approach": "Separation witness C=B(Z), K=S3, alpha=conj((01)). S3 complete: Z=1, Inn=Aut=S3, Out=1. band beta in H^1(S^1;1)=0; [g] in H^2(S^1;Z(S3))=0 (BOTH Z=1 and H^2(S^1)=0), explicit D2 lift T(n)=sigma^n (sigma^2=e); o_{D1}=conj class of the transposition in Inn S3=S3, NONtrivial, Out=1 so unchanged -- D1 fails (single object: mu cancels, need alpha(1)=id). Hence beta=0 AND [g]=0 yet o_{D1}!=0: naive floor corollary FALSE, honest D1 floor is in H^1. D4 aside: Out(D4)=Z/2 swaps the two reflection conj classes (both nonzero) -- Out-quotient needed for coordinate-freeness, vanishing-neutral.",
+                "role": "attempt",
+                "trust": "lean-verified",
+                "file": "2026-10-12-inventory-floor-d1-d2-dichotomy.md",
+                "lean": "FloorD1Separation.floor_separation (capstone: centre=[0] [Z(S3)=1, forces [g]=0] AND autCount=6 [Out S3=1, forces beta=0] AND mulS 1 1=0 [D2 lift sigma^2=e] AND no mu strictifies [D1 fails]); supporting group_axioms, centre_trivial, inn_order_six (|Inn|=6), out_trivial (|Aut|=6 over all 720 carrier perms), d2_lift_order_two, sigma_conj_is_transposition (o_{D1}=transposition class), d1_fails; file lean/2026-10-12-floor-d1-separation-s3.lean. Standalone core Lean (no Mathlib, no native_decide); axioms=[propext]/[Quot.sound] only, no sorryAx.",
+                "note": "scratch/2026-10-12-d1-d2-dichotomy-verify.py: brute-force Aut/Inn/Out/Z. S3 |Aut|=|Inn|=6,|Z|=1,|Out|=1; alpha(1) inner !=id; exhaustive search over all 6 autos m finds NO m with m.alpha(1).m^-1=id (D1 unsolvable); o_{D1}=transposition class !=e; D2 lift T(1)=sigma verified. D4 |Aut|=8,|Inn|=4,|Z|=2,|Out|=2: outer auto swaps {s,r^2s} and {rs,r^3s}. All predictions confirmed. This is Rick's independently-recomputed B(Z)/S3 counterexample, now proved both directions with o_{D1} located. LEAN 2026-10-12: the finite core (Z(S3)=1, Out(S3)=1 via exhaustive |Aut|=6, sigma^2=e D2 lift, and the D1-unsolvability 'no mu in S3 conjugates sigma to e') is machine-checked in lean/2026-10-12-floor-d1-separation-s3.lean; the cohomological identifications ([g]=alphabar*[*], o_{D1} in H^1(C;Inn K)/im H^0, forcing of vanishing from trivial coefficient groups) are the classical bridges (Eilenberg-MacLane; Brown IV.3; Serre I.5), cited not re-derived.",
+                "children": []
+              }
+            ],
+            "review": {
+              "reviewer": "Rick",
+              "artifact": "proofs/reviews/2026-10-13-floor-d1-d2-dichotomy.md",
+              "date": "2026-10-13"
+            }
           }
         ],
-        "reason": "DEMOTED proved->computed 2026-10-12 (Rick band-boundary review, proofs/reviews/2026-10-12-band-boundary-review.pdf). M1: Cor a' FALSE as printed under the naive (D1) definition of global inventory -- the secondary stage is a class in H^1(C;Inn G) mod H^0(C;Out G), NOT [g] in H^2; repair requires D2 (strict alpha / retained 2-cell datum). M2: the claimed n=2 tier-2 exception is FALSE -- S_2 abelian => Inn S_2=1 => [g]=0 on every base; fungible stock is centre-vacuous for ALL n, so the dichotomy collapses to the single n=6 band-only exception. M3: the 'torus-first' framing is false (B(Z/2)~RP^inf couples at rank 1). SURVIVING cores: clause-(a) criterion (proved), clause-(c) beta!=0 witness (proved), the T^2 delta(beta)=[A,B] witness (computed)."
+        "reason": "DEMOTED proved->computed 2026-10-12 (Rick band-boundary review, proofs/reviews/2026-10-12-band-boundary-review.pdf). M1 now REPAIRED as a theorem (child floor-d1-d2-dichotomy, proved) -- re-promotion of band-boundary to proved is a later-wake registry judgement pending Rick referee. M1: Cor a' FALSE as printed under the naive (D1) definition of global inventory -- the secondary stage is a class in H^1(C;Inn G) mod H^0(C;Out G), NOT [g] in H^2; repair requires D2 (strict alpha / retained 2-cell datum). M2: the claimed n=2 tier-2 exception is FALSE -- S_2 abelian => Inn S_2=1 => [g]=0 on every base; fungible stock is centre-vacuous for ALL n, so the dichotomy collapses to the single n=6 band-only exception. M3: the 'torus-first' framing is false (B(Z/2)~RP^inf couples at rank 1). SURVIVING cores: clause-(a) criterion (proved), clause-(c) beta!=0 witness (proved), the T^2 delta(beta)=[A,B] witness (computed)."
       },
       {
         "id": "lean-gerbe-h2-witnesses",
