@@ -182,8 +182,17 @@ rarity enumeration. Section~\ref{sec:conc} draws the consequences for compositio
 group $K:=\Aut F$ is the \emph{relabelling group} of fungible lots. When local inventory
 charts are comparable only up to $K$, the gluing data form an $\Aut F$-gerbe over $N(\C)$:
 a transport $\alpha\colon\Mor\C\to\Aut K$ (re-trivializing a chart conjugates the next
-transport), functorial \emph{up to inner automorphism} of $K$, together with higher
-coherence valued in $Z(K)$. We use throughout the inner/outer and centre sequences of $K$,
+transport), functorial only \emph{up to inner automorphism} of $K$ -- the discrepancy
+recorded by a \emph{comparison $2$-cell datum} $k_{g,f}\in K$ with
+$\alpha_{gf}=\mathrm{conj}(k_{g,f})\cdot\alpha_g\alpha_f$, which we carry as part of the
+gerbe structure throughout (and retain in Definition~\ref{def:global}) -- together with
+higher coherence valued in $Z(K)$. We do \emph{not} assume $k_{g,f}\equiv e$: the
+comparison datum is genuine here, and it is precisely its retention that separates the
+honest floor \textup{(D2)} from the naive variant \textup{(D1)} discussed in
+Remark~\ref{rem:d1}. The datum records inner slack only; a strictly inner-valued transport
+$\alpha\colon\C\to B(\Inn K)$ is already a bona fide functor to $B(\Inn K)$, so the
+$k_{g,f}$ are not what make $\alpha$ functorial -- they record \emph{which} inner
+automorphism witnesses the up-to-inner functoriality. We use throughout the inner/outer and centre sequences of $K$,
 which are precisely the two extensions~\eqref{eq:two-ext}; note that $\Inn K$ is at once the
 quotient $K/Z(K)$ of~(II) and the kernel of~(I), so the two extensions genuinely stack.
 

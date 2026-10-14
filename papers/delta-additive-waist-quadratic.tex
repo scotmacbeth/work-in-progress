@@ -61,12 +61,19 @@ identity in $\Inn K$, computes the composite commutator in full. On the trivial-
 locus $\Out^0$, where the additivity question is well-typed, this collapses to a
 quadratic law $\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)+\chi$ with symmetric
 bi-additive polar form $\chi$ (Theorem~\ref{thm:quadratic}), whence $\delta(\rho^n)=n^2\delta(\rho)$.
-A dichotomy (Theorem~\ref{thm:dichotomy}) shows $\delta$ is additive on an abelian
-subgroup iff it is identically zero there: \emph{there is no abelian subgroup on which
-$\delta$ is a nonzero homomorphism}, so a coupled torus is always a witness to
-non-additivity. Coupling, non-splitting of the lift extension, and non-additivity of
-the waist class are one and the same phenomenon. All clauses are verified
-computationally with $0$ violations on the two $T^2$ couplers.
+A dichotomy (Theorem~\ref{thm:dichotomy}) shows that \emph{for an abelian subgroup
+$\Ab\subseteq\Out^0$} $\delta$ is additive on $\Ab$ iff it is identically zero there:
+\emph{on the trivial-action locus there is no abelian subgroup on which $\delta$ is a
+nonzero homomorphism}, so a coupled torus in $\Out^0$ is always a witness to
+non-additivity. (The scope $\Ab\subseteq\Out^0$ is essential: off $\Out^0$ this can
+fail --- there are abelian subgroups, $1$ for $D_4\times C_2$ and $3$ for
+$Q_8\times C_2$, each of order $8$ meeting $\Out^0$ in order $4$, that contain a coupled
+torus $(a,b)\subseteq\Out^0$ with $\delta(a,b)\neq0$ yet on which the induced
+$\bar\delta$ is additive.) On $\Out^0$, coupling, non-splitting of the lift extension,
+and non-additivity of the waist class are one and the same phenomenon; this is the
+classical commutator form of the central extension $\Aut^0K$ --- the
+$\Hom(\Lambda^2\Ab,M)$ component of $H^2$. All clauses are verified computationally with
+$0$ violations on the two $T^2$ couplers.
 \end{abstract}
 
 \section{The question and the answer}\label{sec:question}
@@ -111,8 +118,13 @@ map $\delta$, which obeys $\delta(\rho^n)=n^2\,\delta(\rho)$. And then the
 \delta\text{ is additive on bands into }\Ab\iff\delta\equiv0\text{ there}\iff
 \pi^{-1}(\Ab)\le\Aut K\text{ is abelian}.
 \]
-\textbf{There is no abelian subgroup on which $\delta$ is a nonzero homomorphism.} A
-coupled torus is \emph{always} a witness to non-additivity.
+\textbf{On the trivial-action locus $\Out^0$ there is no abelian subgroup on which
+$\delta$ is a nonzero homomorphism.} A coupled torus in $\Out^0$ is \emph{always} a
+witness to non-additivity. (This is sharp to the locus: off $\Out^0$ there exist abelian
+$\Ab$ --- $1$ for $D_4\times C_2$, $3$ for $Q_8\times C_2$, each of order $8$ with
+$|\Ab\cap\Out^0|=4$ --- that contain a coupled torus $(a,b)\subseteq\Out^0$,
+$\delta(a,b)\neq0$, yet on which the induced $\bar\delta$ is additive, the elements
+outside $\Out^0$ killing $\delta(a,b)$ in coinvariants.)
 
 So the butterfly \S7 open edge ``composite weld obstruction $=$ composite of waist
 classes?'' resolves in the negative, in the sharpest possible form: the waist class
@@ -299,13 +311,19 @@ subgroups (which suffices, bands being rank $\le2$).
 
 \paragraph{Reconciliation with the coupling criterion.}
 $(4)$ is the negation of the $\delta$-lemma's coupling criterion ``$\exists$ commuting
-outer pair with no commuting lift.'' So Theorem~\ref{thm:dichotomy} says:
+outer pair with no commuting lift.'' So Theorem~\ref{thm:dichotomy} says, \emph{for
+abelian $\Ab\subseteq\Out^0$}:
 \[
 \Ab\text{ couples (some band has }\delta\neq0)\iff\pi^{-1}(\Ab)\text{ nonabelian}
 \iff\delta\text{ is non-additive on }\Ab.
 \]
-Coupling, non-splitting of $\pi^{-1}(\Ab)$, and non-additivity of the waist class are
-\emph{one and the same phenomenon}.
+On the trivial-action locus, coupling, non-splitting of $\pi^{-1}(\Ab)$, and
+non-additivity of the waist class are \emph{one and the same phenomenon} --- this is the
+classical commutator form of a central extension, the $\Hom(\Lambda^2\Ab,M)$ component
+of $H^2(\Ab;M)$, and we claim no novelty for it here. Off $\Out^0$ the chain breaks at
+$(4)$: $\pi^{-1}(\Ab)$ need not be central over $\Ab$, and (Theorem~\ref{thm:receptacle})
+an abelian $\Ab\not\subseteq\Out^0$ can contain a coupled torus while $\bar\delta$ is
+additive on it ($1$ such $\Ab$ for $D_4\times C_2$, $3$ for $Q_8\times C_2$).
 
 \section{Scope, and the genuinely twisted regime}\label{sec:scope}
 
@@ -320,20 +338,37 @@ is not even a statement about one group until a common receptacle is chosen.
 The census (\texttt{coupling vs action}) finds coupled bands ($\delta\neq0$ in the
 quotient) with \emph{nontrivial} action: $24$ of $60$ for $D_4\times C_2$, $72$ of $108$
 for $Q_8\times C_2$. For these, the governing statement is the master formula $(\star)$
-alone --- a correct on-the-nose identity in $\Inn K$ whose descent to any common
-coinvariant quotient $M_{\langle\sigma_1,\tau_1,\sigma_2,\tau_2\rangle}$ still carries
-the twist $(\sigma_1\tau_1)$ on the $\delta(\rho_2)$ term. So:
+alone --- a correct on-the-nose identity in $\Inn K$. Its descent to a common
+coinvariant quotient does \emph{not}, however, retain the twist: in the full
+coinvariant module the factor $(\sigma_1\tau_1-1)\!\cdot\!\delta(\rho_2)$ lies in the
+augmentation submodule $\sum_x(x-1)M$, so the twist \emph{dies} in that quotient (it is
+computed nonzero in $0/10304$ and $0/36420$ checks). The honest common receptacle is
+therefore the subgroup-coinvariant module itself:
+\[
+M_{\Ab}\;:=\;M\Big/\textstyle\sum_{x\in\Ab}(x-1)M,
+\]
+the coinvariants for the whole abelian subgroup $\Ab=\langle\bar A_1,\bar B_1,\bar A_2,
+\bar B_2\rangle$ generated by the four outer classes.
+
+\begin{theorem}[common receptacle off $\Out^0$]\label{thm:receptacle}
+Let $\Ab\le\Out K$ be abelian (not necessarily $\subseteq\Out^0$). In $M_{\Ab}$ the
+induced commutator pairing $\bar c$ is well defined and bi-additive, and
+Theorem~\ref{thm:quadratic} together with the equivalences
+$(1)\Leftrightarrow(2)\Leftrightarrow(3)$ of Theorem~\ref{thm:dichotomy} hold
+\emph{verbatim} with $\bar c,\bar\delta$ in place of $c,\delta$. The remaining
+equivalence ``$(1)\text{--}(3)\Leftrightarrow(4)$'' $[\,\pi^{-1}(\Ab)$ abelian$\,]$ is
+the one clause that \emph{fails} off $\Out^0$.
+\end{theorem}
+
+\noindent Verified: $0$ violations on \emph{all} $14$ abelian subgroups of
+$\Out(D_4\times C_2)$ and all $50$ of $\Out(Q_8\times C_2)$ that are not
+$\subseteq\Out^0$. This closes --- rather than defers --- the common-receptacle edge: the
+only genuine loss off $\Out^0$ is clause $(4)$, since the lift extension
+$\pi^{-1}(\Ab)$ need no longer be a central extension of $\Ab$.
 \begin{itemize}
 \item \textbf{No gap in the posed question.} The question fixes trivial centre-action;
 there the answer is complete and proved: (B), with $\chi=[A_1,B_2]+[A_2,B_1]$, quadratic
 law, dichotomy.
-\item \textbf{Deliberately-left edge (not a gap in the theorem):} a
-\emph{common-receptacle} additivity theorem for bands of differing nontrivial action.
-The master formula shows the obstruction is the twist
-$(\sigma_1\tau_1-1)\!\cdot\!\delta(\rho_2)$ plus the twisted cross terms; packaging this
-as a genuine cocycle identity on $T^2$ (a cup-product / Baer-sum statement over the full
-banded gerbe) is the next node, explicitly deferred behind the mini-course per the PROVE
-brief. It does \emph{not} affect Theorems~\ref{thm:master}--\ref{thm:dichotomy}.
 \end{itemize}
 
 \section{Verification summary (hostile-referee pass)}\label{sec:verif}
@@ -386,7 +421,12 @@ non-additivity'' is a single statement.
 \item \textbf{Applications.} For orchestration / ZS welds, composing two welds does
 \emph{not} add their obstruction classes; the correction $\chi$ is an economically real
 interaction term (the ``cross-coupling'' of two independently-welded subsystems).
-Additivity holds iff each subsystem is individually uncoupled.
+Additivity of the composite, $\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)$, holds
+iff the cross-term $\chi(\rho_1,\rho_2)=c(\bar A_1,\bar B_2)+c(\bar A_2,\bar B_1)$
+vanishes on the \emph{pair} --- \emph{not} iff each subsystem is individually uncoupled.
+Indeed $\rho_1=(\bar x,1)$, $\rho_2=(1,\bar y)$ have $\delta(\rho_1)=\delta(\rho_2)=0$
+yet $\delta(\rho_1\rho_2)=c(\bar x,\bar y)$, nonzero whenever $\bar x,\bar y$ couple: two
+individually-uncoupled welds can interact.
 \item \textbf{Formalisation.} Theorem~\ref{thm:master}'s identity $(\star)$ and
 Lemma~\ref{lem:c} are finite, decidable, and a natural Lean target over the existing
 $\Inn/\Out$ engine.
@@ -398,8 +438,11 @@ in general
 $[A_1A_2,B_1B_2]=[A_1,B_1]+(\sigma_1\tau_1)[A_2,B_2]+\sigma_1[A_2,B_1]+\tau_1[A_1,B_2]$,
 which on the trivial-action locus reads
 $\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)+\big([A_1,B_2]+[A_2,B_1]\big)$ with
-symmetric bi-additive polar form $\chi$; and $\delta$ is additive on an abelian subgroup
-\textbf{iff} it is identically zero there --- a coupled torus is always a witness to
-non-additivity.
+symmetric bi-additive polar form $\chi$; and \emph{for an abelian subgroup
+$\Ab\subseteq\Out^0$} $\delta$ is additive on $\Ab$ \textbf{iff} it is identically zero
+there --- a coupled torus in $\Out^0$ is always a witness to non-additivity. (Off
+$\Out^0$ the induced $\bar\delta$ can be additive on an abelian subgroup that still
+contains a coupled torus: $1$ such subgroup for $D_4\times C_2$, $3$ for
+$Q_8\times C_2$.)
 
 \end{document}

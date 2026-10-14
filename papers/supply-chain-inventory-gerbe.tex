@@ -317,14 +317,13 @@ Comparing two inventory trivialisations of the same fibre across an operation $f
 only up to the relabelling group $K$, i.e.\ transports $K$ by an \emph{automorphism} $\alpha_f\in
 \Aut K$. Re-trivialising a chart conjugates the transport, so $\alpha$ is a priori functorial only
 up to inner automorphisms, $\alpha_{gf}=\mathrm{conj}(k_{g,f})\cdot\alpha_g\alpha_f$ with witnessing
-\emph{comparison data} $k_{g,f}\in K$. \textbf{We retain this $2$-cell datum throughout}: the transport is a strict functor into the
-automorphism \emph{$2$-group} $\mathrm{AUT}(F)$ carrying the comparison data $k_{g,f}$ ---
-equivalently, a \emph{pseudofunctor} $\alpha:\C\to B(\Aut K)$ (Remark~\ref{rem:kinvariant}). (A genuine
-strict functor into the $1$-category $B(\Aut K)$ is the special case $k_{g,f}\equiv e$.) The $2$-cell
-datum is load-bearing and we flag it now: without the $k_{g,f}$, once $\alpha$ is gauged to be
-inner-valued the up-to-inner slack becomes \emph{empty} and $\alpha$ no longer determines a functor
-to $B(\Inn K)$, so the degree-two class is undefined (this is exactly the gap repaired in the proof
-of Corollary~\ref{cor:aprime}). \emph{Scope of the sharp results.} The sharp $n$-lot criterion of
+\emph{comparison data} $k_{g,f}\in K$. \textbf{Throughout we take trivial comparison data, $k_{g,f}\equiv e$}: the transport is then a
+\emph{strict} functor $\alpha:\C\to B(\Aut K)$ into the $1$-category $B(\Aut K)$. (In general,
+re-trivialising charts makes $\alpha$ functorial only up to the inner slack recorded by the
+$k_{g,f}$, i.e.\ a \emph{pseudofunctor} $\alpha:\C\to B(\Aut K)$ valued in the automorphism
+$2$-group $\mathrm{AUT}(F)$; Remark~\ref{rem:kinvariant}.) Under this standing hypothesis a strict
+inner-valued $\alpha$ is itself a genuine functor to $B(\Inn K)$, so the degree-two class is well
+defined. \emph{Scope of the sharp results.} The sharp $n$-lot criterion of
 \S\ref{sec:dsharp} is stated for \emph{trivial} comparison data, $k_{g,f}\equiv e$, so that
 $[\gerbe]=\rho^*[\star]$. A nontrivial \emph{central} comparison datum $k_{g,f}\in\Zc$ is itself a
 $2$-cocycle and contributes a class $[k]\in H^2(N(\C);\Zc)$; the total class becomes
@@ -387,9 +386,9 @@ this reduced transport is itself a \emph{genuine functor}
 \[
 \rho:\C\longrightarrow B(\Inn K),\qquad \Inn K=K/\Zc,
 \]
-with $\mathrm{conj}\circ\rho=\mu\cdot\alpha$. (It is here that strictness is used: without the
-comparison data $k_{g,f}$, an inner-valued $\alpha$ need not be a functor to $B(\Inn K)$, and $\rho$
---- hence $[\gerbe]$ --- would be undefined.) The \emph{inventory gerbe} is the $\Zc$-gerbe of lifts
+with $\mathrm{conj}\circ\rho=\mu\cdot\alpha$. (It is here that strictness is used: a strict
+inner-valued $\alpha$ is itself a functor to $B(\Inn K)$, so $\rho$ --- hence $[\gerbe]$ --- is well
+defined.) The \emph{inventory gerbe} is the $\Zc$-gerbe of lifts
 of $\rho$ through $\pi$ in~\eqref{eq:star}: its local objects are lifts of $\rho_f$ to $K$, and its
 band is the centre $\Zc$ with trivial $\C$-action. A \emph{global inventory} is a pair $(\mu,T)$ of
 a gauge $\mu:\Ob\C\to\Aut K$ and a strict functor $T:\C\to BK$ with
@@ -593,9 +592,8 @@ $\rho_{\mathrm{out}}$; hence $\beta=0$. \emph{Sufficiency given (i):} Theorem~\r
 a gauge $\mu$ for which $\tilde\alpha:=\mu\cdot\alpha$ is inner-valued. Because $\alpha$ is a
 \emph{strict} functor carrying its comparison data $k_{g,f}$ (\S\ref{sec:prelim-gerbe}),
 $\tilde\alpha$ is a strict functor landing in $\Inn K$, hence $\tilde\alpha=\mathrm{conj}\circ\rho$
-for a \emph{genuine} functor $\rho:\C\to B(\Inn K)$ --- this is the step that needs strictness: once
-$\tilde\alpha$ is inner-valued the a-priori up-to-inner condition on $\alpha$ is empty, and only the
-$k_{g,f}$ exhibit $\rho$ as a functor. The gerbe is then the gerbe of lifts of $\rho$
+for a \emph{genuine} functor $\rho:\C\to B(\Inn K)$ --- this is the step that needs strictness: a
+strict inner-valued $\tilde\alpha$ is itself a functor to $B(\Inn K)$. The gerbe is then the gerbe of lifts of $\rho$
 through~\eqref{eq:star}, and by Theorem~\ref{thm:A} a strict $T$ with~\eqref{eq:D2} exists iff
 $[\gerbe]=0$. So (i)$\wedge$(ii) is necessary and sufficient.
 \end{proof}
