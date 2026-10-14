@@ -1,0 +1,405 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{stmaryrd}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Aut}{\mathrm{Aut}}
+\newcommand{\Inn}{\mathrm{Inn}}
+\newcommand{\Out}{\mathrm{Out}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\Ab}{\bar{\mathcal{A}}}
+
+\title{The waist class is quadratic, not additive,\\
+under band composition on $T^2$}
+\author{MacBeth\\ \small Kodamai}
+\date{2026-10-14}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\fbox{\begin{minipage}{0.93\textwidth}
+\small
+\textbf{Author:} MacBeth (Kodamai).\quad\textbf{Date:} 2026-10-14.\\
+\textbf{Prepared for} Rick (referee) and Neil Ghani (PI); \textbf{CC} Robin Langer.\\
+\textbf{Content commit:} \texttt{CONTENT-COMMIT-PLACEHOLDER}.\\
+\textbf{Provenance.} Registry node \texttt{delta-additive-in-band} \textbf{[proved]} in
+registry \texttt{supply-chain-inventory-gerbe-h2}; child of
+\texttt{coupled-T2-general-delta-lemma} \textbf{[proved]} and
+\texttt{gerbe-two-ends-correlation} \textbf{[proved]}.
+Proof file \texttt{proofs/2026-10-13-delta-additive-in-band.md};
+verification script \texttt{scratch/2026-10-13-delta-additivity.py} (couplers
+$D_4\times C_2$, $Q_8\times C_2$; $0$ violations on every clause below).
+This note typesets a complete, registry-graded result; it introduces no new
+claim beyond the cited proof file.
+\end{minipage}}
+\end{center}
+
+\begin{abstract}
+Fix base $C=B(\Z^2)$ (nerve $T^2$) and a structure group $K$ of nilpotency class
+$\le2$, so that $M:=\Inn K$ is abelian. The general $\delta$-commutator lemma
+assigns to a band $\rho\colon\Z^2\to\Out K$ --- a commuting pair of outer classes --- the
+connecting class $\delta(\rho)=[[A,B]]\in H^2(T^2;M)$ for any lifts $A,B\in\Aut K$.
+We determine how $\delta$ behaves under band composition. The answer is: \emph{not
+additively}. A master cross-term formula (Theorem~\ref{thm:master}), an on-the-nose
+identity in $\Inn K$, computes the composite commutator in full. On the trivial-action
+locus $\Out^0$, where the additivity question is well-typed, this collapses to a
+quadratic law $\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)+\chi$ with symmetric
+bi-additive polar form $\chi$ (Theorem~\ref{thm:quadratic}), whence $\delta(\rho^n)=n^2\delta(\rho)$.
+A dichotomy (Theorem~\ref{thm:dichotomy}) shows $\delta$ is additive on an abelian
+subgroup iff it is identically zero there: \emph{there is no abelian subgroup on which
+$\delta$ is a nonzero homomorphism}, so a coupled torus is always a witness to
+non-additivity. Coupling, non-splitting of the lift extension, and non-additivity of
+the waist class are one and the same phenomenon. All clauses are verified
+computationally with $0$ violations on the two $T^2$ couplers.
+\end{abstract}
+
+\section{The question and the answer}\label{sec:question}
+
+Fix base $C=B(\Z^2)$ (nerve $T^2$) and a structure group $K$ of nilpotency class
+$\le2$, so $M:=\Inn K$ is abelian. By the general $\delta$-commutator lemma
+(\texttt{coupled-T2-general-delta-lemma}, proved 2026-10-12), a band
+$\rho\colon\Z^2\to\Out K$ --- i.e.\ a commuting pair $\bar A:=\rho(s)$,
+$\bar B:=\rho(t)\in\Out K$ --- has connecting class
+\begin{equation}\label{eq:delta-def}
+\delta(\rho)=[\,[A,B]\,]\in H^2(T^2;M)=M_{\Z^2}=M\big/\big((\sigma-1)M+(\tau-1)M\big),
+\end{equation}
+where $A,B\in\Aut K$ are \emph{any} lifts of $\bar A,\bar B$ and
+$\sigma=\bar A\cdot(-)$, $\tau=\bar B\cdot(-)$ are the induced actions of
+$\bar A,\bar B$ on $M$ by conjugation.
+
+Let $\rho_1,\rho_2$ be two bands landing in a \emph{common abelian subgroup}
+$\Ab\le\Out K$ (the concrete meaning of ``a common system of commuting lifts'': their
+pointwise product $\rho_1\rho_2=(\bar A_1\bar A_2,\ \bar B_1\bar B_2)$ is again a band
+into $\Ab$, because $\Ab$ is abelian). \textbf{Is
+$\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)$?}
+
+\paragraph{Answer: (B) --- No. $\delta$ is not a homomorphism.}
+The exact defect is governed by the master cross-term formula
+(Theorem~\ref{thm:master}), an on-the-nose identity in $\Inn K$:
+\[
+[A_1A_2,\,B_1B_2]\;=\;\underbrace{[A_1,B_1]}_{=\,\delta(\rho_1)\text{ rep}}
+\;+\;(\sigma_1\tau_1)\!\cdot\![A_2,B_2]\;+\;\sigma_1\!\cdot\![A_2,B_1]\;+\;\tau_1\!\cdot\![A_1,B_2].
+\]
+On the \emph{trivial-action locus}
+$\Out^0=\ker(\Out K\to\Aut M)$ --- where the question is even well-typed, all three
+classes living in the \emph{same} group $M$ --- this collapses
+(Theorem~\ref{thm:quadratic}) to
+\[
+\boxed{\;\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)+\chi(\rho_1,\rho_2),\qquad
+\chi(\rho_1,\rho_2)=[A_1,B_2]+[A_2,B_1]\in M\;}
+\]
+with $\chi$ a \emph{symmetric bi-additive} form --- the polarization of the quadratic
+map $\delta$, which obeys $\delta(\rho^n)=n^2\,\delta(\rho)$. And then the
+\emph{dichotomy} (Theorem~\ref{thm:dichotomy}): on any abelian $\Ab\subseteq\Out^0$,
+\[
+\delta\text{ is additive on bands into }\Ab\iff\delta\equiv0\text{ there}\iff
+\pi^{-1}(\Ab)\le\Aut K\text{ is abelian}.
+\]
+\textbf{There is no abelian subgroup on which $\delta$ is a nonzero homomorphism.} A
+coupled torus is \emph{always} a witness to non-additivity.
+
+So the butterfly \S7 open edge ``composite weld obstruction $=$ composite of waist
+classes?'' resolves in the negative, in the sharpest possible form: the waist class
+$\delta$ is a \emph{quadratic refinement}, not a homomorphism, on the composition
+monoid of bands; its polar form $\chi$ is the obstruction to additivity, and $\chi$
+vanishes exactly when $\delta$ itself does.
+
+\section{The master cross-term formula}\label{sec:master}
+
+Throughout, $M=\Inn K\trianglelefteq\Aut K$ is abelian (class $\le2$), written
+additively, and for $X\in\Aut K$, $m\in M$ we write $X\cdot m:=XmX^{-1}\in M$ ($M$
+normal); this factors through $\pi(X)\in\Out K$. For a band $\rho_i$ fix lifts
+$A_i,B_i\in\Aut K$ of $\rho_i(s),\rho_i(t)$ and set $\sigma_i:=\rho_i(s)\cdot(-)$,
+$\tau_i:=\rho_i(t)\cdot(-)\in\Aut(M)$.
+
+\begin{theorem}[master cross-term formula]\label{thm:master}
+Let $K$ be finite of class $\le2$ and let $\rho_1,\rho_2$ be bands with all four outer
+classes $\bar A_1,\bar B_1,\bar A_2,\bar B_2$ in a common abelian subgroup of $\Out K$.
+Then every pairwise commutator $[A_i,B_j]$ lies in $M$, and, additively in $M$,
+\begin{equation}\label{eq:star}
+[A_1A_2,\,B_1B_2]=[A_1,B_1]+(\sigma_1\tau_1)\!\cdot\![A_2,B_2]+\sigma_1\!\cdot\![A_2,B_1]+\tau_1\!\cdot\![A_1,B_2].\tag{$\star$}
+\end{equation}
+Since $A_1A_2,\,B_1B_2$ are lifts of $(\rho_1\rho_2)(s),(\rho_1\rho_2)(t)$, the left
+side represents $\delta(\rho_1\rho_2)\in M_{\Z^2}$ (coinvariants for the product action
+$\sigma_1\sigma_2,\tau_1\tau_2$).
+\end{theorem}
+
+\begin{proof}
+Membership: $\pi[A_i,B_j]=[\bar A_i,\bar B_j]=1$ because $\bar A_i,\bar B_j$ commute
+(common abelian subgroup), so $[A_i,B_j]\in\ker\pi=M$. Use the universal commutator
+identities
+\[
+[xy,z]=x[y,z]x^{-1}\cdot[x,z],\qquad [x,yz]=[x,y]\cdot y[x,z]y^{-1}.
+\]
+Apply the first with $x=A_1,y=A_2,z=B_1B_2$:
+\[
+[A_1A_2,B_1B_2]=A_1[A_2,B_1B_2]A_1^{-1}\cdot[A_1,B_1B_2].
+\]
+Apply the second to each factor:
+\[
+[A_2,B_1B_2]=[A_2,B_1]\cdot B_1[A_2,B_2]B_1^{-1},\qquad
+[A_1,B_1B_2]=[A_1,B_1]\cdot B_1[A_1,B_2]B_1^{-1}.
+\]
+Substituting and conjugating the first bracket by $A_1$:
+\[
+[A_1A_2,B_1B_2]=\big(A_1[A_2,B_1]A_1^{-1}\big)\cdot\big(A_1B_1[A_2,B_2]B_1^{-1}A_1^{-1}\big)\cdot[A_1,B_1]\cdot\big(B_1[A_1,B_2]B_1^{-1}\big).
+\]
+All four factors lie in the abelian group $M$, so we may reorder and pass to additive
+notation. The conjugating prefixes are $A_1$ (giving $\sigma_1$), $A_1B_1$ (giving
+$\sigma_1\tau_1$), nothing (giving $1$), and $B_1$ (giving $\tau_1$). This is exactly
+$(\star)$.
+\end{proof}
+
+\paragraph{Verification.}
+Script \texttt{scratch/2026-10-13-delta-additivity.py}, clause \texttt{[GEN]}:
+$(\star)$ holds \emph{on the nose in $\Inn K$} over \emph{all} quadruples of bands
+inside a common abelian subgroup --- $8113$ checks for $D_4\times C_2$ and $26037$ for
+$Q_8\times C_2$, \textbf{$0$ violations}. (An earlier run comparing against the
+representative lift of the \emph{product coset} showed spurious ``violations''; those
+are precisely coboundaries $(\sigma-1)M+(\tau-1)M$ --- the product-coset representative
+differs from $A_1A_2$ by an inner automorphism --- and vanish in $M_{\Z^2}$. Using the
+on-the-nose product lift $A_1A_2$ removes them, confirming $(\star)$ is an identity in
+$M$, not merely in the quotient.)
+
+\paragraph{Reading of $(\star)$.}
+Beyond the two ``diagonal'' terms $\delta(\rho_1),\delta(\rho_2)$ there are: a
+\emph{twist} $(\sigma_1\tau_1)$ acting on $\delta(\rho_2)$'s representative, and the two
+\emph{cross terms} $\sigma_1[A_2,B_1]+\tau_1[A_1,B_2]$. Both the twist and the asymmetry
+($\sigma_1,\tau_1$ but not $\sigma_2,\tau_2$) are artifacts of writing the product lift
+as $A_1A_2$ rather than $A_2A_1$; they disappear precisely when the action is trivial.
+
+\section{The trivial-action locus: \texorpdfstring{$\delta$}{delta} is a quadratic map}\label{sec:quadratic}
+
+\begin{definition}\label{def:out0}
+$\Out^0:=\ker\!\big(\Out K\to\Aut(M)\big)$ is the subgroup of outer classes acting
+trivially on $M=\Inn K$. A band $\rho$ is \emph{trivial-action} iff
+$\bar A,\bar B\in\Out^0$, i.e.\ $\sigma=\tau=\id$.
+\end{definition}
+
+\begin{remark}[terminology]
+The PROVE brief's ``trivial centre-action'' is here made precise as the action relevant
+to $\delta$: trivial action of $\Out K$ on the coefficient module $M=\Inn K$ --- the
+exact condition under which $\delta$'s receptacle $M_{\Z^2}$ collapses to $M$ and the
+additivity question becomes well-typed. For class-$\le2$ $K$ this is also the condition
+making the restricted extension $(\ast)|_{\Out^0}$ central, below. We do \emph{not}
+silently conflate it with the distinct condition ``$\Out K$ acts trivially on $Z(K)$'';
+the relevant module for the waist class is $\Inn K$, not $Z(K)$.
+\end{remark}
+
+Over $\Out^0$ the restricted extension
+$1\to M\to\Aut^0K\to\Out^0\to1$ (with $\Aut^0K:=\pi^{-1}(\Out^0)$) is a \emph{central}
+extension: $M$ is central in $\Aut^0K$ (verified: clause
+\texttt{restricted (*) central: True} for both couplers). For such a central extension
+the \emph{commutator pairing}
+\[
+c\colon\{\text{commuting pairs in }\Out^0\}\to M,\qquad c(\bar x,\bar y):=[\tilde x,\tilde y]
+\]
+is well defined (lift-independent: for central $u,v\in M$,
+$[\tilde xu,\tilde yv]=[\tilde x,\tilde y]$) and $\delta(\rho)=c(\rho(s),\rho(t))$ for
+trivial-action bands, with $M_{\Z^2}=M$ (no coboundaries).
+
+\begin{lemma}[$c$ is alternating and bi-multiplicative]\label{lem:c}
+On commuting pairs in $\Out^0$: $c(\bar x,\bar x)=0$; $c(\bar y,\bar x)=-c(\bar x,\bar y)$;
+and whenever all pairs in sight commute,
+\[
+c(\bar x\bar y,\bar z)=c(\bar x,\bar z)+c(\bar y,\bar z),\qquad
+c(\bar x,\bar y\bar z)=c(\bar x,\bar y)+c(\bar x,\bar z).
+\]
+\end{lemma}
+
+\begin{proof}
+Alternating/antisymmetry are immediate from $[\tilde x,\tilde x]=1$,
+$[\tilde y,\tilde x]=[\tilde x,\tilde y]^{-1}$. For bi-multiplicativity,
+\[
+[\tilde x\tilde y,\tilde z]=\tilde x[\tilde y,\tilde z]\tilde x^{-1}\,[\tilde x,\tilde z]
+=[\tilde y,\tilde z][\tilde x,\tilde z],
+\]
+using that $[\tilde y,\tilde z]\in M$ is \emph{central} (this is exactly the
+trivial-action hypothesis).
+\end{proof}
+
+\noindent (Clause \texttt{(2) bi-mult on Out\^{}0}: $0$ violations; and \texttt{(2)}
+over \emph{all} of $\Out$ \textbf{fails} --- $112/1408$ and $962/4032$ violations ---
+confirming centrality is essential.)
+
+\begin{theorem}[quadratic law + cross term]\label{thm:quadratic}
+For trivial-action bands $\rho_1,\rho_2$ into a common abelian $\Ab\subseteq\Out^0$,
+equality holds in $M$:
+\[
+\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)+\chi(\rho_1,\rho_2),\qquad
+\chi(\rho_1,\rho_2)=c(\bar A_1,\bar B_2)+c(\bar A_2,\bar B_1)=[A_1,B_2]+[A_2,B_1].
+\]
+$\chi$ is symmetric ($\chi(\rho_1,\rho_2)=\chi(\rho_2,\rho_1)$) and bi-additive;
+$\delta$ is a \emph{quadratic map}
+$\Hom(\Z^2,\Ab)\cong\Ab\times\Ab\to M$ with polar form $\chi$, and in particular
+$\delta(\rho^n)=n^2\,\delta(\rho)$ and $\delta(\rho^{-1})=\delta(\rho)$.
+\end{theorem}
+
+\begin{proof}
+Either specialize $(\star)$ to $\sigma_1=\tau_1=\id$, or compute directly with
+Lemma~\ref{lem:c}:
+\[
+\delta(\rho_1\rho_2)=c(\bar A_1\bar A_2,\bar B_1\bar B_2)
+=c(\bar A_1,\bar B_1)+c(\bar A_1,\bar B_2)+c(\bar A_2,\bar B_1)+c(\bar A_2,\bar B_2)
+=\delta(\rho_1)+\delta(\rho_2)+\chi.
+\]
+Symmetry of $\chi$ is visible; bi-additivity is bi-multiplicativity of $c$.
+Quadraticity: $\delta(\rho^n)=c(\bar A^n,\bar B^n)=n^2c(\bar A,\bar B)=n^2\delta(\rho)$ by
+bi-multiplicativity; $\delta(\rho^{-1})=c(\bar A^{-1},\bar B^{-1})=(-1)(-1)c(\bar A,\bar B)=\delta(\rho)$.
+\end{proof}
+
+\paragraph{Verification.}
+Clause \texttt{(3) cross-term on Out\^{}0} ($1905$ checks each) and \texttt{(4)
+quadratic} ($320$ checks each, $n\le6$): \textbf{$0$ violations} on both couplers.
+
+\section{The additivity dichotomy}\label{sec:dichotomy}
+
+\begin{theorem}[dichotomy]\label{thm:dichotomy}
+Let $\Ab\subseteq\Out^0$ be abelian. The following are equivalent:
+\begin{enumerate}
+\item $\delta$ is a group homomorphism on $\Hom(\Z^2,\Ab)$ (additivity);
+\item $\delta\equiv0$ on all bands into $\Ab$;
+\item $c|_{\Ab\times\Ab}\equiv0$;
+\item $\pi^{-1}(\Ab)\le\Aut K$ is abelian (i.e.\ $\Ab$ has a system of commuting lifts).
+\end{enumerate}
+In particular $\delta$ is \emph{never a nonzero homomorphism} on any abelian subgroup.
+\end{theorem}
+
+\begin{proof}
+$(2)\Rightarrow(1)$ trivial. $(1)\Rightarrow(3)$: additivity forces $\chi\equiv0$; take
+$\rho_1=(\bar x,1),\rho_2=(1,\bar y)$, so $\delta(\rho_1)=c(\bar x,1)=0$,
+$\delta(\rho_2)=c(1,\bar y)=0$, while $\rho_1\rho_2=(\bar x,\bar y)$ gives
+$\delta(\rho_1\rho_2)=c(\bar x,\bar y)$; additivity makes this $0$ for all
+$\bar x,\bar y\in\Ab$. $(3)\Rightarrow(2)$: $\delta(\rho)=c(\bar A,\bar B)=0$.
+$(3)\Leftrightarrow(4)$: $\pi^{-1}(\Ab)$ is a central extension of the abelian $\Ab$ by
+$M$, hence abelian iff its commutator pairing $c|_{\Ab}$ vanishes.
+\end{proof}
+
+\paragraph{Verification.}
+Clause \texttt{(5) dichotomy on Out\^{}0}: among the $6$ coupled abelian subgroups of
+$\Out^0$ (for each coupler), the count \texttt{nonzero \& ADDITIVE} is \textbf{$0$};
+every coupled subgroup is non-additive. Exhaustive over $\le2$-generated abelian
+subgroups (which suffices, bands being rank $\le2$).
+
+\paragraph{Reconciliation with the coupling criterion.}
+$(4)$ is the negation of the $\delta$-lemma's coupling criterion ``$\exists$ commuting
+outer pair with no commuting lift.'' So Theorem~\ref{thm:dichotomy} says:
+\[
+\Ab\text{ couples (some band has }\delta\neq0)\iff\pi^{-1}(\Ab)\text{ nonabelian}
+\iff\delta\text{ is non-additive on }\Ab.
+\]
+Coupling, non-splitting of $\pi^{-1}(\Ab)$, and non-additivity of the waist class are
+\emph{one and the same phenomenon}.
+
+\section{Scope, and the genuinely twisted regime}\label{sec:scope}
+
+The clean additivity package (Theorems~\ref{thm:quadratic}--\ref{thm:dichotomy}) lives
+on the \emph{trivial-action locus} $\Out^0$, and this is not a cosmetic restriction but
+the precise place the question is \emph{well-typed}: for bands with differing actions,
+$\delta(\rho_1),\delta(\rho_2),\delta(\rho_1\rho_2)$ lie in \emph{different} coinvariant
+quotients $M_{(\sigma,\tau)}$, so ``$\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)$''
+is not even a statement about one group until a common receptacle is chosen.
+
+\paragraph{Coupling is \emph{not} confined to $\Out^0$.}
+The census (\texttt{coupling vs action}) finds coupled bands ($\delta\neq0$ in the
+quotient) with \emph{nontrivial} action: $24$ of $60$ for $D_4\times C_2$, $72$ of $108$
+for $Q_8\times C_2$. For these, the governing statement is the master formula $(\star)$
+alone --- a correct on-the-nose identity in $\Inn K$ whose descent to any common
+coinvariant quotient $M_{\langle\sigma_1,\tau_1,\sigma_2,\tau_2\rangle}$ still carries
+the twist $(\sigma_1\tau_1)$ on the $\delta(\rho_2)$ term. So:
+\begin{itemize}
+\item \textbf{No gap in the posed question.} The question fixes trivial centre-action;
+there the answer is complete and proved: (B), with $\chi=[A_1,B_2]+[A_2,B_1]$, quadratic
+law, dichotomy.
+\item \textbf{Deliberately-left edge (not a gap in the theorem):} a
+\emph{common-receptacle} additivity theorem for bands of differing nontrivial action.
+The master formula shows the obstruction is the twist
+$(\sigma_1\tau_1-1)\!\cdot\!\delta(\rho_2)$ plus the twisted cross terms; packaging this
+as a genuine cocycle identity on $T^2$ (a cup-product / Baer-sum statement over the full
+banded gerbe) is the next node, explicitly deferred behind the mini-course per the PROVE
+brief. It does \emph{not} affect Theorems~\ref{thm:master}--\ref{thm:dichotomy}.
+\end{itemize}
+
+\section{Verification summary (hostile-referee pass)}\label{sec:verif}
+
+All on \texttt{scratch/2026-10-13-delta-additivity.py}, couplers $D_4\times C_2$
+($|\!\Out|=16$), $Q_8\times C_2$ ($|\!\Out|=48$):
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{>{\raggedright}p{0.17\textwidth}>{\raggedright}p{0.40\textwidth}>{\raggedright}p{0.21\textwidth}>{\raggedright\arraybackslash}p{0.14\textwidth}}
+\hline
+\textbf{clause} & \textbf{statement} & \textbf{checks ($D_4{\times}C_2$ / $Q_8{\times}C_2$)} & \textbf{violations}\\
+\hline
+\texttt{[GEN]} & master formula $(\star)$ on-the-nose in $M$ & 8113 / 26037 & \textbf{0 / 0}\\
+central & $(\ast)$ restricted to $\Out^0$ is central & --- & True / True\\
+\texttt{(2)} & $c$ bi-multiplicative on $\Out^0$ & 512 / 512 & \textbf{0 / 0}\\
+\texttt{(2)} over all $\Out$ & bi-multiplicativity \textbf{fails} off $\Out^0$ & 1408 / 4032 & 112 / 962 \emph{(expected)}\\
+\texttt{(3)} & $\delta(\rho_1\rho_2)=\delta_1+\delta_2+\chi$ on $\Out^0$ & 1905 / 1905 & \textbf{0 / 0}\\
+\texttt{(4)} & $\delta(\rho^n)=n^2\delta(\rho)$ on $\Out^0$ & 320 / 320 & \textbf{0 / 0}\\
+\texttt{(5)} & dichotomy: nonzero \& additive & 6 coupled subs each & \textbf{0 / 0}\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Theorem~\ref{thm:master} --- GREEN} (hand proof from universal commutator
+identities $+$ $M$ abelian; computed confirmation $0$ violations). The only hypotheses
+are class $\le2$ and common abelian subgroup.
+\item \textbf{Theorems~\ref{thm:quadratic}--\ref{thm:dichotomy} --- GREEN} (two-line
+proofs from the central commutator pairing; computed confirmation).
+\item \textbf{Boundary cases.} Trivial band $\rho=1$:
+$\chi(1,\rho)=c(1,\bar B)+c(\bar A,1)=0$, additive $\checkmark$. $\rho_1=\rho_2$:
+$\chi(\rho,\rho)=2c(\bar A,\bar B)=2\delta(\rho)$, consistent with
+$\delta(\rho^2)=4\delta(\rho)$ $\checkmark$.
+\item \textbf{No RED. No YELLOW} inside the stated scope; the twisted edge of
+\S\ref{sec:scope} is flagged and is not part of the posed question.
+\end{itemize}
+
+\section{Grant / program placement}\label{sec:grant}
+
+This is the \emph{composition-monoid structure of the waist class}. The butterfly /
+weak-morphism arc asked whether the weld obstruction composes additively; the answer
+sharpens the whole gerbe lane:
+\begin{itemize}
+\item \textbf{Theory.} The waist class $\delta$ is a \emph{quadratic refinement} on the
+band composition monoid, with explicit polar form $\chi$ $=$ the commutator pairing of
+the central extension $\Aut^0K$. This is the $T^2$ counterpart of the floor $D_1/D_2$
+dichotomy and of the two-ends forced correlation: ``coupling $=$ nonabelian lift $=$
+non-additivity'' is a single statement.
+\item \textbf{Applications.} For orchestration / ZS welds, composing two welds does
+\emph{not} add their obstruction classes; the correction $\chi$ is an economically real
+interaction term (the ``cross-coupling'' of two independently-welded subsystems).
+Additivity holds iff each subsystem is individually uncoupled.
+\item \textbf{Formalisation.} Theorem~\ref{thm:master}'s identity $(\star)$ and
+Lemma~\ref{lem:c} are finite, decidable, and a natural Lean target over the existing
+$\Inn/\Out$ engine.
+\end{itemize}
+
+\paragraph{One-line summary.}
+On $T^2$ the band-to-waist connecting map is a \emph{quadratic map}, not a homomorphism:
+in general
+$[A_1A_2,B_1B_2]=[A_1,B_1]+(\sigma_1\tau_1)[A_2,B_2]+\sigma_1[A_2,B_1]+\tau_1[A_1,B_2]$,
+which on the trivial-action locus reads
+$\delta(\rho_1\rho_2)=\delta(\rho_1)+\delta(\rho_2)+\big([A_1,B_2]+[A_2,B_1]\big)$ with
+symmetric bi-additive polar form $\chi$; and $\delta$ is additive on an abelian subgroup
+\textbf{iff} it is identically zero there --- a coupled torus is always a witness to
+non-additivity.
+
+\end{document}
