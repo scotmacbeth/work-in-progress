@@ -298,7 +298,7 @@ $H^2(\Z^2;M)=M$). The class is the bare commutator --- matches
 $[k,k']$ in $Z(K)$ directly, so that the \emph{abelian} hinge $\Inn K=K/Z(K)$ makes any pair of
 images commute and $[k,k']$ is read as a central-end class. This is a convenient sufficient
 condition, \emph{not} a necessary one: see the attributed extension to all finite nilpotent $K$
-in Remark~\ref{rem:nilpotent} below, where centrality of a nontrivial commutator is recovered
+in Remark~\ref{rem:nilpotent} above, where centrality of a nontrivial commutator is recovered
 from the lower-central series rather than assumed.
 \item \textbf{Lemma~\ref{lem:strict}.} Elementary; $\Inn K=1\Rightarrow\delta\equiv0$.
 \item \textbf{Theorem~\ref{thm:main}.} Pure composition of the two lemmas; the empty corner is
@@ -316,11 +316,15 @@ $\mathrm{GL}(2,3)$ factor, giving a homomorphic section of $\pi$.
 \item \textbf{Boundary/degenerate cases.} Abelian $K$: both ends trivial (corner
 $(\text{no},\text{no})$). Rank-$1$ base $S^1$: $H^2(S^1;-)=0$, both ends vanish, no content.
 Trivial band: commutator $=0$, both obstructions $0$.
-\item \textbf{Scope honesty.} $SD_{16},D_{16}$ (and dihedral $D_n$, $4\mid n$, $n>4$) have
-$\Inn$ nonabelian (class $3$), so the \emph{class-$\le2$} proof does not cover them directly;
-but they are nilpotent, the attributed extension (Remark~\ref{rem:nilpotent}) does cover them,
-and both ends are computed ($\delta$ no, $[\gerbe]$ yes) with no violation. The genuine failures
-lie strictly beyond nilpotency (\S\ref{sec:boundary}).
+\item \textbf{Scope honesty.} $SD_{16},D_{16}$ (both of order $16$) have $\Inn$ nonabelian
+(class $3$), so the \emph{class-$\le2$} proof does not cover them directly; but they are
+\emph{nilpotent} --- the $2$-power dihedral group $D_{2^k}$ has class $k-1$ --- so the attributed
+extension (Remark~\ref{rem:nilpotent}) does cover them, and both ends are computed ($\delta$ no,
+$[\gerbe]$ yes) with no violation. The wider dihedral family $D_n$ with $4\mid n$, $n>4$, is
+\emph{not} uniformly nilpotent: $D_{12}$ and $D_{20}$ (orders $12,20$) are non-nilpotent, hence
+outside Remark~\ref{rem:nilpotent}, yet they too compute as ($\delta$ no, $[\gerbe]$ yes) and so
+\emph{happen} to satisfy the implication. The genuine failures lie strictly beyond nilpotency
+(\S\ref{sec:boundary}).
 \end{itemize}
 
 \section{Scope and (non-)gaps}\label{sec:scope}
@@ -356,16 +360,20 @@ $\Out$-pairs that $\delta$-couple.) But $Z(K)=1$ forces $[\gerbe]\equiv0$. Hence
 $(\delta\neq0,\ [\gerbe]=0)$ --- which the Theorem forces empty in the nilpotent world --- is
 \emph{occupied} for this non-nilpotent $K$. Controls: $S_3$ and $A_4$ (also centreless, with
 cyclic $\Out$) do \emph{not} $\delta$-couple, so centrelessness alone does not produce a
-violation --- the $\delta$-end still needs the right $\Aut$-structure.
+violation --- the $\delta$-end still needs the right $\Aut$-structure. (The
+$\mathrm{Dih}(C_3^2)$ witness, the count of $12$ unordered $\delta$-coupling $\Out$-pairs, and
+the $S_3,A_4$ controls are due to R.\ (Rick), 2026-10-14.)
 
 \paragraph{Correcting the structural cause.} This pins down what the ``$(Z)$-split column is
 abelian-only'' statement of \S\ref{sec:theorem} really depended on. ``$(Z)$ splits
 $\Rightarrow K$ abelian'' is a \emph{nilpotency} fact, \emph{not} a general one: for a centreless
 $K$ the sequence $(Z)$ reads $1\to1\to K\xrightarrow{\sim}\Inn K\to1$ and splits
 \emph{trivially}, yet $K$ is nonabelian. So the central end can be switched \emph{off} while the
-strictification end couples precisely when $Z(K)$ is trivial (or more generally too small to
-receive the relevant commutators) --- which is exactly what nilpotency prevents, via the
-$\gamma_c$-central mechanism of Remark~\ref{rem:nilpotent}. Nilpotency is therefore the honest
+strictification end couples precisely when \emph{no nontrivial commutator is central} --- which is
+exactly what nilpotency prevents, via the $\gamma_c$-central mechanism of
+Remark~\ref{rem:nilpotent}. (Centre size is not the parameter: R.'s $K=\mathrm{Dih}(C_3^2)\times
+C_2$ has $Z(K)=C_2\neq1$ yet still occupies the forbidden corner, because its commutators lie in
+the centreless $\mathrm{Dih}(C_3^2)$ factor.) Nilpotency is therefore the honest
 boundary of the forced correlation.
 
 \begin{remark}[open lead: no class-$\ge3$ $\delta$-coupling witness yet]\label{rem:openlead}

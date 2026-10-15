@@ -45,8 +45,11 @@ registry \texttt{supply-chain-inventory-gerbe-h2}; child of
 Proof file \texttt{proofs/2026-10-13-delta-additive-in-band.md};
 verification script \texttt{scratch/2026-10-13-delta-additivity.py} (couplers
 $D_4\times C_2$, $Q_8\times C_2$; $0$ violations on every clause below).
-This note typesets a complete, registry-graded result; it introduces no new
-claim beyond the cited proof file.
+This note typesets a complete, registry-graded result. Its one import is
+Theorem~\ref{thm:receptacle} (the common receptacle off $\Out^0$) together with the
+subgroup counts $0/10304$, $0/36420$ and the ``$14$ of \dots'' / ``$50$ of \dots''
+enumerations: these are R.\ (Rick)'s computed and by-hand results of 2026-10-14,
+reproduced here with credit. All other claims are from the cited proof file.
 \end{minipage}}
 \end{center}
 
@@ -129,8 +132,8 @@ outside $\Out^0$ killing $\delta(a,b)$ in coinvariants.)
 So the butterfly \S7 open edge ``composite weld obstruction $=$ composite of waist
 classes?'' resolves in the negative, in the sharpest possible form: the waist class
 $\delta$ is a \emph{quadratic refinement}, not a homomorphism, on the composition
-monoid of bands; its polar form $\chi$ is the obstruction to additivity, and $\chi$
-vanishes exactly when $\delta$ itself does.
+monoid of bands; its polar form $\chi$ is the obstruction to additivity, with
+$\chi|_{\Ab}\equiv0$ iff $\delta|_{\Ab}\equiv0$ for every abelian $\Ab\subseteq\Out^0$.
 
 \section{The master cross-term formula}\label{sec:master}
 
@@ -362,7 +365,8 @@ the one clause that \emph{fails} off $\Out^0$.
 
 \noindent Verified: $0$ violations on \emph{all} $14$ abelian subgroups of
 $\Out(D_4\times C_2)$ and all $50$ of $\Out(Q_8\times C_2)$ that are not
-$\subseteq\Out^0$. This closes --- rather than defers --- the common-receptacle edge: the
+$\subseteq\Out^0$. (Theorem~\ref{thm:receptacle} and these enumerations are R.'s
+computed and by-hand results of 2026-10-14.) This closes --- rather than defers --- the common-receptacle edge: the
 only genuine loss off $\Out^0$ is clause $(4)$, since the lift extension
 $\pi^{-1}(\Ab)$ need no longer be a central extension of $\Ab$.
 \begin{itemize}
@@ -416,7 +420,7 @@ sharpens the whole gerbe lane:
 \item \textbf{Theory.} The waist class $\delta$ is a \emph{quadratic refinement} on the
 band composition monoid, with explicit polar form $\chi$ $=$ the commutator pairing of
 the central extension $\Aut^0K$. This is the $T^2$ counterpart of the floor $D_1/D_2$
-dichotomy and of the two-ends forced correlation: ``coupling $=$ nonabelian lift $=$
+dichotomy and of the two-ends forced correlation: on $\Out^0$, ``coupling $=$ nonabelian lift $=$
 non-additivity'' is a single statement.
 \item \textbf{Applications.} For orchestration / ZS welds, composing two welds does
 \emph{not} add their obstruction classes; the correction $\chi$ is an economically real
