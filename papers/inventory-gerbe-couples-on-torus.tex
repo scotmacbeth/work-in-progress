@@ -192,7 +192,7 @@ genuine functor to $B(\Inn K)$. What separates the honest floor \textup{(D2)} fr
 naive variant \textup{(D1)} is then \emph{not} the comparison datum but whether the
 stratum-three lifting datum is retained -- see Remark~\ref{rem:d1}. (A nontrivial
 \emph{central} datum $k_{g,f}\in Z(K)$ would be a $2$-cocycle in its own right and would
-shift the sharp line of \S\ref{sec:sharp}; it is excluded here, as in the companion gerbe
+twist the lifting problem by $[k]\in H^2(N(\C);Z(K))$; excluded here, as in the companion gerbe
 note.) We use throughout the inner/outer and centre sequences of $K$,
 which are precisely the two extensions~\eqref{eq:two-ext}; note that $\Inn K$ is at once the
 quotient $K/Z(K)$ of~(II) and the kernel of~(I), so the two extensions genuinely stack.
@@ -235,14 +235,15 @@ globalized, retaining the full stratum-three lifting datum rather than only its 
 
 \begin{definition}[global inventory, D2]\label{def:global}
 A \emph{global inventory} is a pair $(\mu,T)$ in which $\mu\colon\Ob\C\to\Aut K$ is a gauge
-and $T\colon\C\to BK$ is a \emph{strict} functor lifting the inner transport, under the
+and $T\colon\C\to BK$ is a \emph{strict} functor lifting the gauged transport
+$\mu\cdot\alpha\cdot\mu^{-1}$, under the
 standing trivial comparison data $k_{g,f}\equiv e$ (so that
 $\alpha_{gf}=\alpha_g\alpha_f$), subject to
 \[
 \mu(y)\cdot\alpha(f)\cdot\mu(x)^{-1}=\mathrm{conj}(Tf)\qquad(f\colon x\to y).
 \]
 A \emph{strict global inventory} is such a pair. It is the full stratum-three globalization
--- it retains the central lifting datum, not merely the bare outer shadow.
+-- it retains the lift $T$ through the central extension~(II), not merely the bare outer shadow.
 \end{definition}
 
 \begin{corollary}[the floor]\label{cor:floor}
@@ -255,8 +256,8 @@ $[\gerbe]=0\in H^2(N(\C);Z(K))$, where \textup{(ii)} is well-defined once \textu
 A strict global inventory $(\mu,T)$ in the sense of Definition~\ref{def:global} has its gauge
 $\mu$ projecting by $q$ to a trivialization of $\rho$, so (i) is necessary. Given (i), one
 may choose $\alpha$ inner-valued (band-triviality is exactly ``inner-valued up to an outer
-relabelling''), whereupon -- retaining the stratum-three lifting datum (the section-lift
-defect $\gerbe$) -- the gerbe is the honest gerbe of lifts of $\bar\rho$ through~(II),
+relabelling''), whereupon -- retaining the lift $T$ through the central extension~(II)
+-- the gerbe is the honest gerbe of lifts of $\bar\rho$ through~(II),
 neutral iff $[\gerbe]=0$ by the central-extension lifting theorem \cite[IV.3]{brown}. Full details, including the fungibility
 corollary (for an $n$-element commodity fibre $\Out(S_n)=1$ for every $n$ except $n=6$, and
 $Z(S_n)=1$ for $n\ge3$ while $S_2$ is abelian so $[\gerbe]=0$ there as well
@@ -271,7 +272,7 @@ equivalence \emph{fails}: the secondary stage is then a class in $H^1(\C;\Inn G)
 $H^0(\C;\Out G)$, not in $H^2$. Rick's counterexample is $\C=B\Z$ with $G=S_3$ and
 $\alpha=\mathrm{conj}((01))$ (comparison data trivial, $k\equiv e$): there $\beta=0$ and
 $[\gerbe]=0$, yet no gauge $\mu$ strictifies the transport at the \textup{(D1)} level (Rick,
-band-boundary review, 2026-10-12). Retaining the central lifting datum, as in
+band-boundary review, 2026-10-12). Retaining the lift $T$ through the central extension~(II), as in
 Definition~\ref{def:global}, is exactly what restores the clean $H^2$ floor.
 \end{remark}
 

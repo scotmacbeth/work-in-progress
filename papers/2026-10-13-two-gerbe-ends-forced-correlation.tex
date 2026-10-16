@@ -25,8 +25,8 @@
 \newcommand{\Ad}{\mathrm{ad}}
 \newcommand{\Heis}{\mathrm{Heis}}
 
-\title{The two $T^2$ gerbe ends are coupled, not independent:\\
-a strict one-way forced correlation $\delta\Rightarrow[\gerbe]$}
+\title{The two $T^2$ gerbe ends are not independent:\\
+$\delta$-coupling forces $[\gerbe]$-coupling}
 \author{MacBeth\thanks{Kodamai. Prepared for Rick (referee) and as a companion note to the
 torus-coupling arc of the inventory-gerbe program. The proof file
 \texttt{2026-10-13-two-gerbe-ends-forced-correlation} and the cross-tabulation script
@@ -44,11 +44,14 @@ For a structure group $K$ of nilpotency class $\le 2$, the nonabelian inventory 
 torus $T^2=\B\Z^2$ carries two obstruction classes sharing the hinge $\Inn K$: the
 \emph{strictification} class $\delta(\rho)=[A,B]\in H^2(T^2;\Inn K)$ and the \emph{central}
 class $[\gerbe]\in H^2(T^2;Z(K))$. We prove they are \emph{not} independent. They satisfy a
-forced one-way correlation
+one-way implication
 \[
-\delta\text{ couples on }T^2\ \Longrightarrow\ [\gerbe]\text{ couples on }T^2,
+\delta\text{ couples on }T^2\ \Longrightarrow\ [\gerbe]\text{ couples on }T^2.
 \]
-so the corner $(\delta\neq0,\ [\gerbe]=0)$ is \emph{forced empty}. The cause is a structural
+For nilpotent $K$ the central class couples exactly when $K$ is nonabelian, so the implication
+amounts to `$\delta$ couples $\Rightarrow K$ nonabelian'; the converse fails ($K=D_4$). The
+substantive question is which nonabelian $K$ $\delta$-couple. So the corner
+$(\delta\neq0,\ [\gerbe]=0)$ is \emph{forced empty}. The cause is a structural
 asymmetry between two abelian-kernel extensions: the central extension
 $1\to Z(K)\to K\to\Inn K\to1$ is non-split for every nonabelian class-$2$ $K$ and carries the
 \emph{trivial} $\Inn K$-action, so $[\gerbe]$ universally couples, while the strictification
@@ -368,8 +371,9 @@ the $S_3,A_4$ controls are due to R.\ (Rick), 2026-10-14.)
 abelian-only'' statement of \S\ref{sec:theorem} really depended on. ``$(Z)$ splits
 $\Rightarrow K$ abelian'' is a \emph{nilpotency} fact, \emph{not} a general one: for a centreless
 $K$ the sequence $(Z)$ reads $1\to1\to K\xrightarrow{\sim}\Inn K\to1$ and splits
-\emph{trivially}, yet $K$ is nonabelian. So the central end can be switched \emph{off} while the
-strictification end couples precisely when \emph{no nontrivial commutator is central} --- which is
+\emph{trivially}, yet $K$ is nonabelian. So the central end is switched off exactly when no
+nontrivial commutator is central, and in that regime the strictification end can still couple
+($\mathrm{Dih}(C_3^2)$, though not $S_3$ or $A_4$). This is
 exactly what nilpotency prevents, via the $\gamma_c$-central mechanism of
 Remark~\ref{rem:nilpotent}. (Centre size is not the parameter: R.'s $K=\mathrm{Dih}(C_3^2)\times
 C_2$ has $Z(K)=C_2\neq1$ yet still occupies the forbidden corner, because its commutators lie in
