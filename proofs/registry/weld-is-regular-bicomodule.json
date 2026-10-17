@@ -1,0 +1,79 @@
+{
+ "conjecture": "Is the worker/harness weld B = ΔS◁ΔT a genuine (c,d)-bicomodule (horizontal morphism of Cat♯ = Comod(Poly)), and does it realise Conjecture 5.1 of expository/2026-09-20-workers-bicomodules-pra.tex (worker A = ΔS⊗ΔT = right-adjoint PRA content factor; discarded branch maps = Σ-aggregation tail)? VERDICT (3 clauses): (1) EXISTENCE true -- B is the regular (ΔT,ΔS)-bicomodule (λ=δ_{ΔS}◁ΔT, ρ=ΔS◁δ_{ΔT}); (2) worker=content FALSE -- the SGF Prop 3.6 content factor of the represented prafunctor is the power (-)^S, not A; (3) discarded=Σ-tail TRUE -- the Σ-aggregation index is T^S = {g:S->T} = the branch maps the retract e forgets. Gap 5.2 (adjointness reversal) DISSOLVED: T^S is the index of a left-adjoint Σ, not right-adjoint content. Represented prafunctor F̄_B(V)=(T×V)^S=T^S·V^S.",
+ "status": "proved",
+ "date_opened": "2026-10-16",
+ "date_closed": "2026-10-16",
+ "note": "PROVE session against /home/agent/state/PROVE.md. Opens the node the brief anticipated ('No registry node asserts worker=bicomodule/PRA yet'). Decides Conjecture 5.1 completely. The crux obstacle (ii)/Gap 5.3 ('which (c,d)?') dissolves via the regular-bicomodule construction (Lemma 2.1: d◁c is a (c,d)-bicomodule for ANY comonoids c,d). The deep content is the represented prafunctor F̄_B(V)=(T×V)^S and its SGF factorization (content (-)^S kept, Σ_{T^S} tail), which refutes the strong identification (clause 2) while vindicating the branch-maps=tail picture (clause 3). Key lever: ΔS indiscrete => ΔS-Set ≃ Set, collapsing the apparatus to endofunctors of Set; the represented functor is NOT the underlying polynomial of the carrier (the trap the brief flagged). Distinct from pra-vs-probe-method (different PRA statement, probes L_q). Bridges to workers-retract-of-bhm-grading (the retract whose discarded data = the Σ-tail). Grant: state axis of the weld lands in Cat♯ as a data-migration prafunctor X↦(T×X)^S, but entanglement (A) ≠ aggregation (Σ-tail).",
+ "tree": {
+  "id": "root",
+  "approach": "Decide Conjecture 5.1 for the weld B=ΔS◁ΔT: existence TRUE (regular bicomodule), worker=content FALSE, discarded=Σ-tail TRUE, Gap 5.2 dissolved.",
+  "trust": "proved",
+  "file": "2026-10-16-weld-is-regular-bicomodule.md",
+  "sources": [
+   "2111.10968"
+  ],
+  "children": [
+   {
+    "id": "regular-bicomodule-lemma",
+    "approach": "Lemma 2.1: for comonoids c,d in (V,◁,y), d◁c is a (c,d)-bicomodule with λ=δ_d◁c, ρ=d◁δ_c; axioms (34)(35) from comonoid laws whiskered, (36) from ◁-interchange (both sides = δ_d◁δ_c). Standard.",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "children": []
+   },
+   {
+    "id": "weld-is-regular-bicomodule",
+    "approach": "Thm 2.2: B=ΔS◁ΔT is the regular (ΔT,ΔS)-bicomodule (c=ΔT,d=ΔS). Clause (1) TRUE. Gap 5.3 dissolved. Machine-checked: all 5 axioms hold for (|S|,|T|) in {(2,2),(2,3),(3,2),(1,2),(2,1)}, test sizes 2,3.",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "lean": null,
+    "children": [
+     {
+      "id": "bicomodule-axioms-machine-checked",
+      "approach": "Natural-transformation/Godement verification of (34)(35)(36) on nested store-tuples; scratch/2026-10-16-weld-bicomodule-verify.py, all True. Independent corroboration of Thm 2.2, not a dependency (the theorem stands on the proved Lemma 2.1).",
+      "role": "attempt",
+      "trust": "computed",
+      "file": "2026-10-16-weld-is-regular-bicomodule.md",
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "represented-prafunctor",
+    "approach": "Thm 3.1: F̄_B(V)=(T×V)^S=T^S·V^S, via F_B=F_H∘F_G over the unit y (B=H◁G). F_G(X)=Σ_t X(t) [Ḡ(V)=T·V], F_H(W)(a)=W^{outdeg a}=W^S [H̄(W)=W^S]; uses ΔS-Set ≃ Set (indiscrete). Dictionary validated on walking-arrow category.",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "sources": [
+     "2111.10968"
+    ],
+    "children": []
+   },
+   {
+    "id": "clause2-worker-is-content-FALSE",
+    "approach": "Thm 4.1: SGF Prop 3.6 content factor of F̄_B is the power (-)^S (directions S), not A=Δ(S×T) (represented functor V↦V^{S×T}, directions S×T). Differ for |T|>=2. No handedness repairs it. Conjecture 5.1 clause (2): FALSE.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "children": []
+   },
+   {
+    "id": "clause3-tail-is-branch-maps-TRUE",
+    "approach": "Thm 4.2: Σ-aggregation tail = Σ_{g∈T^S}, indexed by branch maps T^S={g:S→T} = exactly what retract idempotent e forgets. Clause (3): TRUE. Thm 4.3: Gap 5.2 dissolved (T^S is a left-adjoint Σ index, not right-adjoint content).",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "children": []
+   },
+   {
+    "id": "worker-is-constant-branch-slice",
+    "approach": "§5 remark: σ:A→B embeds A's T-coord as constant branch maps T↪T^S; A's positions S×T = (content-input S)×(constant-branch slice T⊆T^S of the Σ-tail index). Worker = constant slice of the aggregation tail, not the content.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "children": []
+   }
+  ]
+ }
+}
