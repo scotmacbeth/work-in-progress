@@ -1,12 +1,15 @@
 {
- "conjecture": "Is the worker/harness weld B = ΔS◁ΔT a genuine (c,d)-bicomodule (horizontal morphism of Cat♯ = Comod(Poly)), and does it realise Conjecture 5.1 of expository/2026-09-20-workers-bicomodules-pra.tex (worker A = ΔS⊗ΔT = right-adjoint PRA content factor; discarded branch maps = Σ-aggregation tail)? VERDICT (3 clauses): (1) EXISTENCE true -- B is the regular (ΔT,ΔS)-bicomodule (λ=δ_{ΔS}◁ΔT, ρ=ΔS◁δ_{ΔT}); (2) worker=content FALSE -- the SGF Prop 3.6 content factor of the represented prafunctor is the power (-)^S, not A; (3) discarded=Σ-tail TRUE -- the Σ-aggregation index is T^S = {g:S->T} = the branch maps the retract e forgets. Gap 5.2 (adjointness reversal) DISSOLVED: T^S is the index of a left-adjoint Σ, not right-adjoint content. Represented prafunctor F̄_B(V)=(T×V)^S=T^S·V^S.",
+ "conjecture": "Is the worker/harness weld B = ΔS◁ΔT a genuine (c,d)-bicomodule (horizontal morphism of Cat♯ = Comod(Poly)), and does it realise Conjecture 5.1 of expository/2026-09-20-workers-bicomodules-pra.tex (worker A = ΔS⊗ΔT = right-adjoint PRA content factor; discarded branch maps = Σ-aggregation tail)? [REVISED 2026-10-17 post-Rick uid231 review: only clause (1) stands and is PEER-REVIEWED; clauses (2) worker≠content and (3) discarded=Σ-tail are REOPENED as attempts pending rework per Rick M1/M2/M3 — see note.] VERDICT (clause 1, standing): B is the regular (ΔT,ΔS)-bicomodule (λ=δ_{ΔS}◁ΔT, ρ=ΔS◁δ_{ΔT}) with represented prafunctor F̄_B(V)=(T×V)^S=T^S·V^S.",
  "status": "proved",
  "date_opened": "2026-10-16",
  "date_closed": "2026-10-16",
- "note": "PROVE session against /home/agent/state/PROVE.md. Opens the node the brief anticipated ('No registry node asserts worker=bicomodule/PRA yet'). Decides Conjecture 5.1 completely. The crux obstacle (ii)/Gap 5.3 ('which (c,d)?') dissolves via the regular-bicomodule construction (Lemma 2.1: d◁c is a (c,d)-bicomodule for ANY comonoids c,d). The deep content is the represented prafunctor F̄_B(V)=(T×V)^S and its SGF factorization (content (-)^S kept, Σ_{T^S} tail), which refutes the strong identification (clause 2) while vindicating the branch-maps=tail picture (clause 3). Key lever: ΔS indiscrete => ΔS-Set ≃ Set, collapsing the apparatus to endofunctors of Set; the represented functor is NOT the underlying polynomial of the carrier (the trap the brief flagged). Distinct from pra-vs-probe-method (different PRA statement, probes L_q). Bridges to workers-retract-of-bhm-grading (the retract whose discarded data = the Σ-tail). Grant: state axis of the weld lands in Cat♯ as a data-migration prafunctor X↦(T×X)^S, but entanglement (A) ≠ aggregation (Σ-tail).",
+ "date_reviewed": "2026-10-17",
+ "date_reworked": "2026-10-18",
+ "note_rework_2026-10-18": "PROVE session (2026-10-18, proofs/2026-10-18-worker-content-separation.md) reworked the three demoted nodes per Rick M1/M2/M3 and re-promoted them to PROVED. KEY new result (premise worker-is-constant-branch-slice): the worker A=Δ(S×T), read CONSISTENTLY as a (ΔT,ΔS)-bicomodule, is the constant-branch sub-bicomodule B'⊆B (σ♯=id_{S×T}, σ_1(s,t)=(s,const_t)), with F̄_A(V)=T·V^S inside F̄_B(V)=T^S·V^S. (M1 clause2) worker vs content is a Σ-index separation T vs T^S: same content power (−)^S, worker=content iff |S|=1∨|T|=1, proper on |S|≥2∧|T|≥2 — fixes the inconsistent y-reading and the wrong |T|≥2 locus. (M2 clause3) 'discarded=non-constant maps' REFUTED; corrected: weld Σ-tail = all of T^S=const⊔NC, retract e discards per input the off-diagonal fibre T^{S∖{s}} (size m^{n-1}≠NC≠T^S, distinct at (2,3): 3,6,9). (M3) σ-display corrected = Prop 1.3. All machine-checked in scratch/2026-10-18-worker-content-separation.py. Remaining for WRITE/PDF: S1 provenance + S2 naming still pending.",
+ "note": "PROVE session (2026-10-16) decided all 3 clauses of Conj 5.1 and was graded proved. Rick's referee report (uid231, 2026-10-17; artifact proofs/reviews/2026-10-17-weld-is-regular-bicomodule-rick.md) is a DEMOTION event that also endorses the core. OUTCOME: (A) Clause (1)/Thm 2.2 (B is the (ΔT,ΔS)-bicomodule) AND the represented prafunctor F̄_B(V)=T^S·V^S (Thm 3.1) were independently re-derived by Rick (Hom-count in St_T-Set, confirmed at 7 shapes incl. (2,3),(3,2)) and are now PEER-REVIEWED. Root re-scoped to this clause-(1) core and kept 'proved' (its premises Lemma 2.1 [proved], Thm 2.2 [peer-reviewed], represented-prafunctor [peer-reviewed] are all >= proved). (B) Clause (2) worker=content FALSE: verdict SURVIVES per Rick but the written argument is an inconsistent comparison (M1) — demoted to 'computed' attempt; correct locus |S|>=2 AND |T|>=2, correct reason Σ-index T vs T^S. (C) Clause (3) discarded=Σ-tail: false as stated (M2, 'T^S = non-constant maps' self-contradictory) — demoted to 'speculative' attempt, needs restatement T^S=const(T)⊔non-constant and re-decision. (D) §5 σ-remark (worker-is-constant-branch-slice): conflates two S's (M3) — demoted to 'speculative' attempt, correct σ(A)=sub-bicomodule on {(s,const_t)}, σ♯=id, prafunctor T×V^S. PENDING FIXES for the revised PDF: S1 provenance (2111.10968 IS SGF 'Functorial Aggregation'; prose mis-titled it as Niu-Spivak [=2312.00990] and locators Def 4.2/Rmk 4.3/Thm 4.28/Props 3.6,3.9,5.2,5.7/Ex 5.6 need re-check against the actual SGF print — registry source id 2111.10968 is correct, unchanged); S2 left/right bicomodule label reversal + 'regular bicomodule' node/title rename; S3 generic-shape machine check (|S|=|T|=2 cannot separate T^S y^S from S^T y^T); S5 state S≠∅. NOTE on validators: registry_validate.py (deprecated) false-flags the computed corroboration leaf under the boundary rule; the authoritative trustcheck.py --deployment code/macbeth.json passes clean because corroboration leaves carry role 'attempt' (exempt). Use trustcheck.py.",
  "tree": {
   "id": "root",
-  "approach": "Decide Conjecture 5.1 for the weld B=ΔS◁ΔT: existence TRUE (regular bicomodule), worker=content FALSE, discarded=Σ-tail TRUE, Gap 5.2 dissolved.",
+  "approach": "Clause (1) of Conj 5.1 (standing, peer-reviewed): B=ΔS◁ΔT is the regular (ΔT,ΔS)-bicomodule with represented prafunctor F̄_B(V)=(T×V)^S=T^S·V^S. Clauses (2) worker≠content and (3) discarded=Σ-tail are reopened as attempts (Rick M1/M2/M3).",
   "trust": "proved",
   "file": "2026-10-16-weld-is-regular-bicomodule.md",
   "sources": [
@@ -25,9 +28,15 @@
     "id": "weld-is-regular-bicomodule",
     "approach": "Thm 2.2: B=ΔS◁ΔT is the regular (ΔT,ΔS)-bicomodule (c=ΔT,d=ΔS). Clause (1) TRUE. Gap 5.3 dissolved. Machine-checked: all 5 axioms hold for (|S|,|T|) in {(2,2),(2,3),(3,2),(1,2),(2,1)}, test sizes 2,3.",
     "role": "premise",
-    "trust": "proved",
+    "trust": "peer-reviewed",
     "file": "2026-10-16-weld-is-regular-bicomodule.md",
     "lean": null,
+    "review": {
+     "reviewer": "Rick (grandparick20)",
+     "artifact": "proofs/reviews/2026-10-17-weld-is-regular-bicomodule-rick.md",
+     "date": "2026-10-17",
+     "verdict": "Clause (1) + Theorem 5 accepted, checked-sober; independently re-derived by Hom-count in St_T-Set. Pending SHOULDs: S2 (left/right label reversal, 'regular bicomodule' rename), S3 (|S|=|T|=2 check cannot separate T^S y^S from swapped S^T y^T — use generic shape)."
+    },
     "children": [
      {
       "id": "bicomodule-axioms-machine-checked",
@@ -36,6 +45,15 @@
       "trust": "computed",
       "file": "2026-10-16-weld-is-regular-bicomodule.md",
       "children": []
+     },
+     {
+      "id": "bicomodule-axioms-lean-verified",
+      "approach": "Lean 4 finite-model oracle (Mathlib-free): a uniform store-Tree engine (eps/delta/fmap) mirroring the duck-typed Python ops; the five (34)(35)(36) axioms discharged by `decide` over the explicitly enumerated carrier B=ΔS◁ΔT. Certifies all 5 shapes (|S|,|T|)∈{(2,2),(2,3),(3,2),(1,2),(2,1)} at ground k=2, plus k=3 for the 3 small shapes {(2,2),(1,2),(2,1)}. The 2 large k=3 carriers (|B|=13122,17496) exceed kernel-decide memory with the Tree/List encoding, so remain Python-only (no math lost; k=2 exhibits non-trivial branch tuples for every shape). All 8 declarations: axioms [propext] only, no sorryAx/choice/native_decide. Negative controls confirm non-vacuity (ρ≠λ on 120/128 elements; wrong axioms evaluate false). NB (Rick S3): a (2,2) check alone cannot separate the represented functor T^S y^S from the swapped S^T y^T; the lean-verified claim is the AXIOM check (B is a bicomodule), not the identification of which represented functor — that identification is the peer-reviewed Thm 3.1, confirmed by Rick at 7 generic shapes.",
+      "role": "attempt",
+      "trust": "lean-verified",
+      "file": "2026-10-16-weld-is-regular-bicomodule.md",
+      "lean": "lean/2026-10-17-weld-regular-bicomodule.lean :: Weld.weld_bicomodule_{2_2,2_3,3_2,1_2,2_1}_k2, Weld.weld_bicomodule_{2_2,1_2,2_1}_k3",
+      "children": []
      }
     ]
    },
@@ -43,35 +61,47 @@
     "id": "represented-prafunctor",
     "approach": "Thm 3.1: F̄_B(V)=(T×V)^S=T^S·V^S, via F_B=F_H∘F_G over the unit y (B=H◁G). F_G(X)=Σ_t X(t) [Ḡ(V)=T·V], F_H(W)(a)=W^{outdeg a}=W^S [H̄(W)=W^S]; uses ΔS-Set ≃ Set (indiscrete). Dictionary validated on walking-arrow category.",
     "role": "premise",
-    "trust": "proved",
+    "trust": "peer-reviewed",
     "file": "2026-10-16-weld-is-regular-bicomodule.md",
     "sources": [
      "2111.10968"
     ],
-    "children": []
-   },
-   {
-    "id": "clause2-worker-is-content-FALSE",
-    "approach": "Thm 4.1: SGF Prop 3.6 content factor of F̄_B is the power (-)^S (directions S), not A=Δ(S×T) (represented functor V↦V^{S×T}, directions S×T). Differ for |T|>=2. No handedness repairs it. Conjecture 5.1 clause (2): FALSE.",
-    "role": "attempt",
-    "trust": "proved",
-    "file": "2026-10-16-weld-is-regular-bicomodule.md",
-    "children": []
-   },
-   {
-    "id": "clause3-tail-is-branch-maps-TRUE",
-    "approach": "Thm 4.2: Σ-aggregation tail = Σ_{g∈T^S}, indexed by branch maps T^S={g:S→T} = exactly what retract idempotent e forgets. Clause (3): TRUE. Thm 4.3: Gap 5.2 dissolved (T^S is a left-adjoint Σ index, not right-adjoint content).",
-    "role": "premise",
-    "trust": "proved",
-    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "review": {
+     "reviewer": "Rick (grandparick20)",
+     "artifact": "proofs/reviews/2026-10-17-weld-is-regular-bicomodule-rick.md",
+     "date": "2026-10-17",
+     "verdict": "F̄_B(V) ≅ T^S × V^S independently re-derived by Hom-count in St_T-Set, confirmed at 7 shapes incl. (2,3),(3,2)."
+    },
     "children": []
    },
    {
     "id": "worker-is-constant-branch-slice",
-    "approach": "§5 remark: σ:A→B embeds A's T-coord as constant branch maps T↪T^S; A's positions S×T = (content-input S)×(constant-branch slice T⊆T^S of the Σ-tail index). Worker = constant slice of the aggregation tail, not the content.",
+    "approach": "Prop 1.3 (REWORKED 2026-10-18, fixes M3): the worker A=Δ(S×T) read as a (ΔT,ΔS)-bicomodule is the sub-bicomodule B'⊆B on the CONSTANT branch maps. σ:A→B, σ_1(s,t)=(s,const_t), σ♯=id_{S×T}, is a bicomodule iso A≅B' (prafunctor T·V^S); B' is closed under λ,ρ because both coactions leave the branch-map value g pointwise unchanged (Lemma 1.2). Carrier of B' = (S×T)·y^{S×T} = A on the nose. Also = cobase change of the regular (A,A)-bicomodule along projections π_S,π_T. This is the linchpin for clauses 2&3. Machine-checked (B' λ,ρ-closed; σ_1 bijection |S×T|=n·m) at (2,2),(2,3),(3,2),(1,2),(2,1).",
+    "role": "premise",
+    "trust": "proved",
+    "file": "2026-10-18-worker-content-separation.md",
+    "resolved": "Rick uid231 M3 (2026-10-17) fixed in 2026-10-18 rework: σ(A)=sub-bicomodule on {(s,const_t)}, σ♯=id_{S×T}, prafunctor T×V^S — exactly Rick's corrected form; proved via the constant-branch sub-bicomodule B'≅A (carrier Δ(S×T)).",
+    "children": []
+   },
+   {
+    "id": "clause2-worker-is-content-FALSE",
+    "approach": "Thm 2.1 (REWORKED 2026-10-18, fixes M1): read BOTH A and B as (ΔT,ΔS)-bicomodules (A≅B' constant-branch sub-bicomodule, premise worker-is-constant-branch-slice). Then F̄_B(V)=Σ_{g∈T^S}V^S=T^S·V^S and F̄_A(V)=Σ_{t∈T}V^S=T·V^S: SAME content power (−)^S (exponents AGREE, both S — the old 'S vs S×T' was the inconsistent y-reading of A), differ ONLY in Σ-index T vs T^S. Hence worker=content (indeed A=B) iff |S|=1 OR |T|=1; worker≠content (proper F̄_A⊊F̄_B) exactly on |S|≥2 ∧ |T|≥2. Conj 5.1 clause (2) 'worker=F/1 content' FALSE on that locus (Σ-index mismatch, not exponent), TRUE off it. Witness (2,2)@V=2: 8 vs 16; equality at (1,2),(1,3). Machine-checked (scratch/2026-10-18-worker-content-separation.py).",
     "role": "attempt",
     "trust": "proved",
-    "file": "2026-10-16-weld-is-regular-bicomodule.md",
+    "file": "2026-10-18-worker-content-separation.md",
+    "sources": [
+     "2111.10968"
+    ],
+    "resolved": "Rick uid231 M1 (2026-10-17) fixed: the inconsistent-comparison is replaced by a single consistent (ΔT,ΔS)-reading of both A and B; exponents agree (both (−)^S), the surviving separation is the Σ-index T vs T^S on the sharp locus |S|≥2 ∧ |T|≥2; correctly gives worker=content at |S|=1. Builds on peer-reviewed represented-prafunctor (Thm 3.1) and premise worker-is-constant-branch-slice (proved).",
+    "children": []
+   },
+   {
+    "id": "clause3-tail-is-branch-maps-TRUE",
+    "approach": "Thm 3.1 (REWORKED 2026-10-18, fixes M2): restate Σ-tail honestly T^S=const(T)⊔NC (|const|=m, |NC|=m^n−m). Retract e(s,g)=(s,const_{g(s)}) idempotent, image=S×const(T)≅worker positions; per input s it KEEPS g(s) and DISCARDS g|_{S∖{s}}∈T^{S∖{s}} (fibre size m^{n-1}). RE-DECISION: 'discarded data = the non-constant branch maps = the Σ-tail' is FALSE — (i) Σ-tail index is all of T^S not NC; (ii) per-position discard is the fibre m^{n-1}, neither NC (m^n−m) nor T^S (m^n) — at (2,3): 3≠6≠9; (iii) the fibre {g:g(s)=t} is not 'the non-constant maps' (contains const_t, omits non-constant g with g(s)≠t). TRUE RESIDUE: the weld's Σ-tail IS the full branch-map set T^S=Hom(S,T), and e projects it onto the worker slice const(T)≅T, discarding per position the off-diagonal g|_{S∖{s}} (= the workers paper's own body phrasing). Nonempty discard ⟺ |S|≥2 ∧ |T|≥2. Machine-checked.",
+    "role": "attempt",
+    "trust": "proved",
+    "file": "2026-10-18-worker-content-separation.md",
+    "resolved": "Rick uid231 M2 (2026-10-17) fixed: self-contradictory 'T^S=non-constant' restated as T^S=const(T)⊔NC; original clause-3 statement REFUTED, corrected TRUE residue (weld tail = T^S; worker = constant slice; per-position discard = T^{S∖{s}}, size m^{n-1}) proved. Builds on peer-reviewed represented-prafunctor and premise worker-is-constant-branch-slice.",
     "children": []
    }
   ]
