@@ -1,0 +1,640 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{mathtools}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Cathash}{\mathbf{Cat}^{\sharp}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Comod}{\mathrm{Comod}}
+\newcommand{\PRA}{\mathrm{PRA}}
+\newcommand{\CLP}{\mathrm{CLP}}
+\newcommand{\Fam}{\mathrm{Fam}}
+\renewcommand{\lhd}{\triangleleft}
+\newcommand{\Store}[1]{\Delta #1}
+\newcommand{\op}{^{\mathrm{op}}}
+\newcommand{\yon}{\mathsf{y}}
+\DeclareMathOperator{\const}{const}
+\DeclareMathOperator{\ev}{ev}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Hom}{Hom}
+
+\title[Polynomial bicomodules are parametric right adjoints]
+{Polynomial Bicomodules are Parametric Right Adjoints\\
+(after Spivak--Garner--Fairbanks),\\ with the worker/harness weld as a worked instance}
+
+\author{MacBeth}
+\address{Kodamai}
+\date{18 October 2026}
+
+\begin{document}
+
+\begin{abstract}
+Spivak, Garner and Fairbanks proved that, for polynomial comonoids (equivalently small
+categories) $c$ and $d$, the category of $(c,d)$-bicomodules in $\Poly$ is equivalent to
+the category of parametric right adjoint functors $c\text{-}\Set\to d\text{-}\Set$. We
+restate this correspondence precisely, with its slice (aggregation) factorization, and
+then run it on a single concrete bicomodule drawn from the semantics of stateful agents:
+the worker/harness \emph{weld} $B=\Store{S}\lhd\Store{T}$ of two store comonads. We prove
+that the weld is the \emph{regular} $(\Store{T},\Store{S})$-bicomodule and that it
+represents the prafunctor $\bar F_B(V)=(T\times V)^S=T^S\cdot V^S$; its slice
+factorization keeps the power $(-)^S$ as connected-limit content and aggregates over the
+branch-map set $T^S$ by a coproduct $\Sigma$. We then locate the \emph{worker}
+$A=\Store{(S\times T)}$ inside this picture: read as a $(\Store{T},\Store{S})$-bicomodule
+of the same variance as $B$, it is exactly the constant-branch sub-bicomodule
+$B'\subseteq B$, so worker and weld \emph{share} the content power $(-)^S$ and differ only
+in their $\Sigma$-index, $T$ versus $T^S$. This decides a former conjecture of ours
+(``worker $=$ parametric right adjoint''): affirmatively but with a sharp correction --- the
+worker is not the whole weld-prafunctor but its constant-branch sub-bicomodule, with proper
+inclusion exactly when $|S|\ge 2$ and $|T|\ge 2$.
+\end{abstract}
+
+\maketitle
+
+\footnotetext{Supersedes the 2026-09-20 draft; corrects attribution and resolves the
+former Conjecture~5.1.}
+
+\section{Introduction}\label{sec:intro}
+
+This note has two jobs. The first is expository: to state, carefully and with correct
+attribution, the theorem of Spivak, Garner and Fairbanks \cite{SGF} identifying polynomial
+bicomodules with parametric right adjoints. The second is a worked instance: to run that
+theorem on one concrete bicomodule arising in the semantics of stateful, interacting
+agents, and in doing so to settle a question we had earlier been able only to conjecture.
+
+\subsection*{The correspondence}
+In the polynomial-functor framework \cite{NiuSpivak}, a small category is the same datum as
+a polynomial comonoid in $(\Poly,\lhd,\yon)$ \cite{AhmanUustalu}. The ``horizontal'' maps
+between two such categories $c,d$ are the two-sided \emph{bicomodules}, and Spivak, Garner
+and Fairbanks \cite{SGF} identify them concretely: a $(c,d)$-bicomodule is exactly a
+\emph{parametric right adjoint} functor $c\text{-}\Set\to d\text{-}\Set$ between the
+associated copresheaf categories. This is their Proposition~3.9(5) together with
+Theorem~4.28. Moreover every prafunctor factors (Definition~3.5, equation~(21)) through a
+slice, the first factor carrying the genuine right-adjoint (connected-limit) content and a
+coproduct $\Sigma$ aggregating a tail that is not itself bicomodule data.
+
+\subsection*{A note on attribution}
+The result is sometimes loosely attributed to ``Garner 2019.'' That attribution is not
+citable: it refers to a HoTTEST \emph{talk} (R.~Garner, 11 December 2019), an announcement,
+not a written proof. The definitive, peer-reviewed written source is Spivak, Garner and
+Fairbanks, \emph{Functorial Aggregation}, J.\ Pure Appl.\ Algebra \textbf{229}(2) (2025),
+art.~107883; arXiv:2111.10968 \cite{SGF}. Garner is credited there, as a co-author of the
+actual paper. We cite \cite{SGF} throughout and do not treat the 2019 talk as a proof.
+
+\subsection*{The worked instance: the weld}
+In models of stateful agents one carries a piece of local state $S$ by the \emph{store
+comonad} $\Store{S}=S\cdot\yon^S$. Two agents with states $S$ and $T$ can be welded by
+functor composition, $B=\Store{S}\lhd\Store{T}$ --- the ``store of stores'' used by
+Braithwaite--Hedges--Mihejevs \cite{workersProof}. A competing discipline entangles the
+states by the Dirichlet product into a single store,
+$A=\Store{S}\otimes\Store{T}=\Store{(S\times T)}$, which we call the \emph{worker}. We
+earlier conjectured (in the superseded 2026-09-20 draft) that the worker ``is'' the
+parametric right adjoint content of the weld, with the weld's extra data as the
+$\Sigma$-aggregation tail. We can now say precisely what is true.
+
+The weld $B$ \emph{is} a bicomodule --- the regular $(\Store{T},\Store{S})$-bicomodule
+(\S\ref{sec:weld}) --- and it represents the prafunctor $\bar F_B(V)=(T\times V)^S$, whose
+factorization keeps the power $(-)^S$ as content and aggregates over the branch-map set
+$T^S$. The worker $A$, read consistently as a bicomodule of the same variance, is the
+\emph{constant-branch sub-bicomodule} $B'\subseteq B$ (\S\ref{sec:worker}). Worker and weld
+share the content power $(-)^S$; they differ only in their $\Sigma$-index, $T$ versus $T^S$.
+So the former conjecture is settled affirmatively in a precise and corrected form: the
+worker is a bicomodule, and it is not the whole weld-prafunctor but its constant-branch
+sub-bicomodule.
+
+\subsection*{Status of the claims}
+The correspondence of \S\ref{sec:corr} is \cite{SGF}'s established theorem; we state it and
+sketch its proof in our own words, and claim no part of it. The weld facts of
+\S\S\ref{sec:weld}--\ref{sec:worker} are our own results; the regular-bicomodule structure
+and the represented prafunctor $\bar F_B(V)=(T\times V)^S$ have additionally been
+peer-reviewed by a referee (Rick), and the worker-as-constant-branch-slice comparison is
+proved and machine-checked at small shapes. Trust grades are flagged at each statement.
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} fixes polynomial conventions, the store comonad, parametric right
+adjoints, and the bicomodule definition. Section~\ref{sec:corr} states the SGF
+correspondence, its slice factorization, and the handedness convention.
+Section~\ref{sec:weld} proves the weld is the regular bicomodule and computes its
+prafunctor. Section~\ref{sec:worker} locates the worker as the constant-branch
+sub-bicomodule and decides the former conjecture. Section~\ref{sec:conc} draws the
+consequence for the compositional-correctness program.
+
+\section{Preliminaries}\label{sec:prelim}
+
+We work in the category $\Poly$ of polynomial functors $\Set\to\Set$, following the
+conventions of \cite{NiuSpivak}.
+
+\begin{definition}[polynomials and their maps]\label{def:poly}
+A \emph{polynomial} is a coproduct of representables $p=\sum_{s\in S_p}\yon^{p[s]}$, acting
+on sets by $p(X)=\sum_{s\in S_p}X^{p[s]}$; we call $S_p$ its \emph{positions} (or shapes)
+and $p[s]$ its set of \emph{directions} at $s$. A morphism $f\colon p\to q$ is a pair
+$f=(f_1,f^{\sharp})$ with $f_1\colon S_p\to S_q$ forward on positions and
+$f^{\sharp}_s\colon q[f_1 s]\to p[s]$ \emph{backward} on directions. Composition is
+$(g\circ f)_1=g_1 f_1$ and $(g\circ f)^{\sharp}_s=f^{\sharp}_s\circ g^{\sharp}_{f_1 s}$:
+backward maps compose in reverse. Under the full embedding $\Poly\hookrightarrow[\Set,\Set]$
+a morphism of polynomials \emph{is} a natural transformation.
+\end{definition}
+
+$\Poly$ carries two monoidal structures we need.
+
+\begin{definition}[the two products]\label{def:products}
+The \emph{composition product} is $(p\lhd q)(X)=p(q(X))$, with unit $\yon$; it is strictly
+associative. The \emph{Dirichlet product} $p\otimes q$ has positions $S_p\times S_q$ and
+directions $p[s]\times q[t]$ at $(s,t)$, with unit $\yon$.
+\end{definition}
+
+\begin{definition}[polynomial comonoids are categories]\label{def:comonoid}
+A comonoid for $(\Poly,\lhd,\yon)$ is the same data as a small category
+\cite{AhmanUustalu,NiuSpivak}: positions are objects, directions at $s$ are the morphisms
+out of $s$, the counit $\varepsilon$ picks out identities and the comultiplication $\delta$
+composes. The framed bicategory of polynomial comonoids is written $\Cathash$
+\cite{NiuSpivak}. A polynomial comonoid $c$ presents a category we also call $c$, with
+copresheaf category $c\text{-}\Set$.
+\end{definition}
+
+\begin{definition}[store comonad]\label{def:store}
+For a set $S$, the \emph{store} (or costate) polynomial is $\Store{S}:=S\cdot\yon^{S}$ ---
+positions $S$, with $\Store{S}[s]=S$ at every position --- carrying the store comonad
+$\Store{S}(X)=S\times X^{S}$. Its comultiplication is $\delta_S(s,\varphi)=(s,\,i\mapsto
+(i,\varphi))$ and counit $\varepsilon_S(s,\varphi)=\varphi(s)$. As a category $\Store{S}$ is
+the \emph{indiscrete} (codiscrete) category on $S$: exactly one morphism between any two
+objects. For $S\ne\emptyset$ it is equivalent to the terminal category $1$, so
+$\Store{S}\text{-}\Set\simeq\Set$.
+\end{definition}
+
+The two objects of study on the SGF side are parametric right adjoints and bicomodules.
+
+\begin{definition}[parametric right adjoint]\label{def:pra}
+Let $C$ have a terminal object $1$. A functor $F\colon C\to D$ is a \emph{parametric right
+adjoint} (PRA), or \emph{prafunctor}, if the first factor of the canonical slice
+factorization
+\[
+C \xrightarrow{\;F/1\;} D/F1 \xrightarrow{\;U\;} D
+\]
+is a right adjoint, where $(F/1)(c)=(Fc\to F1)$ and $U$ forgets the slice down to $D$
+\cite[Def.~3.5, eq.~(21)]{SGF}. For endofunctors of $\Set$ this is equivalent to preserving
+connected limits, equivalently to being polynomial \cite[Prop.~2.5]{SGF}.
+\end{definition}
+
+\begin{definition}[bicomodule]\label{def:bicomod}
+Let $c,d$ be polynomial comonoids. A \emph{$(c,d)$-bicomodule} \cite[Def.~4.2]{SGF} is a
+polynomial $m$ with a left $d$-coaction $\lambda\colon m\to d\lhd m$ and a right
+$c$-coaction $\rho\colon m\to m\lhd c$,
+\[
+d\lhd m \xleftarrow{\;\lambda\;} m \xrightarrow{\;\rho\;} m\lhd c,
+\]
+satisfying the left comodule laws (counit and coassociativity, \cite[(34)]{SGF}), the right
+comodule laws (\cite[(35)]{SGF}), and the compatibility law
+$(\lambda\lhd c)\circ\rho=(d\lhd\rho)\circ\lambda$ (\cite[(36)]{SGF}). Bicomodules between
+$c$ and $d$ are the ``horizontal'' (loose) maps of $\Cathash$.
+\end{definition}
+
+\section{The Spivak--Garner--Fairbanks correspondence}\label{sec:corr}
+
+We restate the results of \cite{SGF} this note leans on, in our own words. All are
+established; we claim no part of them.
+
+\begin{theorem}[{\cite[Thm.~4.28]{SGF}}]\label{thm:sgf-main}
+The framed bicategories $\Cathash$ and $\Comod(\Poly)$ are equivalent. Under the
+equivalence: objects are small categories, i.e.\ polynomial comonoids; the horizontal
+(loose) maps from $c$ to $d$ are the $(c,d)$-bicomodules; the vertical (tight) maps are the
+comonoid homomorphisms, i.e.\ retrofunctors (\emph{not} ordinary functors); and the
+$2$-cells are bicomodule morphisms.
+\end{theorem}
+
+The pointwise identification of the horizontal maps is a six-way equivalence, of which the
+piece we use is item~(5): parametric right adjoints.
+
+\begin{proposition}[{\cite[Prop.~3.9(5), with Thm.~4.28]{SGF}}]\label{prop:sixway}
+For polynomial comonoids $c,d$ there is an equivalence of categories
+\[
+\Comod(\Poly)(c,d)\;\simeq\;\PRA\bigl(c\text{-}\Set,\,d\text{-}\Set\bigr)
+\;=\;\CLP\bigl(c\text{-}\Set,\,d\text{-}\Set\bigr),
+\]
+where $\CLP$ denotes the connected-limit-preserving functors. That is, a
+$(c,d)$-bicomodule \emph{is} a parametric right adjoint functor $c\text{-}\Set\to
+d\text{-}\Set$. (Prop.~3.9 lists six equivalent descriptions of the hom-category, with the
+bicomodule description supplied via Theorem~\ref{thm:sgf-main}; items also include functors
+$d\to\Set[c]$ and $d\to\Fam((c\text{-}\Set)\op)$.)
+\end{proposition}
+
+\begin{proof}[Proof sketch, following \cite{SGF}]
+A $(c,d)$-bicomodule $m$ determines a functor $c\text{-}\Set\to d\text{-}\Set$ by right Kan
+extension / coend against its carrier, using the two coactions to make the output a
+$d$-copresheaf and to integrate over $c$. That this functor is a parametric right adjoint is
+the content of \cite[\S2--\S3]{SGF}: polynomial endofunctors of $\Set$ are exactly the
+connected-limit-preserving ones (\cite[Prop.~2.5]{SGF}), and the dependent-sum indexing of a
+bicomodule carrier realises the slice factorization of Definition~\ref{def:pra}. Conversely a
+prafunctor is reconstructed from the slice data $F/1$ and the indexing set $F1$, which assemble
+into a bicomodule carrier with its coactions; composition is covariant and matches ordinary
+functor composition via the coreflexive-equalizer composite $\odot_d$, $\Poly$ preserving
+coreflexive equalizers (\cite[Lem.~2.19]{SGF}). The two passages are mutually inverse up to
+coherent isomorphism.
+\end{proof}
+
+The factorization we actually compare against is the slice factorization of a single
+prafunctor, because it is what performs the ``content versus aggregation'' split.
+
+\begin{proposition}[slice factorization, {\cite[Def.~3.5, eq.~(21)]{SGF}}]\label{prop:factor}
+Every prafunctor $F\colon c\text{-}\Set\to\Set$ factors as
+\[
+c\text{-}\Set \xrightarrow{\;F/1\;} \Set/F1 \xrightarrow{\;\Sigma\;} \Set,
+\]
+where $F/1$ is a \emph{right adjoint} --- the genuine polynomial/bicomodule content --- and
+$\Sigma$ is the coproduct over the index set $F1$, a \emph{left adjoint} ``aggregation
+tail'' that carries no bicomodule data. (The factorization is the datum named in
+Definition~3.5, equation~(21); it is elaborated inside the proof of \cite[Prop.~3.6]{SGF},
+which is itself the single-variable equivalence statement.)
+\end{proposition}
+
+The moral is a content/aggregation split: the bicomodule content lives in the right-adjoint
+factor $F/1$, and the coproduct $\Sigma$ is a tail the correspondence does not see as
+bicomodule data. A second, equivalent presentation of a prafunctor is the data-migration
+form, which we record because it names the pieces the weld will exhibit.
+
+\begin{proposition}[data-migration form, {\cite[Prop.~3.20]{SGF}}]\label{prop:datamig}
+Every prafunctor factors as $\Sigma_T\circ\Pi_\pi\circ\Delta_S$: a reindexing
+$\Delta_S$ (pullback), a dependent product $\Pi_\pi$ (the connected-limit content), and a
+dependent sum $\Sigma_T$ (the aggregation tail).
+\end{proposition}
+
+\begin{remark}[handedness]\label{rem:handedness}
+We use \cite{SGF}'s convention throughout: a $(c,d)$-bicomodule $m\colon c\to d$
+corresponds to a parametric right adjoint $c\text{-}\Set\to d\text{-}\Set$
+(Proposition~\ref{prop:sixway}). The reader should be warned that Lynch, Shapiro and Spivak,
+\emph{All concepts are $\Cathash$} \cite{LSS}, adopt the \emph{reversed} handedness, sending a
+bicomodule to a functor $d\text{-}\Set\to c\text{-}\Set$. It is the same theorem under the
+opposite variance on bicomodules; any concrete identification must pin the convention first.
+We pin \cite{SGF}'s.
+\end{remark}
+
+\section{The weld is the regular bicomodule}\label{sec:weld}
+
+We now run the correspondence on the concrete bicomodule of interest. Fix nonempty sets
+$S,T$ and the store comonoids $\Store{S},\Store{T}$ of Definition~\ref{def:store}. The
+\emph{weld} is the composition product
+\[
+B\;:=\;\Store{S}\lhd\Store{T},
+\]
+with positions $\{(s,g):s\in S,\ g\colon S\to T\}=S\times T^{S}$ and directions $S\times T$
+everywhere, so a position of $B$ carries a whole \emph{branch map} $g\colon S\to T$.
+
+\begin{lemma}[regular bicomodule]\label{lem:regular}
+In any monoidal category $(\mathcal V,\lhd,\yon)$, for comonoids
+$c=(c,\varepsilon_c,\delta_c)$ and $d=(d,\varepsilon_d,\delta_d)$, the object $d\lhd c$ is a
+$(c,d)$-bicomodule with
+\[
+\lambda:=\delta_d\lhd c\colon d\lhd c\to d\lhd d\lhd c=d\lhd(d\lhd c),
+\qquad
+\rho:=d\lhd\delta_c\colon d\lhd c\to d\lhd c\lhd c=(d\lhd c)\lhd c.
+\]
+\end{lemma}
+
+\begin{proof}
+The left comodule laws \cite[(34)]{SGF} are the comonoid laws of $d$ ---
+$(\varepsilon_d\lhd d)\circ\delta_d=\mathrm{id}$ and
+$(\delta_d\lhd d)\circ\delta_d=(d\lhd\delta_d)\circ\delta_d$ --- whiskered on the right by
+$\lhd c$; the right laws \cite[(35)]{SGF} are the comonoid laws of $c$ whiskered on the left
+by $d\lhd$. For compatibility \cite[(36)]{SGF}, $\lambda$ acts on the first ($d$) factor and
+$\rho$ on the last ($c$) factor; since $\lhd$ is a bifunctor, the two whiskerings commute by
+the interchange law, and both $(\lambda\lhd c)\circ\rho$ and $(d\lhd\rho)\circ\lambda$ equal
+the single map $\delta_d\lhd\delta_c\colon d\lhd c\to d\lhd d\lhd c\lhd c$.
+\end{proof}
+
+\begin{theorem}[weld as regular bicomodule]\label{thm:weld-regular}
+The weld $B=\Store{S}\lhd\Store{T}$ is the regular $(\Store{T},\Store{S})$-bicomodule: take
+$c=\Store{T}$, $d=\Store{S}$, carrier $d\lhd c=\Store{S}\lhd\Store{T}=B$, with
+$\lambda=\delta_{\Store{S}}\lhd\Store{T}$ and $\rho=\Store{S}\lhd\delta_{\Store{T}}$. Hence
+$B$ is a horizontal map of $\Cathash$, i.e.\ a prafunctor $\Store{T}\text{-}\Set\to
+\Store{S}\text{-}\Set$.
+\end{theorem}
+
+\begin{proof}
+Immediate from Lemma~\ref{lem:regular} with $c=\Store{T}$, $d=\Store{S}$, since
+$\Store{S},\Store{T}$ are comonoids (Definition~\ref{def:store}). The pair $(c,d)$ in the
+sense of Proposition~\ref{prop:sixway} is $(\Store{T},\Store{S})$.
+\end{proof}
+
+\begin{remark}[trust]\label{rem:trust-weld}
+Theorem~\ref{thm:weld-regular} is \emph{proved} and \emph{peer-reviewed} (referee: Rick,
+clause~(1)/Thm~2.2). All five bicomodule axioms were additionally machine-checked as
+equalities of natural transformations for
+$(|S|,|T|)\in\{(2,2),(2,3),(3,2),(1,2),(2,1)\}$. Lemma~\ref{lem:regular} is standard
+category theory (a $\lhd$-product of comonoids is the regular bicomodule between them); the
+content here is its use to pin the pair $(\Store{T},\Store{S})$ for the weld, with no
+ad hoc choice required.
+\end{remark}
+
+The theorem removes the only genuine type-level worry about the weld: although
+$\Store{S}\lhd\Store{T}$ is a priori a \emph{product} of two comonoids rather than a map
+\emph{between} two fixed ones, the regular-bicomodule construction turns the $\lhd$-product
+of any two comonoids into a bicomodule between them.
+
+\subsection*{The represented prafunctor}
+Because $\Store{S}$ is the indiscrete category on $S$, it is equivalent to the terminal
+category, so $\Store{S}\text{-}\Set\simeq\Set$ (Definition~\ref{def:store}); likewise for
+$\Store{T}$. Right-adjointness and the slice factorization are equivalence-invariant, so we
+transport the weld prafunctor to an endofunctor $\bar F_B$ of $\Set$.
+
+\begin{theorem}[represented prafunctor]\label{thm:weld-pra}
+$\displaystyle \bar F_B(V)\;\cong\;(T\times V)^{S}\;=\;T^{S}\times V^{S}
+\;=\;\sum_{g\in T^{S}}V^{S}.$
+As a polynomial endofunctor of $\Set$, $\bar F_B=T^{S}\cdot\yon^{S}$: positions $T^{S}$,
+directions $S$. Concretely $\bar F_B(X)=\{(g,h):g\colon S\to T,\ h\colon S\to X\}$.
+\end{theorem}
+
+\begin{proof}
+The regular bicomodule $d\lhd c$ is the composite, over the unit $\yon$, of two one-sided
+comodules,
+\[
+\Store{T}\xrightarrow{\;G\;}\yon\xrightarrow{\;H\;}\Store{S},
+\qquad\text{carrier } H\lhd G=\Store{S}\lhd\Store{T}=B,
+\]
+where $G$ is the right $\Store{T}$-comodule with carrier $\Store{T}$ and $\rho=\delta_{\Store{T}}$,
+and $H$ is the left $\Store{S}$-comodule with carrier $\Store{S}$ and
+$\lambda=\delta_{\Store{S}}$. Bicomodule composition over the unit $\yon$ is just $\lhd$
+(no equalizer is needed), so prafunctors compose and $\bar F_B=\bar F_H\circ\bar F_G$.
+
+\emph{The factor $\bar F_G\colon\Store{T}\text{-}\Set\to\Set$.} As a $\Store{T}$-variable
+polynomial (the $\Set[c]$ description of \cite[Prop.~3.9]{SGF}) the right comodule with
+carrier $\Store{T}$ is $F_G(X)=\sum_{t\in T}\Store{T}\text{-}\Set(\yon_t,X)=\sum_{t\in
+T}X(t)$, where $\yon_t$ is the representable at $t$. In the indiscrete category $\yon_t$ is
+the terminal copresheaf, so $\Store{T}\text{-}\Set(\yon_t,X)=\lim X$; hence
+$F_G(X)=\sum_{t\in T}\lim X$, and after transport $\bar F_G(V)=T\times V$.
+
+\emph{The factor $\bar F_H\colon\Set\to\Store{S}\text{-}\Set$.} A left $\Store{S}$-comodule
+is a functor $\Store{S}\to\Poly$ (the Prop.~5.7 dictionary of \cite{SGF}); the regular one
+(carrier $\Store{S}$, $\lambda=\delta_{\Store{S}}$) assigns to each object $a\in S$ the
+component polynomial $\yon^{S}$ (read off $\delta_S$: one position over $a$, with $S$
+directions). So $F_H(W)(a)=(\yon^{S})(W)=W^{S}$, and after transport $\bar F_H(W)=W^{S}$.
+
+Therefore $\bar F_B(V)=\bar F_H(\bar F_G(V))=(T\times V)^{S}=T^{S}\times V^{S}$, and
+$(T\times V)^{S}=\{S\to T\times V\}=\{(g,h):g\colon S\to T,\ h\colon S\to V\}$.
+\end{proof}
+
+\begin{remark}[trust, and the point of the computation]\label{rem:trust-pra}
+Theorem~\ref{thm:weld-pra} is \emph{proved} and \emph{peer-reviewed} (Rick re-derived
+$\bar F_B$ on seven shapes). Note that $\bar F_B=T^{S}\yon^{S}$ is \emph{neither} the
+underlying polynomial of the worker $A=(S\times T)\yon^{S\times T}$ \emph{nor} that of the
+carrier $B=(S\cdot T^{S})\yon^{S\times T}$: the prafunctor represented by a bicomodule is not
+the underlying polynomial functor of its carrier. (Cardinalities at $|S|=|T|=2$, $V=2$:
+$\bar F_B=16$, $A$-underlying $=64$, $B$-underlying $=128$.)
+\end{remark}
+
+Applying Proposition~\ref{prop:factor} to $\bar F_B(V)=\sum_{g\in T^{S}}V^{S}$:
+\[
+\bar F_B(1)=T^{S},\qquad
+(\bar F_B/1)(V)=\bigl(V^{S}\bigr)_{g\in T^{S}}=\Delta_{T^{S}}\circ(-)^{S},\qquad
+\Sigma\colon \Set/T^{S}\to\Set.
+\]
+The content factor $\bar F_B/1$ is a right adjoint --- the power $(-)^{S}$ (right adjoint to
+the copower $S\times(-)$) followed by the diagonal $\Delta_{T^{S}}$ (right adjoint to
+$\Sigma$). The connected-limit content is the \textbf{power $(-)^{S}$}; the aggregation tail
+is the coproduct $\Sigma$ over the \textbf{branch-map set $T^{S}=\Hom(S,T)$}.
+
+\section{The worker is the constant-branch sub-bicomodule}\label{sec:worker}
+
+The \emph{worker} is the Dirichlet entanglement
+\[
+A\;:=\;\Store{S}\otimes\Store{T}\;=\;\Store{(S\times T)},
+\]
+with positions $S\times T$ and directions $S\times T$ everywhere. A priori $A$ is a
+\emph{$0$-cell} (a comonoid/category), whereas the weld content is a \emph{$1$-cell}
+($\Store{T}\to\Store{S}$); to compare them we must read $A$ as a
+$(\Store{T},\Store{S})$-bicomodule of the \emph{same variance} as $B$. There is a canonical
+such reading, and it sits visibly inside $B$.
+
+\begin{definition}[constant-branch slice]\label{def:Bprime}
+Writing a position of $B$ as $(s,g)$ with $s\in S$, $g\in T^{S}$, let
+\[
+B'\;:=\;\{(s,g)\in B:\ g\in\const(T)\}, \qquad \const\colon T\hookrightarrow T^{S},\ t\mapsto\const_t,
+\]
+with directions inherited ($S\times T$ per position). As a polynomial, $B'$ has positions
+$S\times\const(T)\cong S\times T$ and directions $S\times T$, i.e.\
+$B'=(S\times T)\cdot\yon^{S\times T}=\Store{(S\times T)}=A$ on the nose.
+\end{definition}
+
+\begin{lemma}[$B'$ is a sub-bicomodule]\label{lem:subbicomod}
+$B'$ is closed under the weld coactions $\lambda=\delta_{\Store{S}}\lhd\Store{T}$ and
+$\rho=\Store{S}\lhd\delta_{\Store{T}}$; hence $(B',\lambda|,\rho|)$ is a
+$(\Store{T},\Store{S})$-sub-bicomodule of $B$.
+\end{lemma}
+
+\begin{proof}
+Both coactions leave the branch-map coordinate $g=(t_s)_{s\in S}$ \emph{pointwise}
+unchanged, only reorganising positions. For $\rho=\Store{S}\lhd\delta_{\Store{T}}$: the
+inner $\delta_T(t,\psi)=(t,\,j\mapsto(j,\psi))$ keeps the first coordinate $t$, so the
+$B$-layer of $\rho(s,g)$ has the same $g$; a constant $g$ stays constant. For
+$\lambda=\delta_{\Store{S}}$: $\delta_S(s,\varphi)=(s,\,i\mapsto(i,\varphi))$ duplicates the
+whole $\Store{T}$-ground with the same $\varphi$, hence the same $g$; constant stays
+constant. The counit and (co)associativity laws restrict because they are the comonoid laws
+of $\Store{S},\Store{T}$ whiskered, and $B'$ is full on positions with inherited directions.
+Machine-checked ($\rho$-closed, $\lambda$-closed) at
+$(|S|,|T|)\in\{(2,2),(2,3),(3,2),(1,2),(2,1)\}$.
+\end{proof}
+
+\begin{proposition}[the worker's canonical reading]\label{prop:sigma}
+The map $\sigma\colon A\to B$ with $\sigma_1(s,t)=(s,\const_t)$ on positions and
+$\sigma^{\sharp}=\mathrm{id}_{S\times T}$ on directions is an isomorphism of
+$(\Store{T},\Store{S})$-bicomodules $A\cong B'$. Equivalently, $A$ carries the
+$(\Store{T},\Store{S})$-bicomodule structure obtained by cobase change of the regular
+$(A,A)$-bicomodule along the comonoid projections $\pi_S\colon A\to\Store{S}$ (left) and
+$\pi_T\colon A\to\Store{T}$ (right) --- the indiscrete functors induced by the set
+projections --- and this structure coincides with $B'$.
+\end{proposition}
+
+\begin{proof}
+$\sigma_1$ is the bijection $S\times T\cong S\times\const(T)=B'$-positions, and
+$\sigma^{\sharp}=\mathrm{id}_{S\times T}$ matches directions. By Lemma~\ref{lem:subbicomod}
+the coactions act on $B'$ exactly as they do on $A$ under this identification (both leave the
+$g$-value alone), so $\sigma$ commutes with $\lambda,\rho$ and is a bicomodule isomorphism
+onto its image $B'$. The sub-bicomodule description is primary and fully verified; the
+cobase-change description is the conceptual justification that $B'$ is the \emph{canonical}
+reading (not an arbitrary sub-object), and agrees with it on carriers and positions.
+\end{proof}
+
+\begin{theorem}[worker versus weld: a $\Sigma$-index separation]\label{thm:separation}
+Read $A$ and $B$ as $(\Store{T},\Store{S})$-bicomodules via Proposition~\ref{prop:sigma}
+($A\cong B'\subseteq B$). Then
+\[
+\bar F_B(V)=\sum_{g\in T^{S}}V^{S}=T^{S}\cdot V^{S},
+\qquad
+\bar F_A(V)=\sum_{g\in\const(T)}V^{S}=T\cdot V^{S}.
+\]
+Worker and weld have the \emph{same} content power $(-)^{S}$ (directions $S$); they differ
+\emph{only} in the $\Sigma$-aggregation index, $T^{S}$ (all branch maps) for the weld versus
+$T\cong\const(T)$ (constant branch maps) for the worker. Hence $\bar F_A$ is a
+sub-prafunctor of $\bar F_B$, with $\bar F_A\cong\bar F_B$ \emph{iff} $|S|=1$ or $|T|=1$, and
+a \emph{proper} inclusion exactly when $|S|\ge 2$ and $|T|\ge 2$.
+\end{theorem}
+
+\begin{proof}
+$\bar F_B=\sum_{g\in T^{S}}V^{S}$ is Theorem~\ref{thm:weld-pra}; its $\Sigma$-index is the set
+of $B$-positions modulo the left $\Store{S}$-collapse, namely $T^{S}$ (the $S$-head is killed
+by indiscreteness), and the content exponent is the surviving direction $S$ (the
+$T$-direction is killed by the right $\Store{T}$-collapse). By Proposition~\ref{prop:sigma},
+$A\cong B'$ is $B$ restricted on positions to $\const(T)\subseteq T^{S}$ with directions
+unchanged; the same recipe restricts the $\Sigma$-index to $\const(T)$ and leaves the content
+power $(-)^{S}$ untouched, giving $\bar F_A(V)=\sum_{t\in T}V^{S}=T\cdot V^{S}$. Equality of
+the two functors for all $V$ is equality of polynomials $T^{S}\yon^{S}$ and $T\yon^{S}$, i.e.\
+$|T^{S}|=|T|$, i.e.\ $m^{n}=m$ (with $n=|S|$, $m=|T|\ge 1$), i.e.\ $n=1$ or $m=1$. Otherwise
+$T\subsetneq T^{S}$ and the inclusion $\bar F_A\hookrightarrow\bar F_B$ is proper.
+\end{proof}
+
+\begin{remark}[what this corrects]\label{rem:correct}
+The content \emph{exponents agree} --- both are $(-)^{S}$. An earlier, superseded argument
+read $A$ \emph{without} the right $\Store{T}$-coaction and so reported content exponent $S$
+for the weld against $S\times T$ for the worker, concluding a mismatch already at $|S|=1$. But
+at $|S|=1$ one has $T^{S}=T$ and $B=\yon\lhd\Store{T}=\Store{T}=\Store{(1\times T)}=A$ on the
+nose: worker $=$ weld there, so the mismatch claim was an artefact of the inconsistent reading.
+With the consistent $(\Store{T},\Store{S})$-reading the $T$-directions of $A$ collapse into the
+exponent $S$, and the true separation is in the $\Sigma$-index, $T$ versus $T^{S}$, nonzero
+exactly where non-constant branch maps exist: $|S|\ge 2$ and $|T|\ge 2$.
+\end{remark}
+
+\subsection*{What the retract forgets}
+The states-entanglement discipline comes with a retraction $r\colon B\to A$,
+$r_1(s,g)=(s,g(s))$ (self-evaluation), splitting $\sigma$; the idempotent $e=\sigma\circ r$
+has $e(s,g)=(s,\const_{g(s)})$.
+
+\begin{theorem}[the retract's keep/discard]\label{thm:retract}
+The idempotent $e\colon S\times T^{S}\to S\times T^{S}$ has image $S\times\const(T)\cong
+S\times T$ (the worker positions). For each current input $s$, $e$ keeps the value
+$g(s)\in T$ and discards the restriction $g|_{S\setminus\{s\}}\in T^{S\setminus\{s\}}$, a
+fibre of size $|T|^{|S|-1}$. Concretely the fibre of $e$ over $(s,\const_t)$ is
+$\{g:g(s)=t\}\cong T^{S\setminus\{s\}}$.
+\end{theorem}
+
+\begin{proof}
+$e\circ e=e$ since $\const_{g(s)}$ evaluated at $s$ is $g(s)$; the image is the constant
+slice. Two maps $g,g'$ satisfy $e(s,g)=e(s,g')$ iff $g(s)=g'(s)$; fixing $g(s)=t$ leaves
+$S\setminus\{s\}$ free, so the fibre is $T^{S\setminus\{s\}}$. Idempotency, image, and all
+fibre sizes machine-checked at the five shapes above.
+\end{proof}
+
+\begin{remark}[the $\Sigma$-tail, stated honestly]\label{rem:tail}
+The weld's $\Sigma$-aggregation index is the \emph{full} branch-map set
+$T^{S}=\const(T)\sqcup\mathrm{NC}$, with $|\const(T)|=m$ and $|\mathrm{NC}|=m^{n}-m$
+(non-constant maps). It is \emph{not} correct to say ``$T^{S}=$ the non-constant maps''
+(a cardinality contradiction: $m^{n}\ne m^{n}-m$), nor that the retract forgets exactly the
+non-constant maps: per input $s$ the retract forgets the off-diagonal fibre
+$T^{S\setminus\{s\}}$ of size $m^{n-1}$, which is neither $\mathrm{NC}$ ($m^{n}-m$) nor $T^{S}$
+($m^{n}$). At $(|S|,|T|)=(2,3)$ these are $3$ versus $6$ versus $9$, all distinct. What is
+correct: the weld's $\Sigma$-tail \emph{is} the full branch-map set $T^{S}$, and the retract
+realises its projection onto the worker's constant slice $\const(T)\cong T$ by ``evaluate at
+the current input, then make constant.''
+\end{remark}
+
+\begin{remark}[no reversal of adjointness]\label{rem:no-reversal}
+The superseded draft worried that the retract discards ``exponential, hence
+right-adjoint-flavoured'' data $T^{S}$ while the SGF factorization discards a coproduct.
+There is no paradox. $T^{S}$ appears as the \emph{indexing set} of the left-adjoint coproduct
+$\Sigma_{T^{S}}\dashv\Delta_{T^{S}}$, which is a left adjoint for any index set, exponential or
+not. The genuinely right-adjoint (connected-limit) content $(-)^{S}$ is \emph{kept} in the
+$F/1$ factor, exactly as \cite{SGF} predicts, and is shared by worker and weld.
+\end{remark}
+
+\subsection*{Resolution of the former Conjecture~5.1}
+The superseded 2026-09-20 draft conjectured that ``a worker is a parametric right adjoint /
+bicomodule, and the retract kernel is the aggregation tail.'' We can now decide it precisely.
+
+\begin{theorem}[decision of the former conjecture]\label{thm:decision}
+Let $S,T$ be nonempty.
+\begin{enumerate}
+\item[\textup{(1)}] \textbf{(existence --- true, peer-reviewed.)} The weld
+$B=\Store{S}\lhd\Store{T}$ is a bicomodule: the regular $(\Store{T},\Store{S})$-bicomodule
+(Theorem~\ref{thm:weld-regular}), representing the prafunctor $\bar F_B(V)=(T\times V)^{S}$
+(Theorem~\ref{thm:weld-pra}).
+\item[\textup{(2)}] \textbf{(identification --- corrected.)} The worker $A$, read as the
+$(\Store{T},\Store{S})$-bicomodule $\sigma(A)=B'\subseteq B$, is \emph{not} the full
+weld-prafunctor but its \emph{constant-branch sub-bicomodule}. Worker and weld share the
+right-adjoint content power $(-)^{S}$ and differ only in the $\Sigma$-index ($T$ versus
+$T^{S}$). The inclusion is proper exactly on $|S|\ge 2\wedge|T|\ge 2$ (witness $(2,2)$ at
+$V=2$: $\bar F_A=8$, $\bar F_B=16$); worker $=$ weld on the nose when $|S|=1$ or $|T|=1$.
+\item[\textup{(3)}] \textbf{(tail --- true.)} The weld's $\Sigma$-aggregation tail is the
+coproduct over the branch-map set $T^{S}=\Hom(S,T)$; the retract projects this index onto the
+worker's constant slice (Remark~\ref{rem:tail}).
+\end{enumerate}
+In particular the former conjecture holds in the corrected form: \emph{the worker is a
+parametric right adjoint --- the constant-branch sub-bicomodule of the weld --- not the whole
+weld-prafunctor.}
+\end{theorem}
+
+\begin{remark}[trust]\label{rem:trust-decision}
+Clause~(1) (Theorems~\ref{thm:weld-regular}, \ref{thm:weld-pra}) is \emph{peer-reviewed}
+(Rick). The worker-as-constant-branch-slice content of clauses~(2),~(3)
+(Definition~\ref{def:Bprime}, Lemma~\ref{lem:subbicomod},
+Propositions~\ref{prop:sigma}, Theorems~\ref{thm:separation}, \ref{thm:retract}) is
+\emph{proved} and machine-checked at the five shapes
+$(|S|,|T|)\in\{(2,2),(2,3),(3,2),(1,2),(2,1)\}$; the full coaction-by-coaction identification
+of the two bicomodule structures of Proposition~\ref{prop:sigma} for general $S,T$ is not
+written out here, as the comparison only uses $A\cong B'$.
+\end{remark}
+
+\section{What this buys the program}\label{sec:conc}
+
+The weld now has a precise home in $\Poly$: it \emph{is} a data-migration prafunctor
+$\Store{T}\text{-}\Set\to\Store{S}\text{-}\Set$, $X\mapsto(T\times X)^{S}$ --- ``read the
+whole input state $S$; return, for each input, an output token in $T$ and a value in $X$,''
+with the branch-map choice aggregated over $T^{S}$ by $\Sigma$. This places the \emph{state}
+axis of the compositional-correctness program inside the very framed bicategory $\Cathash$
+that already houses the directed (retrofunctor) axis.
+
+But the identification ``worker $=$ parametric right adjoint content'' is \emph{false} on
+$|S|,|T|\ge 2$: state-entanglement (the worker $A$) and data-aggregation (the weld's
+$\Sigma$-tail) are genuinely different collapses of the same content power $(-)^{S}$. The
+worker keeps a branch choice per output token $t\in T$; the weld keeps a branch choice per
+\emph{function} $g\in T^{S}$. Keeping the two distinct is a semantic requirement of
+agent-orchestration, not a bug --- and the exact locus where it matters is $|S|,|T|\ge 2$.
+That is the honest, sharpened dividend of running the SGF correspondence on this one
+bicomodule.
+
+\begin{thebibliography}{9}
+
+\bibitem{AhmanUustalu}
+D.~Ahman and T.~Uustalu,
+\emph{Directed containers as categories},
+in \emph{Proc.\ MSFP 2016}, EPTCS 207, 2016, pp.~89--98.
+arXiv:1604.01187.
+
+\bibitem{LSS}
+O.~Lynch, B.~T.~Shapiro and D.~I.~Spivak,
+\emph{All concepts are $\mathbf{Cat}^{\sharp}$},
+arXiv:2305.02571, 2023.
+
+\bibitem{NiuSpivak}
+N.~Niu and D.~I.~Spivak,
+\emph{Polynomial Functors: A Mathematical Theory of Interaction},
+arXiv:2312.00990, 2023.
+
+\bibitem{SGF}
+D.~I.~Spivak, R.~Garner and A.~Fairbanks,
+\emph{Functorial aggregation},
+J.\ Pure Appl.\ Algebra \textbf{229} (2025), no.~2, art.~107883.
+arXiv:2111.10968.
+
+\bibitem{workersProof}
+MacBeth,
+\emph{The worker/harness weld is the regular bicomodule} and
+\emph{Worker vs.\ weld content: the $\Sigma$-index separation},
+Kodamai internal proof notes, 2026-10-16 and 2026-10-18.
+Prior art: J.~Braithwaite, J.~Hedges and Z.~Mihejevs (ACT 2026), graded
+$\lhd$-composition of store comonads.
+
+\end{thebibliography}
+
+\end{document}
