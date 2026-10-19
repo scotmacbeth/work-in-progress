@@ -47,7 +47,7 @@
 \title{\textbf{The worker is the constant-branch slice of the weld}\\[3pt]
   \large A bicomodule comparison of state-entanglement and data-aggregation}
 \author{MacBeth\\[-2pt]\small Kodamai}
-\date{18 October 2026}
+\date{19 October 2026}
 
 \begin{document}
 \maketitle
@@ -55,12 +55,13 @@
 \begin{center}
 \fbox{\begin{minipage}{0.93\textwidth}
 \small
-\textbf{Author:} MacBeth (Kodamai).\quad\textbf{Date:} 2026-10-18.\\
+\textbf{Author:} MacBeth (Kodamai).\quad\textbf{Date:} 2026-10-19.\\
 \textbf{Prepared for} Rick (referee); \textbf{CC} Robin Langer.\quad
 \textbf{Content commit:} \texttt{\contentcommit}.\\
-\textbf{Status.} Round-2 referee response; supersedes WIP \texttt{585de70}. Registry node
-\texttt{weld-is-regular-bicomodule}: root \textbf{[proved]} (clause-(1) core peer-reviewed);
-children \texttt{clause2}, \texttt{clause3} re-promoted \textbf{[proved]} on this rework.
+\textbf{Status.} Round-3 referee response; supersedes the round-2 content \texttt{a452538}.
+Registry node \texttt{weld-is-regular-bicomodule}: root \textbf{[proved]} (clause-(1) core
+peer-reviewed); \texttt{clause3} \textbf{[peer-reviewed]} (round-3 endorsement), \texttt{clause2}
+\textbf{[peer-reviewed]} on delivery of the round-3 \textsc{must}~M1 fix carried by this revision.
 Self-verification of the retract claim (M1): \texttt{scratch/write-2026-10-18-M1-selfcheck.py};
 machine-checked in \texttt{lean/2026-10-18-retract-bicomodule-map.lean} (axioms
 \texttt{[propext]}). Source: Spivak--Garner--Fairbanks, \emph{Functorial Aggregation},
@@ -132,8 +133,11 @@ the worker $A$ is a priori a $0$-cell of $\Cat$ (a comonoid, a category), while 
 content is a $1$-cell (a bicomodule $\St T\to\St S$). One cannot ask whether a category
 ``equals'' the content of a bicomodule until one has read the category as a bicomodule of
 the same variance. Until that reading is fixed, any comparison of exponents is comparing
-objects at different levels --- and indeed the naive comparison gives the wrong locus,
-declaring worker $\ne$ content already at $|S|=1$, where in fact $B=A$ on the nose.
+objects at different levels. A second, subtler error compounds this one: inferring from the
+carrier coincidence $B=A$ at $|S|=1$ that the worker must there be the content factor. Equal
+carriers do not entail equal content factors --- at $(|S|,|T|)=(1,m)$ with $m\ge2$ the
+carriers coincide, yet the worker is \emph{not} the content factor --- so the coincidence
+$B=A$ settles nothing about content.
 
 \paragraph{The result.}
 We supply the missing reading and settle (2) and (3) together. The worker has a canonical
@@ -175,8 +179,10 @@ is a base-pointed variant $r_{s_0}$.
 \paragraph{The method.}
 The one idea is Definition~\ref{def:slice}: inside the weld's position set $S\times T^S$,
 the positions with \emph{constant} branch map form a sub-polynomial whose carrier is
-exactly $A$, and the weld's two coactions preserve constancy because they never touch the
-branch-map coordinate. Everything else is bookkeeping on the peer-reviewed formula
+exactly $A$, and this slice is coaction-closed because it is \emph{$S$-saturated}
+(Lemma~\ref{lem:subbicomod}(b)): $\lambda$ moves the input over all of $S$ while leaving the
+branch map untouched, so a set closed under that motion and built from constant branch maps
+stays inside the constant slice. Everything else is bookkeeping on the peer-reviewed formula
 $\bar F_B(V)=(T\times V)^S$: restrict its coproduct index from $T^S$ to $\const(T)$
 (Section~\ref{sec:compare}), and read off what the worker's retract keeps and discards
 (Section~\ref{sec:retract}).
@@ -447,25 +453,30 @@ an isomorphism of $(\St T,\St S)$-bicomodules $\pi_!A\xrightarrow{\ \sim\ }B'$.
 Cobase change produces a genuine $(\St T,\St S)$-bicomodule on the carrier $A$ with no
 reference to $B$, so the comparison is not circular: the left coaction is
 $A\xrightarrow{\delta_A}A\comp A\xrightarrow{\pi_S\comp A}\St S\comp A$ and the right is
-$A\xrightarrow{\delta_A}A\comp A\xrightarrow{A\comp\pi_T}A\comp\St T$. On positions
-$\sigma_1$ is the bijection $S\times T\cong S\times\const(T)$ onto the $B'$-positions and
-$\bk\sigma=\mathrm{id}$ matches directions. The pushed left coaction
-$(\pi_S\comp A)\circ\delta_A$ replicates the input over $S$ while fixing the pair $(s,t)$,
-the same shape as $\lambda|_{B'}$ of Lemma~\ref{lem:subbicomod}; the pushed right coaction
-reorganizes the output store while fixing the pair, the same shape as $\rho|_{B'}$ --- the
-two structures agree (Remark~\ref{rem:cobase}). A carrier bijection with
-$\bk\sigma=\mathrm{id}$ intertwining both coactions is an isomorphism onto its image $B'$.
+$A\xrightarrow{\delta_A}A\comp A\xrightarrow{A\comp\pi_T}A\comp\St T$. The two comonoid
+projections, as cofunctors, have direction parts $\bk{\pi_S}(a)=(a,t)$ and
+$\bk{\pi_T}(t')=(s,t')$ (a direction of the codomain is carried back to one of the domain,
+keeping the untouched coordinate fixed). Computing $\lambda_A=(\pi_S\comp A)\,\delta_A$ and
+$\rho_A=(A\comp\pi_T)\,\delta_A$ on positions and directions gives, in closed form for
+\emph{all} $S,T$,
+\[
+  \begin{aligned}
+    \lambda_A(s,t)&=\bigl(s,\ a\mapsto(a,t)\bigr), & \bk{\lambda_A}\bigl(a,(a',t')\bigr)&=(a',t'),\\
+    \rho_A(s,t)&=\bigl((s,t),\ (a,t')\mapsto t'\bigr), & \bk{\rho_A}\bigl((a,t'),t''\bigr)&=(a,t'').
+  \end{aligned}
+\]
+Now apply $\sigma$. On positions $\sigma_1$ is the bijection $S\times T\cong S\times\const(T)$
+onto the $B'$-positions and $\bk\sigma=\mathrm{id}_{S\times T}$ matches directions, so pushing
+$\lambda_A,\rho_A$ across $\sigma$ reproduces exactly the restricted weld coactions of
+Lemma~\ref{lem:subbicomod} at $g=\const_t$: indeed $\lambda_B(s,\const_t)=\bigl(s,\ a\mapsto
+(a,\const_t)\bigr)=\bigl(s,\ a\mapsto\sigma_1(a,t)\bigr)$, and $\rho_B$ fixes the whole
+position just as $\rho_A$ does. Hence $\sigma$ intertwines both coactions for all $S,T$, and a
+carrier bijection with $\bk\sigma=\mathrm{id}$ intertwining $\lambda,\rho$ is an isomorphism
+of bicomodules onto its image $B'$. (The five bicomodule laws for $\pi_!A$ and both
+equivariance squares of $\sigma$ were additionally machine-checked at all nine shapes
+$n,m\in\{1,2,3\}$, and $\bar F_A(V)=T\cdot V^S$ recomputed from $A$'s own cobase-change
+structure, independently of $\sigma$.)
 \end{proof}
-
-\begin{remark}[honest scope of Proposition~\ref{prop:sigma}]\label{rem:cobase}
-The cobase-change \emph{structure} $\pi_!A$ is what makes $A$'s reading canonical and
-non-circular; the identification $\pi_!A\cong B'$ is verified on carriers and positions and
-on the coaction shapes used below, and was machine-checked at
-$(|S|,|T|)\in\{(2,2),(2,3),(3,2),(1,2),(2,1)\}$. A fully general coaction-by-coaction
-identity of $\pi_!A$ with $B'$ for arbitrary $S,T$ is routine but not written out here; the
-comparison of Section~\ref{sec:compare} uses only the carrier isomorphism $A\cong B'$ and
-the restricted coactions, both of which are in hand.
-\end{remark}
 
 \section{The comparison: a coproduct-index separation}\label{sec:compare}
 
@@ -507,8 +518,8 @@ $T$-directions of $A$ collapse into the exponent $S$, not $S\times T$. The consi
 separation is the coproduct index $T$ versus $T^S$, nonzero precisely where non-constant
 branch maps exist, i.e.\ on $|S|\ge2\wedge|T|\ge2$. In particular at $|S|=1$ one has
 $T^S=T$, so $\const(T)=T^S$ and $\bar F_A=\bar F_B=T\cdot V$; moreover the carriers coincide,
-$B=\St S\comp\St T=\y\comp\St T=\St T=\St(1\times T)=A$. There the worker \emph{is} the
-content, on the nose, and no negative verdict may be claimed.
+$B=\St S\comp\St T=\y\comp\St T=\St T=\St(1\times T)=A$. There the worker is the whole
+weld; it is the content factor only if also $|T|=1$.
 \end{remark}
 
 \noindent\textbf{Verdict for clause (2).} The original conjecture asks whether the worker is
@@ -532,8 +543,8 @@ the weld's $T^S$).
 \begin{example}
 At $(|S|,|T|)=(2,2)$, $V=2$: $\bar F_A=2\cdot2^2=8$ and $\bar F_B=(2\cdot2)^2=16$ (proper).
 At $(1,2)$: $\bar F_A=\bar F_B=4$; at $(1,3)$: $\bar F_A=\bar F_B=6$ (equal). These are
-exactly the shapes where the criterion ``$|T|\ge2$'' and the corrected criterion
-``$|S|\ge2\wedge|T|\ge2$'' disagree.
+exactly the shapes where the criterion for worker $\ne$ content factor (``$|T|\ge2$'') and
+the criterion for worker $\ne$ weld (``$|S|\ge2\wedge|T|\ge2$'') disagree.
 \end{example}
 
 \section{The retract: what the worker forgets}\label{sec:retract}
@@ -601,9 +612,12 @@ For any base point $s_0\in S$, $r_{s_0}$ is a morphism of $(\St T,\St S)$-bicomo
 $B\to B'$ \textup{(}it satisfies both the $\lambda$- and $\rho$-equivariance squares\textup{)},
 is idempotent, has image the constant slice $B'=\sigma(A)$, and restricts to the identity on
 $B'$ --- a genuine bicomodule retraction. Its fibre over $(s,\const_t)$ is
-$\{g:g(s_0)=t\}\cong T^{S\setminus\{s_0\}}$, of size $m^{n-1}$: the \emph{same count} as $e$,
-and the \emph{same} represented prafunctor $\bar F$, on which $e$ and $r_{s_0}$ agree. It is
-honestly \emph{non-canonical}: it depends on the choice of $s_0$.
+$\{g:g(s_0)=t\}\cong T^{S\setminus\{s_0\}}$, of size $m^{n-1}$: the \emph{same count} as $e$.
+Being a bicomodule map, $r_{s_0}$ represents a genuine endomorphism of $\bar F$; the set-level
+$e$ does not (Proposition~\ref{prop:efail}), but $e$ agrees with $r_{s_0}$ on the fibre of
+$\bar F$ at the base object $s_0$, the point at which the collapse $\St S\text{-}\Set\simeq\Set$
+is evaluated. The retraction $r_{s_0}$ is honestly \emph{non-canonical}: it depends on the
+choice of $s_0$.
 \end{theorem}
 
 \begin{proof}
@@ -618,7 +632,8 @@ $(2,2),(2,3),(3,2),(1,2),(2,1)$ (and base-point independence at $s_0\in\{0,1\}$ 
 
 \noindent So the bicomodule-level statement ``the worker is the retract of the weld'' is true
 with $r_{s_0}$ in place of $e$; the set-level combinatorics (Theorem~\ref{thm:retract}) are
-unaffected, and $e,r_{s_0}$ induce the same map on $\bar F$.
+unaffected, and $e$ agrees with $r_{s_0}$ on the $\bar F$-fibre at $s_0$ (though only
+$r_{s_0}$, being a bicomodule map, represents an endomorphism of $\bar F$).
 
 \paragraph{Re-decision of clause (3).}
 As first stated --- ``the discarded data is precisely the non-constant branch maps, and that
@@ -684,9 +699,10 @@ must keep them apart.
 
 \section{Response to the referee}\label{sec:response}
 
-This revision answers the referee's second-round report. The core finding --- that $B'$ is
-coaction-closed and is the worker's reading --- was endorsed; two \textsc{must} items and
-three \textsc{should}s are addressed below. We record where each lands.
+This revision answers the referee's second- and third-round reports. The core finding --- that
+$B'$ is coaction-closed and is the worker's reading --- was endorsed; the second round's two
+\textsc{must} items and three \textsc{should}s are addressed below, and the third round's
+residual items are folded into the same text. We record where each lands.
 
 \begin{itemize}[leftmargin=1.5em]
 \item \textbf{M1} (the retract $e$ is not a bicomodule map): Section~\ref{sec:retract}.
@@ -715,14 +731,32 @@ three \textsc{should}s are addressed below. We record where each lands.
 \item \textbf{S2} ($\sigma$ circular): Proposition~\ref{prop:sigma} now defines the worker's
   structure by \emph{cobase change} $\pi_!A$ of the regular $(A,A)$-bicomodule along
   $\pi_S,\pi_T$ --- a structure built without reference to $B$ --- and exhibits $\sigma$ as
-  the carrier isomorphism $\pi_!A\cong B'$. Remark~\ref{rem:cobase} states honestly the one
-  residual item (the general coaction-by-coaction identity, checked at five shapes).
+  the carrier isomorphism $\pi_!A\cong B'$. The explicit intrinsic coactions
+  $\lambda_A,\rho_A$ are now displayed in the proof of Proposition~\ref{prop:sigma}, so the
+  identity $\pi_!A\cong B'$ is established for all $S,T$ (and machine-checked at the nine
+  shapes $n,m\in\{1,2,3\}$); no residual coaction-by-coaction item remains.
 \item \textbf{S3} (Lemma~3 proof text): the proof of Lemma~\ref{lem:subbicomod} now reads
   ``$\lambda$ moves the input $s$ over $S$ fixing $g$; $\rho$ fixes the whole position'', with
   no spurious $\psi$ in $\delta_{\St T}$.
 \item \textbf{N1/N2}: the discarded fibre is called \emph{non-trivial} (size $m^{n-1}>1$),
   not nonempty; the redundant third refutation of clause~(3) has been removed.
 \end{itemize}
+
+\noindent The third-round report (a near-endorsement: clause~(3) accepted unconditionally,
+clause~(2) accepted once the stray conflation was cleared) raised one \textsc{must} and three
+minor items, all textual. Its \textsc{must}~M1 flagged three sentences --- the end of the
+``what this corrects'' remark, one sentence of the Introduction, and the last sentence of the
+Example of Section~\ref{sec:compare} --- that still ran together ``worker $=$ whole weld''
+($A=B$) and ``worker $=$ content factor'' ($\bar F_A=(-)^S$); all three now state the correct
+reading, labelling which equality each locus criterion governs ($|T|=1$ for the content
+factor, $|S|=1\vee|T|=1$ for the whole weld). Its \textsc{should}~S1 asked that the one
+remaining hedge in Proposition~\ref{prop:sigma}'s identification be closed: the explicit
+intrinsic coactions $\lambda_A,\rho_A$ are now displayed in that proof and $\pi_!A\cong B'$ is
+established for all $S,T$. Its two nits are addressed where they arise: the claim that $e$ and
+$r_{s_0}$ ``induce the same map on $\bar F$'' is restricted to the $\bar F$-fibre at the base
+object $s_0$ (only $r_{s_0}$, a bicomodule map, represents an endomorphism of $\bar F$), and
+the method paragraph now attributes the slice's closure to $S$-saturation
+(Lemma~\ref{lem:subbicomod}(b)) rather than to the retired constancy-preservation phrasing.
 
 \noindent Carried over from the first round and unchanged: $B=\St S\comp\St T$ is the
 \emph{unit-composite} bicomodule (Lemma~\ref{lem:unitcomp}), not a regular one; the reference
@@ -734,9 +768,9 @@ diagonal, the costate comonoids being $\St S,\St T$.
 Lemma~\ref{lem:unitcomp} is standard; the contribution is Section~\ref{sec:slice} (the
 worker is the constant-branch sub-bicomodule, with carrier exactly $A$, canonical by the
 diagonal) together with the corrected clause-(2)/(3) analysis built on the peer-reviewed
-Theorem~\ref{thm:prafun}. The residual item of Remark~\ref{rem:cobase} (the general
-coaction-by-coaction identity $\pi_!A\cong B'$) is the only open bookkeeping and is used in
-no verdict. All cardinality and equivariance witnesses quoted above were machine-checked.
+Theorem~\ref{thm:prafun}. The intrinsic identification $\pi_!A\cong B'$
+(Proposition~\ref{prop:sigma}) is now proved for all $S,T$; all cardinality and equivariance
+witnesses quoted above were machine-checked.
 
 \begin{thebibliography}{9}
 \bibitem{SGF}
