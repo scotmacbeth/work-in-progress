@@ -22,145 +22,155 @@
 \newcommand{\Poly}{\mathbf{Poly}}
 \newcommand{\Cat}{\mathbf{Cat}}
 \newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Rel}{\mathbf{Rel}}
+\newcommand{\Norm}{\mathbf{Norm}}
 \newcommand{\Comod}{\mathrm{Comod}}
 \newcommand{\PRA}{\mathrm{PRA}}
 \newcommand{\Kl}{\mathrm{Kl}}
 \newcommand{\Kar}{\mathrm{Kar}}
 \newcommand{\End}{\mathrm{End}}
+\newcommand{\Img}{\mathrm{Im}\,}
 \renewcommand{\lhd}{\triangleleft}
 \newcommand{\Store}[1]{\Delta #1}
 \newcommand{\op}{^{\mathrm{op}}}
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\comp}{\mathbin{;}}
+\newcommand{\sh}{\mathbin{\#}}
 \newcommand{\yon}{\mathsf{y}}
+\newcommand{\LA}{\textsf{(LA)}}
+\newcommand{\RA}{\textsf{(RA}\textsubscript{\#}\textsf{)}}
 \DeclareMathOperator{\Hom}{Hom}
 
-\title[What the weld's non-associativity is NOT]
-{What the weld's non-associativity is \emph{not}:\\
-a negative triangulation across three obstruction theories,\\
-and the handedness invariant that survives}
+\title[What the weld's non-associativity is, and is not]
+{What the weld's non-associativity is --- and is \emph{not}:\\
+a triangulation across four obstruction theories,\\
+and the idempotent normalizer that receives it}
 
 \author{MacBeth}
 \address{Kodamai}
-\date{19 October 2026}
+\date{19--20 October 2026}
 
 \begin{document}
 
 \begin{abstract}
-The worker/harness \emph{weld} --- the Zappa--Sz\'ep (orchestration) composition of
-directed containers, the program's central tool for \emph{when} compositions exist --- is
-non-associative in general. We ask which categorical invariant measures that
-non-associativity, and we answer by \emph{negative triangulation}: three standard
-``obstruction homes'' are probed by three \emph{named} candidate maps. One \emph{exists}
-(the weld is a regular bicomodule, hence a parametric right adjoint, after
-Spivak--Garner--Fairbanks); two are \emph{refuted} --- the renormalization idempotent
-$k=n\comp m$ of Di~Lavore--Rom\'an--Sz\'ekely is \emph{not} a $2$-cocycle (its receptacle
-does not exist: the cocycle \emph{condition is} associativity) and \emph{not} a
-Karoubi/Cauchy splitting obstruction (its receptacle is \emph{vacuous}: $k$ is already a
-split idempotent, and idempotent completion preserves associativity). Two independent
-sources confirm the Karoubi vacuity is generic, not weld-specific. The invariant that
-survives is neither cohomological nor splitting-theoretic: it is \emph{one-sided
-absorptivity} (handedness) --- $k$ is left- but not right-absorptive. The cross-theme
-punchline is that two unrelated obstruction theories are both \emph{orthogonal} to
-associativity for the \emph{same} fact read twice. A dedicated literature sweep found no
-prior categorical home for handedness-of-a-single-map; we state this honestly as evidence,
-not as a theorem, and flag lax distributive laws by inequality as the one live fourth lead.
+The worker/harness \emph{weld} --- the Zappa--Sz\'ep (orchestration) composition of directed
+containers, the program's central tool for \emph{when} compositions exist --- is non-associative in
+general. We ask which categorical invariant measures that non-associativity, and answer in two
+movements. First, by \emph{negative triangulation}: four \emph{named} candidate maps are refuted,
+each in a structurally distinct way. The renormalization idempotent $k=n\comp m$ of
+Di~Lavore--Rom\'an--Sz\'ekely is not a $2$-cocycle (no receptacle: the cocycle condition \emph{is}
+associativity), not a Karoubi/Cauchy splitting obstruction (vacuous receptacle: $k$ already splits),
+and not a lax distributive law of Schoen/Tholen (wrong locus: laxness is a fixed-direction inequality
+on a coherence cell, whereas the associator defect compares two \emph{order-incomparable} normalized
+distributions). Second, and positively: the surviving invariant is received \emph{exactly} by an
+idempotent \emph{normalizer} $K$ --- a hom-operator obeying a left- but not right-absorption law.
+Writing $f\sh g:=K(f\cdot g)$, associativity of $\sh$ is equivalent to $K$ being two-sided absorbing,
+so the handedness obstruction is genuine and non-vacuous; and it is provably \emph{operator-level},
+never \emph{element-level}, which refutes the fourth named map --- the near-semiring's
+one-sided-absorbing \emph{zero}. The normalized-kernel magmoid $\Norm$ is an instance, and a
+machine-checked finite model certifies the construction axiom-free. The originality of the surviving
+invariant is reported honestly, as the current state of a literature sweep, not as a theorem.
 \end{abstract}
 
 \maketitle
 
-\footnotetext{MacBeth (scotmacbeth) $\cdot$ 2026-10-19 $\cdot$ work-in-progress commit: \texttt{56310ea}}
+\footnotetext{MacBeth (scotmacbeth) $\cdot$ 2026-10-19/20 $\cdot$ work-in-progress commit: \texttt{56310ea}}
 
 \section{Setup: the weld and its non-associativity}
 
-Throughout, $\Poly$ is the category of polynomial functors on $\Set$ with the composition
-monoidal product $\lhd$; a comonoid for $\lhd$ is a \emph{polynomial comonad}, equivalently
-a small category. For a set $S$ we write $\Store{S}=S\yon{}^{S}$ (notation $\yon{}$ for the
-representable) for the \emph{store} comonad on $S$, the directed container of the full
-state space on $S$. All composites are written in diagrammatic order: $f\comp g$ means
-``$f$ then $g$'', and vertical composition of natural transformations is likewise
-diagrammatic.
+Throughout, $\Poly$ is the category of polynomial functors on $\Set$ with the composition monoidal
+product $\lhd$; a comonoid for $\lhd$ is a \emph{polynomial comonad}, equivalently a small category.
+For a set $S$ we write $\Store{S}=S\yon{}^{S}$ (notation $\yon{}$ for the representable) for the
+\emph{store} comonad on $S$, the directed container of the full state space on $S$. All composites
+are written in diagrammatic order: $f\comp g$ (equivalently $f\cdot g$) means ``$f$ then $g$'', and
+vertical composition of natural transformations is likewise diagrammatic.
 
 \begin{definition}[The weld]
-Given two directed containers presented by store comonads $\Store{S}$ (the \emph{worker}
-state) and $\Store{T}$ (the \emph{harness} state), their \emph{weld} is the orchestration
-composite
+Given two directed containers presented by store comonads $\Store{S}$ (the \emph{worker} state) and
+$\Store{T}$ (the \emph{harness} state), their \emph{weld} is the orchestration composite
 \[
   B \;=\; \Store{S}\lhd\Store{T},
 \]
-the Zappa--Sz\'ep product that interleaves worker and harness transitions. The weld is the
-program's canonical answer to ``when does a composite of two stateful directed containers
-exist?'': the Zappa--Sz\'ep datum is exactly the mutual-action data that makes the
-interleaving well defined.
+the Zappa--Sz\'ep product that interleaves worker and harness transitions. The weld is the program's
+canonical answer to ``when does a composite of two stateful directed containers exist?'': the
+Zappa--Sz\'ep datum is exactly the mutual-action data that makes the interleaving well defined.
 \end{definition}
 
-The weld is \emph{not} associative in general. This is not a defect of our encoding: it is
+The weld is \emph{not} associative in general. This is not a defect of our encoding; it is
 intrinsic. The sharpest extant witness is probabilistic. Di~Lavore, Rom\'an and Sz\'ekely
 (``Normalized Probabilistic Semantics is Not Associative'', arXiv:2510.01131) show that
-\emph{normalization} of substochastic kernels is a \emph{sesquilaw}, not a distributive
-law, and that the induced Kleisli-style composition of normalized kernels is a genuine
-\emph{magmoid} --- a category minus associativity.
+\emph{normalization} of substochastic kernels is a \emph{sesquilaw}, not a distributive law, and that
+the induced Kleisli-style composition of normalized kernels is a genuine \emph{magmoid} --- a
+category minus associativity.
 
 \begin{definition}[Sesquilaw and the renormalization idempotent, after arXiv:2510.01131]
-A \emph{sesquilaw} $(S,T,m,n)$ consists of a distributive law $m\colon ST\Rightarrow TS$
-together with an \emph{almost-distributive} law $n\colon TS\Rightarrow ST$ satisfying all
-four distributive-law axioms \emph{except} multiplicativity, which holds only up to the
-natural transformation
+\label{def:sesquilaw}
+A \emph{sesquilaw} $(S,T,m,n)$ consists of a distributive law $m\colon ST\Rightarrow TS$ together
+with an \emph{almost-distributive} law $n\colon TS\Rightarrow ST$ satisfying all four
+distributive-law axioms \emph{except} multiplicativity, which holds only up to the natural
+transformation
 \[
   k \;=\; n\comp m \;\colon\; TS \Rightarrow TS
   \qquad\text{(the ``renormalization'' of Lemma 3.5).}
 \]
-For normalization one takes $T=D$ (distribution) and $S=M$ (maybe), so $TS=DM$ and
-$ST=MD$; then $n=(-)^{\circ}\colon DM\Rightarrow MD$ is normalization and
-$m=(-)^{\bullet}\colon MD\Rightarrow DM$ is the subdistribution inclusion. The induced
-magmoid $\mathbf{Norm}$ of normalized kernels $X\to MDY$ is a category minus associativity;
-Proposition~4.9 of loc.\ cit.\ isolates the triples that do associate.
+For normalization one takes $T=D$ (distribution) and $S=M$ (maybe), so $TS=DM$ and $ST=MD$; then
+$n=(-)^{\circ}\colon DM\Rightarrow MD$ is normalization and $m=(-)^{\bullet}\colon MD\Rightarrow DM$
+is the subdistribution inclusion. The induced magmoid $\Norm$ of normalized kernels $X\to MDY$ is a
+category minus associativity; Proposition~4.9 of loc.\ cit.\ isolates the triples that do associate.
 \end{definition}
 
 \begin{remark}
-We treat $k=n\comp m$ as a faithful, finite-dimensional stand-in for the weld's
-associativity defect. The identification is justified computationally below
-(\S\ref{sec:handedness}, reproducing arXiv:2510.01131's Prop.~4.9 purity cases exactly) and
-at the level of principle by the fact that both objects are instances of ``an idempotent
-measuring departure from a distributive law.'' The question of this note is: \emph{which
-categorical invariant is $k$ (equivalently, the weld's non-associativity)?}
+We treat $k=n\comp m$ as a faithful, finite-dimensional stand-in for the weld's associativity defect.
+The identification is justified computationally below (\S\ref{sec:instance}, reproducing
+arXiv:2510.01131's Prop.~4.9 purity cases exactly) and at the level of principle by the fact that
+both objects are instances of ``an idempotent measuring departure from a distributive law.'' The
+question of this note is: \emph{which categorical invariant is $k$ (equivalently, the weld's
+non-associativity)?}
 \end{remark}
 
 \section{The method: name the map, then decide}
 \label{sec:method}
 
-We adopt one discipline, learned the hard way across a month of cross-domain bridge-hopes
-that died on inspection.
+We adopt one discipline, learned the hard way across a month of cross-domain bridge-hopes that died
+on inspection.
 
 \begin{remark}[Naming the map buys decidability, not survival]
-A candidate obstruction home ranked highly because its \emph{vocabulary} matches
-(``cocycle'', ``splitting'', ``Yang--Baxter'') has earned nothing until a \emph{structure
-map} is exhibited between the \emph{specific} objects at hand --- not the words. ``This
-sounds like it should connect'' is a prior of roughly zero. The payoff of naming a
-candidate map is not that it survives; it is that the question becomes \emph{decidable}.
-Our record on resonance-ranked leads is $0/n$; our record on \emph{named}-map leads is: all
-decided, crisply, one way or the other.
+\label{rem:method}
+A candidate obstruction home ranked highly because its \emph{vocabulary} matches (``cocycle'',
+``splitting'', ``Yang--Baxter'') has earned nothing until a \emph{structure map} is exhibited between
+the \emph{specific} objects at hand --- not the words. ``This sounds like it should connect'' is a
+prior of roughly zero. The payoff of naming a candidate map is not that it survives; it is that the
+question becomes \emph{decidable}. Our record on resonance-ranked leads is $0/n$; our record on
+\emph{named}-map leads is: all decided, crisply, one way or the other.
 \end{remark}
 
-Accordingly we probe three obstruction theories with three named maps. Each verdict below
-is one of three kinds, and we keep them strictly separate:
+The note has two movements. In the first (\S\S\ref{sec:exists}--\ref{sec:laxdl}) we record the one
+named map that lands (the associative corner) and refute three of the four candidate obstruction
+homes. In the second (\S\S\ref{sec:home}--\ref{sec:missed}) we exhibit the structure that \emph{does}
+receive the invariant, and show that building it refutes the fourth candidate as a by-product. Each verdict is one of three epistemic kinds, kept
+strictly separate:
 \begin{itemize}
-  \item \textbf{proved} --- a registered result of the program (items (1)--(3));
+  \item \textbf{proved} --- a registered result of the program (the four verdicts and the positive
+        construction; several carry Lean-verified leaves);
   \item \textbf{evidence} --- a literature-sweep conclusion, \emph{not} a theorem (the
-        handedness-originality claim, \S\ref{sec:originality});
-  \item \textbf{open} --- an undecided lead (the fourth receptacle, \S\ref{sec:open}).
+        handedness-originality claim, \S\ref{sec:missed});
+  \item \textbf{computed} --- a corroborating but non-formalized numerical fact (so flagged in place).
 \end{itemize}
 
-\section{The three decided named maps}
-\label{sec:three}
+\bigskip
+\begin{center}\textsc{Movement I. Four homes it is not}\end{center}
 
-\subsection{(1) weld $\mapsto$ regular bicomodule --- EXISTS (proved)}
+\section{The associative corner: the weld is a regular bicomodule (EXISTS)}
+\label{sec:exists}
+
+Before the refutations, we record the one named map that \emph{does} land --- so the reader sees the
+method is not merely destructive, and so the associative regime is kept firmly separate from the
+defect we chase.
 
 \begin{theorem}[Spivak--Garner--Fairbanks, ``Functorial Aggregation'', arXiv:2111.10968,
 Prop.~3.9(5) + Thm.~4.28]
 \label{thm:sgf}
-For polynomial comonoids (equivalently small categories) $c$ and $d$, there is an
-equivalence
+For polynomial comonoids (equivalently small categories) $c$ and $d$, there is an equivalence
 \[
   \Comod(\Poly)(c,d) \;\simeq\; \PRA(c\text{-}\Set,\,d\text{-}\Set)
 \]
@@ -170,67 +180,65 @@ $c\text{-}\Set\to d\text{-}\Set$.
 
 \begin{proposition}[weld is a regular bicomodule; registry \texttt{weld-is-regular-bicomodule}, \textbf{proved}]
 \label{prop:weld-bicomodule}
-The weld $B=\Store{S}\lhd\Store{T}$ is the \emph{regular} $(\Store{T},\Store{S})$-bicomodule.
-Under Theorem~\ref{thm:sgf} it represents the prafunctor
+The weld $B=\Store{S}\lhd\Store{T}$ is the \emph{regular} $(\Store{T},\Store{S})$-bicomodule. Under
+Theorem~\ref{thm:sgf} it represents the prafunctor
 \[
   \bar F_B(V)\;=\;(T\times V)^{S}\;=\;T^{S}\cdot V^{S},
 \]
-whose slice (aggregation) factorization keeps the power $(-)^{S}$ as connected-limit
-content and aggregates over the branch-map set $T^{S}$ by a coproduct $\Sigma$.
+whose slice (aggregation) factorization keeps the power $(-)^{S}$ as connected-limit content and
+aggregates over the branch-map set $T^{S}$ by a coproduct $\Sigma$.
 \end{proposition}
 
-This is the \emph{positive} corner of the triangulation: the structure really is there. The
-result is peer-reviewed within the program (Rick's referee pass, rounds~1 and~2) and carries
-a Lean-verified leaf checking the five regular-bicomodule coaction axioms. We record it so
-that the reader sees the method is not merely destructive: when a named map exists, it is
-found and certified.
+This result is peer-reviewed within the program (Rick's referee pass, rounds~1 and~2) and carries a
+Lean-verified leaf checking the five regular-bicomodule coaction axioms.
 
 \begin{remark}[The bicomodule is associative; keep it separate from the defect]
-Crucially, the bicomodule/PRA picture of \S\ref{prop:weld-bicomodule} lives in the
-\emph{associative} regime. The weld, \emph{once its Zappa--Sz\'ep data make it well
-defined}, is a genuine comodule, and the cohomological class $[\omega]\in H^{2}$ attached to
-it (elsewhere in the program) is a \emph{splitting} obstruction of an \emph{already-
-associative} weld, not a measure of non-associativity. The non-associativity we chase here
-is the Kleisli-side sesquilaw defect --- the \emph{departure} from that associative regime.
-This separation is the hinge of the whole note.
+\label{rem:separate}
+Crucially, the bicomodule/PRA picture of Proposition~\ref{prop:weld-bicomodule} lives in the
+\emph{associative} regime. The weld, \emph{once its Zappa--Sz\'ep data make it well defined}, is a
+genuine comodule, and the cohomological class $[\omega]\in H^{2}$ attached to it (elsewhere in the
+program) is a \emph{splitting} obstruction of an \emph{already-associative} weld, not a measure of
+non-associativity. The non-associativity we chase here is the Kleisli-side sesquilaw defect --- the
+\emph{departure} from that associative regime. This separation is the hinge of the whole note.
 \end{remark}
 
-\subsection{(2) $k \mapsto 2$-cocycle --- REFUTED, no receptacle}
+\section{Refutation I: \texorpdfstring{$k$}{k} is not a 2-cocycle (no receptacle)}
+\label{sec:cocycle}
 
 \begin{claim}[registry: refuted; cf.\ \texttt{h2-weld-class-is-splitting-not-associativity}]
 \label{clm:cocycle}
-The renormalization idempotent $k=n\comp m$ is \emph{not} a $2$-cocycle. The refutation is
-not that the putative class vanishes; it is that the \emph{receptacle does not exist}.
+The renormalization idempotent $k=n\comp m$ is \emph{not} a $2$-cocycle. The refutation is not that
+the putative class vanishes; it is that the \emph{receptacle does not exist}.
 \end{claim}
 
 \begin{proof}[Why the receptacle is empty]
-A $2$-cocycle condition, in every incarnation (group cohomology, the Sweedler/Hopf cocycle,
-the obstruction cocycle of an extension), \emph{is} an associativity equation: the cocycle
-identity is precisely the statement that two bracketings of a triple agree. Thus a
-$2$-cocycle presupposes an associative multiplication whose coherence it then measures. A
-genuinely non-associative magmad has no associative multiplication to begin with, hence no
-cocycle at all --- there is nothing for a class to be a class \emph{of}. One cannot carry
-the non-associativity as a cohomology class because the apparatus that would carry it is
-\emph{defined by} associativity. (Confirmed independently by Rom\'an's magmads: associativity-
-failure is a \emph{magma} phenomenon, not a cocycle phenomenon.)
+A $2$-cocycle condition, in every incarnation (group cohomology, the Sweedler/Hopf cocycle, the
+obstruction cocycle of an extension), \emph{is} an associativity equation: the cocycle identity is
+precisely the statement that two bracketings of a triple agree. Thus a $2$-cocycle presupposes an
+associative multiplication whose coherence it then measures. A genuinely non-associative magmad has
+no associative multiplication to begin with, hence no cocycle at all --- there is nothing for a class
+to be a class \emph{of}. One cannot carry the non-associativity as a cohomology class because the
+apparatus that would carry it is \emph{defined by} associativity. (Confirmed independently by
+Rom\'an's magmads: associativity-failure is a \emph{magma} phenomenon, not a cocycle phenomenon.)
 \end{proof}
 
-This is a \emph{well-posed negative of the first kind}: the map was named, checked, and the
-home turned out to be empty.
+This is a \emph{well-posed negative of the first kind}: the map was named, checked, and the home
+turned out to be empty. Its locus is the \emph{cochain} (single-morphism) level.
 
-\subsection{(3) $k \mapsto$ Karoubi/Cauchy splitting obstruction --- REFUTED, vacuous receptacle}
+\section{Refutation II: \texorpdfstring{$k$}{k} is not a Karoubi splitting obstruction (vacuous receptacle)}
+\label{sec:karoubi}
 
 Here the receptacle \emph{exists}, and that makes the negative subtler and, we think, more
 instructive.
 
 \begin{lemma}[$k$ lives in an associative hom-set and is idempotent]
 \label{lem:k-idem}
-$n\colon DM\Rightarrow MD$ and $m\colon MD\Rightarrow DM$ are morphisms in the functor
-category $[\Set,\Set]$, whose composition (vertical composition of natural transformations)
-is strictly associative. Hence $k=n\comp m\in\End_{[\Set,\Set]}(DM)$, and ``is $k$
-idempotent?'' and ``does $k$ split?'' are both well posed. Moreover $k$ is idempotent: from
-the \emph{section identity} $m\comp n=\id_{MD}$ (a normalized distribution, included as a
-subdistribution, already has unit mass, so renormalizing is the identity),
+$n\colon DM\Rightarrow MD$ and $m\colon MD\Rightarrow DM$ are morphisms in the functor category
+$[\Set,\Set]$, whose composition (vertical composition of natural transformations) is strictly
+associative. Hence $k=n\comp m\in\End_{[\Set,\Set]}(DM)$, and ``is $k$ idempotent?'' and ``does $k$
+split?'' are both well posed. Moreover $k$ is idempotent: from the \emph{section identity}
+$m\comp n=\id_{MD}$ (a normalized distribution, included as a subdistribution, already has unit mass,
+so renormalizing is the identity),
 \[
   k\comp k \;=\; (n\comp m)\comp(n\comp m)
            \;=\; n\comp(m\comp n)\comp m
@@ -241,219 +249,489 @@ subdistribution, already has unit mass, so renormalizing is the identity),
 
 \begin{theorem}[sesquilaw $k$ is a split idempotent; registry \texttt{sesquilaw-magmoid-karoubi}, \textbf{proved}]
 \label{thm:split}
-$k=n\comp m$ is a \emph{split} idempotent. Its splitting is
+$k=n\comp m$ is a \emph{split} idempotent, split by
 \[
   DM \xrightarrow{\;n\;} MD \xrightarrow{\;m\;} DM,
   \qquad m\comp n=\id_{MD},\qquad n\comp m=k,
 \]
-with splitting object the magmad carrier $MD$ itself, retraction $n$ and section $m$.
-Consequently:
+with splitting object the magmad carrier $MD$ itself. Consequently:
 \begin{enumerate}
-  \item the Karoubi/Cauchy (idempotent) completion is a \emph{no-op} on $k$ --- $k$ already
-        lies in the image of $[\Set,\Set]\hookrightarrow\Kar([\Set,\Set])$, so there is no
-        ``missing splitting'';
-  \item there is \emph{no splitting obstruction} to carry the non-associativity: the feared
-        failure (that $k$ does not split) is empty.
+  \item the Karoubi/Cauchy (idempotent) completion is a \emph{no-op} on $k$ --- $k$ already lies in
+        the image of $[\Set,\Set]\hookrightarrow\Kar([\Set,\Set])$, so there is no ``missing
+        splitting'';
+  \item there is \emph{no splitting obstruction} to carry the non-associativity: the feared failure
+        (that $k$ does not split) is empty.
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
-A split idempotent is exactly a factorization $e=s\comp r$ with $r\comp s=\id$ through the
-image; Lemma~\ref{lem:k-idem} exhibits $r=n$, $s=m$, with $m\comp n=\id_{MD}$ and
-$n\comp m=k$. The splitting object $MD$ is already present in $[\Set,\Set]$, so idempotent
-completion adds nothing for $k$. Both consequences follow.
+A split idempotent is exactly a factorization $e=s\comp r$ with $r\comp s=\id$ through the image;
+Lemma~\ref{lem:k-idem} exhibits $r=n$, $s=m$, with $m\comp n=\id_{MD}$ and $n\comp m=k$. The
+splitting object $MD$ is already present in $[\Set,\Set]$, so idempotent completion adds nothing for
+$k$. Both consequences follow.
 \end{proof}
 
-What makes (3) decisive is not the single computation but the meta-lemma it instantiates.
+What makes this decisive is the meta-lemma it instantiates.
 
 \begin{lemma}[idempotent completion preserves associativity]
 \label{lem:meta}
 For any category $\mathcal{D}$, the Karoubi/Cauchy completion $\Kar(\mathcal{D})$ is a
-\emph{category}: its composition is associative. Idempotent completion is an idempotent
-monad on $\Cat$ landing in Cauchy-complete categories; it preserves and reflects
-associativity (Borceux I, \S6.5; nLab, ``idempotent completion'').
+\emph{category}: its composition is associative (Borceux I, \S6.5; nLab, ``idempotent completion'').
 \end{lemma}
 
 \begin{corollary}[splitting can never measure non-associativity]
 \label{cor:orthogonal}
-Splitting idempotents in an associative $\mathcal{D}$ yields only an \emph{associative}
-category. Hence no ``split some idempotents in an associative core'' construction can
-\emph{produce} a non-associative composition; dually, the failure of a composition to be
-associative can never be \emph{identified with} the failure of an idempotent to split,
-because the latter is repaired by a construction (Lemma~\ref{lem:meta}) that cannot repair
-the former. The two defects live in orthogonal parts of the categorical universe.
+Splitting idempotents in an associative $\mathcal{D}$ yields only an \emph{associative} category.
+Hence no ``split some idempotents in an associative core'' construction can \emph{produce} a
+non-associative composition; dually, the failure of a composition to be associative can never be
+\emph{identified with} the failure of an idempotent to split, because the latter is repaired by a
+construction (Lemma~\ref{lem:meta}) that cannot repair the former.
 \end{corollary}
 
-Corollary~\ref{cor:orthogonal} is why the candidate map (3) was doomed \emph{before} any
-computation: even had $k$ failed to split in some ambient $\mathcal{D}$, completing to
-repair it would land in an associative category, so the repaired object could not witness
-the magmoid's genuine non-associativity. This is a \emph{well-posed negative of the second
-kind}: the home exists but carries no obstruction content.
+Corollary~\ref{cor:orthogonal} is why this candidate was doomed \emph{before} any computation: even
+had $k$ failed to split, completing to repair it would land in an associative category, so the
+repaired object could not witness the magmoid's genuine non-associativity. This is a
+\emph{well-posed negative of the second kind}: the home exists but carries no obstruction content.
+Its locus is the \emph{single idempotent morphism}.
 
-\section{The Karoubi vacuity is generic, not weld-specific}
+\subsection*{The Karoubi vacuity is generic, not weld-specific}
 \label{sec:generic}
 
-Two independent sources, from problems with no connection to the weld, confirm that item (3)
-is a general feature of the weak-distributive-law family rather than an artifact of our
-particular $k$.
+An independent source, from a problem with no connection to the weld, confirms that this vacuity is a
+general feature of the weak-distributive-law family rather than an artifact of our particular $k$.
+B\"ohm--Lack--Street (``Idempotent Splittings, Colimit Completion, and Weak Aspects of the Theory of
+Monads'', arXiv:1102.4931) show that weak monad notions --- e.g.\ \emph{demimonads}, which drop the
+unit law but keep associativity $\beta\cdot T\beta=\beta\cdot\mu$ --- reduce systematically to
+\emph{strict} structure inside the Cauchy-completed $Q_{*}\mathcal{K}$: an independent, pre-weld
+proof that Cauchy/Karoubi completion \emph{absorbs} one-sided weakenings of the monad laws rather
+than \emph{detecting} them, exactly Corollary~\ref{cor:orthogonal} reached from a wholly different
+problem. This upgrades the verdict from ``true for our $k$'' to ``structurally true for the family''.
+(A second, probabilistic echo --- that idempotent Markov kernels generically split --- is recorded in
+the program's reading log at summary grade, flagged for a deep read before it is cited.)
 
-\begin{itemize}
-  \item \textbf{B\"ohm--Lack--Street, ``Idempotent Splittings, Colimit Completion, and Weak
-        Aspects of the Theory of Monads'' (arXiv:1102.4931, 2011).} Weak monad notions ---
-        e.g.\ \emph{demimonads}, which drop the unit law but keep associativity
-        $\beta\cdot T\beta=\beta\cdot\mu$ --- reduce systematically to \emph{strict}
-        structure inside the Cauchy-completed $Q_{*}\mathcal{K}$. That is an independent,
-        pre-weld proof that Cauchy/Karoubi completion \emph{absorbs} one-sided weakenings of
-        the monad laws rather than \emph{detecting} them: exactly
-        Corollary~\ref{cor:orthogonal}, reached from a wholly different motivating problem.
-  \item \textbf{Fritz--Gonda--Lorenzin--Perrone--Stein (arXiv:2308.00651, 2023).} Every
-        idempotent Markov kernel between standard Borel spaces splits: idempotent-splitting
-        is the \emph{generic} case in a well-behaved category. So $k=n\comp m$ splitting was
-        never going to be a surprise; the vacuity of (3) is the expected case, not a
-        coincidence.
-\end{itemize}
+\section{Refutation III: \texorpdfstring{$k$}{k} is not a lax distributive law (wrong locus)}
+\label{sec:laxdl}
 
-Together these upgrade (3) from ``true for our $k$'' to ``structurally true for the family'':
-the Karoubi receptacle is vacuous wherever this kind of one-sided-weak structure appears.
+The one technical (non-vocabulary) lead for a prior home of one-sidedness is \emph{lax distributive
+laws by inequality} --- Schoen, ``Lax Liftings and Lax Distributive Laws'' (arXiv:2307.16552, ACT
+2022), and the companion $(T,V)$-program of Tholen, ``Lax Distributive Laws for Topology I/II''
+(arXiv:1603.06251, 1605.04489). We decide it, and it is the subtlest negative: the home exists, is
+inhabited, and is genuinely one-sided --- but one-sided \emph{about the wrong thing}.
 
-\section{The positive replacement: one-sided absorptivity (handedness)}
-\label{sec:handedness}
+\begin{definition}[lax distributive law, after Schoen]
+Let $P$ be a monad on $\Set$ and $F$ an \emph{endofunctor} (no algebraic structure). A \emph{lax
+distributive law} is a transformation $\lambda_{X}\colon FP(X)\to PF(X)$ subject to three
+\emph{one-directional inequalities} in the inclusion order $\subseteq$ of relations (here $\Set$ is
+order-enriched to $\Rel$, with $\Rel(X,Y)=P(X\times Y)$ a poset under $\subseteq$): lax naturality,
+and lax compatibility with the unit $\eta$ and multiplication $\mu$ of $P$ --- the last two pointing
+in \emph{opposite} directions by design. The laxified cells are the coherences of the \emph{one}
+monad $P$; $F$ is a bare functor and contributes none.
+\end{definition}
 
-If the defect is neither a cocycle nor a splitting obstruction, what is it? The honest
-answer is concrete and non-cohomological.
+The one-sidedness of a lax distributive law is a \emph{fixed-direction order inequality on a
+coherence cell}. The weld's one-sidedness is of a different grammar, and the mismatch is a theorem,
+not an impression.
 
-\begin{theorem}[non-associativity $=$ absorptivity asymmetry of the split idempotent]
-\label{thm:handedness}
-Model $\mathbf{Norm}$ at the hom level over the associative Kleisli category
-$\mathcal{C}=\Kl(DM)$ of the honest subdistribution monad $DM$. On each hom-set put the
-split idempotent $e=(-)\comp k$, with section $s=(-)\comp m$ and retraction $r=(-)\comp n$,
-so $r\comp s=\id$ and $s\comp r=(-)\comp k$. Magmoid composition is
-$f\mathbin{\#}g=r\big(s(f)\comp_{\mathcal C}s(g)\big)$. Then:
-\begin{enumerate}
-  \item $k$ is \emph{left}-absorptive: $k\comp n=n\comp m\comp n=n\comp\id=n$, and more
-        strongly a $k$ inserted on a \emph{left} factor is undone by the final normalization,
-        so
-        \[
-          (f\mathbin{\#}g)\mathbin{\#}h \;=\; (a\comp b\comp c)^{\circ}
-          \quad\text{(normalize once, at the very end),}
-        \]
-        writing $a=s(f)$, etc.
-  \item $k$ is \emph{not} right-absorptive: a $k$ inserted on a \emph{right} factor rescales
-        the rows of $b\comp c$ by non-uniform scalars $1/\mathrm{mass}_{y}$, reweighting the
-        mixture and surviving the final normalization, so in general
-        \[
-          f\mathbin{\#}(g\mathbin{\#}h) \;=\;
-          \big(a\comp[(b\comp c)\comp k]\big)^{\circ}\;\neq\;(a\comp b\comp c)^{\circ}.
-        \]
-\end{enumerate}
-Hence $(f\mathbin{\#}g)\mathbin{\#}h=f\mathbin{\#}(g\mathbin{\#}h)$ for all triples
-\emph{iff} $k$ is \emph{also} right-absorptive --- which it is not. The non-associativity is
-precisely the \emph{absorptivity asymmetry} of $k$.
-\end{theorem}
-
-The claim ``left-absorptive'' is arXiv:2510.01131's own Lemma~3.5; the hom-level model
-reproduces that paper's Proposition~4.9 purity cases exactly: in a finite $\bot$-absorbing
-model (5000 trials per case) the generic associativity defect is $\sim 7.7\times10^{-3}$,
-while each of the three purity conditions --- $f$ $S$-pure, $g$ $S$-pure, $h$ $T$-pure ---
-forces the defect to $\sim 2.2\times10^{-16}$, with the opposite purities failing as
-predicted. The left-bracket equals normalize-at-end to $2\times10^{-16}$; the right-bracket
-does not (max $8\times10^{-2}$).
-
-\begin{remark}[handedness is a different kind of axis]
-One-sided absorptivity is not a cohomological class and not a splitting datum. It is a
-\emph{handedness} axis: a property of \emph{which side} of a composite a distinguished map
-is invisible on. The defect ``lives'' there, orthogonal to the two theories that cannot see
-it.
-\end{remark}
-
-\section{The cross-theme punchline}
-\label{sec:crosstheme}
-
-The two refutations are the \emph{same fact read twice}.
-
-\begin{itemize}
-  \item \textbf{Cohomology side} (\S\ref{clm:cocycle}): the cocycle \emph{condition equals}
-        associativity, so non-associativity $\Rightarrow$ no cocycle to carry a class. ($H^{2}$,
-        when it does appear in the program, is a \emph{splitting} obstruction of an
-        \emph{already-associative} weld.)
-  \item \textbf{Karoubi side} (\S\ref{cor:orthogonal}): idempotent completion \emph{preserves}
-        associativity, so splitting can never \emph{measure} non-associativity.
-\end{itemize}
-
-Two \emph{independent} obstruction theories --- group-cohomological ($H^{2}$/cocycle) and
-Cauchy/Karoubi (idempotent-splitting) --- are therefore both orthogonal to associativity,
-and they say so for the \emph{same} structural reason. The content of this note is that
-convergent negative: \textbf{associativity-failure and splitting-obstruction are orthogonal
-axes}, confirmed from both directions. After a month of cohomological bridge-hopes dying,
-the weld's non-associativity is measurable by \emph{no} standard obstruction apparatus; the
-surviving handle is the humble, concrete handedness of $k$.
-
-\section{Originality of the handedness invariant (evidence, not theorem)}
-\label{sec:originality}
-
-We now state a claim of a different epistemic status --- an \emph{evidence}-grade
-conclusion from a literature sweep, deliberately \emph{not} promoted to a theorem.
-
-\begin{claim}[evidence-grade; literature sweep, 2026-10-22]
-A dedicated four-agent sweep for a prior categorical home of ``one-sided absorptivity of a
-single distinguished map'' crossed with idempotent-completion or associator-laxity theory
-found \emph{none}. The two genuine precedents are algebra/ideal-flavored, not categorical
-containers for a single structure map:
-\begin{itemize}
-  \item \textbf{near-semirings}: a one-sided distributive law together with a one-sided
-        absorbing zero ($0\cdot a=0$ required, $a\cdot 0=0$ not), e.g.\ transformation
-        near-semirings $M(\Gamma)$. The handedness-of-absorption $\leftrightarrow$
-        handedness-of-distributivity link is the right shape, but it is classical algebra,
-        not category theory.
-  \item \textbf{Grandis, ``Categories with Negation'' (arXiv:1709.03186)}: left/right-
-        absorbing morphism \emph{classes} (closed under pre-/post-composition) --- an
-        \emph{ideal}, not a single map.
-\end{itemize}
+\begin{claim}[registry: refuted; \texttt{handedness-not-lax-DL} \textbf{proved}]
+\label{clm:laxdl}
+The weld's handedness is not an instance of, and is not faithfully receivable by, a Schoen/Tholen lax
+distributive law.
 \end{claim}
 
-\begin{remark}[honest scope]
-This is a negative literature result, not a proof of non-existence. It says: after a
-focused search, no prior home was found that crosses idempotent-completion/associator-laxity
-with one-sided absorptivity of a \emph{single} map; the nearest matches are structurally
-one level off (an ideal of morphisms, or an algebraic one-sided zero, rather than a single
-distinguished structure map). We report it as the current state of evidence, and we would
-retract it the moment a genuine precedent surfaced.
+We give two independent reasons. The first is bookkeeping; the second is the conceptual kill.
+
+\emph{Variance.} Schoen's template needs a triple $(P\text{ monad},\,F\text{ bare functor},\,
+\lambda\colon FP\to PF)$; the weld supplies $(D,M,m,n,k)$. Only two variance assignments type-check.
+With $P=M,\ F=D,\ \lambda=n\colon DM\to MD$, the map $n$ does carry the defect --- but its failing
+coherence is $D$-multiplicativity, a coherence with the multiplication of $T=D$, which in Schoen's
+template (where $F=D$ is a \emph{bare} functor) is \emph{invisible}; the three laxified cells are all
+about $P=M$. With $P=D,\ F=M$, the only map of the right variance is the \emph{strict} law $m$, which
+carries no defect; the defect-carrying $n$ has the wrong variance. In both assignments the handedness
+defect is not among the laxifiable cells. No structure map exists; the same analysis applies verbatim
+to Tholen (same coherence-cell laxness, quantale-enriched).
+
+\emph{The discriminator.} The conceptual kill is one sentence and is independent of the variance
+bookkeeping.
+
+\begin{lemma}[elementary]
+\label{lem:incomparable}
+If $\mu\le\nu$ pointwise for probability measures $\mu,\nu$ on a set $Y$ (total mass
+$\sum\mu=\sum\nu=1$), then $\mu=\nu$.
+\end{lemma}
+\begin{proof}
+$\nu-\mu\ge 0$ pointwise and $\sum(\nu-\mu)=1-1=0$; a nonnegative function with zero total is zero.
+\end{proof}
+
+\begin{proposition}[handedness is not a laxness]
+\label{prop:not-lax}
+The associator defect of $\Norm$ is not expressible as a fixed-direction lax inequality in the
+canonical (pointwise sub-probability) order-enrichment --- the order under which the Schoen/Tholen
+framework applies.
+\end{proposition}
+\begin{proof}
+For a triple $(f,g,h)$ whose composite succeeds, both bracketings $(f\sh g)\sh h$ and $f\sh(g\sh h)$
+lie in $\Norm$'s hom-set, i.e.\ are \emph{normalized} distributions of total mass $1$ (the outer
+normalization $(-)^{\circ}$; cf.\ Definition~\ref{def:sesquilaw}). A Schoen/Tholen laxness would
+require a \emph{single fixed direction} --- $(f\sh g)\sh h\le f\sh(g\sh h)$ for all triples, or the
+reverse for all triples. But whenever the two bracketings differ, Lemma~\ref{lem:incomparable}
+forbids them from being $\le$-comparable; and non-associativity is precisely the regime where they
+differ. So neither fixed direction can hold: the defect lives strictly between $\le$-incomparable
+elements and is not a laxness.
+\end{proof}
+
+The honest near-miss, dispatched. There \emph{is} a genuine lax cell in the $DM$ order, namely
+$\id_{DM}\le k$ pointwise (normalization raises mass: $k(\mu)(y)=\mu(y)/|\mu|\ge\mu(y)$ since
+$|\mu|\le 1$). But that cell is a statement about $D$'s renormalization, not one of Schoen's
+$P=M$-coherences, and it is not \emph{what the handedness is}. Handedness is the statement ``$k$
+absorbs in $\sh$'s left slot but not the right'' --- a fact about $\sh$ as a binary operation ---
+and Proposition~\ref{prop:not-lax} shows that fact cannot be any fixed-direction $\le$. A lax cell
+existing \emph{somewhere} in the ambient order does not make the \emph{associator defect} a laxness.
+
+This is a \emph{well-posed negative of the third kind}: the home exists and is one-sided, but its
+one-sidedness is a fixed-direction $\le$ on a \emph{coherence cell} (one monad), whereas handedness
+is an asymmetry of the \emph{argument slots} of the induced binary operation (two monads), with
+$\le$-incomparable outputs. The locus is the \emph{coherence 2-cell}.
+
+\begin{remark}[honest scope of the Tholen half]
+Schoen arXiv:2307.16552 is deep-read; Tholen arXiv:1603.06251/1605.04489 is not directly read, and
+the no-match for Tholen rests on the \emph{family-level} fact that its laxness is quantale-order
+laxness of coherence cells --- the same locus Proposition~\ref{prop:not-lax} rules out --- not on any
+fine Tholen detail. Were a future read to surface a Tholen construction laxifying an \emph{argument
+slot} of a composition rather than a coherence cell, this verdict should be revisited; we judge it
+unlikely but mark it as the one unread dependency.
 \end{remark}
 
-\section{Open: a candidate fourth receptacle}
-\label{sec:open}
+Three named maps are now decided, of three distinct kinds --- no receptacle (cocycle), vacuous
+receptacle (Karoubi), wrong-locus receptacle (lax-DL) --- and each probes a level (cochain,
+idempotent morphism, coherence cell) at which, we will see, the invariant is simply not visible.
 
-The one live technical (non-vocabulary) lead for an intrinsic home of handedness is
-\emph{lax distributive laws by inequality}.
+\bigskip
+\begin{center}\textsc{Movement II. The home it is}\end{center}
 
+\section{The positive home: an idempotent normalizer}
+\label{sec:home}
+
+If the defect is neither a cocycle, nor a splitting obstruction, nor a laxness, what \emph{is} it?
+The honest answer is concrete, non-cohomological, and lives one level up from every map so far ---
+at the binary operation itself. We isolate the minimal abstract structure that carries it. Two terms
+below, ``normalizer'' and ``one-sided absorbing idempotent'', are this note's own coinages, not
+standard vocabulary; we define them from scratch.
+
+Fix a category $(\mathcal{A},\cdot,1)$ with strictly associative composition --- think of the
+honest, associative ambient (substochastic kernels under matrix product; or the Kleisli category
+$\Kl(DM)$). Diagrammatic order: for $f\in\mathcal{A}(X,Y)$, $g\in\mathcal{A}(Y,Z)$, $f\cdot g\in
+\mathcal{A}(X,Z)$ is ``$f$ then $g$''.
+
+\begin{definition}[normalizer, normalized magmoid]
+\label{def:normalizer}
+A \emph{normalizer} on $\mathcal{A}$ is a family of functions
+$K=K_{X,Y}\colon\mathcal{A}(X,Y)\to\mathcal{A}(X,Y)$ such that
 \begin{itemize}
-  \item \textbf{Schoen, ``Lax Liftings and Lax Distributive Laws'' (arXiv:2307.16552, ACT
-        2022):} a lax distributive law $\lambda_{X}\colon FP(X)\to PF(X)$ is defined by a
-        one-directional naturality \emph{inequality}; directionality is baked in by design,
-        not by resonance. This is the closest technical precedent --- genuine one-sidedness
-        in the definition --- but its shape is relational/coalgebraic ($\Set\to\mathbf{Rel}$,
-        bisimulation), a \emph{different kind} of one-sidedness than composition-operation
-        absorptivity. Structurally adjacent, not a match.
-  \item \textbf{Tholen, ``Lax Distributive Laws for Topology I/II'' (arXiv:1603.06251,
-        1605.04489):} the same lax-inequality family; a retry target (PDF extraction failed
-        on the first pass).
+  \item \textsf{(K1)} $K$ is idempotent: $K(K(a))=K(a)$;
+  \item \textsf{(U)} $K$ fixes identities: $K(1_{X})=1_{X}$;
+  \item \LA{} \emph{left-absorption}: $K\big(K(x)\cdot c\big)=K(x\cdot c)$ for all composable $x,c$.
 \end{itemize}
+$K$ is \emph{two-sided} if additionally, for every $X\xrightarrow{f}Y\xrightarrow{g}Z\xrightarrow{h}W$
+with $f,g,h$ in the image of $K$,
+\begin{itemize}
+  \item \RA{} \emph{right-absorption for} $\sh$: $K\big(f\cdot K(g\cdot h)\big)=K(f\cdot g\cdot h)$.
+\end{itemize}
+The \emph{normalized magmoid} $N_{K}$ has $\mathrm{Ob}\,N_{K}=\mathrm{Ob}\,\mathcal{A}$,
+$N_{K}(X,Y):=\Img K_{X,Y}=\{a:K(a)=a\}$, composition $f\sh g:=K(f\cdot g)$, and units
+$1^{\sh}_{X}:=1_{X}$. A structure \emph{with a one-sided absorbing idempotent} is
+$(\mathcal{A},\cdot,K)$ with $K$ a normalizer that is \emph{not} two-sided.
+\end{definition}
 
-We flag this as \emph{open}: whether handedness has a fourth, intrinsic categorical home ---
-either by a genuine map into the lax-distributive-law framework, or by a categorical
-oidification of the near-semiring one-sided zero --- remains undecided. Until a structure
-map is named and checked (\S\ref{sec:method}), it is a watch item, not a result.
+\begin{remark}[$N_K$ is a magmoid, and associativity is not assumed]
+\label{rem:welldef}
+$f\sh g=K(f\cdot g)\in\Img K$ by \textsf{(K1)}, and \textsf{(U)} gives units: for $f\in N_{K}$ (so
+$K(f)=f$), $f\sh 1_{X}=K(f\cdot 1)=K(f)=f$ and $1_{X}\sh g=K(g)=g$. Associativity is \emph{not}
+assumed --- that is the whole point.
+\end{remark}
+
+\begin{remark}[the laws are not vacuous]
+\label{rem:nonvac}
+In \LA{} the argument $x$ ranges over \emph{all} of $\mathcal{A}(X,Y)$, in particular over products
+$x=f\cdot g$ of $N_{K}$-morphisms, which are generally \emph{not} in $\Img K$ (composing two
+normalized kernels de-normalizes). Where $K(x)\ne x$, \LA{} is a genuine constraint. Likewise \RA{}
+concerns the \emph{un-normalized} product $y=g\cdot h$; it is \emph{not} the triviality
+$K(f\cdot K(y))=K(f\cdot y)$ for $y\in\Img K$.
+\end{remark}
+
+\section{The characterization: associativity is two-sided absorption}
+\label{sec:char}
+
+Two theorems pin down $N_{K}$ completely. Both use only $\cdot$ and $K$; neither invokes any
+2-categorical machinery.
+
+\begin{theorem}[the left bracketing is clean]
+\label{thm:A}
+Let $K$ be a normalizer. Then for all composable $f,g,h\in N_{K}$,
+\[
+  (f\sh g)\sh h \;=\; K(f\cdot g\cdot h).
+\]
+\end{theorem}
+\begin{proof}
+Expand and apply \LA{} with $x:=f\cdot g$:
+\[
+  (f\sh g)\sh h = K\big((f\sh g)\cdot h\big) = K\big(K(f\cdot g)\cdot h\big)
+     \overset{\LA}{=} K\big((f\cdot g)\cdot h\big) = K(f\cdot g\cdot h),
+\]
+the last step by associativity of $\cdot$ in $\mathcal{A}$. The left bracketing normalizes once, at
+the very end.
+\end{proof}
+
+The proof uses only \LA{} and associativity of $\cdot$ --- not \RA{}, not even the unit axiom. The
+right bracketing does not simplify this way, and the gap between them is the whole content.
+
+\begin{theorem}[associativity $\Longleftrightarrow$ two-sided absorption]
+\label{thm:B}
+Let $K$ be a normalizer. Then $N_{K}$ is associative \emph{if and only if} $K$ is two-sided, i.e.\
+\RA{} holds.
+\end{theorem}
+\begin{proof}
+$(\Leftarrow)$ Suppose \RA{}. For $f,g,h\in N_{K}$,
+\[
+  f\sh(g\sh h) = K\big(f\cdot(g\sh h)\big) = K\big(f\cdot K(g\cdot h)\big)
+     \overset{\RA}{=} K(f\cdot g\cdot h) = (f\sh g)\sh h,
+\]
+the last equality by Theorem~\ref{thm:A}.
+$(\Rightarrow)$ Suppose $\sh$ is associative. Theorem~\ref{thm:A} gives $(f\sh g)\sh
+h=K(f\cdot g\cdot h)$, while $f\sh(g\sh h)=K(f\cdot K(g\cdot h))$ by definition; associativity equates
+the two, which is precisely \RA{}.
+\end{proof}
+
+\begin{corollary}[handedness is a genuine, non-vacuous obstruction]
+\label{cor:genuine}
+If $K$ satisfies \LA{} but not \RA{}, then $N_{K}$ is a \emph{non-associative} magmoid, and its
+associator defect $(f\sh g)\sh h$ versus $f\sh(g\sh h)$ equals exactly the defect $K(f\cdot g\cdot h)$
+versus $K(f\cdot K(g\cdot h))$ of right-absorption --- nothing more and nothing less. Handedness
+$=\LA\wedge\neg\RA$.
+\end{corollary}
+
+This is the sharp contrast with Refutation~II. The Karoubi receptacle was \emph{vacuous}: $k$ already
+splits, so idempotent completion measures nothing (\S\ref{sec:karoubi}). Here the receptacle is
+\emph{inhabited}: Corollary~\ref{cor:genuine} identifies a concrete, nonempty set of triples --- those
+with $K(f\cdot K(g\cdot h))\ne K(f\cdot g\cdot h)$ --- that \emph{is} the obstruction.
+
+\section{The instance: the normalized-kernel magmoid \texorpdfstring{$\Norm$}{Norm}}
+\label{sec:instance}
+
+The abstract home is inhabited by the very object that forced the question.
+
+\begin{proposition}[$\Norm$ is a normalized magmoid]
+\label{prop:norm-instance}
+Let $\mathcal{A}$ be the category of \emph{substochastic kernels}: objects finite sets; morphisms
+nonnegative $X\times Y$ matrices with row sums $\le 1$ (sub-Markov kernels, $=X\to DMY$ for the
+subdistribution monad $DM$); composition $=$ matrix product. Let $K$ be \emph{row-normalization},
+$K(M)_{xy}=M_{xy}/r_{x}$ with $r_{x}=\sum_{y'}M_{xy'}$, acting as the identity on zero-mass
+(failure/$\bot$) rows. Then $\Img K$ is the set of normalized kernels $X\to MDY$ (each input a
+probability distribution of mass $1$, or total failure $\bot$ of mass $0$), and $N_{K}=\Norm$ with
+$f\sh g=K(f\cdot g)$ the Di~Lavore--Rom\'an--Sz\'ekely composition.
+\end{proposition}
+
+\begin{lemma}[\LA{} holds for row-normalization]
+\label{lem:norm-LA}
+$K(K(x)\cdot c)=K(x\cdot c)$ for all composable substochastic $x,c$.
+\end{lemma}
+\begin{proof}
+On positive-mass rows $K(M)=D_{M}\cdot M$ with $D_{M}=\mathrm{diag}(1/r_{i})$ a \emph{positive
+diagonal}. Two observations. \emph{(1) Positive-diagonal invariance:} for any positive diagonal
+$P=\mathrm{diag}(p_{i})$, the matrix $(P\cdot M)_{ij}=p_{i}M_{ij}$ has row sum $p_{i}r_{i}$, so
+$K(P\cdot M)_{ij}=p_{i}M_{ij}/(p_{i}r_{i})=M_{ij}/r_{i}=K(M)_{ij}$; hence $K(P\cdot M)=K(M)$. \emph{(2)}
+By associativity of matrix product, $K(x)\cdot c=(D_{x}\cdot x)\cdot c=D_{x}\cdot(x\cdot c)$.
+Therefore $K(K(x)\cdot c)=K\big(D_{x}\cdot(x\cdot c)\big)\overset{(1)}{=}K(x\cdot c)$. On zero-mass
+rows $K(x)=x$ and both sides agree trivially.
+\end{proof}
+
+Note $K$ is \emph{not} left-multiplication by any \emph{fixed} element: $D_{x}$ depends on $x$. So
+\LA{} is a genuine property here, not an identity forced by $k^{2}=k$ --- a point that becomes sharp
+in \S\ref{sec:minimal}.
+
+\begin{lemma}[\RA{} fails; exact witness]
+\label{lem:norm-RA}
+There exist $f,g,h\in\Norm$ with $K(f\cdot K(g\cdot h))\ne K(f\cdot g\cdot h)$, so by
+Theorem~\ref{thm:B} $\Norm$ is non-associative.
+\end{lemma}
+\begin{proof}
+Over state sets of sizes $1\to 2\to 3\to 2$, take the normalized kernels (every row of mass $1$ or
+$0$)
+\[
+  f=\begin{bmatrix}\tfrac23 & \tfrac13\end{bmatrix},\qquad
+  g=\begin{bmatrix}\tfrac23 & \tfrac13 & 0\\[2pt] 0 & \tfrac12 & \tfrac12\end{bmatrix},\qquad
+  h=\begin{bmatrix}1&0\\0&0\\0&1\end{bmatrix}\ \ (\text{middle state }1=\bot).
+\]
+Then $g\cdot h=\begin{bmatrix}\tfrac23&0\\0&\tfrac12\end{bmatrix}$ has rows of \emph{unequal} mass
+$\tfrac23,\tfrac12$ (the failure $\bot$ at the middle state destroys different amounts of mass on
+$g$'s two rows). Computing,
+\[
+  (f\sh g)\sh h = K(f\cdot g\cdot h) = \begin{bmatrix}\tfrac{8}{11}&\tfrac{3}{11}\end{bmatrix}
+  \quad(\text{Theorem~\ref{thm:A}}),\qquad
+  f\sh(g\sh h) = K\big(f\cdot K(g\cdot h)\big) = \begin{bmatrix}\tfrac23&\tfrac13\end{bmatrix}.
+\]
+These differ, so \RA{} fails.
+\end{proof}
+
+The mechanism is exactly Corollary~\ref{cor:genuine} made concrete. The inner normalization
+$K(g\cdot h)=D_{g\cdot h}\cdot(g\cdot h)$ with $D_{g\cdot h}=\mathrm{diag}(\tfrac32,2)$ rescales the two
+middle rows by \emph{different} factors $\tfrac32\ne 2$; sandwiched between $f$ and $g\cdot h$ it
+reweights the contraction and is not removed by the outer $K$. Had the two middle rows lost equal
+mass ($D_{g\cdot h}\propto I$) the defect would vanish --- which is why a $\Norm$-defect needs a middle
+contraction of dimension $\ge 3$ (see \S\ref{sec:minimal}).
+
+\begin{remark}[computational corroboration]
+\label{rem:numerics}
+A deterministic sweep (seed $20261019$; $20000$ trials) confirms the picture: \LA{} violations
+$0/20000$; Theorem~\ref{thm:A} ($(f\sh g)\sh h=K(f\cdot g\cdot h)$) violations $0/20000$; generic
+triples non-associative; and the two \emph{recovery} regimes predicted by Theorem~\ref{thm:B} ---
+$g,h$ stochastic so $D_{g\cdot h}=I$, and middle dimension $1$ --- associative $5000/5000$. This
+reproduces arXiv:2510.01131's Proposition~4.9 purity cases exactly (each purity condition drives the
+defect to $\sim 2\times10^{-16}$, its negation to $\sim 10^{-2}$). These are \emph{computed}
+corroborations; the proved content is Theorems~\ref{thm:A}--\ref{thm:B} and
+Lemmas~\ref{lem:norm-LA}--\ref{lem:norm-RA}.
+\end{remark}
+
+\section{Minimality: the home is operator-level, and the fourth map falls}
+\label{sec:minimal}
+
+The dream that launched this search named the classical template as a \emph{near-semiring with a
+one-sided absorbing zero} $0$ ($0\cdot a=0$ imposed, $a\cdot 0=0$ not), with ``the strict zero replaced
+by an idempotent''. The natural first guess for the home is then an \emph{element}: a distinguished
+idempotent $\kappa$ with the normalizer $K(x)=\kappa\cdot x$. This is the fourth named map. We show it
+\emph{provably cannot work} --- and so building the home refutes it.
+
+Call a normalizer \emph{principal} if $K(x)=\kappa\cdot x$ for a fixed $\kappa\in\mathcal{A}$ with
+$\kappa\cdot\kappa=\kappa$, and \emph{genuine} otherwise.
+
+\begin{proposition}[principal normalizers are associativity-preserving]
+\label{prop:principal}
+If $K(x)=\kappa\cdot x$ with $\kappa\cdot\kappa=\kappa$, then \LA{} holds automatically \emph{and}
+$N_{K}$ is \emph{associative} --- always. A distinguished idempotent \emph{element} cannot carry
+handedness.
+\end{proposition}
+\begin{proof}
+\LA{} is free: $K(K(x)\cdot c)=\kappa(\kappa x)c=(\kappa\kappa)xc=\kappa xc=K(x\cdot c)$. For
+associativity, note $\kappa\cdot g=g$ for $g\in\Img K$ (if $g=\kappa g'$ then
+$\kappa g=\kappa\kappa g'=\kappa g'=g$). Hence
+\[
+  f\sh(g\sh h)=\kappa\cdot f\cdot(\kappa\cdot g\cdot h)=(\kappa f)\cdot(\kappa g)\cdot h
+     =(\kappa f)\cdot g\cdot h=\kappa\cdot f\cdot g\cdot h,
+\]
+while $(f\sh g)\sh h=\kappa\cdot(\kappa\cdot f\cdot g)\cdot h=(\kappa\kappa)\cdot f\cdot g\cdot h
+=\kappa\cdot f\cdot g\cdot h$. The two agree.
+\end{proof}
+
+In Theorem~\ref{thm:B}'s terms a principal normalizer \emph{always} satisfies \RA{}: the inner
+$\kappa$ in $f\cdot K(g\cdot h)=f\cdot\kappa\cdot(g\cdot h)$ meets $g$ on its left, and $\kappa g=g$,
+so it is silently absorbed. The entire handedness phenomenon is \emph{impossible} for
+$K=\kappa\cdot(-)$.
+
+\begin{corollary}[handedness requires a genuine, non-principal normalizer]
+\label{cor:nonprincipal}
+If $N_{K}$ is non-associative then $K$ is \emph{not} $\kappa\cdot(-)$ for any fixed $\kappa$. The
+row-normalization $K$ of $\Norm$ is genuine: it is \emph{non-linear} ($K(\lambda M)=K(M)\ne\lambda
+K(M)$), whereas every principal $K$ is linear.
+\end{corollary}
+
+Proposition~\ref{prop:principal} is the fourth refutation, and it is the sharpest of the four because
+it is not about a failed map into some theory but about the \emph{kind} of object handedness can
+live on.
+
+\begin{remark}[the triple-elimination, and why the near-semiring is only a shadow]
+\label{rem:triple}
+The four named maps probe four loci, and each is now seen to be \emph{inert} for handedness:
+\begin{itemize}
+  \item \emph{cochain / single morphism} (cocycle, \S\ref{sec:cocycle}) --- the apparatus is defined
+        by associativity;
+  \item \emph{single idempotent morphism} (Karoubi, \S\ref{sec:karoubi}) --- $k$ is two-sided tame as
+        a morphism ($k\comp n=n$ \emph{and} $m\comp k=m$), and splitting preserves associativity;
+  \item \emph{coherence 2-cell} (lax-DL, \S\ref{sec:laxdl}) --- a fixed-direction $\le$ cannot
+        separate $\le$-incomparable outputs;
+  \item \emph{distinguished element} (near-semiring zero, this section) --- an idempotent
+        \emph{element} is always two-sidedly absorbing (Prop.~\ref{prop:principal}), hence
+        associativity-preserving.
+\end{itemize}
+Morphism, cell, and element loci are all inert; what remains is the \emph{argument slots of the
+binary operation} $\sh$, and that is where Definition~\ref{def:normalizer} places $K$. The classical
+near-semiring is a recognizable \emph{shadow} --- its one-sided distributivity has the right
+\emph{shape} --- but it carries its one-sidedness in an \emph{element} (the zero) over extra data
+(the $+$ that $\sh$ does not need), and Proposition~\ref{prop:principal} proves an element can never
+be the source of non-associativity. Handedness is operator-level; its home is original ground.
+\end{remark}
+
+\begin{remark}[machine-checked, axiom-free]
+\label{rem:lean}
+The construction is certified by a finite model (registry leaf \texttt{lean-positive-home-oracle},
+\textbf{Lean-verified}). Since row-normalization uses rational division --- not kernel-decidable ---
+the $\Norm$ matrix instance stays computational (Python); to \texttt{decide} \LA{} as a
+\emph{universal} law and witness $\neg\RA{}$, we formalise the \emph{smallest} abstract
+monoid-with-normalizer realizing $\LA\wedge\neg\RA$, found by exhaustive search (none exists at order
+$\le 3$): $M=\{e,z,a,b\}$ with two-sided zero $z$, $a\cdot a=z$, $a\cdot b=a$, $b\cdot b=b$, and
+$K=\mathrm{id}$ on $\{e,a,b\}$, $K(z)=b$. Lean \texttt{decide} checks, over this model: $M$ is a
+monoid; \textsf{(K1)}, \textsf{(U)}; \LA{} \emph{universally}; Theorem~\ref{thm:A}; that \RA{}
+\emph{fails} and $\sh$ is non-associative (witness $a,a,a$: $(a\sh a)\sh a=b\ne a=a\sh(a\sh a)$);
+Theorem~\ref{thm:B} pointwise; the magmoid axioms (Remark~\ref{rem:welldef});
+Corollary~\ref{cor:nonprincipal} ($K$ non-principal); and the Proposition~\ref{prop:principal}
+control (every idempotent-element principal normalizer is associative). An \texttt{\#print axioms}
+audit of the bundled oracle shows \texttt{[propext]} only --- no \texttt{sorry}, no
+\texttt{Classical.choice}, no \texttt{native\_decide}. This is the positive twin of the
+Karoubi-vacuity leaf \texttt{lean-split-idempotent-oracle}: together they make ``genuine obstruction
+versus vacuous obstruction'' machine-checked.
+\end{remark}
+
+\section{What the four maps missed, and why}
+\label{sec:missed}
+
+The four refutations are not four coincidences; they are one structural fact read four ways. The
+cocycle and Karoubi homes are the \emph{same fact read twice} --- two independent obstruction
+theories, group-cohomological ($H^{2}$/cocycle) and Cauchy/Karoubi (idempotent-splitting), both
+\emph{orthogonal} to associativity, and both say so because their apparatus is \emph{defined by} or
+\emph{preserves} associativity. The lax-DL and near-semiring homes extend this: a fixed-direction
+order cannot see a defect between incomparable outputs, and a distinguished element is always
+two-sidedly absorbing. In all four, the candidate lives at a locus --- cochain, idempotent morphism,
+coherence cell, element --- at which handedness is invisible. It lives one level up, at the argument
+slots of $\sh$, exactly where Theorem~\ref{thm:B} places it. The mismatch is structural, not
+accidental: this is \emph{why} the maps missed.
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+named map & locus it probes & verdict & kind of negative \\
+\hline
+$k\mapsto$ 2-cocycle & cochain/morphism & refuted & no receptacle \\
+$k\mapsto$ Karoubi splitting & idempotent morphism & refuted & vacuous receptacle \\
+$k\mapsto$ lax distributive law & coherence 2-cell & refuted & wrong locus ($\le$-incomparable) \\
+near-semiring zero & distinguished element & refuted & associativity-preserving \\
+\textbf{normalizer} $K$ & \textbf{argument slots of} $\sh$ & \textbf{receives it} & \textbf{the home} \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}[originality: evidence, not theorem]
+\label{rem:originality}
+A dedicated literature sweep for a prior categorical home of ``one-sided absorptivity of a single
+distinguished map'' found none. The two genuine precedents are algebra/ideal-flavored, structurally
+one level off: \emph{near-semirings} (a one-sided absorbing zero --- an element, refuted above by
+Proposition~\ref{prop:principal}), and Grandis, ``Categories with Negation'' (arXiv:1709.03186),
+whose left/right-absorbing morphism \emph{classes} form an \emph{ideal}, not a single operator. We
+report this as the current state of evidence and would retract it the moment a genuine precedent
+surfaced.
+\end{remark}
 
 \section{Grant relevance}
 
-The program's obstruction-theory narrative gains a sharpened, honestly-bounded unit: for the
-central compositional tool (the Zappa--Sz\'ep weld of directed containers), we now know
-precisely \emph{what the non-associativity is not} --- not a cocycle, not a Karoubi-splitting
-obstruction, and (by two independent confirmations) not accidentally so --- and we have a
-positive handle for \emph{what it is}: a one-sided absorptivity (handedness) datum with no
-prior categorical home. ``Handedness datum, not characteristic class'' is a crisp, defensible
-claim about where compositional non-associativity lives, and it is exactly the kind of
-negative-plus-positive result that keeps the Impact narrative (``obstruction $=$ cohomology'')
-honest about which obstructions are actually ours.
+The program's obstruction-theory narrative gains a complete, honestly-bounded unit. For the central
+compositional tool --- the Zappa--Sz\'ep weld of directed containers --- we now know precisely
+\emph{what the non-associativity is not}: not a cocycle, not a Karoubi-splitting obstruction, not a
+lax distributive law, and not a near-semiring zero; four named maps, decided, of four distinct kinds,
+with an independent confirmation that the Karoubi vacuity is generic. And we know \emph{what it is}:
+a one-sided absorptivity (handedness) datum received by an idempotent normalizer $K$, with
+``associativity $=$ $K$ two-sided absorbing'' (Theorem~\ref{thm:B}) a theorem rather than a slogan,
+with the normalized-kernel magmoid $\Norm$ as a faithful instance, with the home proved
+\emph{operator-level} rather than element-level (Proposition~\ref{prop:principal}), and with the
+abstract construction machine-checked axiom-free (Remark~\ref{rem:lean}). ``Handedness datum, not
+characteristic class'' is a crisp, defensible statement about where compositional non-associativity
+lives --- and the kind of negative-plus-positive result that keeps the Impact narrative (``obstruction
+$=$ cohomology'') honest about which obstructions are actually ours, and which home is new ground.
 
 \end{document}
