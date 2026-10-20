@@ -106,23 +106,35 @@
     "id": "clause2-worker-is-content-FALSE",
     "approach": "Thm (compare), REWORKED round-2 2026-10-18 (fixes uid233 M2). Read BOTH A,B as (ΔT,ΔS)-bicomodules (A≅B' constant-branch sub-bicomodule). F̄_B(V)=Σ_{g∈T^S}V^S=T^S·V^S, F̄_A(V)=Σ_{t∈T}V^S=T·V^S: SAME content power (−)^S (exponents AGREE), differ ONLY in Σ-index T vs T^S. VERDICT split into TWO labelled readings (no longer conflated): (a) worker=content factor (−)^S iff |T|=1; (b) worker=whole weld (A=B, equiv. F̄_A=F̄_B) iff |S|=1∨|T|=1. Counterexample (1,2): A=B on the nose yet F̄_A=2V≠V=content. On |S|,|T|≥2 worker is neither. Conj 5.1 clause (2) 'worker=F/1 content' FALSE whenever |T|≥2.",
     "role": "attempt",
-    "trust": "proved",
+    "trust": "peer-reviewed",
     "file": "2026-10-18-worker-content-separation.md",
     "sources": [
      "2111.10968"
     ],
     "resolved": "Rick uid231 M1 (2026-10-17) fixed: the inconsistent-comparison is replaced by a single consistent (ΔT,ΔS)-reading of both A and B; exponents agree (both (−)^S), the surviving separation is the Σ-index T vs T^S on the sharp locus |S|≥2 ∧ |T|≥2. Builds on peer-reviewed represented-prafunctor (Thm 3.1) and premise worker-is-constant-branch-slice (proved).",
     "demotion_review2_2026-10-18": "Rick uid233 MUST M2 (artifact proofs/reviews/2026-10-18-weld-is-regular-bicomodule-rick.md): the verdict sentence conflated TWO statements — worker=whole-weld A=B iff n=1∨m=1 (what Thm 5 / the Lean locus_grid actually prove) vs worker=content-factor F̄_A=content iff m=1. The old 'correctly gives worker=content at |S|=1' is FALSE at (1,2),(1,3) (A=B on the nose yet F̄_A=2V≠V). Counting (8 vs 16; A=B locus n=1∨m=1) is correct and lean-verified; only the verdict WORDING is wrong → demoted proved→computed pending the WRITE rework that picks ONE reading. Re-promotion is cheap (no new math).",
+    "review": {
+     "reviewer": "Rick",
+     "artifact": "proofs/reviews/2026-10-19-weld-is-regular-bicomodule-rick.md",
+     "verdict": "Rick uid234 round-3 (WIP 85ecf0d): 'Clause 2 → proved is fine for Thm 5 and the Verdict paragraph, once M1 is fixed.' His endorsement was CONDITIONAL only on the editorial M1 fix (three stray sentences — Remark 4 l.510-511, Intro l.136, Example 1 l.535-536 — still asserting the retired conflated reading and contradicting the Verdict); the mathematical content was re-derived by Rick himself (F̄_A at (1,2)=6≠3, (1,4)=12≠3, negative verdict claimable whenever m≥2). CONDITION DISCHARGED 2026-10-20: M1 fixed in content commit 40f5c95 (stamp 34bc75d), pushed to WIP and re-delivered to Rick by email (covering note wip-sync/for-collaborator/2026-10-19-weld-worker-round3-rick-uid234.md). Per the pending_review condition recorded at WAKE c2 ('peer-reviewed once M1 fixed and re-delivered'), this upgrades proved→peer-reviewed. If Rick's round-4 reopens the fixed wording this becomes a demotion event.",
+     "date": "2026-10-20"
+    },
     "children": []
    },
    {
     "id": "clause3-tail-is-branch-maps-TRUE",
     "approach": "Thm (retract), REWORKED round-2 2026-10-18 (fixes uid233 M1,N1,N2). Σ-tail honestly T^S=const(T)⊔NC (|const|=m,|NC|=m^n−m). SET-LEVEL idempotent e(s,g)=(s,const_{g(s)}): idempotent, image=S×const(T)=worker positions, per-input fibre T^{S∖{s}} size m^{n-1} (ALL STAND, Lean-checked). BUT M1: e is NOT a bicomodule map — fails λ-equivariance at every non-constant g (first (2,2), pos (0,(0,1))), because e reads g at the CURRENT input while λ moves the input over S. GENUINE bicomodule retraction B↠B' is the base-pointed r_{s0}(s,g)=(s,const_{g(s0)}) (both squares, idempotent, image=σ(A), restricts to id on B'); non-canonical, keeps every count (fibre m^{n-1}) and the same F̄; e,r_{s0} agree on F̄. Self-verified scratch/write-2026-10-18-M1-selfcheck.py + Lean 2026-10-18-retract-bicomodule-map.lean [propext]. RE-DECISION: 'discarded=non-constant=Σ-tail' FALSE — (i) Σ-tail index is all T^S not NC; (ii) per-position discard=fibre m^{n-1}, neither NC nor T^S (at (2,3): 3≠6≠9). TRUE residue: Σ-tail IS full T^S; r_{s0} projects onto const(T); discarded = off-diagonal g|_{S∖{s0}}, NON-TRIVIAL (size m^{n-1}>1) iff |S|,|T|≥2.",
     "role": "attempt",
-    "trust": "proved",
+    "trust": "peer-reviewed",
     "file": "2026-10-18-worker-content-separation.md",
     "resolved": "Rick uid231 M2 (2026-10-17) fixed: self-contradictory 'T^S=non-constant' restated as T^S=const(T)⊔NC; original clause-3 statement REFUTED, corrected TRUE residue (weld tail = T^S; worker = constant slice; per-position discard = T^{S∖{s}}, size m^{n-1}) proved. Builds on peer-reviewed represented-prafunctor and premise worker-is-constant-branch-slice.",
     "demotion_review2_2026-10-18": "Rick uid233 MUST M1 (artifact proofs/reviews/2026-10-18-weld-is-regular-bicomodule-rick.md): the retract e(s,g)=(s,const_{g(s)}) used here is NOT a bicomodule morphism (fails λ-equivariance at every non-constant g; first fail shape (2,2) pos (0,(a,b))), so 'worker arises from the weld by e' is FALSE at the bicomodule level for n,m≥2. The set-level facts (e idempotent, image=const slice, fibre m^{n-1}, (2,3): 3/6/9 distinct) remain TRUE and lean-verified. FIX (Rick-verified all 9 shapes): the genuine bicomodule retraction B↠B' is r_{s0}(s,g)=(s,const_{g(s0)}) for a chosen base s0, r♯=id, keeping every number (honestly non-canonical; e and r_{s0} agree on F̄). Demoted proved→computed pending the WRITE rework that swaps e→r_{s0}. Re-promotion is cheap (Rick already checked r_{s0}).",
+    "review": {
+     "reviewer": "Rick",
+     "artifact": "proofs/reviews/2026-10-19-weld-is-regular-bicomodule-rick.md",
+     "date": "2026-10-19"
+    },
+    "review_note_2026-10-19": "Rick uid234 round-3 (WIP 85ecf0d, PDF /home/agent/mail/attachments/234/2026-10-19-review-macbeth-418.pdf): UNCONDITIONAL endorsement — 'Registry: clause 3 → proved is fine.' Round-2 M1 LANDED in the text (Thm 6 position-set level, Prop 2 λ-square, Thm 7 installs r_s0). Rick INDEPENDENTLY recomputed the retract at six shapes: e fails the λ-square on exactly the non-constant positions (180/192 at (3,4), 312/324 at (4,3), 40/50 at (2,5)) and passes ρ everywhere; r_s0 is a bicomodule retraction onto B' at every base point s0, fibre m^{n-1}. External re-derivation ⇒ UPGRADED proved→peer-reviewed. (NIT 1: Thm 7 'e,r_s0 induce same map on F̄' overstated — restrict to fibre at s0 or drop; prose-only, does not affect this grade.)",
     "children": [
      {
       "id": "retract-bicomodule-map-lean-verified",
@@ -140,5 +152,5 @@
   ]
  },
  "date_reworked_2_2026-10-18": "2026-10-18",
- "note_rework2_2026-10-18": "WRITE session 2026-10-18 (cycle 3): round-2 rework per Rick uid233 delivered. M1 (e not a bicomodule map; genuine retraction r_{s0}) SELF-VERIFIED (scratch/write-2026-10-18-M1-selfcheck.py — all checks pass: r_{s0} both squares+idem+img+retract at 5 shapes; e fails λ at n,m≥2; Rick (2,2) witness reproduced) and Lean-certified (lean/2026-10-18-retract-bicomodule-map.lean, [propext]). M2 (clause-2 verdict) split into two labelled readings; (1,2) counterexample spelled out. S1 (B=∐B_g, S-saturation, Yoneda canonicity), S2 (σ via cobase change, non-circular), S3 (λ/ρ proof text), N1 (non-trivial), N2 (drop item iii) all done. RE-PROMOTED clause2 & clause3 computed→proved. Root stays proved; worker-is-constant-branch-slice stays proved; Lean leaves stand. Paper papers/2026-10-18-weld-worker-bicomodule.pdf, content commit a452538 (stamp fcfd038), pushed work-in-progress. Covering note memory/for-collaborator/2026-10-18-weld-worker-rework-rick-uid233.md — NEXT WAKE delivers to Rick CC Robin (WRITE cannot email)."
+ "note_rework2_2026-10-18": "WRITE session 2026-10-18 (cycle 3): round-2 rework per Rick uid233 delivered. M1 (e not a bicomodule map; genuine retraction r_{s0}) SELF-VERIFIED (scratch/write-2026-10-18-M1-selfcheck.py — all checks pass: r_{s0} both squares+idem+img+retract at 5 shapes; e fails λ at n,m≥2; Rick (2,2) witness reproduced) and Lean-certified (lean/2026-10-18-retract-bicomodule-map.lean, [propext]). M2 (clause-2 verdict) split into two labelled readings; (1,2) counterexample spelled out. S1 (B=∐B_g, S-saturation, Yoneda canonicity), S2 (σ via cobase change, non-circular), S3 (λ/ρ proof text), N1 (non-trivial), N2 (drop item iii) all done. RE-PROMOTED clause2 & clause3 computed→proved. Root stays proved; worker-is-constant-branch-slice stays proved; Lean leaves stand. Paper papers/2026-10-18-weld-worker-bicomodule.pdf, content commit a452538 (stamp fcfd038), pushed work-in-progress. Covering note memory/for-collaborator/2026-10-18-weld-worker-rework-rick-uid233.md DELIVERED 2026-10-19 (WAKE): emailed to Rick (grandparick20) CC Robin, subject 'Re: Weld = regular bicomodule — rework for uid233 (content commit a452538)', PDF 2026-10-18-weld-worker-bicomodule.pdf attached. Awaiting Rick's round-3 referee verdict."
 }

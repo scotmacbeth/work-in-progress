@@ -1,0 +1,144 @@
+{
+  "conjecture": "The sesquilaw idempotent k = n;m (Di Lavore-Roman-Szekely, arXiv:2510.01131) is a genuine idempotent in an associative hom-set (TRUE), and the obstruction to the normalized-kernel magmoid being a genuine category is the failure of k to split in the Karoubi/Cauchy completion (REFUTED: k already splits; non-associativity is the one-sided-absorptivity asymmetry of the split idempotent, not a splitting obstruction).",
+  "status": "proved",
+  "date_opened": "2026-10-18",
+  "date_closed": "2026-10-18",
+  "tree": {
+    "id": "root-karoubi-splitting-reading",
+    "approach": "Decide whether magmoid non-associativity is a Karoubi/Cauchy splitting obstruction for k=n;m. Gate first (pin k's type, check associative home, check well-posedness), then main attempt.",
+    "trust": "proved",
+    "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+    "sources": ["2510.01131"],
+    "children": [
+      {
+        "id": "gate-A-k-genuine-idempotent-associative-home",
+        "role": "premise",
+        "approach": "k = n;m lives in End_{[Set,Set]}(DM), composition of natural transformations is associative; k^2=k from the section identity m;n=id_{MD}. Gate sub-task 1 PASSES.",
+        "trust": "proved",
+        "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+        "sources": ["2510.01131"],
+        "children": []
+      },
+      {
+        "id": "k-is-split-idempotent",
+        "role": "premise",
+        "approach": "k = n;m splits: DM --n--> MD --m--> DM with m;n = id_{MD} (section identity, Thm 3.4 proof / Lemma 3.5), n;m = k. Splitting object = magmad carrier MD. Verified computationally (m;n=id, k^2=k, k!=id).",
+        "trust": "proved",
+        "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+        "sources": ["2510.01131"],
+        "children": [
+          {
+            "id": "lean-split-idempotent-oracle",
+            "role": "attempt",
+            "approach": "Mathlib-free finite-model oracle (enum carriers DM=D(Maybe Y), MD=Maybe(D Y) over a 2-point sample space, recording normalized direction + mass-class): machine-checks k^2=k, section identity m;n=id_{MD}, n;m=k, k!=id, and left-absorptivity k;n=n, all by `decide`. Certifies k is a non-trivial SPLIT idempotent (splitting object MD) => item 3 of the weld-obstruction triangulation. Scope: the magmoid-# left/right asymmetry stays Python-only (sesqui2/3.py); the dual component identity m;k=m also holds here, confirming the handedness is not a component-map phenomenon.",
+            "trust": "lean-verified",
+            "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+            "lean": "lean/2026-10-19-sesquilaw-k-split-idempotent.lean :: Sesquilaw.sesquilaw_k_is_split_idempotent (bundling k_idempotent, section_identity, split_def, k_ne_id, left_absorptivity, right_component_absorptivity). Finite enum model of n,m,k over DM/MD; arXiv:2510.01131 Lemma 3.5 / Thm 3.4. [propext] only (decide, no native_decide).",
+            "sources": ["2510.01131"],
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "completion-preserves-associativity",
+        "role": "premise",
+        "approach": "Meta-lemma: Karoubi/Cauchy completion of any category is a category (associative); Kar preserves+reflects associativity. So splitting idempotents can neither create nor measure non-associativity. Standard (Borceux I 6.5; nLab idempotent-completion).",
+        "trust": "proved",
+        "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+        "children": []
+      },
+      {
+        "id": "karoubi-splitting-obstruction-hypothesis",
+        "role": "attempt",
+        "approach": "Main PROVE hypothesis: magmoid non-associativity = failure of k to split in Kar(C).",
+        "trust": "dead-end",
+        "reason": "VACUOUS receptacle. k already splits (child k-is-split-idempotent), so Karoubi/Cauchy completion is a no-op on it and there is no splitting failure to carry the obstruction; reinforced by completion-preserves-associativity (a construction that preserves associativity cannot measure its failure). Well-posed but refuted on the merits -- NOT ill-posed, so the gate passes and the claim is decided negative.",
+        "refutation": "proved",
+        "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+        "children": []
+      },
+      {
+        "id": "k-as-2-cocycle",
+        "role": "attempt",
+        "approach": "Prior (WAKE 2026-10-17): read k as a 2-cocycle in H^2.",
+        "trust": "dead-end",
+        "reason": "Receptacle does not exist: k is non-additive in the non-abelian [DM,DM], and the cocycle condition IS associativity (h2-weld-class-is-splitting-not-associativity N2), which the sesquilaw destroys. No cocycle without associativity. See questions/idempotent-defect-cohomological-reinterpretation.md (RESOLVED-negative).",
+        "refutation": "proved",
+        "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+        "children": []
+      },
+      {
+        "id": "one-sided-absorptivity-is-the-invariant",
+        "role": "attempt",
+        "approach": "Positive localization: non-associativity = k is LEFT-absorptive (Lemma 3.5, k;n=n; left-bracket = normalize-at-end) but NOT right-absorptive. Hom-level model 𝒞=Kl(DM) with split idempotent e=(-);k on homs; associativity <=> k absorbed on right block. Reproduces Prop 4.9's three purity cases exactly (defect 1e-16) with correct negative controls.",
+        "trust": "computed",
+        "file": "2026-10-18-sesquilaw-k-split-idempotent-not-karoubi.md",
+        "sources": ["2510.01131"],
+        "children": []
+      },
+      {
+        "id": "lax-distributive-law-receptacle-hypothesis",
+        "role": "attempt",
+        "approach": "FOURTH named map (PROVE 2026-10-19): is handedness (k left- not right-absorptive) an instance of / faithfully receivable by a Schoen (arXiv:2307.16552) or Tholen (1603.06251/1605.04489) lax distributive law? Null-prior: name the structure map (P monad, F bare functor, lambda:FP->PF) and check both variance assignments.",
+        "trust": "dead-end",
+        "reason": "Wrong locus / structurally adjacent. Lax-DL laxifies the COHERENCE CELLS of a distributive law (a fixed-direction order inequality on a single 2-cell, for ONE monad P); handedness is an asymmetry of the ARGUMENT SLOTS of the induced binary composition # (two monads, strict equalities). DECISIVE discriminator: both bracketings (f#g)#h, f#(g#h) land in Norm's NORMALIZED hom-set (mass 1), and distinct probability measures are order-INCOMPARABLE (elementary lemma), so the defect cannot be any fixed-direction lax <=. Variance analysis also fails: assignment alpha (P=M,F=D,lambda=n) puts the defect in D-multiplicativity = F-structure, invisible to Schoen; assignment beta (P=D,F=M) forces lambda=m (strict, no defect) and excludes n by variance. Tempting near-miss id<=k (normalization raises mass) is a genuine lax cell but not one of Schoen's (N,E1,E2) and not what handedness IS. Confirmed computationally: id<=k 0/20000 violations; bracketings distinct 8000/8000, <=-comparable 0/8000.",
+        "refutation": "proved",
+        "file": "2026-10-19-handedness-not-lax-distributive-law-fourth-receptacle.md",
+        "sources": ["2307.16552", "2510.01131"],
+        "children": []
+      },
+      {
+        "id": "positive-home-one-sided-absorbing-idempotent",
+        "role": "attempt",
+        "approach": "CONSTRUCTIVE positive counterpart to the 4 refuted maps (PROVE 2026-10-19 #2): build the home of handedness at the correct (binary-operation) locus. Definition: a NORMALIZER on an associative category 𝒜 = idempotent hom-operator K with left-absorption (LA) K(K(x)·c)=K(x·c); normalized magmoid N_K has f#g:=K(f·g). Theorem A: (LA) ⟹ (f#g)#h=K(f·g·h) (left bracket normalizes once). Theorem B: given (LA), N_K associative ⟺ K two-sided (RA_#) K(f·K(g·h))=K(f·g·h) — so handedness=(LA)∧¬(RA_#) is a GENUINE non-vacuous obstruction (contrast Karoubi vacuous). Instance: Norm = (substochastic kernels, K=row-normalize); (LA) proved by hand (K(M)=D_M·M, positive-diagonal invariance K(P·M)=K(M)); (RA_#) fails on exact witness f=[2/3,1/3],g=[[2/3,1/3,0],[0,1/2,1/2]],h=[[1,0],[0,0],[0,1]]: (f#g)#h=[8/11,3/11]=K(fgh) but f#(g#h)=[2/3,1/3]. SHARP minimality (Prop 5.1): principal normalizer K(x)=κ·x by a fixed idempotent ELEMENT κ (κ²=κ) is ALWAYS associative (κg=g for g∈ImK) — a distinguished idempotent element CANNOT carry handedness; the home MUST be a genuine (non-linear) operator normalizer. Decisively closes the near-semiring temptation per null-prior (its one-sided absorbing zero is an element ⟹ associativity-preserving ⟹ wrong KIND of object). Triangulation now COMPLETE: 1 EXISTS + 3 REFUTED + 1 CONSTRUCTED.",
+        "trust": "proved",
+        "file": "2026-10-19-handedness-positive-home.md",
+        "sources": ["2510.01131"],
+        "children": [
+          {
+            "id": "thmA-left-bracket-clean",
+            "role": "premise",
+            "approach": "(LA) ⟹ (f#g)#h = K((f#g)·h) = K(K(f·g)·h) =_{(LA), x=f·g} K(f·g·h). Uses only (LA) + associativity of 𝒜. Elementary, airtight.",
+            "trust": "proved",
+            "file": "2026-10-19-handedness-positive-home.md",
+            "children": []
+          },
+          {
+            "id": "thmB-assoc-iff-two-sided-absorbing",
+            "role": "premise",
+            "approach": "Given (LA): N_K associative ⟺ (RA_#). (⇐) f#(g#h)=K(f·K(g·h))=_{RA_#}K(f·g·h)=(f#g)#h by Thm A. (⇒) associativity equates the two sides, which IS (RA_#) for f,g,h∈Im K. Handedness=(LA)∧¬(RA_#) non-vacuous. Elementary, airtight.",
+            "trust": "proved",
+            "file": "2026-10-19-handedness-positive-home.md",
+            "children": []
+          },
+          {
+            "id": "LA-holds-for-row-normalization",
+            "role": "premise",
+            "approach": "Lemma 4.1: row-normalization satisfies (LA). K(M)=D_M·M, D_M=diag(1/rowsum)>0; (i) K(P·M)=K(M) for positive diagonal P; (ii) K(x)·c=D_x·(x·c) by associativity; hence K(K(x)·c)=K(D_x·(x·c))=K(x·c). By hand, exact. Faithful to DLRS Norm via arXiv:2510.01131 Prop 4.6 (Kleisli presentation).",
+            "trust": "proved",
+            "file": "2026-10-19-handedness-positive-home.md",
+            "sources": ["2510.01131"],
+            "children": []
+          },
+          {
+            "id": "principal-normalizer-always-associative",
+            "role": "premise",
+            "approach": "Proposition 5.1: K(x)=κ·x with κ²=κ ⟹ (LA) automatic AND N_K ALWAYS associative. Key: κg=g for g∈Im K, so the inner κ in f·κ·(g·h) is absorbed. Element-level idempotents are associativity-preserving ⟹ handedness is intrinsically operator-level (Tier-2). Corollary: Norm's K is non-linear (K(λM)=K(M)), hence not κ·(−); so Norm is genuine. Verified 0/3000 over random idempotents (both sides). This is the sharp minimality statement + the decisive null-prior kill of the near-semiring-element guess.",
+            "trust": "proved",
+            "file": "2026-10-19-handedness-positive-home.md",
+            "children": []
+          },
+          {
+            "id": "norm-nonassoc-dimension-bound",
+            "role": "attempt",
+            "approach": "Prop 5.3 dimension observation: honest {0,1}-mass Norm handedness first appears at g–h contraction dimension 3; (1×2,2×2,2×2) exhaustively associative, contraction-2 sweeps 0/20000, contraction-3 realizes defect (482/20000). COMPUTED only; not needed for the home's existence.",
+            "trust": "computed",
+            "file": "2026-10-19-handedness-positive-home.md",
+            "sources": ["2510.01131"],
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}
