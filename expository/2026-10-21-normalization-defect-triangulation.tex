@@ -1,0 +1,831 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{mathtools}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{claim}[theorem]{Claim}
+
+\newcommand{\Poly}{\mathbf{Poly}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Set}{\mathbf{Set}}
+\newcommand{\Rel}{\mathbf{Rel}}
+\newcommand{\Norm}{\mathbf{Norm}}
+\newcommand{\Comod}{\mathrm{Comod}}
+\newcommand{\PRA}{\mathrm{PRA}}
+\newcommand{\Kl}{\mathrm{Kl}}
+\newcommand{\Kar}{\mathrm{Kar}}
+\newcommand{\End}{\mathrm{End}}
+\newcommand{\Img}{\mathrm{Im}\,}
+\renewcommand{\lhd}{\triangleleft}
+\newcommand{\Store}[1]{\Delta #1}
+\newcommand{\op}{^{\mathrm{op}}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\comp}{\mathbin{;}}
+\newcommand{\sh}{\mathbin{\#}}
+\newcommand{\yon}{\mathsf{y}}
+\newcommand{\LA}{\textsf{(LA)}}
+\newcommand{\RA}{\textsf{(RA}\textsubscript{\#}\textsf{)}}
+\DeclareMathOperator{\Hom}{Hom}
+
+\title[What normalization's non-associativity is, and is not]
+{What normalization's non-associativity is --- and is \emph{not}:\\
+three obstruction theories that miss it for one reason,\\
+and the idempotent normalizer --- classically, a transversal --- that receives it}
+
+\author{MacBeth}
+\address{Kodamai}
+\date{21 October 2026}
+
+\begin{document}
+
+\begin{abstract}
+The normalization of substochastic kernels is non-associative: Di~Lavore, Rom\'an and Sz\'ekely
+(arXiv:2510.01131) show it is a \emph{sesquilaw}, not a distributive law, and that the induced
+composition of normalized kernels forms a genuine \emph{magmoid} $\Norm$ --- a category minus
+associativity. We ask which categorical invariant measures that defect. The question is a
+probabilistic, finite-dimensional face of a central concern of the program: the Zappa--Sz\'ep
+\emph{weld} of directed containers (the orchestration composite, our tool for \emph{when}
+compositions exist) is likewise non-associative in general, and $\Norm$ is an exact-factorization
+cousin of it. We answer in two movements. \emph{Movement~I} refutes three \emph{named} candidate
+homes --- a $2$-cocycle, a Karoubi/Cauchy splitting obstruction, and a Schoen/Tholen lax
+distributive law --- and shows they fail for \emph{one} reason, read three ways: the renormalization
+idempotent $k$ is a \emph{unary} $1$-cell that never sees a triple, whereas non-associativity is
+irreducibly \emph{ternary}. \emph{Movement~II} identifies the invariant: it is received by an
+idempotent \emph{normalizer} $K$ obeying a left- but not right-absorption law. Writing
+$f\sh g:=K(f\cdot g)$, associativity of $\sh$ is equivalent to $K$ being two-sided absorbing; and
+the decisive, directly checkable consequence is a \emph{closure criterion} --- \emph{if $\Norm$ is
+handed then $\Img K$ is not closed under composition}. This is the forward direction of the classical
+transversal/right-loop theorem, and it refutes a fourth named map (the near-semiring's one-sided
+absorbing zero) at a stroke: a principal normalizer has closed image, hence is associative. We are
+explicit about provenance: the normalizer package is the classical transversal construction of right
+loops (Baer; Lal; Kiechle), published already in oidified form (Grabowski); $\Norm=D\cdot K$ is an
+exact factorization, a Zappa--Sz\'ep reading. The honest novelty is narrow: a base \emph{without}
+invertibility, and the substochastic-kernel instance. A machine-checked finite model certifies the
+construction axiom-free.
+\end{abstract}
+
+\maketitle
+
+\footnotetext{MacBeth (scotmacbeth) $\cdot$ 2026-10-21 $\cdot$ For: Rick. Revision of the
+triangulation unit (content \texttt{ac07a05}) per Rick's referee report of 2026-10-21 (uid~237).
+The Movement~II algebra is peer-reviewed: four rounds, endorsed in round~4 on \texttt{40f5c95}, final
+NIT in \texttt{b9a0a5c}.}
+
+\section{Setup: the normalization defect, and the weld that motivates it}
+\label{sec:setup}
+
+The object of this note is a concrete non-associative magmoid; the weld is its motivation. We keep
+the two cleanly apart, because conflating them was the first thing a referee (rightly) struck.
+
+\subsection*{The motivation}
+Throughout, $\Poly$ is the category of polynomial functors on $\Set$ with the composition monoidal
+product $\lhd$; a comonoid for $\lhd$ is a \emph{polynomial comonad}, equivalently a small category.
+For a set $S$ we write $\Store{S}=S\yon{}^{S}$ (notation $\yon{}$ for the representable) for the
+\emph{store} comonad on $S$, the directed container of the full state space on $S$. All composites
+are written in diagrammatic order: $f\comp g$ (equivalently $f\cdot g$) means ``$f$ then $g$''.
+
+\begin{definition}[The weld]
+\label{def:weld}
+Given two directed containers presented by store comonads $\Store{S}$ (the \emph{worker} state) and
+$\Store{T}$ (the \emph{harness} state), their \emph{weld} is the orchestration composite
+$B=\Store{S}\lhd\Store{T}$, the Zappa--Sz\'ep product interleaving worker and harness transitions.
+The weld is the program's canonical answer to ``when does a composite of two stateful directed
+containers exist?'': the Zappa--Sz\'ep datum is exactly the mutual-action data that makes the
+interleaving well defined.
+\end{definition}
+
+Two facts about the weld frame --- and bound --- what follows.
+
+\begin{remark}[The weld, once well defined, is \emph{associative}; keep it separate]
+\label{rem:separate}
+When its Zappa--Sz\'ep data make it well defined, the weld is a genuine comodule, and in that regime
+it is associative. Concretely it is the \emph{regular} $(\Store{T},\Store{S})$-bicomodule, which
+under Spivak--Garner--Fairbanks (``Functorial Aggregation'', arXiv:2111.10968, Prop.~3.9(5) +
+Thm.~4.28) represents the parametric right adjoint $\bar F_B(V)=(T\times V)^{S}=T^{S}\cdot V^{S}$
+(registry \texttt{weld-is-regular-bicomodule}, \textbf{peer-reviewed}, with a Lean-verified leaf for
+the five coaction axioms). The cohomological class $[\omega]\in H^{2}$ attached to a well-defined
+weld (registry \texttt{g-obstruction-cohomology}, in \texttt{pairwise-zs.json}) is a \emph{splitting}
+obstruction of that \emph{already-associative} weld --- it measures whether the extension splits, not
+whether the composite associates. Neither the bicomodule picture nor $[\omega]$ is what we chase
+here. The present defect is the \emph{departure} from the associative regime that normalization
+introduces, and we study it in its own clean habitat.
+\end{remark}
+
+\begin{remark}[How $\Norm$ and the weld are related --- and how they are not]
+\label{rem:link}
+We do \emph{not} claim $\Norm$ (below) computes the weld's associativity defect, nor that there is a
+structure map weld-triples$\,\to\,\Norm$-triples; we make no such map and need none. The link is of a
+different, honest kind: both are instances of \emph{Zappa--Sz\'ep / exact-factorization}
+composition. The weld is the Zappa--Sz\'ep product of two directed containers; and $\Norm$, we will
+see (\S\ref{sec:provenance}), is the exact factorization $D\cdot K$ of normalized kernels read
+probabilistically. $\Norm$ is thus a finite-dimensional, fully computable, machine-checkable witness
+of \emph{the kind} of non-associativity that orchestration composition in the program must contend
+with. That is why it is worth measuring; it is not a stand-in for the weld.
+\end{remark}
+
+\subsection*{The object}
+Di~Lavore, Rom\'an and Sz\'ekely (``Normalized Probabilistic Semantics is Not Associative'',
+arXiv:2510.01131) show that \emph{normalization} of substochastic kernels is a \emph{sesquilaw}, not
+a distributive law, and that the induced Kleisli-style composition of normalized kernels is a genuine
+magmoid.
+
+\begin{definition}[Sesquilaw and the renormalization idempotent, after arXiv:2510.01131]
+\label{def:sesquilaw}
+A \emph{sesquilaw} $(S,T,m,n)$ consists of a distributive law $m\colon ST\Rightarrow TS$ together
+with an \emph{almost-distributive} law $n\colon TS\Rightarrow ST$ satisfying all four
+distributive-law axioms \emph{except} multiplicativity, which holds only up to the natural
+transformation
+\[
+  k \;=\; n\comp m \;\colon\; TS \Rightarrow TS
+  \qquad\text{(the ``renormalization'' of Lemma~3.5).}
+\]
+For normalization one takes $T=D$ (distribution) and $S=M$ (maybe), so $TS=DM$ and $ST=MD$; then
+$n=(-)^{\circ}\colon DM\Rightarrow MD$ is normalization and $m=(-)^{\bullet}\colon MD\Rightarrow DM$
+is the subdistribution inclusion. The induced magmoid $\Norm$ of normalized kernels $X\to MDY$ is a
+category minus associativity; Proposition~4.9 of loc.\ cit.\ isolates the triples that do associate.
+\emph{The question of this note is: which categorical invariant is the non-associativity of $\Norm$?}
+\end{definition}
+
+\section{The method: name the map, then decide}
+\label{sec:method}
+
+We adopt one discipline, learned the hard way across a month of cross-domain bridge-hopes that died
+on inspection.
+
+\begin{remark}[Naming the map buys decidability, not survival]
+\label{rem:method}
+A candidate obstruction home ranked highly because its \emph{vocabulary} matches (``cocycle'',
+``splitting'', ``Yang--Baxter'') has earned nothing until a \emph{structure map} is exhibited between
+the \emph{specific} objects at hand --- not the words. ``This sounds like it should connect'' is a
+prior of roughly zero. The payoff of naming a candidate map is not that it survives; it is that the
+question becomes \emph{decidable}. Our record on resonance-ranked leads is $0/n$; our record on
+\emph{named}-map leads is: all decided, crisply, one way or the other.
+\end{remark}
+
+The note has two movements. In the first (\S\ref{sec:onereason}) we refute three candidate homes and
+show the refutations are not three coincidences but one fact read three ways. In the second
+(\S\S\ref{sec:home}--\ref{sec:provenance}) we exhibit the structure that \emph{does} receive the
+invariant, derive the decisive closure criterion, and watch a fourth candidate fall out of it. Each
+verdict is one of three epistemic kinds, kept strictly separate:
+\begin{itemize}
+  \item \textbf{proved} --- a registered result of the program (the refutations and the positive
+        construction; several carry Lean-verified leaves; the Movement~II algebra is peer-reviewed);
+  \item \textbf{computed} --- a corroborating but non-formalized numerical fact (so flagged in place);
+  \item \textbf{open} --- an explicitly unresolved question (so flagged).
+\end{itemize}
+Provenance of the \emph{surviving} structure is handled separately and honestly in
+\S\ref{sec:provenance}: it is classical, and we say so.
+
+\bigskip
+\begin{center}\textsc{Movement I. One reason, three readings}\end{center}
+
+\section{One reason, three readings: the renormalization idempotent is the wrong arity}
+\label{sec:onereason}
+
+Three named maps have been proposed as the home of $\Norm$'s non-associativity. Each is refuted
+below. But they do not fail independently; they fail for a single reason, which we state first so the
+three readings can be seen as what they are.
+
+\begin{remark}[The one reason]
+\label{rem:onereason}
+Every one of the three candidates is built from the renormalization idempotent $k=n\comp m$ --- a
+\emph{single} $1$-cell $DM\Rightarrow DM$ in a functor category. A $1$-cell is \emph{unary} data: it
+takes one input. Non-associativity, by contrast, is irreducibly \emph{ternary}: it is the assertion
+that the associator
+\[
+  Z_{K}(f,g,h)\;:=\;\big((f\sh g)\sh h,\ f\sh(g\sh h)\big)
+\]
+has unequal components for some triple $(f,g,h)$. No feature of a single unary cell --- whether it is
+a coboundary, whether it splits, which way an inequality on it points --- is a function of a triple;
+so none of them can \emph{be} the associator. The three refutations below are three ways of saying
+this: cocycle (wrong \emph{arity}), Karoubi (a unary operation that preserves associativity), lax-DL
+(a fixed-direction order on one cell, blind to a ternary incomparability). The invariant lives one
+level up, at the argument slots of the binary $\sh$, where Movement~II places it.
+\end{remark}
+
+\subsection{Reading 1: not a 2-cocycle --- wrong arity}
+\label{sec:cocycle}
+
+\begin{claim}[registry: refuted; cf.\ \texttt{h2-weld-class-is-splitting-not-associativity},
+\texttt{k-as-2-cocycle}]
+\label{clm:cocycle}
+The renormalization idempotent $k=n\comp m$ is not a $2$-cocycle. The refutation is one of
+\emph{type}: $k$ has the wrong arity.
+\end{claim}
+
+\begin{proof}[Why the type is wrong]
+A $2$-cocycle is a \emph{binary} gadget whose cocycle identity is an equation among the \emph{three}
+ways of associating a triple; it is, by construction, a function that sees triples. The
+renormalization $k$ is a single $1$-cell $DM\Rightarrow DM$ --- unary data. There is no coercion of a
+fixed unary cell into a binary-cum-ternary cocycle; the arities do not match, so the question ``is
+$k$ a $2$-cocycle?'' is not false but \emph{ill-typed}. (This corrects an earlier, stronger and
+incorrect claim of ours --- ``non-associativity cannot be carried as a cohomology class.'' It can;
+see Remark~\ref{rem:degree3}.)
+\end{proof}
+
+\begin{remark}[Non-associativity \emph{can} be cohomological --- but in degree 3]
+\label{rem:degree3}
+The octonions are the twisted group algebra $k_{F}[\mathbb{Z}_{2}^{3}]$ whose associator
+$\varphi=\partial F$ is a genuine \emph{$3$-cocycle} (Albuquerque--Majid, ``Quasialgebra Structure of
+the Octonions'', J.\ Algebra 220 (1999) 188--224). So a non-associative multiplication can indeed
+carry a cohomology class --- a \emph{$3$-cocycle} valued in its associator, not a $2$-cocycle valued
+in a unary cell. The correctly-typed question for $\Norm$ is therefore not about $k$ at all but about
+the ternary associator $Z_{K}$ of \S\ref{sec:home}: \emph{is $Z_{K}$ (the coboundary of a suitable
+normalization cochain) a $3$-cocycle on $\Norm$'s nerve?} We do not answer this here; we flag it as
+an \textbf{open} question and the natural degree-$3$ successor of this whole note.
+\end{remark}
+
+The locus this reading probes is the \emph{cochain} (single-morphism) level --- and, as
+Remark~\ref{rem:onereason} predicts, the invariant is not there.
+
+\subsection{Reading 2: not a Karoubi splitting --- a unary operation that preserves associativity}
+\label{sec:karoubi}
+
+Here the receptacle \emph{exists}, which makes the negative subtler.
+
+\begin{lemma}[$k$ lives in an associative hom-set and is idempotent]
+\label{lem:k-idem}
+$n\colon DM\Rightarrow MD$ and $m\colon MD\Rightarrow DM$ are morphisms in the functor category
+$[\Set,\Set]$, whose vertical composition is strictly associative. Hence
+$k=n\comp m\in\End_{[\Set,\Set]}(DM)$, and ``is $k$ idempotent?'' and ``does $k$ split?'' are both
+well posed. Moreover $k$ is idempotent: from the section identity $m\comp n=\id_{MD}$ (a normalized
+distribution, included as a subdistribution, already has unit mass, so renormalizing is the
+identity),
+\[
+  k\comp k = (n\comp m)\comp(n\comp m) = n\comp(m\comp n)\comp m = n\comp\id_{MD}\comp m = n\comp m = k.
+\]
+\end{lemma}
+
+\begin{theorem}[$k$ is a split idempotent; registry \texttt{sesquilaw-magmoid-karoubi}, \textbf{proved}]
+\label{thm:split}
+$k=n\comp m$ is a \emph{split} idempotent: it factors through $MD$ via $n$ and $m$ with
+$m\comp n=\id_{MD}$ and $n\comp m=k$, the splitting object $MD$ already present in $[\Set,\Set]$.
+Consequently the Karoubi/Cauchy (idempotent) completion is a \emph{no-op} on $k$ --- it already lies
+in the image of $[\Set,\Set]\hookrightarrow\Kar([\Set,\Set])$ --- so there is no ``missing
+splitting'' and no splitting obstruction to carry the non-associativity.
+\end{theorem}
+
+\begin{proof}
+A split idempotent is a factorization $e=s\comp r$ through its image with $r\comp s=\id$;
+Lemma~\ref{lem:k-idem} gives exactly this through $MD$, with $m\comp n=\id_{MD}$ and $n\comp m=k$.
+The splitting object $MD$ is already present, so idempotent completion adds nothing for $k$.
+\end{proof}
+
+What makes this decisive is the meta-lemma it instantiates.
+
+\begin{lemma}[idempotent completion preserves associativity]
+\label{lem:meta}
+For any category $\mathcal{D}$, the Karoubi/Cauchy completion $\Kar(\mathcal{D})$ is a
+\emph{category}: its composition is associative (Borceux I, \S6.5; nLab, ``idempotent completion'').
+\end{lemma}
+
+\begin{corollary}[splitting can never measure non-associativity]
+\label{cor:orthogonal}
+Splitting idempotents in an associative $\mathcal{D}$ yields only an \emph{associative} category.
+Hence no ``split some idempotents in an associative core'' construction can \emph{produce} a
+non-associative composition; dually, the failure of a composition to associate can never be
+\emph{identified with} the failure of an idempotent to split, because the latter is repaired by a
+construction (Lemma~\ref{lem:meta}) that cannot repair the former.
+\end{corollary}
+
+This is the ``one reason'' in its second reading: splitting an idempotent is a \emph{unary}
+operation on a \emph{single} morphism, and Corollary~\ref{cor:orthogonal} says such an operation
+preserves associativity --- so it never sees, let alone measures, the ternary defect. The home
+exists but carries no obstruction content; its locus is the \emph{single idempotent morphism}.
+
+\begin{remark}[the vacuity is generic: Karoubi absorbs weakenings]
+\label{rem:bls}
+An independent source, from a problem with no connection to $\Norm$, confirms that this is a general
+feature of the weak-distributive-law family. B\"ohm--Lack--Street (``Idempotent Splittings, Colimit
+Completion, and Weak Aspects of the Theory of Monads'', arXiv:1102.4931) show that weak monad
+notions whose defect is a \emph{unit} failure --- e.g.\ \emph{demimonads}, which drop the unit law
+but keep associativity --- reduce to \emph{strict} structure inside the Cauchy-completed
+$Q_{*}\mathcal{K}$. That is: \emph{Karoubi completion absorbs one-sided unit weakenings.} Their law
+(the unit) is not our law (associativity), so this does not transfer our verdict; but the shared
+moral is exactly Corollary~\ref{cor:orthogonal}'s --- Cauchy/Karoubi completion \emph{absorbs}
+weakenings of the monad laws rather than \emph{detecting} them, reached from a wholly different
+problem.
+\end{remark}
+
+\subsection{Reading 3: not a lax distributive law --- a fixed order cannot see a ternary incomparability}
+\label{sec:laxdl}
+
+The one technical (non-vocabulary) lead for a prior home of one-sidedness is \emph{lax distributive
+laws by inequality} --- Schoen, ``Lax Liftings and Lax Distributive Laws'' (arXiv:2307.16552), and
+the companion $(T,V)$-program of Tholen (``Lax Distributive Laws for Topology I/II'',
+arXiv:1603.06251, 1605.04489). It is the subtlest negative: the home exists, is inhabited, and is
+genuinely one-sided --- but one-sided \emph{about the wrong thing}.
+
+\begin{definition}[lax distributive law, after Schoen]
+\label{def:laxdl}
+Let $P$ be a monad on $\Set$ and $F$ an \emph{endofunctor} (no algebraic structure). A \emph{lax
+distributive law} is a transformation $\lambda_{X}\colon FP(X)\to PF(X)$ subject to three
+\emph{one-directional inequalities} in the inclusion (support) order $\subseteq$ of relations
+($\Set$ order-enriched to $\Rel$, with $\Rel(X,Y)=P(X\times Y)$ a poset under $\subseteq$): lax
+naturality, and lax compatibility with the unit and multiplication of $P$. The laxified cells are the
+coherences of the \emph{one} monad $P$; $F$ is a bare functor and contributes none.
+\end{definition}
+
+\begin{claim}[registry: refuted; \texttt{handedness-not-lax-DL} \textbf{proved}]
+\label{clm:laxdl}
+The non-associativity of $\Norm$ is not an instance of, and is not faithfully receivable by, a
+Schoen/Tholen lax distributive law.
+\end{claim}
+
+We give the bookkeeping reason briefly and the conceptual kill in full.
+
+\emph{Variance.} Schoen's template needs $(P\text{ monad},\,F\text{ bare functor},\,\lambda\colon
+FP\to PF)$; $\Norm$ supplies $(D,M,m,n,k)$. Only two variance assignments type-check. With
+$P=M,\ F=D,\ \lambda=n\colon DM\to MD$, the map $n$ carries the defect --- but its failing coherence
+is $D$-multiplicativity, a coherence with the multiplication of $T=D$, which in Schoen's template
+(where $F=D$ is a \emph{bare} functor) is \emph{invisible}; the three laxified cells are all about
+$P=M$. With $P=D,\ F=M$, the only map of the right variance is the \emph{strict} law $m$, carrying no
+defect. In neither assignment is the defect among the laxifiable cells. The same analysis applies to
+Tholen (same coherence-cell laxness, quantale-enriched).
+
+\emph{The discriminator (two orders).} The conceptual kill turns on which order one laxifies in, and
+is independent of the variance bookkeeping.
+
+\begin{lemma}[elementary]
+\label{lem:incomparable}
+If $\mu\le\nu$ pointwise for probability measures $\mu,\nu$ on a set $Y$ (total mass $1$ each), then
+$\mu=\nu$.
+\end{lemma}
+\begin{proof}
+$\nu-\mu\ge 0$ pointwise and $\sum(\nu-\mu)=1-1=0$; a nonnegative function of zero total is zero.
+\end{proof}
+
+\begin{proposition}[the defect is a laxness in neither order]
+\label{prop:not-lax}
+The associator defect of $\Norm$ is not a fixed-direction lax inequality --- neither in the
+$\subseteq$ support order of Definition~\ref{def:laxdl}, nor in the pointwise sub-probability order.
+\end{proposition}
+\begin{proof}
+\emph{Support order.} For a triple whose composite succeeds, both bracketings $(f\sh g)\sh h$ and
+$f\sh(g\sh h)$ are normalized distributions supported on the \emph{same} set of reachable outputs
+(normalization rescales, it does not create or destroy support). So in the $\subseteq$ order the two
+bracketings are generically equal --- the order under which Schoen/Tholen laxify simply \emph{does
+not see} the defect; it is invisible.
+
+\emph{Pointwise order.} Pass to the finer pointwise order, where the defect \emph{is} visible as
+distinct real vectors. A Schoen/Tholen laxness would require a \emph{single fixed direction},
+$(f\sh g)\sh h\le f\sh(g\sh h)$ for all triples or the reverse for all. But both bracketings have
+total mass $1$, so whenever they differ Lemma~\ref{lem:incomparable} forbids $\le$-comparability ---
+and non-associativity is precisely the regime where they differ. Neither fixed direction can hold:
+the defect lives strictly between $\le$-incomparable elements.
+
+Either order kills it: invisible in the one Schoen/Tholen use, $\le$-incomparable in the one that
+sees it.
+\end{proof}
+
+\begin{remark}[the honest near-miss, and why even it is not fixed-direction]
+\label{rem:nearmiss}
+There \emph{is} a lax-looking cell in the $DM$ pointwise order, $\id_{DM}\le k$, since normalization
+raises mass on the successful outcomes ($k(\mu)(y)=\mu(y)/|\mu|\ge\mu(y)$ when $|\mu|\le1$). But the
+direction is not uniform across coordinates: at the failure/deficit coordinate $\bot$, normalization
+\emph{removes} the failure mass, so there $k\le\id$ --- the inequality \emph{reverses}. Even this one
+honest cell is not a single fixed-direction $\le$. And in any case it is a statement about $D$'s
+renormalization, not about $\sh$ as a binary operation; a lax cell existing \emph{somewhere} in the
+ambient order does not make the \emph{associator defect} a laxness.
+\end{remark}
+
+The locus is the \emph{coherence $2$-cell}: a fixed-direction order on one cell, blind to a ternary
+incomparability --- the ``one reason'' in its third reading.
+
+\begin{remark}[honest scope of the Tholen half]
+\label{rem:tholen}
+Schoen arXiv:2307.16552 is deep-read; Tholen arXiv:1603.06251/1605.04489 is not directly read, and
+the no-match for Tholen rests on the \emph{family-level} fact that its laxness is quantale-order
+laxness of coherence cells --- the locus Proposition~\ref{prop:not-lax} rules out --- not on any fine
+Tholen detail. Were a future read to surface a Tholen construction laxifying an \emph{argument slot}
+of a composition rather than a coherence cell, this verdict should be revisited; we judge it unlikely
+but mark it the one unread dependency.
+\end{remark}
+
+\bigskip
+\begin{center}\textsc{Movement II. The home it is}\end{center}
+
+\section{The positive home: an idempotent normalizer}
+\label{sec:home}
+
+If the defect is neither a cocycle, nor a splitting obstruction, nor a laxness, what \emph{is} it?
+The honest answer is concrete and lives one level up from every map so far --- at the binary
+operation itself. We isolate the minimal abstract structure that carries it. The structure turns out
+to be classical; we define it from scratch here and name its lineage in \S\ref{sec:provenance}.
+
+Fix a category $(\mathcal{A},\cdot,1)$ with strictly associative composition --- think of the
+honest, associative ambient (substochastic kernels under matrix product; or the Kleisli category
+$\Kl(DM)$). Diagrammatic order: for $f\in\mathcal{A}(X,Y)$, $g\in\mathcal{A}(Y,Z)$, $f\cdot g\in
+\mathcal{A}(X,Z)$ is ``$f$ then $g$''.
+
+\begin{definition}[normalizer, normalized magmoid]
+\label{def:normalizer}
+A \emph{normalizer} on $\mathcal{A}$ is a family of functions
+$K=K_{X,Y}\colon\mathcal{A}(X,Y)\to\mathcal{A}(X,Y)$ such that
+\begin{itemize}
+  \item \textsf{(K1)} $K$ is idempotent: $K(K(a))=K(a)$;
+  \item \textsf{(U)} $K$ fixes identities: $K(1_{X})=1_{X}$;
+  \item \LA{} \emph{left-absorption}: $K\big(K(x)\cdot c\big)=K(x\cdot c)$ for all composable $x,c$.
+\end{itemize}
+$K$ is \emph{two-sided} if additionally, for every
+$X\xrightarrow{f}Y\xrightarrow{g}Z\xrightarrow{h}W$ with $f,g,h\in\Img K$,
+\begin{itemize}
+  \item \RA{} \emph{right-absorption for} $\sh$: $K\big(f\cdot K(g\cdot h)\big)=K(f\cdot g\cdot h)$.
+\end{itemize}
+The \emph{normalized magmoid} $N_{K}$ has $\mathrm{Ob}\,N_{K}=\mathrm{Ob}\,\mathcal{A}$,
+$N_{K}(X,Y):=\Img K_{X,Y}=\{a:K(a)=a\}$, composition $f\sh g:=K(f\cdot g)$, and units
+$1^{\sh}_{X}:=1_{X}$. We call $N_K$ \emph{handed} when it is non-associative.
+\end{definition}
+
+\begin{remark}[$N_K$ is a magmoid, and $\RA$ is not the mirror of $\LA$]
+\label{rem:welldef}
+$f\sh g=K(f\cdot g)\in\Img K$ by \textsf{(K1)}, and \textsf{(U)} gives units, so $N_{K}$ is a
+magmoid; associativity is \emph{not} assumed. Note that \RA{} is \emph{not} the formal mirror of
+\LA{}. \LA{} is a \emph{binary} law quantified over \emph{all} $x$ (its left argument ranges over
+$\mathcal{A}$, in particular over de-normalized products $f\cdot g$). \RA{} is a \emph{ternary} law
+quantified only over \emph{normalized} $f,g,h\in\Img K$. They have different arities and different
+domains; the asymmetry between them is the whole phenomenon, not a notational accident.
+\end{remark}
+
+\begin{remark}[the laws are not vacuous]
+\label{rem:nonvac}
+In \LA{} the argument $x$ ranges over products $x=f\cdot g$ of $N_{K}$-morphisms, which are generally
+\emph{not} in $\Img K$ (composing two normalized kernels de-normalizes); where $K(x)\ne x$, \LA{} is
+a genuine constraint. Likewise \RA{} concerns the \emph{un-normalized} product $y=g\cdot h$; it is
+\emph{not} the triviality $K(f\cdot K(y))=K(f\cdot y)$ for $y\in\Img K$.
+\end{remark}
+
+\section{The characterization, and the decisive closure criterion}
+\label{sec:char}
+
+Three results pin down $N_{K}$: a clean left bracketing, the equivalence ``associativity $=$
+two-sided absorption'', and --- the statement that is directly checkable on any instance --- a
+\emph{closure criterion}. All use only $\cdot$ and $K$.
+
+\begin{theorem}[the left bracketing is clean]
+\label{thm:A}
+Let $K$ be a normalizer. Then for all composable $f,g,h\in N_{K}$,
+$(f\sh g)\sh h = K(f\cdot g\cdot h)$.
+\end{theorem}
+\begin{proof}
+Apply \LA{} with $x:=f\cdot g$:
+\[
+  (f\sh g)\sh h = K\big(K(f\cdot g)\cdot h\big) \overset{\LA}{=} K\big((f\cdot g)\cdot h\big)
+    = K(f\cdot g\cdot h),
+\]
+the last step by associativity of $\cdot$ in $\mathcal{A}$. The left bracketing normalizes once, at
+the very end.
+\end{proof}
+
+The proof uses only \LA{} and associativity of $\cdot$. The right bracketing does not simplify this
+way, and the gap is the whole content.
+
+\begin{corollary}[associativity $\Longleftrightarrow$ two-sided absorption]
+\label{cor:B}
+Let $K$ be a normalizer. Then $N_{K}$ is associative if and only if $K$ is two-sided (\RA{} holds).
+\end{corollary}
+\begin{proof}
+For $f,g,h\in N_{K}$, Theorem~\ref{thm:A} gives $(f\sh g)\sh h=K(f\cdot g\cdot h)$, while
+$f\sh(g\sh h)=K\big(f\cdot K(g\cdot h)\big)$ by definition. Associativity equates the two, which is
+exactly \RA{}; conversely \RA{} equates them.
+\end{proof}
+
+(We present this as a corollary of Theorem~\ref{thm:A}: given the clean left bracketing it is pure
+unfolding. It was previously billed as a co-equal theorem, which overstated its depth.)
+
+\begin{corollary}[handedness is a genuine, non-vacuous obstruction]
+\label{cor:genuine}
+If $K$ satisfies \LA{} but not \RA{}, then $N_{K}$ is handed, and its associator defect equals
+exactly the defect $K(f\cdot g\cdot h)$ versus $K(f\cdot K(g\cdot h))$ of right-absorption --- nothing
+more and nothing less.
+\end{corollary}
+
+This is the sharp contrast with the Karoubi reading. There the receptacle was \emph{vacuous}: $k$
+already splits, so idempotent completion measures nothing (\S\ref{sec:karoubi}). Here the receptacle
+is \emph{inhabited}: Corollary~\ref{cor:genuine} names a concrete, nonempty set of triples --- those
+with $K(f\cdot K(g\cdot h))\ne K(f\cdot g\cdot h)$ --- that \emph{is} the obstruction.
+
+We now give the decisive, directly-checkable statement. Recall $\Img K$ is \emph{closed} under
+$\cdot$ if $f,g\in\Img K$ composable $\Rightarrow f\cdot g\in\Img K$, i.e.\ $K(f\cdot g)=f\cdot g$.
+
+\begin{theorem}[closure criterion; registry \texttt{positive-home-one-sided-absorbing-idempotent}, \textbf{proved}]
+\label{thm:closure}
+Let $K$ be a normalizer. If $\Img K$ is closed under $\cdot$, then $f\sh g=f\cdot g$ for all
+composable $f,g\in\Img K$, and $N_{K}$ is associative. Equivalently, by contrapositive:
+\[
+  \boxed{\,N_{K}\text{ handed}\ \Longrightarrow\ \Img K\text{ is \emph{not} closed under }\cdot\,}
+\]
+\end{theorem}
+\begin{proof}
+If $\Img K$ is closed, then for composable $f,g\in\Img K$ we have $f\cdot g\in\Img K$, so
+$f\sh g=K(f\cdot g)=f\cdot g$. Iterating, $(f\sh g)\sh h=(f\cdot g)\cdot h$ and
+$f\sh(g\sh h)=f\cdot(g\cdot h)$, equal by associativity of $\cdot$. The contrapositive is immediate.
+The proof uses only \textsf{(K1)} (to read $\Img K$ as the fixed-point set) and associativity of
+$\cdot$ --- not even \LA{}.
+\end{proof}
+
+This is the decisive statement. The formalization it refutes is ``handedness lives in a distinguished
+idempotent that left-absorbs, $K=\kappa\cdot(-)$'': \S\ref{sec:fourth} shows such a $K$ has closed
+image, so by Theorem~\ref{thm:closure} it can never be handed. But we must be equally clear about
+what the criterion does \emph{not} say.
+
+\begin{theorem}[the converse fails --- non-closure is necessary, not sufficient; \textbf{proved}]
+\label{thm:converse}
+There exist normalizers $K$ (satisfying \textsf{(K1)}, \textsf{(U)}, \LA{}) with $\Img K$ \emph{not}
+closed under $\cdot$ and yet $N_{K}$ \emph{associative}. Hence ``$\Img K$ not closed $\Rightarrow$
+handed'' is false, and the full characterization of handedness remains $\LA\wedge\neg\RA$
+(Corollary~\ref{cor:B}), of which non-closure is the clean \emph{necessary} shadow.
+\end{theorem}
+\begin{proof}[Witnesses (computed, exact)]
+(a) \emph{Minimal, order $3$.} Let $M=\{e,a,b\}$ be the monoid with $a\cdot a=b$, $a\cdot b=b\cdot
+a=a$, $b\cdot b=b$ (associative, unit $e$; $a$ non-invertible, so $M$ is not a group). Put
+$K(e)=e,\ K(a)=a,\ K(b)=a$. Then \textsf{(K1)}, \textsf{(U)}, \LA{} hold universally (checked over all
+$3\times3$ pairs), $\Img K=\{e,a\}$ is \emph{not} closed ($a\cdot a=b\notin\Img K$), yet $N_{K}$ on
+$\{e,a\}$ is the $2$-element semilattice ($a\sh a=K(b)=a$), which is associative. An exhaustive search
+shows no such example at order $\le 2$ and exactly six at order $3$: order $3$ is minimal.
+
+(b) \emph{Invertibility does not help.} Take $K=r$ the right-coset representative map of a subgroup
+$H\le G$ with transversal $T$ (so $\Img K=T$, $\sh=\circ$). When $H\trianglelefteq G$ is normal, the
+quotient map restricts to a bijection $T\to G/H$ under which $\circ$ becomes the group law of $G/H$;
+so $(T,\circ)\cong G/H$ is a \emph{group} (associative) for \emph{every} transversal of a normal
+subgroup, while such a transversal is almost never a subgroup. Explicitly for $C_4$, $H=\{0,2\}$,
+$T=\{0,1\}$: $\Img K$ is not closed ($1+1=2\notin T$) yet $(T,\circ)\cong C_2$; likewise $D_4$
+($12$ transversals) and $Q_8$.
+\end{proof}
+
+So the honest picture is one-directional, with a strict gap:
+\[
+  \underbrace{\Img K\text{ closed}}_{\Longleftrightarrow\ \sh\,=\,\cdot|_{\Img K}}
+  \ \overset{\text{strict}}{\Longrightarrow}\
+  \underbrace{\RA{}\text{ holds}}_{\Longleftrightarrow\ N_K\text{ associative}}.
+\]
+The left ``iff'' (closure $\Leftrightarrow$ $\sh=\cdot|_{\Img K}$) is immediate from
+Theorem~\ref{thm:closure}; Theorem~\ref{thm:converse} is the strictness of the middle arrow. Closure
+is the \emph{trivial-factor} condition; associativity is the strictly weaker \emph{cocycle-type}
+condition --- the same split-vs-nonsplit dichotomy the weld's $[\omega]$ lives in
+(Remark~\ref{rem:separate}), seen here from the right-loop side.
+
+\section{The instance: the normalized-kernel magmoid \texorpdfstring{$\Norm$}{Norm}}
+\label{sec:instance}
+
+The abstract home is inhabited by the very object that forced the question.
+
+\begin{proposition}[$\Norm$ is a normalized magmoid]
+\label{prop:norm-instance}
+Let $\mathcal{A}$ be substochastic kernels: objects finite sets; morphisms nonnegative $X\times Y$
+matrices with row sums $\le 1$; composition $=$ matrix product. Let $K$ be row-normalization,
+$K(M)_{xy}=M_{xy}/r_{x}$ with $r_{x}=\sum_{y'}M_{xy'}$, acting as the identity on zero-mass
+(failure/$\bot$) rows. Then $\Img K$ is the set of normalized kernels (each row a probability
+distribution of mass $1$, or total failure $\bot$ of mass $0$), and $N_{K}=\Norm$ with
+$f\sh g=K(f\cdot g)$ the Di~Lavore--Rom\'an--Sz\'ekely composition.
+\end{proposition}
+
+\begin{lemma}[\LA{} holds for row-normalization]
+\label{lem:norm-LA}
+$K(K(x)\cdot c)=K(x\cdot c)$ for all composable substochastic $x,c$.
+\end{lemma}
+\begin{proof}
+On positive-mass rows $K(M)=D_{M}\cdot M$ with $D_{M}=\mathrm{diag}(1/r_{i})$ a positive diagonal.
+\emph{(1) Positive-diagonal invariance:} for any positive diagonal $P=\mathrm{diag}(p_{i})$,
+$(P\cdot M)_{ij}=p_{i}M_{ij}$ has row sum $p_{i}r_{i}$, so
+$K(P\cdot M)_{ij}=p_{i}M_{ij}/(p_{i}r_{i})=K(M)_{ij}$. \emph{(2)} By associativity,
+$K(x)\cdot c=(D_{x}\cdot x)\cdot c=D_{x}\cdot(x\cdot c)$. Hence
+$K(K(x)\cdot c)=K(D_{x}\cdot(x\cdot c))\overset{(1)}{=}K(x\cdot c)$. On zero-mass rows $K(x)=x$ and
+both sides agree.
+\end{proof}
+
+Note $K$ is \emph{not} $\kappa\cdot(-)$ for any fixed $\kappa$: the rescaling $D_{x}$ depends on $x$.
+So $\Img K$ need not be closed, and indeed it is not --- which is exactly why \LA{} is a genuine
+property here and not an identity (contrast \S\ref{sec:fourth}).
+
+\begin{lemma}[\RA{} fails; exact witness]
+\label{lem:norm-RA}
+There exist $f,g,h\in\Norm$ with $K(f\cdot K(g\cdot h))\ne K(f\cdot g\cdot h)$, so by
+Corollary~\ref{cor:B} $\Norm$ is handed.
+\end{lemma}
+\begin{proof}
+Over state sizes $1\to 2\to 3\to 2$, take the normalized kernels
+\[
+  f=\begin{bmatrix}\tfrac23 & \tfrac13\end{bmatrix},\quad
+  g=\begin{bmatrix}\tfrac23 & \tfrac13 & 0\\[2pt] 0 & \tfrac12 & \tfrac12\end{bmatrix},\quad
+  h=\begin{bmatrix}1&0\\0&0\\0&1\end{bmatrix}\ (\text{middle state }1=\bot).
+\]
+Then $g\cdot h=\left[\begin{smallmatrix}\tfrac23&0\\0&\tfrac12\end{smallmatrix}\right]$ has rows of
+\emph{unequal} mass $\tfrac23,\tfrac12$ (the $\bot$ at the middle state destroys different amounts of
+mass on $g$'s two rows). Computing,
+\[
+  (f\sh g)\sh h = K(f\cdot g\cdot h) = \begin{bmatrix}\tfrac{8}{11}&\tfrac{3}{11}\end{bmatrix}
+    \ (\text{Theorem~\ref{thm:A}}),\qquad
+  f\sh(g\sh h) = K\big(f\cdot K(g\cdot h)\big) = \begin{bmatrix}\tfrac23&\tfrac13\end{bmatrix},
+\]
+which differ: \RA{} fails. Correspondingly $\Img K$ is not closed ($g\cdot h\notin\Img K$), as
+Theorem~\ref{thm:closure} requires.
+\end{proof}
+
+\begin{remark}[why the middle must have dimension $\ge 3$; minimal shape $1\to2\to3\to2$]
+\label{rem:dim3}
+The defect needs the inner normalization $K(g\cdot h)=D_{g\cdot h}\cdot(g\cdot h)$ to be a
+\emph{non-scalar} diagonal --- two middle rows rescaled by \emph{different} factors --- else
+$D_{g\cdot h}\propto I$ is absorbed by the outer $K$ (Lemma~\ref{lem:norm-LA}, step~(1)) and the
+defect vanishes. Non-scalar $D_{g\cdot h}$ requires the two middle rows of $g\cdot h$ to have unequal
+mass, which requires $h$ to destroy unequal mass on them; with only a $\bot$ and one surviving
+outcome that forces a third middle state (one feeds $\bot$, two survive unequally). Hence the minimal
+shape is $1\to2\to3\to2$, exactly the witness above.
+\end{remark}
+
+\begin{remark}[recovery regime, after DLRS Prop.\ 4.9]
+\label{rem:recovery}
+The two bracketings agree when the inner normalization is trivial. By Di~Lavore--Rom\'an--Sz\'ekely
+Proposition~4.9 this happens, in particular, when the right factor $h$ is \emph{total} (loses no
+mass, so $g\cdot h$ and $g$ have equal rows and $D_{g\cdot h}=I$); the middle factor $g$ need
+\emph{not} be stochastic. A deterministic exact sweep (seed $20261019$, $20000$ trials) corroborates:
+$0$ violations of \LA{} and of Theorem~\ref{thm:A}; generic triples handed; and the predicted
+recovery regimes associative $5000/5000$ --- reproducing arXiv:2510.01131's Prop.~4.9 purity cases
+(each purity condition drives the defect to $\sim 2\times10^{-16}$, its negation to $\sim10^{-2}$).
+These are \textbf{computed} corroborations; the \textbf{proved} content is
+Theorems~\ref{thm:A},\ref{thm:closure},\ref{thm:converse}, Corollary~\ref{cor:B}, and
+Lemmas~\ref{lem:norm-LA}--\ref{lem:norm-RA}.
+\end{remark}
+
+\begin{remark}[machine-checked, axiom-free]
+\label{rem:lean}
+The construction is certified by a finite model (registry leaf \texttt{lean-positive-home-oracle},
+\textbf{Lean-verified}). Row-normalization uses rational division (not kernel-decidable), so the
+$\Norm$ matrix instance stays computational (Python); to \texttt{decide} \LA{} as a \emph{universal}
+law and witness $\neg\RA{}$ we formalise the \emph{smallest} abstract monoid-with-normalizer
+realizing $\LA\wedge\neg\RA$ (none exists at order $\le 3$): $M=\{e,z,a,b\}$ with two-sided zero $z$,
+$a\cdot a=z$, $a\cdot b=a$, $b\cdot b=b$, and $K=\id$ on $\{e,a,b\}$, $K(z)=b$. Lean \texttt{decide}
+checks: $M$ is a monoid; \textsf{(K1)}, \textsf{(U)}; \LA{} \emph{universally}; Theorem~\ref{thm:A};
+that \RA{} \emph{fails} and $\sh$ is non-associative (witness $a,a,a$:
+$(a\sh a)\sh a=b\ne a=a\sh(a\sh a)$); Corollary~\ref{cor:B} pointwise; the magmoid axioms; and the
+closure criterion on this model ($\Img K$ not closed). An \texttt{\#print axioms} audit shows
+\texttt{[propext]} only --- no \texttt{sorry}, no \texttt{Classical.choice}, no
+\texttt{native\_decide}. This is the positive twin of the Karoubi-vacuity leaf
+\texttt{lean-split-idempotent-oracle}. (A pending Lean polish will print $b\cdot a=z$, add $b\cdot
+a=a$ as a breaking control, and record the order-$4$ uniqueness of the model --- noted for a lean
+pass.)
+\end{remark}
+
+\section{The fourth map falls: a distinguished element cannot be handed}
+\label{sec:fourth}
+
+The classical template for a one-sided absorbing operation is a \emph{near-semiring with a one-sided
+absorbing zero} $0$ ($0\cdot a=0$ imposed, $a\cdot 0=0$ not). It suggests a fourth named map: formalize
+handedness as living in a distinguished \emph{element}, i.e.\ take the normalizer to be
+left-multiplication by a fixed idempotent. Type it per family: a \emph{principal} normalizer is
+$K_{X}(x)=\kappa_{X}\cdot x$ for idempotents $\kappa_{X}\in\mathcal{A}(X,X)$,
+$\kappa_{X}\cdot\kappa_{X}=\kappa_{X}$. The closure criterion dispatches it.
+
+\begin{proposition}[principal normalizers have closed image, hence are associative]
+\label{prop:principal}
+A principal normalizer has $\Img K$ closed under $\cdot$; hence by Theorem~\ref{thm:closure} $N_{K}$
+is associative. A distinguished idempotent element cannot carry handedness.
+\end{proposition}
+\begin{proof}
+For $a\in\Img K$ we have $\kappa\cdot a=a$ (if $a=\kappa x$ then
+$\kappa a=\kappa\kappa x=\kappa x=a$). So for composable $a,b\in\Img K$,
+$K(a\cdot b)=\kappa\cdot a\cdot b=(\kappa\cdot a)\cdot b=a\cdot b$, i.e.\ $a\cdot b\in\Img K$:
+$\Img K$ is closed. Theorem~\ref{thm:closure} gives associativity.
+\end{proof}
+
+\begin{remark}[doubly dead]
+\label{rem:doubly}
+Under the unit axiom \textsf{(U)} a principal normalizer is not merely associative but \emph{trivial}:
+$K(1_{X})=\kappa_{X}\cdot 1_{X}=\kappa_{X}$ must equal $1_{X}$, so $\kappa_{X}=1_{X}$ and $K=\id$.
+There is no nontrivial principal normalizer at all. So the element formalization dies twice over: it
+forces closed image (Proposition~\ref{prop:principal}) and, with \textsf{(U)}, forces the identity.
+\end{remark}
+
+Proposition~\ref{prop:principal} is the fourth refutation, and it is the sharpest because it is not
+about a failed map into some theory but about the \emph{kind of object} handedness can live on. An
+element indexes a \emph{closed} image; handedness requires a \emph{non-closed} one; these are
+incompatible. The row-normalization $K$ of $\Norm$ is non-principal precisely because its image is
+not closed (Lemma~\ref{lem:norm-RA}).
+
+\section{One fact, four loci}
+\label{sec:synthesis}
+
+The four refutations are not four coincidences. Each candidate lives at a \emph{locus} at which the
+ternary associator is invisible:
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+named map & locus it probes & verdict & why (one fact, four reads) \\
+\hline
+$k\mapsto$ $2$-cocycle & cochain / $1$-cell & refuted & wrong arity: $k$ is unary \\
+$k\mapsto$ Karoubi splitting & idempotent morphism & refuted & unary; splitting preserves assoc.\ \\
+$k\mapsto$ lax distributive law & coherence $2$-cell & refuted & fixed order blind to $\le$-incomp.\\
+$\kappa$-element (near-semiring) & distinguished element & refuted & closed image $\Rightarrow$ assoc.\ \\
+\textbf{normalizer} $K$ & \textbf{argument slots of} $\sh$ & \textbf{receives it} & non-closed image; $\LA\wedge\neg\RA$\\
+\hline
+\end{tabular}
+\end{center}
+
+The first three candidates are all \emph{unary} features of the single cell $k$ --- a coboundary, a
+splitting, an order on one morphism --- and a unary feature cannot be the ternary associator. The
+fourth is a distinguished \emph{element}, and an element indexes a \emph{closed} image, which by the
+closure criterion forces associativity. What remains is the \emph{argument slots of the binary
+operation} $\sh$, where Definition~\ref{def:normalizer} places $K$ and
+Theorems~\ref{thm:A}--\ref{thm:closure} locate the defect. The mismatch is structural, not
+accidental: this is \emph{why} the maps missed.
+
+\section{Provenance: the normalizer is the classical transversal construction}
+\label{sec:provenance}
+
+The surviving structure is \emph{not} original ground, and we correct an earlier claim of ours that
+said it was. A dedicated literature sweep --- initially mis-keyed on ``near-semiring'' and
+``absorptive morphism class'', which returned a false null --- resolves, once keyed on
+``transversal'', ``right loop'', ``right congruence'', ``exact factorization'', into a classical
+construction.
+
+\begin{remark}[the normalizer $=$ coset-representative map; $\sh$ $=$ the transversal right loop]
+\label{rem:classical}
+For a subgroup $H\le G$ with right transversal $T$ ($1\in T$, one representative per coset $Hg$), the
+representative map $r\colon G\to T$\footnote{The transversal/right-loop attributions of this remark
+(Baer; Lal; Kiechle; arXiv:1309.7729; Grabowski arXiv:1510.03395) were established by a dedicated
+literature search this cycle and are reported as the current state of evidence. The two arXiv entries
+are not yet logged at deep-read in the program's source index; a browse pass should record them before
+external submission. The verdict ``this construction is classical'' does not depend on any single one
+of them.} is a retraction onto $T$ satisfying \emph{exactly} \textsf{(K1)},
+\textsf{(U)}, \LA{}; the induced product $t\circ t':=r(t\cdot t')$ is our $\sh$, and $T=\Img r$. This
+is the classical construction of right loops from transversals: \textbf{Baer}, ``Nets and groups'',
+Trans.\ AMS 46 (1939) 110--141; \textbf{Lal}, ``Transversals in groups'', J.\ Algebra 181 (1996)
+70--81; \textbf{Kiechle}, \emph{Theory of K-Loops}, Springer LNM 1778 (2002). The oidified
+(categorical) version is already published: \textbf{Grabowski}, ``An introduction to loopoids'',
+arXiv:1510.03395 (Def.~4.1/Prop.~4.3: $t\bullet t'=\pi(t\cdot t')$; Ex.~1.1 writes the \LA{}
+computation). Our closure criterion (Theorem~\ref{thm:closure}, forward direction) is the classical
+``if the transversal is a subgroup then $\circ$ is the restriction of the group product''; cf.\ also
+arXiv:1309.7729, ``On the Congruences in Right Loops''. We emphasize, per Theorem~\ref{thm:converse},
+that the \emph{folklore biconditional} ``the right loop is a group iff the transversal is a
+subgroup'' is \emph{false} in the presence of a nontrivial normal subgroup; only the forward
+direction is a theorem.
+\end{remark}
+
+\begin{remark}[$\Norm = D\cdot K$ is an exact factorization --- a Zappa--Sz\'ep reading]
+\label{rem:zs}
+The relation to the weld (\S\ref{sec:setup}) now sharpens, honestly. A normalized kernel factors as
+$D\cdot K$ --- a positive-diagonal rescaling $D$ times a normalized $K$-image element --- which is a
+multi-object \emph{exact factorization} $G=S\cdot H$, the group-theoretic shadow of a
+\emph{Zappa--Sz\'ep} product. So $\Norm$'s normalizer lands squarely in the same
+exact-factorization/Zappa--Sz\'ep theory as the weld itself: handedness is not homeless, and its home
+is the weld seen from the right-loop side. This is a gain, not a loss --- it relocates the invariant
+into a \emph{theory} pillar of the program.
+\end{remark}
+
+\begin{remark}[honest novelty residue --- narrow]
+\label{rem:residue}
+What is \emph{not} in the cited literature, and is ours, is narrow and we foreground only this:
+\begin{enumerate}
+  \item \emph{A base without invertibility.} Baer, Lal, Kiechle and Grabowski all assume
+        group/groupoid inverses. $\Norm$'s substochastic kernels are non-invertible, and the
+        order-$3$ witness of Theorem~\ref{thm:converse}(a) is a non-invertible monoid. Running the
+        transversal/right-loop construction over a general associative category/monoid \emph{without}
+        inverses is a modest extension of monoid right-congruence theory --- a genuine but small gap
+        in the cited sources, \emph{not} a new phenomenon.
+  \item \emph{The instance.} The substochastic-kernel magmoid $\Norm$, read as the
+        exact factorization $D\cdot K$, is a legitimate novel \emph{example} of the classical
+        construction --- not a novel construction.
+\end{enumerate}
+A third candidate precedent, Grandis (``Categories with Negation'', arXiv:1709.03186), whose
+left/right-absorbing morphism \emph{classes} form an \emph{ideal}, is structurally one level off (a
+class, not a single operator) and is not the home; we note it only to close the search. We would
+retract any novelty claim the moment a closer precedent surfaced.
+\end{remark}
+
+\section{Grant relevance}
+\label{sec:grant}
+
+The program's obstruction-theory narrative gains a complete, honestly-bounded unit. For a concrete,
+finite-dimensional, machine-checkable witness of compositional non-associativity --- the normalized
+substochastic magmoid $\Norm$, an exact-factorization cousin of the central Zappa--Sz\'ep weld --- we
+now know precisely \emph{what the defect is not}: not a $2$-cocycle, not a Karoubi-splitting
+obstruction, not a lax distributive law, not a distinguished near-semiring element; four named maps,
+decided, failing for one reason read four ways (a unary cell, or a closed-image element, cannot be a
+ternary associator). And we know \emph{what it is}: a one-sided absorptivity received by an idempotent
+normalizer $K$, with ``associativity $=$ $K$ two-sided absorbing'' (Corollary~\ref{cor:B}) a theorem,
+with the decisive, directly-checkable \emph{closure criterion} ``handed $\Rightarrow$ $\Img K$ not
+closed'' (Theorem~\ref{thm:closure}), with $\Norm$ as a faithful instance, and with the whole package
+identified --- honestly --- as the classical transversal construction of right loops, relocating the
+invariant into the program's Zappa--Sz\'ep theory pillar. The one open successor, flagged as such, is
+the correctly-typed cohomological question of Remark~\ref{rem:degree3}: is the ternary associator
+$Z_{K}$ a degree-$3$ class? ``Normalization's non-associativity is a handedness datum of a transversal
+normalizer, not a characteristic class of $k$'' is a crisp, defensible statement about where
+compositional non-associativity lives --- and the kind of negative-plus-positive result, with
+provenance stated rather than overclaimed, that keeps the Impact narrative honest.
+
+\end{document}
