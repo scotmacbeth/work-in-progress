@@ -8,8 +8,8 @@
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
-\newtheorem{proposition}{Proposition}
-\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -81,8 +81,8 @@ and verified on an exact finite model). Theorem~2's refutation is \textbf{proved
 exact counterexamples (a minimal order-3 non-invertible monoid; and $C_4$/$D_4$/$Q_8$
 normal-subgroup transversals), computed exactly in \texttt{fractions}/finite enumeration.
 Attribution is to the classical transversal literature (Baer, Lal, Kiechle, Grabowski), with the
-explicit note that the folklore \emph{biconditional} those sources are sometimes quoted for does
-not hold.
+explicit note that the group-$\iff$-subgroup \emph{biconditional} sometimes attached to this
+construction has no source and does not hold.
 
 \section{Setting and the standing definition}
 
@@ -118,8 +118,9 @@ $T = \Im r$. Sources: \textbf{Baer, ``Nets and groups,'' Trans.\ AMS 46 (1939) 1
 the Congruences in Right Loops''}; oidified: \textbf{Grabowski, ``An introduction to loopoids,''
 arXiv:1510.03395} (Def~4.1 / Prop~4.3: $t\bullet t' = \pi(t\cdot t')$). The forward direction of
 Theorem~1 (``$T$ a subgroup $\Rightarrow \circ = \cdot|_T$'') is classical and elementary. The
-\emph{converse} --- the folklore biconditional ``right loop is a group $\iff$ transversal is a
-subgroup'' --- is \textbf{not} a theorem (\S3).
+\emph{converse} --- the (sourceless) biconditional ``right loop is a group $\iff$ transversal is a
+subgroup'', which was our own \texttt{PROVE.md} target rather than a classical statement --- is
+\textbf{not} a theorem (\S4).
 
 \section{Theorem 1 --- the closure criterion}
 
@@ -151,7 +152,7 @@ Theorem~1 invokes only \textbf{(K1)} (to read $\Im K$ as the fixed-point set) an
 \textbf{associativity of $\cdot$ in $\Acat$}. It does \emph{not} use $(\mathrm{U})$ or even
 $(\mathrm{LA})$. So closure is a sufficient condition for associativity that is insensitive to the
 left-absorption law --- a first sign that it is strictly stronger than what associativity needs
-(\S3). In the standing setting $(\mathrm{LA})$ holds, so ``handed'' means $(\mathrm{LA}) \wedge
+(\S4). In the standing setting $(\mathrm{LA})$ holds, so ``handed'' means $(\mathrm{LA}) \wedge
 \neg(\mathrm{RA}_\#)$; Theorem~1 gives $(\mathrm{LA}) \wedge \neg(\mathrm{RA}_\#) \Rightarrow$ not
 closed. This is exactly Rick's ``handed $\Rightarrow \Im K$ not closed.''
 \end{remark}
@@ -159,11 +160,12 @@ closed. This is exactly Rick's ``handed $\Rightarrow \Im K$ not closed.''
 \begin{remark}[relation to Theorem~B]
 Theorem~1 is the structural ``why'' behind Theorem~B of the positive-home note. Indeed closure
 $\Rightarrow \NK$ associative $\iff (\mathrm{RA}_\#)$ (Theorem~B). So \textbf{closure $\Rightarrow
-(\mathrm{RA}_\#)$}. The content of \S3 is that this implication is \emph{strict}:
+(\mathrm{RA}_\#)$}. The content of \S4 is that this implication is \emph{strict}:
 $(\mathrm{RA}_\#)$ can hold without closure.
 \end{remark}
 
 \section{Theorem 2 --- the converse fails, even for groups}
+\label{sec:thm2}
 
 The target in \texttt{state/PROVE.md} asked for the biconditional ``handedness $\iff$
 non-closure'', equivalently ``$\NK$ associative $\iff \Im K$ closed''. Only the $\Leftarrow$ of the
@@ -205,8 +207,12 @@ pairs, exactly):
 
 So $(\mathrm{LA})$ holds, $\Im K$ is not closed, yet $\NK$ is associative: the converse of
 Theorem~1 is refuted. An exhaustive search over all monoids of order $\le 3$ and all normalizers on
-them shows \textbf{no such example exists at order $\le 2$} (0 pairs), and exactly \textbf{6} exist
-at order 3 (across 3 monoid tables) --- so order 3 is minimal.
+them shows \textbf{no such example exists at order $\le 2$} (0 pairs) and \textbf{6} at order 3 ---
+so order 3 is minimal. (Counting convention: $6$ \emph{labelled} witnesses $(M,K)$, supported on
+$4$ of the $11$ labelled order-$3$ monoid tables; up to isomorphism, $3$ witnesses on $2$
+isomorphism classes of monoid --- so neither count is literally ``$3$''. The $M$ above is $C_2$
+with an adjoined external unit $e$, and $N_K$ is the quotient collapsing the two-sided congruence
+class $\{a,b\}$.)
 
 \paragraph{What goes wrong for the converse here.} $\Im K = \{e,a\}$ fails closure only at the
 single product $a\cdot a = b$, whose normalization $K(b) = a$ ``lands back'' compatibly: the one
@@ -229,18 +235,45 @@ associative $\iff T$ subgroup'' \textbf{fails}:
   associative.
 \end{itemize}
 
-\paragraph{Mechanism (clean and general).} Whenever $H \triangleleft G$ is normal, the quotient map
-restricts to a bijection $T \to G/H$, $t \mapsto Ht$, under which $\circ$ becomes the group law of
-$G/H$: $r(t\cdot t') \mapsto H(t\cdot t') = (Ht)(Ht')$. So $(T, \circ) \cong G/H$ is a group for
-\textbf{every} transversal of a normal subgroup --- while a transversal of a nontrivial normal
-subgroup is almost never a subgroup. This is a whole family of counterexamples; the vanishing of
-anomalies for $C_2, C_3, C_2\times C_2, S_3$ in the sweep is an accident of those small subgroup
-lattices (every transversal of each normal subgroup there happens to be a subgroup), not a theorem.
+\paragraph{Mechanism --- the exact criterion, and its two canonical solutions.} The reason
+$(T,\circ)$ can associate without $T$ being a subgroup is \emph{not} ``normality'' as such;
+normality is one sufficient route, not the reason. The sharp statement (proved in the companion
+note \texttt{2026-10-22-mirror-LA-sufficient-for-associativity}, node
+\texttt{mirror-LA-sufficient-for-associativity}) is a single criterion with two canonical
+solutions. For $f, g, h \in T$ write the de-normalization $g\cdot h = \varphi(g,h)\cdot(g\circ h)$
+with $\varphi(g,h)\in H$. Then
+\[
+  (T,\circ)\ \text{associative}\qquad\Longleftrightarrow\qquad
+  f\cdot\varphi(g,h)\cdot f^{-1}\in H\quad\text{for all } f,g,h\in T
+\]
+(brute-forced over all $36\,116$ pairs $(H,T)$ across the ten groups up to $S_4$: $0$ mismatches).
+The criterion is met in two canonical ways:
+\begin{itemize}[leftmargin=1.6em]
+\item \textbf{closure} ($T$ a subgroup): then $g\cdot h\in T$, so $\varphi\equiv 1$ and the
+  criterion is vacuous --- this is Theorem~1;
+\item \textbf{normality} ($H\triangleleft G$): then $\varphi(g,h)\in H$ and $fHf^{-1}=H$, so
+  $f\cdot\varphi(g,h)\cdot f^{-1}\in H$ automatically; the quotient map restricts to a group
+  isomorphism $(T,\circ)\cong G/H$, $t\mapsto Ht$, for \textbf{every} transversal of a normal
+  subgroup.
+\end{itemize}
+Both are genuine but \emph{different} degenerations, and the criterion is strictly weaker than
+either: over $S_3\times C_2$ there are $9$ associative non-subgroup transversals with $H$
+\emph{non-normal}; over $S_4$, $36$. So normality is \textbf{sufficient, not necessary}. ($T$ is a
+subgroup precisely when it is a \emph{complement} of $H$; depending on the extension this can be
+universal --- all $8$ transversals of an order-$2$ subgroup of $C_2\times C_2$ are subgroups, as are
+all $4$ of $\langle r\rangle$ in $D_4$ --- or impossible, as in the non-split central witnesses
+above, where $0$ transversals are subgroups.)
 
-This is the decisive correction: \textbf{invertibility does not rescue the converse.} The folklore
-``right loop is a group $\iff$ transversal is a subgroup'' is simply false in the presence of a
-nontrivial normal subgroup. The classical literature's \emph{true} content is the forward direction
-(``subgroup $\Rightarrow \circ = \cdot|_T$'') --- i.e.\ Theorem~1 --- not the biconditional.
+This is the decisive correction: \textbf{invertibility does not rescue the converse.} The
+biconditional ``right loop is a group $\iff$ transversal is a subgroup'' is simply false in the
+presence of a nontrivial normal subgroup. We flag its status honestly: it has \emph{no source} ---
+we have found no text asserting it --- and calling it ``folklore'' earlier overstated its standing.
+It was the target written into our own \texttt{state/PROVE.md} and the memory note
+\texttt{feedback-handedness-is-classical-transversal-not-original}; this note corrects both. What
+the classical transversal literature \emph{does} contain is more than the forward direction: both
+the true biconditional of Prop~3 (closure $\iff \circ=\cdot|_T$) \emph{and} the quotient fact
+($H\triangleleft G\Rightarrow(T,\circ)\cong G/H$) are classical. Only the false
+group-$\iff$-subgroup biconditional was ours to retract.
 
 \section{Proposition 3 --- the biconditional that \emph{is} true}
 
@@ -265,19 +298,34 @@ associativity. Associativity is a strictly weaker ternary condition:
 \]
 The classical transversal statement, stated correctly, is the top line specialized to groups:
 ``$T$ is a subgroup $\iff \circ$ is the restriction of $\cdot$.'' The middle-arrow strictness is
-the whole content of \S3.
+the whole content of \S4.
 
-\begin{remark}[the obstruction, and the resonance with the weld $H^2$ program]
-For $x, y \in \Im K$ write the de-normalization $x\cdot y = \varphi(x,y) \cdot (x\#y)$ where
-$\varphi(x,y)$ is whatever $K$ strips off ($K(x\cdot y) = x\#y$). Then closure $\iff \varphi \equiv
-1$ (trivial factor). Associativity of $\#$ is a \textbf{2-cocycle-type equation} on $\varphi$,
-which $\varphi$ can satisfy \emph{without} being trivial --- precisely the normal-subgroup case,
-where $\varphi$ is (the data of) a split extension and $(T,\circ) \cong G/H$. This is why closure
-$\Rightarrow$ associativity but not conversely, and it is the same split-vs-nonsplit dichotomy that
-the weld obstruction lives in (\texttt{h2-weld-class-is-splitting-not-associativity}): closure is
-the \emph{trivial-factor} condition, strictly below the \emph{cocycle} condition. The handedness
-home $\mathrm{Norm}$ of (\texttt{2026-10-19-handedness-positive-home}) realizes the strict gap from
-the other side --- there $\Im K$ is not closed \textbf{and} $(\mathrm{RA}_\#)$ fails.
+\begin{remark}[what closure, splitting, and associativity actually are --- and the resonance with the weld $H^2$ program]
+Restrict to the group case $H \triangleleft G$ with transversal $T = \Im K$, and for $s, t \in T$
+write the de-normalization $s\cdot t = \varphi(s,t)\cdot (s\# t)$ with $\varphi(s,t) \in H$ (so
+$s\#t = K(s\cdot t)$ is the representative and $\varphi$ is the $H$-part that $K$ strips off). Three
+conditions, \emph{not two}, must be kept apart:
+\begin{itemize}[leftmargin=1.6em]
+\item \textbf{closure} of this particular $T$ $\iff \varphi \equiv 1$ on $T$;
+\item \textbf{splitting} of the extension $1 \to H \to G \to G/H \to 1$ $\iff [\varphi] = 0$ in
+  $H^2(G/H; H)$ $\iff$ \emph{some} transversal is closed (is a complement of $H$);
+\item \textbf{associativity} of $(T,\#)$: holds for \textbf{every} transversal $T$, split or not,
+  because $(T,\#) \cong G/H$ (\S\ref{sec:thm2}, mechanism paragraph).
+\end{itemize}
+So split-vs-non-split is ``\emph{some} transversal closed vs.\ \emph{no} transversal closed'' ---
+\textbf{both inside the associative regime}. It is \emph{not} the closure-vs-associativity axis: the
+printed group witnesses take $H$ the order-$2$ \emph{centre} of $C_4, Q_8, D_4$, whose central
+extension is \textbf{non-split} ($0/2$, $0/8$, $0/8$ of the transversals are subgroups), yet
+$(T,\#)\cong G/H$ is a group in every case. For a \emph{general} normalizer $K$ on a monoid without
+inverses there is no $\varphi$ at all --- nothing is stripped off --- so the cocycle picture is a
+group-only refinement, not the mechanism that makes $\#$ associate.
+
+This is exactly the reading of the weld's class $[\omega]$: it is a \emph{splitting} obstruction of
+an \emph{already-associative} weld (\texttt{h2-weld-class-is-splitting-not-associativity}),
+measuring whether the extension splits, not whether the composite associates. The corrected
+statement here \emph{agrees} with that: the normalized product associates throughout (over $H
+\triangleleft G$), and the $H^2$ class only records whether a closed (split) transversal can be
+chosen.
 \end{remark}
 
 \section{The corrected minimality statement (replacing Prop 5.1)}
@@ -294,12 +342,16 @@ $(\mathrm{LA}) \wedge \neg(\mathrm{RA}_\#)$ (Theorem~B), of which non-closure is
 shadow.
 \end{corollary}
 
-The $\mathrm{Norm}$ instance realizes it: $\Im K =$ row-stochastic kernels is \textbf{not closed}
-under matrix product in the sense required --- the product of two normalized kernels de-normalizes
-(mass is destroyed at $\bot$ states before re-normalization), so $K(f\cdot g) \neq f\cdot g$ in
-general, and additionally $(\mathrm{RA}_\#)$ fails (exact witness, re-verified 2026-10-21:
-$(f\#g)\#h = [8/11,3/11] \neq [2/3,1/3] = f\#(g\#h)$). Non-closure is the necessary half; the
-sufficient defect is the ternary $(\mathrm{RA}_\#)$ failure.
+The $\mathrm{Norm}$ instance realizes it. Here $\Im K$ is the set of normalized kernels --- each row
+of mass $1$ (a probability distribution) or mass $0$ (total failure $\bot$) --- and it is
+\textbf{not closed} under matrix product. The reason is \emph{not} the trivial one: genuinely
+\emph{row-stochastic} kernels (every row mass exactly $1$) \emph{do} form a monoid. Non-closure
+comes only from the $\bot$ rows: a product of two normalized kernels can have rows of intermediate
+mass, because a $\bot$ destroys unequal amounts of mass across rows before re-normalization, so
+$K(f\cdot g)\neq f\cdot g$ in general. Non-closure of $\mathrm{Norm}$ then needs no separate
+argument --- it is forced by Theorem~1 the moment $(\mathrm{RA}_\#)$ fails (exact witness,
+re-verified 2026-10-21: $(f\#g)\#h = [8/11,3/11] \neq [2/3,1/3] = f\#(g\#h)$). Non-closure is the
+necessary half; the sufficient defect is the ternary $(\mathrm{RA}_\#)$ failure.
 
 \section{Verification (computational, exact)}
 
@@ -326,14 +378,15 @@ Scripts under \texttt{scratch/}, all exact (\texttt{fractions.Fraction} / finite
 \item \textbf{Theorem~2} is a refutation by explicit exact examples; the general ``normal $H
   \Rightarrow (T,\circ)\cong G/H$'' mechanism is classical (quotient group), stated as the reason,
   not a new theorem.
-\item \textbf{The record correction} (the folklore ``group $\iff$ subgroup'' biconditional is
-  false; the memory note and \texttt{PROVE.md} target over-stated it) is established by \S3 and
+\item \textbf{The record correction} (the sourceless ``group $\iff$ subgroup'' biconditional is
+  false; the memory note and \texttt{PROVE.md} target over-stated it) is established by \S4 and
   should propagate to the registry and to
   \texttt{feedback-handedness-is-classical-transversal-not-original}.
 \item No claim of originality beyond: (i)~the base is a \textbf{general associative category/monoid
   without invertibility} (the order-3 witness is non-invertible); (ii)~the clean \textbf{statement
-  of the strict gap} closure $\subsetneq (\mathrm{RA}_\#)$ and its refutation of the folklore
-  biconditional \emph{even over groups}; (iii)~the $\mathrm{Norm}$ substochastic-kernel instance.
+  of the strict gap} closure $\subsetneq (\mathrm{RA}_\#)$ and its refutation of the sourceless
+  group-$\iff$-subgroup biconditional \emph{even over groups}; (iii)~the $\mathrm{Norm}$
+  substochastic-kernel instance.
   The closure criterion itself (forward direction) is classical, cited above.
 \end{itemize}
 

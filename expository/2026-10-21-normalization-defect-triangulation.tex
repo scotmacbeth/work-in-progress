@@ -57,10 +57,11 @@ The normalization of substochastic kernels is non-associative: Di~Lavore, Rom\'a
 (arXiv:2510.01131) show it is a \emph{sesquilaw}, not a distributive law, and that the induced
 composition of normalized kernels forms a genuine \emph{magmoid} $\Norm$ --- a category minus
 associativity. We ask which categorical invariant measures that defect. The question is a
-probabilistic, finite-dimensional face of a central concern of the program: the Zappa--Sz\'ep
-\emph{weld} of directed containers (the orchestration composite, our tool for \emph{when}
-compositions exist) is likewise non-associative in general, and $\Norm$ is an exact-factorization
-cousin of it. We answer in two movements. \emph{Movement~I} refutes three \emph{named} candidate
+probabilistic, finite-dimensional face of a central concern of the program: orchestration
+composition is governed by the Zappa--Sz\'ep \emph{weld} of directed containers (our tool for
+\emph{when} compositions exist), which \emph{is} associative once its Zappa--Sz\'ep data make it
+well defined; $\Norm$ is an exact-factorization cousin of the weld and a fully computable witness of
+the non-associativity that \emph{normalization} introduces on top. We answer in two movements. \emph{Movement~I} refutes three \emph{named} candidate
 homes --- a $2$-cocycle, a Karoubi/Cauchy splitting obstruction, and a Schoen/Tholen lax
 distributive law --- and shows they fail for \emph{one} reason, read three ways: the renormalization
 idempotent $k$ is a \emph{unary} $1$-cell that never sees a triple, whereas non-associativity is
@@ -73,7 +74,8 @@ transversal/right-loop theorem, and it refutes a fourth named map (the near-semi
 absorbing zero) at a stroke: a principal normalizer has closed image, hence is associative. We are
 explicit about provenance: the normalizer package is the classical transversal construction of right
 loops (Baer; Lal; Kiechle), published already in oidified form (Grabowski); $\Norm=D\cdot K$ is an
-exact factorization, a Zappa--Sz\'ep reading. The honest novelty is narrow: a base \emph{without}
+\emph{exact factorization} --- one honest rung more general than a Zappa--Sz\'ep product, in which
+only the subgroup factor, not the transversal, is closed. The honest novelty is narrow: a base \emph{without}
 invertibility, and the substochastic-kernel instance. A machine-checked finite model certifies the
 construction axiom-free.
 \end{abstract}
@@ -563,7 +565,8 @@ shows no such example at order $\le 2$ and exactly six at order $3$: order $3$ i
 $H\le G$ with transversal $T$ (so $\Img K=T$, $\sh=\circ$). When $H\trianglelefteq G$ is normal, the
 quotient map restricts to a bijection $T\to G/H$ under which $\circ$ becomes the group law of $G/H$;
 so $(T,\circ)\cong G/H$ is a \emph{group} (associative) for \emph{every} transversal of a normal
-subgroup, while such a transversal is almost never a subgroup. Explicitly for $C_4$, $H=\{0,2\}$,
+subgroup (such a $T$ is itself a subgroup precisely when it is a \emph{complement} of $H$).
+Explicitly for $C_4$, $H=\{0,2\}$,
 $T=\{0,1\}$: $\Img K$ is not closed ($1+1=2\notin T$) yet $(T,\circ)\cong C_2$; likewise $D_4$
 ($12$ transversals) and $Q_8$.
 \end{proof}
@@ -575,10 +578,43 @@ So the honest picture is one-directional, with a strict gap:
   \underbrace{\RA{}\text{ holds}}_{\Longleftrightarrow\ N_K\text{ associative}}.
 \]
 The left ``iff'' (closure $\Leftrightarrow$ $\sh=\cdot|_{\Img K}$) is immediate from
-Theorem~\ref{thm:closure}; Theorem~\ref{thm:converse} is the strictness of the middle arrow. Closure
-is the \emph{trivial-factor} condition; associativity is the strictly weaker \emph{cocycle-type}
-condition --- the same split-vs-nonsplit dichotomy the weld's $[\omega]$ lives in
-(Remark~\ref{rem:separate}), seen here from the right-loop side.
+Theorem~\ref{thm:closure}; Theorem~\ref{thm:converse} is the strictness of the middle arrow.
+
+A word on how this sits against the weld's class $[\omega]$, to head off a tempting but wrong gloss.
+Over a group with $H\triangleleft G$, writing $s\cdot t=\varphi(s,t)\cdot(s\sh t)$ with
+$\varphi(s,t)\in H$, there are \emph{three} conditions, not two: closure of \emph{this} transversal
+$\iff\varphi\equiv1$; \emph{splitting} of $1\to H\to G\to G/H\to1$ $\iff[\varphi]=0\in H^2(G/H;H)$
+$\iff$ \emph{some} transversal is closed; and associativity, which holds for \emph{every}
+transversal because $(T,\sh)\cong G/H$. So the split-vs-non-split axis is ``\emph{some} transversal
+closed vs.\ \emph{none}'' --- entirely \emph{inside} the associative regime --- and is \emph{not}
+the closure-vs-associativity axis. (The printed group witnesses of Theorem~\ref{thm:converse} take
+$H$ the order-$2$ \emph{centre} of $C_4, Q_8, D_4$ --- a \emph{non-split} central extension, $0$ of
+whose transversals are subgroups --- yet $(T,\sh)\cong G/H$ is a group. For a general $K$ on a
+monoid without inverses there is no $\varphi$ at all.) This is \emph{exactly} the reading of
+Remark~\ref{rem:separate}: $[\omega]$ is a \emph{splitting} obstruction of an
+\emph{already-associative} weld, not an associativity obstruction. The closure criterion agrees with
+it; it does not relocate associativity into an $H^2$ class.
+
+\begin{remark}[the unified mechanism: closure and normality solve one criterion]
+\label{rem:mirror}
+Normality is \emph{sufficient but not necessary} for $(T,\sh)$ to associate: over $S_3\times C_2$
+there are $9$ associative non-subgroup transversals with $H$ non-normal; over $S_4$, $36$. The sharp
+statement (companion note, registry \texttt{mirror-LA-sufficient-for-associativity},
+\textbf{proved}) is a single criterion with two canonical solutions. For $f,g,h\in T$ write
+$g\cdot h=\varphi(g,h)\cdot(g\sh h)$ with $\varphi(g,h)\in H$; then
+\[
+  (T,\sh)\ \text{associative}\quad\Longleftrightarrow\quad f\cdot\varphi(g,h)\cdot f^{-1}\in H
+  \quad\text{for all } f,g,h\in T
+\]
+($0$ mismatches over all $36\,116$ pairs $(H,T)$ up to $S_4$). Its two canonical solutions are
+\emph{closure} ($T$ a subgroup, $\varphi\equiv1$, criterion vacuous --- Theorem~\ref{thm:closure})
+and \emph{normality} ($H\triangleleft G$, so $f\varphi f^{-1}\in H$ automatically). Over a general
+base $\mathcal{A}$ the normality half is captured by the \emph{mirror} of \LA{}, the law
+$K(c\cdot K(x))=K(c\cdot x)$, which makes $\ker K$ a two-sided congruence and hence $N_K\cong
+\mathcal{A}/\!\ker K$; for cosets it holds $\iff H\triangleleft G$. It is strictly stronger than
+\RA{} and incomparable with closure --- two genuinely different sufficient conditions, each strictly
+above associativity.
+\end{remark}
 
 \section{The instance: the normalized-kernel magmoid \texorpdfstring{$\Norm$}{Norm}}
 \label{sec:instance}
@@ -609,9 +645,10 @@ $K(K(x)\cdot c)=K(D_{x}\cdot(x\cdot c))\overset{(1)}{=}K(x\cdot c)$. On zero-mas
 both sides agree.
 \end{proof}
 
-Note $K$ is \emph{not} $\kappa\cdot(-)$ for any fixed $\kappa$: the rescaling $D_{x}$ depends on $x$.
-So $\Img K$ need not be closed, and indeed it is not --- which is exactly why \LA{} is a genuine
-property here and not an identity (contrast \S\ref{sec:fourth}).
+Note $K$ is \emph{not} $\kappa\cdot(-)$ for any fixed $\kappa$: the rescaling $D_{x}$ depends on
+$x$. Non-principality does not by itself force $\Img K$ to be non-closed; but here $\Img K$
+\emph{is} non-closed (Lemma~\ref{lem:norm-RA}), which is exactly why \LA{} is a genuine property and
+not an identity (contrast \S\ref{sec:fourth}).
 
 \begin{lemma}[\RA{} fails; exact witness]
 \label{lem:norm-RA}
@@ -650,10 +687,14 @@ shape is $1\to2\to3\to2$, exactly the witness above.
 
 \begin{remark}[recovery regime, after DLRS Prop.\ 4.9]
 \label{rem:recovery}
-The two bracketings agree when the inner normalization is trivial. By Di~Lavore--Rom\'an--Sz\'ekely
-Proposition~4.9 this happens, in particular, when the right factor $h$ is \emph{total} (loses no
-mass, so $g\cdot h$ and $g$ have equal rows and $D_{g\cdot h}=I$); the middle factor $g$ need
-\emph{not} be stochastic. A deterministic exact sweep (seed $20261019$, $20000$ trials) corroborates:
+The two bracketings agree when the inner normalization is trivial. Di~Lavore--Rom\'an--Sz\'ekely
+Proposition~4.9 (Sesquilaw magmoids) gives three sufficient conditions for
+$f\sh(g\sh h)=(f\sh g)\sh h$ in any sesquilaw $(S,T,m,n)$: either (1) $f=u\comp S\eta_T$ for some
+$u$, (2) $g=v\comp S\eta_T$ for some $v$, or (3) $h=w\comp\eta_S T$ for some $w$. In the metalanguage
+gloss of their \S5 these read, respectively, as $f$ \emph{partial}, $g$ \emph{partial}, or $h$
+\emph{stochastic} (total). Our witness fails all three; the cleanest recovery is case~(3), $h$ total
+--- then $h$ loses no mass, so $g\cdot h$ and $g$ have equal row masses, $D_{g\cdot h}=I$, and the
+inner normalization vanishes --- and note the middle factor $g$ need \emph{not} be stochastic. A deterministic exact sweep (seed $20261019$, $20000$ trials) corroborates:
 $0$ violations of \LA{} and of Theorem~\ref{thm:A}; generic triples handed; and the predicted
 recovery regimes associative $5000/5000$ --- reproducing arXiv:2510.01131's Prop.~4.9 purity cases
 (each purity condition drives the defect to $\sim 2\times10^{-16}$, its negation to $\sim10^{-2}$).
@@ -714,8 +755,9 @@ forces closed image (Proposition~\ref{prop:principal}) and, with \textsf{(U)}, f
 Proposition~\ref{prop:principal} is the fourth refutation, and it is the sharpest because it is not
 about a failed map into some theory but about the \emph{kind of object} handedness can live on. An
 element indexes a \emph{closed} image; handedness requires a \emph{non-closed} one; these are
-incompatible. The row-normalization $K$ of $\Norm$ is non-principal precisely because its image is
-not closed (Lemma~\ref{lem:norm-RA}).
+incompatible. The row-normalization $K$ of $\Norm$ is non-principal: its image is not closed
+(Lemma~\ref{lem:norm-RA}), which by Proposition~\ref{prop:principal} (contrapositive) already rules
+out principality.
 
 \section{One fact, four loci}
 \label{sec:synthesis}
@@ -761,8 +803,9 @@ representative map $r\colon G\to T$\footnote{The transversal/right-loop attribut
 (Baer; Lal; Kiechle; arXiv:1309.7729; Grabowski arXiv:1510.03395) were established by a dedicated
 literature search this cycle and are reported as the current state of evidence. The two arXiv entries
 are not yet logged at deep-read in the program's source index; a browse pass should record them before
-external submission. The verdict ``this construction is classical'' does not depend on any single one
-of them.} is a retraction onto $T$ satisfying \emph{exactly} \textsf{(K1)},
+external submission --- Grabowski's Example~1.1 in particular (the explicit \LA{} computation)
+belongs on that deep-read list. The verdict ``this construction is classical'' does not depend on
+any single one of them.} is a retraction onto $T$ satisfying \emph{exactly} \textsf{(K1)},
 \textsf{(U)}, \LA{}; the induced product $t\circ t':=r(t\cdot t')$ is our $\sh$, and $T=\Img r$. This
 is the classical construction of right loops from transversals: \textbf{Baer}, ``Nets and groups'',
 Trans.\ AMS 46 (1939) 110--141; \textbf{Lal}, ``Transversals in groups'', J.\ Algebra 181 (1996)
@@ -772,20 +815,25 @@ arXiv:1510.03395 (Def.~4.1/Prop.~4.3: $t\bullet t'=\pi(t\cdot t')$; Ex.~1.1 writ
 computation). Our closure criterion (Theorem~\ref{thm:closure}, forward direction) is the classical
 ``if the transversal is a subgroup then $\circ$ is the restriction of the group product''; cf.\ also
 arXiv:1309.7729, ``On the Congruences in Right Loops''. We emphasize, per Theorem~\ref{thm:converse},
-that the \emph{folklore biconditional} ``the right loop is a group iff the transversal is a
-subgroup'' is \emph{false} in the presence of a nontrivial normal subgroup; only the forward
-direction is a theorem.
+that the biconditional ``the right loop is a group iff the transversal is a subgroup'' is
+\emph{false} in the presence of a nontrivial normal subgroup. This biconditional has \emph{no
+source} --- it was our own \texttt{state/PROVE.md} target, not a classical claim; the classical
+literature contains the forward direction \emph{and} the quotient fact $H\triangleleft
+G\Rightarrow(T,\circ)\cong G/H$, but not the false iff.
 \end{remark}
 
-\begin{remark}[$\Norm = D\cdot K$ is an exact factorization --- a Zappa--Sz\'ep reading]
+\begin{remark}[$\Norm = D\cdot K$ is an exact factorization, \emph{not} a Zappa--Sz\'ep product]
 \label{rem:zs}
-The relation to the weld (\S\ref{sec:setup}) now sharpens, honestly. A normalized kernel factors as
-$D\cdot K$ --- a positive-diagonal rescaling $D$ times a normalized $K$-image element --- which is a
-multi-object \emph{exact factorization} $G=S\cdot H$, the group-theoretic shadow of a
-\emph{Zappa--Sz\'ep} product. So $\Norm$'s normalizer lands squarely in the same
-exact-factorization/Zappa--Sz\'ep theory as the weld itself: handedness is not homeless, and its home
-is the weld seen from the right-loop side. This is a gain, not a loss --- it relocates the invariant
-into a \emph{theory} pillar of the program.
+The relation to the weld (\S\ref{sec:setup}) now sharpens, honestly. A normalized kernel factors (on
+its positive-mass rows) as $D\cdot K$ --- a positive-diagonal rescaling $D$ times a normalized
+$K$-image element --- the probabilistic shadow of a group \emph{exact factorization} $G=S\cdot H$
+(every element a product of one factor from each). This is strictly \emph{weaker} than a
+\emph{Zappa--Sz\'ep} product, which requires \emph{both} factors to be closed subgroups --- and the
+whole point of this note is that the transversal factor $\Img K$ is \emph{not} closed. So $\Norm$
+sits in the same exact-factorization \emph{family} as the weld, with the weld being the genuine
+Zappa--Sz\'ep case (both factors closed) and $\Norm$ one honest rung more general. That is all we
+claim: no structure map to the weld, and no relocation of the associativity defect into the weld's
+$H^2$ class (cf.\ Remark~\ref{rem:link}).
 \end{remark}
 
 \begin{remark}[honest novelty residue --- narrow]
@@ -821,8 +869,9 @@ ternary associator). And we know \emph{what it is}: a one-sided absorptivity rec
 normalizer $K$, with ``associativity $=$ $K$ two-sided absorbing'' (Corollary~\ref{cor:B}) a theorem,
 with the decisive, directly-checkable \emph{closure criterion} ``handed $\Rightarrow$ $\Img K$ not
 closed'' (Theorem~\ref{thm:closure}), with $\Norm$ as a faithful instance, and with the whole package
-identified --- honestly --- as the classical transversal construction of right loops, relocating the
-invariant into the program's Zappa--Sz\'ep theory pillar. The one open successor, flagged as such, is
+identified --- honestly --- as the classical transversal construction of right loops, placing the
+invariant in the program's exact-factorization theory (of which the Zappa--Sz\'ep weld is the
+two-sided-closed case). The one open successor, flagged as such, is
 the correctly-typed cohomological question of Remark~\ref{rem:degree3}: is the ternary associator
 $Z_{K}$ a degree-$3$ class? ``Normalization's non-associativity is a handedness datum of a transversal
 normalizer, not a characteristic class of $k$'' is a crisp, defensible statement about where
