@@ -1,0 +1,453 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{mathtools}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{claim}[theorem]{Claim}
+
+\newcommand{\Norm}{\mathbf{Norm}}
+\newcommand{\Img}{\mathrm{Im}\,}
+\renewcommand{\lhd}{\triangleleft}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\sh}{\mathbin{\#}}
+\newcommand{\LA}{\textsf{(LA)}}
+\newcommand{\mLA}{\textsf{(mLA)}}
+\newcommand{\RA}{\textsf{(RA}\textsubscript{\#}\textsf{)}}
+\newcommand{\simK}{\mathrel{\sim_{K}}}
+\DeclareMathOperator{\Hom}{Hom}
+
+\title[The mirror law: when the normalized magmoid is a quotient]
+{The mirror law \mLA{}:\\
+when the normalized magmoid is the quotient $\mathcal{A}/\!\ker K$,\\
+and the two classical roads to associativity}
+
+\author{MacBeth}
+\address{Kodamai}
+\date{23 October 2026}
+
+\begin{document}
+
+\begin{abstract}
+In the positive home of the normalization defect, a \emph{normalizer} $K$ on an associative
+category $\mathcal{A}$ satisfies the left-absorption law \LA{} $K(K(x)\cdot c)=K(x\cdot c)$ and
+generates a magmoid $\Norm_K=\Img K$ with product $f\sh g:=K(f\cdot g)$; this magmoid is associative
+exactly when the two-sided law \RA{} holds, and \emph{handedness} is \LA{}$\wedge\,\neg$\RA{}. Two
+visibly different families of normalizers are nonetheless associative --- the normal-subgroup coset
+maps, and certain order-$3$ non-invertible monoids --- and a referee asked for the single condition
+behind both. We answer it. Define the \emph{mirror law} \mLA{} $K(c\cdot K(x))=K(c\cdot x)$, the
+two arguments of \LA{} swapped. We prove three things. (1)~For a normalizer, \mLA{} alone forces
+\RA{}, and \LA{}$\wedge\,$\mLA{} makes the kernel relation $a\simK b:\Leftrightarrow K(a)=K(b)$ a
+\emph{two-sided congruence}, so that $\Norm_K\cong\mathcal{A}/\!\simK$ as categories --- the magmoid
+is literally $\mathcal{A}$ with $\simK$-equal arrows identified; indeed \mLA{} is \emph{equivalent}
+to ``$\simK$ is a left congruence''. (2)~\mLA{} is strictly stronger than \RA{}, and incomparable
+with closure of $\Img K$: each holds while the other fails, so they are two genuinely different
+sufficient conditions, forming a diamond over associativity. (3)~For a group $G$ with $K$ the
+right-coset-representative map of $H\le G$, \mLA{}$\Leftrightarrow H\lhd G$ (then $\Norm_K\cong G/H$);
+without normality, writing $g\cdot h=\varphi(g,h)\cdot(g\sh h)$ with $\varphi\in H$, the transversal
+product is associative $\Leftrightarrow f\varphi(g,h)f^{-1}\in H$ for all $f,g,h$ in the transversal.
+Closure ($\varphi\equiv1$) and normality (\mLA{}) are the two canonical solutions of this one
+conjugation criterion. The results are proved by hand, corroborated by exhaustive enumeration over
+all monoids of order $\le3$ and all $(H,T)$ pairs of $S_3$ and $S_4$ ($36\,000+$ pairs, zero
+mismatches), and the finite core is machine-checked axiom-free in Lean~4.
+\end{abstract}
+
+\maketitle
+
+\footnotetext{MacBeth (scotmacbeth) $\cdot$ 2026-10-23 $\cdot$ For: Rick $\cdot$ content commit
+\texttt{PENDING}. A self-contained write-up of the registry node
+\texttt{mirror-LA-sufficient-for-associativity} (proof
+\texttt{proofs/2026-10-22-mirror-LA-sufficient-for-associativity.md}), under the peer-reviewed
+positive-home parent. Answers SHOULD~S1(b) of the uid~239 referee report on the closure criterion.
+The finite core is Lean-certified (\texttt{lean-mirror-LA-oracle}). This note recaps, and does not
+re-prove, Theorems~A and~B of the positive-home note.}
+
+\section{The question, and the setting}
+\label{sec:setup}
+
+This note is a companion to the triangulation unit (\emph{What normalization's non-associativity is,
+and is not}) and its closure criterion. We use that unit's vocabulary and recall only what the three
+theorems below consume. Composition is diagrammatic: $f\cdot g$ reads ``$f$ then $g$''.
+
+\begin{definition}[normalizer, normalized magmoid]
+\label{def:normalizer}
+A \emph{normalizer} on an associative category $(\mathcal{A},\cdot,\id)$ is a family of endomaps
+$K_{X,Y}\colon\mathcal{A}(X,Y)\to\mathcal{A}(X,Y)$ satisfying, for all composable $x,c$,
+\begin{itemize}
+  \item[\textsf{(K1)}] $K(K a)=K a$ \quad(idempotent),
+  \item[\textsf{(U)}] $K(\id_X)=\id_X$ \quad(unital),
+  \item[\LA{}] $K\big(K(x)\cdot c\big)=K(x\cdot c)$ \quad(left absorption).
+\end{itemize}
+Its \emph{normalized magmoid} $\Norm_K$ has the same objects, hom-sets $\Img K=\{a:K(a)=a\}$ (equal
+by \textsf{(K1)}), product $f\sh g:=K(f\cdot g)$, and units $\id_X$. We call $\Img K$ \emph{closed}
+when $f,g\in\Img K\Rightarrow f\cdot g\in\Img K$, i.e.\ $K(f\cdot g)=f\cdot g$.
+\end{definition}
+
+The magmoid $\Norm_K$ is a category-minus-associativity; the triangulation unit records (its
+Theorem~B) exactly when associativity returns.
+
+\begin{proposition}[Theorem~B of the positive-home note, recalled]
+\label{prop:thmB}
+$\Norm_K$ is associative if and only if the two-sided law
+\[
+  \RA{}\colon\qquad K\big(f\cdot K(g\cdot h)\big)=K(f\cdot g\cdot h)\qquad(f,g,h\in\Img K)
+\]
+holds. The normalizer $K$ is \emph{handed} when \LA{} holds but \RA{} fails; handedness is the
+non-associativity of $\Norm_K$.
+\end{proposition}
+
+Two families of normalizers turn out to be associative for reasons that look nothing alike. The
+first: $\mathcal{A}=G$ a group, $K$ the right-coset-representative map of a \emph{normal} subgroup,
+where $\Norm_K\cong G/H$. The second: small non-invertible monoids whose normalizer has
+\emph{closed} image (the closure criterion's positive side). The referee's question (uid~239,
+SHOULD~S1(b)) was whether one condition sits behind both. It does.
+
+\begin{definition}[kernel relation, mirror law]
+\label{def:mLA}
+On each hom-set, $a\simK b:\Leftrightarrow K(a)=K(b)$; write $[a]$ for the class and
+$\mathcal{A}/\!\simK$ for the quotient graph with hom-sets $\mathcal{A}(X,Y)/\!\simK$. The normalizer
+$K$ satisfies the \emph{mirror law} --- \LA{} with its two arguments swapped --- if
+\[
+  \mLA{}\colon\qquad K\big(c\cdot K(x)\big)=K(c\cdot x)\qquad\text{for all composable }c,x\in\mathcal{A}.
+\]
+\end{definition}
+
+\begin{remark}[\mLA{} is a genuine constraint]
+\label{rem:genuine}
+As with \LA{}, the variable $x$ ranges over \emph{all} of $\mathcal{A}$, in particular over
+un-normalized products $x=g\cdot h$ of $\Norm_K$-arrows. Where $K(x)\ne x$, \mLA{} asserts that the
+inner normalization is invisible to a \emph{left} multiply-then-normalize. It is \emph{not} the
+triviality $K(c\cdot K(x))=K(c\cdot x)$ for $x\in\Img K$ (where both sides are $K(c\cdot x)$ by
+\textsf{(K1)}). This is the mirror of Remark~1.3 of the positive-home note.
+\end{remark}
+
+The three theorems say: (§\ref{sec:thm1}) \mLA{} is exactly the missing left-handed half, and it
+upgrades associativity to a quotient; (§\ref{sec:thm2}) it is strictly stronger than associativity
+and incomparable with closure; (§\ref{sec:thm3}) over groups it \emph{is} normality, and it names the
+exact boundary.
+
+\section{The mirror law makes \texorpdfstring{$\Norm_K$}{Norm K} the quotient \texorpdfstring{$\mathcal{A}/\!\ker K$}{A/ker K}}
+\label{sec:thm1}
+
+\begin{theorem}
+\label{thm:quotient}
+Let $K$ be a normalizer satisfying \mLA{}. Then:
+\begin{enumerate}
+  \item \RA{} holds; hence $\Norm_K$ is associative.
+  \item $\simK$ is a \emph{two-sided congruence} on $\mathcal{A}$: if $a\simK a'$ and $b\simK b'$
+        (composable) then $a\cdot b\simK a'\cdot b'$. Consequently $\mathcal{A}/\!\simK$ is a category
+        under $[a]\cdot[b]:=[a\cdot b]$, units $[\id_X]$.
+  \item $\Phi\colon\Norm_K\to\mathcal{A}/\!\simK$, $\Phi(f)=[f]$, is an \emph{isomorphism of
+        categories}, with inverse $\Psi([a])=K(a)$. In particular $\Norm_K\cong\mathcal{A}/\!\simK$.
+\end{enumerate}
+\end{theorem}
+
+The key idea is that a normalizer always carries \emph{one} half of a congruence --- \LA{} is the
+right-handed half --- and \mLA{} supplies the other. With both halves the kernel is a congruence, and
+the quotient of a category is a category, automatically associative; the normalize-then-compose
+product $\sh$ is \emph{forced} to agree with the quotient product because $K(f\cdot g)\simK f\cdot g$.
+That is the whole mechanism.
+
+\begin{proof}
+\textbf{(1).} Instantiate \mLA{} at $c:=f$ and $x:=g\cdot h$, with $f,g,h\in\Img K$:
+\[
+  K\big(f\cdot K(g\cdot h)\big)=K\big(f\cdot(g\cdot h)\big)=K(f\cdot g\cdot h).
+\]
+The left-hand side is the left-hand side of \RA{}; the right-hand side is its right-hand side. So
+\RA{} holds, and $\Norm_K$ is associative by Proposition~\ref{prop:thmB}. (This step uses
+\mLA{} only; \LA{} enters in part~(2).)
+
+\textbf{(2).} We establish the two one-sided compatibilities separately.
+
+\emph{Right-compatibility, from \LA{}.} Read \LA{} backwards as $K(x\cdot c)=K(K(x)\cdot c)$. If
+$K(a)=K(a')$ with $a,a'\in\mathcal{A}(X,Y)$ and $b\in\mathcal{A}(Y,Z)$, then
+\[
+  K(a\cdot b)=K\big(K(a)\cdot b\big)=K\big(K(a')\cdot b\big)=K(a'\cdot b),
+\]
+so $a\cdot b\simK a'\cdot b$. This holds for \emph{every} normalizer.
+
+\emph{Left-compatibility, from \mLA{}.} If $K(b)=K(b')$ with $b,b'\in\mathcal{A}(Y,Z)$ and
+$a\in\mathcal{A}(X,Y)$, then applying \mLA{} with $c:=a$,
+\[
+  K(a\cdot b)=K\big(a\cdot K(b)\big)=K\big(a\cdot K(b')\big)=K(a\cdot b'),
+\]
+so $a\cdot b\simK a\cdot b'$.
+
+Now if $a\simK a'$ and $b\simK b'$ then
+$K(a\cdot b)=K(a'\cdot b)$ (right-compatibility) $=K(a'\cdot b')$ (left-compatibility, common first
+factor $a'$), i.e.\ $a\cdot b\simK a'\cdot b'$. So $\simK$ is a two-sided congruence, and the quotient
+graph inherits a well-defined composition $[a]\cdot[b]:=[a\cdot b]$, associative and unital because
+$\cdot$ is, hence a category.
+
+\textbf{(3).} $\Psi$ is well-defined: $a\simK a'\Rightarrow K(a)=K(a')\in\Img K=\Norm_K$. The two
+maps are mutually inverse:
+\[
+  \Psi(\Phi(f))=\Psi([f])=K(f)=f\quad(f\in\Img K),\qquad
+  \Phi(\Psi([a]))=\Phi(K(a))=[K(a)]=[a],
+\]
+the last because $K(K(a))=K(a)$ gives $K(a)\simK a$ by \textsf{(K1)}. And $\Phi$ is functorial:
+\[
+  \Phi(f\sh g)=\big[K(f\cdot g)\big]=[f\cdot g]=[f]\cdot[g]=\Phi(f)\cdot\Phi(g),\qquad
+  \Phi(\id_X)=[\id_X],
+\]
+using $K(f\cdot g)\simK f\cdot g$ for the second equality. Being bijective on objects and on each
+hom-set, $\Phi$ is an isomorphism of categories.
+\end{proof}
+
+\begin{remark}[\mLA{} is exactly ``$\simK$ a left congruence'']
+\label{rem:leftcong}
+Theorem~\ref{thm:quotient}(2) shows $\mLA{}\Rightarrow\simK$ a left congruence. The converse holds
+using only \textsf{(K1)}: if $\simK$ is a left congruence, then since $K(x)\simK x$, left-compatibility
+with first factor $c$ gives $K(c\cdot K(x))=K(c\cdot x)$, which is \mLA{}. Hence
+\[
+  \mLA{}\ \Longleftrightarrow\ \simK\text{ is a left congruence,}
+\]
+independently of \LA{}; dually, $\LA{}\Leftrightarrow\simK$ is a \emph{right} congruence. This is the
+reading Theorem~\ref{thm:normal} uses.
+\end{remark}
+
+\begin{remark}[what Theorem~\ref{thm:quotient} adds to Theorem~B]
+\label{rem:added}
+Proposition~\ref{prop:thmB} says \emph{when} $\Norm_K$ is associative; Theorem~\ref{thm:quotient} says
+\emph{what it then is}. \RA{} is the bare ternary associativity equation; \mLA{} is the stronger,
+more legible statement that the kernel is a congruence, so $\Norm_K$ is $\mathcal{A}$ with
+$\simK$-equal arrows identified. A normalizer always supplies the \LA{} (right) half of the
+congruence, so \mLA{} is precisely the missing left half. Both associative families of
+§\ref{sec:setup} will turn out to be quotients $\mathcal{A}/\!\simK$.
+\end{remark}
+
+\section{Strictly stronger than associativity, and incomparable with closure}
+\label{sec:thm2}
+
+\mLA{} is a \emph{sufficient} condition for associativity. So is closure of $\Img K$ (the triangulation
+unit's closure criterion). Neither is necessary, and --- the point of this section --- neither implies
+the other.
+
+\begin{theorem}
+\label{thm:strict}
+There is a normalizer with $\LA{}\wedge\RA{}\wedge\neg\mLA{}$; so $\mLA{}\Rightarrow\RA{}$ is a proper
+implication. Moreover \mLA{} and closure of $\Img K$ are \emph{incomparable}: each can hold while the
+other fails. They are two distinct sufficient conditions, both strictly above associativity.
+\end{theorem}
+
+\begin{proof}
+\emph{A separator with $\RA{}\wedge\neg\mLA{}$ and $\Img K$ closed.} Let $M=\{0,1,2\}$ with $0$ the
+unit and multiplication (rows $=$ left factor)
+\[
+  \begin{array}{c|ccc}
+    \cdot & 0 & 1 & 2\\\hline
+    0 & 0 & 1 & 2\\
+    1 & 1 & 1 & 2\\
+    2 & 2 & 1 & 2
+  \end{array}
+\]
+$M$ is associative and $1,2$ are non-invertible (both checked exactly). Take
+$K(0)=0,\ K(1)=0,\ K(2)=2$, so $\Img K=\{0,2\}$. Then \textsf{(K1)}, \textsf{(U)}, \LA{} hold
+(checked over all $3\times3$ pairs), and $\Img K$ is \emph{closed}
+($0\cdot0=0,\,0\cdot2=2,\,2\cdot0=2,\,2\cdot2=2$), so \RA{} holds and $\Norm_K$ --- the two-element
+monoid $\{0,2\}$ with $2$ absorbing --- is associative. But \mLA{} fails at $c=2,\ x=1$:
+\[
+  K\big(2\cdot K(1)\big)=K(2\cdot0)=K(2)=2,\qquad K(2\cdot1)=K(1)=0,\qquad 2\ne0.
+\]
+Thus $\RA{}\wedge\neg\mLA{}$ --- so $\mLA{}\Rightarrow\RA{}$ is proper --- and, since $\Img K$ is
+closed here, \emph{closure does not imply \mLA{}}.
+
+\emph{A separator with \mLA{} but $\Img K$ not closed.} The order-$3$ converse witness of the closure
+note ($M=\{e,a,b\}$, $a\cdot a=b$, $a\cdot b=b\cdot a=b\cdot b=a$, with $K(e)=e,\,K(a)=a,\,K(b)=a$)
+has $\simK$-classes $\{e\},\{a,b\}$, a two-sided congruence, so \mLA{} holds; yet
+$\Img K=\{e,a\}$ is not closed because $a\cdot a=b\notin\Img K$. So \emph{\mLA{} does not imply
+closure}. The two conditions are incomparable.
+\end{proof}
+
+The failure in the first separator is diagnostic. Closure says the \emph{image} is a subcategory;
+\mLA{} says the \emph{kernel} $\simK$ is a left congruence. Here the classes are $\{0,1\}$ and $\{2\}$,
+and left-multiplying the class $\{0,1\}$ by $2$ sends $2\cdot0=2$ into class $\{2\}$ but $2\cdot1=1$
+into class $\{0,1\}$: left multiplication by $2$ does not respect $\simK$. A closed image is blind to
+this; \mLA{} is not.
+
+\begin{remark}[the diamond]
+\label{rem:diamond}
+Theorem~\ref{thm:strict} draws a diamond over associativity:
+\[
+\begin{array}{ccc}
+ & \Norm_K\text{ associative }=\RA{} & \\[2pt]
+ \nearrow & & \nwarrow \\[2pt]
+ \mLA{}:\ \simK\text{ a left congruence} & & \text{closure: }\Img K\text{ a subcategory}\\[2pt]
+ \text{[\mLA{} holds, not closed]} & & \text{[closed, \mLA{} fails]}
+\end{array}
+\]
+Each upward arrow is strict and the two upper conditions are logically independent. Over groups
+(§\ref{sec:thm3}) they are the two classical mechanisms: $\mLA{}\Leftrightarrow H$ normal, closure
+$\Leftrightarrow T$ a subgroup. Handedness $=\LA{}\wedge\neg\RA{}$ therefore requires both $\neg\mLA{}$
+and $\neg$closure --- each is necessary for associativity to fail, neither alone is the obstruction.
+\end{remark}
+
+\section{Over a group: the mirror law is normality}
+\label{sec:thm3}
+
+Let $G$ be a group, $H\le G$ a subgroup, and $T$ a \emph{right transversal} (one representative per
+right coset $Hg$, with $\id\in T$). Let $K\colon G\to G$ send $g$ to the unique $t\in T$ with $Hg=Ht$;
+then $\Img K=T$ and $\sh$ is the transversal (right-loop) product $t\sh t'=K(t\cdot t')$.
+
+Two facts are immediate. First, \LA{} holds for \emph{every} transversal rep map: since $K(x)\in Hx$,
+we have $H\cdot K(x)=H\cdot x$, hence $H\cdot(K(x)\cdot c)=H\cdot(x\cdot c)$ and
+$K(K(x)\cdot c)=K(x\cdot c)$. Second, $K(a)=K(b)\Leftrightarrow Ha=Hb$, so the classes of $\simK$ are
+exactly the \emph{right cosets} of $H$.
+
+\begin{theorem}
+\label{thm:normal}
+With $K$ the right-coset-representative map of $H\le G$: $\mLA{}$ holds $\Leftrightarrow H\lhd G$.
+When $H\lhd G$, Theorem~\ref{thm:quotient}(3) specializes to the classical isomorphism
+$(T,\sh)\cong G/H$.
+\end{theorem}
+
+\begin{proof}
+By Remark~\ref{rem:leftcong}, $\mLA{}\Leftrightarrow\simK$ is a left congruence. The $\simK$-classes
+are right cosets, so left-compatibility reads: $Ha=Hb\Rightarrow H(ca)=H(cb)$ for all $c$.
+Equivalently, for all $a,b,c$: $ab^{-1}\in H\Rightarrow(ca)(cb)^{-1}=c(ab^{-1})c^{-1}\in H$. Letting
+$ab^{-1}$ range over all of $H$ and $c$ over $G$, this is exactly $cHc^{-1}\subseteq H$ for all $c$,
+i.e.\ $H\lhd G$. When $H$ is normal, $\simK$ is equality of (two-sided) cosets, so
+$\mathcal{A}/\!\simK=G/H$ and $\Phi\colon t\mapsto Ht$ is the group isomorphism $(T,\sh)\cong G/H$.
+\end{proof}
+
+So the normal-subgroup family of associative transversals \emph{is} the \mLA{} family. The remaining
+associative transversals --- associative with $H$ not normal --- are governed by an explicit ternary
+criterion.
+
+\begin{theorem}[the exact boundary]
+\label{thm:criterion}
+For $f,g,h\in T$ write the de-normalization $g\cdot h=\varphi(g,h)\cdot(g\sh h)$ with
+$\varphi(g,h):=(g\cdot h)(g\sh h)^{-1}\in H$. Then $(T,\sh)$ is associative $\Leftrightarrow
+f\,\varphi(g,h)\,f^{-1}\in H$ for all $f,g,h\in T$.
+\end{theorem}
+
+\begin{proof}
+Since $g\sh h=K(g\cdot h)\in Hg\cdot h$, indeed $\varphi(g,h)\in H$ and
+$g\sh h=\varphi(g,h)^{-1}\cdot(g\cdot h)$. By \LA{} and Theorem~A of the positive-home note,
+$(f\sh g)\sh h=K(f\cdot g\cdot h)$; and
+\[
+  f\sh(g\sh h)=K\big(f\cdot(g\sh h)\big)=K\big(f\cdot\varphi(g,h)^{-1}\cdot g\cdot h\big).
+\]
+Associativity is $K(f\cdot g\cdot h)=K(f\cdot\varphi(g,h)^{-1}\cdot g\cdot h)$ for all $f,g,h\in T$.
+Using $K(x)=K(y)\Leftrightarrow xy^{-1}\in H$, this is
+\[
+  (f\cdot g\cdot h)\big(f\cdot\varphi(g,h)^{-1}\cdot g\cdot h\big)^{-1}
+   = f\cdot g\cdot h\cdot(g\cdot h)^{-1}\cdot\varphi(g,h)\cdot f^{-1}
+   = f\,\varphi(g,h)\,f^{-1}\in H
+\]
+for all $f,g,h\in T$.
+\end{proof}
+
+\begin{remark}[the criterion is the diamond]
+\label{rem:unify}
+The criterion $f\varphi(g,h)f^{-1}\in H$ is satisfied in two canonical ways, matching
+Remark~\ref{rem:diamond}:
+\begin{itemize}
+  \item \emph{closure / $T$ a subgroup:} then $g\cdot h\in T$, so $g\sh h=g\cdot h$ and
+        $\varphi(g,h)=\id$; the criterion is vacuous.
+  \item \emph{normality / \mLA{}:} $\varphi(g,h)\in H$ and $H\lhd G$, so $f\varphi(g,h)f^{-1}\in H$
+        automatically.
+\end{itemize}
+The criterion is strictly weaker than either: it permits a nontrivial $\varphi$, valued in a
+non-normal $H$, that merely stays in $H$ under conjugation by the finitely many $f\in T$. That
+strictly-between regime is the honest content of ``associative without normality or closure''. This
+mirrors the split-vs-cocycle dichotomy of the weld $H^2$ program: closure is the trivial-cocycle
+locus ($\varphi\equiv\id$), normality a cocycle-stability locus, and associativity strictly below
+both.
+\end{remark}
+
+\section{Verification and scope}
+\label{sec:verify}
+
+\paragraph{Lean (finite core, axiom-free).} The leaf \texttt{lean-mirror-LA-oracle}
+(\texttt{lean/\allowbreak2026-10-22-\allowbreak mirror-LA-\allowbreak oracle.lean}, Lean~4,
+Mathlib-free) machine-checks the decidable
+content: on the order-$4$ handed model, \mLA{} fails (as it must, being handed); \mLA{} forces \RA{}
+and $\sh$-associativity over \emph{all} monoids of order $\le3$ and all idempotent unit-fixing $K$
+(zero counterexamples); $\mLA{}\Leftrightarrow\simK$ a left congruence over the same range (zero
+mismatches, Remark~\ref{rem:leftcong}); the strictness separator exists at order~$3$ and not below;
+and the explicit separator of §\ref{sec:thm2} (closed image, \RA{} true, \mLA{} false at $c=2,x=1$)
+is certified. The bundled theorem reports \emph{no} axiom dependence --- not even \texttt{propext};
+every \texttt{decide} reduces to \texttt{rfl}. We cite it rather than reproduce it.
+
+\paragraph{Exhaustive enumeration.} \texttt{scratch/2026-10-22-mirror-LA-verify.py} (exact integer /
+permutation arithmetic). Over all monoids of order $\le3$ and all their normalizers:
+$\mLA{}\Rightarrow\RA{}$, $\mLA{}\Rightarrow$ associative, and $\mLA{}\Leftrightarrow\simK$
+left-congruence hold with zero exceptions; right-congruence never fails under \LA{}; and exactly $2$
+separators $\RA{}\wedge\neg\mLA{}$ occur, both at order~$3$ (none at order $\le2$). Over all $(H,T)$
+transversal pairs of $S_3$ ($15$) and $S_4$ ($35\,416$): \LA{} never fails,
+$[\mLA{}\Leftrightarrow H\text{ normal}]$ has zero mismatches, and
+$[(T,\sh)\text{ associative}\Leftrightarrow\text{the criterion}]$ has zero mismatches. The explicit
+$S_3$ witness of the ``closed but \mLA{} fails'' corner is $H=\langle(1\,2)\rangle$ (order~$2$,
+non-normal), $T=A_3$ (a subgroup, hence closed): \LA{}~\checkmark, \mLA{}~fails, $(T,\sh)\cong C_3$
+associative.
+
+\paragraph{Honest scope.} Theorems~\ref{thm:quotient}--\ref{thm:criterion} are proved by hand
+(elementary: \textsf{(K1)}, \LA{}, \mLA{}, associativity of $\cdot$, and, for §\ref{sec:thm3}, the
+right-coset structure); the enumerations corroborate but are not the proof. Minimality of the order-$3$
+separator is a computational fact (exhaustive over order $\le3$), as in the closure note, and nothing
+downstream depends on it. The group reading assumes a right transversal with $\id\in T$; the
+left-transversal reading swaps $\LA{}\leftrightarrow\mLA{}$ and gives the mirror statements. The group
+specialization (Theorem~\ref{thm:normal}) and the $S_3/S_4$ enumerations are Python-only (permutation
+searches, not reducible kernel \texttt{decide}s at that scale); the Lean leaf certifies the abstract
+finite core.
+
+\section*{What this settles}
+
+The two associative families are one mechanism and its two classical degenerations. Whenever the
+kernel of $K$ is a two-sided congruence --- i.e.\ $\LA{}\wedge\mLA{}$ --- the magmoid is the honest
+quotient, $\Norm_K\cong\mathcal{A}/\!\simK$. \mLA{} is a legible, checkable sufficient condition for
+associativity (``the kernel is a left congruence''), strictly stronger than bare \RA{} and
+incomparable with closure of $\Img K$; the two sit in a diamond over associativity. Over groups,
+\mLA{} is normality and closure is subgroup-hood, and both are solutions of the single conjugation
+criterion $f\varphi(g,h)f^{-1}\in H$ --- which also exhibits, between them, the genuine
+associative-without-either regime. This is exactly the unification SHOULD~S1(b) asked for.
+
+\begin{thebibliography}{9}
+
+\bibitem{positivehome}
+MacBeth, \emph{The positive home of the normalization defect: a one-sided-absorbing idempotent
+normalizer} (program note, 2026-10-19; registry node
+\texttt{positive-home-one-sided-absorbing-idempotent}). Source of Theorems~A and~B and the handedness
+definition recalled here.
+
+\bibitem{triangulation}
+MacBeth, \emph{What normalization's non-associativity is, and is not: three obstruction theories that
+miss it, and the idempotent normalizer that receives it} (triangulation unit,
+\texttt{expository/2026-10-21-normalization-defect-triangulation}, content commit \texttt{75a0756}).
+Contains the closure criterion and the provenance discussion (Baer; Lal; Kiechle; Grabowski).
+
+\bibitem{dlrs}
+E.~Di~Lavore, M.~Rom\'an, P.~Sz\'ekely, \emph{Normalization is a sesquilaw}, arXiv:2510.01131. Origin
+of the magmoid $\Norm$ and the renormalization idempotent.
+
+\bibitem{baer}
+R.~Baer, Nets and groups, \emph{Trans.\ Amer.\ Math.\ Soc.} \textbf{46} (1939) 110--141.
+
+\bibitem{lal}
+R.~Lal, Transversals in groups, \emph{J.\ Algebra} \textbf{181} (1996) 70--81.
+
+\bibitem{kiechle}
+H.~Kiechle, \emph{Theory of K-Loops}, Springer LNM~1778 (2002).
+
+\end{thebibliography}
+
+\noindent\footnotesize The oidified (categorical) version of this transversal/right-loop construction
+is published (Grabowski, \emph{An introduction to loopoids}): see the provenance discussion of
+the triangulation unit~[2], whose source index logs it. It is not re-cited here directly pending a
+deep-read registration.
+
+\end{document}
