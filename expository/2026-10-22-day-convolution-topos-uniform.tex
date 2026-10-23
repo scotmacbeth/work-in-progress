@@ -37,42 +37,46 @@
 \newcommand{\ob}{\mathrm{ob}}
 \DeclareMathOperator{\Mod}{Mod}
 
-\title[Day convolution of polynomial comonoids is the product category, in every topos]
-{The Day convolution of two polynomial comonoids is the\\
-product internal category --- in every Grothendieck topos}
+\title[The Dirichlet tensor of two polynomial comonoids is the product category]
+{The Dirichlet tensor of two polynomial comonoids is the\\
+product internal category --- in every finitely complete category}
 
 \author{MacBeth}
 \address{Kodamai}
-\date{22 October 2026}
+\date{23 October 2026}
 
 \begin{document}
 
 \begin{abstract}
 In $\Set$, comonoids for the substitution product $\sub$ of polynomial functors are exactly small
-categories, and the Dirichlet (Day-convolution) tensor $\otimes$ of two such comonoids represents
-the product category $C\times D$ on the nose. We show this is not an artefact of $\Set$. Let $\Ee$
-be any Grothendieck topos and $C,D$ internal categories in $\Ee$, viewed as $\sub$-comonoids
-$c,d$ in the category $\Poly(\Ee)$ of internal polynomial functors. Then $c\otimes d$ carries a
-canonical comonoid structure whose represented internal category is the product $C\times D$ in
-$\Cat(\Ee)$ --- componentwise objects, morphisms, identities and composition --- \emph{on the nose};
-and under the internal equivalence $\Comon(\Poly(\Ee),\sub)\simeq\Cat(\Ee)$ the tensor $\otimes$
-computes the categorical product. The proof uses only that $\Ee$ is locally cartesian closed and
-finitely complete; it never invokes well-pointedness, extensivity, or disjointness of coproducts, so
-it is uniform across presheaf and sheaf toposes alike, with $\Set$ as the degenerate case. The
-single load-bearing coherence is the distributor $\Sigma(A\times B)\cong(\Sigma A)\times(\Sigma B)$,
-which is exactly the local-cartesian-closedness law that Gambino and Kock use to compose polynomial
-functors. A worked witness in the presheaf topos $\Graph$, with a loopless object-of-objects carrying
-no global element, is machine-checked in Lean.
+categories, and the Dirichlet tensor $\otimes$ of two such comonoids carries a comonoid whose
+represented category is the product $C\times D$ on the nose --- the $\Set$ case is Niu--Spivak
+\cite[Prop.~8.79]{NiuSpivak2023}. We show this is not an artefact of $\Set$, nor of any size,
+coproduct, or well-pointedness hypothesis. Let $\Ee$ be any finitely complete category and $C,D$
+internal categories in $\Ee$ whose domain maps are exponentiable, so that they are
+$\sub$-comonoids $c,d$ in the category $\Poly(\Ee)$ of internal polynomials in the sense of
+Shapiro--Spivak \cite{ShapiroSpivak2023}. Then $c\otimes d$ carries a canonical $\sub$-comonoid
+structure whose represented internal category is the product $C\times D$ in $\Cat(\Ee)$ ---
+componentwise objects, morphisms, identities and composition --- \emph{on the nose}. Beyond the
+ambient Shapiro--Spivak polynomial framework the proof uses only finite limits: its single
+load-bearing coherence is the commutation of products with pullbacks, a finite-limit fact that needs
+no local cartesian closure, no coproducts, no extensivity and no well-pointedness. The statement
+therefore holds uniformly across every elementary and Grothendieck topos and every locally cartesian
+closed category, with $\Set$ as the degenerate case. We separate carefully this (true) identification
+of the represented category from the (false) assertion that $\otimes$ is the categorical product of
+comonoids: among comonoids --- equivalently cofunctors --- $\otimes$ is a monoidal, non-cartesian
+product, and the genuine categorical product lives on the functor side $\Cat(\Ee)$. A worked witness
+in the presheaf topos $\Graph$ illustrates the identification and is machine-checked in Lean.
 \end{abstract}
 
 \maketitle
 
-\footnotetext{MacBeth (scotmacbeth) $\cdot$ 2026-10-22 $\cdot$ content commit \texttt{b553b27}.
-Theorem~\ref{thm:main-I} (the on-the-nose identification) is proved here. Theorem~\ref{thm:main-II}
-(that $\otimes$ is the categorical product) rests on the published internal equivalence of
-Shapiro--Spivak \cite{ShapiroSpivak2023}, Thm.~5.6 and Cor.~5.12, and is \emph{not} claimed as a
-result of this note. The $\Graph$ witness of \S\ref{sec:graph} is machine-checked
-(\texttt{lean/2026-10-21-day-convolution-graph.lean}, Mathlib-free, \texttt{[propext]} only).}
+\footnotetext{MacBeth (\texttt{scotmacbeth}) $\cdot$ 2026-10-23 $\cdot$ for Rick $\cdot$ content
+commit \texttt{PENDING}. Theorem~\ref{thm:main} (the on-the-nose identification) is proved here, as a
+short corollary of the Shapiro--Spivak polynomial framework \cite{ShapiroSpivak2023}; the $\Set$ case
+is Niu--Spivak \cite[Prop.~8.79]{NiuSpivak2023}. The $\Graph$ witness of \S\ref{sec:graph} is
+machine-checked (\url{https://github.com/scotmacbeth/work-in-progress/blob/main/lean/2026-10-21-day-convolution-graph.lean},
+Mathlib-free, \texttt{[propext]} only) and is offered as an illustration, not a result.}
 
 %============================================================
 \section{Introduction}
@@ -94,71 +98,78 @@ $(\Poly,\sub,y)$ with small categories:
 \[
    \Comon(\Poly,\sub,y) \;\simeq\; \Cat .
 \]
-A polynomial carries a \emph{second} monoidal product, the Dirichlet tensor $\otimes$, which by
-Niu--Spivak \cite[Prop.~3.79]{NiuSpivak2023} is the Day convolution induced on $\Poly$ by the
-cartesian structure $(1,\times)$ of $\Set$. The two products interlock into a normal duoidal
-structure \cite[Ex.~2.9]{ShapiroSpivak2023}, so $\sub$-comonoids are closed under $\otimes$; and a
-short computation (\S\ref{sec:setI}, and \cite[the $\Set$ case]{NiuSpivak2023}) shows that the
-resulting comonoid on $c\otimes d$ is precisely the product category $C\times D$.
+A polynomial carries a \emph{second} monoidal product, the Dirichlet tensor $\otimes$, which in
+$\Set$ is the Day convolution induced on $\Poly$ by the cartesian structure $(1,\times)$ ---
+Niu--Spivak \cite[Prop.~3.79]{NiuSpivak2023}. The two products interlock into a normal duoidal
+structure, so $\sub$-comonoids are closed under $\otimes$; and a short computation shows that the
+resulting comonoid on $c\otimes d$ is precisely the product category $C\times D$. This last fact, in
+$\Set$, is Niu--Spivak \cite[Prop.~8.79]{NiuSpivak2023}: carrier $c\otimes d$, counit
+$\varepsilon_c\otimes\varepsilon_d$, comultiplication through the duoidal interchanger, with
+codomains and composition coordinatewise.
 
 This is a clean fact about $\Set$. It is natural to ask whether it is \emph{only} a fact about
 $\Set$. The question is not idle. The entire value of the equivalence chain, as a foundation for
 compositional systems, is that it should be a theorem about \emph{structure}, not about a privileged
 ambient universe; and the concrete compositional models one wants --- presheaves on a site of
-locations, sheaves on a space of states, graphs of a network --- live in toposes other than $\Set$.
-If the Day convolution ceased to be the product category the moment one left $\Set$, the chain would
-be a $\Set$-level coincidence rather than a transportable principle.
+locations, sheaves on a space of states, graphs of a network --- live in categories other than
+$\Set$. If the Dirichlet-tensor-is-product fact ceased to hold the moment one left $\Set$, the chain
+would be a $\Set$-level coincidence rather than a transportable principle.
 
 \subsection*{The main result}
 
-It is not a coincidence. We prove it transports, verbatim, to every Grothendieck topos.
+It is not a coincidence. The identification transports, verbatim, to \emph{any finitely complete
+category} in which the ambient polynomial framework is available --- which, following
+Shapiro--Spivak \cite{ShapiroSpivak2023}, asks only that the relevant maps be exponentiable.
 
-Throughout, $\Ee$ is a Grothendieck topos (equivalently, a left-exact localization of a presheaf
-topos); in particular $\Ee$ is locally cartesian closed and finitely complete, and by Gambino--Kock
-\cite{GambinoKock2013} the category $\Poly(\Ee)$ of internal polynomial functors exists, carries the
-substitution product $\sub$ and the Dirichlet tensor $\otimes$, and its $\sub$-comonoids are internal
-categories in $\Ee$. Write $\cat(\Ee):=\Comon(\Poly(\Ee),\sub,y)$. For an internal category $C$ in
-$\Ee$ we write $\sharpc{C}\in\cat(\Ee)$ for the corresponding comonoid.
-
-\begin{theorem}[On-the-nose identification]\label{thm:main-I}
-Let $C,D$ be internal categories in a Grothendieck topos $\Ee$, with comonoids $c,d\in\cat(\Ee)$.
-Then $c\otimes d$ carries a canonical $(\sub,y)$-comonoid structure --- counit $\varepsilon_c\otimes
-\varepsilon_d$, comultiplication $\iota\circ(\delta_c\otimes\delta_d)$ via the normal-duoidal
-interchanger $\iota$ --- and the internal category it represents is the product internal category
-$C\times D$, \emph{on the nose}: object-of-objects $C_0\times D_0$, object-of-morphisms
-$C_1\times D_1$, with domain, codomain, identities and composition all componentwise. In symbols,
-$c\otimes d=\sharpc{(C\times D)}$ in $\cat(\Ee)$.
+\begin{theorem}[On-the-nose identification]\label{thm:main}
+Let $\Ee$ be a finitely complete category, and let $C,D$ be internal categories in $\Ee$ whose
+domain maps $\dom_C,\dom_D$ are exponentiable, with associated $\sub$-comonoids $c,d$ in
+$\Poly(\Ee)$. Then $c\otimes d$ carries a canonical $(\sub,y)$-comonoid structure --- counit
+$\varepsilon_c\otimes\varepsilon_d$, comultiplication $\iota\circ(\delta_c\otimes\delta_d)$ via the
+normal-duoidal interchanger $\iota$ of \cite[Thm.~4.5]{ShapiroSpivak2023} --- and the internal
+category it represents is the product internal category $C\times D$, \emph{on the nose}:
+object-of-objects $C_0\times D_0$, object-of-morphisms $C_1\times D_1$, with domain, codomain,
+identities and composition all componentwise. In symbols, $c\otimes d=\sharpc{(C\times D)}$ in
+$\Comon(\Poly(\Ee),\sub,y)$.
 \end{theorem}
 
-\begin{theorem}[Universal property]\label{thm:main-II}
-Under the internal equivalence $\cat(\Ee)\simeq\Cat(\Ee)$, the Dirichlet tensor $\otimes$ computes the
-categorical product in $\cat(\Ee)$, with projections $\pi_C=\id_c\otimes\varepsilon_d$ and
-$\pi_D=\varepsilon_c\otimes\id_d$ --- even though $\otimes$, as a monoidal structure on all of
-$\Poly(\Ee)$, is \emph{not} the cartesian product.
-\end{theorem}
+Over $\Set$ this is \cite[Prop.~8.79]{NiuSpivak2023} word for word. The internal statement does not
+appear in \cite{ShapiroSpivak2023} or \cite{NiuSpivak2023}; it is a short corollary of their results
+--- normal duoidality \cite[Thm.~4.5]{ShapiroSpivak2023} plus the comonoid--category identification
+\cite[Thm.~5.6, Rem.~5.7]{ShapiroSpivak2023} --- and that is how we present it. We claim the
+internal corollary and the honest accounting around it; we do not claim either input.
 
-We are careful about what is ours. Theorem~\ref{thm:main-I} is proved here, modulo the two published
-facts recalled in \S\ref{sec:prelim} (that $\Poly(\Ee)$ exists over an LCCC, Gambino--Kock
-\cite{GambinoKock2013}; and that the duoidal interchanger exists, Shapiro--Spivak
-\cite{ShapiroSpivak2023}). Theorem~\ref{thm:main-II} additionally requires the \emph{full} internal
-equivalence $\cat(\Ee)\simeq\Cat(\Ee)$ --- including essential surjectivity, to quantify the product's
-universal property over \emph{all} comonoids --- which is the published theorem of Shapiro--Spivak
-\cite[Thm.~5.6, Cor.~5.12]{ShapiroSpivak2023}. Theorem~\ref{thm:main-II} is therefore a corollary of
-their equivalence, not a result of this note; we state it to complete the picture.
+\subsection*{What is, and what is not, a product}
+
+One warning belongs on the first page, because an earlier version of this note got it wrong. The
+identification $c\otimes d=\sharpc{(C\times D)}$ says that the \emph{represented internal category}
+of $c\otimes d$ is $C\times D$. It does \emph{not} say that $c\otimes d$ is the categorical product
+of $c$ and $d$ in the category of comonoids. That stronger statement is \emph{false}, already in
+$\Set$. Comonoid morphisms in $\Poly$ are \emph{cofunctors}, not functors
+\cite[Cor.~5.12, Def.~5.11]{ShapiroSpivak2023}; and among cofunctors $C\times D$ is not the
+categorical product --- as Niu--Spivak note, the usual product of categories ``is not the categorical
+product in $\Cat^{\sharp}$; it is, however, a monoidal product on $\Cat^{\sharp}$, coinciding with the
+parallel product'' \cite[\S8.2.4]{NiuSpivak2023}. We give the two-line counterexample in
+\S\ref{sec:notproduct}. The genuine categorical product of $C$ and $D$ lives on the \emph{functor}
+side: in $\Cat(\Ee)$, where morphisms are internal functors, $C\times D$ is the product, by the
+elementary fact that $\Cat(\Ee)$ has all limits $\Ee$ has. That is a statement about $\Cat(\Ee)$, not
+about $\otimes$ on comonoids, and we keep the two apart.
 
 \subsection*{Why ``on the nose'', and what the proof does not use}
 
-The phrase ``on the nose'' is doing real work. There is no coherence isomorphism to chase: the
-structure maps of $c\otimes d$ --- read off through the comonoid-to-category dictionary --- are
-\emph{equal}, as morphisms of $\Ee$, to the structure maps of $C\times D$. The reason is a clean
-division of labour. The non-trivial, non-pointwise ingredient of the substitution product $\sub$
-(it uses the dependent product $\Pi$, hence an internal hom, hence a Yoneda/Kan formula --- it is
-\emph{not} computed objectwise in a presheaf topos) is absorbed entirely into the
-comonoid-to-category translation and never resurfaces. What remains, once one is speaking the language
-of internal-category data $(C_0,C_1,\dom,\cod,\id,\comp)$, is componentwise finite limits.
+The phrase ``on the nose'' is doing real work. Morphisms of $\Poly(\Ee)$ are iso-classes of
+diagrams \cite[Def.~3.7, 3.13]{ShapiroSpivak2023}, so an equality of polynomials is a genuine
+equality of such classes; the claim is that the structure maps of $c\otimes d$ --- read off through
+the comonoid-to-category dictionary --- are \emph{equal}, in this sense, to the structure maps of
+$C\times D$, with the only isomorphism in sight being the canonical one witnessing that products
+commute with pullbacks. The reason is a clean division of labour. The non-trivial, non-pointwise
+ingredient of the substitution product $\sub$ (it uses the dependent product $\Pi$ along domain maps,
+hence their exponentiability --- it is \emph{not} computed objectwise in a presheaf topos) is absorbed
+entirely into the ambient framework and into the comonoid-to-category translation, and never
+resurfaces in the identification. What remains, once one is speaking the language of internal-category
+data $(C_0,C_1,\dom,\cod,\id,\comp)$, is componentwise finite limits.
 
-Three ingredients the reader might expect to see are conspicuously absent, and their absence is the
-sharpening we offer over the folklore ``locally cartesian closed and extensive'' hypothesis:
+Three ingredients the reader might expect to see are conspicuously absent:
 
 \begin{itemize}
 \item \emph{No well-pointedness.} The counit $\varepsilon_c:c\to y$, which in the $\Set$ picture
@@ -166,95 +177,99 @@ sharpening we offer over the folklore ``locally cartesian closed and extensive''
 section $\id:C_0\to C_1$ of $\Ee$ --- not a choice of global elements. This is the point at which
 every naive $\Set$-level argument would break, and it does not break. The $\Graph$ witness of
 \S\ref{sec:graph} is built with a \emph{loopless} object-of-objects, which has no global element at
-all, precisely to exhibit this.
-\item \emph{No extensivity, no disjointness of coproducts.} The one coherence the comultiplication
-needs is the distributor
-\(
-  \Sigma_{(i,k)}(A_i\times B_k)\;\cong\;(\Sigma_i A_i)\times(\Sigma_k B_k),
-\)
-and this is \emph{not} a separate extensivity axiom: it is the distributivity of products over
-dependent sums that holds in every LCCC --- indeed it is the very law Gambino and Kock invoke to prove
-that polynomial functors compose \cite{GambinoKock2013}. Universal coproducts come for free (each
-pullback functor $f^\ast$ is a left adjoint, hence preserves colimits).
-\item \emph{No cartesianness, and no symmetry of the tensor} for the identification itself.
-Symmetry of $\times$ in $\Ee$ is used only to make $\otimes$ symmetric, whose braiding corresponds to
-the swap $C\times D\cong D\times C$ --- an addendum, not a hypothesis of Theorem~\ref{thm:main-I}.
+all, to make the point concrete.
+\item \emph{No local cartesian closure for the identification itself.} Exponentiability of the
+domain maps is what makes $\Poly(\Ee)$, $\sub$ and $\otimes$ exist at all
+\cite[Thm.~3.26, Def.~4.1, Lem.~4.3, Thm.~4.5]{ShapiroSpivak2023}; but the \emph{identification}
+$c\otimes d=\sharpc{(C\times D)}$ consumes, beyond that ambient framework, nothing more than finite
+limits. Its one coherence is
+\begin{equation}\label{eq:star}
+  (C_1\times_{C_0}C_1)\times(D_1\times_{D_0}D_1)\;\cong\;(C_1\times D_1)\times_{C_0\times D_0}(C_1\times D_1),
+  \tag{$\star$}
+\end{equation}
+the commutation of products with pullbacks --- a finite-limit fact, true in any finitely complete
+category, needing no dependent products, no coproducts, and no extensivity.
+\item \emph{No extensivity, no disjointness of coproducts.} None is used; \eqref{eq:star} is a
+limit--limit interchange, not an extensivity axiom.
 \end{itemize}
 
-So the honest reach of the method is ``locally cartesian closed, with the dependent sums that
-Gambino--Kock polynomials require'', of which Grothendieck toposes are the canonical --- and
-completely general-purpose --- instance. We state the theorems over Grothendieck toposes because they
-have everything with no fuss, and flag the maximal-generality form as an open bound in
-\S\ref{sec:discussion}.
+So the honest reach of the method is the Shapiro--Spivak setting itself: any finitely complete
+category with the exponentiable maps their framework requires. Every locally cartesian closed
+category and every elementary topos --- Grothendieck or not, with or without a natural-numbers
+object --- is an instance, and so is $\Set$.
 
 \subsection*{A question that inverted into its own answer}
 
 This note is the positive residue of a negative-looking investigation. For some months the program
-pursued a ``which base $V$?'' question: over which monoidal bases does the Day-convolution-is-product
-phenomenon survive? The characteristic failure case was $V=\mathbf{Vec}$. The enriched-category
-literature points the same way from a different direction: Lucyshyn-Wright's study of graded and
-bigraded categories \cite{LucyshynWright2025} finds that Day-convolution \emph{closure} is special to
-$\Set$-like bases and does not transport to a general enriched base $V$ (the paper is about enrichment,
-not polynomial comonoids, so this is a parallel signal rather than the same theorem). Read under
-``for \emph{all} $V$?'', such findings look like a dead end. Read under ``for \emph{which} $V$?'',
-they are the answer: the Day-convolution story is base-sensitive, and asks for a base with genuine
-dependent-type structure. The present theorems supply such a base in the cleanest way --- a
-Grothendieck topos --- and state the positive side: the product-is-Day-convolution fact does not
-merely survive the passage to a topos, it is \emph{uniform} across all of them. They also relocate the
-$\mathbf{Vec}$ obstruction precisely: $\mathbf{Vec}$ is not locally cartesian closed, so
-$\Poly(\mathbf{Vec})$ and its $\sub$ have no standard construction; the obstruction was never about
-cartesianness of the tensor (consistent with $\mathbf{Vec}$'s $\otimes$ distributing happily over
-$\oplus$).
+pursued a ``which base $V$?'' question: over which monoidal bases does the product-is-Dirichlet-tensor
+phenomenon survive? The characteristic failure case was $V=\mathbf{Vec}$. Read under ``for \emph{all}
+$V$?'', the failure looks like a dead end. Read under ``for \emph{which} $V$?'', it is informative:
+the phenomenon asks for a base with genuine dependent-type structure --- enough that the maps carrying
+the directions of a polynomial are exponentiable. A finitely complete category with that much
+structure supplies it, and the present theorem states the positive side: the fact does not merely
+survive the passage away from $\Set$, it is \emph{uniform} across every such base. We do not overclaim
+the location of the $\mathbf{Vec}$ obstruction: $\mathbf{Vec}$ is not locally cartesian closed and its
+addition maps are not the exponentiable direction-bundles the framework wants, so $\Poly(\mathbf{Vec})$
+has no standard construction --- but the Shapiro--Spivak hypotheses are weaker than local cartesian
+closure, so we claim no sharp dividing line, only that cartesianness of the tensor was never the
+issue.
 
 \subsection*{Outline} \S\ref{sec:prelim} recalls $\Poly(\Ee)$, the two products, the
-comonoid--category dictionary, and the interchanger, over a general LCCC base. \S\ref{sec:setI} proves
-Theorem~\ref{thm:main-I} in three steps: the underlying object (finite limits), the interchanger's
-distributor (the LCCC law), and the structure trace. \S\ref{sec:product} records
-Theorem~\ref{thm:main-II} as a corollary of the Shapiro--Spivak equivalence. \S\ref{sec:transport}
-isolates, in a table, exactly what the base must supply. \S\ref{sec:graph} gives the machine-checked
-$\Graph$ witness. \S\ref{sec:discussion} states the honest open bounds.
+comonoid--category dictionary, and the interchanger, over a finitely complete base with exponentiable
+maps. \S\ref{sec:setI} proves Theorem~\ref{thm:main} in three steps: the underlying object (finite
+limits), the interchanger (cited), and the structure trace (the finite-limit coherence
+\eqref{eq:star}). \S\ref{sec:notproduct} records, with a two-line counterexample, that $\otimes$ is
+\emph{not} the categorical product of comonoids. \S\ref{sec:transport} isolates, in a table, exactly
+what the base must supply. \S\ref{sec:graph} gives the machine-checked $\Graph$ illustration.
+\S\ref{sec:discussion} states the honest bounds.
 
 %============================================================
 \section{Preliminaries}\label{sec:prelim}
 %============================================================
 
-We fix a Grothendieck topos $\Ee$; the only properties used are that $\Ee$ is locally cartesian closed
-(LCCC) and finitely complete, so the reader may equally read ``LCCC with Gambino--Kock polynomials''
-throughout. Recall that LCCC means each slice $\Ee/I$ is cartesian closed; equivalently each pullback
-functor $f^\ast:\Ee/J\to\Ee/I$ along $f:I\to J$ has a right adjoint $\Pi_f$ (dependent product), in
-addition to its left adjoint $\Sigma_f$ (dependent sum). We freely use the adjoint string
-$\Sigma_f\dashv f^\ast\dashv\Pi_f$.
+We fix a finitely complete category $\Ee$. Following Shapiro--Spivak \cite{ShapiroSpivak2023}, the
+polynomial framework requires no more: a \emph{polynomial} is an \emph{exponentiable} morphism, and
+all of $\Poly(\Ee)$, the substitution product $\sub$, the Dirichlet tensor $\otimes$ and the normal
+duoidal structure are available over any such $\Ee$. Recall that a morphism $s:B\to A$ is
+exponentiable when the pullback functor $s^\ast:\Ee/A\to\Ee/B$ has a right adjoint $\Pi_s$ (dependent
+product along $s$); in a locally cartesian closed category \emph{every} morphism is exponentiable,
+and in an elementary topos likewise, but we never assume this globally.
 
 \subsection{Internal polynomial functors}
 
-\begin{definition}[{\cite{GambinoKock2013}}]
-A \emph{polynomial} $p$ in $\Ee$ is a morphism (a \emph{bundle}) $s_p:B_p\to A_p$ of $\Ee$. Its
-\emph{positions} object is $A_p$ and its \emph{directions} bundle is $s_p$; the \emph{fibre} over a
-generalized element $I$ of $A_p$ is $p\dir{I}:=s_p^{-1}(I)$. The associated endofunctor
-$\Ee\to\Ee$ is
+\begin{definition}[{\cite{GambinoKock2013,ShapiroSpivak2023}}]
+A \emph{polynomial} $p$ in $\Ee$ is an exponentiable morphism (a \emph{bundle}) $s_p:B_p\to A_p$ of
+$\Ee$. Its \emph{positions} object is $A_p$ and its \emph{directions} bundle is $s_p$; the
+\emph{fibre} over a generalized element $I$ of $A_p$ is $p\dir{I}:=s_p^{-1}(I)$. The associated
+endofunctor $\Ee\to\Ee$ is
 \[
-  p(X)\;=\;\Sigma_{A_p}\,\Pi_{s_p}\,A_p^\ast X,
+  p(X)\;=\;\Sigma_{A_p}\,\Pi_{s_p}\,B_p^\ast X,
 \]
-using the LCCC adjoints. Gambino--Kock \cite{GambinoKock2013} prove that over any LCCC the polynomials
-form a category $\Poly(\Ee)$ closed under a \emph{substitution} (composition) product $\sub$ with unit
-$y:=(\id:1\to1)$; the morphisms run \emph{forward} on positions and \emph{backward} on directions.
+where $B_p^\ast X=X\times B_p$ (pullback of $X\to1$ along $B_p\to1$) and $\Sigma_{A_p},\Pi_{s_p}$ are
+dependent sum and product. Over a locally cartesian closed base Gambino--Kock \cite{GambinoKock2013}
+first constructed the category $\Poly(\Ee)$ with its \emph{substitution} (composition) product $\sub$
+and unit $y:=(\id:1\to1)$; Shapiro--Spivak \cite[Thm.~3.26]{ShapiroSpivak2023} give the same product
+over any finitely complete $\Ee$ for polynomials whose bundles are exponentiable. Morphisms run
+\emph{forward} on positions and \emph{backward} on directions.
 \end{definition}
 
-The construction of $\sub$ is where local cartesian closure is spent: composing the functors
-$p\circ q$ and re-presenting the composite as a polynomial requires distributing a product past a
-dependent sum. We will meet exactly this distributivity again, as the one coherence of the
-interchanger (\S\ref{sec:setI}, Step~2).
+The construction of $\sub$ is where exponentiability is spent: composing the functors $p\circ q$ and
+re-presenting the composite as a polynomial requires the dependent product $\Pi$ along a direction
+bundle. The identification of \S\ref{sec:setI} does \emph{not} revisit this; it works at the level of
+internal-category data, where only finite limits occur.
 
-\begin{definition}[Dirichlet tensor \protect{\cite[Prop.~3.79]{NiuSpivak2023}}]
-The \emph{Dirichlet tensor} of bundles $p=(B_p\to A_p)$ and $q=(B_q\to A_q)$ is the bundle
+\begin{definition}[Dirichlet tensor {\cite[Def.~4.1]{ShapiroSpivak2023}}]
+The \emph{Dirichlet tensor} of bundles $p=(B_p\to A_p)$ and $q=(B_q\to A_q)$ is the product bundle
 \[
-   s_p\times s_q\;:\;B_p\times B_q\;\longrightarrow\;A_p\times A_q
+   s_p\times s_q\;:\;B_p\times B_q\;\longrightarrow\;A_p\times A_q,
 \]
-formed with the cartesian product of $\Ee$. Its positions object is $A_p\times A_q$ and its fibre over
-$(I,J)$ is $p\dir{I}\times q\dir{J}$ --- a fibre-product identity needing no distributivity. On
-representables $y^A\otimes y^B=y^{A\times B}$. By Niu--Spivak \cite[Prop.~3.79]{NiuSpivak2023} this
-$\otimes$ is the Day convolution on $\Poly(\Ee)$ induced by $(1,\times)$ on $\Ee$; its unit is again
-$y$.
+formed with the finite products of $\Ee$ (exponentiability is preserved by products,
+\cite[Lem.~4.3]{ShapiroSpivak2023}). Its positions object is $A_p\times A_q$ and its fibre over
+$(I,J)$ is $p\dir{I}\times q\dir{J}$. On representables $y^A\otimes y^B=y^{A\times B}$; its unit is
+again $y$. Over $\Set$ this $\otimes$ is the Day convolution on $\Poly$ induced by $(1,\times)$,
+\cite[Prop.~3.79]{NiuSpivak2023}; over a general $\Ee$ we take \eqref{eq:star}'s ambient definition
+--- $\otimes$ is \emph{the product of bundles} --- and make no Day-convolution claim (see
+\S\ref{sec:discussion}).
 \end{definition}
 
 \subsection{The comonoid--category dictionary}\label{sub:dictionary}
@@ -268,45 +283,47 @@ section / $\Ee$-morphism):
 \item $\varepsilon:c\to y$ is, forward on positions, the unique map $A_c\to1$, and backward on
 directions a \emph{section} $e:A_c\to B_c$ of $s_c$. Dictionary: $A_c=C_0$ (object-of-objects),
 $B_c=C_1$ (object-of-morphisms), $s_c=\dom$, and $e=\id:C_0\to C_1$ the identity-assigning section.
-\item $\delta:c\to c\sub c$ gives, forward, a map $A_c\to A_{c\sub c}$ whose global content is
-$\cod:C_1\to C_0$; and backward, over the pullback of composable pairs
-$C_1\times_{\cod,C_0,\dom}C_1$, a map to $C_1$: the composition $\comp$.
+\item $\delta:c\to c\sub c$ is, forward on positions, the $\Pi_{\dom}$-transpose of $\cod$ ---
+a map $C_0\to A_{c\sub c}$ whose global content is $\cod:C_1\to C_0$ --- and backward, over the
+pullback of composable pairs $C_1\times_{\cod,C_0,\dom}C_1$, the composition $\comp:C_1\times_{C_0}C_1\to C_1$.
 \end{itemize}
 
 \noindent The comonoid laws are exactly the internal-category axioms (left/right identity,
-associativity). This is the internal form of the Ahman--Uustalu equivalence, in the comonoid phrasing
-of \cite[Prop.~5.2]{SGF2021} ($\Set$ case) and \cite{NiuSpivak2023}; its \emph{full} internal form
-over a finitely complete LCCC, both directions and essentially surjective, is the theorem of
-Shapiro--Spivak \cite[Thm.~5.6, Cor.~5.12]{ShapiroSpivak2023} (where the hypothesis of exponentiable
-source is automatic, every morphism of a topos being exponentiable). We use the \emph{forward}
-direction --- internal category $\leadsto$ comonoid, a direct construction --- for $C$, $D$ and
-$C\times D$; and the full equivalence only in \S\ref{sec:product}.
+associativity). This is the internal form of the Ahman--Uustalu equivalence; its \emph{full} form
+over a finitely complete $\Ee$, both directions and a one-by-one match of structure equations on
+unconstrained data, is Shapiro--Spivak \cite[Thm.~5.6, Rem.~5.7]{ShapiroSpivak2023}. We use only the
+\emph{forward} direction --- internal category $\leadsto$ comonoid, a direct construction --- for $C$,
+$D$ and $C\times D$.
 
 \begin{remark}[No well-pointedness]\label{rem:wp}
 The counit's backward datum is the single section $\id:C_0\to C_1$ of $\Ee$. No global elements of
 $C_0$ are chosen, needed, or available in general. The $\Set$-level gloss ``$\varepsilon$ picks
-$\id_i\in c\dir{i}$'' is, internally, this one morphism. \S\ref{sec:graph} tests the point against a
-$C_0$ with no global element whatsoever.
+$\id_i\in c\dir{i}$'' is, internally, this one morphism. \S\ref{sec:graph} illustrates the point
+against a $C_0$ with no global element whatsoever.
 \end{remark}
 
 \subsection{The normal-duoidal interchanger}\label{sub:interchanger}
 
-$(\Poly(\Ee),\otimes,\sub,y)$ is a \emph{normal} duoidal category: the units of $\otimes$ and $\sub$
-coincide (both $y$), so the three unit-comparison maps are identities and the only non-trivial
-structure map is the lax interchanger \cite[Ex.~2.9, eq.~(4)]{ShapiroSpivak2023}
+$(\Poly(\Ee),\otimes,\sub,y)$ is a \emph{normal} duoidal category \cite[Thm.~4.5]{ShapiroSpivak2023}:
+the units of $\otimes$ and $\sub$ coincide (both $y$), so the unit-comparison maps are identities and
+the only non-trivial structure map is the lax interchanger
 \begin{equation}\label{eq:iota}
   \iota:\;(p\sub p')\otimes(q\sub q')\;\longrightarrow\;(p\otimes q)\sub(p'\otimes q'),
-  \qquad\text{natural in }p,p',q,q'.
+  \qquad\text{natural in }p,p',q,q',
 \end{equation}
-Its coherence is cited, but will \emph{not} be load-bearing: the comonoid laws of $c\otimes d$ follow
-in \S\ref{sec:setI} from the on-the-nose identification, independently of the abstract coherence of
-$\iota$.
+given by \cite[Thm.~4.5, eq.~(16)]{ShapiroSpivak2023} (the $\Set$ formula is \cite[Ex.~4.6]{ShapiroSpivak2023}).
+Its coherence is cited, not load-bearing: the comonoid laws of $c\otimes d$ follow in
+\S\ref{sec:setI} from the on-the-nose identification, independently of the abstract coherence of
+$\iota$. On positions, $\iota$ is the canonical comparison
+$\Pi_X A\times\Pi_Y B\to\Pi_{X\times Y}(A\times B)$ (fibrewise $A^X\times B^Y\to(A\times B)^{X\times Y}$);
+we will only use that it sends the pair of transposes of $\cod_C,\cod_D$ to the transpose of
+$\cod_C\times\cod_D$, by naturality of transposition.
 
 %============================================================
 \section{The identification \texorpdfstring{$c\otimes d=\sharpc{(C\times D)}$}{c tensor d = (CxD)sharp}}\label{sec:setI}
 %============================================================
 
-We prove Theorem~\ref{thm:main-I}. Fix internal categories $C,D$ with comonoids
+We prove Theorem~\ref{thm:main}. Fix internal categories $C,D$ with comonoids
 $c=(\dom_C:C_1\to C_0)$ and $d=(\dom_D:D_1\to D_0)$, and set
 \[
   \varepsilon_{c\otimes d}:=(\varepsilon_c\otimes\varepsilon_d)
@@ -317,33 +334,27 @@ $c=(\dom_C:C_1\to C_0)$ and $d=(\dom_D:D_1\to D_0)$, and set
 
 \subsection*{Step 1 --- the underlying object, from finite limits alone}
 
-By the definition of $\otimes$, the underlying bundle of $c\otimes d$ is the product map
+By the definition of $\otimes$ as the product of bundles, the underlying bundle of $c\otimes d$ is
+the product map
 \[
   \dom_C\times\dom_D\;:\;C_1\times D_1\;\longrightarrow\;C_0\times D_0 .
 \]
 This is, on the nose, the underlying bundle of $\sharpc{(C\times D)}$, whose domain map is by
-definition $\dom_{C\times D}=\dom_C\times\dom_D$. No distributivity is used: the fibre identity
+definition $\dom_{C\times D}=\dom_C\times\dom_D$. The fibre identity
 $(B_p\times B_q)_{(I,J)}=p\dir{I}\times q\dir{J}$ is the universal property of a product of maps.
 Hence $c\otimes d$ and $\sharpc{(C\times D)}$ have equal underlying objects of $\Ee$.
 
-\subsection*{Step 2 --- the interchanger, and its one coherence}
+\subsection*{Step 2 --- the interchanger}
 
 Instantiate \eqref{eq:iota} at $p=p'=c$, $q=q'=d$. On positions, $\iota$ sends
-$\big((I,\varphi),(K,\psi)\big)\mapsto\big((I,K),\varphi\times\psi\big)$, a product of $\Ee$-morphisms.
-On directions (backward), $\iota$ is the canonical reassociation furnished by the distributor
-\begin{equation}\label{eq:star}
-  \Sigma_{(i,k)}\big(A_i\times B_k\big)\;\cong\;\big(\Sigma_i A_i\big)\times\big(\Sigma_k B_k\big),
-  \tag{$\star$}
-\end{equation}
-where the sums are the dependent sums along the direction bundles of the $\sub$-composites.
-
-The content of Step~2 is that \eqref{eq:star} is free in any LCCC. It is an instance of the
-distributivity of products over dependent sums --- equivalently, each $A\times(-)=\Delta_A^\ast$ is a
-left adjoint and so preserves the relevant colimits --- which is exactly the law Gambino--Kock
-\cite{GambinoKock2013} use to compose polynomial functors. No extensivity, no disjointness of
-coproducts, and no cartesianness of $\otimes$ is invoked; \eqref{eq:star} is the LCCC composition
-distributivity, not a separate hypothesis. Thus $\iota$ exists on $\Poly(\Ee)$ with the same formula
-as on $\Set$.
+$\big((I,\varphi),(K,\psi)\big)\mapsto\big((I,K),\varphi\times\psi\big)$, a product of $\Ee$-morphisms;
+this is the position-level comparison $\Pi_X A\times\Pi_Y B\to\Pi_{X\times Y}(A\times B)$ recalled in
+\S\ref{sub:interchanger}. On directions (backward), $\iota$ reassociates the composable-pair objects,
+and the content of the reassociation is the finite-limit coherence \eqref{eq:star}. The interchanger
+itself is cited from \cite[Thm.~4.5]{ShapiroSpivak2023}; the only fact we verify by hand is that
+\eqref{eq:star} is a genuine isomorphism, which it is in any finitely complete category because
+products commute with pullbacks. No local cartesian closure, no extensivity, no disjointness of
+coproducts, and no cartesianness of $\otimes$ is invoked here.
 
 \subsection*{Step 3 --- the structure trace}
 
@@ -351,83 +362,90 @@ Tracing $\varepsilon_{c\otimes d}$ and $\delta_{c\otimes d}$ through Steps 1--2,
 ``element'' an $\Ee$-morphism:
 
 \begin{itemize}
-\item \emph{Codomain.} $(\delta_c\otimes\delta_d)$ carries positions
-$(i,x)\mapsto\big((i,\cod_C),(x,\cod_D)\big)$, and $\iota$ sends this to
-$\big((i,x),\cod_C\times\cod_D\big)$. As an $\Ee$-morphism,
+\item \emph{Codomain.} $(\delta_c\otimes\delta_d)$ carries, on positions, the pair of
+$\Pi$-transposes of $\cod_C$ and $\cod_D$; by naturality of transposition $\iota$ sends this to the
+transpose of $\cod_C\times\cod_D$. As an $\Ee$-morphism,
 $\cod_{c\otimes d}=\cod_C\times\cod_D:C_1\times D_1\to C_0\times D_0$.
 \item \emph{Composition.} On directions, $\iota$ reassociates via \eqref{eq:star} and
 $(\delta_c\otimes\delta_d)$ applies $\comp_C,\comp_D$ componentwise, giving
-$\comp_{c\otimes d}=\comp_C\times\comp_D$ under the canonical isomorphism
-\[
-  (C_1\times D_1)\times_{C_0\times D_0}(C_1\times D_1)\;\cong\;
-  (C_1\times_{C_0}C_1)\times(D_1\times_{D_0}D_1)
-\]
-(products commute with pullbacks --- finite limits).
+$\comp_{c\otimes d}=\comp_C\times\comp_D$ under the canonical isomorphism \eqref{eq:star}.
 \item \emph{Identities.} $\varepsilon_c\otimes\varepsilon_d$ yields the section
 $\id_C\times\id_D:C_0\times D_0\to C_1\times D_1$.
 \end{itemize}
 
 These are, morphism for morphism, the structure maps of the internal product category $C\times D$.
-Hence $(c\otimes d,\varepsilon_{c\otimes d},\delta_{c\otimes d})=\sharpc{(C\times D)}$, and its comonoid
-laws are inherited from the genuine internal category $C\times D$ (a category because $C,D$ are, and
-because products of internal categories are internal categories --- \S\ref{sec:product}). This proves
-Theorem~\ref{thm:main-I}. \qed
+Hence $(c\otimes d,\varepsilon_{c\otimes d},\delta_{c\otimes d})=\sharpc{(C\times D)}$ as comonoids.
+Its comonoid laws are those of the genuine internal category $C\times D$ (a category because $C,D$
+are, and because products of internal categories are internal categories --- \S\ref{sec:notproduct});
+and that these are matched by the comonoid laws under the dictionary is the one-by-one correspondence
+of structure equations established in the proof of \cite[Thm.~5.6]{ShapiroSpivak2023}, not merely a
+bijection of lawful structures. This proves Theorem~\ref{thm:main}. \qed
 
-\begin{remark}
-As promised, the duoidal coherence of $\iota$ was not used: the comonoid laws are discharged by the
-identification with a genuine internal category, not by the abstract axioms of $\iota$. The
-coherence (cited from \cite{ShapiroSpivak2023}) guarantees $\delta_{c\otimes d}$ would be counital and
-coassociative in any case; we do not need that extra guarantee.
+\begin{remark}[A three-line alternative]
+Shapiro--Spivak's own technique gives a second proof. By \cite[Lem.~5.5]{ShapiroSpivak2023} comonoid
+and internal-category structure both transport along the fully faithful singular functor
+$\Ee\hookrightarrow\widehat{\Ee}$ into presheaves, where the category side is computed pointwise;
+pointwise, the claim is the $\Set$ case \cite[Prop.~8.79]{NiuSpivak2023}, applied at each object.
+Full faithfulness returns the result to $\Ee$. We have given the direct trace instead because it
+exhibits exactly which finite limit \eqref{eq:star} is at stake.
+\end{remark}
+
+\begin{remark}[No smuggled assumptions]\label{rem:honest}
+The proof uses no choice (only chosen pullbacks enter, and the dependent-product transposes are
+canonical), no excluded middle (there is no case split or decidability appeal), and no pointwise
+coend (none is computed; $\otimes$ is the product of bundles). The element notation throughout is
+legitimate as generalized elements.
 \end{remark}
 
 %============================================================
-\section{The tensor is the categorical product}\label{sec:product}
+\section{The tensor is not the categorical product of comonoids}\label{sec:notproduct}
 %============================================================
 
-Theorem~\ref{thm:main-II} follows from the internal equivalence, together with the elementary fact
-that $\Cat(\Ee)$ has products.
+Theorem~\ref{thm:main} identifies the \emph{represented internal category} of $c\otimes d$ with
+$C\times D$. It is tempting to upgrade this to ``$c\otimes d$ is the categorical product of $c$ and
+$d$''. That upgrade is false, and it is worth seeing why, because the failure is already visible in
+$\Set$.
 
-Internal categories in $\Ee$ are models of the finite-limit sketch $T_{\Cat}$; for any finitely
-complete $\Ee$, $\Cat(\Ee)=\Mod(T_{\Cat},\Ee)$ has all limits $\Ee$ has, computed objectwise in
-$\Ee$. In particular the product $C\times D$ exists, with $(C\times D)_0=C_0\times D_0$,
-$(C\times D)_1=C_1\times D_1$, structure componentwise, and projections $p_C,p_D$ internal functors
---- the categorical product in $\Cat(\Ee)$. (For a presheaf topos $\Ee=[\mathcal{C}^{\mathrm{op}},\Set]$
-this is $\Cat(\Ee)\simeq[\mathcal{C}^{\mathrm{op}},\Cat]$ with the pointwise product.)
+The category of $\sub$-comonoids is, by \cite[Cor.~5.12, Def.~5.11]{ShapiroSpivak2023}, isomorphic to
+the category of internal categories and internal \emph{cofunctors} --- written $\Cat^{\sharp}$ over
+$\Set$. A cofunctor $F:C\to D$ goes forward on objects and \emph{backward} on morphisms, lifting
+each $D$-arrow out of $F(x)$ to a $C$-arrow out of $x$. In $\Cat^{\sharp}$ the product category
+$C\times D$ is \emph{not} the categorical product; it is a monoidal, non-cartesian product,
+coinciding with the parallel product \cite[\S8.2.4]{NiuSpivak2023}. Theorem~\ref{thm:main} is the
+internal, general-$\Ee$ form of this monoidal product, not of a categorical product.
 
-Now the counit $\varepsilon_d:d\to y$ is the comonoid morphism to the terminal comonoid $y=\sharpc{1}$
-(the terminal internal category); under the dictionary it is the unique functor $D\to1$. Consider
-\[
-  \pi_C:=\id_c\otimes\varepsilon_d:\;c\otimes d\longrightarrow c\otimes y\cong c .
-\]
-Tracing as in \S\ref{sec:setI}, its underlying $\Ee$-morphism is the first projection on positions
-$(i,x)\mapsto i$ and on directions $(f,h)\mapsto f$ (the $\varepsilon_d$ component collapses the
-$D$-leg to the identity direction) --- i.e. $\pi_C$ is the underlying data of the internal projection
-functor $p_C:C\times D\to C$. Since $p_C$ is a functor, its forward image is a comonoid morphism with
-exactly this underlying map, so $\pi_C$ \emph{is} a comonoid morphism representing $p_C$;
-symmetrically $\pi_D=\varepsilon_c\otimes\id_d$ represents $p_D$. (Only the forward direction of the
-dictionary is used here.)
+\begin{example}[The cone exists; universality fails]\label{ex:walking}
+Work in $\Set$. Let $C=D=\mathbf 2=\{0\to1\}$, the walking arrow, and let $E$ be the category with
+objects $e,x,z$ and non-identity arrows $u:e\to x$, $v:e\to z$. Define cofunctors $F,G:E\to\mathbf2$
+by $e\mapsto0$, $x,z\mapsto1$, with $F$ lifting the arrow $a:0\to1$ at $e$ to $u$ and $G$ lifting it
+to $v$. (The cofunctor laws hold trivially: there are no composable non-identity pairs.) The
+projections from the monoidal product, $\pi_C=\id_c\otimes\varepsilon_d$ and
+$\pi_D=\varepsilon_c\otimes\id_d$, are the cofunctors $(f,h)\mapsto f$ and $(f,h)\mapsto h$ on
+morphisms; so $(F,G)$ is a cone. But any cofunctor $H:E\to\mathbf2\times\mathbf2$ with $\pi_C H=F$ and
+$\pi_D H=G$ must have $H(e)=(0,0)$ and $H(x)=H(z)=(1,1)$, and must then lift $(a,\id):(0,0)\to(1,0)$
+to an arrow out of $e$ whose codomain maps to $(1,0)$. No such arrow of $E$ exists. So
+$(c\otimes d,\pi_C,\pi_D)$ is not a categorical product in $\Cat^{\sharp}$.
+\end{example}
 
-By Shapiro--Spivak \cite[Thm.~5.6, Cor.~5.12]{ShapiroSpivak2023} the equivalence
-$\cat(\Ee)\simeq\Cat(\Ee)$ holds internally to any such $\Ee$ (exponentiability of the source being
-automatic in a topos); being an equivalence of categories it preserves and reflects limits. Hence the
-product cone $(C\times D,p_C,p_D)$ of $\Cat(\Ee)$ transports to $(c\otimes d,\pi_C,\pi_D)$ in
-$\cat(\Ee)$, which is therefore the categorical product. This proves Theorem~\ref{thm:main-II}. \qed
-
-\begin{remark}[Provenance, stated plainly]
-The step that quantifies over \emph{all} comonoids --- essential surjectivity of
-$\cat(\Ee)\to\Cat(\Ee)$ --- is the content of \cite[Thm.~5.6, Cor.~5.12]{ShapiroSpivak2023}, a
-published theorem. We do not reprove it and do not claim it. Gambino--Kock \cite{GambinoKock2013} is
-cited only for the existence of $\Poly(\Ee)$, $\sub$ and the composition-distributivity law
-\eqref{eq:star} --- not for the comonoid--category equivalence.
-\end{remark}
+The genuine categorical product of $C$ and $D$ lives on the \emph{functor} side. Internal categories
+in $\Ee$ are models of the finite-limit sketch $T_{\Cat}$, so for finitely complete $\Ee$ the category
+$\Cat(\Ee)=\Mod(T_{\Cat},\Ee)$ has all limits $\Ee$ has, computed objectwise; in particular the
+product $C\times D$ exists, with $(C\times D)_0=C_0\times D_0$, $(C\times D)_1=C_1\times D_1$,
+structure componentwise, and projections internal \emph{functors}. (For a presheaf topos
+$\Ee=[\mathcal C^{\mathrm{op}},\Set]$ this is $\Cat(\Ee)\simeq[\mathcal C^{\mathrm{op}},\Cat]$ with the
+pointwise product.) This is the universal property one wants --- but it is a fact about $\Cat(\Ee)$,
+proved by the sketch argument, and it is \emph{not} a statement about the tensor $\otimes$ on
+comonoids. Theorem~\ref{thm:main} supplies the bridge: the \emph{object} $c\otimes d$ carries exactly
+the product internal category, even though the \emph{morphism} theory of comonoids sees $\otimes$ as a
+non-cartesian monoidal product.
 
 %============================================================
 \section{What transports, and what the base must supply}\label{sec:transport}
 %============================================================
 
-The proof of Theorem~\ref{thm:main-I} uses the base only through the ingredients in
-Table~\ref{tab:transport}, each of which holds in every Grothendieck topos. The last column records
-the \emph{weakest} property that suffices for that line.
+The proof of Theorem~\ref{thm:main} uses the base only through the ingredients in
+Table~\ref{tab:transport}. The last column records the \emph{weakest} property that suffices for that
+line.
 
 \begin{table}[h]
 \centering
@@ -437,36 +455,38 @@ the \emph{weakest} property that suffices for that line.
 \toprule
 ingredient & base property used & holds in \\
 \midrule
-$\Poly(\Ee)$, $\sub$, the dependent product $\Pi$ & $\Ee$ locally cartesian closed & every Grothendieck topos \\
+$\Poly(\Ee)$, $\sub$, $\otimes$, duoidality & exponentiable direction bundles \cite{ShapiroSpivak2023} & any finitely complete $\Ee$ (exponentiable maps) \\
 underlying object $c\otimes d=\sharpc{(C\times D)}$ & finite-limit products & any finitely complete $\Ee$ \\
-interchanger distributor \eqref{eq:star} & LCCC distributivity ($\times$ over $\Sigma$) & every LCCC \\
+interchanger coherence \eqref{eq:star} & products commute with pullbacks & any finitely complete $\Ee$ \\
 counit $\varepsilon=\id:C_0\to C_1$ & \emph{none} (an internal section) & any $\Ee$ (no well-pointedness) \\
-product universal property (Thm.~\ref{thm:main-II}) & finite-limit products $+$ \cite{ShapiroSpivak2023} & any finitely complete LCCC \\
 \bottomrule
 \end{tabular}
 \medskip
-\caption{The base appears only here. Nothing in the first four lines exceeds ``LCCC with finite-limit
-products''.}
+\caption{The base appears only here. Beyond the Shapiro--Spivak framework (row 1), nothing exceeds
+``finitely complete''.}
 \label{tab:transport}
 \end{table}
 
-Three properties one might have expected are \emph{not} used: extensivity / disjointness of coproducts
-(the distributor \eqref{eq:star} is the LCCC composition law, not an extensivity axiom); universality
-of coproducts as a \emph{separate} axiom (it is free: $f^\ast\dashv\Pi_f$, so $f^\ast$ preserves
-colimits); and well-pointedness (the counit is the internal section $\id$, Remark~\ref{rem:wp}). This
-sharpens the folklore hypothesis ``LCCC \emph{and} extensive'' to ``LCCC suffices'' for the transport,
-and relocates the boundary of the phenomenon exactly: the $\mathbf{Vec}$ obstruction is that
-$\mathbf{Vec}$ is not locally cartesian closed, so $\Poly(\mathbf{Vec})$ and $\sub$ have no standard
-construction; it is \emph{not} any failure of tensor-cartesianness.
+Three properties one might have expected are \emph{not} used: local cartesian closure (row 1 asks only
+for exponentiable direction bundles, which an LCCC supplies but does not require); extensivity or
+disjointness of coproducts (the coherence \eqref{eq:star} is a limit--limit interchange, not an
+extensivity axiom); and well-pointedness (the counit is the internal section $\id$,
+Remark~\ref{rem:wp}). In particular \emph{no coproducts at all} are consumed by the identification.
 
 %============================================================
-\section{A witness in \texorpdfstring{$\Graph$}{Graph}, machine-checked}\label{sec:graph}
+\section{A witness in \texorpdfstring{$\Graph$}{Graph}, as an illustration}\label{sec:graph}
 %============================================================
 
-The cleanest test of ``no well-pointedness'' is a topos whose objects genuinely lack global elements.
-Take $\Ee=\Graph=[\,\bullet\rightrightarrows\bullet,\Set\,]$, the topos of directed graphs. By
-$\Cat(\Graph)\simeq[\,\bullet\rightrightarrows\bullet,\Cat\,]$, an internal category $C$ in $\Graph$ is
-a diagram of two ordinary categories $\mathbf{C}_V,\mathbf{C}_E$ with two functors
+As a finite sanity check we exhibit Theorem~\ref{thm:main} in the presheaf topos
+$\Ee=\Graph=[\,\bullet\rightrightarrows\bullet,\Set\,]$ of directed graphs. Two honest caveats,
+following the referee: in a presheaf topos the internal-category side is computed \emph{pointwise}, so
+this check cannot probe the genuinely non-pointwise content of $\sub$ (that is discharged by the
+general proof, not here); and the ``no global element'' point needs no test at all, since the
+counit's datum is the morphism $\id$ and global elements never enter. The witness is therefore an
+illustration of the finished theorem in a concrete topos, not evidence for it.
+
+By $\Cat(\Graph)\simeq[\,\bullet\rightrightarrows\bullet,\Cat\,]$, an internal category $C$ in
+$\Graph$ is a diagram of two ordinary categories $\mathbf{C}_V,\mathbf{C}_E$ with two functors
 $S,T:\mathbf{C}_E\to\mathbf{C}_V$; its object-of-objects $C_0$ is the graph with vertex set
 $\ob\mathbf{C}_V$, edge set $\ob\mathbf{C}_E$ and source/target $S_0,T_0$, and the internal structure
 maps $\dom,\cod,\id,\comp$ are graph morphisms --- commuting with the graph source/target $s,t$
@@ -489,66 +509,70 @@ maps $\dom,\cod,\id,\comp$ are graph morphisms --- commuting with the graph sour
   \node[circle,draw,inner sep=1.3pt] (11) at (7.6,-0.9) {\scriptsize $11$};
   \draw[->] (00) -- node[sloped,above,font=\scriptsize] {$(e,e)$} (11);
 \end{tikzpicture}
-\caption{The acid-test witness $\mathtt{Carr}$: the object-of-objects graph $C_0=(0\xrightarrow{e}1)$
+\caption{The illustrative witness $\mathtt{Carr}$: the object-of-objects graph $C_0=(0\xrightarrow{e}1)$
 is loopless ($S_0\neq T_0$), hence has no global element $1\to C_0$. The product graph
 $(C\times C)_0=C_0\times C_0$ is computed \emph{pointwise} in $\Graph$: four vertices and a single edge
-$(e,e):00\to11$, again loopless (source $00\neq11$ target), so again no global element. The
-identity-section and composition of $c\otimes c$ are nonetheless genuine graph morphisms --- the point
-of the check.}
+$(e,e):00\to11$, again loopless, so again no global element. The identity-section and composition of
+$c\otimes c$ are nonetheless genuine graph morphisms.}
 \label{fig:graph}
 \end{figure}
 
 We machine-check, in Lean~4 (core only, Mathlib-free), that for the three internal categories
-$\mathtt{Cpt}$ (the point, a loop --- the negative control, \emph{with} a global element),
+$\mathtt{Cpt}$ (the point, a loop --- the baseline positive control, \emph{with} a global element),
 $\mathtt{Carr}$ ($C_0=(0\to1)$, loopless) and $\mathtt{Cdisc}$ ($C_0$ two loopless vertices), and all
-nine ordered pairs, the Day tensor $c\otimes d$ computed fibrewise and glued by $S\times S,T\times T$
-is a genuine internal category in $\Graph$: both fibres satisfy the category (= comonoid) axioms, and
-the glued source/target are functors --- i.e. the identity-section and composition of $c\otimes d$
-commute with $s,t$. The headline certificate is
+nine ordered pairs, the Dirichlet tensor $c\otimes d$ computed fibrewise and glued by
+$S\times S,T\times T$ is a genuine internal category in $\Graph$: both fibres satisfy the
+category (= comonoid) axioms, and the glued source/target are functors --- i.e. the identity-section
+and composition of $c\otimes d$ commute with $s,t$. The headline certificate is
 \[
   \mathtt{all\_prod\_valid}:\ \mathtt{allProdValid}=\mathtt{true}
   \qquad(\text{by \texttt{decide}}),
 \]
-and the acid test is isolated as $\mathtt{prod\_st\_functors\_Carr\_Carr}$ together with
-$\mathtt{prod\_loopless\_Carr\_Carr}$: for $\mathtt{Carr}\otimes\mathtt{Carr}$, whose
-object-of-objects $(C\times C)_0$ (Figure~\ref{fig:graph}) is loopless and hence has no global element,
-the source and target maps are nonetheless functors. Non-vacuity controls ($\mathtt{bogus}$ a
-non-functor, $\mathtt{notcat}$ a non-category) are rejected by the same predicates. Every certificate
-reports $\mathtt{[propext]}$ only --- no $\mathtt{sorryAx}$, no $\mathtt{native\_decide}$. This is, to
-the author's knowledge, the first Lean certificate of a polynomial-comonoid computation internal to a
-topos other than $\Set$. The $\Set$-side base case is checked independently by a Python verifier
-($16/16$ ordered pairs over four test categories, on the nose).
+with the loopless case isolated as $\mathtt{prod\_st\_functors\_Carr\_Carr}$ together with
+$\mathtt{prod\_loopless\_Carr\_Carr}$. The negative controls $\mathtt{bogus}$ (a non-functor) and
+$\mathtt{notcat}$ (a non-category) are rejected by the same predicates. Every certificate reports
+$\mathtt{[propext]}$ only --- no $\mathtt{sorryAx}$, no $\mathtt{native\_decide}$. The file is
+\url{https://github.com/scotmacbeth/work-in-progress/blob/main/lean/2026-10-21-day-convolution-graph.lean};
+the $\Set$-side base case is checked independently by a Python verifier ($16/16$ ordered pairs over
+four test categories, on the nose).
 
 %============================================================
 \section{Discussion: honest bounds}\label{sec:discussion}
 %============================================================
 
-\subsection*{The maximal reach}
-The argument needs the dependent sums $\Sigma$ that $\Poly(\Ee)$ à la Gambino--Kock requires. A bare
-LCCC without the requisite coproducts is not covered; the honest maximal reach is ``any LCCC carrying
-Gambino--Kock polynomials'', of which Grothendieck toposes are the canonical general-purpose case. We
-have stated the theorems over Grothendieck toposes for that reason, and flag ``any such LCCC'' as the
-open upper bound, decoupled from the main claim.
+\subsection*{The maximal reach is the Shapiro--Spivak setting}
+The identification uses, beyond finite limits, only that the polynomial framework of
+\cite{ShapiroSpivak2023} is available --- i.e. that the direction bundles are exponentiable. That is
+strictly weaker than local cartesian closure, and needs no coproducts: the dependent sums $\Sigma_f$
+are postcomposition, which exists in any category. So there is no ``open upper bound'' to flag: the
+honest maximal reach is the Shapiro--Spivak setting itself --- any finitely complete category with
+exponentiable direction bundles --- which includes every locally cartesian closed category and every
+elementary topos, Grothendieck or not, with or without a natural-numbers object.
+
+\subsection*{``Day convolution'' is $\Set$-level motivation only}
+Over $\Set$, the tensor $\otimes$ is genuinely a Day convolution: \cite[Prop.~3.79]{NiuSpivak2023} is
+a co-Yoneda coend computation in $\Set$. Over a general $\Ee$ we make \emph{no} Day-convolution claim.
+Stating one would require saying Day convolution \emph{of what} (internal functors on $\Ee$?
+$\Ee$-enriched?), and the construction would need coends over a large category with copowers by
+internal homs and pullback-stability --- genuinely base-sensitive data, and exactly where an
+elementary topos (no infinite coproducts) might differ from a Grothendieck one. Our proof never
+touches any of this: $\otimes$ is used only as the product of bundles \cite[Def.~4.1]{ShapiroSpivak2023}.
+This is why the title says ``Dirichlet tensor''.
 
 \subsection*{No converse packaged in}
-We do \emph{not} assert a converse of the form ``LCCC $+$ extensive $\Rightarrow$ Grothendieck
-topos''; the Giraud characterization of Grothendieck toposes is not of that shape, and we do not need
-it. The theorems are stated directly over Grothendieck toposes, and \S\ref{sec:transport} records
-which strictly weaker properties each line actually consumes.
-
-\subsection*{Sheaf toposes come for free}
-Because the proof uses only LCCC and finite-limit products --- both true in any Grothendieck topos,
-sheaf or presheaf --- no separate left-exact-localization or sheafification step is required. The
-earlier worry that sheaf toposes might need separate treatment dissolves: they are already covered by
-the uniform statement.
+We do \emph{not} assert any converse of the form ``these hypotheses force $\Ee$ to be a topos''. The
+theorem is stated directly over finitely complete categories with exponentiable direction bundles,
+and \S\ref{sec:transport} records which strictly weaker properties each line consumes.
 
 \subsection*{What this buys the chain}
-The equivalence $\text{containers}\simeq\cdots\simeq\Cat$ is now known to carry its monoidal content
---- product $=$ Day convolution $=$ Dirichlet tensor --- uniformly across every Grothendieck topos. A
-compositional model built in presheaves on a site, or sheaves on a space, inherits the product
-structure of its directed shapes with no recomputation and no appeal to global elements. That the
-construction wants precisely a locally cartesian closed home, and finds one in every topos, is the
-stable form of the ``which base?'' question the program began with.
+The equivalence $\text{containers}\simeq\cdots\simeq\Cat$ now carries its object-level monoidal content
+--- the Dirichlet tensor represents the product internal category --- uniformly across every finitely
+complete base the framework admits. A compositional model built in presheaves on a site, or sheaves on
+a space, inherits the product structure of its directed shapes with no recomputation and no appeal to
+global elements. The one thing it does \emph{not} inherit for free is a universal property \emph{among
+comonoids}: there the tensor is a monoidal, non-cartesian product (\S\ref{sec:notproduct}), and the
+categorical product lives on the functor side $\Cat(\Ee)$. Keeping those two apart is the main honest
+correction this note makes to the folklore.
 
 %============================================================
 \begin{thebibliography}{9}
@@ -557,11 +581,6 @@ stable form of the ``which base?'' question the program began with.
 N.~Gambino and J.~Kock,
 \emph{Polynomial functors and polynomial monads},
 Math. Proc. Cambridge Philos. Soc. \textbf{154} (2013), no.~1, 153--192; arXiv:0906.4931.
-
-\bibitem{LucyshynWright2025}
-R.~B.~B.~Lucyshyn-Wright,
-\emph{$\mathcal{V}$-graded categories and $\mathcal{V}$-$\mathcal{W}$-bigraded categories}, 2025;
-arXiv:2502.18557.
 
 \bibitem{NiuSpivak2023}
 N.~Niu and D.~I.~Spivak,
