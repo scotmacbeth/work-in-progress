@@ -561,7 +561,10 @@ a=a$, $b\cdot b=b$ (associative, unit $e$; $a$ non-invertible, so $M$ is not a g
 $K(e)=e,\ K(a)=a,\ K(b)=a$. Then \textsf{(K1)}, \textsf{(U)}, \LA{} hold universally (checked over all
 $3\times3$ pairs), $\Img K=\{e,a\}$ is \emph{not} closed ($a\cdot a=b\notin\Img K$), yet $N_{K}$ on
 $\{e,a\}$ is the $2$-element semilattice ($a\sh a=K(b)=a$), which is associative. An exhaustive search
-shows no such example at order $\le 2$ and exactly six at order $3$: order $3$ is minimal.
+shows no such example at order $\le 2$ and exactly six at order $3$ --- counting \emph{labelled}
+witnesses $(M,K)$ with the unit fixed, supported on four of the eleven labelled order-$3$ monoid
+tables; up to isomorphism this is three witnesses on two isomorphism classes of monoid --- so order
+$3$ is minimal.
 
 (b) \emph{Invertibility does not help.} Take $K=r$ the right-coset representative map of a subgroup
 $H\le G$ with transversal $T$ (so $\Img K=T$, $\sh=\circ$). When $H\trianglelefteq G$ is normal, the
@@ -818,9 +821,11 @@ computation). Our closure criterion (Theorem~\ref{thm:closure}, forward directio
 ``if the transversal is a subgroup then $\circ$ is the restriction of the group product''; cf.\ also
 arXiv:1309.7729, ``On the Congruences in Right Loops''. We emphasize, per Theorem~\ref{thm:converse},
 that the biconditional ``the right loop is a group iff the transversal is a subgroup'' is
-\emph{false} in the presence of a nontrivial normal subgroup. This biconditional has \emph{no
-source} --- it was our own \texttt{state/PROVE.md} target, not a classical claim; the classical
-literature contains the forward direction \emph{and} the quotient fact $H\triangleleft
+\emph{false}: it fails for a pair $(G,H)$ exactly when some transversal is associative but not a
+complement of $H$ --- for instance whenever $H$ is a \emph{non-split} normal subgroup, where every
+transversal gives an associative $(T,\circ)\cong G/H$ and none is a subgroup. This biconditional has
+\emph{no source} --- it was our own \texttt{state/PROVE.md} target, not a classical claim; the
+classical literature contains the forward direction \emph{and} the quotient fact $H\triangleleft
 G\Rightarrow(T,\circ)\cong G/H$, but not the false iff.
 \end{remark}
 
@@ -852,7 +857,11 @@ What is \emph{not} in the cited literature, and is ours, is narrow and we foregr
         exact factorization $D\cdot K$, is a legitimate novel \emph{example} of the classical
         construction --- not a novel construction.
 \end{enumerate}
-A third candidate precedent, Grandis (``Categories with Negation'', arXiv:1709.03186), whose
+A third candidate precedent, Grandis (``Categories with Negation'', arXiv:1709.03186),\footnote{%
+Attribution flag: arXiv:1709.03186 is not yet logged at \texttt{deep-read} in the program's source
+index; it is cited here as a near-miss to close the search, not as a load-bearing precedent, and
+should be registered before external submission. See the committed attribution tracker
+\texttt{ATTRIBUTION-TRACKER.md}.} whose
 left/right-absorbing morphism \emph{classes} form an \emph{ideal}, is structurally one level off (a
 class, not a single operator) and is not the home; we note it only to close the search. We would
 retract any novelty claim the moment a closer precedent surfaced.

@@ -61,8 +61,8 @@ without normality, writing $g\cdot h=\varphi(g,h)\cdot(g\sh h)$ with $\varphi\in
 product is associative $\Leftrightarrow f\varphi(g,h)f^{-1}\in H$ for all $f,g,h$ in the transversal.
 Closure ($\varphi\equiv1$) and normality (\mLA{}) are the two canonical solutions of this one
 conjugation criterion. The results are proved by hand, corroborated by exhaustive enumeration over
-all monoids of order $\le3$ and all $(H,T)$ pairs of $S_3$ and $S_4$ ($36\,000+$ pairs, zero
-mismatches), and the finite core is machine-checked axiom-free in Lean~4.
+all monoids of order $\le3$ and all $(H,T)$ transversal pairs of $S_3$ ($15$) and $S_4$ ($35\,416$),
+zero mismatches, and the finite core is machine-checked axiom-free in Lean~4.
 \end{abstract}
 
 \maketitle
@@ -71,7 +71,7 @@ mismatches), and the finite core is machine-checked axiom-free in Lean~4.
 \texttt{70b090c}. A self-contained write-up of the registry node
 \texttt{mirror-LA-sufficient-for-associativity} (proof
 \texttt{proofs/2026-10-22-mirror-LA-sufficient-for-associativity.md}), under the peer-reviewed
-positive-home parent. Answers SHOULD~S1(b) of the uid~239 referee report on the closure criterion.
+positive-home parent. Answers SHOULD~S1 of the uid~239 referee report on the closure criterion.
 The finite core is Lean-certified (\texttt{lean-mirror-LA-oracle}). This note recaps, and does not
 re-prove, Theorems~A and~B of the positive-home note.}
 
@@ -111,9 +111,12 @@ non-associativity of $\Norm_K$.
 
 Two families of normalizers turn out to be associative for reasons that look nothing alike. The
 first: $\mathcal{A}=G$ a group, $K$ the right-coset-representative map of a \emph{normal} subgroup,
-where $\Norm_K\cong G/H$. The second: small non-invertible monoids whose normalizer has
-\emph{closed} image (the closure criterion's positive side). The referee's question (uid~239,
-SHOULD~S1(b)) was whether one condition sits behind both. It does.
+where $\Norm_K\cong G/H$. The second: the small non-invertible monoids of the closure criterion's
+converse witness --- the order-$3$ normalizers of the triangulation unit's Theorem~2(a) whose image
+is \emph{not} closed, yet whose magmoid is associative (e.g.\ $M=\{e,a,a^2\}$, $a^3=a$, with
+$K(a^2)=a$). These are associative for a reason unrelated to the group quotient, and (as
+§\ref{sec:thm2} shows) \emph{not} because the image is closed. The referee's question (uid~239,
+SHOULD~S1) was whether one condition sits behind both. It does.
 
 \begin{definition}[kernel relation, mirror law]
 \label{def:mLA}
@@ -132,6 +135,20 @@ un-normalized products $x=g\cdot h$ of $\Norm_K$-arrows. Where $K(x)\ne x$, \mLA
 inner normalization is invisible to a \emph{left} multiply-then-normalize. It is \emph{not} the
 triviality $K(c\cdot K(x))=K(c\cdot x)$ for $x\in\Img K$ (where both sides are $K(c\cdot x)$ by
 \textsf{(K1)}). This is the mirror of Remark~1.3 of the positive-home note.
+\end{remark}
+
+\begin{remark}[provenance]
+\label{rem:provenance}
+The mirror condition \mLA{} and its core consequences were first stated by the referee
+(Rick, uid~239 report, SHOULD~S1): that \mLA{} yields \RA{} immediately, that
+$\Norm_K\cong\mathcal{A}/\!\ker K$, that over a group the coset reading forces $H$ normal, that it is
+strictly stronger than \RA{}, and the exact group criterion, with the enumeration counts. What this
+note contributes is the \emph{written proofs} below; the converse of Remark~\ref{rem:leftcong}
+(\mLA{} \emph{equivalent} to ``$\simK$ a left congruence,'' independently of \LA{}); the
+closed-image separator of Theorem~\ref{thm:strict}, which establishes that \mLA{} and closure are
+genuinely \emph{incomparable}; the core-of-$H$ form of the group criterion
+(Remark~\ref{rem:core}); the honest-unifier Proposition~\ref{prop:tfae}; and the axiom-free Lean
+core. We flag the separation so the referee's prior claim is credited where it is due.
 \end{remark}
 
 The three theorems say: (§\ref{sec:thm1}) \mLA{} is exactly the missing left-handed half, and it
@@ -167,8 +184,10 @@ That is the whole mechanism.
   K\big(f\cdot K(g\cdot h)\big)=K\big(f\cdot(g\cdot h)\big)=K(f\cdot g\cdot h).
 \]
 The left-hand side is the left-hand side of \RA{}; the right-hand side is its right-hand side. So
-\RA{} holds, and $\Norm_K$ is associative by Proposition~\ref{prop:thmB}. (This step uses
-\mLA{} only; \LA{} enters in part~(2).)
+\RA{} holds, and $\Norm_K$ is associative by Proposition~\ref{prop:thmB}. (The derivation of \RA{}
+here uses \mLA{} only; the passage from \RA{} to \emph{associativity} is Proposition~\ref{prop:thmB}
+--- Theorem~B of the positive-home note --- whose proof uses \LA{}. So the hand argument for
+``\mLA{} $\Rightarrow$ associative'' presupposes \LA{}; \LA{} also enters directly in part~(2).)
 
 \textbf{(2).} We establish the two one-sided compatibilities separately.
 
@@ -266,7 +285,8 @@ Thus $\RA{}\wedge\neg\mLA{}$ --- so $\mLA{}\Rightarrow\RA{}$ is proper --- and, 
 closed here, \emph{closure does not imply \mLA{}}.
 
 \emph{A separator with \mLA{} but $\Img K$ not closed.} The order-$3$ converse witness of the closure
-note ($M=\{e,a,b\}$, $a\cdot a=b$, $a\cdot b=b\cdot a=b\cdot b=a$, with $K(e)=e,\,K(a)=a,\,K(b)=a$)
+note ($M=\{e,a,b\}$ with $a\cdot a=b$, $a\cdot b=b\cdot a=a$, $b\cdot b=b$ --- i.e.\ $M=\{e,a,a^2\}$
+with $a^3=a$ --- and $K(e)=e,\,K(a)=a,\,K(b)=a$)
 has $\simK$-classes $\{e\},\{a,b\}$, a two-sided congruence, so \mLA{} holds; yet
 $\Img K=\{e,a\}$ is not closed because $a\cdot a=b\notin\Img K$. So \emph{\mLA{} does not imply
 closure}. The two conditions are incomparable.
@@ -293,6 +313,14 @@ Each upward arrow is strict and the two upper conditions are logically independe
 (§\ref{sec:thm3}) they are the two classical mechanisms: $\mLA{}\Leftrightarrow H$ normal, closure
 $\Leftrightarrow T$ a subgroup. Handedness $=\LA{}\wedge\neg\RA{}$ therefore requires both $\neg\mLA{}$
 and $\neg$closure --- each is necessary for associativity to fail, neither alone is the obstruction.
+
+One caution: the bottom vertex is \emph{not} the join of the two upper ones. Associativity (\RA{}) is
+strictly weaker than ``$\mLA{}$ or closure'': there are normalizers that are associative with
+\emph{neither} \mLA{} nor closed image. The smallest such lie at order~$4$ among monoids (six
+normalizers, found by exhaustive search; §\ref{sec:verify}) and at $S_3\times C_2$ among groups. Only
+at order~$\le3$ do the two coincide --- there associativity $=\mLA{}\vee\text{closure}$ exactly, with
+zero exceptions --- which is why the two-condition picture looks complete on the small examples but is
+not the general story. The general account is Proposition~\ref{prop:tfae}.
 \end{remark}
 
 \section{Over a group: the mirror law is normality}
@@ -351,6 +379,26 @@ Using $K(x)=K(y)\Leftrightarrow xy^{-1}\in H$, this is
 for all $f,g,h\in T$.
 \end{proof}
 
+\begin{remark}[core form: the $f$-quantifier disappears]
+\label{rem:core}
+Because $G=HT$ and $(hf)^{-1}H(hf)=f^{-1}Hf$ for $h\in H$, running $f$ over the transversal $T$ is the
+same as running it over all of $G$, so $\bigcap_{f\in T}f^{-1}Hf=\bigcap_{g\in G}g^{-1}Hg
+=\mathrm{core}_G(H)$, the \emph{normal core} --- the largest normal subgroup of $G$ contained in $H$.
+Thus ``$f\varphi(g,h)f^{-1}\in H$ for all $f$'' is just $\varphi(g,h)\in\mathrm{core}_G(H)$, and
+Theorem~\ref{thm:criterion} becomes
+\[
+  (T,\sh)\text{ associative}\ \Longleftrightarrow\ \varphi(T\times T)\subseteq\mathrm{core}_G(H)
+  \ \Longleftrightarrow\ \text{the image of }T\text{ in }G/\mathrm{core}_G(H)\text{ is a subgroup.}
+\]
+The two ends of the diamond are the two extremes of the core: \mLA{} is $\mathrm{core}_G(H)=H$ (i.e.\
+$H\lhd G$), and closure is $\varphi\equiv\id$, where the core plays no role. This reads off the
+enumeration. In $S_3$ every proper subgroup is either normal ($A_3$) or has \emph{trivial} core (the
+order-$2$ subgroups), and trivial core forces $\varphi\equiv\id$ on any associative transversal
+--- i.e.\ closure --- so $S_3$ has \emph{no} strictly-between transversal; the first groups with a
+strictly-between regime are those with a non-trivial proper core, e.g.\ $S_3\times C_2$ (core $C_2$),
+which has nine.
+\end{remark}
+
 \begin{remark}[the criterion is the diamond]
 \label{rem:unify}
 The criterion $f\varphi(g,h)f^{-1}\in H$ is satisfied in two canonical ways, matching
@@ -362,11 +410,81 @@ Remark~\ref{rem:diamond}:
         automatically.
 \end{itemize}
 The criterion is strictly weaker than either: it permits a nontrivial $\varphi$, valued in a
-non-normal $H$, that merely stays in $H$ under conjugation by the finitely many $f\in T$. That
-strictly-between regime is the honest content of ``associative without normality or closure''. This
-mirrors the split-vs-cocycle dichotomy of the weld $H^2$ program: closure is the trivial-cocycle
-locus ($\varphi\equiv\id$), normality a cocycle-stability locus, and associativity strictly below
-both.
+non-normal $H$, that merely stays in the normal core $\mathrm{core}_G(H)$ (Remark~\ref{rem:core}).
+That strictly-between regime is the honest content of ``associative without normality or closure''.
+\end{remark}
+
+\section{The honest unifier: one condition, two specializations}
+\label{sec:unifier}
+
+Sections~\ref{sec:thm2}--\ref{sec:thm3} might read as though, over a \emph{general} associative
+category $\mathcal{A}$, the two sufficient conditions --- \mLA{} and closure of $\Img K$ --- were the
+two faces of one mechanism. They are not. Theorem~\ref{thm:strict} shows they are incomparable, and
+off the group setting there is no $\varphi$ to carry a common criterion: ``one mechanism and its two
+classical degenerations'' is a group phenomenon (§\ref{sec:thm3}), not a general theorem. What
+\emph{is} general is the following, isolated by the referee (uid~239) and adopted here as the honest
+statement of ``one condition behind both''. It pins down the exact restriction of \mLA{} that is
+equivalent to associativity.
+
+Write $\theta_K$ for the \emph{largest two-sided congruence contained in $\simK$}; explicitly,
+\[
+  a\mathbin{\theta_K}b\ :\Longleftrightarrow\ K(x\cdot a\cdot y)=K(x\cdot b\cdot y)
+  \quad\text{for all composable }x,y.
+\]
+(Taking $x=y=\id$ shows $\theta_K\subseteq\simK$; the two quantifiers make $\theta_K$ a two-sided
+congruence; and any two-sided congruence inside $\simK$ is contained in $\theta_K$, so it is the
+largest.)
+
+\begin{proposition}[the honest unifier]
+\label{prop:tfae}
+Let $K$ be a normalizer (so \LA{} holds). The following are equivalent.
+\begin{enumerate}
+  \item $\Norm_K$ is associative (equivalently, \RA{} holds).
+  \item \mLA{} holds \emph{on products of normalized arrows:} $K\big(c\cdot K(x)\big)=K(c\cdot x)$ for
+        all $c\in\mathcal{A}$ and all $x\in\Img K\cdot\Img K$ (i.e.\ $x=g\cdot h$, $g,h\in\Img K$).
+  \item $K(g\cdot h)\mathbin{\theta_K}(g\cdot h)$ for all $g,h\in\Img K$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{(2)$\Rightarrow$(1).} Take $c=f\in\Img K$ and $x=g\cdot h$ with $g,h\in\Img K$; then (2) reads
+$K\big(f\cdot K(g\cdot h)\big)=K(f\cdot g\cdot h)$, which is \RA{}. So $\Norm_K$ is associative by
+Proposition~\ref{prop:thmB}.
+
+\emph{(1)$\Rightarrow$(2).} For $c\in\mathcal{A}$ and $g,h\in\Img K$,
+\[
+  K\big(c\cdot K(g\cdot h)\big)
+  \overset{\LA{}}{=}K\big(K(c)\cdot K(g\cdot h)\big)
+  \overset{\RA{}}{=}K\big(K(c)\cdot g\cdot h\big)
+  \overset{\LA{}}{=}K(c\cdot g\cdot h),
+\]
+the outer steps being \LA{} (read backwards and forwards) and the middle step \RA{} applied to
+$K(c),g,h\in\Img K$, available because (1)$\Leftrightarrow$\RA{}.
+
+\emph{(2)$\Leftrightarrow$(3).} Since $K$ is idempotent, $K(g\cdot h)\simK(g\cdot h)$ always; and every
+normalizer has the \LA{} (right-congruence) half, i.e.\ $K(a\cdot y)=K(K(a)\cdot y)$. Condition~(3)
+unfolds to $K\big(x\cdot K(g\cdot h)\cdot y\big)=K\big(x\cdot(g\cdot h)\cdot y\big)$ for all $x,y$.
+Setting $y=\id$ gives (2) with $c=x$. Conversely, given (2), for all $x,y$,
+\[
+  K\big(x\cdot K(g\cdot h)\cdot y\big)=K\big(K(x\cdot K(g\cdot h))\cdot y\big)
+  =K\big(K(x\cdot g\cdot h)\cdot y\big)=K\big(x\cdot(g\cdot h)\cdot y\big),
+\]
+using right-compatibility at the outer equalities and (2) (with $c=x$) at the middle. So (3) holds.
+\end{proof}
+
+\begin{remark}[what (2) is, and what it is not]
+\label{rem:tfae-ends}
+Condition~(2) is the honest ``single condition behind both'': it is \RA{} rewritten as \mLA{}
+restricted to products of normalized arrows. The full mirror law \mLA{} (all $x\in\mathcal{A}$) and
+closure of $\Img K$ are its two \emph{sufficient specializations} --- full \mLA{} gives (2) a
+fortiori; closure makes (2) \emph{vacuous} (then $x=g\cdot h\in\Img K$, so $K(x)=x$ and both sides are
+$K(c\cdot x)$). They are \emph{not} two degenerations of one criterion over general $\mathcal{A}$
+(Theorem~\ref{thm:strict}: incomparable), but two sufficient routes to the \emph{same}
+necessary-and-sufficient condition~(2)/(3). Over a group with $K$ the coset-representative map,
+$\theta_K$ is the coset relation of $\mathrm{core}_G(H)$ and (3) is Theorem~\ref{thm:criterion} in the
+core form of Remark~\ref{rem:core}. The equivalence (1)$\Leftrightarrow$(3) was checked exhaustively
+on all $1578$ normalizers of all $156$ order-$4$ monoids (unit fixed) and all monoids of order~$\le3$,
+with zero mismatches.
 \end{remark}
 
 \section{Verification and scope}
@@ -376,7 +494,13 @@ both.
 (\texttt{lean/\allowbreak2026-10-22-\allowbreak mirror-LA-\allowbreak oracle.lean}, Lean~4,
 Mathlib-free) machine-checks the decidable
 content: on the order-$4$ handed model, \mLA{} fails (as it must, being handed); \mLA{} forces \RA{}
-and $\sh$-associativity over \emph{all} monoids of order $\le3$ and all idempotent unit-fixing $K$
+and $\sh$-associativity over \emph{all} monoids of order $\le3$ and all idempotent unit-fixing
+$K$\footnote{This Lean range includes idempotent unit-fixing $K$ that do \emph{not} satisfy \LA{},
+which the hand proof of Theorem~\ref{thm:quotient}(1) does not cover (its passage \RA{}$\Rightarrow$
+associative uses \LA{}, via Proposition~\ref{prop:thmB}). The certified implication
+``\mLA{}$\Rightarrow\sh$-associative'' is nonetheless true on the whole range: at order~$3$ there are
+exactly $6$ such $K$ with \mLA{} but without \LA{}, and all $6$ are associative. For those the
+statement is a verified computational fact, not a consequence of the hand argument.}
 (zero counterexamples); $\mLA{}\Leftrightarrow\simK$ a left congruence over the same range (zero
 mismatches, Remark~\ref{rem:leftcong}); the strictness separator exists at order~$3$ and not below;
 and the explicit separator of §\ref{sec:thm2} (closed image, \RA{} true, \mLA{} false at $c=2,x=1$)
@@ -386,8 +510,10 @@ every \texttt{decide} reduces to \texttt{rfl}. We cite it rather than reproduce 
 \paragraph{Exhaustive enumeration.} \texttt{scratch/2026-10-22-mirror-LA-verify.py} (exact integer /
 permutation arithmetic). Over all monoids of order $\le3$ and all their normalizers:
 $\mLA{}\Rightarrow\RA{}$, $\mLA{}\Rightarrow$ associative, and $\mLA{}\Leftrightarrow\simK$
-left-congruence hold with zero exceptions; right-congruence never fails under \LA{}; and exactly $2$
-separators $\RA{}\wedge\neg\mLA{}$ occur, both at order~$3$ (none at order $\le2$). Over all $(H,T)$
+left-congruence hold with zero exceptions; right-congruence never fails under \LA{}; and, with the
+unit fixed ($11$ labelled order-$3$ tables), exactly $2$ separators $\RA{}\wedge\neg\mLA{}$ occur,
+both at order~$3$ (none at order $\le2$); allowing any element to be the unit ($33$ tables) the count
+is $6$. Over all $(H,T)$
 transversal pairs of $S_3$ ($15$) and $S_4$ ($35\,416$): \LA{} never fails,
 $[\mLA{}\Leftrightarrow H\text{ normal}]$ has zero mismatches, and
 $[(T,\sh)\text{ associative}\Leftrightarrow\text{the criterion}]$ has zero mismatches. The explicit
@@ -407,14 +533,20 @@ finite core.
 
 \section*{What this settles}
 
-The two associative families are one mechanism and its two classical degenerations. Whenever the
-kernel of $K$ is a two-sided congruence --- i.e.\ $\LA{}\wedge\mLA{}$ --- the magmoid is the honest
-quotient, $\Norm_K\cong\mathcal{A}/\!\simK$. \mLA{} is a legible, checkable sufficient condition for
-associativity (``the kernel is a left congruence''), strictly stronger than bare \RA{} and
-incomparable with closure of $\Img K$; the two sit in a diamond over associativity. Over groups,
-\mLA{} is normality and closure is subgroup-hood, and both are solutions of the single conjugation
-criterion $f\varphi(g,h)f^{-1}\in H$ --- which also exhibits, between them, the genuine
-associative-without-either regime. This is exactly the unification SHOULD~S1(b) asked for.
+There is one honest condition behind the two associative families, and it is \emph{not} a single
+mechanism with two degenerations --- over a general $\mathcal{A}$, \mLA{} and closure are incomparable
+(Theorem~\ref{thm:strict}). The common condition is associativity itself, read as the restricted
+mirror law of Proposition~\ref{prop:tfae}: $K(c\cdot K(x))=K(c\cdot x)$ for $x$ a product of
+normalized arrows, equivalently $K(g\cdot h)\mathbin{\theta_K}(g\cdot h)$. Full \mLA{} and closure of
+$\Img K$ are its two \emph{sufficient specializations} --- the first makes the kernel a two-sided
+congruence, so $\Norm_K\cong\mathcal{A}/\!\simK$ is the honest quotient; the second makes the
+restricted law vacuous. \mLA{} is itself a legible, checkable sufficient condition (``$\simK$ is a
+left congruence''), strictly stronger than bare \RA{} and incomparable with closure; the two sit in a
+diamond over associativity whose bottom vertex is strictly below their join. Over groups, \mLA{} is
+normality and closure is subgroup-hood, and both solve the single conjugation criterion
+$f\varphi(g,h)f^{-1}\in H$ --- equivalently $\varphi(T\times T)\subseteq\mathrm{core}_G(H)$
+(Remark~\ref{rem:core}) --- which exhibits, between them, the genuine associative-without-either
+regime. This is the content SHOULD~S1 asked for.
 
 \begin{thebibliography}{9}
 

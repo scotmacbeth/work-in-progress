@@ -84,8 +84,9 @@ and verified on an exact finite model). Theorem~2's refutation is \textbf{proved
 exact counterexamples (a minimal order-3 non-invertible monoid; and $C_4$/$D_4$/$Q_8$
 normal-subgroup transversals), computed exactly in \texttt{fractions}/finite enumeration.
 Attribution is to the classical transversal literature (Baer, Lal, Kiechle, Grabowski), with the
-explicit note that the group-$\iff$-subgroup \emph{biconditional} sometimes attached to this
-construction has no source and does not hold.
+explicit note that the group-$\iff$-subgroup \emph{biconditional} has \emph{no source} in that
+literature --- it was our own \texttt{state/PROVE.md} target, not a classical claim --- and does not
+hold (Theorem~2).
 
 \section{Setting and the standing definition}
 
@@ -119,7 +120,12 @@ $T = \Im r$. Sources: \textbf{Baer, ``Nets and groups,'' Trans.\ AMS 46 (1939) 1
 \textbf{Lal, ``Transversals in groups,'' J.\ Algebra 181 (1996) 70--81};
 \textbf{Kiechle, \emph{Theory of K-Loops}, Springer LNM 1778 (2002)}; \textbf{arXiv:1309.7729, ``On
 the Congruences in Right Loops''}; oidified: \textbf{Grabowski, ``An introduction to loopoids,''
-arXiv:1510.03395} (Def~4.1 / Prop~4.3: $t\bullet t' = \pi(t\cdot t')$). The forward direction of
+arXiv:1510.03395} (Def~4.1 / Prop~4.3: $t\bullet t' = \pi(t\cdot t')$).\footnote{Attribution flag:
+the two arXiv entries cited here, 1309.7729 and 1510.03395, are not yet logged at \texttt{deep-read}
+in the program's source index; a browse pass should register them (Grabowski's Example~1.1 --- the
+explicit $(\mathrm{LA})$ computation --- in particular) before any external submission. The verdict ``this
+construction is classical'' does not rest on any single one of them. See the committed attribution
+tracker \texttt{ATTRIBUTION-TRACKER.md}.} The forward direction of
 Theorem~1 (``$T$ a subgroup $\Rightarrow \circ = \cdot|_T$'') is classical and elementary. The
 \emph{converse} --- the (sourceless) biconditional ``right loop is a group $\iff$ transversal is a
 subgroup'', which was our own \texttt{PROVE.md} target rather than a classical statement --- is
@@ -268,8 +274,11 @@ all $4$ of $\langle r\rangle$ in $D_4$ --- or impossible, as in the non-split ce
 above, where $0$ transversals are subgroups.)
 
 This is the decisive correction: \textbf{invertibility does not rescue the converse.} The
-biconditional ``right loop is a group $\iff$ transversal is a subgroup'' is simply false in the
-presence of a nontrivial normal subgroup. We flag its status honestly: it has \emph{no source} ---
+biconditional ``right loop is a group $\iff$ transversal is a subgroup'' fails for a pair $(G,H)$
+exactly when some transversal is associative but not a complement of $H$ --- for instance whenever
+$H$ is a \emph{non-split} normal subgroup, where \emph{every} transversal gives an associative
+$(T,\circ)\cong G/H$ while \emph{none} is a subgroup (the $C_4,D_4,Q_8$ central witnesses above). We
+flag its status honestly: it has \emph{no source} ---
 we have found no text asserting it --- and calling it ``folklore'' earlier overstated its standing.
 It was the target written into our own \texttt{state/PROVE.md} and the memory note
 \texttt{feedback-handedness-is-classical-transversal-not-original}; this note corrects both. What
